@@ -33,18 +33,21 @@ export default function DashboardTabs() {
   const { data: automations = [], isLoading: isLoadingAutomations } = useQuery({
     queryKey: ["/api/automations"],
     enabled: !!user && activeTab === "automation",
+    staleTime: 1000 * 60, // 1 minute
   });
   
   // Fetch integrations
   const { data: integrations = [], isLoading: isLoadingIntegrations } = useQuery({
     queryKey: ["/api/integrations"],
     enabled: !!user && activeTab === "integrations",
+    staleTime: 1000 * 60, // 1 minute
   });
   
   // Fetch user settings
   const { data: settings, isLoading: isLoadingSettings } = useQuery({
     queryKey: ["/api/settings"],
     enabled: !!user && activeTab === "settings",
+    staleTime: 1000 * 60, // 1 minute
   });
   
   // Mutations
