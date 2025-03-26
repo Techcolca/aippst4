@@ -18,7 +18,14 @@ declare global {
  * Adds userId to the request object if verification is successful
  */
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies?.auth_token;
+  // Obtener el token de las cookies o del encabezado Authorization
+  const token = req.cookies?.auth_token || 
+                (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                 ? req.headers.authorization.slice(7) : null);
+  
+  console.log("Verificando token:", token ? "Token presente" : "No hay token");
+  console.log("Cookies:", req.cookies);
+  console.log("Authorization header:", req.headers.authorization);
   
   if (!token) {
     return res.status(401).json({ message: 'Authentication required' });
@@ -27,6 +34,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
     req.userId = decoded.userId;
+    console.log("Token verificado con éxito para userId:", decoded.userId);
     next();
   } catch (error) {
     console.error('Token verification error:', error);

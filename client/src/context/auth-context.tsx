@@ -65,24 +65,45 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       });
       
       const userData = await response.json();
-      setUser(userData);
       
-      // Después de iniciar sesión, verificamos de nuevo el estado de autenticación
-      // para asegurarnos de que las cookies se han establecido correctamente
-      try {
-        const meResponse = await fetch("/api/auth/me", {
-          credentials: "include",
-        });
-        
-        if (meResponse.ok) {
-          const verifiedUserData = await meResponse.json();
-          console.log("Verificación de autenticación exitosa:", verifiedUserData);
-        } else {
-          console.warn("Verificación de autenticación falló:", await meResponse.text());
+      // Como respaldo, guardamos el token en localStorage también (solo para depuración)
+      const token = response.headers.get('Set-Cookie');
+      if (token) {
+        console.log("Token recibido en respuesta:", token);
+        // Extraer el token de la cookie
+        const match = token.match(/auth_token=([^;]+)/);
+        if (match && match[1]) {
+          localStorage.setItem('auth_token', match[1]);
+          console.log("Token guardado en localStorage:", match[1]);
         }
-      } catch (verifyError) {
-        console.error("Error verificando autenticación:", verifyError);
+      } else {
+        // Si no se pudo obtener de Set-Cookie, usamos un método alternativo
+        try {
+          const cookieResponse = await fetch("/api/auth/me", {
+            credentials: "include",
+          });
+          
+          if (cookieResponse.ok) {
+            const verifiedUserData = await cookieResponse.json();
+            console.log("Verificación de autenticación exitosa:", verifiedUserData);
+            
+            // Solicitar el token directamente
+            const tokenResponse = await fetch("/api/auth/token", {
+              credentials: "include",
+            });
+            
+            if (tokenResponse.ok) {
+              const { token } = await tokenResponse.json();
+              localStorage.setItem('auth_token', token);
+              console.log("Token obtenido y guardado:", token);
+            }
+          }
+        } catch (verifyError) {
+          console.error("Error verificando autenticación:", verifyError);
+        }
       }
+      
+      setUser(userData);
     } catch (error) {
       console.error("Login error:", error);
       throw error;

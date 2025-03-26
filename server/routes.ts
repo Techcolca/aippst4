@@ -83,7 +83,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        sameSite: "lax",
+        path: "/",
       });
+      
+      console.log("Login successful for user:", user.username);
+      console.log("Token created:", token);
       
       // Return user without password
       const { password: _, ...userWithoutPassword } = user;
@@ -99,12 +104,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ message: "Logged out successfully" });
   });
   
+  // Endpoint para obtener el token actual para debugging
+  app.get("/api/auth/token", verifyToken, (req, res) => {
+    try {
+      const token = jwt.sign({ userId: req.userId }, JWT_SECRET, { expiresIn: "7d" });
+      res.json({ token });
+    } catch (error) {
+      console.error("Get token error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/auth/me", verifyToken, async (req, res) => {
     try {
       const user = await storage.getUser(req.userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
+      
+      console.log("Usuario autenticado encontrado:", user.username);
       
       // Return user without password
       const { password, ...userWithoutPassword } = user;

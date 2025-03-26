@@ -29,9 +29,21 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    console.log("Ejecutando consulta para:", queryKey[0]);
+    // Obtener el token del localStorage como respaldo
+    const authToken = localStorage.getItem('auth_token');
+    
+    const headers: Record<string, string> = {};
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    
     const res = await fetch(queryKey[0] as string, {
       credentials: "include",
+      headers: headers,
     });
+    
+    console.log("Respuesta:", res.status, res.statusText);
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
       return null;
