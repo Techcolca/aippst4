@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -16,6 +16,16 @@ import { useAuth } from "@/context/auth-context";
 
 export default function DashboardTabs() {
   const [activeTab, setActiveTab] = useState("automation");
+  const [apiKey, setApiKey] = useState("");
+  const [scriptExample, setScriptExample] = useState('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');
+  const [newIntegration, setNewIntegration] = useState({
+    name: "",
+    url: "",
+    themeColor: "#3B82F6",
+    position: "bottom-right",
+    apiKey: ""
+  });
+  const apiKeyInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
   
@@ -57,6 +67,36 @@ export default function DashboardTabs() {
     },
   });
   
+  const createIntegrationMutation = useMutation({
+    mutationFn: (integration: any) => 
+      apiRequest("POST", "/api/integrations", integration),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/integrations"] });
+      toast({
+        title: "Integración creada",
+        description: "La integración ha sido creada exitosamente",
+      });
+      
+      // Reiniciar el formulario
+      setApiKey("");
+      setScriptExample('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');
+      setNewIntegration({
+        name: "",
+        url: "",
+        themeColor: "#3B82F6",
+        position: "bottom-right",
+        apiKey: ""
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "No se pudo crear la integración. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    },
+  });
+  
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -67,6 +107,94 @@ export default function DashboardTabs() {
     if (!settings) return;
     
     updateSettingsMutation.mutate(settings);
+  };
+  
+  // Manejadores de cambios para los campos del formulario
+  const handleIntegrationFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewIntegration(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  const handleThemeColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewIntegration(prev => ({
+      ...prev,
+      themeColor: value
+    }));
+  };
+  
+  const handlePositionChange = (value: string) => {
+    setNewIntegration(prev => ({
+      ...prev,
+      position: value
+    }));
+  };
+  
+  // Función para crear una nueva integración
+  const handleCreateIntegration = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validar que haya un API key generado
+    if (!apiKey) {
+      toast({
+        title: "Error",
+        description: "Debes generar una API Key primero",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validar que se hayan ingresado los campos requeridos
+    if (!newIntegration.name || !newIntegration.url) {
+      toast({
+        title: "Error",
+        description: "Por favor, completa todos los campos requeridos",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Crear la integración con los datos del formulario y la API key generada
+    createIntegrationMutation.mutate({
+      ...newIntegration,
+      apiKey: apiKey,
+      active: true
+    });
+  };
+  
+  // Función para generar una API Key aleatoria
+  const generateApiKey = () => {
+    // Generamos una cadena alfanumérica aleatoria de 32 caracteres
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const length = 32;
+    let result = '';
+    
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    
+    // Establecemos la API Key generada
+    const newApiKey = `aipi_${result}`;
+    setApiKey(newApiKey);
+    
+    // Actualizamos el script de ejemplo con la API Key
+    setScriptExample(`<script src="https://api.aipi.example.com/widget.js?key=${newApiKey}"></script>`);
+    
+    // Notificamos al usuario
+    toast({
+      title: "API Key generada",
+      description: "Se ha generado una nueva API Key",
+    });
+    
+    // Seleccionamos el contenido del input para facilitar la copia
+    setTimeout(() => {
+      if (apiKeyInputRef.current) {
+        apiKeyInputRef.current.select();
+      }
+    }, 100);
   };
   
   return (
@@ -292,17 +420,29 @@ export default function DashboardTabs() {
         
         <div className="mb-8">
           <h3 className="text-lg font-medium mb-4">Add New Integration</h3>
-          <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+          <form onSubmit={handleCreateIntegration} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
             <div className="mb-6">
               <h4 className="text-md font-medium mb-2">Website Information</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="website-name">Website Name</Label>
-                  <Input id="website-name" name="website-name" placeholder="e.g. Product Blog" />
+                  <Label htmlFor="name">Website Name</Label>
+                  <Input 
+                    id="name" 
+                    name="name" 
+                    value={newIntegration.name}
+                    onChange={handleIntegrationFormChange}
+                    placeholder="e.g. Product Blog" 
+                  />
                 </div>
                 <div>
-                  <Label htmlFor="website-url">Website URL</Label>
-                  <Input id="website-url" name="website-url" placeholder="https://blog.example.com" />
+                  <Label htmlFor="url">Website URL</Label>
+                  <Input 
+                    id="url" 
+                    name="url" 
+                    value={newIntegration.url}
+                    onChange={handleIntegrationFormChange}
+                    placeholder="https://blog.example.com" 
+                  />
                 </div>
               </div>
             </div>
@@ -311,15 +451,30 @@ export default function DashboardTabs() {
               <h4 className="text-md font-medium mb-2">Integration Settings</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="theme-color">Theme Color</Label>
+                  <Label htmlFor="themeColor">Theme Color</Label>
                   <div className="flex">
-                    <input type="color" id="theme-color" name="theme-color" defaultValue="#3B82F6" className="h-10 w-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" />
-                    <Input className="ml-2" defaultValue="#3B82F6" />
+                    <input 
+                      type="color" 
+                      id="themeColor" 
+                      name="themeColor" 
+                      value={newIntegration.themeColor}
+                      onChange={handleThemeColorChange}
+                      className="h-10 w-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
+                    />
+                    <Input 
+                      className="ml-2" 
+                      value={newIntegration.themeColor}
+                      onChange={handleThemeColorChange}
+                      name="themeColorText"
+                    />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="position">Widget Position</Label>
-                  <Select defaultValue="bottom-right">
+                  <Select 
+                    value={newIntegration.position}
+                    onValueChange={handlePositionChange}
+                  >
                     <SelectTrigger id="position">
                       <SelectValue placeholder="Select a position" />
                     </SelectTrigger>
@@ -335,17 +490,60 @@ export default function DashboardTabs() {
             </div>
             
             <div className="mb-6">
+              <h4 className="text-md font-medium mb-2">API Key</h4>
+              <div className="mb-4">
+                <Label htmlFor="api-key">API Key</Label>
+                <div className="flex mt-1">
+                  <Input 
+                    id="api-key" 
+                    ref={apiKeyInputRef}
+                    value={apiKey} 
+                    readOnly 
+                    className="font-mono text-xs bg-gray-50 dark:bg-gray-900" 
+                    placeholder="No API key generated yet" 
+                  />
+                  <Button 
+                    className="ml-2" 
+                    variant="outline"
+                    type="button"
+                    onClick={() => {
+                      if (apiKey) {
+                        navigator.clipboard.writeText(apiKey);
+                        toast({
+                          title: "Copied to clipboard",
+                          description: "API Key copied to clipboard",
+                        });
+                      }
+                    }}
+                    disabled={!apiKey}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+            
+              <div className="flex justify-end mb-4">
+                <Button onClick={generateApiKey} type="button">
+                  Generate API Key
+                </Button>
+              </div>
+            </div>
+              
+            <div className="mb-6">
               <h4 className="text-md font-medium mb-2">Installation</h4>
               <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-md">
                 <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">Add this script to your website's HTML just before the closing <code className="font-mono text-xs bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">&lt;/body&gt;</code> tag:</p>
                 <div className="relative">
-                  <pre className="text-xs text-gray-800 dark:text-gray-200 overflow-x-auto font-mono bg-white dark:bg-gray-800 p-3 rounded border border-gray-300 dark:border-gray-700"><code>&lt;script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"&gt;&lt;/script&gt;</code></pre>
+                  <pre className="text-xs text-gray-800 dark:text-gray-200 overflow-x-auto font-mono bg-white dark:bg-gray-800 p-3 rounded border border-gray-300 dark:border-gray-700"><code>{scriptExample}</code></pre>
                   <Button 
                     className="absolute top-2 right-2 p-1 h-auto text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" 
                     variant="ghost"
+                    type="button"
                     aria-label="Copy code"
                     onClick={() => {
-                      navigator.clipboard.writeText('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');
+                      navigator.clipboard.writeText(scriptExample);
                       toast({
                         title: "Copied to clipboard",
                         description: "Script tag copied to clipboard",
@@ -360,12 +558,16 @@ export default function DashboardTabs() {
               </div>
             </div>
             
-            <div className="flex justify-end">
-              <Button>
-                Generate API Key
+            <div className="flex justify-end mt-8">
+              <Button 
+                type="submit" 
+                className="bg-primary-600 hover:bg-primary-700 text-white"
+                disabled={createIntegrationMutation.isPending}
+              >
+                {createIntegrationMutation.isPending ? "Creando..." : "Crear Integración"}
               </Button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       
