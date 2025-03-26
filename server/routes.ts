@@ -171,23 +171,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.post("/api/integrations", verifyToken, async (req, res) => {
     try {
+      console.log("Create integration request body:", req.body);
+      console.log("User ID from token:", req.userId);
+      
+      // Si apiKey se proporciona en el cuerpo de la solicitud, lo usamos
+      // en lugar de generar uno nuevo
+      const apiKey = req.body.apiKey || generateApiKey();
+      
       const validatedData = insertIntegrationSchema.parse({
         ...req.body,
         userId: req.userId,
       });
       
-      // Generate API key for the integration
-      const apiKey = generateApiKey();
+      console.log("Validated data for integration:", validatedData);
       
       const integration = await storage.createIntegration({
         ...validatedData,
         apiKey,
       });
       
+      console.log("Integration created successfully:", integration);
+      
       res.status(201).json(integration);
     } catch (error) {
       console.error("Create integration error:", error);
-      res.status(400).json({ message: "Invalid integration data" });
+      // Proporcionar más detalles sobre el error para depuración
+      if (error instanceof Error) {
+        res.status(400).json({ message: "Invalid integration data", error: error.message });
+      } else {
+        res.status(400).json({ message: "Invalid integration data" });
+      }
     }
   });
   

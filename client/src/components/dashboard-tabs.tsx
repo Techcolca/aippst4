@@ -160,11 +160,23 @@ export default function DashboardTabs() {
       return;
     }
     
+    // Logs para depuración
+    console.log("Creando integración con los siguientes datos:", {
+      name: newIntegration.name,
+      url: newIntegration.url,
+      themeColor: newIntegration.themeColor,
+      position: newIntegration.position,
+      apiKey: apiKey
+    });
+    
     // Crear la integración con los datos del formulario y la API key generada
+    // Omitimos active ya que es un valor por defecto en el esquema
     createIntegrationMutation.mutate({
-      ...newIntegration,
-      apiKey: apiKey,
-      active: true
+      name: newIntegration.name,
+      url: newIntegration.url,
+      themeColor: newIntegration.themeColor,
+      position: newIntegration.position,
+      apiKey: apiKey
     });
   };
   

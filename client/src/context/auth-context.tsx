@@ -66,6 +66,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       const userData = await response.json();
       setUser(userData);
+      
+      // Después de iniciar sesión, verificamos de nuevo el estado de autenticación
+      // para asegurarnos de que las cookies se han establecido correctamente
+      try {
+        const meResponse = await fetch("/api/auth/me", {
+          credentials: "include",
+        });
+        
+        if (meResponse.ok) {
+          const verifiedUserData = await meResponse.json();
+          console.log("Verificación de autenticación exitosa:", verifiedUserData);
+        } else {
+          console.warn("Verificación de autenticación falló:", await meResponse.text());
+        }
+      } catch (verifyError) {
+        console.error("Error verificando autenticación:", verifyError);
+      }
     } catch (error) {
       console.error("Login error:", error);
       throw error;
