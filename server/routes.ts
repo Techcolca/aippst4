@@ -192,20 +192,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Create integration request body:", req.body);
       console.log("User ID from token:", req.userId);
       
-      // Si apiKey se proporciona en el cuerpo de la solicitud, lo usamos
-      // en lugar de generar uno nuevo
+      // Obtenemos la API key del cuerpo de la solicitud
       const apiKey = req.body.apiKey || generateApiKey();
       
-      const validatedData = insertIntegrationSchema.parse({
-        ...req.body,
+      // Extraemos solo los campos necesarios para la base de datos
+      const integrationData = {
+        name: req.body.name,
+        url: req.body.url,
+        themeColor: req.body.themeColor || "#3B82F6",
+        position: req.body.position || "bottom-right",
         userId: req.userId,
-      });
+      };
       
-      console.log("Validated data for integration:", validatedData);
+      console.log("Cleaned integration data:", integrationData);
       
+      // Creamos la integración
       const integration = await storage.createIntegration({
-        ...validatedData,
-        apiKey,
+        ...integrationData,
+        apiKey: apiKey,
       });
       
       console.log("Integration created successfully:", integration);
@@ -215,7 +219,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Create integration error:", error);
       // Proporcionar más detalles sobre el error para depuración
       if (error instanceof Error) {
-        res.status(400).json({ message: "Invalid integration data", error: error.message });
+        res.status(400).json({ 
+          message: "Invalid integration data", 
+          error: error.message,
+          stack: process.env.NODE_ENV === "development" ? error.stack : undefined
+        });
       } else {
         res.status(400).json({ message: "Invalid integration data" });
       }
