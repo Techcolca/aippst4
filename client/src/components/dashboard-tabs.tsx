@@ -43,6 +43,13 @@ export default function DashboardTabs() {
     staleTime: 1000 * 60, // 1 minute
   });
   
+  // Fetch conversations
+  const { data: conversations = [], isLoading: isLoadingConversations } = useQuery({
+    queryKey: ["/api/conversations"],
+    enabled: !!user && activeTab === "conversations",
+    staleTime: 1000 * 60, // 1 minute
+  });
+  
   // Fetch user settings
   const { data: settings, isLoading: isLoadingSettings } = useQuery({
     queryKey: ["/api/settings"],
@@ -331,64 +338,111 @@ export default function DashboardTabs() {
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                      JD
-                    </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">John Doe</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">user123@example.com</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900 dark:text-white">Product inquiry about pricing</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">8 messages</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                  Today, 10:23 AM
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                  3m 42s
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">Resolved</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <a href="#" className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300">View</a>
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                      JS
-                    </div>
-                    <div className="ml-4">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">Jane Smith</div>
-                      <div className="text-sm text-gray-500 dark:text-gray-400">jane.s@company.co</div>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900 dark:text-white">Technical support request</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">15 messages</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                  Yesterday, 3:40 PM
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                  8m 15s
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full">Escalated</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <a href="#" className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300">View</a>
-                </td>
-              </tr>
+              {isLoadingConversations ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                    Cargando conversaciones...
+                  </td>
+                </tr>
+              ) : conversations.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                    No hay conversaciones disponibles
+                  </td>
+                </tr>
+              ) : (
+                conversations.map((conversation: any) => {
+                  // Formato de fecha
+                  const createdAt = conversation.createdAt 
+                    ? new Date(conversation.createdAt)
+                    : new Date();
+                  
+                  const dateFormatted = new Intl.DateTimeFormat('es', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }).format(createdAt);
+                  
+                  // Generar iniciales del visitante
+                  const visitorId = conversation.visitorId || 'Anónimo';
+                  const initials = visitorId.substring(0, 2).toUpperCase();
+                  
+                  // Formatear duración
+                  const formatDuration = (seconds: number) => {
+                    if (!seconds) return "N/A";
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = seconds % 60;
+                    return `${minutes}m ${remainingSeconds}s`;
+                  };
+                  
+                  return (
+                    <tr key={conversation.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                            {initials}
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                              Visitante {visitorId.substring(0, 8)}
+                            </div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                              {conversation.integrationName || "Integración desconocida"}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900 dark:text-white truncate max-w-xs">
+                          Conversación #{conversation.id}
+                        </div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          {conversation.url ? (
+                            <a href={conversation.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                              {new URL(conversation.url).hostname}
+                            </a>
+                          ) : (
+                            "URL no disponible"
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {dateFormatted}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                        {formatDuration(conversation.duration || 0)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {conversation.resolved ? (
+                          <span className="px-2 py-1 text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">
+                            Resuelta
+                          </span>
+                        ) : (
+                          <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">
+                            Abierta
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button 
+                          onClick={() => {
+                            // Aquí puedes implementar la lógica para ver los detalles de la conversación
+                            toast({
+                              title: "Ver conversación",
+                              description: `Viendo detalles de la conversación #${conversation.id}`,
+                            });
+                          }}
+                          className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300"
+                        >
+                          Ver
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>

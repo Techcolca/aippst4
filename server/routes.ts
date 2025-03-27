@@ -654,6 +654,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ================ Conversation Routes ================
+  // Get all conversations for a user (from all their integrations)
+  app.get("/api/conversations", verifyToken, async (req, res) => {
+    try {
+      // Obtener todas las integraciones del usuario
+      const integrations = await storage.getIntegrations(req.userId);
+      
+      if (!integrations || integrations.length === 0) {
+        return res.json([]);
+      }
+      
+      // Obtener IDs de integraciones
+      const integrationIds = integrations.map(integration => integration.id);
+      
+      // Array para almacenar todas las conversaciones
+      let allConversations = [];
+      
+      // Obtener conversaciones para cada integración
+      for (const integrationId of integrationIds) {
+        const conversations = await storage.getConversations(integrationId);
+        if (conversations && conversations.length > 0) {
+          // Añadir información de la integración a cada conversación
+          const integration = integrations.find(i => i.id === integrationId);
+          const conversationsWithIntegration = conversations.map(conv => ({
+            ...conv,
+            integrationName: integration?.name || "Unknown Integration",
+            integrationUrl: integration?.url || ""
+          }));
+          
+          allConversations = [...allConversations, ...conversationsWithIntegration];
+        }
+      }
+      
+      // Ordenar por fecha de creación (más reciente primero)
+      allConversations.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
+      
+      res.json(allConversations);
+    } catch (error) {
+      console.error("Get conversations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Get conversations for a specific integration
+  app.get("/api/integrations/:integrationId/conversations", verifyToken, async (req, res) => {
+    try {
+      const { integrationId } = req.params;
+      
+      // Verificar que la integración pertenece al usuario
+      const integration = await storage.getIntegration(parseInt(integrationId));
+      
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      const conversations = await storage.getConversations(parseInt(integrationId));
+      res.json(conversations);
+    } catch (error) {
+      console.error("Get integration conversations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Get messages for a specific conversation
+  app.get("/api/conversations/:conversationId/messages", verifyToken, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.conversationId);
+      
+      // Verificar que la conversación existe
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Verificar que el usuario tiene acceso a esta conversación
+      const integration = await storage.getIntegration(conversation.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      const messages = await storage.getConversationMessages(conversationId);
+      res.json(messages);
+    } catch (error) {
+      console.error("Get conversation messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
   // Serve the embed script
   app.get("/embed.js", (req, res) => {
     // Use import.meta.url instead of __dirname (which is not available in ES modules)
