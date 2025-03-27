@@ -478,7 +478,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Serve the embed script
   app.get("/embed.js", (req, res) => {
-    const embedScriptPath = path.join(__dirname, "../public/embed.js");
+    // Use import.meta.url instead of __dirname (which is not available in ES modules)
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const embedScriptPath = path.resolve(currentDir, '../public/embed.js');
     
     // Check if file exists
     if (fs.existsSync(embedScriptPath)) {
