@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import AutomationCard from "./automation-card";
 import IntegrationCard from "./integration-card";
 import { useAuth } from "@/context/auth-context";
@@ -25,6 +26,13 @@ export default function DashboardTabs() {
     position: "bottom-right",
     apiKey: ""
   });
+  
+  // Estados para el modal de conversación
+  const [isConversationModalOpen, setIsConversationModalOpen] = useState(false);
+  const [selectedConversation, setSelectedConversation] = useState<any>(null);
+  const [conversationMessages, setConversationMessages] = useState<any[]>([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  
   const apiKeyInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -217,6 +225,32 @@ export default function DashboardTabs() {
         apiKeyInputRef.current.select();
       }
     }, 100);
+  };
+  
+  // Función para cargar los mensajes de una conversación
+  const handleViewConversation = async (conversation: any) => {
+    setSelectedConversation(conversation);
+    setIsConversationModalOpen(true);
+    setIsLoadingMessages(true);
+    
+    try {
+      const response = await fetch(`/api/conversations/${conversation.id}/messages`);
+      if (!response.ok) {
+        throw new Error('Error al cargar los mensajes');
+      }
+      
+      const messagesData = await response.json();
+      setConversationMessages(messagesData);
+    } catch (error) {
+      console.error('Error al cargar mensajes:', error);
+      toast({
+        title: "Error",
+        description: "No se pudieron cargar los mensajes de la conversación",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingMessages(false);
+    }
   };
   
   return (
@@ -427,13 +461,7 @@ export default function DashboardTabs() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button 
-                          onClick={() => {
-                            // Aquí puedes implementar la lógica para ver los detalles de la conversación
-                            toast({
-                              title: "Ver conversación",
-                              description: `Viendo detalles de la conversación #${conversation.id}`,
-                            });
-                          }}
+                          onClick={() => handleViewConversation(conversation)}
                           className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300"
                         >
                           Ver
@@ -804,6 +832,76 @@ export default function DashboardTabs() {
           </form>
         )}
       </div>
+      
+      {/* Modal de Conversación */}
+      <Dialog open={isConversationModalOpen} onOpenChange={setIsConversationModalOpen}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              Conversación con {selectedConversation?.visitorId?.substring(0, 8) || 'Visitante'}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedConversation ? (
+                <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                  <span>
+                    {new Date(selectedConversation.createdAt).toLocaleString('es')} - 
+                    {selectedConversation.integrationName}
+                  </span>
+                  <span className={`px-2 py-0.5 rounded-full text-xs ${
+                    selectedConversation.resolved 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                      : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                  }`}>
+                    {selectedConversation.resolved ? 'Resuelta' : 'Abierta'}
+                  </span>
+                </div>
+              ) : null}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mt-4">
+            {isLoadingMessages ? (
+              <div className="flex justify-center items-center h-60">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary-500" />
+              </div>
+            ) : conversationMessages.length === 0 ? (
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                No hay mensajes en esta conversación
+              </div>
+            ) : (
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto p-2">
+                {conversationMessages.map((message: any) => (
+                  <div 
+                    key={message.id} 
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div 
+                      className={`max-w-[80%] p-3 rounded-lg ${
+                        message.role === 'user' 
+                          ? 'bg-primary-100 dark:bg-primary-900 ml-12' 
+                          : 'bg-gray-100 dark:bg-gray-800 mr-12'
+                      }`}
+                    >
+                      <div className="text-sm mb-1 font-medium">
+                        {message.role === 'user' ? 'Usuario' : 'AIPI Assistant'}
+                      </div>
+                      <p className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+                        {message.content}
+                      </p>
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                        {new Date(message.createdAt || message.timestamp).toLocaleTimeString('es', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
