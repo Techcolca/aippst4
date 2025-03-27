@@ -136,6 +136,47 @@ export type InsertAutomation = z.infer<typeof insertAutomationSchema>;
 export type Settings = typeof settings.$inferSelect;
 export type InsertSettings = z.infer<typeof insertSettingsSchema>;
 
+// Tipos de datos para analytics
+export interface TopProduct {
+  name: string;
+  count: number;
+  percentage: number;
+}
+
+export interface TopTopic {
+  topic: string;
+  count: number;
+  sentiment: number;
+}
+
+export interface ConversationAnalytics {
+  topProducts: TopProduct[];
+  topTopics: TopTopic[];
+  conversationsByDay: {
+    date: string;
+    count: number;
+  }[];
+  keywordFrequency: {
+    keyword: string;
+    frequency: number;
+  }[];
+}
+
+export interface IntegrationPerformance {
+  integrationId: number;
+  integrationName: string;
+  conversationCount: number;
+  responseTime: number;
+  resolutionRate: number;
+  userSatisfaction: number;
+}
+
+export interface DashboardStats {
+  totalConversations: number;
+  resolutionRate: number;
+  averageResponseTime: number;
+}
+
 // Tabla para almacenar información del sitio web scrapeado
 export const sitesContent = pgTable("sites_content", {
   id: serial("id").primaryKey(),
