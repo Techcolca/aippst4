@@ -5,6 +5,7 @@ import { verifyToken } from "./middleware/auth";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
 import { webscraper } from "./lib/webscraper";
+import { documentProcessor } from "./lib/document-processor";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
@@ -709,13 +710,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         }
         
+        // Procesar el contenido de los documentos, si existen
+        let documentsContext = '';
+        if (integration.documentsData && Array.isArray(integration.documentsData) && integration.documentsData.length > 0) {
+          console.log(`Procesando ${integration.documentsData.length} documentos para contexto...`);
+          
+          try {
+            // Procesar todos los documentos y extraer su contenido
+            const processedDocs = await documentProcessor.processDocuments(integration.documentsData);
+            
+            if (processedDocs.length > 0) {
+              // Crear contexto con el contenido de los documentos, limitando el tamaño total
+              let totalContent = '';
+              const maxContentLength = 8000; // Limitar a aproximadamente 8000 caracteres en total para no exceder límites de tokens
+              
+              for (const doc of processedDocs) {
+                const docContent = `Documento: ${doc.originalName}\nContenido:\n${doc.content.substring(0, Math.min(doc.content.length, 2000))}${doc.content.length > 2000 ? '...(continúa)' : ''}`;
+                
+                // Si agregar este documento excedería el límite, paramos
+                if (totalContent.length + docContent.length > maxContentLength) {
+                  totalContent += `\n\n[Hay ${processedDocs.length - totalContent.split('Documento:').length + 1} documentos más que no se incluyen por limitaciones de espacio]`;
+                  break;
+                }
+                
+                totalContent += (totalContent ? '\n\n' : '') + docContent;
+              }
+              
+              const docsContent = totalContent;
+              
+              documentsContext = `\n\nInformación de documentos cargados:\n${docsContent}\n\n`;
+              console.log(`Procesados ${processedDocs.length} documentos para incluir en respuesta.`);
+            }
+          } catch (error) {
+            console.error("Error al procesar documentos:", error);
+            // Si hay error, incluimos solo los nombres como antes
+            const docsInfo = integration.documentsData.map((doc: any) => 
+              `Documento: ${doc.originalName} (${doc.mimetype})`
+            ).join('\n');
+            
+            documentsContext = `\n\nInformación de documentos disponibles:\n${docsInfo}\n\n`;
+          }
+        }
+        
         // Agregar comportamiento del bot al contexto, si existe
         if (integration.botBehavior) {
           const botBehaviorContext = `Instrucciones de comportamiento: ${integration.botBehavior}\n\n`;
           context = botBehaviorContext + (context || '');
         }
         
-        console.log(`Generando respuesta con ${context ? 'contexto del sitio web' : 'sin contexto del sitio'}`);
+        // Añadir el contexto de los documentos
+        if (documentsContext) {
+          context = (context || '') + documentsContext;
+        }
+        
+        console.log(`Generando respuesta con ${context ? 'contexto del sitio web y documentos' : 'sin contexto'}`);
         
         // Generate AI response
         const completion = await generateChatCompletion(
