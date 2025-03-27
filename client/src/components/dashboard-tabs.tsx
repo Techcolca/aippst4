@@ -256,7 +256,7 @@ export default function DashboardTabs() {
       // Redirigir a la página de edición de la nueva integración
       const newIntegrationId = data.id;
       if (newIntegrationId) {
-        navigate(`/edit-integration/${newIntegrationId}`);
+        navigate(`/integrations/${newIntegrationId}/edit`);
       }
     })
     .catch(error => {
@@ -572,7 +572,7 @@ export default function DashboardTabs() {
                     installedDate={new Date(integration.createdAt).toLocaleDateString()}
                     onEdit={() => {
                       // Redireccionar a la página de edición
-                      navigate(`/edit-integration/${integration.id}`);
+                      navigate(`/integrations/${integration.id}/edit`);
                     }}
                     onViewAnalytics={() => {
                       toast({
