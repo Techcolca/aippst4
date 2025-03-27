@@ -1,19 +1,28 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import StatCard from "@/components/stat-card";
 import DashboardTabs from "@/components/dashboard-tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/auth-context";
-import { MessageCircle, CheckCircle, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, CheckCircle, Zap, BarChart } from "lucide-react";
+
+// Define interface for dashboard stats
+interface DashboardStats {
+  totalConversations: number;
+  resolutionRate: number;
+  averageResponseTime: number;
+}
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
   
   // Fetch dashboard stats
-  const { data: stats, isLoading: isLoadingStats } = useQuery({
+  const { data: stats, isLoading: isLoadingStats } = useQuery<DashboardStats>({
     queryKey: ["/api/dashboard/stats"],
     enabled: !!user,
   });
@@ -35,11 +44,21 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           
           {/* Dashboard Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">AIPI Dashboard</h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              Manage your AI assistant and monitor its performance
-            </p>
+          <div className="mb-8 flex flex-wrap justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">AIPI Dashboard</h1>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                Manage your AI assistant and monitor its performance
+              </p>
+            </div>
+            <div className="mt-4 md:mt-0">
+              <Link href="/analytics">
+                <Button className="flex items-center gap-2">
+                  <BarChart className="h-4 w-4" />
+                  View Detailed Analytics
+                </Button>
+              </Link>
+            </div>
           </div>
           
           {/* Dashboard Stats */}
