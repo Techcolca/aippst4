@@ -547,7 +547,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/widget/:apiKey/message", async (req, res) => {
     try {
       const { apiKey } = req.params;
-      const { conversationId, content, role } = req.body;
+      const { conversationId, content, role, pageContext } = req.body;
       
       // Validate input
       if (!conversationId || !content || !role) {
@@ -574,16 +574,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         // Get site content for context
         let context = "";
-        const siteContent = await storage.getSiteContent(integration.id);
         
-        if (siteContent && siteContent.length > 0) {
-          // Limitar la cantidad de contenido para no exceder tokens de OpenAI
-          const combinedContent = siteContent
-            .map(page => `Página: ${page.url}\nTítulo: ${page.title || 'Sin título'}\n${page.content}`)
-            .join('\n\n')
-            .slice(0, 10000); // Limitar a ~10k caracteres
+        // First check if there's page context from current page
+        if (pageContext && pageContext.content) {
+          console.log(`Recibido contenido de página actual: ${pageContext.url}`);
+          
+          // Store the current page content in the database for future use
+          try {
+            const existingContent = await storage.getSiteContentByUrl(integration.id, pageContext.url);
             
-          context = `Información del sitio web:\n${combinedContent}\n\nResponde usando esta información cuando sea relevante.`;
+            if (existingContent) {
+              // Update existing record
+              await storage.updateSiteContent(existingContent.id, {
+                content: pageContext.content,
+                title: pageContext.title || null,
+                // El campo lastUpdated se actualizará automáticamente en la base de datos
+              });
+              console.log(`Actualizado contenido existente para: ${pageContext.url}`);
+            } else {
+              // Create new record
+              await storage.createSiteContent({
+                integrationId: integration.id,
+                url: pageContext.url,
+                title: pageContext.title || null,
+                content: pageContext.content,
+                // Nota: lastUpdated se establece automáticamente como valor predeterminado en el esquema
+              });
+              console.log(`Almacenado nuevo contenido para: ${pageContext.url}`);
+            }
+          } catch (error) {
+            console.error("Error al guardar contenido de página:", error);
+            // Continúa con la ejecución incluso si hay error en el almacenamiento
+          }
+          
+          // Use the current page content as context
+          context = `Información de la página actual (${pageContext.url}):\nTítulo: ${pageContext.title || 'Sin título'}\n${pageContext.content}\n\nResponde basándote en esta información cuando sea relevante.`;
+        } else {
+          // If no current page context, use stored site content
+          const siteContent = await storage.getSiteContent(integration.id);
+          
+          if (siteContent && siteContent.length > 0) {
+            // Limitar la cantidad de contenido para no exceder tokens de OpenAI
+            const combinedContent = siteContent
+              .map(page => `Página: ${page.url}\nTítulo: ${page.title || 'Sin título'}\n${page.content}`)
+              .join('\n\n')
+              .slice(0, 10000); // Limitar a ~10k caracteres
+              
+            context = `Información del sitio web:\n${combinedContent}\n\nResponde usando esta información cuando sea relevante.`;
+          }
         }
         
         console.log(`Generando respuesta con ${context ? 'contexto del sitio web' : 'sin contexto del sitio'}`);

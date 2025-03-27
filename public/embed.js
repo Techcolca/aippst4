@@ -26,6 +26,9 @@
   let isTyping = false;
   let conversationStarted = false;
   let fontLoaded = false;
+  let siteContentScanned = false;
+  let currentPageContent = "";
+  let pageTitle = "";
   
   // Initialize widget
   function init() {
@@ -111,9 +114,154 @@
         config.font = data.settings.font || config.font;
       }
       
+      // Extraer el contenido de la página actual para mejorar las respuestas
+      scanCurrentPageContent();
+      
     } catch (error) {
       console.error('Error loading AIPI widget configuration:', error);
       // Continue with default settings
+    }
+  }
+  
+  // Función para extraer el contenido del sitio
+  function scanCurrentPageContent() {
+    try {
+      // Extraer título de la página
+      pageTitle = document.title || '';
+      
+      // Extraer metadescription si existe
+      let metaDescription = '';
+      const metaDescriptionTag = document.querySelector('meta[name="description"]');
+      if (metaDescriptionTag) {
+        metaDescription = metaDescriptionTag.getAttribute('content') || '';
+      }
+      
+      // Extraer encabezados H1 y H2 para entender la estructura
+      const headings = [];
+      document.querySelectorAll('h1, h2').forEach(heading => {
+        const text = heading.textContent.trim();
+        if (text) {
+          headings.push(`${heading.tagName}: ${text}`);
+        }
+      });
+      
+      // Extraer contenido principal
+      let mainContent = '';
+      
+      // Lista de selectores para contenido principal, ordenados por especificidad
+      const mainSelectors = [
+        // Selectores comunes de contenido principal
+        'main', 'article', '[role="main"]', '.main-content', '#main-content', 
+        // Selectores específicos de gestores de contenido
+        '.post-content', '.entry-content', '.article-content', '.page-content',
+        // Selectores más generales
+        '.content', '#content'
+      ];
+      
+      // Intentar obtener el contenido principal con selectores comunes
+      for (const selector of mainSelectors) {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length > 0) {
+          // Si hay múltiples elementos, concatenarlos (pero evitar duplicados)
+          const contents = [];
+          elements.forEach(el => {
+            // Hacer una copia para no modificar el DOM real
+            const clone = el.cloneNode(true);
+            
+            // Eliminar elementos no deseados dentro del contenido principal
+            const unwanted = clone.querySelectorAll('script, style, iframe, nav, aside, .comment, .comments, .sidebar, .widget, .ad, .ads, .advertisement');
+            unwanted.forEach(unwantedEl => unwantedEl.remove());
+            
+            contents.push(clone.textContent.trim());
+          });
+          
+          // Unir contenidos y eliminar duplicados
+          mainContent = Array.from(new Set(contents)).join('\n\n');
+          break;
+        }
+      }
+      
+      // Si no se encontró contenido con selectores comunes, extraer del body de forma selectiva
+      if (!mainContent) {
+        // Crear una copia del body para manipular
+        const bodyClone = document.body.cloneNode(true);
+        
+        // Eliminar todos los elementos no deseados
+        const elementsToRemove = bodyClone.querySelectorAll(
+          'script, style, link, meta, noscript, iframe, ' + 
+          'nav, footer, header, aside, ' + 
+          '[role="banner"], [role="navigation"], [role="complementary"], [role="contentinfo"], ' +
+          '.sidebar, #sidebar, .footer, #footer, .header, #header, ' + 
+          '.navigation, #navigation, .menu, #menu, ' +
+          '.comment, .comments, #comments, ' +
+          '.widget, .widgets, ' +
+          '.ad, .ads, .advertisement, [class*="cookie"], [id*="cookie"], ' +
+          '.social, .share, .newsletter'
+        );
+        
+        elementsToRemove.forEach(el => el.remove());
+        
+        // Obtener párrafos significativos (con suficiente texto)
+        const paragraphs = [];
+        bodyClone.querySelectorAll('p').forEach(p => {
+          const text = p.textContent.trim();
+          // Solo incluir párrafos con al menos 100 caracteres
+          if (text.length > 100) {
+            paragraphs.push(text);
+          }
+        });
+        
+        if (paragraphs.length > 0) {
+          // Si hay párrafos significativos, usarlos como contenido
+          mainContent = paragraphs.join('\n\n');
+        } else {
+          // En último caso, usar todo el texto del body limpio
+          mainContent = bodyClone.textContent.trim();
+        }
+      }
+      
+      // Limpiar el texto (eliminar espacios extras, líneas vacías, etc.)
+      mainContent = mainContent
+        .replace(/\s+/g, ' ')
+        .replace(/\n\s*\n/g, '\n\n')
+        .trim();
+      
+      // Limitar el tamaño para evitar problemas con peticiones demasiado grandes
+      // (limitar a ~8000 caracteres)
+      if (mainContent.length > 8000) {
+        mainContent = mainContent.substring(0, 8000) + '... [contenido truncado]';
+      }
+      
+      // Guardar el contenido estructurado
+      currentPageContent = `
+Título: ${pageTitle}
+URL: ${window.location.href}
+${metaDescription ? `Descripción: ${metaDescription}\n` : ''}
+${headings.length > 0 ? `Estructura de la página:\n${headings.join('\n')}\n\n` : ''}
+Contenido principal:
+${mainContent}
+      `.trim();
+      
+      siteContentScanned = true;
+      console.log('AIPI: Contenido de la página escaneado con éxito');
+      // Para depuración, descomentar la siguiente línea:
+      // console.log('Contenido escaneado:', currentPageContent);
+    } catch (error) {
+      console.error('Error escaneando contenido de la página:', error);
+      
+      // En caso de error, intentar una versión simplificada
+      try {
+        pageTitle = document.title || '';
+        currentPageContent = `
+Título: ${pageTitle}
+URL: ${window.location.href}
+Contenido: [Error al extraer contenido detallado]
+        `.trim();
+        siteContentScanned = true;
+      } catch (fallbackError) {
+        console.error('Error completo al escanear contenido:', fallbackError);
+        siteContentScanned = false;
+      }
     }
   }
   
@@ -726,7 +874,12 @@
         body: JSON.stringify({
           conversationId: config.conversationId,
           content: message,
-          role: 'user'
+          role: 'user',
+          pageContext: siteContentScanned ? {
+            title: pageTitle,
+            url: window.location.href,
+            content: currentPageContent
+          } : undefined
         }),
       });
       
