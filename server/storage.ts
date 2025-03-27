@@ -1,7 +1,8 @@
 import { 
   User, InsertUser, Integration, InsertIntegration, 
   Conversation, InsertConversation, Message, InsertMessage,
-  Automation, InsertAutomation, Settings
+  Automation, InsertAutomation, Settings, InsertSettings,
+  SiteContent, InsertSiteContent
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -48,6 +49,13 @@ export interface IStorage {
     resolutionRate: number;
     averageResponseTime: number;
   }>;
+
+  // Site content methods
+  getSiteContent(integrationId: number): Promise<SiteContent[]>;
+  getSiteContentByUrl(integrationId: number, url: string): Promise<SiteContent | undefined>;
+  createSiteContent(content: InsertSiteContent): Promise<SiteContent>;
+  updateSiteContent(id: number, data: Partial<SiteContent>): Promise<SiteContent>;
+  deleteSiteContent(id: number): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -58,6 +66,7 @@ export class MemStorage implements IStorage {
   private messages: Map<number, Message>;
   private automations: Map<number, Automation>;
   private settings: Map<number, Settings>;
+  private siteContents: Map<number, SiteContent>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -65,6 +74,7 @@ export class MemStorage implements IStorage {
   private messageIdCounter: number;
   private automationIdCounter: number;
   private settingsIdCounter: number;
+  private siteContentIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -73,6 +83,7 @@ export class MemStorage implements IStorage {
     this.messages = new Map();
     this.automations = new Map();
     this.settings = new Map();
+    this.siteContents = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -80,6 +91,7 @@ export class MemStorage implements IStorage {
     this.messageIdCounter = 1;
     this.automationIdCounter = 1;
     this.settingsIdCounter = 1;
+    this.siteContentIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -449,6 +461,52 @@ export class MemStorage implements IStorage {
     };
     this.settings.set(id, newSettings);
     return newSettings;
+  }
+
+  // Site content methods
+  async getSiteContent(integrationId: number): Promise<SiteContent[]> {
+    return Array.from(this.siteContents.values())
+      .filter(content => content.integrationId === integrationId);
+  }
+
+  async getSiteContentByUrl(integrationId: number, url: string): Promise<SiteContent | undefined> {
+    return Array.from(this.siteContents.values())
+      .find(content => content.integrationId === integrationId && content.url === url);
+  }
+
+  async createSiteContent(content: InsertSiteContent): Promise<SiteContent> {
+    const id = this.siteContentIdCounter++;
+    const now = new Date();
+    
+    const newContent: SiteContent = {
+      ...content,
+      id,
+      lastUpdated: now,
+      createdAt: now
+    };
+    
+    this.siteContents.set(id, newContent);
+    return newContent;
+  }
+
+  async updateSiteContent(id: number, data: Partial<SiteContent>): Promise<SiteContent> {
+    const content = this.siteContents.get(id);
+    if (!content) {
+      throw new Error(`Site content with id ${id} not found`);
+    }
+
+    const updatedContent = {
+      ...content,
+      ...data,
+      lastUpdated: new Date()
+    };
+    
+    this.siteContents.set(id, updatedContent);
+    return updatedContent;
+  }
+
+  async deleteSiteContent(id: number): Promise<void> {
+    this.siteContents.delete(id);
   }
 
   // Dashboard methods

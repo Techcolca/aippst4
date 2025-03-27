@@ -9,9 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Loader, CheckCircle, AlertCircle } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw } from "lucide-react";
 
-// Definición de la interfaz para la integración
+// Definición de interfaces
 interface Integration {
   id: number;
   userId: number;
@@ -23,6 +24,15 @@ interface Integration {
   active: boolean;
   createdAt: string;
   visitorCount: number;
+}
+
+interface SiteContent {
+  id: number;
+  integrationId: number;
+  url: string;
+  title: string | null;
+  content: string;
+  lastUpdated: string | null;
 }
 
 export default function EditIntegration() {
@@ -37,6 +47,8 @@ export default function EditIntegration() {
     active: true
   });
   const [scriptExample, setScriptExample] = useState('');
+  const [isScrapingLoading, setIsScrapingLoading] = useState(false);
+  const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
   
   // Obtener datos de la integración
   const { data: integration, isLoading, error } = useQuery<Integration>({
@@ -79,8 +91,29 @@ export default function EditIntegration() {
       
       // Actualizar el script de ejemplo con la API Key
       setScriptExample(`<script src="https://api.aipi.example.com/widget.js?key=${integration.apiKey}"></script>`);
+      
+      // Cargar el contenido del sitio
+      loadSiteContent();
     }
   }, [integration]);
+  
+  // Función para cargar el contenido del sitio
+  const loadSiteContent = async () => {
+    if (!integration) return;
+    
+    try {
+      const response = await fetch(`/api/site-content/${integration.id}`);
+      if (!response.ok) {
+        throw new Error("Error al cargar el contenido del sitio");
+      }
+      
+      const data = await response.json();
+      setSiteContent(data);
+    } catch (error) {
+      console.error("Error cargando contenido:", error);
+      // No mostrar toast de error aquí para no interrumpir la experiencia del usuario
+    }
+  };
   
   // Manejar cambios en el formulario
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -286,6 +319,183 @@ export default function EditIntegration() {
                   <li>Guarda los cambios y actualiza tu sitio web.</li>
                   <li>El widget de chat aparecerá en la posición seleccionada.</li>
                 </ol>
+              </div>
+            </div>
+          </div>
+          
+          <Separator className="my-6" />
+          
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Entrenamiento con contenido del sitio</h3>
+            <div className="p-4 bg-muted/50 rounded-lg border">
+              <div className="flex flex-col space-y-4">
+                <div className="flex flex-col space-y-2">
+                  <Label htmlFor="websiteUrl">URL del sitio web para extraer contenido</Label>
+                  <div className="flex space-x-2">
+                    <Input
+                      id="websiteUrl"
+                      placeholder="https://ejemplo.com"
+                      className="flex-grow"
+                      defaultValue={formData.url}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="secondary"
+                      disabled={isScrapingLoading}
+                      onClick={async () => {
+                        const urlInput = document.getElementById('websiteUrl') as HTMLInputElement;
+                        const url = urlInput.value.trim();
+                        if (!url) {
+                          toast({
+                            title: "URL vacía",
+                            description: "Por favor, introduce una URL válida",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        
+                        if (!url.startsWith('http')) {
+                          toast({
+                            title: "URL inválida",
+                            description: "La URL debe comenzar con http:// o https://",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        
+                        try {
+                          setIsScrapingLoading(true);
+                          toast({
+                            title: "Iniciando extracción...",
+                            description: "El proceso puede tardar unos minutos",
+                          });
+                          
+                          const response = await fetch('/api/scrape', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              url,
+                              integrationId: integration?.id,
+                              maxPages: 5,
+                            }),
+                          });
+                          
+                          if (!response.ok) {
+                            const error = await response.json();
+                            throw new Error(error.message || 'Error al hacer extracción');
+                          }
+                          
+                          const data = await response.json();
+                          toast({
+                            title: "Extracción completada",
+                            description: `Se procesaron ${data.pagesProcessed} páginas y se guardó el contenido.`,
+                          });
+                          
+                          // Refrescar la lista de contenido
+                          loadSiteContent();
+                        } catch (error) {
+                          console.error("Error en extracción:", error);
+                          toast({
+                            title: "Error en extracción",
+                            description: error.message || "Ocurrió un error al procesar el sitio",
+                            variant: "destructive",
+                          });
+                        } finally {
+                          setIsScrapingLoading(false);
+                        }
+                      }}
+                    >
+                      {isScrapingLoading ? (
+                        <>
+                          <Loader className="w-4 h-4 mr-2 animate-spin" />
+                          Extrayendo...
+                        </>
+                      ) : "Extraer contenido"}
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Esta función analiza el contenido de tu sitio web para que el chat pueda responder preguntas sobre él.
+                  </p>
+                </div>
+                
+                <Separator className="my-2" />
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium">Contenido extraído</h4>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm"
+                      onClick={loadSiteContent}
+                      className="flex items-center"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-1" />
+                      Actualizar
+                    </Button>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto border rounded-md p-2">
+                    {siteContent && siteContent.length > 0 ? (
+                      <ul className="space-y-2">
+                        {siteContent.map((content) => (
+                          <li key={content.id} className="px-3 py-2 bg-background rounded-md shadow-sm">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1 pr-2 overflow-hidden">
+                                <p className="font-medium truncate">{content.title || "Sin título"}</p>
+                                <a 
+                                  href={content.url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-xs text-blue-500 hover:underline truncate block"
+                                >
+                                  {content.url}
+                                </a>
+                              </div>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-6 w-6 text-red-500 hover:text-red-700 flex-shrink-0"
+                                onClick={async () => {
+                                  try {
+                                    const response = await fetch(`/api/site-content/${content.id}`, {
+                                      method: 'DELETE',
+                                    });
+                                    
+                                    if (!response.ok) {
+                                      throw new Error('Error al eliminar el contenido');
+                                    }
+                                    
+                                    toast({
+                                      title: "Contenido eliminado",
+                                      description: "El contenido se ha eliminado correctamente",
+                                    });
+                                    
+                                    // Refrescar la lista
+                                    loadSiteContent();
+                                  } catch (error) {
+                                    toast({
+                                      title: "Error",
+                                      description: "No se pudo eliminar el contenido",
+                                      variant: "destructive",
+                                    });
+                                  }
+                                }}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-center py-4 text-muted-foreground">
+                        No hay contenido extraído. Utiliza el botón "Extraer contenido" para analizar tu sitio web.
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>

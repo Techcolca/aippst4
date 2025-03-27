@@ -4,10 +4,11 @@ import { storage } from "./storage";
 import { verifyToken } from "./middleware/auth";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
+import { webscraper } from "./lib/webscraper";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { insertUserSchema, insertIntegrationSchema, insertMessageSchema } from "@shared/schema";
+import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema } from "@shared/schema";
 import fs from "fs";
 import path from "path";
 
@@ -312,6 +313,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ================ Site Content Routes ================
+  // Ruta para scraping de sitio web
+  app.post("/api/scrape", verifyToken, async (req, res) => {
+    try {
+      const { url, integrationId, maxPages } = req.body;
+      
+      if (!url || !integrationId) {
+        return res.status(400).json({ message: "URL and integrationId are required" });
+      }
+      
+      // Verificar que la integración existe y pertenece al usuario
+      const integration = await storage.getIntegration(parseInt(integrationId));
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      console.log(`Iniciando scraping de sitio web: ${url} para integrationId: ${integrationId}`);
+      
+      // Realizar el scraping
+      const scrapedData = await webscraper.scrapeSite(url, maxPages || 5);
+      
+      // Guardar el contenido extraído en la base de datos
+      const savedContent = [];
+      
+      for (const pageContent of scrapedData.pages) {
+        // Verificar si ya existe contenido para esta URL
+        const existingContent = await storage.getSiteContentByUrl(integration.id, pageContent.url);
+        
+        if (existingContent) {
+          // Actualizar contenido existente
+          const updatedContent = await storage.updateSiteContent(existingContent.id, {
+            content: pageContent.content,
+            title: pageContent.title,
+            lastUpdated: new Date()
+          });
+          savedContent.push(updatedContent);
+        } else {
+          // Crear nuevo contenido
+          const newContent = await storage.createSiteContent({
+            url: pageContent.url,
+            content: pageContent.content,
+            title: pageContent.title,
+            integrationId: integration.id
+          });
+          savedContent.push(newContent);
+        }
+      }
+      
+      res.json({
+        message: "Scraping completado con éxito",
+        pagesProcessed: scrapedData.pagesProcessed,
+        savedContent
+      });
+    } catch (error) {
+      console.error("Error in scraping:", error);
+      res.status(500).json({ 
+        message: "Error durante el scraping del sitio", 
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  // Obtener todo el contenido del sitio para una integración
+  app.get("/api/site-content/:integrationId", verifyToken, async (req, res) => {
+    try {
+      const integrationId = parseInt(req.params.integrationId);
+      
+      if (isNaN(integrationId)) {
+        return res.status(400).json({ message: "Invalid integration ID" });
+      }
+      
+      // Verificar que la integración existe y pertenece al usuario
+      const integration = await storage.getIntegration(integrationId);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      const content = await storage.getSiteContent(integrationId);
+      res.json(content);
+    } catch (error) {
+      console.error("Error getting site content:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Eliminar contenido del sitio por ID
+  app.delete("/api/site-content/:id", verifyToken, async (req, res) => {
+    try {
+      const contentId = parseInt(req.params.id);
+      
+      if (isNaN(contentId)) {
+        return res.status(400).json({ message: "Invalid content ID" });
+      }
+      
+      // Verificar que el contenido existe
+      const content = await storage.updateSiteContent(contentId, {});
+      if (!content) {
+        return res.status(404).json({ message: "Content not found" });
+      }
+      
+      // Verificar que la integración pertenece al usuario
+      const integration = await storage.getIntegration(content.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      await storage.deleteSiteContent(contentId);
+      res.json({ message: "Content deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting site content:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // ================ OpenAI Routes ================
   app.post("/api/openai/completion", async (req, res) => {
     try {
@@ -449,9 +572,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Get conversation messages
         const messages = await storage.getConversationMessages(conversationId);
         
+        // Get site content for context
+        let context = "";
+        const siteContent = await storage.getSiteContent(integration.id);
+        
+        if (siteContent && siteContent.length > 0) {
+          // Limitar la cantidad de contenido para no exceder tokens de OpenAI
+          const combinedContent = siteContent
+            .map(page => `Página: ${page.url}\nTítulo: ${page.title || 'Sin título'}\n${page.content}`)
+            .join('\n\n')
+            .slice(0, 10000); // Limitar a ~10k caracteres
+            
+          context = `Información del sitio web:\n${combinedContent}\n\nResponde usando esta información cuando sea relevante.`;
+        }
+        
+        console.log(`Generando respuesta con ${context ? 'contexto del sitio web' : 'sin contexto del sitio'}`);
+        
         // Generate AI response
         const completion = await generateChatCompletion(
-          messages.map(msg => ({ role: msg.role, content: msg.content }))
+          messages.map(msg => ({ role: msg.role, content: msg.content })),
+          context
         );
         
         // Save AI response

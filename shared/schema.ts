@@ -132,3 +132,23 @@ export type InsertAutomation = z.infer<typeof insertAutomationSchema>;
 
 export type Settings = typeof settings.$inferSelect;
 export type InsertSettings = z.infer<typeof insertSettingsSchema>;
+
+// Tabla para almacenar información del sitio web scrapeado
+export const sitesContent = pgTable("sites_content", {
+  id: serial("id").primaryKey(),
+  integrationId: integer("integration_id").notNull().references(() => integrations.id, { onDelete: "cascade" }),
+  url: text("url").notNull(),
+  title: text("title"),
+  content: text("content").notNull(),
+  lastUpdated: timestamp("last_updated").defaultNow(),
+});
+
+export const insertSitesContentSchema = createInsertSchema(sitesContent).pick({
+  integrationId: true,
+  url: true,
+  title: true,
+  content: true,
+});
+
+export type SiteContent = typeof sitesContent.$inferSelect;
+export type InsertSiteContent = z.infer<typeof insertSitesContentSchema>;

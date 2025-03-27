@@ -5,7 +5,8 @@ import {
   User, InsertUser, Integration, InsertIntegration, 
   Conversation, InsertConversation, Message, InsertMessage,
   Automation, InsertAutomation, Settings, InsertSettings,
-  users, integrations, conversations, messages, automations, settings
+  SiteContent, InsertSiteContent,
+  users, integrations, conversations, messages, automations, settings, sitesContent
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -158,6 +159,47 @@ export class PgStorage implements IStorage {
       .values(settingsData)
       .returning();
     return result[0];
+  }
+
+  // Site content methods
+  async getSiteContent(integrationId: number): Promise<SiteContent[]> {
+    return await db.select()
+      .from(sitesContent)
+      .where(eq(sitesContent.integrationId, integrationId));
+  }
+
+  async getSiteContentByUrl(integrationId: number, url: string): Promise<SiteContent | undefined> {
+    const result = await db.select()
+      .from(sitesContent)
+      .where(
+        and(
+          eq(sitesContent.integrationId, integrationId),
+          eq(sitesContent.url, url)
+        )
+      )
+      .limit(1);
+    return result[0];
+  }
+
+  async createSiteContent(content: InsertSiteContent): Promise<SiteContent> {
+    const result = await db.insert(sitesContent)
+      .values(content)
+      .returning();
+    return result[0];
+  }
+
+  async updateSiteContent(id: number, data: Partial<SiteContent>): Promise<SiteContent> {
+    const now = new Date();
+    const result = await db.update(sitesContent)
+      .set({ ...data, lastUpdated: now })
+      .where(eq(sitesContent.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteSiteContent(id: number): Promise<void> {
+    await db.delete(sitesContent)
+      .where(eq(sitesContent.id, id));
   }
 
   // Dashboard methods
