@@ -22,28 +22,51 @@ export default function IntegrationPerformanceChart({ data, loading = false }: I
   // Componente de tooltip personalizado
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
+      // Obtener el objeto de datos completo desde el primer elemento del payload
+      // (todos los elementos del payload tienen acceso al objeto de datos completo)
+      const dataItem = payload[0]?.payload;
+      
       return (
         <div className="bg-white dark:bg-gray-900 p-3 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg">
           <p className="font-medium">{label}</p>
           <div className="mt-2 space-y-1">
-            <p className="text-sm">
-              <span style={{ color: "#3b82f6" }}>●</span>
-              <span className="ml-1">Tiempo de respuesta: </span>
-              <span className="font-semibold">{payload[0].value}s</span>
-            </p>
-            <p className="text-sm">
-              <span style={{ color: "#10b981" }}>●</span>
-              <span className="ml-1">Tasa de resolución: </span>
-              <span className="font-semibold">{payload[1].value}%</span>
-            </p>
-            <p className="text-sm">
-              <span style={{ color: "#f59e0b" }}>●</span>
-              <span className="ml-1">Satisfacción: </span>
-              <span className="font-semibold">{payload[2].value}%</span>
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              Conversaciones: {payload[3].payload.conversationCount}
-            </p>
+            {payload.map((entry: any, index: number) => {
+              // Solo mostrar los items que están en el payload actual (los que mouseover activa)
+              if (!entry) return null;
+              
+              let color = "#3b82f6"; // default color
+              let label = "Tiempo de respuesta";
+              let unit = "s";
+              
+              if (entry.dataKey === "responseTime") {
+                color = "#3b82f6";
+                label = "Tiempo de respuesta";
+                unit = "s";
+              } else if (entry.dataKey === "resolutionRate") {
+                color = "#10b981";
+                label = "Tasa de resolución";
+                unit = "%";
+              } else if (entry.dataKey === "satisfaction") {
+                color = "#f59e0b";
+                label = "Satisfacción";
+                unit = "%";
+              }
+              
+              return (
+                <p key={index} className="text-sm">
+                  <span style={{ color }}>●</span>
+                  <span className="ml-1">{label}: </span>
+                  <span className="font-semibold">{entry.value}{unit}</span>
+                </p>
+              );
+            })}
+            
+            {/* Mostrar el número de conversaciones, asegurándonos de que dataItem existe */}
+            {dataItem && (
+              <p className="text-sm text-gray-500 mt-1">
+                Conversaciones: {dataItem.conversationCount}
+              </p>
+            )}
           </div>
         </div>
       );
