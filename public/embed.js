@@ -38,9 +38,21 @@
     const urlParams = new URLSearchParams(scriptSrc.split('?')[1]);
     config.apiKey = urlParams.get('key');
     
-    // Extract server URL from script src
-    const scriptUrl = new URL(scriptSrc);
-    config.serverUrl = `${scriptUrl.protocol}//${scriptUrl.hostname}${scriptUrl.port ? ':' + scriptUrl.port : ''}`;
+    // Extract server URL from script src safely
+    try {
+      const scriptUrl = new URL(scriptSrc);
+      config.serverUrl = `${scriptUrl.protocol}//${scriptUrl.hostname}${scriptUrl.port ? ':' + scriptUrl.port : ''}`;
+    } catch (error) {
+      console.warn("Error parsing script URL, falling back to default");
+      // Extract domain from script src using regex as fallback
+      const domainMatch = scriptSrc.match(/https?:\/\/([^\/]+)/);
+      if (domainMatch && domainMatch[0]) {
+        config.serverUrl = domainMatch[0];
+      } else {
+        // Hard fallback to the known Replit URL
+        config.serverUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
+      }
+    }
     
     // Generate visitor ID if not exists
     if (!localStorage.getItem('aipi_visitor_id')) {
@@ -718,27 +730,37 @@
         }),
       });
       
+      // Hide typing indicator
+      showTypingIndicator(false);
+      
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        // Show friendly error message in chat
+        if (response.status === 500) {
+          addMessage("Lo siento, hay un problema temporal con el servicio. Por favor, intenta de nuevo más tarde o contacta con soporte si el problema persiste.", 'assistant');
+        } else {
+          addMessage("Lo siento, no pude procesar tu mensaje. Por favor, intenta de nuevo.", 'assistant');
+        }
+        throw new Error(`Failed to send message: ${response.status}`);
       }
       
       const data = await response.json();
       
-      // Hide typing indicator
-      showTypingIndicator(false);
-      
       // Add AI response to UI
       if (data.aiMessage) {
         addMessage(data.aiMessage.content, 'assistant');
+      } else {
+        addMessage("Recibí tu mensaje, pero no pude generar una respuesta en este momento.", 'assistant');
       }
     } catch (error) {
       console.error('Error sending message:', error);
       
-      // Hide typing indicator
+      // Hide typing indicator if still showing
       showTypingIndicator(false);
       
-      // Show error message
-      addMessage('Sorry, I encountered an error. Please try again.', 'assistant');
+      // Only add error message if one hasn't been added already
+      if (!document.querySelector('.aipi-assistant-message:last-child')) {
+        addMessage("Lo siento, hay un problema de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.", 'assistant');
+      }
     }
   }
   
