@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import AutomationCard from "./automation-card";
 import IntegrationCard from "./integration-card";
@@ -912,22 +913,49 @@ export default function DashboardTabs() {
                 </div>
                 
                 <div>
-                  <Label htmlFor="knowledge-base">Knowledge Base</Label>
-                  <div className="flex">
-                    <Select defaultValue={settings?.knowledgeBase || "default"}>
-                      <SelectTrigger id="knowledge-base" className="flex-1">
-                        <SelectValue placeholder="Select a knowledge base" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="default">Default (Website Content)</SelectItem>
-                        <SelectItem value="product">Product Documentation</SelectItem>
-                        <SelectItem value="support">Support Knowledge Base</SelectItem>
-                        <SelectItem value="custom">Custom Data Source</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Button variant="outline" className="ml-2">
-                      Manage
-                    </Button>
+                  <Label className="mb-2 block">Knowledge Base</Label>
+                  <div className="space-y-2 bg-gray-50 dark:bg-gray-900 p-3 rounded-md">
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id="kb-default" 
+                        defaultChecked={settings?.knowledgeBase?.includes('default') || true}
+                      />
+                      <Label htmlFor="kb-default" className="ml-2 cursor-pointer">
+                        Default (Website Content)
+                      </Label>
+                    </div>
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id="kb-product" 
+                        defaultChecked={settings?.knowledgeBase?.includes('product') || false}
+                      />
+                      <Label htmlFor="kb-product" className="ml-2 cursor-pointer">
+                        Product Documentation
+                      </Label>
+                    </div>
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id="kb-support" 
+                        defaultChecked={settings?.knowledgeBase?.includes('support') || false}
+                      />
+                      <Label htmlFor="kb-support" className="ml-2 cursor-pointer">
+                        Support Knowledge Base
+                      </Label>
+                    </div>
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id="kb-custom" 
+                        defaultChecked={settings?.knowledgeBase?.includes('custom') || false}
+                      />
+                      <Label htmlFor="kb-custom" className="ml-2 cursor-pointer">
+                        Custom Data Source
+                      </Label>
+                    </div>
+                    <div className="pt-2 flex justify-end">
+                      <Button variant="outline" size="sm">
+                        Manage Sources
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 
