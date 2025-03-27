@@ -12,6 +12,11 @@ import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertS
 import fs from "fs";
 import path from "path";
 import multer from "multer";
+import { fileURLToPath } from 'url';
+
+// Obtener el equivalente a __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Configurar multer para manejar subida de archivos
 const upload = multer({
