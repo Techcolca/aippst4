@@ -24,8 +24,11 @@ export default function DashboardTabs() {
     url: "",
     themeColor: "#3B82F6",
     position: "bottom-right",
-    apiKey: ""
+    apiKey: "",
+    botBehavior: "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
   });
+  
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   
   // Estados para el modal de conversación
   const [isConversationModalOpen, setIsConversationModalOpen] = useState(false);
@@ -103,8 +106,10 @@ export default function DashboardTabs() {
         url: "",
         themeColor: "#3B82F6",
         position: "bottom-right",
-        apiKey: ""
+        apiKey: "",
+        botBehavior: "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
       });
+      setSelectedFiles([]);
     },
     onError: (error) => {
       toast({
@@ -128,12 +133,19 @@ export default function DashboardTabs() {
   };
   
   // Manejadores de cambios para los campos del formulario
-  const handleIntegrationFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIntegrationFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewIntegration(prev => ({
       ...prev,
       [name]: value
     }));
+  };
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const fileList = Array.from(e.target.files);
+      setSelectedFiles(fileList);
+    }
   };
   
   const handleThemeColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,14 +196,68 @@ export default function DashboardTabs() {
       apiKey: apiKey
     });
     
-    // Crear la integración con los datos del formulario y la API key generada
-    // Omitimos active ya que es un valor por defecto en el esquema
-    createIntegrationMutation.mutate({
-      name: newIntegration.name,
-      url: newIntegration.url,
-      themeColor: newIntegration.themeColor,
-      position: newIntegration.position,
-      apiKey: apiKey
+    // Preparar los datos de la integración
+    const formData = new FormData();
+    formData.append('name', newIntegration.name);
+    formData.append('url', newIntegration.url);
+    formData.append('themeColor', newIntegration.themeColor);
+    formData.append('position', newIntegration.position);
+    formData.append('apiKey', apiKey);
+    formData.append('botBehavior', newIntegration.botBehavior);
+    
+    // Añadir archivos si fueron seleccionados
+    selectedFiles.forEach(file => {
+      formData.append('documents', file);
+    });
+    
+    // Enviar formData con archivos
+    // Como estamos usando FormData, debemos usar fetch directamente en lugar de la mutación
+    // Mostramos un estado de carga
+    toast({
+      title: "Creando integración",
+      description: "Espere mientras se crea la integración...",
+    });
+    
+    fetch('/api/integrations', {
+      method: 'POST',
+      body: formData,
+      // No establecemos Content-Type para que el navegador lo haga automáticamente con el boundary correcto
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al crear la integración');
+      }
+      return response.json();
+    })
+    .then(data => {
+      // Éxito: invalidar caché y mostrar mensaje
+      queryClient.invalidateQueries({ queryKey: ["/api/integrations"] });
+      
+      toast({
+        title: "Integración creada",
+        description: "La integración ha sido creada exitosamente",
+      });
+      
+      // Reiniciar el formulario
+      setApiKey("");
+      setScriptExample('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');
+      setNewIntegration({
+        name: "",
+        url: "",
+        themeColor: "#3B82F6",
+        position: "bottom-right",
+        apiKey: "",
+        botBehavior: "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
+      });
+      setSelectedFiles([]);
+    })
+    .catch(error => {
+      console.error('Error en la creación de integración:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo crear la integración. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
     });
   };
   
@@ -653,13 +719,61 @@ export default function DashboardTabs() {
               </div>
             </div>
             
+            <div className="mb-6">
+              <h4 className="text-md font-medium mb-2">Comportamiento del Chatbot</h4>
+              <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-md">
+                <Label htmlFor="botBehavior">Comportamiento y Personalidad</Label>
+                <Textarea 
+                  id="botBehavior" 
+                  name="botBehavior" 
+                  value={newIntegration.botBehavior}
+                  onChange={handleIntegrationFormChange}
+                  placeholder="Define cómo debe comportarse el chatbot. Por ejemplo: Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
+                  className="mt-1 text-sm bg-white dark:bg-gray-800 min-h-[100px]"
+                />
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Define la personalidad y comportamiento del chatbot. Esta descripción guiará las respuestas del AI.
+                </p>
+              </div>
+            </div>
+            
+            <div className="mb-6">
+              <h4 className="text-md font-medium mb-2">Documentos de Conocimiento</h4>
+              <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-md">
+                <Label htmlFor="documents">Subir Documentos</Label>
+                <div className="mt-1">
+                  <Input 
+                    type="file" 
+                    id="documents" 
+                    name="documents" 
+                    multiple
+                    onChange={handleFileChange}
+                    className="bg-white dark:bg-gray-800"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.txt"
+                  />
+                </div>
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Sube documentos (PDF, DOCX, Excel, TXT) para mejorar el conocimiento del chatbot sobre tu negocio.
+                </p>
+                {selectedFiles.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Archivos seleccionados:</p>
+                    <ul className="mt-1 list-disc list-inside text-xs text-gray-600 dark:text-gray-400">
+                      {selectedFiles.map((file, index) => (
+                        <li key={index}>{file.name} ({Math.round(file.size / 1024)} KB)</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+            
             <div className="flex justify-end mt-8">
               <Button 
                 type="submit" 
                 className="bg-primary-600 hover:bg-primary-700 text-white"
-                disabled={createIntegrationMutation.isPending}
               >
-                {createIntegrationMutation.isPending ? "Creando..." : "Crear Integración"}
+                Crear Integración
               </Button>
             </div>
           </form>

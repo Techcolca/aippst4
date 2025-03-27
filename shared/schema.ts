@@ -32,6 +32,8 @@ export const integrations = pgTable("integrations", {
   active: boolean("active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
   visitorCount: integer("visitor_count").default(0),
+  botBehavior: text("bot_behavior").default("Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."),
+  documentsData: json("documents_data").default([]), // Almacenará metadatos de los documentos subidos
 });
 
 export const insertIntegrationSchema = createInsertSchema(integrations).pick({
@@ -40,6 +42,7 @@ export const insertIntegrationSchema = createInsertSchema(integrations).pick({
   url: true,
   themeColor: true,
   position: true,
+  botBehavior: true,
 });
 
 // Conversation schema

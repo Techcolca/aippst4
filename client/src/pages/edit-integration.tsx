@@ -10,7 +10,8 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw, Upload, File } from "lucide-react";
 
 // Definición de interfaces
 interface Integration {
@@ -24,6 +25,8 @@ interface Integration {
   active: boolean;
   createdAt: string;
   visitorCount: number;
+  botBehavior?: string;
+  documentsData?: any[];
 }
 
 interface SiteContent {
@@ -44,8 +47,10 @@ export default function EditIntegration() {
     url: "",
     themeColor: "#3B82F6",
     position: "bottom-right",
-    active: true
+    active: true,
+    botBehavior: ""
   });
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [scriptExample, setScriptExample] = useState('');
   const [isScrapingLoading, setIsScrapingLoading] = useState(false);
   const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
@@ -86,7 +91,8 @@ export default function EditIntegration() {
         url: integration.url || "",
         themeColor: integration.themeColor || "#3B82F6",
         position: integration.position || "bottom-right",
-        active: integration.active
+        active: integration.active,
+        botBehavior: integration.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
       });
       
       // Actualizar el script de ejemplo con la API Key
@@ -116,7 +122,7 @@ export default function EditIntegration() {
   };
   
   // Manejar cambios en el formulario
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -261,6 +267,21 @@ export default function EditIntegration() {
                 />
                 <Label htmlFor="active">Integración activa</Label>
               </div>
+              
+              <div>
+                <Label htmlFor="botBehavior">Comportamiento del chatbot</Label>
+                <Textarea
+                  id="botBehavior"
+                  name="botBehavior"
+                  placeholder="Ejemplo: Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
+                  value={formData.botBehavior}
+                  onChange={handleInputChange}
+                  className="min-h-24"
+                />
+                <p className="text-sm text-muted-foreground mt-1">
+                  Define la personalidad y el comportamiento del chatbot. Sea formal, amigable, profesional, etc.
+                </p>
+              </div>
             </div>
             
             <div className="space-y-4">
@@ -319,6 +340,158 @@ export default function EditIntegration() {
                   <li>Guarda los cambios y actualiza tu sitio web.</li>
                   <li>El widget de chat aparecerá en la posición seleccionada.</li>
                 </ol>
+              </div>
+            </div>
+          </div>
+          
+          <Separator className="my-6" />
+          
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Subir documentos adicionales</h3>
+            <div className="p-4 bg-muted/50 rounded-lg border">
+              <div className="flex flex-col space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Sube documentos (PDF, DOCX, Excel) para entrenar al chatbot con información adicional que no está en tu sitio web.
+                </p>
+                
+                <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center">
+                  <div className="flex flex-col items-center space-y-2">
+                    <Upload className="h-8 w-8 text-muted-foreground" />
+                    <h4 className="font-medium">Selecciona archivos para subir</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Arrastra archivos aquí o haz clic para seleccionarlos
+                    </p>
+                    <Input
+                      type="file"
+                      multiple
+                      className="hidden"
+                      id="document-upload"
+                      accept=".pdf,.docx,.xlsx,.xls,.doc,.txt"
+                      onChange={(e) => setSelectedFiles(e.target.files)}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('document-upload')?.click()}
+                    >
+                      Seleccionar archivos
+                    </Button>
+                  </div>
+                </div>
+                
+                {selectedFiles && selectedFiles.length > 0 && (
+                  <div className="space-y-2 mt-4">
+                    <h4 className="font-medium">Archivos seleccionados:</h4>
+                    <ul className="space-y-2">
+                      {Array.from(selectedFiles).map((file, index) => (
+                        <li key={index} className="flex items-center bg-background p-2 rounded-md">
+                          <File className="h-4 w-4 mr-2 text-blue-500" />
+                          <span className="text-sm truncate">{file.name}</span>
+                          <span className="text-xs text-muted-foreground ml-2">
+                            ({Math.round(file.size / 1024)} KB)
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex justify-end mt-2">
+                      <Button
+                        type="button"
+                        onClick={async () => {
+                          if (!selectedFiles || !integration) return;
+                          
+                          const formData = new FormData();
+                          Array.from(selectedFiles).forEach(file => {
+                            formData.append('documents', file);
+                          });
+                          formData.append('integrationId', integration.id.toString());
+                          
+                          try {
+                            const response = await fetch('/api/documents/upload', {
+                              method: 'POST',
+                              body: formData,
+                            });
+                            
+                            if (!response.ok) {
+                              throw new Error('Error al subir los documentos');
+                            }
+                            
+                            toast({
+                              title: "Documentos subidos",
+                              description: "Los documentos se han subido correctamente",
+                            });
+                            
+                            setSelectedFiles(null);
+                            
+                            // Refrescar los datos de la integración
+                            queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+                          } catch (err) {
+                            console.error("Error al subir documentos:", err);
+                            toast({
+                              title: "Error",
+                              description: "No se pudieron subir los documentos. Inténtalo de nuevo.",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                      >
+                        Subir documentos
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                
+                {integration?.documentsData && integration.documentsData.length > 0 && (
+                  <div className="space-y-2 mt-4">
+                    <h4 className="font-medium">Documentos subidos:</h4>
+                    <ul className="space-y-2">
+                      {integration.documentsData.map((doc, index) => (
+                        <li key={index} className="flex items-center justify-between bg-background p-2 rounded-md">
+                          <div className="flex items-center">
+                            <File className="h-4 w-4 mr-2 text-blue-500" />
+                            <span className="text-sm truncate">{doc.filename}</span>
+                            <span className="text-xs text-muted-foreground ml-2">
+                              ({Math.round(doc.size / 1024)} KB)
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 text-red-500 hover:text-red-700"
+                            onClick={async () => {
+                              try {
+                                const response = await fetch(`/api/documents/${doc.id}`, {
+                                  method: 'DELETE',
+                                });
+                                
+                                if (!response.ok) {
+                                  throw new Error('Error al eliminar el documento');
+                                }
+                                
+                                toast({
+                                  title: "Documento eliminado",
+                                  description: "El documento se ha eliminado correctamente",
+                                });
+                                
+                                // Refrescar los datos de la integración
+                                queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+                              } catch (err) {
+                                console.error("Error al eliminar documento:", err);
+                                toast({
+                                  title: "Error",
+                                  description: "No se pudo eliminar el documento",
+                                  variant: "destructive",
+                                });
+                              }
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -395,11 +568,11 @@ export default function EditIntegration() {
                           
                           // Refrescar la lista de contenido
                           loadSiteContent();
-                        } catch (error) {
-                          console.error("Error en extracción:", error);
+                        } catch (err: any) {
+                          console.error("Error en extracción:", err);
                           toast({
                             title: "Error en extracción",
-                            description: error.message || "Ocurrió un error al procesar el sitio",
+                            description: err.message || "Ocurrió un error al procesar el sitio",
                             variant: "destructive",
                           });
                         } finally {
@@ -474,7 +647,8 @@ export default function EditIntegration() {
                                     
                                     // Refrescar la lista
                                     loadSiteContent();
-                                  } catch (error) {
+                                  } catch (err) {
+                                    console.error("Error al eliminar contenido:", err);
                                     toast({
                                       title: "Error",
                                       description: "No se pudo eliminar el contenido",

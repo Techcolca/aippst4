@@ -11,6 +11,47 @@ import { z } from "zod";
 import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema } from "@shared/schema";
 import fs from "fs";
 import path from "path";
+import multer from "multer";
+
+// Configurar multer para manejar subida de archivos
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      // Crear carpeta uploads si no existe
+      const uploadsDir = path.join(__dirname, '../uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+      // Generar nombre único para evitar colisiones
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+  }),
+  // Limitar tipos de archivos aceptados
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/plain'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Tipo de archivo no soportado. Solo se permiten PDF, DOCX, Excel y TXT.'));
+    }
+  },
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Limitar a 10MB por archivo
+  }
+});
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_jwt_secret";
 
@@ -188,7 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/integrations", verifyToken, async (req, res) => {
+  app.post("/api/integrations", verifyToken, upload.array('documents'), async (req, res) => {
     try {
       console.log("Create integration request body:", req.body);
       console.log("User ID from token:", req.userId);
@@ -203,14 +244,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         themeColor: req.body.themeColor || "#3B82F6",
         position: req.body.position || "bottom-right",
         userId: req.userId,
+        botBehavior: req.body.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
       };
       
       console.log("Cleaned integration data:", integrationData);
       
-      // Creamos la integración
+      // Preparar la información de los documentos subidos (si hay)
+      const uploadedFiles = req.files as Express.Multer.File[];
+      const documentsData = uploadedFiles ? uploadedFiles.map(file => ({
+        filename: file.filename,
+        originalName: file.originalname,
+        path: file.path,
+        size: file.size,
+        mimetype: file.mimetype,
+        uploadedAt: new Date()
+      })) : [];
+      
+      console.log("Documentos subidos:", documentsData.length);
+      
+      // Creamos la integración con los datos del formulario y información de documentos
       const integration = await storage.createIntegration({
         ...integrationData,
         apiKey: apiKey,
+        documentsData: documentsData
       });
       
       console.log("Integration created successfully:", integration);
@@ -218,6 +274,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(integration);
     } catch (error) {
       console.error("Create integration error:", error);
+      
+      // Si hubo un error, intentar eliminar archivos subidos para no dejar basura
+      try {
+        const uploadedFiles = req.files as Express.Multer.File[];
+        if (uploadedFiles && uploadedFiles.length > 0) {
+          uploadedFiles.forEach(file => {
+            fs.unlinkSync(file.path);
+            console.log(`Archivo temporal eliminado: ${file.path}`);
+          });
+        }
+      } catch (cleanupError) {
+        console.error("Error al limpiar archivos temporales:", cleanupError);
+      }
+      
       // Proporcionar más detalles sobre el error para depuración
       if (error instanceof Error) {
         res.status(400).json({ 
@@ -503,7 +573,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Return widget configuration
       res.json({
-        integration,
+        integration: {
+          id: integration.id,
+          name: integration.name,
+          url: integration.url,
+          themeColor: integration.themeColor,
+          position: integration.position,
+          active: integration.active,
+          visitorCount: integration.visitorCount,
+          botBehavior: integration.botBehavior,
+          // No enviamos datos sensibles como userId o apiKey al cliente
+        },
         settings: {
           assistantName: settings.assistantName,
           defaultGreeting: settings.defaultGreeting,
@@ -622,6 +702,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               
             context = `Información del sitio web:\n${combinedContent}\n\nResponde usando esta información cuando sea relevante.`;
           }
+        }
+        
+        // Agregar comportamiento del bot al contexto, si existe
+        if (integration.botBehavior) {
+          const botBehaviorContext = `Instrucciones de comportamiento: ${integration.botBehavior}\n\n`;
+          context = botBehaviorContext + (context || '');
         }
         
         console.log(`Generando respuesta con ${context ? 'contexto del sitio web' : 'sin contexto del sitio'}`);
