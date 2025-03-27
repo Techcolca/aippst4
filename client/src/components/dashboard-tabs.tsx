@@ -415,10 +415,8 @@ export default function DashboardTabs() {
                     visitorCount={integration.visitorCount}
                     installedDate={new Date(integration.createdAt).toLocaleDateString()}
                     onEdit={() => {
-                      toast({
-                        title: "Edit integration",
-                        description: `Editing ${integration.name}`,
-                      });
+                      // Redireccionar a la página de edición
+                      window.location.href = `/integrations/${integration.id}/edit`;
                     }}
                     onViewAnalytics={() => {
                       toast({

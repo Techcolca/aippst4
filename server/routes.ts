@@ -230,6 +230,67 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Obtener una integración específica
+  app.get("/api/integrations/:id", verifyToken, async (req, res) => {
+    try {
+      const integrationId = parseInt(req.params.id);
+      if (isNaN(integrationId)) {
+        return res.status(400).json({ message: "Invalid integration ID" });
+      }
+      
+      const integration = await storage.getIntegration(integrationId);
+      
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Verificar que el usuario es el propietario de la integración
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      res.json(integration);
+    } catch (error) {
+      console.error("Get integration error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Actualizar una integración específica
+  app.patch("/api/integrations/:id", verifyToken, async (req, res) => {
+    try {
+      const integrationId = parseInt(req.params.id);
+      if (isNaN(integrationId)) {
+        return res.status(400).json({ message: "Invalid integration ID" });
+      }
+      
+      // Verificar que la integración existe
+      const integration = await storage.getIntegration(integrationId);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Verificar que el usuario es el propietario de la integración
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      // Actualizar los campos de la integración
+      const updatedIntegration = await storage.updateIntegration(integrationId, {
+        name: req.body.name,
+        url: req.body.url,
+        themeColor: req.body.themeColor,
+        position: req.body.position,
+        active: req.body.active
+      });
+      
+      res.json(updatedIntegration);
+    } catch (error) {
+      console.error("Update integration error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
   // ================ Settings Routes ================
   app.get("/api/settings", verifyToken, async (req, res) => {
     try {
