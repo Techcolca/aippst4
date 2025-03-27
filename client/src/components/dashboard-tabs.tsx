@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -18,6 +19,7 @@ import { useAuth } from "@/context/auth-context";
 export default function DashboardTabs() {
   const [activeTab, setActiveTab] = useState("automation");
   const [apiKey, setApiKey] = useState("");
+  const [, navigate] = useLocation();
   const [scriptExample, setScriptExample] = useState('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');
   const [newIntegration, setNewIntegration] = useState({
     name: "",
@@ -250,6 +252,12 @@ export default function DashboardTabs() {
         botBehavior: "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
       });
       setSelectedFiles([]);
+      
+      // Redirigir a la página de edición de la nueva integración
+      const newIntegrationId = data.id;
+      if (newIntegrationId) {
+        navigate(`/edit-integration/${newIntegrationId}`);
+      }
     })
     .catch(error => {
       console.error('Error en la creación de integración:', error);
@@ -564,7 +572,7 @@ export default function DashboardTabs() {
                     installedDate={new Date(integration.createdAt).toLocaleDateString()}
                     onEdit={() => {
                       // Redireccionar a la página de edición
-                      window.location.href = `/integrations/${integration.id}/edit`;
+                      navigate(`/edit-integration/${integration.id}`);
                     }}
                     onViewAnalytics={() => {
                       toast({
