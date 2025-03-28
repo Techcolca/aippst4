@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { verifyToken } from "./middleware/auth";
@@ -62,6 +63,11 @@ const upload = multer({
 const JWT_SECRET = process.env.JWT_SECRET || "default_jwt_secret";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Servir archivos estáticos desde la carpeta /static
+  const staticDir = path.join(__dirname, '../public/static');
+  console.log('Sirviendo archivos estáticos desde:', staticDir);
+  app.use('/static', express.static(staticDir));
+  
   // API routes
   const apiRouter = app.route("/api");
   
