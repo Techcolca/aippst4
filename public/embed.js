@@ -297,6 +297,26 @@ Contenido: [Error al extraer contenido detallado]
     // Agregar clase según el tipo de widget
     if (config.widgetType === 'fullscreen') {
       widgetInstance.classList.add('aipi-fullscreen-widget');
+      
+      // Crear botón de acceso flotante para modo pantalla completa
+      const fullscreenButton = document.createElement('div');
+      fullscreenButton.id = 'aipi-fullscreen-button';
+      fullscreenButton.innerHTML = `
+        <div class="aipi-fullscreen-button-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 16v-4"></path>
+            <path d="M12 8h.01"></path>
+          </svg>
+        </div>
+        <div class="aipi-fullscreen-button-text">AIPI Assistant</div>
+      `;
+      widgetInstance.appendChild(fullscreenButton);
+      
+      // Agregar evento para abrir el chat al hacer clic en el botón
+      fullscreenButton.addEventListener('click', () => {
+        openWidget();
+      });
     } else {
       widgetInstance.classList.add('aipi-bubble-widget');
     }
@@ -622,6 +642,47 @@ Contenido: [Error al extraer contenido detallado]
         transform: scale(1.05);
         background-color: ${adjustColor(config.themeColor, -20)};
       }
+      
+      /* Estilos para el botón de acceso en modo pantalla completa */
+      #aipi-fullscreen-button {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        background-color: ${config.themeColor};
+        color: white;
+        border-radius: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 999999;
+        font-family: ${getFontFamily()};
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      
+      #aipi-fullscreen-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .aipi-fullscreen-button-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 8px;
+      }
+      
+      .aipi-fullscreen-button-icon svg {
+        width: 20px;
+        height: 20px;
+        color: white;
+      }
+      
+      .aipi-fullscreen-button-text {
+        font-weight: 600;
+        font-size: 14px;
+      }
     `;
     document.head.appendChild(widgetStyles);
     
@@ -809,9 +870,15 @@ Contenido: [Error al extraer contenido detallado]
   function openWidget() {
     const chatPanel = document.getElementById('aipi-chat-panel');
     const toggleButton = document.getElementById('aipi-toggle-button');
+    const fullscreenButton = document.getElementById('aipi-fullscreen-button');
     
     // Para widgets tipo fullscreen, abrir siempre directamente
     if (config.widgetType === 'fullscreen') {
+      // Ocultar botón flotante cuando el chat está abierto
+      if (fullscreenButton) {
+        fullscreenButton.style.display = 'none';
+      }
+      
       chatPanel.style.display = 'flex';
       isOpen = true;
       
@@ -866,10 +933,17 @@ Contenido: [Error al extraer contenido detallado]
     const chatPanel = document.getElementById('aipi-chat-panel');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
     const toggleButton = document.getElementById('aipi-toggle-button');
+    const fullscreenButton = document.getElementById('aipi-fullscreen-button');
     
     // Para widgets tipo fullscreen, no permitir cerrar completamente
     if (config.widgetType === 'fullscreen') {
-      minimizeWidget();
+      // Mostrar el botón flotante nuevamente
+      if (fullscreenButton) {
+        fullscreenButton.style.display = 'flex';
+      }
+      
+      chatPanel.style.display = 'none';
+      isOpen = false;
       return;
     }
     
