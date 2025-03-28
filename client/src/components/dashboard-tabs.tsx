@@ -26,9 +26,17 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   
   // Update active tab if initialTab prop changes
   useEffect(() => {
-    // Transform initialTab if it's "profile" to "settings"
-    const tabToShow = initialTab === "profile" ? "settings" : initialTab;
-    setActiveTab(tabToShow);
+    // Always update the active tab when initialTab changes
+    if (initialTab === "profile") {
+      // For profile, we show settings tab but with profile content
+      setActiveTab("settings");
+    } else {
+      // For any other tab, show that tab directly
+      setActiveTab(initialTab);
+    }
+    
+    // Log for debugging
+    console.log(`initialTab changed to: ${initialTab}, setting activeTab to: ${initialTab === "profile" ? "settings" : initialTab}`);
   }, [initialTab]);
   
   const [apiKey, setApiKey] = useState("");
@@ -636,6 +644,8 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   
   // Render settings tab content
   const renderSettingsTab = () => {
+    console.log("Rendering settings tab with initialTab:", initialTab);
+    
     if (initialTab === "profile") {
       return (
         <div>

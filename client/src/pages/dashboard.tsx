@@ -29,6 +29,7 @@ export default function Dashboard() {
     const tabParam = searchParams.get("tab");
     
     if (tabParam && ["automation", "conversations", "integrations", "settings", "profile"].includes(tabParam)) {
+      console.log(`Dashboard: Setting initialTab to ${tabParam} from URL query parameters`);
       setInitialTab(tabParam);
     }
   }, [location]);
