@@ -54,6 +54,7 @@ export default function EditIntegration() {
   });
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [scriptExample, setScriptExample] = useState('');
+  const [scriptExampleFullscreen, setScriptExampleFullscreen] = useState('');
   const [isScrapingLoading, setIsScrapingLoading] = useState(false);
   const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
   
@@ -99,7 +100,21 @@ export default function EditIntegration() {
       });
       
       // Actualizar el script de ejemplo con la API Key
-      setScriptExample(`<script src="https://api.aipi.example.com/embed.js?key=${integration.apiKey}"></script>`);
+      // El widget puede ser el estándar (embed.js) o el nuevo simplificado (simple-embed.js)
+      const widgetType = integration.widgetType || "bubble";
+      const scriptFile = widgetType === "fullscreen" ? "simple-embed.js" : "embed.js";
+      
+      setScriptExample(`<script src="https://api.aipi.example.com/${scriptFile}?key=${integration.apiKey}"></script>`);
+      
+      // Agregar un ejemplo alternativo para el widget fullscreen
+      if (widgetType === "fullscreen") {
+        setScriptExampleFullscreen(`<!-- Widget simplificado en pantalla completa -->
+<script src="https://api.aipi.example.com/simple-embed.js?key=${integration.apiKey}" 
+  data-theme-color="${integration.themeColor || '#4f46e5'}"
+  data-position="${integration.position || 'bottom-right'}"
+  data-title="AIPI Asistente"
+></script>`);
+      }
       
       // Cargar el contenido del sitio
       loadSiteContent();
@@ -376,6 +391,33 @@ export default function EditIntegration() {
                   <li>El widget de chat aparecerá en la posición seleccionada.</li>
                 </ol>
               </div>
+              
+              {formData.widgetType === "fullscreen" && (
+                <div className="mt-6">
+                  <Label htmlFor="scriptExampleFullscreen">Código alternativo (recomendado)</Label>
+                  <div className="relative mt-1">
+                    <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto">
+                      {scriptExampleFullscreen}
+                    </pre>
+                    <Button 
+                      type="button" 
+                      className="absolute right-1 top-1 h-8 px-2"
+                      onClick={() => {
+                        navigator.clipboard.writeText(scriptExampleFullscreen);
+                        toast({
+                          title: "Código copiado",
+                          description: "El código alternativo ha sido copiado al portapapeles",
+                        });
+                      }}
+                    >
+                      Copiar
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Este código actualizado ofrece más opciones de personalización para el widget de pantalla completa.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
           
