@@ -392,6 +392,7 @@
       const pageContent = document.body.innerText.substring(0, 10000); // Limitar a 10k caracteres
       
       // Crear conversación en el servidor
+      console.log('AIPI Widget: Creando conversación en el servidor...');
       const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/conversation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -406,10 +407,13 @@
       });
       
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('AIPI Widget Error al crear conversación:', errorText);
         throw new Error(`Error al crear conversación: ${response.status}`);
       }
       
       const data = await response.json();
+      console.log('AIPI Widget: Conversación creada', data);
       conversationId = data.id;
       
       // Añadir mensaje de saludo
@@ -447,6 +451,7 @@
       }
       
       // Enviar mensaje al servidor
+      console.log('AIPI Widget: Enviando mensaje...', { conversationId, message });
       const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -461,6 +466,7 @@
       showTypingIndicator(false);
       
       if (!response.ok) {
+        console.error('AIPI Widget Error:', await response.text());
         if (response.status === 500) {
           addMessage('Lo siento, hay un problema temporal con el servicio. Por favor, intenta de nuevo más tarde.', 'assistant');
         } else {
@@ -470,6 +476,7 @@
       }
       
       const data = await response.json();
+      console.log('AIPI Widget: Respuesta recibida', data);
       
       // Añadir respuesta de la IA
       if (data.aiMessage && data.aiMessage.content) {
