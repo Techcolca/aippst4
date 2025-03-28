@@ -414,8 +414,21 @@ export default function EditIntegration() {
                     </Button>
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Este código actualizado ofrece más opciones de personalización para el widget de pantalla completa.
+                    Este código actualizado ofrece más opciones de personalización para el widget de pantalla completa. También debe colocarse justo antes de la etiqueta de cierre <code>&lt;/body&gt;</code> en tu sitio web.
                   </p>
+                  
+                  <div className="bg-amber-50 dark:bg-amber-900 p-3 rounded-lg mt-3 border border-amber-200 dark:border-amber-700">
+                    <div className="flex items-start">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600 dark:text-amber-400 w-5 h-5 mt-0.5 mr-2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                      </svg>
+                      <p className="text-sm text-amber-800 dark:text-amber-200">
+                        <strong>Recomendación:</strong> Este código alternativo proporciona un botón más visible con la etiqueta "Chat" y una mejor experiencia para los visitantes de tu sitio. Reemplaza completamente al código estándar.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
