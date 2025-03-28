@@ -100,16 +100,16 @@ export default function EditIntegration() {
       });
       
       // Actualizar el script de ejemplo con la API Key
-      // El widget puede ser el estándar (embed.js) o el nuevo simplificado (simple-embed.js)
+      // El widget puede ser el estándar (embed.js) o el de pantalla completa estilo ChatGPT (chatgpt-embed.js)
       const widgetType = integration.widgetType || "bubble";
-      const scriptFile = widgetType === "fullscreen" ? "simple-embed.js" : "embed.js";
+      const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
       
       setScriptExample(`<script src="https://api.aipi.example.com/${scriptFile}?key=${integration.apiKey}"></script>`);
       
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
-        setScriptExampleFullscreen(`<!-- Widget simplificado en pantalla completa -->
-<script src="https://api.aipi.example.com/simple-embed.js?key=${integration.apiKey}" 
+        setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->
+<script src="https://api.aipi.example.com/static/chatgpt-embed.js?key=${integration.apiKey}" 
   data-theme-color="${integration.themeColor || '#4f46e5'}"
   data-position="${integration.position || 'bottom-right'}"
   data-title="AIPI Asistente"
@@ -414,7 +414,7 @@ export default function EditIntegration() {
                     </Button>
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Este código actualizado ofrece más opciones de personalización para el widget de pantalla completa. También debe colocarse justo antes de la etiqueta de cierre <code>&lt;/body&gt;</code> en tu sitio web.
+                    Este código actualizado ofrece una interfaz estilo ChatGPT y más opciones de personalización. También debe colocarse justo antes de la etiqueta de cierre <code>&lt;/body&gt;</code> en tu sitio web.
                   </p>
                   
                   <div className="bg-amber-50 dark:bg-amber-900 p-3 rounded-lg mt-3 border border-amber-200 dark:border-amber-700">
@@ -425,7 +425,7 @@ export default function EditIntegration() {
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                       </svg>
                       <p className="text-sm text-amber-800 dark:text-amber-200">
-                        <strong>Recomendación:</strong> Este código alternativo proporciona un botón más visible con la etiqueta "Chat" y una mejor experiencia para los visitantes de tu sitio. Reemplaza completamente al código estándar.
+                        <strong>Recomendación:</strong> Este código alternativo proporciona una interfaz estilo ChatGPT para una experiencia más familiar y profesional. Reemplaza completamente al código estándar.
                       </p>
                     </div>
                   </div>
