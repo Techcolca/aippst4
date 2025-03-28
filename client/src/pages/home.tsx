@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTheme } from "@/context/theme-context";
+import { useAuth } from "@/context/auth-context";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ChatInterface from "@/components/chat-interface";
@@ -10,6 +11,31 @@ import { Bot, Code, BarChart3, Rocket } from "lucide-react";
 
 export default function Home() {
   const { theme } = useTheme();
+  const { user } = useAuth();
+  
+  useEffect(() => {
+    // Solo incluir el widget si el usuario es Pablo (ID 1)
+    if (user && user.id === 1) {
+      const scriptElement = document.createElement('script');
+      scriptElement.src = '/static/aipi-web-widget.js';
+      scriptElement.id = 'aipi-web-widget';
+      scriptElement.async = true;
+      document.body.appendChild(scriptElement);
+      
+      return () => {
+        // Limpiar al desmontar
+        const scriptTag = document.getElementById('aipi-web-widget');
+        if (scriptTag) {
+          scriptTag.remove();
+        }
+        // Eliminar también el widget si existe
+        const widgetElement = document.querySelector('.aipi-widget');
+        if (widgetElement) {
+          widgetElement.remove();
+        }
+      };
+    }
+  }, [user]);
   
   return (
     <div className="min-h-screen flex flex-col">

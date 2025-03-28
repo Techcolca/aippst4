@@ -62,7 +62,40 @@ const upload = multer({
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_jwt_secret";
 
+// Función para crear una integración interna específica para el sitio web principal
+async function createInternalWebsiteIntegration() {
+  try {
+    // Verificar si ya existe la integración interna
+    const existingIntegration = await storage.getIntegrationByApiKey("aipi_web_internal");
+    
+    if (existingIntegration) {
+      console.log("La integración interna para el sitio web principal ya existe");
+      return;
+    }
+    
+    // Crear la integración interna
+    await storage.createIntegration({
+      name: "AIPI Web Integration",
+      url: "localhost",
+      userId: 1, // Usuario Pablo
+      themeColor: "#6366f1",
+      position: "bottom-right",
+      botBehavior: "Eres AIPI, un asistente integrado en el sitio web principal de AIPI. Tu objetivo es ayudar a los usuarios a entender cómo funciona la plataforma, sus características y beneficios. Debes ser informativo, profesional y claro en tus respuestas. Brinda ejemplos concretos de cómo se puede utilizar AIPI en diferentes contextos.",
+      widgetType: "floating",
+      apiKey: "aipi_web_internal",
+      documentsData: []
+    });
+    
+    console.log("Se ha creado la integración interna para el sitio web principal");
+  } catch (error) {
+    console.error("Error al crear integración interna:", error);
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Crear integración interna para el sitio principal
+  await createInternalWebsiteIntegration();
+  
   // Servir archivos estáticos desde la carpeta /static
   const staticDir = path.join(__dirname, '../public/static');
   console.log('Sirviendo archivos estáticos desde:', staticDir);
