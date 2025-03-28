@@ -315,10 +315,37 @@ Contenido: [Error al extraer contenido detallado]
       // No añadir el botón dentro del widget, sino directamente al body para que sea independiente
       document.body.appendChild(fullscreenButton);
       
-      // Agregar evento para abrir el chat al hacer clic en el botón
-      fullscreenButton.addEventListener('click', () => {
-        openWidget();
-      });
+      // Usar onclick en lugar de addEventListener
+      fullscreenButton.onclick = function() {
+        // Obtener el panel de chat directamente
+        const chatPanel = document.getElementById('aipi-chat-panel');
+        if (chatPanel) {
+          // Ocultar el botón flotante
+          this.style.display = 'none';
+          
+          // Mostrar el panel de chat
+          chatPanel.style.display = 'flex';
+          isOpen = true;
+          
+          // Iniciar conversación si no se ha iniciado
+          if (!conversationStarted) {
+            startConversation();
+          }
+          
+          // Enfocar el campo de entrada
+          setTimeout(() => {
+            const input = document.getElementById('aipi-input');
+            if (input) {
+              input.focus();
+            }
+          }, 300);
+          
+          // Desplazar al final de los mensajes
+          scrollToBottom();
+        } else {
+          console.error('Error: No se encontró el panel de chat');
+        }
+      };
     } else {
       widgetInstance.classList.add('aipi-bubble-widget');
     }
