@@ -11,6 +11,7 @@ import EditIntegration from "@/pages/edit-integration";
 import Analytics from "@/pages/analytics";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
+import { ProfileProvider } from "@/context/profile-context";
 
 function Router() {
   return (
@@ -31,8 +32,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <Router />
-          <Toaster />
+          <ProfileProvider>
+            <Router />
+            <Toaster />
+          </ProfileProvider>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

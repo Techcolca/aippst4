@@ -3,16 +3,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Copy as CopyIcon, Upload as UploadIcon, Camera as CameraIcon, Trash2 as TrashIcon } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { useProfile } from "@/context/profile-context";
 
 export default function ProfileSection() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { avatarUrl, companyLogoUrl, updateAvatar, updateCompanyLogo } = useProfile();
   const [copied, setCopied] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isLogoUploading, setIsLogoUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   const handleCopyApiKey = () => {
     // Placeholder: In a real implementation, this would copy an API key from the user object
@@ -64,7 +67,9 @@ export default function ProfileSection() {
 
     // Create object URL for preview
     const objectUrl = URL.createObjectURL(file);
-    setAvatarUrl(objectUrl);
+    
+    // Update profile context
+    updateAvatar(objectUrl);
 
     // Here you would normally upload to server
     // Simulate server upload delay
@@ -77,6 +82,49 @@ export default function ProfileSection() {
     }, 1500);
   };
 
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // File size validation (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // File type validation
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file (JPEG, PNG, etc.)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLogoUploading(true);
+
+    // Create object URL for preview
+    const objectUrl = URL.createObjectURL(file);
+    
+    // Update profile context
+    updateCompanyLogo(objectUrl);
+
+    // Here you would normally upload to server
+    // Simulate server upload delay
+    setTimeout(() => {
+      setIsLogoUploading(false);
+      toast({
+        title: "Company logo updated",
+        description: "Your company logo has been updated successfully",
+      });
+    }, 1500);
+  };
+
   const handleUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -84,7 +132,7 @@ export default function ProfileSection() {
   };
 
   const handleDeleteAvatar = () => {
-    setAvatarUrl(null);
+    updateAvatar(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -197,37 +245,62 @@ export default function ProfileSection() {
               
               <div className="mt-2">
                 <Label htmlFor="companyLogo" className="block mb-2">Company Logo (Optional)</Label>
-                <div className="flex items-center space-x-2">
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="flex items-center"
-                    onClick={() => {
-                      const logoInput = document.getElementById('companyLogo') as HTMLInputElement;
-                      if (logoInput) logoInput.click();
-                    }}
-                  >
-                    <UploadIcon className="h-4 w-4 mr-2" />
-                    Upload Logo
-                  </Button>
-                  <span className="text-sm text-gray-500">
-                    Recommended size: 500x500px (Max 5MB)
-                  </span>
+                <div className="flex items-center space-x-4">
+                  {companyLogoUrl ? (
+                    <div className="relative group">
+                      <div className="w-16 h-16 rounded-md overflow-hidden bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600">
+                        <img src={companyLogoUrl} alt="Company logo" className="w-full h-full object-contain" />
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          updateCompanyLogo(null);
+                          if (logoInputRef.current) {
+                            logoInputRef.current.value = '';
+                          }
+                          toast({
+                            title: "Logo removed",
+                            description: "Company logo has been removed",
+                          });
+                        }}
+                        className="absolute -top-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1 shadow-sm border border-gray-200 dark:border-gray-700 text-red-500 hover:text-red-700"
+                      >
+                        <TrashIcon className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ) : null}
+                  
+                  <div className="flex items-center space-x-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="flex items-center"
+                      onClick={() => {
+                        if (logoInputRef.current) {
+                          logoInputRef.current.click();
+                        }
+                      }}
+                      disabled={isLogoUploading}
+                    >
+                      {isLogoUploading ? (
+                        <div className="animate-spin h-4 w-4 border-2 border-primary-500 border-t-transparent rounded-full mr-2" />
+                      ) : (
+                        <UploadIcon className="h-4 w-4 mr-2" />
+                      )}
+                      {companyLogoUrl ? "Change Logo" : "Upload Logo"}
+                    </Button>
+                    <span className="text-sm text-gray-500">
+                      Recommended size: 500x500px (Max 5MB)
+                    </span>
+                  </div>
                 </div>
                 <input 
                   id="companyLogo" 
                   type="file" 
+                  ref={logoInputRef}
                   accept="image/*" 
                   className="hidden" 
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      toast({
-                        title: "Logo selected",
-                        description: `Selected: ${file.name}`,
-                      });
-                    }
-                  }}
+                  onChange={handleLogoUpload}
                 />
               </div>
               

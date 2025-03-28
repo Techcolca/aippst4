@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sun, Moon, Menu, X } from "lucide-react";
 import { useTheme } from "@/context/theme-context";
 import { useAuth } from "@/context/auth-context";
+import { useProfile } from "@/context/profile-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -18,6 +19,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 export default function Header() {
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
+  const { avatarUrl } = useProfile();
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
   
@@ -84,7 +86,7 @@ export default function Header() {
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=250&q=80" alt="User avatar" />
+                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
                       <AvatarFallback>{user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                   </button>
