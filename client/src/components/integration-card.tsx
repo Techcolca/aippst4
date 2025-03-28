@@ -10,6 +10,7 @@ interface IntegrationCardProps {
   installedDate: string;
   onEdit: () => void;
   onViewAnalytics: () => void;
+  onViewConversations?: () => void;
 }
 
 export default function IntegrationCard({
@@ -19,7 +20,8 @@ export default function IntegrationCard({
   visitorCount,
   installedDate,
   onEdit,
-  onViewAnalytics
+  onViewAnalytics,
+  onViewConversations
 }: IntegrationCardProps) {
   return (
     <Card className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -49,7 +51,7 @@ export default function IntegrationCard({
       <div className="mb-4">
         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
           <Eye className="w-4 h-4 mr-2" />
-          Visitors helped: {visitorCount.toLocaleString()}
+          Visitors helped: {visitorCount ? visitorCount.toLocaleString() : '0'}
         </div>
         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
           <Calendar className="w-4 h-4 mr-2" />
@@ -57,7 +59,7 @@ export default function IntegrationCard({
         </div>
       </div>
       
-      <div className="flex justify-between">
+      <div className="flex flex-wrap gap-2 justify-between">
         <Button 
           variant="outline" 
           size="sm" 
@@ -66,14 +68,28 @@ export default function IntegrationCard({
         >
           Edit
         </Button>
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={onViewAnalytics}
-          className="px-3 py-1 text-sm bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
-        >
-          View Analytics
-        </Button>
+        
+        <div className="flex gap-2">
+          {onViewConversations && (
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={onViewConversations}
+              className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+            >
+              Conversations
+            </Button>
+          )}
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={onViewAnalytics}
+            className="px-3 py-1 text-sm bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
+          >
+            Analytics
+          </Button>
+        </div>
       </div>
     </Card>
   );
