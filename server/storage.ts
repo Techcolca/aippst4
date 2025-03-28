@@ -2,7 +2,8 @@ import {
   User, InsertUser, Integration, InsertIntegration, 
   Conversation, InsertConversation, Message, InsertMessage,
   Automation, InsertAutomation, Settings, InsertSettings,
-  SiteContent, InsertSiteContent
+  SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
+  TopProduct, TopTopic
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -49,6 +50,10 @@ export interface IStorage {
     resolutionRate: number;
     averageResponseTime: number;
   }>;
+  
+  // Analytics methods
+  getConversationAnalytics(userId: number): Promise<ConversationAnalytics>;
+  getIntegrationPerformance(userId: number): Promise<IntegrationPerformance[]>;
 
   // Site content methods
   getSiteContent(integrationId: number): Promise<SiteContent[]>;
@@ -536,7 +541,7 @@ export class MemStorage implements IStorage {
       : 0;
     
     const totalDuration = allConversations.reduce(
-      (sum, conversation) => sum + conversation.duration, 
+      (sum, conversation) => sum + (conversation.duration || 0), 
       0
     );
     
@@ -549,6 +554,201 @@ export class MemStorage implements IStorage {
       resolutionRate,
       averageResponseTime
     };
+  }
+  
+  // Implementación de análisis de conversación para MemStorage
+  async getConversationAnalytics(userId: number): Promise<ConversationAnalytics> {
+    // Obtener las integraciones del usuario
+    const userIntegrations = await this.getIntegrations(userId);
+    const integrationIds = userIntegrations.map(integration => integration.id);
+    
+    // Si no hay integraciones, devolver datos vacíos
+    if (integrationIds.length === 0) {
+      return {
+        topProducts: [],
+        topTopics: [],
+        conversationsByDay: [],
+        keywordFrequency: []
+      };
+    }
+    
+    // Obtener todas las conversaciones para las integraciones del usuario
+    const allConversations = Array.from(this.conversations.values()).filter(
+      conversation => integrationIds.includes(conversation.integrationId)
+    );
+    
+    // Obtener todos los mensajes de estas conversaciones
+    const conversationIds = allConversations.map(conv => conv.id);
+    const allMessages = conversationIds.length > 0 
+      ? Array.from(this.messages.values()).filter(
+          message => conversationIds.includes(message.conversationId)
+        )
+      : [];
+    
+    // Filtrar mensajes de usuarios (no del asistente)
+    const userMessages = allMessages.filter(msg => msg.role === 'user');
+    
+    // Generar datos de tendencia de conversaciones
+    const conversationsByDay: { date: string, count: number }[] = [];
+    
+    // Crear un mapa para contar conversaciones por día
+    const dateCountMap = new Map<string, number>();
+    
+    // Inicializar los últimos 30 días con cero conversaciones
+    const today = new Date();
+    for (let i = 0; i < 30; i++) {
+      const date = new Date();
+      date.setDate(today.getDate() - 29 + i);
+      const dateStr = date.toISOString().split('T')[0]; // formato YYYY-MM-DD
+      dateCountMap.set(dateStr, 0);
+    }
+    
+    // Contar conversaciones por día
+    allConversations.forEach(conv => {
+      if (conv.createdAt) {
+        const dateStr = new Date(conv.createdAt).toISOString().split('T')[0];
+        if (dateCountMap.has(dateStr)) {
+          dateCountMap.set(dateStr, (dateCountMap.get(dateStr) || 0) + 1);
+        }
+      }
+    });
+    
+    // Convertir a array y ordenar por fecha
+    const orderedConversationsByDay = Array.from(dateCountMap.entries())
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+    
+    // Extraer palabras clave y su frecuencia
+    const keywordFrequency: { keyword: string, frequency: number }[] = [];
+    
+    // Extraer texto de todos los mensajes
+    const allText = userMessages.map(msg => msg.content).join(' ').toLowerCase();
+    
+    // Lista de palabras de parada en español
+    const stopWords = new Set([
+      'a', 'al', 'algo', 'algunas', 'algunos', 'ante', 'antes', 'como', 'con', 'contra',
+      'cual', 'cuando', 'de', 'del', 'desde', 'donde', 'durante', 'e', 'el', 'ella',
+      'ellas', 'ellos', 'en', 'entre', 'era', 'erais', 'eran', 'eras', 'eres', 'es',
+      'esa', 'esas', 'ese', 'eso', 'esos', 'esta', 'estaba', 'estaban', 'estado',
+      'estais', 'estamos', 'estan', 'estar', 'estas', 'este', 'esto', 'estos', 'estoy',
+      'etc', 'fue', 'fueron', 'fui', 'fuimos', 'han', 'has', 'hay', 'he', 'hemos',
+      'hube', 'hubo', 'la', 'las', 'le', 'les', 'lo', 'los', 'me', 'mi', 'mia',
+      'mias', 'mio', 'mios', 'mis', 'mu', 'muy', 'nada', 'ni', 'no', 'nos', 'nosotras',
+      'nosotros', 'nuestra', 'nuestras', 'nuestro', 'nuestros', 'o', 'os', 'otra',
+      'otras', 'otro', 'otros', 'para', 'pero', 'por', 'porque', 'que', 'quien',
+      'quienes', 'qué', 'se', 'sea', 'seais', 'seamos', 'sean', 'seas', 'ser',
+      'sereis', 'seremos', 'seria', 'seriais', 'seriamos', 'serian', 'serias', 'será',
+      'seran', 'seras', 'seré', 'seréis', 'seríamos', 'si', 'sido', 'siendo', 'sin',
+      'sobre', 'sois', 'somos', 'son', 'soy', 'su', 'sus', 'suya', 'suyas', 'suyo',
+      'suyos', 'sí', 'también', 'tanto', 'te', 'teneis', 'tenemos', 'tener', 'tengo',
+      'ti', 'tiene', 'tienen', 'tienes', 'todo', 'todos', 'tu', 'tus', 'tuve', 'tuvimos',
+      'tuviste', 'tuvisteis', 'tuvo', 'tuvieron', 'tuya', 'tuyas', 'tuyo', 'tuyos',
+      'tú', 'un', 'una', 'uno', 'unos', 'vosotras', 'vosotros', 'vuestra', 'vuestras',
+      'vuestro', 'vuestros', 'y', 'ya', 'yo'
+    ]);
+    
+    // Dividir el texto en palabras
+    const words = allText.split(/\s+/)
+      .map(word => word.replace(/[.,;!?()]/g, ''))
+      .filter(word => word.length > 3 && !stopWords.has(word));
+    
+    // Contar frecuencia de cada palabra
+    const wordCount = new Map<string, number>();
+    words.forEach(word => {
+      wordCount.set(word, (wordCount.get(word) || 0) + 1);
+    });
+    
+    // Convertir a array, ordenar por frecuencia y tomar las 20 más frecuentes
+    const orderedKeywords = Array.from(wordCount.entries())
+      .map(([keyword, frequency]) => ({ keyword, frequency }))
+      .sort((a, b) => b.frequency - a.frequency)
+      .slice(0, 20);
+      
+    // Productos/servicios más demandados (demo)
+    const topProducts: TopProduct[] = [
+      { name: "Asistencia Técnica", count: 156, percentage: 42 },
+      { name: "Plan Premium", count: 89, percentage: 24 },
+      { name: "Facturación", count: 67, percentage: 18 },
+      { name: "Configuración Inicial", count: 45, percentage: 12 },
+      { name: "Sugerencias", count: 15, percentage: 4 }
+    ];
+    
+    // Temas más discutidos con sentimiento (demo)
+    const topTopics: TopTopic[] = [
+      { topic: "Problemas de conexión", count: 124, sentiment: 35 },
+      { topic: "Rendimiento del sistema", count: 98, sentiment: 62 },
+      { topic: "Funcionalidades nuevas", count: 76, sentiment: 85 },
+      { topic: "Precios y facturación", count: 64, sentiment: 48 },
+      { topic: "Atención al cliente", count: 58, sentiment: 75 }
+    ];
+    
+    return {
+      topProducts,
+      topTopics,
+      conversationsByDay: orderedConversationsByDay,
+      keywordFrequency: orderedKeywords
+    };
+  }
+  
+  // Implementación de rendimiento de integraciones para MemStorage
+  async getIntegrationPerformance(userId: number): Promise<IntegrationPerformance[]> {
+    // Obtener las integraciones del usuario
+    const userIntegrations = await this.getIntegrations(userId);
+    
+    if (userIntegrations.length === 0) return [];
+    
+    // Crear array para almacenar el rendimiento de cada integración
+    const performanceData: IntegrationPerformance[] = [];
+    
+    // Analizar cada integración
+    for (const integration of userIntegrations) {
+      // Obtener conversaciones para esta integración
+      const integrationConversations = Array.from(this.conversations.values()).filter(
+        conversation => conversation.integrationId === integration.id
+      );
+      
+      if (integrationConversations.length === 0) {
+        // Si no hay conversaciones, añadir datos con valores predeterminados
+        performanceData.push({
+          integrationId: integration.id,
+          integrationName: integration.name,
+          conversationCount: 0,
+          responseTime: 0,
+          resolutionRate: 0,
+          userSatisfaction: 0
+        });
+        continue;
+      }
+      
+      // Contar conversaciones resueltas
+      const resolvedCount = integrationConversations.filter(conv => conv.resolved).length;
+      
+      // Calcular tasa de resolución
+      const resolutionRate = (resolvedCount / integrationConversations.length) * 100;
+      
+      // Calcular tiempo de respuesta promedio
+      const totalDuration = integrationConversations.reduce(
+        (sum, conv) => sum + (conv.duration || 0), 
+        0
+      );
+      const responseTime = totalDuration / integrationConversations.length;
+      
+      // Calcular satisfacción del usuario (simulado)
+      // En una implementación real, esto podría basarse en encuestas o análisis de sentimiento
+      // Para esta simulación, generamos un valor entre 65 y 95
+      const userSatisfaction = Math.floor(Math.random() * 30) + 65;
+      
+      performanceData.push({
+        integrationId: integration.id,
+        integrationName: integration.name,
+        conversationCount: integrationConversations.length,
+        responseTime,
+        resolutionRate,
+        userSatisfaction
+      });
+    }
+    
+    return performanceData;
   }
 }
 

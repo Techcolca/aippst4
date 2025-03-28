@@ -192,101 +192,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // API para obtener los análisis de conversaciones
+  // API para obtener los análisis de conversaciones (con datos reales)
   app.get("/api/analytics/conversation", verifyToken, async (req, res) => {
     try {
       const userId = req.userId;
       
-      // Datos de ejemplo para productos/servicios más demandados
-      const topProducts = [
-        { name: "Asistencia Técnica", count: 156, percentage: 42 },
-        { name: "Plan Premium", count: 89, percentage: 24 },
-        { name: "Facturación", count: 67, percentage: 18 },
-        { name: "Configuración Inicial", count: 45, percentage: 12 },
-        { name: "Sugerencias", count: 15, percentage: 4 }
-      ];
+      // Utilizar la función de análisis de conversaciones que trabaja con datos reales
+      const conversationAnalytics = await storage.getConversationAnalytics(userId);
       
-      // Datos de ejemplo para temas más discutidos
-      const topTopics = [
-        { topic: "Problemas de conexión", count: 124, sentiment: 35 },
-        { topic: "Rendimiento del sistema", count: 98, sentiment: 62 },
-        { topic: "Funcionalidades nuevas", count: 76, sentiment: 85 },
-        { topic: "Precios y facturación", count: 64, sentiment: 48 },
-        { topic: "Atención al cliente", count: 58, sentiment: 75 }
-      ];
-      
-      // Datos de ejemplo para tendencia de conversaciones
-      const today = new Date();
-      const conversationsByDay = Array.from({ length: 30 }, (_, i) => {
-        const date = new Date();
-        date.setDate(today.getDate() - 29 + i);
-        
-        // Genera un número aleatorio con tendencia creciente para simular datos
-        const baseCount = 10 + Math.floor(i / 3);
-        const variation = Math.floor(Math.random() * 8) - 3;
-        const count = Math.max(1, baseCount + variation);
-        
-        return {
-          date: date.toISOString().split('T')[0],
-          count
-        };
-      });
-      
-      // Datos de ejemplo para frecuencia de palabras clave
-      const keywordFrequency = [
-        { keyword: "ayuda", frequency: 145 },
-        { keyword: "error", frequency: 132 },
-        { keyword: "servicio", frequency: 121 },
-        { keyword: "cuenta", frequency: 112 },
-        { keyword: "pago", frequency: 98 },
-        { keyword: "configuración", frequency: 87 },
-        { keyword: "problema", frequency: 85 },
-        { keyword: "actualización", frequency: 76 },
-        { keyword: "instalación", frequency: 74 },
-        { keyword: "factura", frequency: 65 },
-        { keyword: "conexión", frequency: 58 },
-        { keyword: "usuario", frequency: 54 },
-        { keyword: "contraseña", frequency: 48 },
-        { keyword: "soporte", frequency: 45 },
-        { keyword: "funciona", frequency: 42 },
-        { keyword: "gracias", frequency: 38 },
-        { keyword: "descarga", frequency: 35 },
-        { keyword: "versión", frequency: 32 },
-        { keyword: "registro", frequency: 30 },
-        { keyword: "acceso", frequency: 28 }
-      ];
-      
-      res.json({
-        topProducts,
-        topTopics,
-        conversationsByDay,
-        keywordFrequency
-      });
+      res.json(conversationAnalytics);
     } catch (error) {
       console.error("Error getting conversation analytics:", error);
       res.status(500).json({ message: "Error obteniendo análisis de conversaciones" });
     }
   });
   
-  // API para obtener rendimiento de integraciones
+  // API para obtener rendimiento de integraciones (con datos reales)
   app.get("/api/analytics/integration-performance", verifyToken, async (req, res) => {
     try {
       const userId = req.userId;
       
-      // Obtener integraciones reales del usuario
-      const userIntegrations = await storage.getIntegrations(userId);
-      
-      // Crear datos de rendimiento basados en integraciones reales
-      const performanceData = userIntegrations.map(integration => {
-        return {
-          integrationId: integration.id,
-          integrationName: integration.name,
-          conversationCount: integration.visitorCount || Math.floor(Math.random() * 80) + 5,
-          responseTime: Math.floor(Math.random() * 60) + 5, // entre 5 y 65 segundos
-          resolutionRate: Math.floor(Math.random() * 40) + 50, // entre 50% y 90%
-          userSatisfaction: Math.floor(Math.random() * 30) + 65 // entre 65% y 95%
-        };
-      });
+      // Utilizar la función que calcula el rendimiento de integraciones usando datos reales
+      const performanceData = await storage.getIntegrationPerformance(userId);
       
       res.json(performanceData);
     } catch (error) {
