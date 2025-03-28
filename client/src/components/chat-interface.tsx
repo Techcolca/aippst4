@@ -88,81 +88,52 @@ export default function ChatInterface({ demoMode = false, integrationId, context
     try {
       let response: string;
       
-      // Siempre usamos la API real en lugar de respuestas demo prefabricadas
-      // Esto permitirá que las respuestas se basen en el contenido del sitio
+      // En modo demo, usamos la API de OpenAI directamente en lugar de la API del widget
       if (demoMode) {
-        // Aunque estemos en modo demo, usaremos la API web_internal para obtener respuestas contextuales
         await new Promise(resolve => setTimeout(resolve, 600)); // Pequeña espera para simular procesamiento
         
-        // Usar la API interna del sitio web
-        const apiKey = 'aipi_web_internal';
-        
-        // Si no hay conversación iniciada, la iniciamos primero
-        if (!conversationId) {
-          const visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
-          
-          try {
-            const convResponse = await fetch(`/api/widget/${apiKey}/conversation`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ visitorId })
-            });
-            
-            if (!convResponse.ok) {
-              throw new Error(`Error starting conversation: ${convResponse.status}`);
-            }
-            
-            const convData = await convResponse.json();
-            setConversationId(convData.id);
-            console.log('Demo conversation started with API:', convData.id);
-          } catch (error) {
-            console.error('Failed to start conversation:', error);
-            // Si hay error al iniciar la conversación, usamos respuestas de emergencia
-            response = "Lo siento, no puedo conectar con el servidor en este momento. ¿Puedo ayudarte con información general sobre AIPI?";
-            setMessages(prev => [...prev, { role: 'assistant', content: response }]);
-            setIsTyping(false);
-            return;
-          }
-        }
-        
-        // Ahora enviamos el mensaje usando la API real
         try {
           // Capturar el contexto de la página actual
           const pageContent = document.querySelector('main')?.textContent?.trim() || '';
           const pageTitle = document.title;
           const pageUrl = window.location.href;
           
-          console.log("Enviando mensaje con contexto de página:", {
-            url: pageUrl,
-            title: pageTitle,
-            contentLength: pageContent ? pageContent.length : 0
-          });
+          console.log("Usando el modelo OpenAI directamente con contexto de la página");
           
-          const messageResponse = await fetch(`/api/widget/${apiKey}/message`, {
+          // En lugar de usar la API del widget, vamos a usar directamente la API de OpenAI
+          const allMessages = messages.concat(userMessage);
+          
+          // Crear contexto con el contenido de la página
+          const pageContext = `
+Información de la página actual:
+URL: ${pageUrl}
+Título: ${pageTitle}
+Contenido de la página:
+${pageContent}
+
+Eres AIPI, un asistente virtual integrado en el sitio web de AIPI.
+Tu objetivo es proporcionar información útil sobre la plataforma AIPI, 
+sus características y beneficios basándote en el contenido de la página.
+Debes ser informativo, profesional y claro en tus respuestas en español.
+`;
+          
+          const openAIResponse = await fetch('/api/openai/completion', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              conversationId,
-              content: inputValue,
-              role: 'user',
-              pageContext: {
-                title: pageTitle,
-                url: pageUrl,
-                content: pageContent
-              }
+              messages: allMessages,
+              context: pageContext
             })
           });
           
-          if (!messageResponse.ok) {
-            throw new Error(`Error sending message: ${messageResponse.status}`);
+          if (!openAIResponse.ok) {
+            throw new Error(`Error calling OpenAI API: ${openAIResponse.status}`);
           }
           
-          const data = await messageResponse.json();
-          response = data.aiMessage.content;
+          const data = await openAIResponse.json();
+          response = data.message.content;
         } catch (error) {
           console.error("Error enviando mensaje a la API:", error);
           // Fallback a respuestas predefinidas si hay error en la API
