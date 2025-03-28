@@ -317,33 +317,47 @@ Contenido: [Error al extraer contenido detallado]
       
       // Usar onclick en lugar de addEventListener
       fullscreenButton.onclick = function() {
-        // Obtener el panel de chat directamente
-        const chatPanel = document.getElementById('aipi-chat-panel');
-        if (chatPanel) {
-          // Ocultar el botón flotante
-          this.style.display = 'none';
+        try {
+          console.log('AIPI Debug: Botón fullscreen clickeado');
           
-          // Mostrar el panel de chat
-          chatPanel.style.display = 'flex';
-          isOpen = true;
+          // Obtener el panel de chat directamente
+          const chatPanel = document.getElementById('aipi-chat-panel');
+          console.log('AIPI Debug: Panel de chat encontrado?', !!chatPanel);
           
-          // Iniciar conversación si no se ha iniciado
-          if (!conversationStarted) {
-            startConversation();
-          }
-          
-          // Enfocar el campo de entrada
-          setTimeout(() => {
-            const input = document.getElementById('aipi-input');
-            if (input) {
-              input.focus();
+          if (chatPanel) {
+            // Ocultar el botón flotante
+            this.style.display = 'none';
+            console.log('AIPI Debug: Botón flotante ocultado');
+            
+            // Mostrar el panel de chat
+            chatPanel.style.display = 'flex';
+            console.log('AIPI Debug: Panel de chat mostrado');
+            isOpen = true;
+            
+            // Iniciar conversación si no se ha iniciado
+            if (!conversationStarted) {
+              console.log('AIPI Debug: Iniciando conversación');
+              startConversation();
             }
-          }, 300);
-          
-          // Desplazar al final de los mensajes
-          scrollToBottom();
-        } else {
-          console.error('Error: No se encontró el panel de chat');
+            
+            // Enfocar el campo de entrada
+            setTimeout(() => {
+              const input = document.getElementById('aipi-input');
+              console.log('AIPI Debug: Input encontrado?', !!input);
+              if (input) {
+                input.focus();
+              }
+            }, 300);
+            
+            // Desplazar al final de los mensajes
+            scrollToBottom();
+          } else {
+            console.error('Error AIPI: No se encontró el panel de chat. ID widget:', widgetInstance?.id);
+            alert('Error al abrir el chat: No se encontró el panel en el DOM');
+          }
+        } catch (error) {
+          console.error('Error AIPI al abrir el widget:', error);
+          alert('Error al abrir el chat: ' + error.message);
         }
       };
     } else {
