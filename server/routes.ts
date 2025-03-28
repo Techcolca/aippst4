@@ -388,7 +388,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         url: req.body.url,
         themeColor: req.body.themeColor,
         position: req.body.position,
-        active: req.body.active
+        active: req.body.active,
+        widgetType: req.body.widgetType,
+        botBehavior: req.body.botBehavior
       });
       
       res.json(updatedIntegration);
@@ -618,6 +620,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           active: integration.active,
           visitorCount: integration.visitorCount,
           botBehavior: integration.botBehavior,
+          widgetType: integration.widgetType || 'bubble', // Incluir tipo de widget, con valor por defecto
           // No enviamos datos sensibles como userId o apiKey al cliente
         },
         settings: {
