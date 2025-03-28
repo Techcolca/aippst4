@@ -29,9 +29,19 @@ export class DocumentProcessor {
       
       // Procesar documentos PDF
       if (mimetype === 'application/pdf') {
-        console.log(`Detectado documento PDF: ${filePath}`);
-        // Por el momento, simplemente informamos que se trata de un PDF
-        return `[Documento PDF disponible: ${path.basename(filePath)}. La extracción de texto de PDFs será implementada próximamente.]`;
+        console.log(`Procesando documento PDF: ${filePath}`);
+        try {
+          // Importar pdf-parse dinámicamente para evitar errores si no está instalado
+          const pdfParse = await import('pdf-parse');
+          const dataBuffer = await fs.promises.readFile(filePath);
+          const data = await pdfParse.default(dataBuffer);
+          console.log(`Documento PDF procesado, extraídos ${data.text.length} caracteres`);
+          return data.text;
+        } catch (err) {
+          console.error(`Error al procesar PDF ${path.basename(filePath)}:`, err);
+          const errorMessage = err instanceof Error ? err.message : String(err);
+          return `[Error al procesar el documento PDF: ${path.basename(filePath)}. ${errorMessage}]`;
+        }
       }
       
       // Procesar documentos de Excel (XLSX)

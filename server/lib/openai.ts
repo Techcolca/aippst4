@@ -14,12 +14,29 @@ export async function generateChatCompletion(
   try {
     // Add system message with context if provided
     const systemMessage = context 
-      ? { role: "system", content: `You are AIPI, an AI assistant that helps website visitors. Use the following context to inform your responses: ${context}` }
+      ? { role: "system", content: `You are AIPI, an AI assistant embedded on a website. Your primary goal is to provide helpful, accurate information based specifically on the context provided. 
+      
+IMPORTANT INSTRUCTIONS:
+1. Focus your responses on the information found in the context below.
+2. If the user's question can be answered using the context, always respond with information from the context.
+3. If information to answer the question is present in a document, cite the document name in your response.
+4. If the information is not available in the context, clearly state that you don't have specific information about that, and provide a general response.
+5. Your answers should be concise but complete.
+6. Never make up information that isn't in the context.
+
+CONTEXT: ${context}` }
       : { role: "system", content: "You are AIPI, a helpful AI assistant that provides concise, accurate information to website visitors. Be friendly, professional, and helpful." };
+    
+    // Log system message for debugging
+    console.log("System message length:", systemMessage.content.length);
+    console.log("System message preview:", systemMessage.content.substring(0, 200) + "...");
     
     // Prepare the messages array with the system message first
     const formattedMessages = [
-      systemMessage,
+      {
+        role: systemMessage.role as "system",
+        content: systemMessage.content
+      },
       ...messages.map(m => ({
         role: m.role as "user" | "assistant" | "system",
         content: m.content
@@ -29,9 +46,9 @@ export async function generateChatCompletion(
     // Make request to OpenAI
     const response = await openai.chat.completions.create({
       model: OPENAI_MODEL,
-      messages: formattedMessages,
-      temperature: 0.7,
-      max_tokens: 500
+      messages: formattedMessages as any, // Type assertion to avoid TypeScript errors
+      temperature: 0.5, // Reduced temperature for more factual responses
+      max_tokens: 800  // Increased max tokens for more complete responses
     });
 
     return {
@@ -40,9 +57,10 @@ export async function generateChatCompletion(
         content: response.choices[0].message.content
       }
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error generating chat completion:", error);
-    throw new Error(`Failed to generate chat completion: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to generate chat completion: ${errorMessage}`);
   }
 }
 
@@ -74,9 +92,10 @@ export async function analyzeSentiment(text: string): Promise<{
       rating: Math.max(1, Math.min(5, Math.round(result.rating))),
       confidence: Math.max(0, Math.min(1, result.confidence)),
     };
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to analyze sentiment:", error);
-    throw new Error(`Failed to analyze sentiment: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to analyze sentiment: ${errorMessage}`);
   }
 }
 
