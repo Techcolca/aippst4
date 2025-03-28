@@ -14,18 +14,19 @@ export async function generateChatCompletion(
   try {
     // Add system message with context if provided
     const systemMessage = context 
-      ? { role: "system", content: `You are AIPI, an AI assistant embedded on a website. Your primary goal is to provide helpful, accurate information based specifically on the context provided. 
+      ? { role: "system", content: `Eres AIPI, un asistente de IA integrado en un sitio web. Tu objetivo principal es proporcionar información útil y precisa basada específicamente en el contexto proporcionado.
       
-IMPORTANT INSTRUCTIONS:
-1. Focus your responses on the information found in the context below.
-2. If the user's question can be answered using the context, always respond with information from the context.
-3. If information to answer the question is present in a document, cite the document name in your response.
-4. If the information is not available in the context, clearly state that you don't have specific information about that, and provide a general response.
-5. Your answers should be concise but complete.
-6. Never make up information that isn't in the context.
+INSTRUCCIONES IMPORTANTES:
+1. Enfoca tus respuestas en la información que encuentres en el contexto a continuación.
+2. Si la pregunta del usuario se puede responder usando el contexto, siempre responde con información del contexto.
+3. Si la información para responder la pregunta está presente en un documento, cita el nombre del documento en tu respuesta.
+4. Si la información no está disponible en el contexto, indica claramente que no tienes información específica sobre eso y proporciona una respuesta general.
+5. Tus respuestas deben ser concisas pero completas.
+6. Nunca inventes información que no esté en el contexto.
+7. Responde siempre en español a menos que te pregunten específicamente en otro idioma.
 
-CONTEXT: ${context}` }
-      : { role: "system", content: "You are AIPI, a helpful AI assistant that provides concise, accurate information to website visitors. Be friendly, professional, and helpful." };
+CONTEXTO: ${context}` }
+      : { role: "system", content: "Eres AIPI, un asistente de IA útil que proporciona información concisa y precisa a los visitantes del sitio web. Sé amigable, profesional y servicial. Responde siempre en español a menos que te pregunten en otro idioma." };
     
     // Log system message for debugging
     console.log("System message length:", systemMessage.content.length);
@@ -110,9 +111,10 @@ export async function summarizeText(text: string): Promise<string> {
     });
 
     return response.choices[0].message.content;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to summarize text:", error);
-    throw new Error(`Failed to summarize text: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to summarize text: ${errorMessage}`);
   }
 }
 
@@ -127,9 +129,10 @@ export async function extractKeyInformation(text: string, query: string): Promis
     });
 
     return response.choices[0].message.content;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to extract key information:", error);
-    throw new Error(`Failed to extract key information: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to extract key information: ${errorMessage}`);
   }
 }
 
@@ -159,15 +162,16 @@ export async function generateAutomatedResponse(
     const response = await openai.chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
-        { role: "system", content: "You are AIPI, an AI assistant embedded on a website. You help visitors by providing accurate, helpful information based on the website's content." },
+        { role: "system", content: "Eres AIPI, un asistente de IA integrado en un sitio web. Ayudas a los visitantes proporcionando información precisa y útil basada en el contenido del sitio web. Responde siempre en español a menos que te pregunten en otro idioma." },
         { role: "user", content: prompt }
       ],
     });
 
     return response.choices[0].message.content;
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Failed to generate automated response:", error);
-    throw new Error(`Failed to generate automated response: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to generate automated response: ${errorMessage}`);
   }
 }
 

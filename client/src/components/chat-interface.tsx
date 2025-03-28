@@ -88,39 +88,104 @@ export default function ChatInterface({ demoMode = false, integrationId, context
     try {
       let response: string;
       
+      // Siempre usamos la API real en lugar de respuestas demo prefabricadas
+      // Esto permitirá que las respuestas se basen en el contenido del sitio
       if (demoMode) {
-        // Demo mode responses
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Aunque estemos en modo demo, usaremos la API web_internal para obtener respuestas contextuales
+        await new Promise(resolve => setTimeout(resolve, 600)); // Pequeña espera para simular procesamiento
         
-        const demoResponses: Record<string, string> = {
-          "hello": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
-          "hola": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
-          "help": "Puedo ayudarte con información sobre nuestra plataforma AIPI, sus características, cómo integrarla en tu sitio web y mucho más. ¿Qué te gustaría saber?",
-          "ayuda": "Puedo ayudarte con información sobre nuestra plataforma AIPI, sus características, cómo integrarla en tu sitio web y mucho más. ¿Qué te gustaría saber?",
-          "features": "AIPI ofrece IA conversacional, automatización de tareas, asistencia en tiempo real e integración perfecta con sitios web. Nuestro chatbot puede personalizar sus respuestas según el contenido de tu página.",
-          "características": "AIPI ofrece IA conversacional, automatización de tareas, asistencia en tiempo real e integración perfecta con sitios web. Nuestro chatbot puede personalizar sus respuestas según el contenido de tu página.",
-          "integration": "Puedes integrar AIPI con un simple tag de script. Solo necesitas agregar una línea de código a tu sitio web. ¿Te gustaría ver un ejemplo?",
-          "integración": "Puedes integrar AIPI con un simple tag de script. Solo necesitas agregar una línea de código a tu sitio web. ¿Te gustaría ver un ejemplo?",
-          "pricing": "AIPI ofrece planes de precios flexibles que comienzan en $29/mes. ¿Te gustaría ver los detalles completos de precios?"
-        };
+        // Usar la API interna del sitio web
+        const apiKey = 'aipi_web_internal';
         
-        const lowerInput = inputValue.toLowerCase().trim();
-        
-        // Primero intentamos con coincidencias exactas
-        if (demoResponses[lowerInput]) {
-          response = demoResponses[lowerInput];
-        } 
-        // Luego con coincidencias parciales
-        else if (Object.keys(demoResponses).find(key => lowerInput.includes(key))) {
-          response = demoResponses[Object.keys(demoResponses).find(key => lowerInput.includes(key)) as string];
+        // Si no hay conversación iniciada, la iniciamos primero
+        if (!conversationId) {
+          const visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
+          
+          try {
+            const convResponse = await fetch(`/api/widget/${apiKey}/conversation`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ visitorId })
+            });
+            
+            if (!convResponse.ok) {
+              throw new Error(`Error starting conversation: ${convResponse.status}`);
+            }
+            
+            const convData = await convResponse.json();
+            setConversationId(convData.id);
+            console.log('Demo conversation started with API:', convData.id);
+          } catch (error) {
+            console.error('Failed to start conversation:', error);
+            // Si hay error al iniciar la conversación, usamos respuestas de emergencia
+            response = "Lo siento, no puedo conectar con el servidor en este momento. ¿Puedo ayudarte con información general sobre AIPI?";
+            setMessages(prev => [...prev, { role: 'assistant', content: response }]);
+            setIsTyping(false);
+            return;
+          }
         }
-        // Respuestas para saludos comunes en español
-        else if (lowerInput.match(/^(hola|buenos días|buenas tardes|buenas noches)$/)) {
-          response = "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?";
-        }
-        // Y finalmente una respuesta genérica en español
-        else {
-          response = "Entiendo. ¿Podrías darme más detalles sobre lo que estás buscando? Estoy aquí para ayudarte con información sobre nuestra plataforma AIPI.";
+        
+        // Ahora enviamos el mensaje usando la API real
+        try {
+          // Capturar el contexto de la página actual
+          const pageContent = document.querySelector('main')?.textContent?.trim() || '';
+          const pageTitle = document.title;
+          const pageUrl = window.location.href;
+          
+          console.log("Enviando mensaje con contexto de página:", {
+            url: pageUrl,
+            title: pageTitle,
+            contentLength: pageContent ? pageContent.length : 0
+          });
+          
+          const messageResponse = await fetch(`/api/widget/${apiKey}/message`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              conversationId,
+              content: inputValue,
+              role: 'user',
+              pageContext: {
+                title: pageTitle,
+                url: pageUrl,
+                content: pageContent
+              }
+            })
+          });
+          
+          if (!messageResponse.ok) {
+            throw new Error(`Error sending message: ${messageResponse.status}`);
+          }
+          
+          const data = await messageResponse.json();
+          response = data.aiMessage.content;
+        } catch (error) {
+          console.error("Error enviando mensaje a la API:", error);
+          // Fallback a respuestas predefinidas si hay error en la API
+          const demoResponses: Record<string, string> = {
+            "hello": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+            "hola": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+            "ayuda": "Puedo ayudarte con información sobre nuestra plataforma AIPI, sus características, cómo integrarla en tu sitio web y mucho más.",
+            "features": "AIPI ofrece IA conversacional, automatización de tareas, asistencia en tiempo real y análisis de contenido de tu sitio web.",
+            "precios": "AIPI ofrece planes de precios flexibles que comienzan en $29/mes."
+          };
+          
+          const lowerInput = inputValue.toLowerCase().trim();
+          
+          // Intentar encontrar respuesta predefinida como fallback
+          if (demoResponses[lowerInput]) {
+            response = demoResponses[lowerInput];
+          } else if (Object.keys(demoResponses).find(key => lowerInput.includes(key))) {
+            response = demoResponses[Object.keys(demoResponses).find(key => lowerInput.includes(key)) as string];
+          } else if (lowerInput.match(/^(hola|buenos días|buenas tardes|buenas noches)$/)) {
+            response = "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?";
+          } else {
+            response = "Lo siento, estoy teniendo problemas para conectarme al servidor. ¿Puedo ayudarte con información general sobre la plataforma AIPI?";
+          }
         }
       } else if (conversationId) {
         // Real API response using the widget API
