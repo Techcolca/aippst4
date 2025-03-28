@@ -276,6 +276,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Create integration request body:", req.body);
       console.log("User ID from token:", req.userId);
       
+      // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
+      const isPablo = req.userId === 1; // ID del usuario Pablo
+      const isReservdName = req.body.name === 'Techcolca21';
+      
+      if (isReservdName && !isPablo) {
+        return res.status(403).json({ 
+          message: "No puedes crear una integración con este nombre. Está reservado para el chat principal del sitio web." 
+        });
+      }
+      
       // Obtenemos la API key del cuerpo de la solicitud
       const apiKey = req.body.apiKey || generateApiKey();
       
@@ -357,6 +367,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Integration not found" });
       }
       
+      // Comprobar si es la integración principal (Techcolca21 en este caso) y si el usuario no es Pablo
+      const isMainWebsiteIntegration = integration.name === 'Techcolca21';
+      const isPablo = req.userId === 1; // ID del usuario Pablo
+      
+      if (isMainWebsiteIntegration && !isPablo) {
+        return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
+      }
+      
       // Verificar que el usuario es el propietario de la integración
       if (integration.userId !== req.userId) {
         return res.status(403).json({ message: "Unauthorized" });
@@ -381,6 +399,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const integration = await storage.getIntegration(integrationId);
       if (!integration) {
         return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Comprobar si es la integración principal (Techcolca21 en este caso) y si el usuario no es Pablo
+      const isMainWebsiteIntegration = integration.name === 'Techcolca21';
+      const isPablo = req.userId === 1; // ID del usuario Pablo
+      
+      if (isMainWebsiteIntegration && !isPablo) {
+        return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
       }
       
       // Verificar que el usuario es el propietario de la integración
@@ -607,6 +633,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const integration = await storage.getIntegrationByApiKey(apiKey);
       if (!integration) {
         return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Verificar si es la integración del sitio principal y restringir acceso
+      // Las IDs son diferentes en tu entorno, en la estructura original el sitio web principal usa ID 0
+      const isMainIntegration = integration.name === 'Techcolca21';
+      const isPablo = req.userId === 1; // ID del usuario Pablo
+      
+      // Si es la integración principal y el usuario no es Pablo, verificar la operación
+      if (isMainIntegration && req.path.includes('/edit') && !isPablo) {
+        return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
       }
       
       // Get user settings

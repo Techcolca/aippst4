@@ -64,6 +64,24 @@ export default function EditIntegration() {
     enabled: !!id,
     staleTime: 1000 * 60, // 1 minuto
   });
+
+  // Manejar errores y restricciones de acceso
+  useEffect(() => {
+    if (error) {
+      console.error("Error fetching integration:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      
+      toast({
+        title: "Error",
+        description: errorMessage === "Solo Pablo puede configurar el chat principal del sitio web" 
+          ? "Solo el usuario Pablo puede editar esta integración."
+          : "Error al cargar la integración. Verifica tus permisos.",
+        variant: "destructive"
+      });
+      
+      navigate("/dashboard");
+    }
+  }, [error, navigate, toast]);
   
   // Mutación para actualizar la integración
   const updateIntegrationMutation = useMutation({
