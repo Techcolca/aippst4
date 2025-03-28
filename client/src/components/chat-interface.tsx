@@ -28,7 +28,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
       setMessages([
         { 
           role: 'assistant', 
-          content: '👋 Hi there! I\'m AIPI, your AI assistant. How can I help you today?' 
+          content: '👋 ¡Hola! Soy AIPI, tu asistente de IA. ¿En qué puedo ayudarte hoy?' 
         }
       ]);
       
@@ -93,17 +93,35 @@ export default function ChatInterface({ demoMode = false, integrationId, context
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         const demoResponses: Record<string, string> = {
-          "hello": "Hello! How can I assist you today?",
-          "help": "I can help with answering questions about your website, automating tasks, or providing real-time assistance. What would you like to do?",
-          "features": "AIPI offers conversational AI, task automation, real-time assistance, and seamless website integration.",
-          "integration": "You can integrate AIPI with a simple script tag. Would you like to see an example?",
-          "pricing": "AIPI offers flexible pricing plans starting at $29/month. Would you like to see the full pricing details?"
+          "hello": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+          "hola": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+          "help": "Puedo ayudarte con información sobre nuestra plataforma AIPI, sus características, cómo integrarla en tu sitio web y mucho más. ¿Qué te gustaría saber?",
+          "ayuda": "Puedo ayudarte con información sobre nuestra plataforma AIPI, sus características, cómo integrarla en tu sitio web y mucho más. ¿Qué te gustaría saber?",
+          "features": "AIPI ofrece IA conversacional, automatización de tareas, asistencia en tiempo real e integración perfecta con sitios web. Nuestro chatbot puede personalizar sus respuestas según el contenido de tu página.",
+          "características": "AIPI ofrece IA conversacional, automatización de tareas, asistencia en tiempo real e integración perfecta con sitios web. Nuestro chatbot puede personalizar sus respuestas según el contenido de tu página.",
+          "integration": "Puedes integrar AIPI con un simple tag de script. Solo necesitas agregar una línea de código a tu sitio web. ¿Te gustaría ver un ejemplo?",
+          "integración": "Puedes integrar AIPI con un simple tag de script. Solo necesitas agregar una línea de código a tu sitio web. ¿Te gustaría ver un ejemplo?",
+          "pricing": "AIPI ofrece planes de precios flexibles que comienzan en $29/mes. ¿Te gustaría ver los detalles completos de precios?"
         };
         
-        const lowerInput = inputValue.toLowerCase();
-        response = Object.keys(demoResponses).find(key => lowerInput.includes(key))
-          ? demoResponses[Object.keys(demoResponses).find(key => lowerInput.includes(key)) as string]
-          : "I understand. Let me look into that for you. Is there anything specific you'd like to know about this topic?";
+        const lowerInput = inputValue.toLowerCase().trim();
+        
+        // Primero intentamos con coincidencias exactas
+        if (demoResponses[lowerInput]) {
+          response = demoResponses[lowerInput];
+        } 
+        // Luego con coincidencias parciales
+        else if (Object.keys(demoResponses).find(key => lowerInput.includes(key))) {
+          response = demoResponses[Object.keys(demoResponses).find(key => lowerInput.includes(key)) as string];
+        }
+        // Respuestas para saludos comunes en español
+        else if (lowerInput.match(/^(hola|buenos días|buenas tardes|buenas noches)$/)) {
+          response = "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?";
+        }
+        // Y finalmente una respuesta genérica en español
+        else {
+          response = "Entiendo. ¿Podrías darme más detalles sobre lo que estás buscando? Estoy aquí para ayudarte con información sobre nuestra plataforma AIPI.";
+        }
       } else if (conversationId) {
         // Real API response using the widget API
         const apiKey = 'aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
@@ -139,7 +157,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
       console.error("Error sending message:", error);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I'm sorry, I encountered an error processing your request. Please try again."
+        content: "Lo siento, encontré un error al procesar tu solicitud. Por favor, intenta de nuevo."
       }]);
     } finally {
       setIsTyping(false);
@@ -190,7 +208,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
           value={inputValue}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
-          placeholder="Type your message..."
+          placeholder="Escribe tu mensaje..."
           className="flex-1"
         />
         <Button 
