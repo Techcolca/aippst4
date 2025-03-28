@@ -77,6 +77,22 @@
       
       console.log('AIPI Widget: Clave API cargada - ' + config.apiKey);
       
+      // Obtener URL del servidor si se proporciona
+      const serverUrl = scriptElement.getAttribute('data-server-url');
+      if (serverUrl) {
+        config.serverUrl = serverUrl;
+        console.log('AIPI Widget: URL del servidor personalizada - ' + config.serverUrl);
+      } else {
+        // Extraer el dominio del script como URL del servidor
+        try {
+          const scriptUrl = new URL(scriptSrc);
+          config.serverUrl = scriptUrl.origin;
+          console.log('AIPI Widget: URL del servidor desde script - ' + config.serverUrl);
+        } catch (error) {
+          console.log('AIPI Widget: Error al extraer dominio, usando predeterminado');
+        }
+      }
+      
       // Obtener color del tema
       const themeColor = scriptElement.getAttribute('data-theme-color');
       if (themeColor) config.mainColor = themeColor;
@@ -422,7 +438,7 @@
       console.log('AIPI Widget: Conversación iniciada con ID', conversationId);
     } catch (error) {
       console.error('AIPI Widget Error:', error);
-      addMessage('Lo siento, hubo un problema al iniciar la conversación. Por favor, intenta de nuevo más tarde.', 'assistant');
+      addMessage(`Lo siento, hubo un problema al iniciar la conversación: ${error.message}. Comprueba que la URL del servidor sea correcta. Puedes añadir el atributo 'data-server-url' al script con la URL completa de tu servidor.`, 'assistant');
     }
   }
   
@@ -466,11 +482,12 @@
       showTypingIndicator(false);
       
       if (!response.ok) {
-        console.error('AIPI Widget Error:', await response.text());
+        const errorText = await response.text();
+        console.error('AIPI Widget Error:', errorText);
         if (response.status === 500) {
           addMessage('Lo siento, hay un problema temporal con el servicio. Por favor, intenta de nuevo más tarde.', 'assistant');
         } else {
-          addMessage('Lo siento, no pude procesar tu mensaje. Por favor, intenta de nuevo.', 'assistant');
+          addMessage(`Lo siento, no pude procesar tu mensaje (Error ${response.status}). Verifica que la URL del servidor sea correcta usando el atributo 'data-server-url' en el script.`, 'assistant');
         }
         throw new Error(`Error al enviar mensaje: ${response.status}`);
       }
