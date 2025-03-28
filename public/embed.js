@@ -1124,7 +1124,19 @@ Contenido: [Error al extraer contenido detallado]
     // Show typing indicator
     showTypingIndicator(true);
     
+    // Asegurarnos de que tenemos el contenido de la página si no lo hemos escaneado aún
+    if (!siteContentScanned) {
+      scanCurrentPageContent();
+    }
+    
     try {
+      // Mensaje de debug para verificar el envío de información contextual
+      console.log("Enviando mensaje con contexto de página:", {
+        url: window.location.href,
+        title: pageTitle,
+        contentLength: currentPageContent ? currentPageContent.length : 0
+      });
+      
       // Send message to server
       const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/message`, {
         method: 'POST',
@@ -1135,11 +1147,11 @@ Contenido: [Error al extraer contenido detallado]
           conversationId: config.conversationId,
           content: message,
           role: 'user',
-          pageContext: siteContentScanned ? {
-            title: pageTitle,
+          pageContext: {
+            title: pageTitle || document.title,
             url: window.location.href,
             content: currentPageContent
-          } : undefined
+          }
         }),
       });
       
