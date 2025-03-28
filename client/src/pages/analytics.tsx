@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import DashboardTabs from "@/components/dashboard-tabs";
-import { CircleX, Clock, MessageSquare, BarChart, ArrowUp, ArrowDown } from "lucide-react";
+import { CircleX, Clock, MessageSquare, BarChart, ArrowUp, ArrowDown, ArrowLeft } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/context/auth-context";
 import ProductDemandChart from "@/components/analytics/product-demand-chart";
@@ -18,6 +20,7 @@ import {
 
 export default function Analytics() {
   const { user } = useAuth();
+  const [, navigate] = useLocation();
   
   // Fetch dashboard stats
   const { data: stats, isLoading: isLoadingStats, error: statsError } = useQuery<DashboardStats>({
@@ -74,11 +77,21 @@ export default function Analytics() {
   return (
     <div className="container px-4 mx-auto py-8">
       <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">Analytics</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Dashboard analytics and insights for your integrations and conversations.
-          </p>
+        <div className="flex flex-wrap justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Analytics</h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Dashboard analytics and insights for your integrations and conversations.
+            </p>
+          </div>
+          <Button 
+            onClick={() => navigate('/dashboard')}
+            variant="outline" 
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </Button>
         </div>
 
         <DashboardTabs />

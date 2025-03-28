@@ -405,9 +405,10 @@ export default function DashboardTabs() {
                   }}
                   onViewAnalytics={() => {
                     toast({
-                      title: "View analytics",
-                      description: `Viewing analytics for ${automation.name}`,
+                      title: "Redirecting to analytics",
+                      description: `Viewing analytics for all automations and integrations`,
                     });
+                    navigate('/analytics');
                   }}
                 />
               ))}
@@ -577,9 +578,10 @@ export default function DashboardTabs() {
                     }}
                     onViewAnalytics={() => {
                       toast({
-                        title: "View analytics",
-                        description: `Viewing analytics for ${integration.name}`,
+                        title: "Redirecting to analytics",
+                        description: `Viewing analytics for all automations and integrations`,
                       });
+                      navigate('/analytics');
                     }}
                   />
                 ))}
