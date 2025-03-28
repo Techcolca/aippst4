@@ -1,19 +1,43 @@
-import { useEffect } from "react";
-import { Link } from "wouter";
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog";
+import { 
+  Tabs, 
+  TabsContent, 
+  TabsList, 
+  TabsTrigger 
+} from "@/components/ui/tabs";
 import { useTheme } from "@/context/theme-context";
 import { useAuth } from "@/context/auth-context";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ChatInterface from "@/components/chat-interface";
-import { Bot, Code, BarChart3, Rocket } from "lucide-react";
+import { Bot, Code, BarChart3, Rocket, CopyIcon } from "lucide-react";
 
 export default function Home() {
+  const [location, setLocation] = useState("/");
   const { theme } = useTheme();
   const { user } = useAuth();
+  const [copied, setCopied] = useState(false);
   
-  // Eliminado el widget adicional para no interferir con el widget principal
+  // Función para copiar el código de integración
+  const copyIntegrationCode = () => {
+    const code = `<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/aipi-web-widget.js?key=aipi_web_internal"></script>`;
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -32,9 +56,132 @@ export default function Home() {
                   AIPI is the intelligent conversational platform that enhances your website with real-time AI assistance, task automation, and personalized user interactions.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="bg-primary-600 hover:bg-primary-700">
-                    Get Started
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="lg" className="bg-primary-600 hover:bg-primary-700">
+                        Get Started
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[600px]">
+                      <DialogHeader>
+                        <DialogTitle>Comienza con AIPI en tu sitio web</DialogTitle>
+                        <DialogDescription>
+                          Sigue estos pasos para integrar AIPI en tu sitio web y comenzar a ofrecer conversaciones inteligentes a tus visitantes.
+                        </DialogDescription>
+                      </DialogHeader>
+                      
+                      <Tabs defaultValue="bubble" className="mt-4">
+                        <TabsList className="grid grid-cols-2">
+                          <TabsTrigger value="bubble">Widget flotante (burbuja)</TabsTrigger>
+                          <TabsTrigger value="fullscreen">Pantalla completa (estilo ChatGPT)</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="bubble" className="mt-4">
+                          <div className="space-y-4">
+                            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
+                              <h3 className="font-medium mb-2">Paso 1: Agrega este código a tu sitio web</h3>
+                              <div className="relative">
+                                <pre className="bg-black text-white p-4 rounded-md overflow-x-auto text-sm">
+                                  {`<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/aipi-web-widget.js?key=aipi_web_internal"></script>`}
+                                </pre>
+                                <button 
+                                  onClick={copyIntegrationCode} 
+                                  className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white p-1 rounded-md"
+                                  title="Copiar código"
+                                >
+                                  <CopyIcon size={16} />
+                                </button>
+                                {copied && (
+                                  <span className="absolute top-2 right-10 text-green-500 text-sm">¡Copiado!</span>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
+                              <h3 className="font-medium mb-2">Paso 2: Personaliza el widget</h3>
+                              <p>Personaliza la apariencia y comportamiento del widget desde tu panel de control de AIPI.</p>
+                              {user ? (
+                                <Button className="mt-2" onClick={() => setLocation("/dashboard/integrations")}>
+                                  Ir al Panel de Control
+                                </Button>
+                              ) : (
+                                <Button className="mt-2" onClick={() => setLocation("/login")}>
+                                  Iniciar Sesión
+                                </Button>
+                              )}
+                            </div>
+                            
+                            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
+                              <h3 className="font-medium mb-2">Paso 3: Entrena tu asistente</h3>
+                              <p>Sube documentos y configura el comportamiento del asistente para que responda según las necesidades de tu negocio.</p>
+                            </div>
+                          </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="fullscreen" className="mt-4">
+                          <div className="space-y-4">
+                            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
+                              <h3 className="font-medium mb-2">Paso 1: Agrega este código a tu sitio web</h3>
+                              <div className="relative">
+                                <pre className="bg-black text-white p-4 rounded-md overflow-x-auto text-sm">
+                                  {`<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/fullscreen-embed.js?key=aipi_web_internal"></script>`}
+                                </pre>
+                                <button 
+                                  onClick={() => {
+                                    navigator.clipboard.writeText(`<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/fullscreen-embed.js?key=aipi_web_internal"></script>`);
+                                    setCopied(true);
+                                    setTimeout(() => setCopied(false), 2000);
+                                  }} 
+                                  className="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white p-1 rounded-md"
+                                  title="Copiar código"
+                                >
+                                  <CopyIcon size={16} />
+                                </button>
+                                {copied && (
+                                  <span className="absolute top-2 right-10 text-green-500 text-sm">¡Copiado!</span>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
+                              <h3 className="font-medium mb-2">Paso 2: Personaliza la interfaz</h3>
+                              <p>Configura la interfaz de pantalla completa para que se integre con el diseño de tu sitio web.</p>
+                              {user ? (
+                                <Button className="mt-2" onClick={() => setLocation("/dashboard/integrations")}>
+                                  Ir al Panel de Control
+                                </Button>
+                              ) : (
+                                <Button className="mt-2" onClick={() => setLocation("/login")}>
+                                  Iniciar Sesión
+                                </Button>
+                              )}
+                            </div>
+                            
+                            <div className="bg-gray-100 dark:bg-gray-800 rounded-md p-4">
+                              <h3 className="font-medium mb-2">Paso 3: Configura las respuestas</h3>
+                              <p>Define el comportamiento de tu asistente y entrénalo con documentos específicos de tu negocio.</p>
+                            </div>
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+                      
+                      <DialogFooter className="mt-6">
+                        <DialogClose asChild>
+                          <Button variant="outline">Cerrar</Button>
+                        </DialogClose>
+                        {user ? (
+                          <Button onClick={() => setLocation("/dashboard")}>
+                            Ir al Dashboard
+                          </Button>
+                        ) : (
+                          <Button onClick={() => setLocation("/register")}>
+                            Crear Cuenta
+                          </Button>
+                        )}
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                  
                   <Button size="lg" variant="outline">
                     Watch Demo
                   </Button>
