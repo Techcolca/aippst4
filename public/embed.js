@@ -298,7 +298,7 @@ Contenido: [Error al extraer contenido detallado]
     if (config.widgetType === 'fullscreen') {
       widgetInstance.classList.add('aipi-fullscreen-widget');
       
-      // Crear botón de acceso flotante para modo pantalla completa
+      // Crear botón de acceso flotante para modo pantalla completa y añadirlo directamente al body
       const fullscreenButton = document.createElement('div');
       fullscreenButton.id = 'aipi-fullscreen-button';
       fullscreenButton.innerHTML = `
@@ -311,7 +311,9 @@ Contenido: [Error al extraer contenido detallado]
         </div>
         <div class="aipi-fullscreen-button-text">AIPI Assistant</div>
       `;
-      widgetInstance.appendChild(fullscreenButton);
+      
+      // No añadir el botón dentro del widget, sino directamente al body para que sea independiente
+      document.body.appendChild(fullscreenButton);
       
       // Agregar evento para abrir el chat al hacer clic en el botón
       fullscreenButton.addEventListener('click', () => {
@@ -682,6 +684,35 @@ Contenido: [Error al extraer contenido detallado]
       .aipi-fullscreen-button-text {
         font-weight: 600;
         font-size: 14px;
+      }
+      
+      /* Estilos para el botón flotante del modo pantalla completa */
+      #aipi-fullscreen-button {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background-color: ${config.themeColor};
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 999999;
+        transition: all 0.3s ease;
+      }
+      
+      #aipi-fullscreen-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+      }
+      
+      .aipi-fullscreen-button-icon {
+        margin-right: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     `;
     document.head.appendChild(widgetStyles);
