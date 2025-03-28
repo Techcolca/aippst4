@@ -937,6 +937,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Serve test HTML file
+  app.get("/test-fullscreen.html", (req, res) => {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const testFilePath = path.resolve(currentDir, '../test-fullscreen.html');
+    
+    if (fs.existsSync(testFilePath)) {
+      res.setHeader("Content-Type", "text/html");
+      res.sendFile(testFilePath);
+    } else {
+      res.status(404).json({ message: "Test file not found" });
+    }
+  });
+  
   const httpServer = createServer(app);
   
   return httpServer;

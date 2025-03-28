@@ -99,7 +99,7 @@ export default function EditIntegration() {
       });
       
       // Actualizar el script de ejemplo con la API Key
-      setScriptExample(`<script src="https://api.aipi.example.com/widget.js?key=${integration.apiKey}"></script>`);
+      setScriptExample(`<script src="https://api.aipi.example.com/embed.js?key=${integration.apiKey}"></script>`);
       
       // Cargar el contenido del sitio
       loadSiteContent();
