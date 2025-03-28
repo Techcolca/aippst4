@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import StatCard from "@/components/stat-card";
@@ -20,6 +20,18 @@ interface DashboardStats {
 export default function Dashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [location] = useLocation();
+  const [initialTab, setInitialTab] = useState("automation");
+  
+  // Parse URL query parameters to set the initial tab
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const tabParam = searchParams.get("tab");
+    
+    if (tabParam && ["automation", "conversations", "integrations", "settings"].includes(tabParam)) {
+      setInitialTab(tabParam);
+    }
+  }, [location]);
   
   // Fetch dashboard stats
   const { data: stats, isLoading: isLoadingStats } = useQuery<DashboardStats>({
@@ -89,7 +101,7 @@ export default function Dashboard() {
           </div>
           
           {/* Dashboard Tabs */}
-          <DashboardTabs />
+          <DashboardTabs initialTab={initialTab} />
         </div>
       </main>
       

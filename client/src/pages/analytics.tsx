@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import DashboardTabs from "@/components/dashboard-tabs";
 import { CircleX, Clock, MessageSquare, BarChart, ArrowUp, ArrowDown, ArrowLeft } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/context/auth-context";
@@ -94,7 +93,6 @@ export default function Analytics() {
           </Button>
         </div>
 
-        <DashboardTabs />
 
         {isLoading ? (
           <div className="flex items-center justify-center p-8">

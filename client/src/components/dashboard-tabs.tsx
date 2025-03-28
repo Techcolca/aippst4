@@ -17,8 +17,13 @@ import AutomationCard from "./automation-card";
 import IntegrationCard from "./integration-card";
 import { useAuth } from "@/context/auth-context";
 
-export default function DashboardTabs() {
-  const [activeTab, setActiveTab] = useState("automation");
+export default function DashboardTabs({ initialTab = "automation" }) {
+  const [activeTab, setActiveTab] = useState(initialTab);
+  
+  // Update active tab if initialTab prop changes
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
   const [apiKey, setApiKey] = useState("");
   const [, navigate] = useLocation();
   const [scriptExample, setScriptExample] = useState('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');

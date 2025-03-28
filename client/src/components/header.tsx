@@ -27,9 +27,9 @@ export default function Header() {
   
   const navLinks = [
     { name: "Dashboard", href: "/dashboard", auth: true },
-    { name: "Integrations", href: "/integrations", auth: true },
+    { name: "Integrations", href: "/dashboard?tab=integrations", auth: true },
     { name: "Analytics", href: "/analytics", auth: true },
-    { name: "Settings", href: "/settings", auth: true },
+    { name: "Settings", href: "/dashboard?tab=settings", auth: true },
   ];
   
   const publicLinks = [
@@ -93,10 +93,10 @@ export default function Header() {
                   <DropdownMenuLabel>Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">Profile</Link>
+                    <Link href="/dashboard">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/settings">Settings</Link>
+                    <Link href="/dashboard?tab=settings">Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
