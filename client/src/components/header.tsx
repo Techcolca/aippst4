@@ -93,7 +93,7 @@ export default function Header() {
                   <DropdownMenuLabel>Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard">Profile</Link>
+                    <Link href="/dashboard?tab=profile">Profile</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard?tab=settings">Settings</Link>

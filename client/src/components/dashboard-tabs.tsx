@@ -15,15 +15,22 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import AutomationCard from "./automation-card";
 import IntegrationCard from "./integration-card";
+import ProfileSection from "./profile-section";
 import { useAuth } from "@/context/auth-context";
+import { Copy as CopyIcon } from "lucide-react";
 
 export default function DashboardTabs({ initialTab = "automation" }) {
-  const [activeTab, setActiveTab] = useState(initialTab);
+  // Transform initialTab if it's "profile" to "settings"
+  const normalizedInitialTab = initialTab === "profile" ? "settings" : initialTab;
+  const [activeTab, setActiveTab] = useState(normalizedInitialTab);
   
   // Update active tab if initialTab prop changes
   useEffect(() => {
-    setActiveTab(initialTab);
+    // Transform initialTab if it's "profile" to "settings"
+    const tabToShow = initialTab === "profile" ? "settings" : initialTab;
+    setActiveTab(tabToShow);
   }, [initialTab]);
+  
   const [apiKey, setApiKey] = useState("");
   const [, navigate] = useLocation();
   const [scriptExample, setScriptExample] = useState('<script src="https://api.aipi.example.com/widget.js?key=YOUR_API_KEY"></script>');
@@ -333,59 +340,10 @@ export default function DashboardTabs({ initialTab = "automation" }) {
     }
   };
   
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
-      <div className="px-4 sm:px-6 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex -mb-px overflow-x-auto">
-          <button 
-            data-tab="automation" 
-            onClick={() => handleTabChange("automation")}
-            className={`py-4 px-6 font-medium rounded-t-lg ${
-              activeTab === "automation"
-                ? "bg-primary-500 text-white"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-            }`}
-          >
-            Task Automation
-          </button>
-          <button 
-            data-tab="conversations" 
-            onClick={() => handleTabChange("conversations")}
-            className={`py-4 px-6 font-medium rounded-t-lg ${
-              activeTab === "conversations"
-                ? "bg-primary-500 text-white"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-            }`}
-          >
-            Conversations
-          </button>
-          <button 
-            data-tab="integrations" 
-            onClick={() => handleTabChange("integrations")}
-            className={`py-4 px-6 font-medium rounded-t-lg ${
-              activeTab === "integrations"
-                ? "bg-primary-500 text-white"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-            }`}
-          >
-            Website Integrations
-          </button>
-          <button 
-            data-tab="settings" 
-            onClick={() => handleTabChange("settings")}
-            className={`py-4 px-6 font-medium rounded-t-lg ${
-              activeTab === "settings"
-                ? "bg-primary-500 text-white"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-            }`}
-          >
-            Settings
-          </button>
-        </div>
-      </div>
-      
-      {/* Automation Tab Panel */}
-      <div data-tab-panel="automation" className={`p-6 ${activeTab !== "automation" ? "hidden" : ""}`}>
+  // Render automations tab content
+  const renderAutomationsTab = () => {
+    return (
+      <div>
         <h2 className="text-xl font-semibold mb-4">Task Automation</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">Create automated sequences to handle repetitive tasks and common user inquiries.</p>
         
@@ -394,7 +352,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
             <p>Loading automations...</p>
           ) : (
             <>
-              {automations.map((automation: any) => (
+              {Array.isArray(automations) && automations.map((automation: any) => (
                 <AutomationCard
                   key={automation.id}
                   name={automation.name}
@@ -434,370 +392,267 @@ export default function DashboardTabs({ initialTab = "automation" }) {
           )}
         </div>
       </div>
-      
-      {/* Conversations Tab Panel */}
-      <div data-tab-panel="conversations" className={`p-6 ${activeTab !== "conversations" ? "hidden" : ""}`}>
-        <h2 className="text-xl font-semibold mb-4">Conversation History</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Review past conversations and analyze performance.</p>
+    );
+  };
+  
+  // Render conversations tab content
+  const renderConversationsTab = () => {
+    return (
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Conversations</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">View and manage conversations with your website visitors.</p>
         
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead className="bg-gray-50 dark:bg-gray-800">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Conversation</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Duration</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-              {isLoadingConversations ? (
+        {isLoadingConversations ? (
+          <p>Loading conversations...</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white dark:bg-gray-800 shadow-sm rounded-md">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                    Cargando conversaciones...
-                  </td>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Visitor</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Integration</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                  <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                 </tr>
-              ) : conversations.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                    No hay conversaciones disponibles
-                  </td>
-                </tr>
-              ) : (
-                conversations.map((conversation: any) => {
-                  // Formato de fecha
-                  const createdAt = conversation.createdAt 
-                    ? new Date(conversation.createdAt)
-                    : new Date();
-                  
-                  const dateFormatted = new Intl.DateTimeFormat('es', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  }).format(createdAt);
-                  
-                  // Generar iniciales del visitante
-                  const visitorId = conversation.visitorId || 'Anónimo';
-                  const initials = visitorId.substring(0, 2).toUpperCase();
-                  
-                  // Formatear duración
-                  const formatDuration = (seconds: number) => {
-                    if (!seconds) return "N/A";
-                    const minutes = Math.floor(seconds / 60);
-                    const remainingSeconds = seconds % 60;
-                    return `${minutes}m ${remainingSeconds}s`;
-                  };
-                  
-                  return (
-                    <tr key={conversation.id}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                            {initials}
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                              Visitante {visitorId.substring(0, 8)}
-                            </div>
-                            <div className="text-sm text-gray-500 dark:text-gray-400">
-                              {conversation.integrationName || "Integración desconocida"}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900 dark:text-white truncate max-w-xs">
-                          Conversación #{conversation.id}
-                        </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {conversation.url ? (
-                            <a href={conversation.url} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                              {new URL(conversation.url).hostname}
-                            </a>
-                          ) : (
-                            "URL no disponible"
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {dateFormatted}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {formatDuration(conversation.duration || 0)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {conversation.resolved ? (
-                          <span className="px-2 py-1 text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full">
-                            Resuelta
-                          </span>
-                        ) : (
-                          <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">
-                            Abierta
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button 
-                          onClick={() => handleViewConversation(conversation)}
-                          className="text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-300"
-                        >
-                          Ver
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {Array.isArray(conversations) && conversations.map((conv: any) => (
+                  <tr key={conv.id} className="hover:bg-gray-50 dark:hover:bg-gray-900">
+                    <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">{conv.id}</td>
+                    <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">
+                      {conv.visitorId ? conv.visitorId.substring(0, 8) + '...' : 'Anonymous'}
+                    </td>
+                    <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">{conv.integrationName || 'Unknown'}</td>
+                    <td className="py-3 px-4 text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(conv.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        conv.resolved 
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      }`}>
+                        {conv.resolved ? 'Resolved' : 'Open'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <Button variant="outline" size="sm" onClick={() => handleViewConversation(conv)}>
+                        View Messages
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+                
+                {Array.isArray(conversations) && conversations.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-4 px-6 text-center text-gray-500 dark:text-gray-400">
+                      No conversations found
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
-      
-      {/* Integrations Tab Panel */}
-      <div data-tab-panel="integrations" className={`p-6 ${activeTab !== "integrations" ? "hidden" : ""}`}>
+    );
+  };
+  
+  // Render integrations tab content
+  const renderIntegrationsTab = () => {
+    return (
+      <div>
         <h2 className="text-xl font-semibold mb-4">Website Integrations</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Manage and monitor AIPI integrations across your websites.</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">Create and manage website integrations for AIPI.</p>
         
+        {/* Existing Integrations */}
         <div className="mb-8">
-          <h3 className="text-lg font-medium mb-4">Active Integrations</h3>
+          <h3 className="text-lg font-medium mb-4">Your Integrations</h3>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {isLoadingIntegrations ? (
               <p>Loading integrations...</p>
             ) : (
               <>
-                {integrations.map((integration: any) => (
+                {Array.isArray(integrations) && integrations.map((integration: any) => (
                   <IntegrationCard
                     key={integration.id}
                     name={integration.name}
                     url={integration.url}
-                    active={integration.active}
-                    visitorCount={integration.visitorCount}
-                    installedDate={new Date(integration.createdAt).toLocaleDateString()}
-                    onEdit={() => {
-                      // Redireccionar a la página de edición
-                      navigate(`/integrations/${integration.id}/edit`);
-                    }}
-                    onViewAnalytics={() => {
-                      toast({
-                        title: "Redirecting to analytics",
-                        description: `Viewing analytics for all automations and integrations`,
-                      });
-                      navigate('/analytics');
+                    visitors={integration.visitorCount || 0}
+                    onEdit={() => navigate(`/integrations/${integration.id}/edit`)}
+                    onViewAnalytics={() => navigate('/analytics')}
+                    onViewConversations={() => {
+                      // Change tab to conversations and filter by integration
+                      handleTabChange('conversations');
                     }}
                   />
                 ))}
+                
+                {/* New Integration Card */}
+                <Card className="border border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-6">
+                  <h3 className="font-medium text-lg mb-4">Create New Integration</h3>
+                  
+                  <form onSubmit={handleCreateIntegration} className="space-y-6">
+                    <div>
+                      <Label htmlFor="integration-name">Integration Name</Label>
+                      <Input 
+                        id="integration-name" 
+                        name="name" 
+                        value={newIntegration.name}
+                        onChange={handleIntegrationFormChange}
+                        placeholder="My Website" 
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="website-url">Website URL</Label>
+                      <Input 
+                        id="website-url" 
+                        name="url" 
+                        value={newIntegration.url}
+                        onChange={handleIntegrationFormChange}
+                        placeholder="https://example.com" 
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="api-key">API Key</Label>
+                      <div className="flex">
+                        <Input 
+                          id="api-key" 
+                          name="apiKey" 
+                          value={apiKey}
+                          readOnly
+                          placeholder="Generate API Key" 
+                          ref={apiKeyInputRef}
+                          className="flex-1"
+                        />
+                        <Button 
+                          type="button" 
+                          onClick={generateApiKey}
+                          className="ml-2"
+                        >
+                          Generate
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="theme-color">Theme Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <input 
+                          type="color" 
+                          id="theme-color" 
+                          name="themeColor" 
+                          value={newIntegration.themeColor}
+                          onChange={handleThemeColorChange}
+                          className="h-10 w-10 border border-gray-300 dark:border-gray-600 rounded shadow-sm"
+                        />
+                        <Input 
+                          value={newIntegration.themeColor}
+                          onChange={handleThemeColorChange}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="position">Widget Position</Label>
+                      <Select value={newIntegration.position} onValueChange={handlePositionChange}>
+                        <SelectTrigger id="position">
+                          <SelectValue placeholder="Select position" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="bottom-right">Bottom Right</SelectItem>
+                          <SelectItem value="bottom-left">Bottom Left</SelectItem>
+                          <SelectItem value="top-right">Top Right</SelectItem>
+                          <SelectItem value="top-left">Top Left</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="bot-behavior">Assistant's Behavior</Label>
+                      <Textarea 
+                        id="bot-behavior" 
+                        name="botBehavior" 
+                        value={newIntegration.botBehavior}
+                        onChange={handleIntegrationFormChange}
+                        rows={3}
+                        placeholder="Describe how AIPI should behave and respond to users" 
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="documents">Upload Documents (Optional)</Label>
+                      <Input 
+                        id="documents" 
+                        type="file" 
+                        onChange={handleFileChange}
+                        multiple
+                        className="cursor-pointer"
+                      />
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        Upload PDF, DOCX, or TXT files to help AIPI answer questions about your content (max 5MB per file)
+                      </p>
+                      
+                      {selectedFiles.length > 0 && (
+                        <div className="mt-2">
+                          <h4 className="text-sm font-medium">Selected files:</h4>
+                          <ul className="list-disc pl-5 text-sm text-gray-600 dark:text-gray-400">
+                            {selectedFiles.map((file, index) => (
+                              <li key={index}>{file.name} ({(file.size / 1024).toFixed(1)} KB)</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div>
+                      <Label className="block mb-2">Installation Code</Label>
+                      <div className="bg-gray-50 dark:bg-gray-900 rounded p-3 font-mono text-sm text-gray-800 dark:text-gray-200 mb-2 overflow-x-auto">
+                        {scriptExample}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        This code will be generated after creating the integration
+                      </p>
+                    </div>
+                    
+                    <Button type="submit" className="w-full">
+                      Create Integration
+                    </Button>
+                  </form>
+                </Card>
               </>
             )}
           </div>
         </div>
-        
-        <div className="mb-8">
-          <h3 className="text-lg font-medium mb-4">Add New Integration</h3>
-          <form onSubmit={handleCreateIntegration} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
-            <div className="mb-6">
-              <h4 className="text-md font-medium mb-2">Website Information</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="name">Website Name</Label>
-                  <Input 
-                    id="name" 
-                    name="name" 
-                    value={newIntegration.name}
-                    onChange={handleIntegrationFormChange}
-                    placeholder="e.g. Product Blog" 
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="url">Website URL</Label>
-                  <Input 
-                    id="url" 
-                    name="url" 
-                    value={newIntegration.url}
-                    onChange={handleIntegrationFormChange}
-                    placeholder="https://blog.example.com" 
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h4 className="text-md font-medium mb-2">Integration Settings</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="themeColor">Theme Color</Label>
-                  <div className="flex">
-                    <input 
-                      type="color" 
-                      id="themeColor" 
-                      name="themeColor" 
-                      value={newIntegration.themeColor}
-                      onChange={handleThemeColorChange}
-                      className="h-10 w-10 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500" 
-                    />
-                    <Input 
-                      className="ml-2" 
-                      value={newIntegration.themeColor}
-                      onChange={handleThemeColorChange}
-                      name="themeColorText"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="position">Widget Position</Label>
-                  <Select 
-                    value={newIntegration.position}
-                    onValueChange={handlePositionChange}
-                  >
-                    <SelectTrigger id="position">
-                      <SelectValue placeholder="Select a position" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                      <SelectItem value="bottom-left">Bottom Left</SelectItem>
-                      <SelectItem value="top-right">Top Right</SelectItem>
-                      <SelectItem value="top-left">Top Left</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h4 className="text-md font-medium mb-2">API Key</h4>
-              <div className="mb-4">
-                <Label htmlFor="api-key">API Key</Label>
-                <div className="flex mt-1">
-                  <Input 
-                    id="api-key" 
-                    ref={apiKeyInputRef}
-                    value={apiKey} 
-                    readOnly 
-                    className="font-mono text-xs bg-gray-50 dark:bg-gray-900" 
-                    placeholder="No API key generated yet" 
-                  />
-                  <Button 
-                    className="ml-2" 
-                    variant="outline"
-                    type="button"
-                    onClick={() => {
-                      if (apiKey) {
-                        navigator.clipboard.writeText(apiKey);
-                        toast({
-                          title: "Copied to clipboard",
-                          description: "API Key copied to clipboard",
-                        });
-                      }
-                    }}
-                    disabled={!apiKey}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                    </svg>
-                  </Button>
-                </div>
-              </div>
-            
-              <div className="flex justify-end mb-4">
-                <Button onClick={generateApiKey} type="button">
-                  Generate API Key
-                </Button>
-              </div>
-            </div>
-              
-            <div className="mb-6">
-              <h4 className="text-md font-medium mb-2">Installation</h4>
-              <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-md">
-                <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">Add this script to your website's HTML just before the closing <code className="font-mono text-xs bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">&lt;/body&gt;</code> tag:</p>
-                <div className="relative">
-                  <pre className="text-xs text-gray-800 dark:text-gray-200 overflow-x-auto font-mono bg-white dark:bg-gray-800 p-3 rounded border border-gray-300 dark:border-gray-700"><code>{scriptExample}</code></pre>
-                  <Button 
-                    className="absolute top-2 right-2 p-1 h-auto text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" 
-                    variant="ghost"
-                    type="button"
-                    aria-label="Copy code"
-                    onClick={() => {
-                      navigator.clipboard.writeText(scriptExample);
-                      toast({
-                        title: "Copied to clipboard",
-                        description: "Script tag copied to clipboard",
-                      });
-                    }}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                    </svg>
-                  </Button>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h4 className="text-md font-medium mb-2">Comportamiento del Chatbot</h4>
-              <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-md">
-                <Label htmlFor="botBehavior">Comportamiento y Personalidad</Label>
-                <Textarea 
-                  id="botBehavior" 
-                  name="botBehavior" 
-                  value={newIntegration.botBehavior}
-                  onChange={handleIntegrationFormChange}
-                  placeholder="Define cómo debe comportarse el chatbot. Por ejemplo: Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
-                  className="mt-1 text-sm bg-white dark:bg-gray-800 min-h-[100px]"
-                />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  Define la personalidad y comportamiento del chatbot. Esta descripción guiará las respuestas del AI.
-                </p>
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h4 className="text-md font-medium mb-2">Documentos de Conocimiento</h4>
-              <div className="bg-gray-100 dark:bg-gray-900 p-4 rounded-md">
-                <Label htmlFor="documents">Subir Documentos</Label>
-                <div className="mt-1">
-                  <Input 
-                    type="file" 
-                    id="documents" 
-                    name="documents" 
-                    multiple
-                    onChange={handleFileChange}
-                    className="bg-white dark:bg-gray-800"
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.txt"
-                  />
-                </div>
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  Sube documentos (PDF, DOCX, Excel, TXT) para mejorar el conocimiento del chatbot sobre tu negocio.
-                </p>
-                {selectedFiles.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Archivos seleccionados:</p>
-                    <ul className="mt-1 list-disc list-inside text-xs text-gray-600 dark:text-gray-400">
-                      {selectedFiles.map((file, index) => (
-                        <li key={index}>{file.name} ({Math.round(file.size / 1024)} KB)</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            <div className="flex justify-end mt-8">
-              <Button 
-                type="submit" 
-                className="bg-primary-600 hover:bg-primary-700 text-white"
-              >
-                Crear Integración
-              </Button>
-            </div>
-          </form>
-        </div>
       </div>
-      
-      {/* Settings Tab Panel */}
-      <div data-tab-panel="settings" className={`p-6 ${activeTab !== "settings" ? "hidden" : ""}`}>
+    );
+  };
+  
+  // Render settings tab content
+  const renderSettingsTab = () => {
+    if (initialTab === "profile") {
+      return (
+        <div>
+          <h2 className="text-xl font-semibold mb-4">User Profile</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Manage your personal information and account details.</p>
+          
+          {isLoadingSettings ? (
+            <p>Loading profile information...</p>
+          ) : (
+            <ProfileSection />
+          )}
+        </div>
+      );
+    }
+    
+    return (
+      <div>
         <h2 className="text-xl font-semibold mb-4">AIPI Settings</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">Configure your AIPI assistant to match your preferences and requirements.</p>
         
@@ -816,7 +671,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     defaultValue={settings?.assistantName || "AIPI Assistant"} 
                   />
                 </div>
-                
+            
                 <div>
                   <Label htmlFor="default-greeting">Default Greeting Message</Label>
                   <Textarea 
@@ -989,8 +844,69 @@ export default function DashboardTabs({ initialTab = "automation" }) {
           </form>
         )}
       </div>
+    );
+  };
+  
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-8">
+      <div className="px-4 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex -mb-px overflow-x-auto">
+          <button 
+            data-tab="automation" 
+            onClick={() => handleTabChange("automation")}
+            className={`py-4 px-6 font-medium rounded-t-lg ${
+              activeTab === "automation"
+                ? "bg-primary-500 text-white"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            }`}
+          >
+            Task Automation
+          </button>
+          <button 
+            data-tab="conversations" 
+            onClick={() => handleTabChange("conversations")}
+            className={`py-4 px-6 font-medium rounded-t-lg ${
+              activeTab === "conversations"
+                ? "bg-primary-500 text-white"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            }`}
+          >
+            Conversations
+          </button>
+          <button 
+            data-tab="integrations" 
+            onClick={() => handleTabChange("integrations")}
+            className={`py-4 px-6 font-medium rounded-t-lg ${
+              activeTab === "integrations"
+                ? "bg-primary-500 text-white"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            }`}
+          >
+            Website Integrations
+          </button>
+          <button 
+            data-tab="settings" 
+            onClick={() => handleTabChange("settings")}
+            className={`py-4 px-6 font-medium rounded-t-lg ${
+              activeTab === "settings"
+                ? "bg-primary-500 text-white"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            }`}
+          >
+            Settings
+          </button>
+        </div>
+      </div>
       
-      {/* Modal de Conversación */}
+      {/* Tab Panels */}
+      <div className="p-6">
+        {activeTab === "automation" && renderAutomationsTab()}
+        {activeTab === "conversations" && renderConversationsTab()}
+        {activeTab === "integrations" && renderIntegrationsTab()}
+        {activeTab === "settings" && renderSettingsTab()}
+      </div>
+      
+      {/* Conversation Modal */}
       <Dialog open={isConversationModalOpen} onOpenChange={setIsConversationModalOpen}>
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
