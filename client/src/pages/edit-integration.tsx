@@ -27,6 +27,7 @@ interface Integration {
   visitorCount: number;
   botBehavior?: string;
   documentsData?: any[];
+  widgetType?: string;
 }
 
 interface SiteContent {
@@ -48,7 +49,8 @@ export default function EditIntegration() {
     themeColor: "#3B82F6",
     position: "bottom-right",
     active: true,
-    botBehavior: ""
+    botBehavior: "",
+    widgetType: "bubble"
   });
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [scriptExample, setScriptExample] = useState('');
@@ -92,7 +94,8 @@ export default function EditIntegration() {
         themeColor: integration.themeColor || "#3B82F6",
         position: integration.position || "bottom-right",
         active: integration.active,
-        botBehavior: integration.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."
+        botBehavior: integration.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
+        widgetType: integration.widgetType || "bubble"
       });
       
       // Actualizar el script de ejemplo con la API Key
@@ -134,6 +137,13 @@ export default function EditIntegration() {
     setFormData(prev => ({
       ...prev,
       position: value
+    }));
+  };
+  
+  const handleWidgetTypeChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      widgetType: value
     }));
   };
   
@@ -242,10 +252,30 @@ export default function EditIntegration() {
               </div>
               
               <div>
+                <Label htmlFor="widgetType">Tipo de widget</Label>
+                <Select
+                  value={formData.widgetType}
+                  onValueChange={handleWidgetTypeChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecciona el tipo de widget" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bubble">Widget flotante (burbuja)</SelectItem>
+                    <SelectItem value="fullscreen">Pantalla completa (estilo ChatGPT)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Selecciona el tipo de experiencia de chat que deseas ofrecer a tus usuarios.
+                </p>
+              </div>
+              
+              <div>
                 <Label htmlFor="position">Posición del widget</Label>
                 <Select
                   value={formData.position}
                   onValueChange={handlePositionChange}
+                  disabled={formData.widgetType === "fullscreen"}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona la posición" />
@@ -257,6 +287,11 @@ export default function EditIntegration() {
                     <SelectItem value="top-left">Arriba a la izquierda</SelectItem>
                   </SelectContent>
                 </Select>
+                {formData.widgetType === "fullscreen" && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    La posición no se aplica al modo de pantalla completa.
+                  </p>
+                )}
               </div>
               
               <div className="flex items-center space-x-2">

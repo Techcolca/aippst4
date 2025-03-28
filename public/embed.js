@@ -14,6 +14,7 @@
     autoOpenDelay: 5000, // in milliseconds
     visitorId: "",
     conversationId: null,
+    widgetType: "bubble", // "bubble" or "fullscreen"
     serverUrl: "https://api.aipi.example.com", // Will be overridden by script URL source
     fontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
   };
@@ -103,6 +104,7 @@
       if (data.integration) {
         config.position = data.integration.position || config.position;
         config.themeColor = data.integration.themeColor || config.themeColor;
+        config.widgetType = data.integration.widgetType || config.widgetType;
       }
       
       if (data.settings) {
@@ -292,6 +294,13 @@ Contenido: [Error al extraer contenido detallado]
     widgetInstance.style.zIndex = '999999';
     widgetInstance.style.fontFamily = getFontFamily();
     
+    // Agregar clase según el tipo de widget
+    if (config.widgetType === 'fullscreen') {
+      widgetInstance.classList.add('aipi-fullscreen-widget');
+    } else {
+      widgetInstance.classList.add('aipi-bubble-widget');
+    }
+    
     // Set position based on config
     setWidgetPosition();
     
@@ -314,6 +323,22 @@ Contenido: [Error al extraer contenido detallado]
         margin-bottom: 16px;
         transition: all 0.3s ease;
         font-family: ${getFontFamily()};
+      }
+
+      .aipi-fullscreen-widget #aipi-chat-panel {
+        width: 100%;
+        height: 100%;
+        margin-bottom: 0;
+        border-radius: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+
+      .aipi-fullscreen-widget #aipi-toggle-button {
+        display: none;
       }
       
       #aipi-chat-header {
@@ -663,23 +688,44 @@ Contenido: [Error al extraer contenido detallado]
   
   // Set widget position based on config
   function setWidgetPosition() {
+    // Para widgets tipo fullscreen, el posicionamiento es diferente
+    if (config.widgetType === 'fullscreen') {
+      widgetInstance.style.left = '0';
+      widgetInstance.style.top = '0';
+      widgetInstance.style.right = '0';
+      widgetInstance.style.bottom = '0';
+      widgetInstance.style.width = '100%';
+      widgetInstance.style.height = '100%';
+      widgetInstance.style.maxWidth = 'none';
+      return;
+    }
+    
+    // Para widgets tipo bubble (tipo original)
     switch (config.position) {
       case 'bottom-left':
         widgetInstance.style.bottom = '24px';
         widgetInstance.style.left = '24px';
+        widgetInstance.style.right = 'auto';
+        widgetInstance.style.top = 'auto';
         break;
       case 'top-right':
         widgetInstance.style.top = '24px';
         widgetInstance.style.right = '24px';
+        widgetInstance.style.left = 'auto';
+        widgetInstance.style.bottom = 'auto';
         break;
       case 'top-left':
         widgetInstance.style.top = '24px';
         widgetInstance.style.left = '24px';
+        widgetInstance.style.right = 'auto';
+        widgetInstance.style.bottom = 'auto';
         break;
       case 'bottom-right':
       default:
         widgetInstance.style.bottom = '24px';
         widgetInstance.style.right = '24px';
+        widgetInstance.style.left = 'auto';
+        widgetInstance.style.top = 'auto';
         break;
     }
   }
@@ -764,6 +810,27 @@ Contenido: [Error al extraer contenido detallado]
     const chatPanel = document.getElementById('aipi-chat-panel');
     const toggleButton = document.getElementById('aipi-toggle-button');
     
+    // Para widgets tipo fullscreen, abrir siempre directamente
+    if (config.widgetType === 'fullscreen') {
+      chatPanel.style.display = 'flex';
+      isOpen = true;
+      
+      // Start conversation if not already started
+      if (!conversationStarted) {
+        startConversation();
+      }
+      
+      // Focus input
+      setTimeout(() => {
+        document.getElementById('aipi-input').focus();
+      }, 300);
+      
+      // Scroll to bottom of messages
+      scrollToBottom();
+      return;
+    }
+    
+    // Para widgets tipo bubble (comportamiento original)
     // Update toggle button icon
     toggleButton.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -800,6 +867,13 @@ Contenido: [Error al extraer contenido detallado]
     const minimizedContainer = document.getElementById('aipi-minimized-container');
     const toggleButton = document.getElementById('aipi-toggle-button');
     
+    // Para widgets tipo fullscreen, no permitir cerrar completamente
+    if (config.widgetType === 'fullscreen') {
+      minimizeWidget();
+      return;
+    }
+    
+    // Para widgets tipo bubble (comportamiento original)
     // Update toggle button icon
     toggleButton.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -819,6 +893,22 @@ Contenido: [Error al extraer contenido detallado]
     const chatPanel = document.getElementById('aipi-chat-panel');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
     
+    // Para el widget tipo fullscreen, minimizar significa hacerlo más pequeño pero no ocultarlo
+    if (config.widgetType === 'fullscreen') {
+      // Si es fullscreen, cambiamos el estilo a bubble temporalmente
+      chatPanel.style.width = '350px';
+      chatPanel.style.height = '500px';
+      chatPanel.style.position = 'fixed';
+      chatPanel.style.bottom = '24px';
+      chatPanel.style.right = '24px';
+      chatPanel.style.left = 'auto';
+      chatPanel.style.top = 'auto';
+      chatPanel.style.borderRadius = '10px';
+      isMinimized = true;
+      return;
+    }
+    
+    // Para widgets tipo bubble (comportamiento original)
     chatPanel.style.display = 'none';
     minimizedContainer.style.display = 'flex';
     isMinimized = true;
@@ -829,6 +919,30 @@ Contenido: [Error al extraer contenido detallado]
     const chatPanel = document.getElementById('aipi-chat-panel');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
     
+    // Para el widget tipo fullscreen, maximizar significa restaurar su tamaño completo
+    if (config.widgetType === 'fullscreen') {
+      // Restaurar el estilo fullscreen
+      chatPanel.style.width = '100%';
+      chatPanel.style.height = '100%';
+      chatPanel.style.position = 'fixed';
+      chatPanel.style.top = '0';
+      chatPanel.style.left = '0';
+      chatPanel.style.right = '0';
+      chatPanel.style.bottom = '0';
+      chatPanel.style.borderRadius = '0';
+      isMinimized = false;
+      
+      // Focus input
+      setTimeout(() => {
+        document.getElementById('aipi-input').focus();
+      }, 300);
+      
+      // Scroll to bottom of messages
+      scrollToBottom();
+      return;
+    }
+    
+    // Para widgets tipo bubble (comportamiento original)
     minimizedContainer.style.display = 'none';
     chatPanel.style.display = 'flex';
     isMinimized = false;

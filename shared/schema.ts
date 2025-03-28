@@ -34,6 +34,7 @@ export const integrations = pgTable("integrations", {
   visitorCount: integer("visitor_count").default(0),
   botBehavior: text("bot_behavior").default("Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."),
   documentsData: json("documents_data").default([]), // Almacenará metadatos de los documentos subidos
+  widgetType: text("widget_type").default("bubble"), // Tipo de widget: "bubble" (original) o "fullscreen" (estilo ChatGPT)
 });
 
 export const insertIntegrationSchema = createInsertSchema(integrations).pick({
@@ -43,6 +44,7 @@ export const insertIntegrationSchema = createInsertSchema(integrations).pick({
   themeColor: true,
   position: true,
   botBehavior: true,
+  widgetType: true,
 });
 
 // Conversation schema
