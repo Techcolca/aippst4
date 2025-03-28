@@ -19,6 +19,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [conversationId, setConversationId] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Initial greeting
@@ -30,13 +31,47 @@ export default function ChatInterface({ demoMode = false, integrationId, context
           content: '👋 Hi there! I\'m AIPI, your AI assistant. How can I help you today?' 
         }
       ]);
+      
+      // If not in demo mode, start conversation with the API
+      if (!demoMode) {
+        startConversation();
+      }
     }
-  }, [messages]);
+  }, [messages, demoMode]);
   
   // Auto scroll to bottom of chat
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+  
+  // Start a new conversation with the API
+  const startConversation = async () => {
+    try {
+      // Using a default API key for testing within the app itself
+      const apiKey = 'aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
+      
+      // Create a visitor ID (could be more sophisticated in a real app)
+      const visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
+      
+      const response = await fetch(`/api/widget/${apiKey}/conversation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ visitorId })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error starting conversation: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setConversationId(data.id);
+      console.log('Conversation started:', data.id);
+    } catch (error) {
+      console.error('Failed to start conversation:', error);
+    }
+  };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -69,8 +104,30 @@ export default function ChatInterface({ demoMode = false, integrationId, context
         response = Object.keys(demoResponses).find(key => lowerInput.includes(key))
           ? demoResponses[Object.keys(demoResponses).find(key => lowerInput.includes(key)) as string]
           : "I understand. Let me look into that for you. Is there anything specific you'd like to know about this topic?";
+      } else if (conversationId) {
+        // Real API response using the widget API
+        const apiKey = 'aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
+        
+        const messageResponse = await fetch(`/api/widget/${apiKey}/message`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            conversationId,
+            content: inputValue,
+            role: 'user'
+          })
+        });
+        
+        if (!messageResponse.ok) {
+          throw new Error(`Error sending message: ${messageResponse.status}`);
+        }
+        
+        const data = await messageResponse.json();
+        response = data.aiMessage.content;
       } else {
-        // Real API response
+        // Fallback to the generateChatCompletion function
         response = await generateChatCompletion(
           messages.concat(userMessage),
           context
