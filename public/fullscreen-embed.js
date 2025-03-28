@@ -176,10 +176,11 @@
           padding: 12px 20px;
           border-radius: 50px;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          cursor: pointer;
+          cursor: pointer !important;
           z-index: 999999;
           font-family: Arial, sans-serif;
           transition: all 0.3s ease;
+          pointer-events: auto !important;
         }
         
         #aipi-fs-button:hover {
@@ -403,14 +404,32 @@
       
       // Append to document
       document.head.appendChild(style);
-      document.body.appendChild(widgetButton);
+      
+      // Crear un contenedor para el botón que asegure que los eventos funcionen
+      const widgetContainer = document.createElement('div');
+      widgetContainer.id = 'aipi-fs-container';
+      widgetContainer.style.cssText = 'position: fixed; bottom: 24px; right: 24px; z-index: 999998;';
+      
+      // Append elements to DOM
+      document.body.appendChild(widgetContainer);
+      widgetContainer.appendChild(widgetButton);
       document.body.appendChild(chatPanel);
       
-      // Add event listeners
-      widgetButton.addEventListener('click', function() {
-        console.log('AIPI Fullscreen Widget: Button clicked');
+      // Add event listeners with multiple event types para asegurar que se capturen
+      widgetButton.onclick = function(e) {
+        console.log('AIPI Fullscreen Widget: Button clicked (onclick)');
+        e.preventDefault();
+        e.stopPropagation();
         openChat();
-      });
+        return false;
+      };
+      
+      widgetButton.addEventListener('click', function(e) {
+        console.log('AIPI Fullscreen Widget: Button clicked (addEventListener)');
+        e.preventDefault();
+        e.stopPropagation();
+        openChat();
+      }, true);
       
       document.getElementById('aipi-fs-close-button').addEventListener('click', function() {
         console.log('AIPI Fullscreen Widget: Close button clicked');
@@ -442,8 +461,22 @@
   function openChat() {
     console.log('AIPI Fullscreen Widget: Opening chat...');
     try {
-      widgetButton.style.display = 'none';
-      chatPanel.style.display = 'flex';
+      // Ocultar el botón
+      if (widgetButton) {
+        widgetButton.style.display = 'none';
+        
+        // También ocultar el contenedor
+        const container = document.getElementById('aipi-fs-container');
+        if (container) {
+          container.style.display = 'none';
+        }
+      }
+      
+      // Mostrar el panel de chat
+      if (chatPanel) {
+        chatPanel.style.display = 'flex';
+      }
+      
       isOpen = true;
       
       // Start conversation if not already started
@@ -453,8 +486,13 @@
       
       // Focus input
       setTimeout(function() {
-        document.getElementById('aipi-fs-input').focus();
+        const inputField = document.getElementById('aipi-fs-input');
+        if (inputField) {
+          inputField.focus();
+        }
       }, 300);
+      
+      console.log('AIPI Fullscreen Widget: Chat opened successfully');
     } catch (error) {
       console.error('AIPI Fullscreen Widget Error:', error);
       alert('Error al abrir el chat: ' + error.message);
@@ -465,11 +503,27 @@
   function closeChat() {
     console.log('AIPI Fullscreen Widget: Closing chat...');
     try {
-      chatPanel.style.display = 'none';
-      widgetButton.style.display = 'flex';
+      // Asegurar que el panel se oculta correctamente
+      if (chatPanel) {
+        chatPanel.style.display = 'none';
+      }
+      
+      // Asegurar que el botón se muestra correctamente
+      if (widgetButton) {
+        widgetButton.style.display = 'flex';
+        
+        // También asegurar que el contenedor esté visible
+        const container = document.getElementById('aipi-fs-container');
+        if (container) {
+          container.style.display = 'block';
+        }
+      }
+      
       isOpen = false;
+      console.log('AIPI Fullscreen Widget: Chat closed successfully');
     } catch (error) {
       console.error('AIPI Fullscreen Widget Error:', error);
+      alert('Error al cerrar el chat: ' + error.message);
     }
   }
   
