@@ -161,7 +161,7 @@
       buttonContainer.appendChild(button);
       document.body.appendChild(buttonContainer);
       
-      // Crear panel de chat
+      // Crear panel de chat con barra lateral
       const chatPanel = document.createElement('div');
       chatPanel.id = 'aipi-chat-panel';
       chatPanel.innerHTML = `
@@ -176,17 +176,59 @@
           </div>
           <button id="aipi-chat-close">×</button>
         </div>
-        <div id="aipi-chat-messages">
-          <!-- Los mensajes se añadirán aquí -->
-        </div>
-        <div id="aipi-chat-input-area">
-          <textarea id="aipi-chat-input" placeholder="Escribe tu mensaje..." rows="1"></textarea>
-          <button id="aipi-chat-send" disabled style="background-color: ${config.mainColor};">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
+        
+        <div id="aipi-chat-body">
+          <!-- Barra lateral con sugerencias -->
+          <div id="aipi-chat-sidebar">
+            <div id="aipi-sidebar-header">
+              <h3>Conversaciones sugeridas</h3>
+            </div>
+            <div id="aipi-suggested-topics">
+              <!-- Estas sugerencias se generarán dinámicamente -->
+              <div class="aipi-topic" data-query="¿Qué servicios ofrece AIPI?">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>¿Qué servicios ofrece AIPI?</span>
+              </div>
+              <div class="aipi-topic" data-query="¿Cómo puedo integrar el chatbot en mi sitio web?">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>¿Cómo puedo integrar el chatbot?</span>
+              </div>
+              <div class="aipi-topic" data-query="Explica cómo funciona el análisis de contenido">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Análisis de contenido</span>
+              </div>
+              <div class="aipi-topic" data-query="¿Cuáles son las ventajas de usar inteligencia artificial?">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Ventajas de la IA</span>
+              </div>
+              <div class="aipi-topic" data-query="¿Qué tipos de documentos puedo subir para entrenar al chatbot?">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Documentos compatibles</span>
+              </div>
+            </div>
+            <div id="aipi-new-chat">
+              <button id="aipi-new-chat-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Nueva conversación
+              </button>
+            </div>
+          </div>
+          
+          <!-- Panel principal de chat -->
+          <div id="aipi-chat-main">
+            <div id="aipi-chat-messages">
+              <!-- Los mensajes se añadirán aquí -->
+            </div>
+            <div id="aipi-chat-input-area">
+              <textarea id="aipi-chat-input" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+              <button id="aipi-chat-send" disabled style="background-color: ${config.mainColor};">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       `;
       
@@ -240,6 +282,41 @@
         
         // Enviar mensaje al hacer clic en el botón
         sendButton.onclick = sendMessage;
+      }
+      
+      // Eventos para los temas sugeridos
+      const topicElements = document.querySelectorAll('.aipi-topic');
+      topicElements.forEach(topic => {
+        topic.addEventListener('click', function() {
+          const query = this.getAttribute('data-query');
+          if (query) {
+            const inputField = document.getElementById('aipi-chat-input');
+            if (inputField) {
+              inputField.value = query;
+              // Disparar el evento input para activar el botón
+              const event = new Event('input', { bubbles: true });
+              inputField.dispatchEvent(event);
+              // Enfocar el campo
+              inputField.focus();
+            }
+          }
+        });
+      });
+      
+      // Evento para nueva conversación
+      const newChatButton = document.getElementById('aipi-new-chat-button');
+      if (newChatButton) {
+        newChatButton.addEventListener('click', function() {
+          // Limpiar mensajes existentes
+          const messagesContainer = document.getElementById('aipi-chat-messages');
+          if (messagesContainer) {
+            messagesContainer.innerHTML = '';
+          }
+          
+          // Reiniciar conversación
+          conversationId = null;
+          startConversation();
+        });
       }
       
       console.log('AIPI Widget: Todos los eventos adjuntados correctamente');
@@ -652,6 +729,112 @@
         background-color: rgba(0, 0, 0, 0.1);
       }
       
+      /* Layout del cuerpo principal con sidebar (estilo ChatGPT) */
+      #aipi-chat-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+        height: calc(100% - 60px);
+      }
+      
+      /* Sidebar con sugerencias */
+      #aipi-chat-sidebar {
+        width: 260px;
+        background-color: #f9fafb;
+        border-right: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow-y: auto;
+      }
+      
+      #aipi-sidebar-header {
+        padding: 16px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      
+      #aipi-sidebar-header h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #4b5563;
+        margin: 0;
+      }
+      
+      #aipi-suggested-topics {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+      }
+      
+      .aipi-topic {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        background-color: #fff;
+        border: 1px solid #e5e7eb;
+      }
+      
+      .aipi-topic:hover {
+        background-color: #f3f4f6;
+      }
+      
+      .aipi-topic svg {
+        color: #6b7280;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+      
+      .aipi-topic span {
+        font-size: 13px;
+        line-height: 1.4;
+        color: #374151;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      
+      #aipi-new-chat {
+        padding: 12px;
+        border-top: 1px solid #e5e7eb;
+      }
+      
+      #aipi-new-chat-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 8px 12px;
+        background-color: #fff;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 13px;
+        color: #374151;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      
+      #aipi-new-chat-button:hover {
+        background-color: #f3f4f6;
+      }
+      
+      #aipi-new-chat-button svg {
+        margin-right: 8px;
+      }
+      
+      /* Área principal de chat */
+      #aipi-chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+      }
+      
       /* Área de mensajes */
       #aipi-chat-messages {
         flex: 1;
@@ -816,6 +999,10 @@
       
       /* Estilo para dispositivos móviles */
       @media (max-width: 768px) {
+        #aipi-chat-sidebar {
+          display: none; /* Ocultar sidebar en móviles */
+        }
+        
         .aipi-message {
           padding: 12px 16px;
         }
