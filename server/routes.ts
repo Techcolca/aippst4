@@ -937,6 +937,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Serve the fullscreen embed script
+  app.get("/fullscreen-embed.js", (req, res) => {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const embedScriptPath = path.resolve(currentDir, '../public/fullscreen-embed.js');
+    
+    if (fs.existsSync(embedScriptPath)) {
+      res.setHeader("Content-Type", "application/javascript");
+      res.sendFile(embedScriptPath);
+    } else {
+      res.status(404).json({ message: "Fullscreen embed script not found" });
+    }
+  });
+  
   // Serve test HTML file
   app.get("/test-fullscreen.html", (req, res) => {
     const currentDir = path.dirname(new URL(import.meta.url).pathname);
@@ -947,6 +960,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.sendFile(testFilePath);
     } else {
       res.status(404).json({ message: "Test file not found" });
+    }
+  });
+  
+  // Serve new test HTML file
+  app.get("/test-fullscreen-new.html", (req, res) => {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const testFilePath = path.resolve(currentDir, '../public/test-fullscreen-new.html');
+    
+    if (fs.existsSync(testFilePath)) {
+      res.setHeader("Content-Type", "text/html");
+      res.sendFile(testFilePath);
+    } else {
+      res.status(404).json({ message: "New test file not found" });
+    }
+  });
+  
+  // Serve simple fullscreen HTML file
+  app.get("/simple-fullscreen.html", (req, res) => {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const testFilePath = path.resolve(currentDir, '../public/simple-fullscreen.html');
+    
+    if (fs.existsSync(testFilePath)) {
+      res.setHeader("Content-Type", "text/html");
+      res.sendFile(testFilePath);
+    } else {
+      res.status(404).json({ message: "Simple fullscreen file not found" });
     }
   });
   

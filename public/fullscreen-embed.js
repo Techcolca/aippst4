@@ -58,7 +58,7 @@
       }
       
       config.apiKey = apiKey;
-      config.serverUrl = serverUrl;
+      // config.serverUrl ya se establece en línea 47, no necesitamos reasignarlo aquí
       
       // Generate visitor ID if not existing
       config.visitorId = localStorage.getItem('aipi_visitor_id') || 
