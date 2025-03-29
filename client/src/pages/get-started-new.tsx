@@ -403,8 +403,8 @@ export default function GetStarted() {
                       </div>
                     )}
                     
-                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                      Nota: Esta vista previa es una simulación con imágenes de ejemplo ya que no es posible capturar sitios web en tiempo real en esta versión de demostración. La URL que ingresaste fue: <span className="font-semibold text-primary-600">{bubbleUrl}</span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-medium text-primary-600">Vista previa de integración</span>: Así es como quedará el widget de AIPI integrado en <span className="font-semibold text-primary-600">{bubbleUrl}</span>. Esta simulación muestra la interfaz de usuario y posicionamiento exactos que tendrá el widget en tu sitio web.
                     </p>
                   </div>
                 </div>
@@ -630,8 +630,8 @@ export default function GetStarted() {
                       </div>
                     )}
                     
-                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                      Nota: Esta vista previa es una simulación con imágenes de ejemplo ya que no es posible capturar sitios web en tiempo real en esta versión de demostración. La URL que ingresaste fue: <span className="font-semibold text-primary-600">{fullscreenUrl}</span>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-medium text-primary-600">Vista previa de integración</span>: Así es como quedará el widget de AIPI integrado en <span className="font-semibold text-primary-600">{fullscreenUrl}</span>. Esta simulación muestra la interfaz de usuario y posicionamiento exactos que tendrá en tu sitio web.
                     </p>
                   </div>
                 </div>
