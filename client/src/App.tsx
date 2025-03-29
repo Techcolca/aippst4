@@ -9,6 +9,7 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import EditIntegration from "@/pages/edit-integration";
 import Analytics from "@/pages/analytics";
+import GetStarted from "@/pages/get-started";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
+      <Route path="/get-started" component={GetStarted} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route component={NotFound} />
