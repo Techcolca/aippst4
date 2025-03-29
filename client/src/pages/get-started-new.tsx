@@ -301,7 +301,7 @@ export default function GetStarted() {
                           <div className="w-full h-full absolute inset-0 bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
                             <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
                               <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
-                                <h5 className="font-medium text-lg mb-2">Sin AIPI</h5>
+                                <h5 className="font-medium text-lg mb-2">Así se ve tu sitio web actualmente</h5>
                                 <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded overflow-hidden">
                                   {bubblePreviewImage ? (
                                     <div className="w-full h-full relative">
@@ -314,6 +314,14 @@ export default function GetStarted() {
                                           target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
                                         }}
                                       />
+                                      
+                                      {/* Elementos del sitio web original (simulados) */}
+                                      <div className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-900 opacity-80 p-2 flex items-center border-b border-gray-300">
+                                        <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                      </div>
                                     </div>
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center">
@@ -321,10 +329,13 @@ export default function GetStarted() {
                                     </div>
                                   )}
                                 </div>
+                                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                  Sitio web original sin asistente de chat
+                                </div>
                               </div>
                               
                               <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
-                                <h5 className="font-medium text-lg mb-2">Con AIPI</h5>
+                                <h5 className="font-medium text-lg mb-2">Así se verá tu sitio web con AIPI</h5>
                                 <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded overflow-hidden relative">
                                   {bubblePreviewImage ? (
                                     <div className="w-full h-full relative">
@@ -337,10 +348,43 @@ export default function GetStarted() {
                                           target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
                                         }}
                                       />
-                                      <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                                      
+                                      {/* Elementos del sitio web original (simulados) */}
+                                      <div className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-900 opacity-80 p-2 flex items-center border-b border-gray-300">
+                                        <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                      </div>
+                                      
+                                      {/* Widget flotante de AIPI */}
+                                      <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer hover:bg-primary-700 transition-all duration-200 ease-in-out">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                         </svg>
+                                      </div>
+                                      
+                                      {/* Panel de chat minimizado (oculto por defecto) */}
+                                      <div className="absolute bottom-20 right-4 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden" style={{display: 'none'}}>
+                                        <div className="bg-primary-600 p-3 text-white flex justify-between items-center">
+                                          <span>Chat con AIPI</span>
+                                          <div className="flex gap-2">
+                                            <button className="p-1 hover:bg-primary-700 rounded">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <polyline points="4 14 10 14 10 20"></polyline>
+                                                <polyline points="20 10 14 10 14 4"></polyline>
+                                                <line x1="14" y1="10" x2="21" y2="3"></line>
+                                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                                              </svg>
+                                            </button>
+                                            <button className="p-1 hover:bg-primary-700 rounded">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                              </svg>
+                                            </button>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   ) : (
@@ -348,6 +392,9 @@ export default function GetStarted() {
                                       <span className="text-gray-500">Previsualización no disponible</span>
                                     </div>
                                   )}
+                                </div>
+                                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                  El widget flotante aparecerá en la esquina inferior derecha
                                 </div>
                               </div>
                             </div>
@@ -485,34 +532,57 @@ export default function GetStarted() {
                           <div className="w-full h-full absolute inset-0 bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
                             <div className="grid grid-cols-1 gap-6 mt-4 w-full max-w-3xl">
                               <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
-                                <h5 className="font-medium text-lg mb-2">Simulación del chat de pantalla completa</h5>
+                                <h5 className="font-medium text-lg mb-2">Así se verá la integración con AIPI de pantalla completa</h5>
                                 <div className="flex">
                                   <div className="w-1/4 bg-gray-200 dark:bg-gray-800 p-2 border-r border-gray-300 dark:border-gray-700">
                                     {fullscreenPreviewImage ? (
-                                      <div className="h-16 mb-2 overflow-hidden rounded">
-                                        <img 
-                                          src={fullscreenPreviewImage} 
-                                          alt={`Vista previa de ${fullscreenUrl}`}
-                                          className="w-full h-full object-cover"
-                                          onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
-                                          }}
-                                        />
-                                      </div>
+                                      <>
+                                        <div className="h-16 mb-2 overflow-hidden rounded">
+                                          <img 
+                                            src={fullscreenPreviewImage} 
+                                            alt={`Vista previa de ${fullscreenUrl}`}
+                                            className="w-full h-full object-cover"
+                                            onError={(e) => {
+                                              const target = e.target as HTMLImageElement;
+                                              target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
+                                            }}
+                                          />
+                                        </div>
+                                        <div className="text-xs text-primary-600 dark:text-primary-400 font-medium mb-2">{fullscreenUrl}</div>
+                                      </>
                                     ) : (
                                       <div className="h-16 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2">
                                         <div className="text-green-600 dark:text-green-400 font-medium text-sm truncate p-1">{fullscreenUrl}</div>
                                       </div>
                                     )}
                                     
-                                    <div className="h-4 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2"></div>
-                                    <div className="h-4 bg-gray-300 dark:bg-gray-700 w-3/4 rounded mb-2"></div>
-                                    <div className="h-4 bg-gray-300 dark:bg-gray-700 w-2/3 rounded"></div>
+                                    {/* Navegación del sitio simulada */}
+                                    <div className="h-6 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2 flex items-center px-2">
+                                      <div className="w-3 h-3 rounded-full bg-gray-400 dark:bg-gray-600 mr-1"></div>
+                                      <div className="text-xs text-gray-600 dark:text-gray-400">Inicio</div>
+                                    </div>
+                                    <div className="h-6 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2 flex items-center px-2">
+                                      <div className="w-3 h-3 rounded-full bg-gray-400 dark:bg-gray-600 mr-1"></div>
+                                      <div className="text-xs text-gray-600 dark:text-gray-400">Productos</div>
+                                    </div>
+                                    <div className="h-6 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2 flex items-center px-2">
+                                      <div className="w-3 h-3 rounded-full bg-gray-400 dark:bg-gray-600 mr-1"></div>
+                                      <div className="text-xs text-gray-600 dark:text-gray-400">Contacto</div>
+                                    </div>
+                                    
+                                    {/* Botón de AIPI pequeño en esquina */}
+                                    <div className="absolute bottom-24 left-4 bg-primary-600 text-white text-xs px-2 py-1 rounded-full flex items-center">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                      </svg>
+                                      <span>AIPI</span>
+                                    </div>
                                   </div>
+                                  
+                                  {/* Ventana de chat a pantalla completa */}
                                   <div className="w-3/4 bg-gray-200 dark:bg-gray-800 rounded flex flex-col items-stretch">
                                     <div className="bg-primary-600 text-white py-2 px-4 flex items-center">
-                                      <span className="font-medium">Chat AIPI</span>
+                                      <span className="font-medium">Asistente AIPI</span>
                                       <div className="ml-auto flex space-x-2">
                                         <button className="p-1 rounded hover:bg-primary-500">
                                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -525,13 +595,13 @@ export default function GetStarted() {
                                     <div className="flex-1 p-4 flex flex-col">
                                       <div className="flex-1 flex flex-col gap-3 overflow-y-auto">
                                         <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg max-w-[80%]">
-                                          <p className="text-sm text-gray-700 dark:text-gray-200">Hola, soy AIPI. ¿En qué puedo ayudarte hoy?</p>
+                                          <p className="text-sm text-gray-700 dark:text-gray-200">Hola, bienvenido/a a {fullscreenUrl || "tu sitio web"}. Soy el asistente AIPI. ¿En qué puedo ayudarte hoy?</p>
                                         </div>
                                         <div className="bg-primary-100 dark:bg-primary-900 p-2 rounded-lg max-w-[80%] self-end">
-                                          <p className="text-sm text-primary-800 dark:text-primary-100">¿Cuáles son tus servicios principales?</p>
+                                          <p className="text-sm text-primary-800 dark:text-primary-100">¿Cuáles son sus servicios principales?</p>
                                         </div>
                                         <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg max-w-[80%]">
-                                          <p className="text-sm text-gray-700 dark:text-gray-200">Ofrecemos [servicios basados en tu sitio web]...</p>
+                                          <p className="text-sm text-gray-700 dark:text-gray-200">Con base en la información de su sitio web, ofrecemos una variedad de servicios que incluyen [servicios relacionados con tu tipo de negocio]. ¿Hay algún servicio específico que te interese conocer más a fondo?</p>
                                         </div>
                                       </div>
                                       <div className="mt-auto flex gap-2 border-t pt-3">
@@ -549,6 +619,9 @@ export default function GetStarted() {
                                       </div>
                                     </div>
                                   </div>
+                                </div>
+                                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                  El modo de pantalla completa ofrece una experiencia de chat más inmersiva
                                 </div>
                               </div>
                             </div>
