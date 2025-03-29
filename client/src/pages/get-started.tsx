@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { 
@@ -7,11 +7,18 @@ import {
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useTheme } from "@/context/theme-context";
 import { useAuth } from "@/context/auth-context";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Globe } from "lucide-react";
 
 export default function GetStarted() {
   const [location, setLocation] = useLocation();
@@ -143,21 +150,59 @@ export default function GetStarted() {
                 
                 <div className="bg-primary-50 dark:bg-gray-800 rounded-lg p-6 border border-primary-100 dark:border-gray-700">
                   <h3 className="text-xl font-bold mb-4 text-primary-900 dark:text-primary-400">Previsualización del widget</h3>
-                  <div className="aspect-video bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center relative">
-                    <img 
-                      src="/static/images/widget-preview.png" 
-                      alt="Previsualización del widget flotante" 
-                      className="max-h-full max-w-full rounded"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+del+widget";
-                      }}
-                    />
-                    <div className="absolute bottom-4 right-4 w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                      </svg>
+                  <div className="space-y-4">
+                    <p className="text-gray-700 dark:text-gray-300">
+                      Para previsualizar cómo se verá el widget en tu sitio web, ingresa la URL de tu sitio:
+                    </p>
+                    
+                    <div className="flex gap-2">
+                      <input 
+                        type="url" 
+                        placeholder="https://tusitio.com" 
+                        className="flex-1 px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      />
+                      <Button>
+                        Previsualizar
+                      </Button>
                     </div>
+                    
+                    <div className="aspect-video bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center relative overflow-hidden">
+                      <div className="w-full h-full relative">
+                        <div className="w-full h-full absolute inset-0 bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
+                          <div className="text-center mb-6">
+                            <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Vista previa de tu sitio con AIPI</h4>
+                            <p className="text-gray-700 dark:text-gray-300">
+                              Ingresa la URL de tu sitio web y haz clic en "Previsualizar" para ver cómo se integraría el widget de AIPI en tu página.
+                            </p>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-6 mt-4 w-full max-w-3xl">
+                            <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+                              <h5 className="font-medium text-lg mb-2">Sin AIPI</h5>
+                              <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded flex items-center justify-center">
+                                <span className="text-gray-500 dark:text-gray-400">Tu sitio web actual</span>
+                              </div>
+                            </div>
+                            
+                            <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+                              <h5 className="font-medium text-lg mb-2">Con AIPI</h5>
+                              <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded flex items-center justify-center relative">
+                                <span className="text-gray-500 dark:text-gray-400">Tu sitio web con AIPI</span>
+                                <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                  </svg>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                      Nota: Esta vista previa es una simulación. Para una integración real, deberás agregar el código del widget a tu sitio web.
+                    </p>
                   </div>
                 </div>
               </TabsContent>
@@ -244,16 +289,83 @@ export default function GetStarted() {
                 
                 <div className="bg-primary-50 dark:bg-gray-800 rounded-lg p-6 border border-primary-100 dark:border-gray-700">
                   <h3 className="text-xl font-bold mb-4 text-primary-900 dark:text-primary-400">Previsualización de pantalla completa</h3>
-                  <div className="aspect-video bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center">
-                    <img 
-                      src="/static/images/fullscreen-preview.png" 
-                      alt="Previsualización de chat de pantalla completa" 
-                      className="max-h-full max-w-full rounded"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+del+chat+completo";
-                      }}
-                    />
+                  <div className="space-y-4">
+                    <p className="text-gray-700 dark:text-gray-300">
+                      Para previsualizar cómo se verá la interfaz de pantalla completa en tu sitio web, ingresa la URL de tu sitio:
+                    </p>
+                    
+                    <div className="flex gap-2">
+                      <input 
+                        type="url" 
+                        placeholder="https://tusitio.com" 
+                        className="flex-1 px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      />
+                      <Button>
+                        Previsualizar
+                      </Button>
+                    </div>
+                    
+                    <div className="aspect-video bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center relative overflow-hidden">
+                      <div className="w-full h-full relative">
+                        <div className="w-full h-full absolute inset-0 bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
+                          <div className="text-center mb-6">
+                            <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Vista previa de tu sitio con AIPI (Pantalla completa)</h4>
+                            <p className="text-gray-700 dark:text-gray-300">
+                              Ingresa la URL de tu sitio web y haz clic en "Previsualizar" para ver cómo se integraría la interfaz de pantalla completa de AIPI en tu página.
+                            </p>
+                          </div>
+                          
+                          <div className="grid grid-cols-1 gap-6 mt-4 w-full max-w-3xl">
+                            <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
+                              <h5 className="font-medium text-lg mb-2">Simulación del chat de pantalla completa</h5>
+                              <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded flex flex-col items-stretch">
+                                <div className="bg-primary-600 text-white py-2 px-4 flex items-center">
+                                  <span className="font-medium">Chat AIPI</span>
+                                  <div className="ml-auto flex space-x-2">
+                                    <button className="p-1 rounded hover:bg-primary-500">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className="flex-1 p-4 flex flex-col">
+                                  <div className="flex-1 flex flex-col gap-3 overflow-y-auto">
+                                    <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg max-w-[80%]">
+                                      <p className="text-sm text-gray-700 dark:text-gray-200">Hola, soy AIPI. ¿En qué puedo ayudarte hoy?</p>
+                                    </div>
+                                    <div className="bg-primary-100 dark:bg-primary-900 p-2 rounded-lg max-w-[80%] self-end">
+                                      <p className="text-sm text-primary-800 dark:text-primary-100">¿Cuáles son tus servicios principales?</p>
+                                    </div>
+                                    <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded-lg max-w-[80%]">
+                                      <p className="text-sm text-gray-700 dark:text-gray-200">Ofrecemos [servicios basados en tu sitio web]...</p>
+                                    </div>
+                                  </div>
+                                  <div className="mt-auto flex gap-2 border-t pt-3">
+                                    <input 
+                                      type="text" 
+                                      placeholder="Escribe tu mensaje..." 
+                                      className="flex-1 px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md text-sm"
+                                    />
+                                    <button className="bg-primary-600 text-white p-2 rounded-md">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                      Nota: Esta vista previa es una simulación. Para una integración real, deberás agregar el código a tu sitio web.
+                    </p>
                   </div>
                 </div>
               </TabsContent>
