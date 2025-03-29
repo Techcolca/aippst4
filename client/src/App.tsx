@@ -9,7 +9,7 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import EditIntegration from "@/pages/edit-integration";
 import Analytics from "@/pages/analytics";
-import GetStarted from "@/pages/get-started";
+import GetStarted from "@/pages/get-started-new";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
