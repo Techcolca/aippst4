@@ -68,18 +68,28 @@ export default function GetStarted() {
   
   // Función para obtener una captura de la web
   const getWebsiteScreenshot = async (url: string): Promise<string> => {
-    // En un entorno real, usaríamos un API para capturas de pantalla
-    // Como ejemplo, podríamos usar: https://api.apiflash.com/v1/urltoimage
+    // En un entorno real, usaríamos una API para capturas de pantalla de sitios web reales
+    // Como por ejemplo: https://api.apiflash.com/v1/urltoimage o https://www.screenshotapi.io/
+    
+    // Nota importante: Esta es una versión de demostración que utiliza imágenes estáticas
+    // En la versión de producción, se realizaría una solicitud a una API de capturas de pantalla
+    // para obtener una imagen real del sitio web ingresado
     
     try {
-      // Para nuestra demo, usaremos una imagen local basada en un patrón de la URL
-      const hash = url.replace(/https?:\/\//i, "").replace(/[^\w]/g, "").toLowerCase();
-      const imageNumber = Math.abs(hash.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5) + 1;
+      // En este momento, generamos una imagen aleatoria basada en la URL proporcionada
+      const host = new URL(url).hostname;
+      console.log(`Simulando captura para: ${host}`);
+      
+      // Para simular una conexión a una API externa, agregamos un poco de retraso
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Agregamos un timestamp para evitar problemas de caché
       const timestamp = new Date().getTime();
       
-      // En un caso real, retornaríamos la URL de la captura
+      // Elegimos una imagen de ejemplo basada en un hash simple de la URL
+      const hash = url.replace(/https?:\/\//i, "").replace(/[^\w]/g, "").toLowerCase();
+      const imageNumber = Math.abs(hash.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5) + 1;
+      
       return `/static/images/website-preview-${imageNumber}.jpg?t=${timestamp}`;
     } catch (error) {
       console.error("Error al generar la URL de previsualización:", error);
@@ -347,7 +357,7 @@ export default function GetStarted() {
                     )}
                     
                     <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                      Nota: Esta vista previa es una simulación. Para una integración real, deberás agregar el código del widget a tu sitio web.
+                      Nota: Esta vista previa es una simulación con imágenes de ejemplo ya que no es posible capturar sitios web en tiempo real en esta versión de demostración. La URL que ingresaste fue: <span className="font-semibold text-primary-600">{bubbleUrl}</span>
                     </p>
                   </div>
                 </div>
@@ -548,7 +558,7 @@ export default function GetStarted() {
                     )}
                     
                     <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                      Nota: Esta vista previa es una simulación. Para una integración real, deberás agregar el código a tu sitio web.
+                      Nota: Esta vista previa es una simulación con imágenes de ejemplo ya que no es posible capturar sitios web en tiempo real en esta versión de demostración. La URL que ingresaste fue: <span className="font-semibold text-primary-600">{fullscreenUrl}</span>
                     </p>
                   </div>
                 </div>
