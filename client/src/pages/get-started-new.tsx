@@ -71,12 +71,20 @@ export default function GetStarted() {
     // En un entorno real, usaríamos un API para capturas de pantalla
     // Como ejemplo, podríamos usar: https://api.apiflash.com/v1/urltoimage
     
-    // Para nuestra demo, usaremos una imagen local basada en un patrón de la URL
-    const hash = url.replace(/https?:\/\//i, "").replace(/[^\w]/g, "").toLowerCase();
-    const imageNumber = Math.abs(hash.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5) + 1;
-    
-    // En un caso real, retornaríamos la URL de la captura
-    return `/static/images/website-preview-${imageNumber}.jpg`;
+    try {
+      // Para nuestra demo, usaremos una imagen local basada en un patrón de la URL
+      const hash = url.replace(/https?:\/\//i, "").replace(/[^\w]/g, "").toLowerCase();
+      const imageNumber = Math.abs(hash.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5) + 1;
+      
+      // Agregamos un timestamp para evitar problemas de caché
+      const timestamp = new Date().getTime();
+      
+      // En un caso real, retornaríamos la URL de la captura
+      return `/static/images/website-preview-${imageNumber}.jpg?t=${timestamp}`;
+    } catch (error) {
+      console.error("Error al generar la URL de previsualización:", error);
+      return `/static/images/website-preview-1.jpg`;
+    }
   };
   
   // Función para previsualizar widget flotante
