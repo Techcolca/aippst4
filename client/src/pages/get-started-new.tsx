@@ -62,8 +62,25 @@ export default function GetStarted() {
     }
   };
   
+  // URLs de previsualización
+  const [bubblePreviewImage, setBubblePreviewImage] = useState("");
+  const [fullscreenPreviewImage, setFullscreenPreviewImage] = useState("");
+  
+  // Función para obtener una captura de la web
+  const getWebsiteScreenshot = async (url: string): Promise<string> => {
+    // En un entorno real, usaríamos un API para capturas de pantalla
+    // Como ejemplo, podríamos usar: https://api.apiflash.com/v1/urltoimage
+    
+    // Para nuestra demo, usaremos una imagen local basada en un patrón de la URL
+    const hash = url.replace(/https?:\/\//i, "").replace(/[^\w]/g, "").toLowerCase();
+    const imageNumber = Math.abs(hash.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5) + 1;
+    
+    // En un caso real, retornaríamos la URL de la captura
+    return `/static/images/website-preview-${imageNumber}.jpg`;
+  };
+  
   // Función para previsualizar widget flotante
-  const previewBubbleWidget = () => {
+  const previewBubbleWidget = async () => {
     if (!bubbleUrl) {
       alert("Por favor, ingresa la URL de tu sitio web");
       return;
@@ -75,15 +92,24 @@ export default function GetStarted() {
     }
     
     setIsLoadingBubble(true);
-    // Simulamos una carga para mostrar la previsualización
-    setTimeout(() => {
+    
+    try {
+      // Obtener una captura del sitio web
+      const previewImage = await getWebsiteScreenshot(bubbleUrl);
+      setBubblePreviewImage(previewImage);
+      
+      // Mostramos la previsualización
       setShowBubblePreview(true);
+    } catch (error) {
+      console.error("Error al obtener la vista previa:", error);
+      alert("No se pudo obtener la vista previa del sitio web. Por favor, intenta con otra URL.");
+    } finally {
       setIsLoadingBubble(false);
-    }, 1500);
+    }
   };
   
   // Función para previsualizar widget de pantalla completa
-  const previewFullscreenWidget = () => {
+  const previewFullscreenWidget = async () => {
     if (!fullscreenUrl) {
       alert("Por favor, ingresa la URL de tu sitio web");
       return;
@@ -95,11 +121,20 @@ export default function GetStarted() {
     }
     
     setIsLoadingFullscreen(true);
-    // Simulamos una carga para mostrar la previsualización
-    setTimeout(() => {
+    
+    try {
+      // Obtener una captura del sitio web
+      const previewImage = await getWebsiteScreenshot(fullscreenUrl);
+      setFullscreenPreviewImage(previewImage);
+      
+      // Mostramos la previsualización
       setShowFullscreenPreview(true);
+    } catch (error) {
+      console.error("Error al obtener la vista previa:", error);
+      alert("No se pudo obtener la vista previa del sitio web. Por favor, intenta con otra URL.");
+    } finally {
       setIsLoadingFullscreen(false);
-    }, 1500);
+    }
   };
   
   return (
@@ -249,20 +284,52 @@ export default function GetStarted() {
                             <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
                               <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
                                 <h5 className="font-medium text-lg mb-2">Sin AIPI</h5>
-                                <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded flex items-center justify-center">
-                                  <span className="text-green-600 dark:text-green-400 font-medium">{bubbleUrl}</span>
+                                <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded overflow-hidden">
+                                  {bubblePreviewImage ? (
+                                    <div className="w-full h-full relative">
+                                      <img 
+                                        src={bubblePreviewImage} 
+                                        alt={`Vista previa de ${bubbleUrl}`}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          const target = e.target as HTMLImageElement;
+                                          target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
+                                        }}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <span className="text-gray-500">Previsualización no disponible</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                               
                               <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
                                 <h5 className="font-medium text-lg mb-2">Con AIPI</h5>
-                                <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded flex items-center justify-center relative">
-                                  <span className="text-green-600 dark:text-green-400 font-medium">{bubbleUrl}</span>
-                                  <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                  </div>
+                                <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded overflow-hidden relative">
+                                  {bubblePreviewImage ? (
+                                    <div className="w-full h-full relative">
+                                      <img 
+                                        src={bubblePreviewImage} 
+                                        alt={`Vista previa de ${bubbleUrl} con AIPI`}
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                          const target = e.target as HTMLImageElement;
+                                          target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
+                                        }}
+                                      />
+                                      <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                        </svg>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <span className="text-gray-500">Previsualización no disponible</span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -403,7 +470,24 @@ export default function GetStarted() {
                                 <h5 className="font-medium text-lg mb-2">Simulación del chat de pantalla completa</h5>
                                 <div className="flex">
                                   <div className="w-1/4 bg-gray-200 dark:bg-gray-800 p-2 border-r border-gray-300 dark:border-gray-700">
-                                    <div className="text-green-600 dark:text-green-400 font-medium text-sm mb-2 truncate">{fullscreenUrl}</div>
+                                    {fullscreenPreviewImage ? (
+                                      <div className="h-16 mb-2 overflow-hidden rounded">
+                                        <img 
+                                          src={fullscreenPreviewImage} 
+                                          alt={`Vista previa de ${fullscreenUrl}`}
+                                          className="w-full h-full object-cover"
+                                          onError={(e) => {
+                                            const target = e.target as HTMLImageElement;
+                                            target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
+                                          }}
+                                        />
+                                      </div>
+                                    ) : (
+                                      <div className="h-16 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2">
+                                        <div className="text-green-600 dark:text-green-400 font-medium text-sm truncate p-1">{fullscreenUrl}</div>
+                                      </div>
+                                    )}
+                                    
                                     <div className="h-4 bg-gray-300 dark:bg-gray-700 w-full rounded mb-2"></div>
                                     <div className="h-4 bg-gray-300 dark:bg-gray-700 w-3/4 rounded mb-2"></div>
                                     <div className="h-4 bg-gray-300 dark:bg-gray-700 w-2/3 rounded"></div>
