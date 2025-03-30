@@ -71,29 +71,55 @@ export default function GetStarted() {
     // En un entorno real, usaríamos una API para capturas de pantalla de sitios web reales
     // Como por ejemplo: https://api.apiflash.com/v1/urltoimage o https://www.screenshotapi.io/
     
-    // Nota importante: Esta es una versión de demostración que utiliza imágenes estáticas
-    // En la versión de producción, se realizaría una solicitud a una API de capturas de pantalla
-    // para obtener una imagen real del sitio web ingresado
-    
     try {
-      // En este momento, generamos una imagen aleatoria basada en la URL proporcionada
+      // En este momento, generamos una imagen personalizada basada en la URL proporcionada
       const host = new URL(url).hostname;
-      console.log(`Simulando captura para: ${host}`);
+      console.log(`Generando simulación para: ${host}`);
       
       // Para simular una conexión a una API externa, agregamos un poco de retraso
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Agregamos un timestamp para evitar problemas de caché
-      const timestamp = new Date().getTime();
+      // Extraemos el dominio para personalizar la previsualización
+      const domain = url.replace(/https?:\/\/(www\.)?/, '').split('/')[0];
       
-      // Elegimos una imagen de ejemplo basada en un hash simple de la URL
-      const hash = url.replace(/https?:\/\//i, "").replace(/[^\w]/g, "").toLowerCase();
-      const imageNumber = Math.abs(hash.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 5) + 1;
+      // Aquí podríamos usar imágenes pregeneradas según la URL para mayor realismo
+      // Por ahora utilizamos una lógica simple basada en el dominio para generar colores
       
-      return `/static/images/website-preview-${imageNumber}.jpg?t=${timestamp}`;
+      if (domain.includes("google")) {
+        return "https://placehold.co/1200x800/ffffff/333333?text=Google";
+      } else if (domain.includes("facebook") || domain.includes("meta")) {
+        return "https://placehold.co/1200x800/3b5998/ffffff?text=Facebook";
+      } else if (domain.includes("twitter") || domain.includes("x.com")) {
+        return "https://placehold.co/1200x800/1da1f2/ffffff?text=Twitter";
+      } else if (domain.includes("instagram")) {
+        return "https://placehold.co/1200x800/c13584/ffffff?text=Instagram";
+      } else if (domain.includes("amazon")) {
+        return "https://placehold.co/1200x800/ff9900/000000?text=Amazon";
+      } else if (domain.includes("microsoft")) {
+        return "https://placehold.co/1200x800/00a4ef/ffffff?text=Microsoft";
+      } else if (domain.includes("apple")) {
+        return "https://placehold.co/1200x800/555555/ffffff?text=Apple";
+      } else if (domain.includes("netflix")) {
+        return "https://placehold.co/1200x800/e50914/ffffff?text=Netflix";
+      } else if (domain.includes("youtube")) {
+        return "https://placehold.co/1200x800/ff0000/ffffff?text=YouTube";
+      } else if (domain.includes("linkedin")) {
+        return "https://placehold.co/1200x800/0077b5/ffffff?text=LinkedIn";
+      }
+      
+      // Para URLs personalizadas, generamos un color basado en el hash del dominio para mayor consistencia
+      const hashCode = (s: string) => 
+        s.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0) & 0xFFFFFF;
+      
+      const colorHash = Math.abs(hashCode(domain)).toString(16).padStart(6, '0');
+      const textColor = parseInt(colorHash.substring(0, 2), 16) > 128 ? '000000' : 'ffffff';
+      
+      return `https://placehold.co/1200x800/${colorHash}/${textColor}?text=${encodeURIComponent(domain)}`;
     } catch (error) {
-      console.error("Error al generar la URL de previsualización:", error);
-      return `/static/images/website-preview-1.jpg`;
+      console.error("Error al generar la simulación:", error);
+      return "https://placehold.co/1200x800/e2e8f0/64748b?text=Error+al+cargar+la+previsualización";
+    } finally {
+      setIsLoadingBubble(false);
     }
   };
   
@@ -299,84 +325,124 @@ export default function GetStarted() {
                       <div className="aspect-video bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center relative overflow-hidden">
                         <div className="w-full h-full relative">
                           <div className="w-full h-full absolute inset-0 bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center p-6">
-                            <div className="grid grid-cols-2 gap-6 w-full max-w-3xl">
-                              <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
-                                <h5 className="font-medium text-lg mb-2">Así se ve tu sitio web actualmente</h5>
-                                <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded overflow-hidden">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+                              {/* Simulación de navegador - Sin AIPI */}
+                              <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md overflow-hidden">
+                                <div className="bg-gray-200 dark:bg-gray-800 p-2 border-b border-gray-300 dark:border-gray-700">
+                                  {/* Barra de navegador */}
+                                  <div className="flex items-center">
+                                    <div className="flex mr-2 space-x-1.5">
+                                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                    </div>
+                                    <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-md px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                                      {bubbleUrl || "https://www.ejemplo.com"}
+                                    </div>
+                                    <div className="ml-2 rounded-full p-1 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Contenido del sitio web */}
+                                <div className="p-0 relative">
                                   {bubblePreviewImage ? (
-                                    <div className="w-full h-full relative">
+                                    <div className="h-60 overflow-hidden">
                                       <img 
                                         src={bubblePreviewImage} 
                                         alt={`Vista previa de ${bubbleUrl}`}
-                                        className="w-full h-full object-cover"
+                                        className="w-full object-cover"
                                         onError={(e) => {
                                           const target = e.target as HTMLImageElement;
                                           target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
                                         }}
                                       />
                                       
-                                      {/* Elementos del sitio web original (simulados) */}
-                                      <div className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-900 opacity-80 p-2 flex items-center border-b border-gray-300">
-                                        <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                      {/* Menú de navegación simulado */}
+                                      <div className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-3 flex justify-between items-center">
+                                        <div className="flex items-center space-x-1">
+                                          <div className="font-bold text-primary-600 dark:text-primary-400 text-lg">{bubbleUrl?.replace(/https?:\/\/(www\.)?/, '').split('/')[0] || "ejemplo.com"}</div>
+                                        </div>
+                                        <div className="flex space-x-4">
+                                          <div className="text-sm font-medium">Inicio</div>
+                                          <div className="text-sm font-medium">Productos</div>
+                                          <div className="text-sm font-medium">Contacto</div>
+                                        </div>
                                       </div>
                                     </div>
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
+                                    <div className="h-60 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                                       <span className="text-gray-500">Previsualización no disponible</span>
                                     </div>
                                   )}
                                 </div>
-                                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                  Sitio web original sin asistente de chat
+                                <div className="bg-gray-100 dark:bg-gray-800 p-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                                  Sitio web sin AIPI
                                 </div>
                               </div>
                               
-                              <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 shadow-sm">
-                                <h5 className="font-medium text-lg mb-2">Así se verá tu sitio web con AIPI</h5>
-                                <div className="aspect-video bg-gray-200 dark:bg-gray-800 rounded overflow-hidden relative">
+                              {/* Simulación de navegador - Con AIPI */}
+                              <div className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-md overflow-hidden">
+                                <div className="bg-gray-200 dark:bg-gray-800 p-2 border-b border-gray-300 dark:border-gray-700">
+                                  {/* Barra de navegador */}
+                                  <div className="flex items-center">
+                                    <div className="flex mr-2 space-x-1.5">
+                                      <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                      <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                    </div>
+                                    <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-md px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-300 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                                      {bubbleUrl || "https://www.ejemplo.com"}
+                                    </div>
+                                    <div className="ml-2 rounded-full p-1 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500 dark:text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                                      </svg>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Contenido del sitio web con AIPI */}
+                                <div className="p-0 relative">
                                   {bubblePreviewImage ? (
-                                    <div className="w-full h-full relative">
+                                    <div className="h-60 overflow-hidden relative">
                                       <img 
                                         src={bubblePreviewImage} 
                                         alt={`Vista previa de ${bubbleUrl} con AIPI`}
-                                        className="w-full h-full object-cover"
+                                        className="w-full object-cover"
                                         onError={(e) => {
                                           const target = e.target as HTMLImageElement;
                                           target.src = "https://placehold.co/600x400/e2e8f0/64748b?text=Vista+previa+no+disponible";
                                         }}
                                       />
                                       
-                                      {/* Elementos del sitio web original (simulados) */}
-                                      <div className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-900 opacity-80 p-2 flex items-center border-b border-gray-300">
-                                        <div className="h-6 w-24 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
-                                        <div className="h-4 w-16 bg-gray-300 dark:bg-gray-700 rounded mr-2"></div>
+                                      {/* Menú de navegación simulado */}
+                                      <div className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-3 flex justify-between items-center">
+                                        <div className="flex items-center space-x-1">
+                                          <div className="font-bold text-primary-600 dark:text-primary-400 text-lg">{bubbleUrl?.replace(/https?:\/\/(www\.)?/, '').split('/')[0] || "ejemplo.com"}</div>
+                                        </div>
+                                        <div className="flex space-x-4">
+                                          <div className="text-sm font-medium">Inicio</div>
+                                          <div className="text-sm font-medium">Productos</div>
+                                          <div className="text-sm font-medium">Contacto</div>
+                                        </div>
                                       </div>
                                       
-                                      {/* Widget flotante de AIPI */}
-                                      <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer hover:bg-primary-700 transition-all duration-200 ease-in-out">
+                                      {/* Widget flotante AIPI */}
+                                      <div className="absolute bottom-4 right-4 w-12 h-12 bg-primary-600 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer hover:bg-primary-700 transition-all duration-200 ease-in-out animate-pulse">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                                         </svg>
                                       </div>
                                       
-                                      {/* Panel de chat minimizado (oculto por defecto) */}
-                                      <div className="absolute bottom-20 right-4 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden" style={{display: 'none'}}>
+                                      {/* Panel de chat (mostrado solo a modo de ejemplo) */}
+                                      <div className="absolute bottom-20 right-4 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                                         <div className="bg-primary-600 p-3 text-white flex justify-between items-center">
                                           <span>Chat con AIPI</span>
                                           <div className="flex gap-2">
-                                            <button className="p-1 hover:bg-primary-700 rounded">
-                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <polyline points="4 14 10 14 10 20"></polyline>
-                                                <polyline points="20 10 14 10 14 4"></polyline>
-                                                <line x1="14" y1="10" x2="21" y2="3"></line>
-                                                <line x1="3" y1="21" x2="10" y2="14"></line>
-                                              </svg>
-                                            </button>
                                             <button className="p-1 hover:bg-primary-700 rounded">
                                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -385,16 +451,30 @@ export default function GetStarted() {
                                             </button>
                                           </div>
                                         </div>
+                                        <div className="p-3 bg-gray-50 dark:bg-gray-900 max-h-40 overflow-auto">
+                                          <div className="mb-2 bg-primary-100 dark:bg-primary-900 p-2 rounded-lg text-xs">
+                                            <p className="text-primary-800 dark:text-primary-200">Hola, ¿en qué puedo ayudarte?</p>
+                                          </div>
+                                        </div>
+                                        <div className="p-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex">
+                                          <input type="text" placeholder="Escribe tu mensaje..." className="flex-1 p-2 text-xs bg-gray-100 dark:bg-gray-700 border-none rounded" />
+                                          <button className="ml-2 bg-primary-600 text-white p-1 rounded">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                              <line x1="22" y1="2" x2="11" y2="13"></line>
+                                              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                            </svg>
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
+                                    <div className="h-60 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                                       <span className="text-gray-500">Previsualización no disponible</span>
                                     </div>
                                   )}
                                 </div>
-                                <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                  El widget flotante aparecerá en la esquina inferior derecha
+                                <div className="bg-gray-100 dark:bg-gray-800 p-2 text-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                                  Sitio web con AIPI integrado
                                 </div>
                               </div>
                             </div>
