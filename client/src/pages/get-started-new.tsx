@@ -200,9 +200,9 @@ export default function GetStarted() {
         <section className="py-12 bg-white dark:bg-gray-900">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Tabs defaultValue="bubble" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-8">
-                <TabsTrigger value="bubble" className="text-lg py-3">Widget flotante (burbuja)</TabsTrigger>
-                <TabsTrigger value="fullscreen" className="text-lg py-3">Pantalla completa (estilo ChatGPT)</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 mb-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <TabsTrigger value="bubble" className="text-lg py-3 data-[state=active]:bg-primary-600 data-[state=active]:text-white rounded-lg">Widget flotante (burbuja)</TabsTrigger>
+                <TabsTrigger value="fullscreen" className="text-lg py-3 data-[state=active]:bg-primary-600 data-[state=active]:text-white rounded-lg">Pantalla completa (estilo ChatGPT)</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
