@@ -230,15 +230,15 @@ export default function Documentation() {
                           <li>Posibilidad de seguimiento posterior para ofrecer información adicional o servicios relacionados</li>
                         </ul>
                         
-                        <h3>5. Análisis y Estadísticas Detalladas</h3>
-                        <p>El panel de control administrativo ofrece:</p>
+                        <h3>5. Análisis y Estadísticas Detalladas por Usuario</h3>
+                        <p>El panel de control administrativo ofrece estadísticas personalizadas para cada cuenta de usuario:</p>
                         <ul>
-                          <li>Métricas sobre número total de conversaciones</li>
-                          <li>Tasa de resolución de consultas</li>
-                          <li>Tiempo promedio de respuesta</li>
-                          <li>Tendencias en las consultas</li>
-                          <li>Rendimiento por tipo de integración</li>
-                          <li>Análisis de temas y productos de mayor interés</li>
+                          <li>Métricas sobre número total de conversaciones de tus integraciones</li>
+                          <li>Tasa de resolución de consultas específica de tu cuenta</li>
+                          <li>Tiempo promedio de respuesta de tus asistentes virtuales</li>
+                          <li>Tendencias en las consultas de tus visitantes</li>
+                          <li>Rendimiento individualizado por tipo de integración</li>
+                          <li>Análisis de temas y productos de mayor interés para tus usuarios</li>
                         </ul>
                         
                         <h3>6. Automatización de Tareas</h3>
@@ -300,11 +300,12 @@ export default function Documentation() {
                           <li>Ofrece orientación sobre visados, alojamiento y otros aspectos relevantes</li>
                         </ul>
                         
-                        <h4>Análisis de Tendencias en la Demanda Educativa</h4>
+                        <h4>Análisis de Tendencias en la Demanda Educativa de Tu Institución</h4>
                         <ul>
-                          <li>Identifica los programas más consultados</li>
-                          <li>Analiza las preocupaciones más frecuentes de los estudiantes potenciales</li>
-                          <li>Proporciona datos valiosos para la planificación estratégica de la oferta académica</li>
+                          <li>Identifica los programas más consultados en tu sitio web</li>
+                          <li>Analiza las preocupaciones más frecuentes de tus estudiantes potenciales</li>
+                          <li>Proporciona datos valiosos específicos para la planificación estratégica de tu oferta académica</li>
+                          <li>Estadísticas segregadas por cuenta de usuario, sin mezclar datos con otras instituciones</li>
                         </ul>
                         
                         <h3>Testimonios</h3>
@@ -371,11 +372,12 @@ export default function Documentation() {
                           <li>Permite que los comerciales se concentren en prospectos de alta calidad</li>
                         </ul>
                         
-                        <h4>Análisis del Comportamiento del Cliente</h4>
+                        <h4>Análisis del Comportamiento de Tus Clientes</h4>
                         <ul>
-                          <li>Identifica tendencias en las consultas y necesidades del mercado</li>
-                          <li>Proporciona insights sobre objeciones frecuentes o preocupaciones de los clientes</li>
-                          <li>Ayuda a refinar ofertas y mensajes comerciales</li>
+                          <li>Identifica tendencias en las consultas y necesidades específicas de tu mercado</li>
+                          <li>Proporciona insights exclusivos sobre objeciones frecuentes de tus clientes</li>
+                          <li>Ayuda a refinar ofertas y mensajes comerciales basados en tus datos propios</li>
+                          <li>Métricas segmentadas por cuenta de usuario para mantener la privacidad y relevancia</li>
                         </ul>
                         
                         <h3>Testimonios</h3>
@@ -443,11 +445,13 @@ export default function Documentation() {
                           <li>Evita malentendidos que pueden afectar la relación profesional</li>
                         </ul>
                         
-                        <h4>Marketing de Contenidos Interactivo</h4>
+                        <h4>Marketing de Contenidos Interactivo y Datos Analíticos</h4>
                         <ul>
                           <li>Presenta información valiosa de manera conversacional</li>
-                          <li>Demuestra experiencia y conocimiento en el campo específico</li>
+                          <li>Demuestra experiencia y conocimiento en tu campo específico</li>
                           <li>Genera confianza antes del contacto personal</li>
+                          <li>Proporciona estadísticas exclusivas de tu práctica profesional</li>
+                          <li>Métricas aisladas por cuenta, garantizando la privacidad de tus datos</li>
                         </ul>
                         
                         <h3>Testimonios</h3>
@@ -527,16 +531,17 @@ export default function Documentation() {
                           extraiga y aprenda de ese contenido automáticamente.
                         </p>
                         
-                        <h4>Paso 4: Activación y Monitoreo</h4>
+                        <h4>Paso 4: Activación y Monitoreo Personalizado</h4>
                         <p>
                           Una vez configurado, el asistente estará listo para interactuar con tus visitantes. 
-                          Desde el panel de control podrás:
+                          Desde tu panel de control particular podrás:
                         </p>
                         <ul>
-                          <li>Monitorear conversaciones en tiempo real</li>
-                          <li>Revisar métricas de uso y efectividad</li>
-                          <li>Acceder a leads capturados</li>
-                          <li>Refinar el entrenamiento basado en interacciones reales</li>
+                          <li>Monitorear conversaciones en tiempo real solo de tus integraciones</li>
+                          <li>Revisar métricas de uso y efectividad exclusivas de tu cuenta</li>
+                          <li>Acceder a leads capturados en tu sitio web</li>
+                          <li>Refinar el entrenamiento basado en interacciones reales con tus visitantes</li>
+                          <li>Obtener estadísticas completamente aisladas de otros usuarios del sistema</li>
                         </ul>
                         
                         <h3>Requisitos Técnicos</h3>
