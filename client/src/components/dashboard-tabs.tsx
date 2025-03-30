@@ -145,6 +145,14 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    
+    // Update URL query parameters to reflect the current tab
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("tab", tab);
+    
+    // Update the URL without reloading the page
+    const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+    window.history.pushState({}, '', newUrl);
   };
   
   const handleSaveSettings = (e: React.FormEvent) => {

@@ -248,7 +248,7 @@ export default function GetStarted() {
                       <li>Idiomas soportados</li>
                     </ul>
                     {user ? (
-                      <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
+                      <Button size="lg" onClick={() => setLocation("/dashboard?tab=integrations")}>
                         Ir al Panel de Control
                       </Button>
                     ) : (
@@ -274,7 +274,7 @@ export default function GetStarted() {
                       <li>Instrucciones específicas sobre el tono y estilo de las respuestas</li>
                     </ul>
                     {user ? (
-                      <Button size="lg" onClick={() => setLocation("/dashboard/content")}>
+                      <Button size="lg" onClick={() => setLocation("/dashboard?tab=content")}>
                         Administrar Contenido
                       </Button>
                     ) : (
@@ -533,7 +533,7 @@ export default function GetStarted() {
                       <li>Ajustes de accesibilidad</li>
                     </ul>
                     {user ? (
-                      <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
+                      <Button size="lg" onClick={() => setLocation("/dashboard?tab=integrations")}>
                         Ir al Panel de Control
                       </Button>
                     ) : (
@@ -559,7 +559,7 @@ export default function GetStarted() {
                       <li>Establece reglas de derivación a humanos cuando sea necesario</li>
                     </ul>
                     {user ? (
-                      <Button size="lg" onClick={() => setLocation("/dashboard/automations")}>
+                      <Button size="lg" onClick={() => setLocation("/dashboard?tab=automation")}>
                         Configurar Asistente
                       </Button>
                     ) : (
