@@ -10,6 +10,7 @@ import Register from "@/pages/register";
 import EditIntegration from "@/pages/edit-integration";
 import Analytics from "@/pages/analytics";
 import GetStarted from "@/pages/get-started-new";
+import Documentation from "@/pages/docs";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/get-started" component={GetStarted} />
+      <Route path="/docs" component={Documentation} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route component={NotFound} />
