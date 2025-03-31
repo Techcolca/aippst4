@@ -313,6 +313,60 @@ export default function Documentation() {
                           <li><strong>Escalabilidad:</strong> Permite manejar un mayor volumen de consultas sin aumentar el personal</li>
                           <li><strong>Calificación de Leads:</strong> Identifica automáticamente los prospectos más prometedores para seguimiento prioritario</li>
                         </ul>
+                        
+                        <h4>Ejemplo Práctico: Task Automation + Web Integration</h4>
+                        <p>A continuación se presenta un ejemplo detallado de cómo una Task Automation puede mejorar el rendimiento de una integración web:</p>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 my-4">
+                          <h5 className="font-bold mb-2">Caso: Universidad que Ofrece Programas de Postgrado</h5>
+                          
+                          <p className="mb-3"><strong>Escenario inicial:</strong> La universidad tiene una integración web de AIPI en su sitio web principal, en formato widget flotante. Sin automatizaciones, el asistente responde preguntas generales sobre la universidad.</p>
+                          
+                          <p className="font-medium">Implementación de Automatización:</p>
+                          <ol className="space-y-2 mb-3">
+                            <li>1. Se crea una <strong>Task Automation</strong> específica llamada "Admisiones Postgrado 2026"</li>
+                            <li>2. Se configura con los siguientes desencadenantes:
+                              <ul className="list-disc pl-6 my-1">
+                                <li>Palabras clave: "postgrado", "maestría", "doctorado", "2026", "requisitos"</li>
+                                <li>Rutas URL: cualquier página bajo "/postgrados/*" en el sitio web</li>
+                              </ul>
+                            </li>
+                            <li>3. Se definen las acciones automatizadas:
+                              <ul className="list-disc pl-6 my-1">
+                                <li>Saludo personalizado: "Bienvenido al asistente de admisiones para programas de postgrado 2026"</li>
+                                <li>Mensaje proactivo: "Veo que estás interesado en nuestros programas de postgrado. ¿Puedo ayudarte con información sobre algún programa específico?"</li>
+                                <li>Recopilación de datos del visitante si muestra interés específico</li>
+                              </ul>
+                            </li>
+                            <li>4. Se carga una base de conocimiento específica:
+                              <ul className="list-disc pl-6 my-1">
+                                <li>Documentos PDF con los nuevos catálogos de programas 2026</li>
+                                <li>Fechas actualizadas del proceso de admisión</li>
+                                <li>Nuevos requisitos y cambios en las becas disponibles</li>
+                              </ul>
+                            </li>
+                            <li>5. Se conecta esta automatización a la <strong>integración web existente</strong> (el widget del sitio)</li>
+                          </ol>
+                          
+                          <p className="font-medium">Resultados:</p>
+                          <ul className="list-disc pl-6 space-y-1 mb-3">
+                            <li>Cuando un visitante navega por la sección de postgrados, el widget cambia automáticamente su comportamiento</li>
+                            <li>Ofrece proactivamente ayuda específica sobre admisiones 2026 en lugar de esperar a que el usuario inicie la conversación</li>
+                            <li>Proporciona información precisa y actualizada de los nuevos programas</li>
+                            <li>Identifica automáticamente candidatos potenciales, solicitando su correo para enviar información detallada</li>
+                            <li>Generar reportes específicos sobre el interés en los programas de postgrado 2026</li>
+                          </ul>
+                          
+                          <p className="font-medium">Métricas de impacto:</p>
+                          <ul className="list-disc pl-6 space-y-1">
+                            <li>Aumento del 40% en la tasa de interacción con el widget en las páginas de postgrado</li>
+                            <li>Incremento del 25% en formularios de interés completados</li>
+                            <li>Reducción del 30% en consultas repetitivas al departamento de admisiones</li>
+                            <li>Mejora de la experiencia del usuario con un 90% de valoraciones positivas</li>
+                          </ul>
+                        </div>
+                        
+                        <p>Este ejemplo ilustra cómo una Task Automation puede transformar una integración web genérica en una herramienta de captación altamente especializada, que responde de manera contextual y proactiva según las necesidades específicas de cada sección del sitio web.</p>
                       </div>
                     </div>
                   </div>
