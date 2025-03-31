@@ -32,27 +32,14 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
       return next();
     } catch (error) {
       console.error('Token verification error:', error);
-      // Si estamos en producción, devolvemos un error
-      if (process.env.NODE_ENV === 'production') {
-        res.clearCookie('auth_token');
-        return res.status(401).json({ message: 'Invalid or expired token' });
-      }
-      // En desarrollo, continuamos con el fallback
-      console.log("Error en la verificación del token, usando fallback");
+      res.clearCookie('auth_token');
+      return res.status(401).json({ message: 'Invalid or expired token' });
     }
   } else {
     console.log("No se encontró token de autenticación");
   }
   
-  // En desarrollo, si no hay token o es inválido, utilizamos un userId fijo
-  if (process.env.NODE_ENV !== 'production') {
-    console.log("Modo desarrollo - autenticación automática como usuario predeterminado");
-    // Establece un ID de usuario fijo para desarrollo
-    req.userId = 1;
-    return next();
-  }
-  
-  // En producción, si no hay token, devolvemos un error
+  // En cualquier ambiente, si no hay token válido, devolvemos un error
   return res.status(401).json({ message: 'Authentication required' });
 }
 

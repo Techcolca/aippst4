@@ -1544,18 +1544,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // ================ Admin Routes ================
-  // Obtener todos los usuarios (solo admin)
+  // Obtener todos los usuarios con sus suscripciones (solo admin)
   app.get("/api/admin/users", verifyToken, isAdmin, async (req, res) => {
     try {
-      // Obtener todos los usuarios de la base de datos
+      // Obtener todos los usuarios con sus suscripciones en una sola consulta
       const queryResult = await pool.query(
-        `SELECT id, username, email, full_name, created_at, 
-          api_key, stripe_customer_id, stripe_subscription_id 
-        FROM users 
-        ORDER BY id ASC`
+        `SELECT 
+          u.id, u.username, u.email, u.full_name, u.created_at, u.api_key, 
+          u.stripe_customer_id, u.stripe_subscription_id,
+          s.id as subscription_id, s.tier, s.interactions_limit, s.interactions_used, 
+          s.status, s.start_date, s.end_date  
+        FROM users u
+        LEFT JOIN subscriptions s ON u.id = s.user_id
+        ORDER BY u.id ASC`
       );
       
-      const users = queryResult.rows;
+      // Transformar el resultado plano en una estructura anidada
+      const userMap = new Map();
+      
+      // Agrupar usuarios con sus suscripciones
+      queryResult.rows.forEach(row => {
+        if (!userMap.has(row.id)) {
+          // Extraer datos del usuario
+          userMap.set(row.id, {
+            id: row.id,
+            username: row.username,
+            email: row.email,
+            full_name: row.full_name,
+            created_at: row.created_at,
+            api_key: row.api_key,
+            stripe_customer_id: row.stripe_customer_id,
+            stripe_subscription_id: row.stripe_subscription_id,
+            subscriptions: []
+          });
+        }
+        
+        // Añadir suscripción si existe
+        if (row.subscription_id) {
+          const user = userMap.get(row.id);
+          user.subscriptions.push({
+            id: row.subscription_id,
+            tier: row.tier,
+            status: row.status,
+            interactions_limit: row.interactions_limit,
+            interactions_used: row.interactions_used,
+            start_date: row.start_date,
+            end_date: row.end_date
+          });
+        }
+      });
+      
+      // Convertir Map a Array
+      const users = Array.from(userMap.values());
+      console.log(`Encontrados ${users.length} usuarios con sus suscripciones`);
+      
       res.json(users);
     } catch (error) {
       console.error("Error getting all users:", error);
