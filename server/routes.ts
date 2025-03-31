@@ -156,18 +156,14 @@ const isAdmin = async (req: any, res: any, next: any) => {
     
     console.log("isAdmin: Verificando usuario con ID:", req.userId);
     
-    // Obtener el usuario directamente de la base de datos
-    const userResult = await pool.query(
-      "SELECT id, username FROM users WHERE id = $1",
-      [req.userId]
-    );
+    // Obtener el usuario usando el almacén compartido
+    const user = await storage.getUser(req.userId);
     
-    if (userResult.rows.length === 0) {
-      console.log("isAdmin: Usuario no encontrado en la base de datos");
+    if (!user) {
+      console.log("isAdmin: Usuario no encontrado");
       return res.status(401).json({ message: "User not found" });
     }
     
-    const user = userResult.rows[0];
     console.log("isAdmin: Usuario encontrado:", user.username, "con ID:", user.id);
     
     // Verificar si el usuario es admin (username === 'admin')
@@ -260,18 +256,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Set cookie
       res.cookie("auth_token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true, // Siempre usar secure en entornos de desarrollo Replit
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        sameSite: "lax",
+        sameSite: "none", // Usar "none" para permitir cookies cross-origin en Replit
         path: "/",
       });
       
       console.log("Login successful for user:", user.username);
       console.log("Token created:", token);
       
-      // Return user without password
+      // Return user without password and también incluir el token en la respuesta
       const { password: _, ...userWithoutPassword } = user;
-      res.json(userWithoutPassword);
+      res.json({
+        ...userWithoutPassword,
+        token: token // Incluimos el token en la respuesta para usarlo como Bearer token
+      });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -279,7 +278,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   app.post("/api/auth/logout", (req, res) => {
-    res.clearCookie("auth_token");
+    res.clearCookie("auth_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+    });
     res.json({ message: "Logged out successfully" });
   });
   

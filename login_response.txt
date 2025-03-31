@@ -1,0 +1,74 @@
+Note: Unnecessary use of -X or --request, POST is already inferred.
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev:443 was resolved.
+* IPv6: (none)
+* IPv4: 35.226.206.236
+*   Trying 35.226.206.236:443...
+* ALPN: curl offers h2,http/1.1
+} [5 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [88 bytes data]
+* TLSv1.3 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+* TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [223 bytes data]
+* TLSv1.3 (IN), TLS handshake, Encrypted Extensions (8):
+{ [21 bytes data]
+* TLSv1.3 (IN), TLS handshake, Certificate (11):
+{ [2633 bytes data]
+* TLSv1.3 (IN), TLS handshake, CERT verify (15):
+{ [264 bytes data]
+* TLSv1.3 (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* TLSv1.3 (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256 / secp521r1 / RSASSA-PSS
+* ALPN: server accepted http/1.1
+* Server certificate:
+*  subject: CN=picard.replit.dev
+*  start date: Feb 14 16:23:20 2025 GMT
+*  expire date: May 15 16:23:19 2025 GMT
+*  subjectAltName: host "a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev" matched cert's "*.picard.replit.dev"
+*  issuer: C=US; O=Let's Encrypt; CN=R10
+*  SSL certificate verify ok.
+*   Certificate level 0: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+*   Certificate level 1: Public key type RSA (2048/112 Bits/secBits), signed using sha256WithRSAEncryption
+*   Certificate level 2: Public key type RSA (4096/152 Bits/secBits), signed using sha256WithRSAEncryption
+* Connected to a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev (35.226.206.236) port 443
+* using HTTP/1.x
+} [5 bytes data]
+> POST /api/auth/login HTTP/1.1
+> Host: a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+> User-Agent: curl/8.11.1
+> Accept: */*
+> Content-Type: application/json
+> Content-Length: 43
+> 
+} [43 bytes data]
+* upload completely sent off: 43 bytes
+{ [5 bytes data]
+* TLSv1.3 (IN), TLS handshake, Newsession Ticket (4):
+{ [122 bytes data]
+< HTTP/1.1 200 OK
+< Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, x-api-key
+< Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS
+< Access-Control-Allow-Origin: *
+< Content-Length: 222
+< Content-Type: application/json; charset=utf-8
+< Date: Mon, 31 Mar 2025 20:07:53 GMT
+< Etag: W/"de-3IvbJFX7UJ5fb0mJOh9JkDNezRI"
+< Replit-Cluster: picard
+< Set-Cookie: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc0MzQ1MTY3MywiZXhwIjoxNzQ0MDU2NDczfQ.TGXnI4OMh9JFlSitrGWhUu67Pygwl9igFDwecbqe9Q8; Path=/; Expires=Mon, 07 Apr 2025 20:07:53 GMT; Max-Age=604800; HttpOnly; Secure; SameSite=None
+< X-Powered-By: Express
+< X-Robots-Tag: none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex
+< X-Robots-Tag: none, noindex, noarchive, nofollow, nositelinkssearchbox, noimageindex
+< 
+{ [5 bytes data]
+100   265  100   222  100    43   1358    263 --:--:-- --:--:-- --:--:--  1625
+* Connection #0 to host a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev left intact
+{"id":4,"username":"admin","email":"admin@example.com","fullName":"Administrador","apiKey":"aipi_a9f796b333f9aff8d2de700554c34c73","createdAt":"2025-03-31T18:51:12.857Z","stripeCustomerId":null,"stripeSubscriptionId":null}

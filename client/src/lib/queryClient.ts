@@ -12,14 +12,38 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  // Configurar los headers básicos
+  const headers: Record<string, string> = data 
+    ? { "Content-Type": "application/json" } 
+    : {};
+  
+  // Añadir token de autenticación si existe en localStorage
+  const authToken = localStorage.getItem('auth_token');
+  if (authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
+  }
+  
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: headers,
     body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
+    credentials: "include", // Mantener cookies como respaldo
   });
 
   await throwIfResNotOk(res);
+  
+  // Si es una respuesta de login, extraer y guardar el token
+  if (url.includes('/auth/login') && res.ok) {
+    const setCookieHeader = res.headers.get('Set-Cookie');
+    if (setCookieHeader) {
+      const tokenMatch = setCookieHeader.match(/auth_token=([^;]+)/);
+      if (tokenMatch && tokenMatch[1]) {
+        localStorage.setItem('auth_token', tokenMatch[1]);
+        console.log("Token guardado en localStorage desde apiRequest");
+      }
+    }
+  }
+  
   return res;
 }
 

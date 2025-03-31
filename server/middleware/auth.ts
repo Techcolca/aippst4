@@ -26,17 +26,27 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
   
   if (token) {
     try {
+      console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
       req.userId = decoded.userId;
       console.log("Token verificado correctamente. ID de usuario:", req.userId);
       return next();
     } catch (error) {
       console.error('Token verification error:', error);
-      res.clearCookie('auth_token');
+      res.clearCookie('auth_token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
   } else {
     console.log("No se encontró token de autenticación");
+    
+    // Para depuración, mostrar qué cookies hay disponibles
+    console.log("Cookies disponibles:", req.cookies);
+    console.log("Headers:", req.headers);
   }
   
   // En cualquier ambiente, si no hay token válido, devolvemos un error

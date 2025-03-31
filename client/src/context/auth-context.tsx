@@ -41,8 +41,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setIsLoading(true);
         
         console.log("Verificando estado de autenticación...");
+        
+        // Preparar headers con el token de autorización si existe
+        const headers: Record<string, string> = {};
+        const authToken = localStorage.getItem('auth_token');
+        if (authToken) {
+          console.log("Token encontrado en localStorage, usando para autenticación");
+          headers['Authorization'] = `Bearer ${authToken}`;
+        }
+        
         const response = await fetch("/api/auth/me", {
           credentials: "include",
+          cache: "no-store", // Evitar caché
+          headers: headers
         });
         
         console.log("Estado de la respuesta:", response.status);
@@ -69,45 +80,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Login function
   const login = async (username: string, password: string) => {
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        credentials: "include", // importante para cookies
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
+      console.log("Intentando iniciar sesión para el usuario:", username);
+      
+      // Usar apiRequest para el login
+      const response = await apiRequest("POST", "/api/auth/login", {
+        username,
+        password,
       });
       
-      if (!response.ok) {
-        throw new Error(`Login failed: ${response.statusText}`);
-      }
-      
+      // Obtener los datos del usuario y el token
       const userData = await response.json();
       console.log("Usuario autenticado:", userData);
       
-      // Revalidar la sesión para confirmar que las cookies están funcionando
-      try {
-        const meResponse = await fetch("/api/auth/me", {
-          credentials: "include"
-        });
+      // Guardar el token en localStorage si viene en la respuesta
+      if (userData.token) {
+        localStorage.setItem('auth_token', userData.token);
+        console.log("Token guardado en localStorage:", userData.token.substring(0, 20) + "...");
         
-        if (meResponse.ok) {
-          const verifiedUser = await meResponse.json();
-          console.log("Verificación de autenticación exitosa:", verifiedUser);
-          // Usar los datos verificados
-          setUser(verifiedUser);
-        } else {
-          console.warn("Error en verificación, usando datos directos del login");
-          setUser(userData);
-        }
-      } catch (verifyError) {
-        console.error("Error verificando autenticación:", verifyError);
-        // Fallback a usar los datos del login directo
+        // Eliminar el token del objeto de usuario para no guardarlo en el estado
+        const { token, ...userWithoutToken } = userData;
+        setUser(userWithoutToken);
+      } else {
+        console.warn("No se recibió token en la respuesta de login");
         setUser(userData);
       }
+      
+      // Ya no es necesario verificar la sesión, ya que la respuesta incluye los datos del usuario
+      
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -118,10 +117,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = async () => {
     try {
       await apiRequest("POST", "/api/auth/logout", {});
+      // Eliminar el token del localStorage
+      localStorage.removeItem('auth_token');
       setUser(null);
     } catch (error) {
+      // Eliminar el token del localStorage incluso si hay error
+      localStorage.removeItem('auth_token');
       console.error("Logout error:", error);
-      throw error;
+      setUser(null);
     }
   };
   
