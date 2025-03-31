@@ -179,6 +179,38 @@ export interface DashboardStats {
   averageResponseTime: number;
 }
 
+// Tipos para suscripciones
+export const subscriptions = pgTable("subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripePriceId: text("stripe_price_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  status: text("status").notNull().default("inactive"),
+  tier: text("tier").notNull().default("free"),
+  interactionsLimit: integer("interactions_limit").notNull().default(20),
+  interactionsUsed: integer("interactions_used").notNull().default(0),
+  startDate: timestamp("start_date", { mode: "date" }),
+  endDate: timestamp("end_date", { mode: "date" }),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow(),
+});
+
+export const insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
+  userId: true,
+  stripeCustomerId: true,
+  stripePriceId: true,
+  stripeSubscriptionId: true,
+  status: true,
+  tier: true,
+  interactionsLimit: true,
+  startDate: true,
+  endDate: true,
+});
+
+export type Subscription = typeof subscriptions.$inferSelect;
+export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
+
 // Tabla para almacenar información del sitio web scrapeado
 export const sitesContent = pgTable("sites_content", {
   id: serial("id").primaryKey(),

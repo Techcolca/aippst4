@@ -5,6 +5,13 @@ import { storage } from "./storage";
 import { verifyToken } from "./middleware/auth";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
+import { 
+  stripe, 
+  initializeProducts, 
+  createCheckoutSession, 
+  handleWebhookEvent, 
+  PRODUCTS 
+} from "./lib/stripe";
 import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
 import bcrypt from "bcrypt";
@@ -61,6 +68,48 @@ const upload = multer({
 });
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_jwt_secret";
+
+// Función para obtener las características de cada plan según su nivel
+function getFeaturesByTier(tier: string): string[] {
+  switch (tier) {
+    case 'basic':
+      return [
+        "Hasta 500 interacciones mensuales",
+        "Incluye todas las funcionalidades del Paquete Gratuito",
+        "Carga y procesamiento de documentos específicos (PDF, DOCX, Excel)",
+        "Captura básica de leads con almacenamiento de información de contacto",
+        "Análisis detallados de interacciones y consultas frecuentes"
+      ];
+    case 'professional':
+      return [
+        "Hasta 2,000 interacciones mensuales",
+        "Incluye todas las funcionalidades del Paquete Básico",
+        "Integración en pantalla completa tipo ChatGPT para una experiencia más inmersiva",
+        "Automatización de tareas frecuentes y programación de seguimientos",
+        "Análisis avanzados con métricas de rendimiento y tendencias",
+        "Soporte prioritario"
+      ];
+    case 'enterprise':
+      return [
+        "Interacciones ilimitadas",
+        "Incluye todas las funcionalidades del Paquete Profesional",
+        "Personalización avanzada del asistente virtual (tono, estilo, branding)",
+        "Integración con sistemas CRM y otras plataformas empresariales",
+        "Análisis personalizados y reportes a medida",
+        "Soporte dedicado con gestor de cuenta asignado"
+      ];
+    case 'free':
+    default:
+      return [
+        "Hasta 20 interacciones por día",
+        "Acceso al widget flotante para integración sencilla en el sitio web",
+        "Respuestas basadas en la información disponible públicamente en el sitio web",
+        "Sin personalización ni carga de documentos específicos",
+        "Sin captura de leads ni seguimiento posterior",
+        "Análisis básicos de interacciones"
+      ];
+  }
+}
 
 // Función para crear una integración interna específica para el sitio web principal
 async function createInternalWebsiteIntegration() {
@@ -654,6 +703,175 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("OpenAI summarize error:", error);
       res.status(500).json({ message: "Error summarizing text" });
+    }
+  });
+  
+  // ================ Stripe Routes ================
+  // Inicializar productos de Stripe
+  // Esta ruta se ejecuta una vez al iniciar el servidor para asegurar que los productos existen en Stripe
+  (async () => {
+    try {
+      console.log("Inicializando productos en Stripe...");
+      await initializeProducts();
+    } catch (error) {
+      console.error("Error inicializando productos en Stripe:", error);
+    }
+  })();
+  
+  // Obtener los planes disponibles
+  app.get("/api/pricing/plans", async (req, res) => {
+    try {
+      // Obtener los productos de Stripe con sus precios
+      const products = [];
+      
+      // Añadir el plan gratuito que no está en Stripe
+      products.push({
+        id: "free",
+        name: "Paquete Gratuito (Prueba)",
+        description: "Hasta 20 interacciones por día",
+        price: 0,
+        currency: "cad",
+        interval: "month",
+        features: [
+          "Acceso al widget flotante para integración sencilla en el sitio web",
+          "Respuestas basadas en la información disponible públicamente en el sitio web",
+          "Sin personalización ni carga de documentos específicos",
+          "Sin captura de leads ni seguimiento posterior",
+          "Análisis básicos de interacciones"
+        ],
+        tier: "free",
+        interactionsLimit: 20
+      });
+      
+      // Añadir los planes de pago
+      for (const [key, product] of Object.entries(PRODUCTS)) {
+        products.push({
+          id: key.toLowerCase(),
+          name: product.name,
+          description: product.description,
+          price: product.price / 100, // Convertir centavos a dólares para mostrar
+          currency: product.currency,
+          interval: product.interval,
+          features: getFeaturesByTier(key.toLowerCase()),
+          tier: product.metadata.tier,
+          interactionsLimit: product.metadata.interactions
+        });
+      }
+      
+      res.json(products);
+    } catch (error) {
+      console.error("Error obteniendo planes:", error);
+      res.status(500).json({ message: "Error obteniendo planes de precios" });
+    }
+  });
+  
+  // Iniciar proceso de checkout para un plan
+  app.post("/api/pricing/checkout", verifyToken, async (req, res) => {
+    try {
+      const { planId } = req.body;
+      
+      if (!planId) {
+        return res.status(400).json({ message: "ID del plan es requerido" });
+      }
+      
+      // Si es el plan gratuito, activarlo directamente
+      if (planId === "free") {
+        // Obtener o crear suscripción gratuita para el usuario
+        // TODO: Implementar lógica para suscripción gratuita
+        return res.json({ 
+          success: true, 
+          message: "Plan gratuito activado", 
+          redirectUrl: "/dashboard" 
+        });
+      }
+      
+      // Obtener información del usuario
+      const user = await storage.getUser(req.userId);
+      if (!user) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      
+      // Encontrar el priceId correspondiente al plan seleccionado
+      let priceId = "";
+      for (const [key, product] of Object.entries(PRODUCTS)) {
+        if (key.toLowerCase() === planId.toLowerCase()) {
+          // Crear o actualizar el producto/precio en Stripe
+          const { priceId: stripePriceId } = await createOrUpdatePrice(product);
+          priceId = stripePriceId;
+          break;
+        }
+      }
+      
+      if (!priceId) {
+        return res.status(404).json({ message: "Plan no encontrado" });
+      }
+      
+      // Crear sesión de checkout
+      const session = await createCheckoutSession(priceId, req.userId, user.email);
+      
+      res.json({ 
+        success: true, 
+        sessionId: session.id,
+        sessionUrl: session.url
+      });
+    } catch (error) {
+      console.error("Error creando sesión de checkout:", error);
+      res.status(500).json({ message: "Error procesando la solicitud de pago" });
+    }
+  });
+  
+  // Webhook para eventos de Stripe
+  app.post("/api/webhook/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+      const signature = req.headers['stripe-signature'] as string;
+      
+      // Verificar que la petición es legítima de Stripe
+      let event;
+      try {
+        const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+        
+        // Si no hay webhook secret configurado, omitir verificación en desarrollo
+        if (!webhookSecret && process.env.NODE_ENV !== 'production') {
+          event = req.body;
+        } else if (webhookSecret) {
+          event = stripe.webhooks.constructEvent(
+            req.body,
+            signature,
+            webhookSecret
+          );
+        } else {
+          return res.status(400).send('Webhook secret requerido en producción');
+        }
+      } catch (err) {
+        console.error(`Error verificando webhook: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+      }
+      
+      // Procesar el evento
+      await handleWebhookEvent(event);
+      
+      res.json({ received: true });
+    } catch (error) {
+      console.error('Error en webhook de Stripe:', error);
+      res.status(500).json({ message: "Error procesando webhook" });
+    }
+  });
+  
+  // Obtener el estado de la suscripción del usuario
+  app.get("/api/subscription/status", verifyToken, async (req, res) => {
+    try {
+      // TODO: Implementar lógica para obtener el estado de la suscripción
+      // Por ahora, devolver un estado ficticio
+      res.json({
+        tier: "free",
+        status: "active",
+        interactionsLimit: 20,
+        interactionsUsed: 5,
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      });
+    } catch (error) {
+      console.error("Error obteniendo estado de suscripción:", error);
+      res.status(500).json({ message: "Error obteniendo estado de suscripción" });
     }
   });
   

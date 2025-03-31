@@ -11,6 +11,7 @@ import EditIntegration from "@/pages/edit-integration";
 import Analytics from "@/pages/analytics";
 import GetStarted from "@/pages/get-started-new";
 import Documentation from "@/pages/docs";
+import Pricing from "@/pages/pricing";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/get-started" component={GetStarted} />
       <Route path="/docs" component={Documentation} />
+      <Route path="/pricing" component={Pricing} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route component={NotFound} />
