@@ -3,14 +3,19 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { verifyToken } from "./middleware/auth";
+import { getInteractionLimitByTier } from "./middleware/subscription";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
-import { 
-  stripe, 
-  initializeProducts, 
-  createCheckoutSession, 
-  handleWebhookEvent, 
-  PRODUCTS 
+import stripe, { 
+  PRODUCTS,
+  createOrRetrieveProduct,
+  createOrUpdatePrice,
+  createCheckoutSession,
+  createOrUpdateCustomer,
+  retrieveSubscription,
+  updateSubscription,
+  cancelSubscription,
+  handleWebhookEvent
 } from "./lib/stripe";
 import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
@@ -833,21 +838,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Si no hay webhook secret configurado, omitir verificación en desarrollo
         if (!webhookSecret && process.env.NODE_ENV !== 'production') {
           event = req.body;
-        } else if (webhookSecret) {
+        } else if (webhookSecret && stripe) {
           event = stripe.webhooks.constructEvent(
             req.body,
             signature,
             webhookSecret
           );
         } else {
-          return res.status(400).send('Webhook secret requerido en producción');
+          return res.status(400).send('Webhook secret requerido en producción o Stripe no está configurado');
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error(`Error verificando webhook: ${err.message}`);
         return res.status(400).send(`Webhook Error: ${err.message}`);
       }
       
-      // Procesar el evento
+      // Procesar el evento utilizando nuestra función en lib/stripe
       await handleWebhookEvent(event);
       
       res.json({ received: true });
@@ -857,21 +862,253 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ================ Subscription Routes ================
+
   // Obtener el estado de la suscripción del usuario
   app.get("/api/subscription/status", verifyToken, async (req, res) => {
     try {
-      // TODO: Implementar lógica para obtener el estado de la suscripción
-      // Por ahora, devolver un estado ficticio
+      const userId = req.userId;
+      
+      // Obtener todas las suscripciones del usuario
+      const subscriptions = await storage.getUserSubscriptions(userId);
+      
+      // Si no hay suscripciones, devolver el plan gratuito por defecto
+      if (!subscriptions || subscriptions.length === 0) {
+        return res.json({
+          tier: "free",
+          status: "active",
+          interactionsLimit: getInteractionLimitByTier("free"),
+          interactionsUsed: 0,
+          expiresAt: null
+        });
+      }
+      
+      // Encontrar la suscripción activa más reciente (ordenadas por fecha de creación descendente)
+      const activeSubscription = subscriptions
+        .filter(sub => sub.status === "active")
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+      
+      if (!activeSubscription) {
+        return res.json({
+          tier: "free",
+          status: "active",
+          interactionsLimit: getInteractionLimitByTier("free"),
+          interactionsUsed: 0,
+          expiresAt: null
+        });
+      }
+      
+      // Si hay una suscripción activa con Stripe, verificar su estado actual
+      if (activeSubscription.stripeSubscriptionId) {
+        try {
+          const stripeSubscription = await retrieveSubscription(activeSubscription.stripeSubscriptionId);
+          
+          // Actualizar el estado si ha cambiado en Stripe
+          if (stripeSubscription && stripeSubscription.status !== activeSubscription.status) {
+            await storage.updateSubscription(activeSubscription.id, {
+              status: stripeSubscription.status
+            });
+            activeSubscription.status = stripeSubscription.status;
+          }
+        } catch (stripeError) {
+          console.error("Error verificando suscripción en Stripe:", stripeError);
+          // Continuar con los datos que tenemos almacenados localmente
+        }
+      }
+      
+      // Devolver información de la suscripción activa
       res.json({
-        tier: "free",
-        status: "active",
-        interactionsLimit: 20,
-        interactionsUsed: 5,
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        id: activeSubscription.id,
+        tier: activeSubscription.tier,
+        status: activeSubscription.status,
+        interactionsLimit: activeSubscription.interactionsLimit,
+        interactionsUsed: activeSubscription.interactionsUsed,
+        startDate: activeSubscription.startDate,
+        endDate: activeSubscription.endDate,
+        stripeCustomerId: activeSubscription.stripeCustomerId,
+        stripeSubscriptionId: activeSubscription.stripeSubscriptionId
       });
     } catch (error) {
       console.error("Error obteniendo estado de suscripción:", error);
       res.status(500).json({ message: "Error obteniendo estado de suscripción" });
+    }
+  });
+  
+  // Obtener los planes disponibles
+  app.get("/api/subscription/plans", async (req, res) => {
+    try {
+      // Devolver los planes disponibles desde la definición en stripe.ts
+      const plans = Object.entries(PRODUCTS)
+        .filter(([_, plan]) => plan.available)
+        .map(([id, plan]) => ({
+          id,
+          ...plan
+        }));
+      
+      res.json(plans);
+    } catch (error) {
+      console.error("Error obteniendo planes:", error);
+      res.status(500).json({ message: "Error obteniendo planes disponibles" });
+    }
+  });
+  
+  // Crear una nueva suscripción o actualizar la existente
+  app.post("/api/subscription/checkout", verifyToken, async (req, res) => {
+    try {
+      const { planId } = req.body;
+      if (!planId) {
+        return res.status(400).json({ message: "Se requiere un ID de plan" });
+      }
+      
+      // Obtener el usuario actual
+      const user = await storage.getUser(req.userId);
+      if (!user) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      
+      // Encontrar el producto correspondiente al plan seleccionado
+      const productInfo = PRODUCTS[planId];
+      if (!productInfo) {
+        return res.status(404).json({ message: "Plan no encontrado" });
+      }
+      
+      // Si es plan gratuito, crear una suscripción sin pasar por Stripe
+      if (planId === 'free' || productInfo.price === 0) {
+        // Revisar si ya existe una suscripción activa gratuita
+        const existingSubs = await storage.getUserSubscriptions(req.userId);
+        const activeFree = existingSubs.find(sub => 
+          sub.tier === 'free' && sub.status === 'active'
+        );
+        
+        if (activeFree) {
+          return res.json({
+            success: true,
+            subscription: activeFree,
+            message: "Ya tienes un plan gratuito activo"
+          });
+        }
+        
+        // Crear nueva suscripción gratuita
+        const newSub = await storage.createSubscription({
+          userId: req.userId,
+          tier: 'free',
+          status: 'active',
+          interactionsLimit: getInteractionLimitByTier('free'),
+          interactionsUsed: 0,
+          startDate: new Date(),
+          // El plan gratuito no tiene fecha de finalización
+        });
+        
+        return res.json({
+          success: true,
+          subscription: newSub,
+          message: "Plan gratuito activado con éxito"
+        });
+      }
+      
+      // Para planes pagos, procesar con Stripe
+      // 1. Crear o recuperar producto en Stripe
+      const product = await createOrRetrieveProduct(productInfo);
+      if (!product) {
+        return res.status(500).json({ message: "Error creando producto en Stripe" });
+      }
+      
+      // 2. Crear o actualizar precio en Stripe
+      const price = await createOrUpdatePrice(product, productInfo.price);
+      if (!price) {
+        return res.status(500).json({ message: "Error creando precio en Stripe" });
+      }
+      
+      // 3. Crear o actualizar cliente en Stripe si el usuario tiene un email
+      let customerId = user.stripeCustomerId;
+      if (user.email) {
+        const customer = await createOrUpdateCustomer(user.email, user.fullName || user.username, user.stripeCustomerId);
+        if (customer) {
+          customerId = customer.id;
+          
+          // Actualizar ID de cliente en la base de datos si es nuevo
+          if (!user.stripeCustomerId) {
+            // Esta función debería estar implementada en storage
+            /* await storage.updateUserStripeInfo(user.id, {
+              stripeCustomerId: customer.id,
+              stripeSubscriptionId: user.stripeSubscriptionId
+            }); */
+          }
+        }
+      }
+      
+      // 4. Crear sesión de checkout
+      const successUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/success?session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/cancel`;
+      
+      const session = await createCheckoutSession(
+        customerId,
+        price.id,
+        successUrl,
+        cancelUrl
+      );
+      
+      if (!session) {
+        return res.status(500).json({ message: "Error creando sesión de checkout" });
+      }
+      
+      res.json({ 
+        success: true, 
+        sessionId: session.id,
+        sessionUrl: session.url,
+        message: "Sesión de checkout creada con éxito"
+      });
+    } catch (error) {
+      console.error("Error creando sesión de checkout:", error);
+      res.status(500).json({ message: "Error procesando la solicitud de pago" });
+    }
+  });
+  
+  // Cancelar una suscripción activa
+  app.post("/api/subscription/cancel", verifyToken, async (req, res) => {
+    try {
+      const userId = req.userId;
+      const { subscriptionId } = req.body;
+      
+      if (!subscriptionId) {
+        return res.status(400).json({ message: "Se requiere ID de suscripción" });
+      }
+      
+      // Verificar que la suscripción existe y pertenece al usuario
+      const subscription = await storage.getSubscription(subscriptionId);
+      
+      if (!subscription) {
+        return res.status(404).json({ message: "Suscripción no encontrada" });
+      }
+      
+      if (subscription.userId !== userId) {
+        return res.status(403).json({ message: "No tienes permiso para cancelar esta suscripción" });
+      }
+      
+      // Cancelar en Stripe si tiene ID de suscripción de Stripe
+      if (subscription.stripeSubscriptionId) {
+        try {
+          await cancelSubscription(subscription.stripeSubscriptionId);
+        } catch (stripeError) {
+          console.error("Error cancelando suscripción en Stripe:", stripeError);
+          // Continuar con la cancelación local incluso si falló en Stripe
+        }
+      }
+      
+      // Actualizar estado en nuestra base de datos
+      const updated = await storage.updateSubscription(subscriptionId, {
+        status: "canceled",
+        endDate: new Date()
+      });
+      
+      res.json({
+        success: true,
+        subscription: updated,
+        message: "Suscripción cancelada con éxito"
+      });
+    } catch (error) {
+      console.error("Error cancelando suscripción:", error);
+      res.status(500).json({ message: "Error procesando la solicitud de cancelación" });
     }
   });
   

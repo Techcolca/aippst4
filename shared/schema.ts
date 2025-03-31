@@ -11,6 +11,8 @@ export const users = pgTable("users", {
   fullName: text("full_name"),
   apiKey: text("api_key").notNull().unique(),
   createdAt: timestamp("created_at").defaultNow(),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -45,6 +47,7 @@ export const insertIntegrationSchema = createInsertSchema(integrations).pick({
   position: true,
   botBehavior: true,
   widgetType: true,
+  documentsData: true,
 });
 
 // Conversation schema

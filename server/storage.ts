@@ -3,7 +3,7 @@ import {
   Conversation, InsertConversation, Message, InsertMessage,
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
-  TopProduct, TopTopic
+  TopProduct, TopTopic, Subscription, InsertSubscription
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -61,6 +61,15 @@ export interface IStorage {
   createSiteContent(content: InsertSiteContent): Promise<SiteContent>;
   updateSiteContent(id: number, data: Partial<SiteContent>): Promise<SiteContent>;
   deleteSiteContent(id: number): Promise<void>;
+
+  // Subscription methods
+  getUserSubscriptions(userId: number): Promise<Subscription[]>;
+  getSubscription(id: number): Promise<Subscription | undefined>;
+  createSubscription(subscription: InsertSubscription): Promise<Subscription>;
+  updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription>;
+  incrementSubscriptionUsage(id: number): Promise<void>;
+  getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined>;
+  updateUserStripeInfo(userId: number, data: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User>;
 }
 
 // In-memory storage implementation
@@ -72,6 +81,7 @@ export class MemStorage implements IStorage {
   private automations: Map<number, Automation>;
   private settings: Map<number, Settings>;
   private siteContents: Map<number, SiteContent>;
+  private subscriptions: Map<number, Subscription>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -80,6 +90,7 @@ export class MemStorage implements IStorage {
   private automationIdCounter: number;
   private settingsIdCounter: number;
   private siteContentIdCounter: number;
+  private subscriptionIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -89,6 +100,7 @@ export class MemStorage implements IStorage {
     this.automations = new Map();
     this.settings = new Map();
     this.siteContents = new Map();
+    this.subscriptions = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -97,6 +109,7 @@ export class MemStorage implements IStorage {
     this.automationIdCounter = 1;
     this.settingsIdCounter = 1;
     this.siteContentIdCounter = 1;
+    this.subscriptionIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -512,6 +525,82 @@ export class MemStorage implements IStorage {
 
   async deleteSiteContent(id: number): Promise<void> {
     this.siteContents.delete(id);
+  }
+  
+  // Subscription methods
+  async getUserSubscriptions(userId: number): Promise<Subscription[]> {
+    return Array.from(this.subscriptions.values()).filter(
+      subscription => subscription.userId === userId
+    );
+  }
+
+  async getSubscription(id: number): Promise<Subscription | undefined> {
+    return this.subscriptions.get(id);
+  }
+
+  async createSubscription(subscription: InsertSubscription): Promise<Subscription> {
+    const id = this.subscriptionIdCounter++;
+    const now = new Date();
+    
+    const newSubscription: Subscription = {
+      ...subscription,
+      id,
+      createdAt: now,
+      updatedAt: now,
+      interactionsUsed: 0,
+    };
+    
+    this.subscriptions.set(id, newSubscription);
+    return newSubscription;
+  }
+
+  async updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription> {
+    const subscription = this.subscriptions.get(id);
+    if (!subscription) {
+      throw new Error(`Subscription with id ${id} not found`);
+    }
+
+    const updatedSubscription = {
+      ...subscription,
+      ...data,
+      updatedAt: new Date()
+    };
+    
+    this.subscriptions.set(id, updatedSubscription);
+    return updatedSubscription;
+  }
+
+  async incrementSubscriptionUsage(id: number): Promise<void> {
+    const subscription = this.subscriptions.get(id);
+    if (subscription) {
+      subscription.interactionsUsed += 1;
+      this.subscriptions.set(id, subscription);
+    }
+  }
+
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      user => user.stripeCustomerId === stripeCustomerId
+    );
+  }
+
+  async updateUserStripeInfo(
+    userId: number, 
+    data: { stripeCustomerId: string, stripeSubscriptionId: string }
+  ): Promise<User> {
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+
+    const updatedUser = { 
+      ...user, 
+      stripeCustomerId: data.stripeCustomerId,
+      stripeSubscriptionId: data.stripeSubscriptionId 
+    };
+    
+    this.users.set(userId, updatedUser);
+    return updatedUser;
   }
 
   // Dashboard methods
