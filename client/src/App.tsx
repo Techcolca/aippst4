@@ -12,6 +12,7 @@ import Analytics from "@/pages/analytics";
 import GetStarted from "@/pages/get-started-new";
 import Documentation from "@/pages/docs";
 import Pricing from "@/pages/pricing";
+import AdminPanel from "@/pages/admin";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/pricing" component={Pricing} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
       <Route path="/analytics" component={Analytics} />
+      <Route path="/admin" component={AdminPanel} />
       <Route component={NotFound} />
     </Switch>
   );

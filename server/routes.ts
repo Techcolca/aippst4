@@ -27,6 +27,8 @@ import fs from "fs";
 import path from "path";
 import multer from "multer";
 import { fileURLToPath } from 'url';
+import crypto from 'crypto';
+import { db, pool } from "./db";
 
 // Obtener el equivalente a __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -145,6 +147,31 @@ async function createInternalWebsiteIntegration() {
     console.error("Error al crear integración interna:", error);
   }
 }
+
+// Middleware para verificar si un usuario es administrador
+const isAdmin = async (req: any, res: any, next: any) => {
+  try {
+    if (!req.userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    const user = await storage.getUser(req.userId);
+    
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+    
+    // Verificar si el usuario es admin (username === 'admin')
+    if (user.username !== 'admin') {
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    
+    next();
+  } catch (error) {
+    console.error("Admin verification error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Crear integración interna para el sitio principal
@@ -1513,6 +1540,537 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ================ Admin Routes ================
+  // Obtener todos los usuarios (solo admin)
+  app.get("/api/admin/users", verifyToken, isAdmin, async (req, res) => {
+    try {
+      // Obtener todos los usuarios de la base de datos
+      const queryResult = await pool.query(
+        `SELECT id, username, email, full_name, created_at, 
+          api_key, stripe_customer_id, stripe_subscription_id 
+        FROM users 
+        ORDER BY id ASC`
+      );
+      
+      const users = queryResult.rows;
+      res.json(users);
+    } catch (error) {
+      console.error("Error getting all users:", error);
+      res.status(500).json({ message: "Error al obtener usuarios" });
+    }
+  });
+
+  // Obtener detalles de un usuario específico (solo admin)
+  app.get("/api/admin/users/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: "ID de usuario inválido" });
+      }
+      
+      // Obtener usuario
+      const userResult = await pool.query(
+        `SELECT id, username, email, full_name, created_at, 
+          api_key, stripe_customer_id, stripe_subscription_id 
+        FROM users WHERE id = $1`, 
+        [userId]
+      );
+      
+      if (userResult.rows.length === 0) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      
+      const user = userResult.rows[0];
+      
+      // Obtener suscripciones del usuario
+      const subscriptionsResult = await pool.query(
+        `SELECT id, tier, status, interactions_limit, interactions_used, 
+          created_at, start_date, end_date 
+        FROM subscriptions 
+        WHERE user_id = $1 
+        ORDER BY created_at DESC`, 
+        [userId]
+      );
+      
+      // Obtener integraciones del usuario
+      const integrationsResult = await pool.query(
+        `SELECT id, name, url, theme_color, position, active, 
+          api_key, visitor_count, created_at, bot_behavior, widget_type 
+        FROM integrations 
+        WHERE user_id = $1 
+        ORDER BY created_at DESC`, 
+        [userId]
+      );
+      
+      // Obtener conversaciones del usuario a través de sus integraciones
+      const conversationsResult = await pool.query(
+        `SELECT c.id, c.integration_id, c.visitor_id, c.resolved, c.duration, 
+          c.created_at, c.updated_at, i.name as integration_name 
+        FROM conversations c 
+        JOIN integrations i ON c.integration_id = i.id 
+        WHERE i.user_id = $1 
+        ORDER BY c.created_at DESC 
+        LIMIT 100`, 
+        [userId]
+      );
+      
+      // Obtener estadísticas de uso
+      const statsResult = await pool.query(
+        `SELECT 
+          COUNT(DISTINCT c.id) as total_conversations,
+          COUNT(DISTINCT m.id) as total_messages,
+          SUM(CASE WHEN c.resolved = true THEN 1 ELSE 0 END) as resolved_conversations,
+          SUM(CASE WHEN m.role = 'assistant' THEN 1 ELSE 0 END) as assistant_messages,
+          SUM(CASE WHEN m.role = 'user' THEN 1 ELSE 0 END) as user_messages
+        FROM integrations i
+        LEFT JOIN conversations c ON i.id = c.integration_id
+        LEFT JOIN messages m ON c.id = m.conversation_id
+        WHERE i.user_id = $1`,
+        [userId]
+      );
+      
+      // Calcular tokens aproximados (estimación básica)
+      // Promedio de 4 caracteres por token para mensajes en español
+      const messagesResult = await pool.query(
+        `SELECT m.content 
+        FROM messages m
+        JOIN conversations c ON m.conversation_id = c.id
+        JOIN integrations i ON c.integration_id = i.id
+        WHERE i.user_id = $1
+        AND m.role = 'assistant'`,
+        [userId]
+      );
+      
+      let totalTokensEstimation = 0;
+      if (messagesResult.rows.length > 0) {
+        // Estimación de tokens usados basada en el contenido de los mensajes
+        messagesResult.rows.forEach(msg => {
+          if (msg.content) {
+            // Estimación aproximada: 1 token ≈ 4 caracteres en español
+            totalTokensEstimation += Math.ceil(msg.content.length / 4);
+          }
+        });
+      }
+      
+      // Construir la respuesta
+      const response = {
+        user,
+        subscriptions: subscriptionsResult.rows,
+        integrations: integrationsResult.rows,
+        recentConversations: conversationsResult.rows,
+        usage: {
+          ...statsResult.rows[0],
+          estimated_tokens: totalTokensEstimation
+        }
+      };
+      
+      res.json(response);
+    } catch (error) {
+      console.error("Error getting user details:", error);
+      res.status(500).json({ message: "Error al obtener detalles del usuario" });
+    }
+  });
+
+  // Crear un nuevo usuario (solo admin)
+  app.post("/api/admin/users", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const { username, password, email, fullName, tier } = req.body;
+      
+      // Validar datos
+      if (!username || !password || !email) {
+        return res.status(400).json({ 
+          message: "Se requieren username, password y email" 
+        });
+      }
+      
+      // Verificar si el usuario ya existe
+      const checkUserResult = await pool.query(
+        "SELECT id FROM users WHERE username = $1 OR email = $2",
+        [username, email]
+      );
+      
+      if (checkUserResult.rows.length > 0) {
+        return res.status(400).json({ 
+          message: "El nombre de usuario o email ya están en uso" 
+        });
+      }
+      
+      // Generar API key y hash de contraseña
+      const apiKey = 'aipi_' + crypto.randomBytes(16).toString('hex');
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      
+      // Insertar usuario
+      const insertUserResult = await pool.query(
+        `INSERT INTO users 
+         (username, password, email, full_name, api_key, created_at) 
+         VALUES ($1, $2, $3, $4, $5, NOW())
+         RETURNING id, username, email, full_name, api_key, created_at`,
+        [username, hashedPassword, email, fullName, apiKey]
+      );
+      
+      const newUser = insertUserResult.rows[0];
+      
+      // Crear suscripción según el tier especificado
+      let interactions_limit = 20;
+      let end_date = null;
+      
+      switch(tier) {
+        case 'basic':
+          interactions_limit = 500;
+          // 30 días a partir de hoy
+          end_date = new Date(new Date().setDate(new Date().getDate() + 30));
+          break;
+        case 'professional':
+          interactions_limit = 2000;
+          // 30 días a partir de hoy
+          end_date = new Date(new Date().setDate(new Date().getDate() + 30));
+          break;
+        case 'enterprise':
+          interactions_limit = 99999;
+          // 365 días a partir de hoy
+          end_date = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+          break;
+        default: // free
+          interactions_limit = 20;
+          // Sin fecha de expiración (o usar null)
+          end_date = null;
+      }
+      
+      await pool.query(
+        `INSERT INTO subscriptions 
+         (user_id, tier, status, interactions_limit, interactions_used, 
+          created_at, updated_at, start_date, end_date)
+         VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), NOW(), $6)`,
+        [newUser.id, tier || 'free', 'active', interactions_limit, 0, end_date]
+      );
+      
+      res.status(201).json({
+        message: "Usuario creado exitosamente",
+        user: newUser
+      });
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ message: "Error al crear usuario" });
+    }
+  });
+
+  // Modificar un usuario existente (solo admin)
+  app.patch("/api/admin/users/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: "ID de usuario inválido" });
+      }
+      
+      // Verificar que el usuario existe
+      const checkUser = await pool.query(
+        "SELECT id FROM users WHERE id = $1",
+        [userId]
+      );
+      
+      if (checkUser.rows.length === 0) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      
+      const { username, email, fullName, password } = req.body;
+      
+      // Construir la consulta dinámicamente basada en los campos proporcionados
+      let updateQuery = "UPDATE users SET ";
+      const updateValues = [];
+      const updateFields = [];
+      
+      let paramIndex = 1;
+      
+      if (username) {
+        updateFields.push(`username = $${paramIndex}`);
+        updateValues.push(username);
+        paramIndex++;
+      }
+      
+      if (email) {
+        updateFields.push(`email = $${paramIndex}`);
+        updateValues.push(email);
+        paramIndex++;
+      }
+      
+      if (fullName) {
+        updateFields.push(`full_name = $${paramIndex}`);
+        updateValues.push(fullName);
+        paramIndex++;
+      }
+      
+      if (password) {
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        updateFields.push(`password = $${paramIndex}`);
+        updateValues.push(hashedPassword);
+        paramIndex++;
+      }
+      
+      // Si no hay campos para actualizar, devolver error
+      if (updateFields.length === 0) {
+        return res.status(400).json({ 
+          message: "No se proporcionaron campos para actualizar" 
+        });
+      }
+      
+      updateQuery += updateFields.join(", ");
+      updateQuery += ` WHERE id = $${paramIndex} RETURNING id, username, email, full_name, created_at`;
+      updateValues.push(userId);
+      
+      // Ejecutar la actualización
+      const updateResult = await pool.query(updateQuery, updateValues);
+      
+      res.json({
+        message: "Usuario actualizado exitosamente",
+        user: updateResult.rows[0]
+      });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Error al actualizar usuario" });
+    }
+  });
+
+  // Modificar la suscripción de un usuario (solo admin)
+  app.patch("/api/admin/users/:id/subscription", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: "ID de usuario inválido" });
+      }
+      
+      const { tier, status, interactionsLimit, endDate } = req.body;
+      
+      // Verificar que el usuario existe
+      const checkUser = await pool.query(
+        "SELECT id FROM users WHERE id = $1",
+        [userId]
+      );
+      
+      if (checkUser.rows.length === 0) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      
+      // Buscar la suscripción activa del usuario
+      const subResult = await pool.query(
+        "SELECT id FROM subscriptions WHERE user_id = $1 AND status = 'active'",
+        [userId]
+      );
+      
+      let subscriptionId;
+      
+      if (subResult.rows.length > 0) {
+        // Actualizar suscripción existente
+        subscriptionId = subResult.rows[0].id;
+        
+        // Construir la consulta dinámicamente
+        let updateQuery = "UPDATE subscriptions SET updated_at = NOW()";
+        const updateValues = [];
+        let paramIndex = 1;
+        
+        if (tier) {
+          updateQuery += `, tier = $${paramIndex}`;
+          updateValues.push(tier);
+          paramIndex++;
+        }
+        
+        if (status) {
+          updateQuery += `, status = $${paramIndex}`;
+          updateValues.push(status);
+          paramIndex++;
+        }
+        
+        if (interactionsLimit) {
+          updateQuery += `, interactions_limit = $${paramIndex}`;
+          updateValues.push(interactionsLimit);
+          paramIndex++;
+        }
+        
+        if (endDate) {
+          updateQuery += `, end_date = $${paramIndex}`;
+          updateValues.push(new Date(endDate));
+          paramIndex++;
+        }
+        
+        updateQuery += ` WHERE id = $${paramIndex} RETURNING *`;
+        updateValues.push(subscriptionId);
+        
+        const updateResult = await pool.query(updateQuery, updateValues);
+        
+        res.json({
+          message: "Suscripción actualizada exitosamente",
+          subscription: updateResult.rows[0]
+        });
+      } else {
+        // Crear nueva suscripción
+        let interactions_limit = interactionsLimit || 20;
+        let end_date = endDate ? new Date(endDate) : null;
+        
+        if (!tier) {
+          // Si no se especifica tier, usar valores por defecto según el tier
+          switch(tier) {
+            case 'basic':
+              interactions_limit = 500;
+              // 30 días a partir de hoy si no se especifica endDate
+              if (!endDate) end_date = new Date(new Date().setDate(new Date().getDate() + 30));
+              break;
+            case 'professional':
+              interactions_limit = 2000;
+              // 30 días a partir de hoy si no se especifica endDate
+              if (!endDate) end_date = new Date(new Date().setDate(new Date().getDate() + 30));
+              break;
+            case 'enterprise':
+              interactions_limit = 99999;
+              // 365 días a partir de hoy si no se especifica endDate
+              if (!endDate) end_date = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+              break;
+            default: // free
+              interactions_limit = 20;
+              // Sin fecha de expiración (o usar null)
+              end_date = null;
+          }
+        }
+        
+        const insertResult = await pool.query(
+          `INSERT INTO subscriptions 
+           (user_id, tier, status, interactions_limit, interactions_used, 
+            created_at, updated_at, start_date, end_date)
+           VALUES ($1, $2, $3, $4, $5, NOW(), NOW(), NOW(), $6)
+           RETURNING *`,
+          [userId, tier || 'free', status || 'active', interactions_limit, 0, end_date]
+        );
+        
+        res.json({
+          message: "Nueva suscripción creada exitosamente",
+          subscription: insertResult.rows[0]
+        });
+      }
+    } catch (error) {
+      console.error("Error updating subscription:", error);
+      res.status(500).json({ message: "Error al actualizar suscripción" });
+    }
+  });
+
+  // Obtener estadísticas globales para administrador
+  app.get("/api/admin/stats", verifyToken, isAdmin, async (req, res) => {
+    try {
+      // Estadísticas de usuarios
+      const usersResult = await pool.query(
+        `SELECT COUNT(*) AS total_users,
+         (SELECT COUNT(*) FROM users WHERE created_at > NOW() - INTERVAL '7 days') AS new_users_last_7_days`
+      );
+      
+      // Estadísticas de conversaciones
+      const convsResult = await pool.query(
+        `SELECT 
+         COUNT(*) AS total_conversations,
+         (SELECT COUNT(*) FROM conversations WHERE created_at > NOW() - INTERVAL '7 days') AS new_conversations_last_7_days,
+         COUNT(CASE WHEN resolved = true THEN 1 END) AS resolved_conversations,
+         ROUND(AVG(duration)::numeric, 2) AS avg_duration`
+      );
+      
+      // Estadísticas de mensajes y estimación de tokens
+      const msgsResult = await pool.query(
+        `SELECT 
+         COUNT(*) AS total_messages,
+         COUNT(CASE WHEN role = 'assistant' THEN 1 END) AS assistant_messages,
+         COUNT(CASE WHEN role = 'user' THEN 1 END) AS user_messages,
+         (SELECT COUNT(*) FROM messages WHERE timestamp > NOW() - INTERVAL '7 days') AS new_messages_last_7_days`
+      );
+      
+      // Calcular tokens aproximados (estimación)
+      const tokensResult = await pool.query(
+        `SELECT SUM(LENGTH(content)) AS total_content_length FROM messages WHERE role = 'assistant'`
+      );
+      
+      const totalContentLength = parseInt(tokensResult.rows[0].total_content_length) || 0;
+      // Estimación aproximada: 1 token ≈ 4 caracteres en español
+      const estimatedTokensUsed = Math.ceil(totalContentLength / 4);
+      
+      // Estadísticas de suscripciones
+      const subsResult = await pool.query(
+        `SELECT 
+         COUNT(*) AS total_subscriptions,
+         COUNT(CASE WHEN tier = 'free' THEN 1 END) AS free_subscriptions,
+         COUNT(CASE WHEN tier = 'basic' THEN 1 END) AS basic_subscriptions,
+         COUNT(CASE WHEN tier = 'professional' THEN 1 END) AS professional_subscriptions,
+         COUNT(CASE WHEN tier = 'enterprise' THEN 1 END) AS enterprise_subscriptions,
+         COUNT(CASE WHEN status = 'active' THEN 1 END) AS active_subscriptions`
+      );
+      
+      // Usuarios que se acercan a su límite (>80% de uso)
+      const nearLimitResult = await pool.query(
+        `SELECT 
+         COUNT(*) AS users_near_limit
+         FROM subscriptions
+         WHERE interactions_limit > 0
+         AND interactions_used > (interactions_limit * 0.8)`
+      );
+      
+      // Usuarios que están por encima de su límite
+      const overLimitResult = await pool.query(
+        `SELECT 
+         COUNT(*) AS users_over_limit
+         FROM subscriptions
+         WHERE interactions_limit > 0
+         AND interactions_used > interactions_limit`
+      );
+      
+      // Construir respuesta con todas las estadísticas
+      const response = {
+        users: {
+          ...usersResult.rows[0]
+        },
+        conversations: {
+          ...convsResult.rows[0]
+        },
+        messages: {
+          ...msgsResult.rows[0]
+        },
+        subscriptions: {
+          ...subsResult.rows[0]
+        },
+        tokens: {
+          estimated_tokens_used: estimatedTokensUsed,
+          // Dependiendo del modelo usado, calcular el costo aproximado (GPT-4o-mini = $5 por millón de tokens de salida)
+          estimated_cost_usd: (estimatedTokensUsed / 1000000) * 5
+        },
+        limits: {
+          users_near_limit: parseInt(nearLimitResult.rows[0].users_near_limit),
+          users_over_limit: parseInt(overLimitResult.rows[0].users_over_limit)
+        }
+      };
+      
+      res.json(response);
+    } catch (error) {
+      console.error("Error getting admin stats:", error);
+      res.status(500).json({ message: "Error al obtener estadísticas de administración" });
+    }
+  });
+
+  // Obtener lista de usuarios cercanos a su límite
+  app.get("/api/admin/users/near-limit", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT u.id, u.username, u.email, u.full_name,
+         s.tier, s.interactions_limit, s.interactions_used,
+         s.end_date, s.status,
+         ROUND((s.interactions_used::float / s.interactions_limit::float) * 100, 2) AS usage_percentage
+         FROM subscriptions s
+         JOIN users u ON s.user_id = u.id
+         WHERE s.interactions_limit > 0
+         AND s.interactions_used > (s.interactions_limit * 0.8)
+         ORDER BY usage_percentage DESC`
+      );
+      
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Error getting users near limit:", error);
+      res.status(500).json({ message: "Error al obtener usuarios cercanos al límite" });
+    }
+  });
+
   const httpServer = createServer(app);
   
   return httpServer;
