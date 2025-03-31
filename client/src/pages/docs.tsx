@@ -241,13 +241,77 @@ export default function Documentation() {
                           <li>Análisis de temas y productos de mayor interés para tus usuarios</li>
                         </ul>
                         
-                        <h3>6. Automatización de Tareas</h3>
-                        <p>AIPI puede configurarse para:</p>
+                        <h3>6. Automatización de Tareas (Task Automation)</h3>
+                        <p>El sistema de Task Automation de AIPI permite crear flujos de trabajo automatizados para manejar consultas repetitivas y tareas comunes sin intervención humana.</p>
+                        
+                        <h4>¿Qué es Task Automation?</h4>
+                        <p>Task Automation es una funcionalidad avanzada que permite configurar respuestas automáticas y acciones predefinidas basadas en desencadenantes específicos. Estas automatizaciones permiten que su asistente virtual realice tareas complejas como:</p>
                         <ul>
-                          <li>Responder automáticamente preguntas frecuentes</li>
-                          <li>Programar seguimientos basados en el interés mostrado</li>
-                          <li>Proporcionar información preliminar antes de conectar con un humano</li>
-                          <li>Recopilar datos específicos necesarios para el proceso de admisión o venta</li>
+                          <li>Responder automáticamente preguntas frecuentes con información detallada</li>
+                          <li>Programar seguimientos basados en el interés mostrado por los visitantes</li>
+                          <li>Proporcionar información preliminar antes de conectar con un representante humano</li>
+                          <li>Recopilar datos específicos necesarios para procesos de admisión o ventas</li>
+                          <li>Generar alertas para el equipo cuando se detecten consultas prioritarias</li>
+                          <li>Clasificar automáticamente las consultas por departamento o área de interés</li>
+                        </ul>
+                        
+                        <h4>Cómo Configurar una Task Automation</h4>
+                        <p>Para crear una nueva automatización de tareas, siga estos pasos:</p>
+                        <ol>
+                          <li><strong>Acceda al Panel de Control:</strong> Inicie sesión y navegue a la pestaña "Task Automation" en su dashboard</li>
+                          <li><strong>Cree una Nueva Automatización:</strong> Haga clic en el botón "Create New Automation" para abrir el formulario de configuración</li>
+                          <li><strong>Defina la Información Básica:</strong>
+                            <ul>
+                              <li>Nombre: Asigne un nombre descriptivo a la automatización (ej. "Consultas sobre Admisiones")</li>
+                              <li>Descripción: Detalle el propósito de esta automatización</li>
+                              <li>Estado: Seleccione si la automatización estará activa, en pruebas o inactiva</li>
+                            </ul>
+                          </li>
+                          <li><strong>Configure los Desencadenantes (Triggers):</strong> Determine qué condiciones activarán la automatización
+                            <ul>
+                              <li>Palabras clave específicas en las consultas de los usuarios</li>
+                              <li>Categorías de preguntas identificadas por el sistema</li>
+                              <li>Patrones específicos en la conversación</li>
+                              <li>Horario (para respuestas fuera del horario de atención)</li>
+                            </ul>
+                          </li>
+                          <li><strong>Defina las Acciones:</strong> Establezca qué acciones realizará el sistema cuando se active
+                            <ul>
+                              <li>Enviar respuestas predefinidas con información detallada</li>
+                              <li>Recopilar datos del visitante (nombre, correo, teléfono)</li>
+                              <li>Generar notificaciones para el equipo de atención</li>
+                              <li>Transferir la conversación a un representante humano</li>
+                              <li>Proporcionar enlaces a recursos específicos</li>
+                            </ul>
+                          </li>
+                          <li><strong>Personalice la Experiencia:</strong> Ajuste la apariencia y comportamiento del asistente
+                            <ul>
+                              <li>Nombre del asistente para esta automatización</li>
+                              <li>Mensaje de bienvenida personalizado</li>
+                              <li>Colores y estilo visual</li>
+                              <li>Base de conocimiento específica para esta automatización</li>
+                            </ul>
+                          </li>
+                          <li><strong>Pruebe la Automatización:</strong> Active el modo de prueba para verificar su funcionamiento</li>
+                          <li><strong>Active y Monitoree:</strong> Una vez verificado su correcto funcionamiento, active la automatización y supervise su rendimiento a través del panel de análisis</li>
+                        </ol>
+                        
+                        <h4>Casos de Uso Comunes</h4>
+                        <p>Las automatizaciones de tareas son especialmente útiles para:</p>
+                        <ul>
+                          <li><strong>Instituciones Educativas:</strong> Automatizar respuestas sobre fechas de admisión, requisitos, costos de matrícula y programas disponibles</li>
+                          <li><strong>Comercios:</strong> Manejar consultas sobre disponibilidad de productos, precios, políticas de devolución y horarios de atención</li>
+                          <li><strong>Servicios Profesionales:</strong> Responder a preguntas frecuentes sobre servicios ofrecidos, tarifas y procesos de contratación</li>
+                          <li><strong>Atención al Cliente:</strong> Clasificar y priorizar automáticamente las consultas de soporte según su urgencia y complejidad</li>
+                        </ul>
+                        
+                        <h4>Beneficios de Task Automation</h4>
+                        <ul>
+                          <li><strong>Ahorro de Tiempo:</strong> Libera a su equipo de responder repetidamente las mismas preguntas</li>
+                          <li><strong>Consistencia:</strong> Garantiza que todas las consultas similares reciban la misma información precisa</li>
+                          <li><strong>Disponibilidad 24/7:</strong> Proporciona respuestas inmediatas incluso fuera del horario laboral</li>
+                          <li><strong>Escalabilidad:</strong> Permite manejar un mayor volumen de consultas sin aumentar el personal</li>
+                          <li><strong>Calificación de Leads:</strong> Identifica automáticamente los prospectos más prometedores para seguimiento prioritario</li>
                         </ul>
                       </div>
                     </div>
