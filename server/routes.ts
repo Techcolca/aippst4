@@ -150,28 +150,36 @@ async function createInternalWebsiteIntegration() {
 const isAdmin = async (req: any, res: any, next: any) => {
   try {
     if (!req.userId) {
+      console.log("isAdmin: No userId en la petición");
       return res.status(401).json({ message: "Unauthorized" });
     }
     
-    // Obtener el usuario de la base de datos
-    const user = await storage.getUser(req.userId);
+    console.log("isAdmin: Verificando usuario con ID:", req.userId);
     
-    if (!user) {
+    // Obtener el usuario directamente de la base de datos
+    const userResult = await pool.query(
+      "SELECT id, username FROM users WHERE id = $1",
+      [req.userId]
+    );
+    
+    if (userResult.rows.length === 0) {
+      console.log("isAdmin: Usuario no encontrado en la base de datos");
       return res.status(401).json({ message: "User not found" });
     }
     
-    console.log("Verificando permisos de administrador para:", user.username);
+    const user = userResult.rows[0];
+    console.log("isAdmin: Usuario encontrado:", user.username, "con ID:", user.id);
     
     // Verificar si el usuario es admin (username === 'admin')
     if (user.username !== 'admin') {
-      console.log("Acceso denegado: El usuario no es administrador");
+      console.log("isAdmin: Acceso denegado para", user.username, "- No es administrador");
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
     
-    console.log("Acceso de administrador concedido para:", user.username);
+    console.log("isAdmin: Acceso de administrador concedido para:", user.username);
     next();
   } catch (error) {
-    console.error("Admin verification error:", error);
+    console.error("isAdmin: Error en verificación de administrador:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

@@ -38,16 +38,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
+        setIsLoading(true);
+        
+        console.log("Verificando estado de autenticación...");
         const response = await fetch("/api/auth/me", {
           credentials: "include",
         });
         
+        console.log("Estado de la respuesta:", response.status);
+        
         if (response.ok) {
           const userData = await response.json();
+          console.log("Usuario autenticado encontrado:", userData);
           setUser(userData);
+        } else {
+          console.log("No hay sesión activa.");
+          setUser(null);
         }
       } catch (error) {
         console.error("Error checking auth status:", error);
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
@@ -59,51 +69,45 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Login function
   const login = async (username: string, password: string) => {
     try {
-      const response = await apiRequest("POST", "/api/auth/login", {
-        username,
-        password,
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        credentials: "include", // importante para cookies
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
       });
       
-      const userData = await response.json();
-      
-      // Como respaldo, guardamos el token en localStorage también (solo para depuración)
-      const token = response.headers.get('Set-Cookie');
-      if (token) {
-        console.log("Token recibido en respuesta:", token);
-        // Extraer el token de la cookie
-        const match = token.match(/auth_token=([^;]+)/);
-        if (match && match[1]) {
-          localStorage.setItem('auth_token', match[1]);
-          console.log("Token guardado en localStorage:", match[1]);
-        }
-      } else {
-        // Si no se pudo obtener de Set-Cookie, usamos un método alternativo
-        try {
-          const cookieResponse = await fetch("/api/auth/me", {
-            credentials: "include",
-          });
-          
-          if (cookieResponse.ok) {
-            const verifiedUserData = await cookieResponse.json();
-            console.log("Verificación de autenticación exitosa:", verifiedUserData);
-            
-            // Solicitar el token directamente
-            const tokenResponse = await fetch("/api/auth/token", {
-              credentials: "include",
-            });
-            
-            if (tokenResponse.ok) {
-              const { token } = await tokenResponse.json();
-              localStorage.setItem('auth_token', token);
-              console.log("Token obtenido y guardado:", token);
-            }
-          }
-        } catch (verifyError) {
-          console.error("Error verificando autenticación:", verifyError);
-        }
+      if (!response.ok) {
+        throw new Error(`Login failed: ${response.statusText}`);
       }
       
-      setUser(userData);
+      const userData = await response.json();
+      console.log("Usuario autenticado:", userData);
+      
+      // Revalidar la sesión para confirmar que las cookies están funcionando
+      try {
+        const meResponse = await fetch("/api/auth/me", {
+          credentials: "include"
+        });
+        
+        if (meResponse.ok) {
+          const verifiedUser = await meResponse.json();
+          console.log("Verificación de autenticación exitosa:", verifiedUser);
+          // Usar los datos verificados
+          setUser(verifiedUser);
+        } else {
+          console.warn("Error en verificación, usando datos directos del login");
+          setUser(userData);
+        }
+      } catch (verifyError) {
+        console.error("Error verificando autenticación:", verifyError);
+        // Fallback a usar los datos del login directo
+        setUser(userData);
+      }
     } catch (error) {
       console.error("Login error:", error);
       throw error;
