@@ -2025,7 +2025,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
          COUNT(*) AS total_conversations,
          (SELECT COUNT(*) FROM conversations WHERE created_at > NOW() - INTERVAL '7 days') AS new_conversations_last_7_days,
          COUNT(CASE WHEN conversations.resolved = true THEN 1 END) AS resolved_conversations,
-         ROUND(AVG(conversations.duration)::numeric, 2) AS avg_duration
+         ROUND(AVG(COALESCE(conversations.duration, 0))::numeric, 2)::float AS avg_duration
         FROM conversations`
       );
       

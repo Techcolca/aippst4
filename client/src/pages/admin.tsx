@@ -607,7 +607,7 @@ export default function AdminPanel() {
                                 </p>
                               </div>
                               <div className="text-2xl font-bold">
-                                {adminStats?.conversations.avg_duration?.toFixed(1) || 0}s
+                                {(adminStats?.conversations.avg_duration ? parseFloat(adminStats.conversations.avg_duration).toFixed(1) : '0')}s
                               </div>
                             </div>
                             
