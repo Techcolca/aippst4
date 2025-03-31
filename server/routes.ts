@@ -2015,7 +2015,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Estadísticas de usuarios
       const usersResult = await pool.query(
         `SELECT COUNT(*) AS total_users,
-         (SELECT COUNT(*) FROM users WHERE created_at > NOW() - INTERVAL '7 days') AS new_users_last_7_days`
+         (SELECT COUNT(*) FROM users WHERE created_at > NOW() - INTERVAL '7 days') AS new_users_last_7_days
+         FROM users`
       );
       
       // Estadísticas de conversaciones
@@ -2023,8 +2024,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         `SELECT 
          COUNT(*) AS total_conversations,
          (SELECT COUNT(*) FROM conversations WHERE created_at > NOW() - INTERVAL '7 days') AS new_conversations_last_7_days,
-         COUNT(CASE WHEN resolved = true THEN 1 END) AS resolved_conversations,
-         ROUND(AVG(duration)::numeric, 2) AS avg_duration`
+         COUNT(CASE WHEN conversations.resolved = true THEN 1 END) AS resolved_conversations,
+         ROUND(AVG(conversations.duration)::numeric, 2) AS avg_duration
+        FROM conversations`
       );
       
       // Estadísticas de mensajes y estimación de tokens
@@ -2033,7 +2035,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
          COUNT(*) AS total_messages,
          COUNT(CASE WHEN role = 'assistant' THEN 1 END) AS assistant_messages,
          COUNT(CASE WHEN role = 'user' THEN 1 END) AS user_messages,
-         (SELECT COUNT(*) FROM messages WHERE timestamp > NOW() - INTERVAL '7 days') AS new_messages_last_7_days`
+         (SELECT COUNT(*) FROM messages WHERE timestamp > NOW() - INTERVAL '7 days') AS new_messages_last_7_days
+         FROM messages`
       );
       
       // Calcular tokens aproximados (estimación)
@@ -2053,7 +2056,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
          COUNT(CASE WHEN tier = 'basic' THEN 1 END) AS basic_subscriptions,
          COUNT(CASE WHEN tier = 'professional' THEN 1 END) AS professional_subscriptions,
          COUNT(CASE WHEN tier = 'enterprise' THEN 1 END) AS enterprise_subscriptions,
-         COUNT(CASE WHEN status = 'active' THEN 1 END) AS active_subscriptions`
+         COUNT(CASE WHEN status = 'active' THEN 1 END) AS active_subscriptions
+         FROM subscriptions`
       );
       
       // Usuarios que se acercan a su límite (>80% de uso)
