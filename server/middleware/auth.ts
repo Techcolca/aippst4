@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { storage } from '../storage';
 
 // JWT secret key
-const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
+export const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
 
 // Extend Express Request interface to include userId
 declare global {

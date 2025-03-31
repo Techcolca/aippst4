@@ -2,7 +2,7 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { verifyToken } from "./middleware/auth";
+import { verifyToken, JWT_SECRET } from "./middleware/auth";
 import { getInteractionLimitByTier } from "./middleware/subscription";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
@@ -73,8 +73,6 @@ const upload = multer({
     fileSize: 10 * 1024 * 1024, // Limitar a 10MB por archivo
   }
 });
-
-const JWT_SECRET = process.env.JWT_SECRET || "default_jwt_secret";
 
 // Función para obtener las características de cada plan según su nivel
 function getFeaturesByTier(tier: string): string[] {
