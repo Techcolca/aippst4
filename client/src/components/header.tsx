@@ -27,12 +27,17 @@ export default function Header() {
     logout();
   };
   
+  // Determinar si el usuario actual es administrador
+  const isAdmin = user?.username === 'admin';
+  
   const navLinks = [
     { name: "Dashboard", href: "/dashboard", auth: true },
     { name: "Integrations", href: "/dashboard?tab=integrations", auth: true },
     { name: "Analytics", href: "/analytics", auth: true },
     { name: "Settings", href: "/dashboard?tab=settings", auth: true },
-    { name: "Documentation", href: "/docs", auth: true }, // Añadido para usuarios autenticados
+    { name: "Documentation", href: "/docs", auth: true },
+    // Añadir enlace a panel de administración solo si el usuario es admin
+    ...(isAdmin ? [{ name: "Admin Panel", href: "/admin", auth: true }] : [])
   ];
   
   const publicLinks = [
@@ -101,6 +106,11 @@ export default function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard?tab=settings">Settings</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">Admin Panel</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     Logout

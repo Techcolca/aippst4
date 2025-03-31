@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { storage } from '../storage';
 
 // JWT secret key
 const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
@@ -27,6 +28,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
       req.userId = decoded.userId;
+      console.log("Token verificado correctamente. ID de usuario:", req.userId);
       return next();
     } catch (error) {
       console.error('Token verification error:', error);
@@ -35,13 +37,16 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
         res.clearCookie('auth_token');
         return res.status(401).json({ message: 'Invalid or expired token' });
       }
-      // En desarrollo, continuamos con el usuario por defecto
+      // En desarrollo, continuamos con el fallback
+      console.log("Error en la verificación del token, usando fallback");
     }
+  } else {
+    console.log("No se encontró token de autenticación");
   }
   
   // En desarrollo, si no hay token o es inválido, utilizamos un userId fijo
   if (process.env.NODE_ENV !== 'production') {
-    console.log("Modo desarrollo - autenticación automática");
+    console.log("Modo desarrollo - autenticación automática como usuario predeterminado");
     // Establece un ID de usuario fijo para desarrollo
     req.userId = 1;
     return next();
@@ -98,16 +103,28 @@ export function optionalAuth(req: Request, res: Response, next: NextFunction) {
 export function authorize(roles: string[]) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // This would typically check the user's roles from the database
-      // For this example, we're just making a simple check
-      
-      // Assume admin role for userId 1 for demo purposes
-      const isAdmin = req.userId === 1;
-      
-      if (roles.includes('admin') && !isAdmin) {
-        return res.status(403).json({ message: 'Insufficient permissions' });
+      if (!req.userId) {
+        return res.status(401).json({ message: 'Authentication required' });
       }
       
+      // Obtener el usuario actual
+      const user = await storage.getUser(req.userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      console.log(`Verificando autorización para roles ${roles.join(', ')} - Usuario: ${user.username} (ID: ${user.id})`);
+      
+      // Comprobar si el usuario es administrador (tiene username 'admin')
+      const isAdmin = user.username === 'admin';
+      
+      if (roles.includes('admin') && !isAdmin) {
+        console.log(`Acceso denegado: ${user.username} no tiene rol de administrador`);
+        return res.status(403).json({ message: 'Insufficient permissions: Admin role required' });
+      }
+      
+      console.log(`Autorización concedida para ${user.username}`);
       next();
     } catch (error) {
       console.error('Authorization error:', error);
