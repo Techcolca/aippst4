@@ -8,6 +8,7 @@ import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
 import stripe, { 
   PRODUCTS,
+  ProductInfo,
   createOrRetrieveProduct,
   createOrUpdatePrice,
   createCheckoutSession,
@@ -771,11 +772,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
             name: product.name,
             description: product.description,
             price: product.price / 100, // Convertir centavos a dólares para mostrar
-            currency: "cad", // Dólares canadienses por defecto
-            interval: "month", // Todos los planes son mensuales
-            features: getFeaturesByTier(key.toLowerCase()),
-            tier: key,
-            interactionsLimit: product.interactionsLimit
+            currency: product.currency || "cad", // Dólares canadienses por defecto
+            interval: product.interval || "month", // Por defecto mensual
+            features: product.features || getFeaturesByTier(key.toLowerCase()),
+            tier: product.tier,
+            interactionsLimit: product.interactionsLimit,
+            isAnnual: product.isAnnual || false,
+            discount: product.discount
           });
         }
       }
@@ -790,11 +793,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Iniciar proceso de checkout para un plan
   app.post("/api/pricing/checkout", verifyToken, async (req, res) => {
     try {
-      const { planId } = req.body;
+      const { planId, billingType } = req.body;
       
       if (!planId) {
         return res.status(400).json({ message: "ID del plan es requerido" });
       }
+      
+      // Verificar si se ha seleccionado facturación anual o mensual
+      const isAnnual = billingType === 'annual';
       
       // Si es el plan gratuito, activarlo directamente
       if (planId === "free") {
@@ -816,8 +822,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Encontrar el producto correspondiente al plan seleccionado
       let priceId = "";
       let selectedProduct: ProductInfo | null = null;
+      let productKey = planId.toLowerCase();
+      
+      // Si seleccionó facturación anual pero el planId no contiene 'annual', 
+      // buscamos la versión anual del mismo plan
+      if (isAnnual && !productKey.includes('annual')) {
+        productKey = `${productKey}-annual`;
+      }
+      
       for (const [key, product] of Object.entries(PRODUCTS)) {
-        if (key.toLowerCase() === planId.toLowerCase()) {
+        if (key.toLowerCase() === productKey) {
           selectedProduct = product;
           break;
         }
@@ -834,7 +848,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Crear o actualizar precio en Stripe
-      const price = await createOrUpdatePrice(stripeProduct, selectedProduct.price);
+      const price = await createOrUpdatePrice(
+        stripeProduct, 
+        selectedProduct.price, 
+        selectedProduct.interval as 'month' | 'year' || 'month'
+      );
       if (!price || !price.id) {
         return res.status(500).json({ message: "Error creando precio en Stripe" });
       }
@@ -991,10 +1009,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Crear una nueva suscripción o actualizar la existente
   app.post("/api/subscription/checkout", verifyToken, async (req, res) => {
     try {
-      const { planId } = req.body;
+      const { planId, billingType } = req.body;
       if (!planId) {
         return res.status(400).json({ message: "Se requiere un ID de plan" });
       }
+      
+      // Verificar si se ha seleccionado facturación anual o mensual
+      const isAnnual = billingType === 'annual';
       
       // Obtener el usuario actual
       const user = await storage.getUser(req.userId);
@@ -1002,8 +1023,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Usuario no encontrado" });
       }
       
+      // Construir la clave del producto según el plan y tipo de facturación
+      let productKey = planId.toLowerCase();
+      
+      // Si seleccionó facturación anual pero el planId no contiene 'annual', 
+      // buscamos la versión anual del mismo plan
+      if (isAnnual && !productKey.includes('annual')) {
+        productKey = `${productKey}-annual`;
+      }
+      
       // Encontrar el producto correspondiente al plan seleccionado
-      const productInfo = PRODUCTS[planId];
+      const productInfo = PRODUCTS[productKey];
       if (!productInfo) {
         return res.status(404).json({ message: "Plan no encontrado" });
       }
@@ -1050,7 +1080,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // 2. Crear o actualizar precio en Stripe
-      const price = await createOrUpdatePrice(product, productInfo.price);
+      const price = await createOrUpdatePrice(
+        product, 
+        productInfo.price,
+        productInfo.interval as 'month' | 'year' || 'month'
+      );
       if (!price) {
         return res.status(500).json({ message: "Error creando precio en Stripe" });
       }
@@ -1058,17 +1092,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // 3. Crear o actualizar cliente en Stripe si el usuario tiene un email
       let customerId = user.stripeCustomerId;
       if (user.email) {
-        const customer = await createOrUpdateCustomer(user.email, user.fullName || user.username, user.stripeCustomerId);
+        const customer = await createOrUpdateCustomer(user.email, user.fullName || user.username, user.stripeCustomerId || undefined);
         if (customer) {
           customerId = customer.id;
           
           // Actualizar ID de cliente en la base de datos si es nuevo
           if (!user.stripeCustomerId) {
             // Esta función debería estar implementada en storage
-            /* await storage.updateUserStripeInfo(user.id, {
+            await storage.updateUserStripeInfo(user.id, {
               stripeCustomerId: customer.id,
-              stripeSubscriptionId: user.stripeSubscriptionId
-            }); */
+              stripeSubscriptionId: user.stripeSubscriptionId || ''
+            });
           }
         }
       }
@@ -1078,7 +1112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const cancelUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/cancel`;
       
       const session = await createCheckoutSession(
-        customerId,
+        customerId || undefined,
         price.id,
         successUrl,
         cancelUrl

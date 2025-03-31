@@ -6,8 +6,8 @@ import {
   Conversation, InsertConversation, Message, InsertMessage,
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
-  TopProduct, TopTopic,
-  users, integrations, conversations, messages, automations, settings, sitesContent
+  TopProduct, TopTopic, Subscription, InsertSubscription,
+  users, integrations, conversations, messages, automations, settings, sitesContent, subscriptions
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -517,5 +517,61 @@ export class PgStorage implements IStorage {
     result.push(Math.max(1, remaining));
     
     return result;
+  }
+
+  // Subscription methods
+  async getUserSubscriptions(userId: number): Promise<Subscription[]> {
+    return await db.select()
+      .from(subscriptions)
+      .where(eq(subscriptions.userId, userId));
+  }
+
+  async getSubscription(id: number): Promise<Subscription | undefined> {
+    const result = await db.select()
+      .from(subscriptions)
+      .where(eq(subscriptions.id, id))
+      .limit(1);
+    return result[0];
+  }
+
+  async createSubscription(subscription: InsertSubscription): Promise<Subscription> {
+    const result = await db.insert(subscriptions)
+      .values(subscription)
+      .returning();
+    return result[0];
+  }
+
+  async updateSubscription(id: number, data: Partial<Subscription>): Promise<Subscription> {
+    const now = new Date();
+    const result = await db.update(subscriptions)
+      .set({ ...data, updatedAt: now })
+      .where(eq(subscriptions.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async incrementSubscriptionUsage(id: number): Promise<void> {
+    const subscription = await this.getSubscription(id);
+    if (subscription) {
+      await db.update(subscriptions)
+        .set({ interactionsUsed: (subscription.interactionsUsed + 1) })
+        .where(eq(subscriptions.id, id));
+    }
+  }
+
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
+    const result = await db.select()
+      .from(users)
+      .where(eq(users.stripeCustomerId, stripeCustomerId))
+      .limit(1);
+    return result[0];
+  }
+
+  async updateUserStripeInfo(userId: number, data: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User> {
+    const result = await db.update(users)
+      .set(data)
+      .where(eq(users.id, userId))
+      .returning();
+    return result[0];
   }
 }

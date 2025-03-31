@@ -6,9 +6,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = process.env.STRIPE_SECRET_KEY
-  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2023-10-16",
-    })
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
   : null;
 
 export interface ProductInfo {
@@ -22,10 +20,13 @@ export interface ProductInfo {
   popular?: boolean;
   available: boolean;
   currency?: string; // 'cad' por defecto
-  interval?: string; // 'month' por defecto
+  interval?: string; // 'month' o 'year' por defecto
+  isAnnual?: boolean; // Indica si es un plan anual
+  discount?: number; // Porcentaje de descuento para planes anuales
   metadata?: {
     tier: string;
     interactions: number;
+    isAnnual?: boolean;
   };
 }
 
@@ -120,6 +121,88 @@ export const PRODUCTS: Record<string, ProductInfo> = {
       tier: "enterprise",
       interactions: getInteractionLimitByTier("enterprise")
     }
+  },
+  // Planes anuales con descuento
+  "basic-annual": {
+    tier: "basic",
+    name: "Básico Anual",
+    description: "Para sitios web con tráfico moderado (Facturación anual)",
+    price: 54000, // $540 (descuento de 10% sobre $600 anual)
+    priceDisplay: "$540 CAD",
+    features: [
+      "500 interacciones por mes",
+      "Widget flotante (burbuja)",
+      "Carga de documentos para entrenar a la IA",
+      "Estadísticas básicas",
+      "Captura de leads",
+      "10% de descuento sobre el precio mensual",
+    ],
+    interactionsLimit: getInteractionLimitByTier("basic"),
+    available: true,
+    currency: "cad",
+    interval: "year",
+    isAnnual: true,
+    discount: 10,
+    metadata: {
+      tier: "basic",
+      interactions: getInteractionLimitByTier("basic"),
+      isAnnual: true
+    }
+  },
+  "professional-annual": {
+    tier: "professional",
+    name: "Profesional Anual",
+    description: "Para negocios en crecimiento (Facturación anual)",
+    price: 153000, // $1,530 (descuento de 15% sobre $1,800 anual)
+    priceDisplay: "$1,530 CAD",
+    features: [
+      "2,000 interacciones por mes",
+      "Widget flotante y pantalla completa",
+      "Carga de documentos para entrenar a la IA",
+      "Estadísticas detalladas",
+      "Captura de leads",
+      "Automatización de tareas",
+      "15% de descuento sobre el precio mensual",
+    ],
+    interactionsLimit: getInteractionLimitByTier("professional"),
+    popular: true,
+    available: true,
+    currency: "cad",
+    interval: "year",
+    isAnnual: true,
+    discount: 15,
+    metadata: {
+      tier: "professional",
+      interactions: getInteractionLimitByTier("professional"),
+      isAnnual: true
+    }
+  },
+  "enterprise-annual": {
+    tier: "enterprise",
+    name: "Empresa Anual",
+    description: "Para negocios de gran escala (Facturación anual)",
+    price: 510000, // $5,100 (descuento de 15% sobre $6,000 anual)
+    priceDisplay: "$5,100 CAD",
+    features: [
+      "Interacciones ilimitadas",
+      "Todas las características de Profesional",
+      "Personalización de marca",
+      "Integración con CRM",
+      "Soporte prioritario",
+      "API personalizada",
+      "15% de descuento sobre el precio mensual",
+    ],
+    interactionsLimit: getInteractionLimitByTier("enterprise"),
+    available: true,
+    currency: "cad",
+    interval: "year",
+    isAnnual: true,
+    discount: 15,
+    metadata: {
+      tier: "enterprise",
+      interactions: getInteractionLimitByTier("enterprise"),
+      isAnnual: true
+    }
   }
 };
 
@@ -158,41 +241,54 @@ export async function createOrRetrieveProduct(productInfo: ProductInfo) {
 }
 
 // Función para crear o actualizar un precio en Stripe
-export async function createOrUpdatePrice(product: Stripe.Product, amount: number) {
+export async function createOrUpdatePrice(
+  product: Stripe.Product, 
+  amount: number, 
+  interval: 'month' | 'year' = 'month'
+) {
   if (!stripe) return null;
 
   try {
-    // Buscar precios existentes para este producto
+    // Buscar precios existentes para este producto con el intervalo especificado
     const existingPrices = await stripe.prices.list({
       product: product.id,
       active: true
     });
 
-    // Crear nuevo precio si no existe o si el monto ha cambiado
-    if (existingPrices.data.length === 0 || 
-        existingPrices.data[0].unit_amount !== amount) {
+    // Filtrar los precios por intervalo (mensual o anual)
+    const matchingPrices = existingPrices.data.filter(price => 
+      price.recurring && price.recurring.interval === interval
+    );
+
+    // Crear nuevo precio si no existe uno con el intervalo correcto o si el monto ha cambiado
+    if (matchingPrices.length === 0 || 
+        matchingPrices[0].unit_amount !== amount) {
       
-      // Desactivar precios antiguos si existen y el monto ha cambiado
-      if (existingPrices.data.length > 0 && 
-          existingPrices.data[0].unit_amount !== amount) {
-        for (const price of existingPrices.data) {
+      // Desactivar precios antiguos con el mismo intervalo si existen y el monto ha cambiado
+      if (matchingPrices.length > 0 && 
+          matchingPrices[0].unit_amount !== amount) {
+        for (const price of matchingPrices) {
           await stripe.prices.update(price.id, { active: false });
         }
       }
       
-      // Crear nuevo precio
+      // Crear nuevo precio con el intervalo especificado
       return await stripe.prices.create({
         product: product.id,
         unit_amount: amount,
         currency: 'cad',
         recurring: {
-          interval: 'month'
+          interval: interval
         },
+        metadata: {
+          interval: interval,
+          isAnnual: interval === 'year' ? 'true' : 'false'
+        }
       });
     }
     
-    // Usar el precio existente si el monto es el mismo
-    return existingPrices.data[0];
+    // Usar el precio existente si el monto y el intervalo son los mismos
+    return matchingPrices[0];
   } catch (error) {
     console.error("Error al crear/actualizar precio en Stripe:", error);
     return null;

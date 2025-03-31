@@ -9,6 +9,8 @@ import { Check, ArrowRight, Loader2 } from 'lucide-react';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { loadStripe } from '@stripe/stripe-js';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 // Inicializar Stripe con la clave pública
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -23,6 +25,8 @@ type PricingPlan = {
   features: string[];
   tier: string;
   interactionsLimit: number;
+  isAnnual?: boolean;
+  discount?: number;
 };
 
 const formatCurrency = (amount: number, currency: string) => {
@@ -37,12 +41,20 @@ export default function PricingPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [checkoutInProgress, setCheckoutInProgress] = useState<string | null>(null);
+  const [billingType, setBillingType] = useState<'monthly' | 'annual'>('monthly');
 
   // Obtener los planes de precios de la API
-  const { data: plans = [], isLoading } = useQuery<PricingPlan[]>({
+  const { data: allPlans = [], isLoading } = useQuery<PricingPlan[]>({
     queryKey: ['/api/pricing/plans'],
     retry: false
   });
+  
+  // Filtrar los planes según la selección de facturación (mensual o anual)
+  const plans = allPlans.filter(plan => 
+    billingType === 'monthly' 
+      ? !plan.isAnnual
+      : plan.isAnnual || plan.id === 'free' // Mantener el plan gratuito en ambas vistas
+  );
 
   // Función para iniciar el proceso de checkout
   const handleSubscribe = async (planId: string) => {
@@ -64,7 +76,10 @@ export default function PricingPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ 
+          planId,
+          billingType // Incluir el tipo de facturación seleccionado (mensual o anual)
+        }),
       });
 
       const result = await response.json();
@@ -115,6 +130,31 @@ export default function PricingPage() {
                   Elige el plan que mejor se adapte a las necesidades de tu negocio.
                   Todos los planes incluyen actualizaciones gratuitas y soporte técnico.
                 </p>
+              </div>
+
+              {/* Selector de tipo de facturación */}
+              <div className="flex items-center justify-center space-x-4 mt-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-full">
+                <span className={`text-sm font-medium ${billingType === 'monthly' ? 'text-primary' : 'text-gray-500'}`}>
+                  Facturación mensual
+                </span>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="billing-toggle"
+                    checked={billingType === 'annual'}
+                    onCheckedChange={(checked) => setBillingType(checked ? 'annual' : 'monthly')}
+                  />
+                  <Label htmlFor="billing-toggle" className="sr-only">
+                    Alternar entre facturación mensual y anual
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className={`text-sm font-medium ${billingType === 'annual' ? 'text-primary' : 'text-gray-500'}`}>
+                    Facturación anual
+                  </span>
+                  <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 border-green-200 dark:border-green-800">
+                    Ahorra 10-15%
+                  </Badge>
+                </div>
               </div>
             </div>
 
