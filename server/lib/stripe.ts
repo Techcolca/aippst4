@@ -21,6 +21,12 @@ export interface ProductInfo {
   interactionsLimit: number;
   popular?: boolean;
   available: boolean;
+  currency?: string; // 'cad' por defecto
+  interval?: string; // 'month' por defecto
+  metadata?: {
+    tier: string;
+    interactions: number;
+  };
 }
 
 // Definición de los productos/planes disponibles
@@ -39,6 +45,12 @@ export const PRODUCTS: Record<string, ProductInfo> = {
     ],
     interactionsLimit: getInteractionLimitByTier("free"),
     available: true,
+    currency: "cad",
+    interval: "month",
+    metadata: {
+      tier: "free",
+      interactions: getInteractionLimitByTier("free")
+    }
   },
   basic: {
     tier: "basic",
@@ -56,6 +68,12 @@ export const PRODUCTS: Record<string, ProductInfo> = {
     interactionsLimit: getInteractionLimitByTier("basic"),
     popular: true,
     available: true,
+    currency: "cad",
+    interval: "month",
+    metadata: {
+      tier: "basic",
+      interactions: getInteractionLimitByTier("basic")
+    }
   },
   professional: {
     tier: "professional",
@@ -73,6 +91,12 @@ export const PRODUCTS: Record<string, ProductInfo> = {
     ],
     interactionsLimit: getInteractionLimitByTier("professional"),
     available: true,
+    currency: "cad",
+    interval: "month",
+    metadata: {
+      tier: "professional",
+      interactions: getInteractionLimitByTier("professional")
+    }
   },
   enterprise: {
     tier: "enterprise",
@@ -90,6 +114,12 @@ export const PRODUCTS: Record<string, ProductInfo> = {
     ],
     interactionsLimit: getInteractionLimitByTier("enterprise"),
     available: true,
+    currency: "cad",
+    interval: "month",
+    metadata: {
+      tier: "enterprise",
+      interactions: getInteractionLimitByTier("enterprise")
+    }
   }
 };
 

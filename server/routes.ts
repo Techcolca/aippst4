@@ -712,16 +712,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // ================ Stripe Routes ================
-  // Inicializar productos de Stripe
-  // Esta ruta se ejecuta una vez al iniciar el servidor para asegurar que los productos existen en Stripe
-  (async () => {
-    try {
-      console.log("Inicializando productos en Stripe...");
-      await initializeProducts();
-    } catch (error) {
-      console.error("Error inicializando productos en Stripe:", error);
-    }
-  })();
+  // No necesitamos inicializar los productos de Stripe aquí
+  // Los productos se crean según sea necesario cuando alguien intenta suscribirse
   
   // Obtener los planes disponibles
   app.get("/api/pricing/plans", async (req, res) => {
@@ -729,38 +721,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Obtener los productos de Stripe con sus precios
       const products = [];
       
-      // Añadir el plan gratuito que no está en Stripe
-      products.push({
-        id: "free",
-        name: "Paquete Gratuito (Prueba)",
-        description: "Hasta 20 interacciones por día",
-        price: 0,
-        currency: "cad",
-        interval: "month",
-        features: [
-          "Acceso al widget flotante para integración sencilla en el sitio web",
-          "Respuestas basadas en la información disponible públicamente en el sitio web",
-          "Sin personalización ni carga de documentos específicos",
-          "Sin captura de leads ni seguimiento posterior",
-          "Análisis básicos de interacciones"
-        ],
-        tier: "free",
-        interactionsLimit: 20
-      });
-      
-      // Añadir los planes de pago
+      // Añadir todos los planes desde nuestras constantes PRODUCTS
       for (const [key, product] of Object.entries(PRODUCTS)) {
-        products.push({
-          id: key.toLowerCase(),
-          name: product.name,
-          description: product.description,
-          price: product.price / 100, // Convertir centavos a dólares para mostrar
-          currency: product.currency,
-          interval: product.interval,
-          features: getFeaturesByTier(key.toLowerCase()),
-          tier: product.metadata.tier,
-          interactionsLimit: product.metadata.interactions
-        });
+        if (product.available) {
+          products.push({
+            id: key.toLowerCase(),
+            name: product.name,
+            description: product.description,
+            price: product.price / 100, // Convertir centavos a dólares para mostrar
+            currency: "cad", // Dólares canadienses por defecto
+            interval: "month", // Todos los planes son mensuales
+            features: getFeaturesByTier(key.toLowerCase()),
+            tier: key,
+            interactionsLimit: product.interactionsLimit
+          });
+        }
       }
       
       res.json(products);
@@ -796,23 +771,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Usuario no encontrado" });
       }
       
-      // Encontrar el priceId correspondiente al plan seleccionado
+      // Encontrar el producto correspondiente al plan seleccionado
       let priceId = "";
+      let selectedProduct: ProductInfo | null = null;
       for (const [key, product] of Object.entries(PRODUCTS)) {
         if (key.toLowerCase() === planId.toLowerCase()) {
-          // Crear o actualizar el producto/precio en Stripe
-          const { priceId: stripePriceId } = await createOrUpdatePrice(product);
-          priceId = stripePriceId;
+          selectedProduct = product;
           break;
         }
       }
       
-      if (!priceId) {
+      if (!selectedProduct) {
         return res.status(404).json({ message: "Plan no encontrado" });
       }
       
+      // Crear o recuperar producto en Stripe
+      const stripeProduct = await createOrRetrieveProduct(selectedProduct);
+      if (!stripeProduct) {
+        return res.status(500).json({ message: "Error creando producto en Stripe" });
+      }
+      
+      // Crear o actualizar precio en Stripe
+      const price = await createOrUpdatePrice(stripeProduct, selectedProduct.price);
+      if (!price || !price.id) {
+        return res.status(500).json({ message: "Error creando precio en Stripe" });
+      }
+      
       // Crear sesión de checkout
-      const session = await createCheckoutSession(priceId, req.userId, user.email);
+      const successUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/success?session_id={CHECKOUT_SESSION_ID}`;
+      const cancelUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/cancel`;
+      
+      const session = await createCheckoutSession(
+        user.stripeCustomerId || undefined,
+        price.id,
+        successUrl,
+        cancelUrl
+      );
       
       res.json({ 
         success: true, 
