@@ -341,9 +341,10 @@ export default function AdminPanel() {
       const updateData: any = {};
       if (editSubscriptionData.tier) updateData.tier = editSubscriptionData.tier;
       if (editSubscriptionData.status) updateData.status = editSubscriptionData.status;
-      if (editSubscriptionData.interactionsLimit) {
-        updateData.interactionsLimit = parseInt(editSubscriptionData.interactionsLimit.toString());
-      }
+      
+      // Siempre incluir el interactionsLimit, incluso si es 0
+      updateData.interactionsLimit = parseInt(editSubscriptionData.interactionsLimit.toString());
+      
       if (editSubscriptionData.endDate) updateData.endDate = editSubscriptionData.endDate;
       
       await apiRequest(

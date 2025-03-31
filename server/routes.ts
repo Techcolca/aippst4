@@ -1938,7 +1938,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           paramIndex++;
         }
         
-        if (interactionsLimit) {
+        if (interactionsLimit !== undefined) {
           updateQuery += `, interactions_limit = $${paramIndex}`;
           updateValues.push(interactionsLimit);
           paramIndex++;
