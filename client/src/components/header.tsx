@@ -32,6 +32,7 @@ export default function Header() {
     { name: "Integrations", href: "/dashboard?tab=integrations", auth: true },
     { name: "Analytics", href: "/analytics", auth: true },
     { name: "Settings", href: "/dashboard?tab=settings", auth: true },
+    { name: "Documentation", href: "/docs", auth: true }, // Añadido para usuarios autenticados
   ];
   
   const publicLinks = [
