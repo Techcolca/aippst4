@@ -18,33 +18,37 @@ declare global {
  * Adds userId to the request object if verification is successful
  */
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
-  // En desarrollo, SOLO para probar la aplicación, utilizamos un userId fijo
-  // SOLO SE USA PARA DESARROLLO, NUNCA PARA PRODUCCIÓN
-  if (process.env.NODE_ENV === 'development' || true) {
+  // Primero comprobar si hay un token válido
+  const token = req.cookies?.auth_token || 
+                (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                 ? req.headers.authorization.slice(7) : null);
+  
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+      req.userId = decoded.userId;
+      return next();
+    } catch (error) {
+      console.error('Token verification error:', error);
+      // Si estamos en producción, devolvemos un error
+      if (process.env.NODE_ENV === 'production') {
+        res.clearCookie('auth_token');
+        return res.status(401).json({ message: 'Invalid or expired token' });
+      }
+      // En desarrollo, continuamos con el usuario por defecto
+    }
+  }
+  
+  // En desarrollo, si no hay token o es inválido, utilizamos un userId fijo
+  if (process.env.NODE_ENV !== 'production') {
     console.log("Modo desarrollo - autenticación automática");
     // Establece un ID de usuario fijo para desarrollo
     req.userId = 1;
     return next();
   }
   
-  // Este código se utilizaría en producción para verificar tokens reales
-  const token = req.cookies?.auth_token || 
-                (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                 ? req.headers.authorization.slice(7) : null);
-  
-  if (!token) {
-    return res.status(401).json({ message: 'Authentication required' });
-  }
-  
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-    req.userId = decoded.userId;
-    next();
-  } catch (error) {
-    console.error('Token verification error:', error);
-    res.clearCookie('auth_token');
-    return res.status(401).json({ message: 'Invalid or expired token' });
-  }
+  // En producción, si no hay token, devolvemos un error
+  return res.status(401).json({ message: 'Authentication required' });
 }
 
 /**

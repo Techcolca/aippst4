@@ -188,13 +188,22 @@ export default function AdminPanel() {
   
   // Verificar si el usuario es administrador
   useEffect(() => {
-    if (user && user.username !== 'admin') {
+    console.log("Usuario actual:", user?.username);
+    if (!user) {
+      // Si no hay usuario, esperar a que se cargue
+      return;
+    }
+    
+    if (user.username !== 'admin') {
+      console.log("Acceso denegado al panel de administración para:", user.username);
       toast({
         title: "Acceso restringido",
         description: "No tienes permisos para acceder al panel de administración",
         variant: "destructive"
       });
       navigate("/dashboard");
+    } else {
+      console.log("Acceso autorizado al panel de administración para:", user.username);
     }
   }, [user, navigate, toast]);
   

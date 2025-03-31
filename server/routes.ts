@@ -155,17 +155,22 @@ const isAdmin = async (req: any, res: any, next: any) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
     
+    // Obtener el usuario de la base de datos
     const user = await storage.getUser(req.userId);
     
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
     
+    console.log("Verificando permisos de administrador para:", user.username);
+    
     // Verificar si el usuario es admin (username === 'admin')
     if (user.username !== 'admin') {
+      console.log("Acceso denegado: El usuario no es administrador");
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
     
+    console.log("Acceso de administrador concedido para:", user.username);
     next();
   } catch (error) {
     console.error("Admin verification error:", error);
