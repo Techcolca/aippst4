@@ -12,12 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import AutomationCard from "./automation-card";
 import IntegrationCard from "./integration-card";
 import ProfileSection from "./profile-section";
 import { useAuth } from "@/context/auth-context";
-import { Copy as CopyIcon } from "lucide-react";
+import { Copy as CopyIcon, Info as InfoIcon } from "lucide-react";
 
 export default function DashboardTabs({ initialTab = "automation" }) {
   // Transform initialTab if it's "profile" to "settings"
@@ -54,7 +54,55 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   
   // Estados para el modal de conversación
-  const [isConversationModalOpen, setIsConversationModalOpen] = useState(false);
+  const [isConversationModalOpen, setIsConversationModalOpen] = useState(false)
+  
+  // Estados para el modal de creación de automatización
+  const [isAutomationModalOpen, setIsAutomationModalOpen] = useState(false)
+  // Definimos la interfaz para el tipo de configuración de automatización
+  interface AutomationConfig {
+    automationType?: string;
+    triggers?: any[];
+    actions?: any[];
+    assistantName?: string;
+    defaultGreeting?: string;
+    showAvailability?: boolean;
+    userBubbleColor?: string;
+    assistantBubbleColor?: string;
+    font?: string;
+    conversationStyle?: string;
+    knowledgeBase?: {
+      documents?: string[];
+      websites?: string[];
+      sources?: string[];
+      customData?: string;
+    };
+    enableLearning?: boolean;
+  }
+
+  const [newAutomation, setNewAutomation] = useState({
+    name: "",
+    description: "",
+    status: "inactive" as "active" | "inactive" | "in_testing",
+    config: {
+      automationType: "message_response",
+      triggers: [],
+      actions: [],
+      assistantName: "",
+      defaultGreeting: "",
+      showAvailability: false,
+      userBubbleColor: "#E2F5FC",
+      assistantBubbleColor: "#F5F7F9",
+      font: "Inter",
+      conversationStyle: "chat",
+      knowledgeBase: {
+        documents: [],
+        websites: [],
+        sources: [],
+        customData: ""
+      },
+      enableLearning: false
+    } as AutomationConfig
+  });
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
   const [conversationMessages, setConversationMessages] = useState<any[]>([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -84,8 +132,26 @@ export default function DashboardTabs({ initialTab = "automation" }) {
     staleTime: 1000 * 60, // 1 minute
   });
   
+  // Define settings interface
+  interface AppSettings {
+    assistantName?: string;
+    defaultGreeting?: string;
+    showAvailability?: boolean;
+    userBubbleColor?: string;
+    assistantBubbleColor?: string;
+    font?: string;
+    conversationStyle?: string;
+    knowledgeBase?: {
+      documents?: string[];
+      websites?: string[];
+      sources?: string[];
+      customData?: string;
+    };
+    enableLearning?: boolean;
+  }
+
   // Fetch user settings
-  const { data: settings, isLoading: isLoadingSettings } = useQuery({
+  const { data: settings, isLoading: isLoadingSettings } = useQuery<AppSettings>({
     queryKey: ["/api/settings"],
     enabled: !!user && activeTab === "settings",
     staleTime: 1000 * 60, // 1 minute
@@ -93,7 +159,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   
   // Mutations
   const updateSettingsMutation = useMutation({
-    mutationFn: (newSettings: any) => 
+    mutationFn: (newSettings: AppSettings) => 
       apiRequest("PATCH", "/api/settings", newSettings),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/settings"] });
@@ -393,7 +459,10 @@ export default function DashboardTabs({ initialTab = "automation" }) {
               ))}
               
               {/* Create New Automation Card */}
-              <Card className="border border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-4 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors">
+              <Card 
+                className="border border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-4 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                onClick={() => setIsAutomationModalOpen(true)}
+              >
                 <div className="text-center">
                   <div className="mx-auto h-12 w-12 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-300 mb-2">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -800,7 +869,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     <div className="flex items-center">
                       <Checkbox 
                         id="kb-default" 
-                        defaultChecked={settings?.knowledgeBase?.includes('default') || true}
+                        defaultChecked={settings?.knowledgeBase?.sources?.includes('default') || true}
                       />
                       <Label htmlFor="kb-default" className="ml-2 cursor-pointer">
                         Default (Website Content)
@@ -809,7 +878,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     <div className="flex items-center">
                       <Checkbox 
                         id="kb-product" 
-                        defaultChecked={settings?.knowledgeBase?.includes('product') || false}
+                        defaultChecked={settings?.knowledgeBase?.sources?.includes('product') || false}
                       />
                       <Label htmlFor="kb-product" className="ml-2 cursor-pointer">
                         Product Documentation
@@ -818,7 +887,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     <div className="flex items-center">
                       <Checkbox 
                         id="kb-support" 
-                        defaultChecked={settings?.knowledgeBase?.includes('support') || false}
+                        defaultChecked={settings?.knowledgeBase?.sources?.includes('support') || false}
                       />
                       <Label htmlFor="kb-support" className="ml-2 cursor-pointer">
                         Support Knowledge Base
@@ -827,7 +896,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     <div className="flex items-center">
                       <Checkbox 
                         id="kb-custom" 
-                        defaultChecked={settings?.knowledgeBase?.includes('custom') || false}
+                        defaultChecked={settings?.knowledgeBase?.sources?.includes('custom') || false}
                       />
                       <Label htmlFor="kb-custom" className="ml-2 cursor-pointer">
                         Custom Data Source
@@ -993,6 +1062,155 @@ export default function DashboardTabs({ initialTab = "automation" }) {
               </div>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de creación de automatización */}
+      <Dialog open={isAutomationModalOpen} onOpenChange={setIsAutomationModalOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Create New Automation</DialogTitle>
+            <DialogDescription>
+              Create an automated task sequence to handle repetitive inquiries and actions.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            
+            if (!newAutomation.name || !newAutomation.description) {
+              toast({
+                title: "Missing fields",
+                description: "Please fill all required fields",
+                variant: "destructive",
+              });
+              return;
+            }
+            
+            // Create new automation
+            fetch('/api/automations', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: newAutomation.name,
+                description: newAutomation.description,
+                status: newAutomation.status,
+                config: {
+                  automationType: "message_response",
+                  triggers: [],
+                  actions: []
+                }
+              }),
+            })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to create automation');
+              }
+              return response.json();
+            })
+            .then(data => {
+              queryClient.invalidateQueries({ queryKey: ["/api/automations"] });
+              setIsAutomationModalOpen(false);
+              
+              // Reset form
+              setNewAutomation({
+                name: "",
+                description: "",
+                status: "inactive" as "active" | "inactive" | "in_testing",
+                config: {
+                  automationType: "message_response",
+                  triggers: [],
+                  actions: [],
+                  assistantName: "",
+                  defaultGreeting: "",
+                  showAvailability: false,
+                  userBubbleColor: "#E2F5FC",
+                  assistantBubbleColor: "#F5F7F9",
+                  font: "Inter",
+                  conversationStyle: "chat",
+                  knowledgeBase: {
+                    documents: [],
+                    websites: [],
+                    sources: [],
+                    customData: ""
+                  },
+                  enableLearning: false
+                }
+              });
+              
+              toast({
+                title: "Automation created",
+                description: `${data.name} has been created successfully`,
+              });
+            })
+            .catch(error => {
+              console.error('Error creating automation:', error);
+              toast({
+                title: "Error",
+                description: "Failed to create automation. Please try again.",
+                variant: "destructive",
+              });
+            });
+          }}>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="automation-name">Name</Label>
+                <Input 
+                  id="automation-name"
+                  placeholder="Enter automation name"
+                  value={newAutomation.name}
+                  onChange={(e) => setNewAutomation({...newAutomation, name: e.target.value})}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="automation-description">Description</Label>
+                <Textarea 
+                  id="automation-description"
+                  placeholder="Describe what this automation does"
+                  rows={3}
+                  value={newAutomation.description}
+                  onChange={(e) => setNewAutomation({...newAutomation, description: e.target.value})}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="automation-status">Status</Label>
+                <Select 
+                  value={newAutomation.status} 
+                  onValueChange={(value: "active" | "inactive" | "in_testing") => 
+                    setNewAutomation({...newAutomation, status: value})
+                  }
+                >
+                  <SelectTrigger id="automation-status">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="in_testing">In Testing</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <InfoIcon className="inline-block w-4 h-4 mr-1" />
+                  After creating the automation, you'll be able to define specific triggers, 
+                  conditions, and actions in the automation editor.
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button variant="outline" type="button" onClick={() => setIsAutomationModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">Create Automation</Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
