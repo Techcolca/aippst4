@@ -2,12 +2,26 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Database, Code, Building2, School, Headset, Rocket, BookOpen, MessageSquare, BarChart, Users, Bot, File } from "lucide-react";
+import { 
+  Database, Code, Building2, School, Headset, Rocket, BookOpen, 
+  MessageSquare, BarChart, Users, Bot, File, Monitor, Smartphone, 
+  ExternalLink, CheckCircle2, BarChart3, LineChart
+} from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
 export default function Documentation() {
   const [activeTab, setActiveTab] = useState("overview");
+  
+  // Nuevas secciones para funcionalidades específicas
+  const functionalityTabs = [
+    "widget-integration", 
+    "contextual-understanding", 
+    "document-training", 
+    "lead-capture", 
+    "analytics", 
+    "task-automation"
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -49,6 +63,73 @@ export default function Documentation() {
                       <div className="flex items-center">
                         <Rocket className="w-5 h-5 mr-2" />
                         <span>Funcionalidades</span>
+                      </div>
+                    </a>
+
+                    {/* Funcionalidades separadas como submenú */}
+                    <a 
+                      href="#widget-integration" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("widget-integration"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "widget-integration" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        <span>Integración de Widgets</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#contextual-understanding" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("contextual-understanding"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "contextual-understanding" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <Database className="w-4 h-4 mr-2" />
+                        <span>Comprensión Contextual</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#document-training" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("document-training"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "document-training" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <File className="w-4 h-4 mr-2" />
+                        <span>Entrena. con Documentos</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#lead-capture" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("lead-capture"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "lead-capture" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-2" />
+                        <span>Captura de Leads</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#analytics" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("analytics"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "analytics" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <BarChart className="w-4 h-4 mr-2" />
+                        <span>Análisis y Estadísticas</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#task-automation" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("task-automation"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "task-automation" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <Bot className="w-4 h-4 mr-2" />
+                        <span>Automatización de Tareas</span>
                       </div>
                     </a>
                     <a 
@@ -367,6 +448,329 @@ export default function Documentation() {
                         </div>
                         
                         <p>Este ejemplo ilustra cómo una Task Automation puede transformar una integración web genérica en una herramienta de captación altamente especializada, que responde de manera contextual y proactiva según las necesidades específicas de cada sección del sitio web.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Sección de Widget Integration */}
+                {activeTab === "widget-integration" && (
+                  <div id="widget-integration" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Integración de Widgets en Sitios Web</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          AIPI ofrece dos tipos diferentes de widgets para integrarse de manera flexible en tu sitio web, 
+                          permitiéndote elegir la opción que mejor se adapte a las necesidades de tu organización y la 
+                          experiencia que deseas ofrecer a tus visitantes.
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                          <div className="border border-primary-200 dark:border-primary-800 rounded-lg p-5 bg-primary-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <MessageSquare className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-2" />
+                              <h3 className="text-xl font-bold text-primary-700 dark:text-primary-400">Widget Flotante (Burbuja)</h3>
+                            </div>
+                            <p className="mb-3">
+                              Una pequeña burbuja discreta que aparece en una esquina de tu sitio web. Los visitantes pueden
+                              hacer clic en ella para abrir un panel de chat compacto sin perder visibilidad del contenido principal.
+                            </p>
+                            <h4 className="font-semibold mt-4 mb-2">Características:</h4>
+                            <ul className="list-disc pl-5 space-y-1">
+                              <li>Mínimamente invasivo - no interrumpe la experiencia de navegación</li>
+                              <li>Personalización de colores y posición (esquina inferior derecha o izquierda)</li>
+                              <li>Opción de mensaje de bienvenida proactivo configurable</li>
+                              <li>Interfaz de chat responsiva que se adapta a dispositivos móviles</li>
+                            </ul>
+                          </div>
+                          
+                          <div className="border border-primary-200 dark:border-primary-800 rounded-lg p-5 bg-primary-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <Monitor className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-2" />
+                              <h3 className="text-xl font-bold text-primary-700 dark:text-primary-400">Pantalla Completa (Estilo ChatGPT)</h3>
+                            </div>
+                            <p className="mb-3">
+                              Una experiencia inmersiva similar a ChatGPT que ocupa toda la pantalla, ideal para interacciones
+                              más profundas y extensas. Perfecto para sitios que ofrecen el chat como servicio principal.
+                            </p>
+                            <h4 className="font-semibold mt-4 mb-2">Características:</h4>
+                            <ul className="list-disc pl-5 space-y-1">
+                              <li>Historial de conversaciones persistente para los usuarios</li>
+                              <li>Presentación de sugerencias y temas frecuentes</li>
+                              <li>Soporte para cargas y descargas de archivos</li>
+                              <li>Personalización completa de la interfaz con tu imagen de marca</li>
+                            </ul>
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold mt-8 mb-4">Ejemplo Práctico: Universidad con Múltiples Facultades</h3>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 my-4">
+                          <h4 className="font-semibold text-lg mb-3">Caso de Implementación:</h4>
+                          <p className="mb-3">
+                            La Universidad Nacional de Tecnología implementó el widget flotante de AIPI en su sitio web principal
+                            y en los sitios específicos de cada facultad con configuraciones adaptadas para cada contexto.
+                          </p>
+                          
+                          <h5 className="font-medium mt-4 mb-2">Configuración:</h5>
+                          <ul className="list-disc pl-5 mb-4">
+                            <li><strong>Sitio principal:</strong> Widget flotante con conocimiento general sobre admisiones, becas y vida universitaria</li>
+                            <li><strong>Facultad de Ingeniería:</strong> Widget especializado con datos sobre programas técnicos y requisitos específicos</li>
+                            <li><strong>Facultad de Medicina:</strong> Asistente con información sobre procesos de admisión especiales y pasantías clínicas</li>
+                            <li><strong>Portal de Estudiantes:</strong> Implementación pantalla completa para consultas detalladas sobre horarios y trámites</li>
+                          </ul>
+                          
+                          <h5 className="font-medium mt-4 mb-2">Resultados:</h5>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                            <div className="bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                              <div className="flex items-center text-primary-700 dark:text-primary-400">
+                                <CheckCircle2 className="w-5 h-5 mr-2" />
+                                <span className="font-medium">42% más consultas resueltas</span>
+                              </div>
+                              <p className="text-sm mt-1">Sin necesidad de contactar al personal administrativo</p>
+                            </div>
+                            
+                            <div className="bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                              <div className="flex items-center text-primary-700 dark:text-primary-400">
+                                <CheckCircle2 className="w-5 h-5 mr-2" />
+                                <span className="font-medium">35% reducción en emails</span>
+                              </div>
+                              <p className="text-sm mt-1">De consultas básicas a departamentos académicos</p>
+                            </div>
+                            
+                            <div className="bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                              <div className="flex items-center text-primary-700 dark:text-primary-400">
+                                <CheckCircle2 className="w-5 h-5 mr-2" />
+                                <span className="font-medium">27% aumento en aplicaciones</span>
+                              </div>
+                              <p className="text-sm mt-1">Con información completa y correcta desde el inicio</p>
+                            </div>
+                            
+                            <div className="bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                              <div className="flex items-center text-primary-700 dark:text-primary-400">
+                                <CheckCircle2 className="w-5 h-5 mr-2" />
+                                <span className="font-medium">1,250+ leads generados</span>
+                              </div>
+                              <p className="text-sm mt-1">De estudiantes potenciales en un semestre</p>
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 italic">
+                            "El widget de AIPI revolucionó nuestra forma de comunicarnos con estudiantes potenciales. 
+                            Ahora podemos ofrecer información específica para cada facultad de manera instantánea, 
+                            capturar datos de contacto y hacer seguimiento personalizado."
+                            <div className="mt-1 font-medium">— Directora de Admisiones, Universidad Nacional de Tecnología</div>
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold mt-8 mb-4">Implementación Técnica</h3>
+                        
+                        <p className="mb-4">Integrar cualquiera de los widgets en tu sitio web es extremadamente sencillo y requiere solo unas pocas líneas de código:</p>
+                        
+                        <div className="bg-gray-800 text-gray-200 p-4 rounded-lg overflow-x-auto">
+                          <pre><code>{`<script>
+  (function(w,d,s,o,f,js,fjs){
+    w['AIPI-Widget']=o;w[o]=w[o]||function(){(w[o].q=w[o].q||[]).push(arguments)};
+    js=d.createElement(s),fjs=d.getElementsByTagName(s)[0];
+    js.id=o;js.src=f;js.async=1;fjs.parentNode.insertBefore(js,fjs);
+  }(window,document,'script','aipi','https://tu-dominio.com/widget.js'));
+  
+  aipi('init', { 
+    apiKey: 'TU_API_KEY',
+    widgetType: 'bubble', // o 'fullscreen'
+    position: 'bottom-right',
+    themeColor: '#4F46E5',
+    welcomeMessage: '¡Hola! ¿En qué puedo ayudarte hoy?'
+  });
+</script>`}</code></pre>
+                        </div>
+                        
+                        <h4 className="font-semibold mt-6 mb-2">Parámetros de Configuración:</h4>
+                        <ul className="list-disc pl-5 space-y-1">
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">apiKey</code>: Tu clave de API única generada en el panel de control de AIPI</li>
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">widgetType</code>: El tipo de widget ('bubble' o 'fullscreen')</li>
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">position</code>: Ubicación en la pantalla (para widget tipo burbuja)</li>
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">themeColor</code>: Color principal que se usará en el widget</li>
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">welcomeMessage</code>: Mensaje inicial que se mostrará al abrir el chat</li>
+                        </ul>
+                        
+                        <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                          <div className="flex items-start">
+                            <div className="flex-shrink-0">
+                              <ExternalLink className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div className="ml-3">
+                              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-300">¿Necesitas más opciones de personalización?</h4>
+                              <p className="mt-1 text-sm text-blue-700 dark:text-blue-400">
+                                Visita la <a href="#implementation" className="underline font-medium" onClick={(e) => { e.preventDefault(); setActiveTab("implementation"); }}>
+                                sección de implementación</a> para ver la documentación técnica completa con todas las opciones disponibles.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Sección de Comprensión Contextual */}
+                {activeTab === "contextual-understanding" && (
+                  <div id="contextual-understanding" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Comprensión Contextual del Contenido Web</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          Una de las características más poderosas de AIPI es su capacidad para comprender y analizar 
+                          automáticamente el contenido de tu sitio web, brindando respuestas contextuales precisas sin 
+                          necesidad de programación manual o entrenamiento específico.
+                        </p>
+                        
+                        <h3 className="text-xl font-bold mt-6 mb-3">¿Cómo Funciona?</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                          <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                            <h4 className="font-semibold mb-2 flex items-center text-primary-700 dark:text-primary-400">
+                              <span className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-300 rounded-full w-6 h-6 flex items-center justify-center mr-2">1</span>
+                              Escaneo Inteligente
+                            </h4>
+                            <p className="text-sm">
+                              Cuando un visitante interactúa con el widget, AIPI escanea automáticamente la página 
+                              actual y otras páginas relevantes del sitio para obtener contexto.
+                            </p>
+                          </div>
+                          
+                          <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                            <h4 className="font-semibold mb-2 flex items-center text-primary-700 dark:text-primary-400">
+                              <span className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-300 rounded-full w-6 h-6 flex items-center justify-center mr-2">2</span>
+                              Análisis Semántico
+                            </h4>
+                            <p className="text-sm">
+                              La inteligencia artificial procesa el contenido para comprender su significado, 
+                              identificando temas clave, servicios, productos y otra información relevante.
+                            </p>
+                          </div>
+                          
+                          <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+                            <h4 className="font-semibold mb-2 flex items-center text-primary-700 dark:text-primary-400">
+                              <span className="bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-300 rounded-full w-6 h-6 flex items-center justify-center mr-2">3</span>
+                              Generación de Respuestas
+                            </h4>
+                            <p className="text-sm">
+                              Con base en esta comprensión, el sistema proporciona respuestas precisas y 
+                              contextuales, incluyendo enlaces a las secciones relevantes del sitio.
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold mt-8 mb-4">Ejemplo Práctico: Tienda de Comercio Electrónico</h3>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 my-4">
+                          <h4 className="font-semibold text-lg mb-3">Caso de Implementación:</h4>
+                          <p className="mb-3">
+                            TechGadgets, una tienda online especializada en productos electrónicos, implementó AIPI para 
+                            mejorar la asistencia a sus clientes y aumentar las conversiones.
+                          </p>
+                          
+                          <div className="border-l-4 border-primary-500 pl-4 py-1 my-4 bg-primary-50 dark:bg-primary-900/20">
+                            <h5 className="font-medium">Consulta de cliente:</h5>
+                            <p className="italic">
+                              "¿Este modelo de laptop es compatible con programas de diseño gráfico profesional?"
+                            </p>
+                          </div>
+                          
+                          <div className="mb-4">
+                            <h5 className="font-medium mb-2">Proceso de AIPI:</h5>
+                            <ol className="list-decimal pl-5 space-y-2">
+                              <li>
+                                <strong>Análisis de Contexto:</strong> 
+                                <p className="text-sm">
+                                  AIPI detectó que el usuario estaba viendo la página de un modelo específico de laptop.
+                                </p>
+                              </li>
+                              <li>
+                                <strong>Extracción de Información:</strong> 
+                                <p className="text-sm">
+                                  El sistema extrajo las especificaciones técnicas del producto (procesador, memoria RAM, 
+                                  tarjeta gráfica) de la página del producto.
+                                </p>
+                              </li>
+                              <li>
+                                <strong>Conexión con Conocimiento:</strong> 
+                                <p className="text-sm">
+                                  Relacionó estas especificaciones con los requisitos típicos de software de diseño gráfico
+                                  mencionados en otras páginas del sitio, como guías y comparativas.
+                                </p>
+                              </li>
+                            </ol>
+                          </div>
+                          
+                          <div className="border-l-4 border-green-500 pl-4 py-1 my-4 bg-green-50 dark:bg-green-900/20">
+                            <h5 className="font-medium">Respuesta generada:</h5>
+                            <p className="italic">
+                              "Sí, el Modelo XPS 15 que estás viendo es altamente compatible con software de diseño gráfico 
+                              profesional como Adobe Photoshop, Illustrator e InDesign. Con su procesador Intel i7 de 11ª generación, 
+                              32GB de RAM y tarjeta NVIDIA RTX 3050, cumple y supera los requisitos recomendados para estos programas. 
+                              Además, su pantalla calibrada para precisión de color (100% Adobe RGB) lo hace ideal para trabajo gráfico. 
+                              Si necesitas ver más opciones optimizadas para diseño gráfico, <a href="#" className="text-primary-600 dark:text-primary-400">puedes ver nuestra comparativa aquí</a>."
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <h3 className="text-xl font-bold mt-8 mb-4">Beneficios de la Comprensión Contextual</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 className="font-semibold mb-2 text-primary-700 dark:text-primary-400">Respuestas Inmediatas y Precisas</h4>
+                            <p>
+                              Los visitantes obtienen información exacta sin tener que navegar por múltiples páginas 
+                              buscando respuestas específicas.
+                            </p>
+                          </div>
+                          
+                          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 className="font-semibold mb-2 text-primary-700 dark:text-primary-400">Reducción de Abandono</h4>
+                            <p>
+                              Al resolver dudas en el momento, se evita que los visitantes abandonen tu sitio por 
+                              frustración o falta de información clara.
+                            </p>
+                          </div>
+                          
+                          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 className="font-semibold mb-2 text-primary-700 dark:text-primary-400">Cero Mantenimiento Manual</h4>
+                            <p>
+                              A diferencia de los sistemas tradicionales de FAQs, AIPI se actualiza automáticamente 
+                              cuando modificas el contenido de tu sitio web.
+                            </p>
+                          </div>
+                          
+                          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                            <h4 className="font-semibold mb-2 text-primary-700 dark:text-primary-400">Información Consistente</h4>
+                            <p>
+                              Todas las respuestas se basan en el contenido oficial de tu sitio, garantizando 
+                              consistencia en la información proporcionada.
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                          <div className="flex">
+                            <div className="flex-shrink-0">
+                              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            <div className="ml-3">
+                              <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-300">Nota Importante</h4>
+                              <p className="mt-2 text-sm text-yellow-700 dark:text-yellow-200">
+                                Para mejorar aún más la precisión de las respuestas contextuales, puedes complementar 
+                                esta funcionalidad con el entrenamiento específico usando documentos. Esto es 
+                                especialmente útil para información que no está directamente disponible en tu sitio web.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
