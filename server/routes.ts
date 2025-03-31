@@ -1964,8 +1964,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         let interactions_limit = interactionsLimit || 20;
         let end_date = endDate ? new Date(endDate) : null;
         
-        if (!tier) {
-          // Si no se especifica tier, usar valores por defecto según el tier
+        // Si se especifica tier, usar valores por defecto según el tier
+        if (tier) {
           switch(tier) {
             case 'basic':
               interactions_limit = 500;

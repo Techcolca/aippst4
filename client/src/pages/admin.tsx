@@ -208,20 +208,20 @@ export default function AdminPanel() {
   }, [user, navigate, toast]);
   
   // Query para obtener estadísticas de administrador
-  const { data: adminStats, isLoading: isLoadingStats } = useQuery<AdminStats>({
+  const { data: adminStats, isLoading: isLoadingStats, refetch: refetchStats } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"],
     enabled: !!user && user.username === 'admin',
     refetchInterval: 30000, // Actualizar cada 30 segundos
   });
   
   // Query para obtener lista de usuarios
-  const { data: users, isLoading: isLoadingUsers } = useQuery<UserInfo[]>({
+  const { data: users, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery<UserInfo[]>({
     queryKey: ["/api/admin/users"],
     enabled: !!user && user.username === 'admin' && activeTab === "users",
   });
   
   // Query para obtener detalles de un usuario específico
-  const { data: userDetails, isLoading: isLoadingUserDetails } = useQuery<UserDetails>({
+  const { data: userDetails, isLoading: isLoadingUserDetails, refetch: refetchUserDetails } = useQuery<UserDetails>({
     queryKey: ["/api/admin/users", selectedUser],
     enabled: !!selectedUser,
   });
@@ -270,8 +270,9 @@ export default function AdminPanel() {
         tier: "free"
       });
       
-      // Refrescar lista de usuarios
-      window.location.reload();
+      // Refrescar lista de usuarios sin recargar la página
+      refetchUsers();
+      refetchStats();
     } catch (error) {
       console.error("Error creating user:", error);
       toast({
@@ -320,7 +321,8 @@ export default function AdminPanel() {
       }
       
       // Refrescar lista de usuarios
-      window.location.reload();
+      refetchUsers();
+      refetchStats();
     } catch (error) {
       console.error("Error updating user:", error);
       toast({
@@ -358,13 +360,15 @@ export default function AdminPanel() {
       // Cerrar modal y refrescar datos
       setSubscriptionModal(false);
       
-      // Refrescar detalles del usuario si está seleccionado
+      // Refrescar datos sin recargar la página
+      refetchUsers();
+      refetchStats();
+      
+      // Si hay un usuario seleccionado, refrescar sus detalles
       if (selectedUser === editSubscriptionData.userId) {
+        refetchUserDetails();
         setUserDetailsModal(true);
       }
-      
-      // Refrescar lista de usuarios
-      window.location.reload();
     } catch (error) {
       console.error("Error updating subscription:", error);
       toast({
