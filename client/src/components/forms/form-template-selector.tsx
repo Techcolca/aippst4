@@ -47,7 +47,12 @@ export function FormTemplateSelector() {
         title: "Formulario creado",
         description: "Se ha creado un nuevo formulario basado en la plantilla seleccionada.",
       });
-      setLocation(`/form-editor/${data.id}`);
+      // Redireccionar a dashboard con la pestaña forms activada
+      setLocation(`/dashboard?tab=forms`);
+      toast({
+        title: "¡Formulario listo para editar!",
+        description: "Puedes encontrar tu nuevo formulario en la lista de formularios",
+      });
     },
     onError: (error: any) => {
       toast({
@@ -75,7 +80,12 @@ export function FormTemplateSelector() {
   };
 
   const handleCreateBlankForm = () => {
-    setLocation('/form-editor/new');
+    // También redirigir al dashboard con un mensaje
+    toast({
+      title: "Función en desarrollo",
+      description: "La creación de formularios desde cero estará disponible próximamente",
+    });
+    setLocation('/dashboard?tab=forms');
   };
 
   if (isLoading) {
