@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, FileText, Users, BarChart4 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { ArrowRight, FileText, Users, BarChart4, Eye, X, ClipboardList, Star, User, ShoppingCart, MessageSquare, Briefcase, Bell, Mail } from "lucide-react";
 
 type FormTemplate = {
   id: number;
@@ -30,6 +31,8 @@ export function FormTemplateSelector() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
 
   // Fetch available templates
   const { data: templates, isLoading } = useQuery<FormTemplate[]>({
@@ -112,7 +115,12 @@ export function FormTemplateSelector() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Selecciona una plantilla</h2>
+        <div>
+          <h2 className="text-2xl font-bold">Selecciona una plantilla</h2>
+          <p className="text-muted-foreground text-sm mt-1">
+            Pasa el cursor sobre la plantilla y haz clic en el ícono del <Eye className="w-3 h-3 inline mx-1" /> para previsualizarla antes de usar.
+          </p>
+        </div>
         <Button variant="outline" onClick={handleCreateBlankForm}>
           Crear desde cero
         </Button>
@@ -136,7 +144,20 @@ export function FormTemplateSelector() {
               <CardDescription>{template.description}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center py-4">
-              <div className="w-full aspect-video bg-slate-100 dark:bg-gray-800 rounded-md mb-3 overflow-hidden relative">
+              <div className="w-full aspect-video bg-slate-100 dark:bg-gray-800 rounded-md mb-3 overflow-hidden relative group">
+                {/* Botón de vista previa */}
+                <button 
+                  className="absolute right-2 top-2 bg-primary/90 text-white p-1.5 rounded-full z-10 opacity-0 group-hover:opacity-100 transition-opacity" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPreviewTemplate(template);
+                    setShowPreview(true);
+                  }}
+                  title="Vista previa"
+                >
+                  <Eye className="h-4 w-4" />
+                </button>
+                
                 {/* Miniatura de ejemplo - normalmente sería una imagen real almacenada en el servidor */}
                 <div className={`w-full h-full flex flex-col p-4 border ${
                   selectedTemplate === template.id ? "border-primary" : "border-gray-200 dark:border-gray-700"
@@ -368,6 +389,149 @@ export function FormTemplateSelector() {
           </Card>
         ))}
       </div>
+
+      {/* Modal de Vista Previa */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="sm:max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">
+              {previewTemplate?.name || "Vista previa de la plantilla"}
+            </DialogTitle>
+            <DialogDescription>
+              {previewTemplate?.description || "Vista previa detallada de los campos y estructura del formulario."}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-white dark:bg-slate-900 border rounded-lg p-6 max-h-[70vh] overflow-y-auto">
+            {previewTemplate && (
+              <div className="space-y-6">
+                <div className="text-center mb-8">
+                  <h2 className="text-2xl font-bold mb-2">{previewTemplate.name}</h2>
+                  <p className="text-muted-foreground">{previewTemplate.description}</p>
+                </div>
+                
+                {/* Aquí renderizamos una versión más detallada del formulario según el tipo */}
+                {previewTemplate.type === 'contact' && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Nombre <span className="text-red-500">*</span></label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email <span className="text-red-500">*</span></label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Asunto</label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Mensaje <span className="text-red-500">*</span></label>
+                      <div className="h-32 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="pt-4">
+                      <div className="h-10 w-full md:w-1/3 bg-primary/80 rounded-md mx-auto"></div>
+                    </div>
+                  </div>
+                )}
+                
+                {previewTemplate.type === 'waitlist' && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Nombre <span className="text-red-500">*</span></label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email <span className="text-red-500">*</span></label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <div className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded border"></div>
+                        <span className="text-sm">Quiero recibir actualizaciones por email</span>
+                      </div>
+                    </div>
+                    <div className="pt-4">
+                      <div className="h-10 w-full md:w-1/2 bg-primary/80 rounded-md mx-auto"></div>
+                    </div>
+                  </div>
+                )}
+                
+                {previewTemplate.type === 'survey' && (
+                  <div className="space-y-6">
+                    <div className="space-y-3">
+                      <label className="text-sm font-medium">¿Cómo calificaría nuestro servicio? <span className="text-red-500">*</span></label>
+                      <div className="flex justify-between">
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <div key={n} className="flex flex-col items-center">
+                            <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 border"></div>
+                            <span className="text-xs mt-1">{n}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">¿Qué aspecto le gustó más?</label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">¿Tiene alguna sugerencia para mejorar?</label>
+                      <div className="h-24 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email (opcional)</label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="pt-4">
+                      <div className="h-10 w-full md:w-1/3 bg-primary/80 rounded-md mx-auto"></div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Formulario genérico para otros tipos */}
+                {!['contact', 'waitlist', 'survey'].includes(previewTemplate.type) && (
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Nombre <span className="text-red-500">*</span></label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email <span className="text-red-500">*</span></label>
+                      <div className="h-10 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Mensaje</label>
+                      <div className="h-24 w-full bg-gray-100 dark:bg-gray-800 rounded-md border"></div>
+                    </div>
+                    <div className="pt-4">
+                      <div className="h-10 w-full md:w-1/3 bg-primary/80 rounded-md mx-auto"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
+            <DialogClose asChild>
+              <Button variant="outline">Cerrar vista previa</Button>
+            </DialogClose>
+            
+            <Button
+              disabled={!previewTemplate || createFormMutation.isPending}
+              onClick={() => {
+                if (previewTemplate) {
+                  setSelectedTemplate(previewTemplate.id);
+                  createFormMutation.mutate(previewTemplate.id);
+                  setShowPreview(false);
+                }
+              }}
+            >
+              {createFormMutation.isPending ? "Creando..." : "Usar esta plantilla"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="flex justify-end mt-6">
         <Button 
