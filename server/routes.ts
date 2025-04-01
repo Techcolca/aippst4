@@ -18,6 +18,7 @@ import stripe, {
   cancelSubscription,
   handleWebhookEvent
 } from "./lib/stripe";
+import { createOrUpdateStripeProduct, syncPlansWithStripe } from "./lib/stripe-utils";
 import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
 import bcrypt from "bcrypt";
@@ -2543,7 +2544,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      const pricingPlan = await storage.createPricingPlan(validatedData);
+      let pricingPlan = await storage.createPricingPlan(validatedData);
+      
+      // Sincronizar con Stripe - Crear producto y precio correspondiente
+      try {
+        const stripeInfo = await createOrUpdateStripeProduct(pricingPlan);
+        
+        // Actualizar el plan con los IDs de Stripe
+        pricingPlan = await storage.updatePricingPlan(pricingPlan.id, {
+          stripeProductId: stripeInfo.stripeProductId,
+          stripePriceId: stripeInfo.stripePriceId
+        });
+        
+        console.log("Plan sincronizado con Stripe:", pricingPlan.name);
+      } catch (stripeError) {
+        console.error("Error sincronizando con Stripe:", stripeError);
+        // Continuamos sin error fatal, pero registramos el problema
+      }
+      
       res.status(201).json(pricingPlan);
     } catch (error) {
       console.error("Error creating pricing plan:", error);
@@ -2581,7 +2599,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
+      // Actualizar el plan en la base de datos
       const updatedPlan = await storage.updatePricingPlan(id, req.body);
+      
+      // Sincronizar con Stripe - Actualizar producto y precio correspondiente
+      try {
+        if (updatedPlan) {
+          const stripeInfo = await createOrUpdateStripeProduct(updatedPlan);
+          
+          // Si los IDs de Stripe no coinciden con los que ya teníamos, actualizamos el plan
+          if (stripeInfo.stripeProductId !== updatedPlan.stripeProductId || 
+              stripeInfo.stripePriceId !== updatedPlan.stripePriceId) {
+            
+            await storage.updatePricingPlan(id, {
+              stripeProductId: stripeInfo.stripeProductId,
+              stripePriceId: stripeInfo.stripePriceId
+            });
+            
+            // Actualizar el objeto del plan con los nuevos IDs de Stripe
+            updatedPlan.stripeProductId = stripeInfo.stripeProductId;
+            updatedPlan.stripePriceId = stripeInfo.stripePriceId;
+          }
+          console.log("Plan sincronizado con Stripe:", updatedPlan.name);
+        }
+      } catch (stripeError) {
+        console.error("Error sincronizando con Stripe:", stripeError);
+        // Continuamos sin error fatal, pero registramos el problema
+      }
+      
       res.json(updatedPlan);
     } catch (error) {
       console.error("Error updating pricing plan:", error);
@@ -2609,11 +2654,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Plan de precio no encontrado" });
       }
 
+      // Para Stripe no eliminamos productos, solo los marcamos como inactivos en nuestra BD
+      // Stripe maneja esto de forma separada con archivado de productos
+
       await storage.deletePricingPlan(id);
       res.json({ message: "Plan de precio eliminado correctamente" });
     } catch (error) {
       console.error("Error deleting pricing plan:", error);
       res.status(500).json({ message: "Error al eliminar el plan de precio" });
+    }
+  });
+  
+  // Sincronizar todos los planes con Stripe (admin)
+  app.post("/api/admin/pricing-plans/sync-with-stripe", verifyToken, isAdmin, async (req, res) => {
+    try {
+      // Obtener todos los planes de precios
+      const pricingPlans = await storage.getPricingPlans();
+      
+      // Sincronizar todos los planes con Stripe
+      const syncedPlans = await syncPlansWithStripe(pricingPlans);
+      
+      // Responder con los planes sincronizados
+      res.json({
+        message: `${syncedPlans.length} planes sincronizados con Stripe`,
+        plans: syncedPlans
+      });
+    } catch (error) {
+      console.error("Error synchronizing plans with Stripe:", error);
+      res.status(500).json({ message: "Error al sincronizar planes con Stripe" });
     }
   });
 

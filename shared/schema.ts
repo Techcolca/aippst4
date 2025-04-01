@@ -258,6 +258,8 @@ export const pricingPlans = pgTable("pricing_plans", {
   discount: integer("discount"),
   popular: boolean("popular").default(false),
   available: boolean("available").default(true),
+  stripeProductId: text("stripe_product_id"),
+  stripePriceId: text("stripe_price_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -277,6 +279,8 @@ export const insertPricingPlanSchema = createInsertSchema(pricingPlans).pick({
   discount: true,
   popular: true,
   available: true,
+  stripeProductId: true,
+  stripePriceId: true,
 });
 
 export type PricingPlan = typeof pricingPlans.$inferSelect;

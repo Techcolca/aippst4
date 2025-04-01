@@ -18,7 +18,7 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
-import { PlusCircle, Trash } from "lucide-react";
+import { PlusCircle, Trash, RefreshCw } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   BarChart,
@@ -643,6 +643,29 @@ export default function AdminPanel() {
   };
   
   // Crear un nuevo plan de precios
+  // Sincronizar todos los planes con Stripe
+  const handleSyncPlansWithStripe = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/admin/pricing-plans/sync-with-stripe", {});
+      const result = await response.json();
+      
+      toast({
+        title: "Planes sincronizados",
+        description: result.message || `${result.plans?.length || 0} planes sincronizados con Stripe`
+      });
+      
+      // Refrescar lista de planes
+      refetchPricingPlans();
+    } catch (error) {
+      console.error("Error sincronizando planes con Stripe:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron sincronizar los planes con Stripe. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+  
   const handleCreatePricingPlan = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -1291,13 +1314,23 @@ export default function AdminPanel() {
               <TabsContent value="pricing-plans">
                 <div className="mb-6 flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Planes de Precios</h2>
-                  <Button 
-                    onClick={() => setPricingPlanModal(true)} 
-                    className="flex items-center gap-2"
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                    Crear Plan
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      onClick={handleSyncPlansWithStripe} 
+                      variant="outline"
+                      className="flex items-center gap-2"
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      Sincronizar con Stripe
+                    </Button>
+                    <Button 
+                      onClick={() => setPricingPlanModal(true)} 
+                      className="flex items-center gap-2"
+                    >
+                      <PlusCircle className="h-4 w-4" />
+                      Crear Plan
+                    </Button>
+                  </div>
                 </div>
 
                 {isLoadingPricingPlans ? (
