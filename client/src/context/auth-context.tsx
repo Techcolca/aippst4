@@ -120,11 +120,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Eliminar el token del localStorage
       localStorage.removeItem('auth_token');
       setUser(null);
+      // Redirigir al dashboard/login - usando window.location para la navegación
+      window.location.href = '/';
     } catch (error) {
       // Eliminar el token del localStorage incluso si hay error
       localStorage.removeItem('auth_token');
       console.error("Logout error:", error);
       setUser(null);
+      // Redirigir al dashboard/login incluso en caso de error
+      window.location.href = '/';
     }
   };
   
