@@ -124,7 +124,7 @@ export function FormTemplateSelector() {
             key={template.id}
             className={`cursor-pointer transition-all hover:shadow-md ${
               selectedTemplate === template.id 
-                ? "border-2 border-primary ring-2 ring-primary/20" 
+                ? "border-2 border-primary ring-2 ring-primary/20 bg-primary/5 dark:bg-primary/10" 
                 : "hover:border-primary/30"
             }`}
             onClick={() => handleTemplateSelect(template.id)}
@@ -135,22 +135,233 @@ export function FormTemplateSelector() {
               </CardTitle>
               <CardDescription>{template.description}</CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col items-center justify-center py-6">
-              {template.type && iconMap[template.type as keyof typeof iconMap] || 
-                <FileText className="w-8 h-8 mb-2 text-primary" />}
-              <p className="text-sm text-center text-muted-foreground">{template.type.charAt(0).toUpperCase() + template.type.slice(1)}</p>
+            <CardContent className="flex flex-col items-center justify-center py-4">
+              <div className="w-full aspect-video bg-slate-100 dark:bg-gray-800 rounded-md mb-3 overflow-hidden relative">
+                {/* Miniatura de ejemplo - normalmente sería una imagen real almacenada en el servidor */}
+                <div className={`w-full h-full flex flex-col p-4 border ${
+                  selectedTemplate === template.id ? "border-primary" : "border-gray-200 dark:border-gray-700"
+                } rounded-md`}>
+                  {/* Encabezado del formulario de muestra */}
+                  <div className="w-full mb-3">
+                    <div className="h-4 w-3/4 bg-gray-300 dark:bg-gray-600 rounded mb-1"></div>
+                    <div className="h-3 w-1/2 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  </div>
+                  
+                  {/* Simulación de campos según el tipo de formulario */}
+                  <div className="space-y-2 w-full">
+                    {template.type === 'contact' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-16 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {template.type === 'waitlist' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/2 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="flex space-x-2">
+                            <div className="h-5 w-5 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                            <div className="h-3 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mt-1"></div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {template.type === 'survey' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="flex space-x-1">
+                            {[1, 2, 3, 4, 5].map((n) => (
+                              <div key={n} className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {template.type === 'lead' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {template.type === 'registration' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="h-8 w-full bg-gray-300 dark:bg-gray-600 rounded mt-3"></div>
+                      </>
+                    )}
+                    
+                    {template.type === 'order' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <div className="flex flex-col space-y-1 w-2/3">
+                            <div className="h-3 w-1/3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                            <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                          </div>
+                          <div className="flex flex-col space-y-1 w-1/3">
+                            <div className="h-3 w-1/2 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                            <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                          </div>
+                        </div>
+                        <div className="h-8 w-full bg-gray-300 dark:bg-gray-600 rounded mt-3"></div>
+                      </>
+                    )}
+                    
+                    {template.type === 'feedback' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="flex space-x-1">
+                            {[1, 2, 3, 4, 5].map((n) => (
+                              <div key={n} className="h-5 w-5 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="flex space-x-1">
+                            {[1, 2, 3].map((n) => (
+                              <div key={n} className="flex items-center space-x-1">
+                                <div className="h-4 w-4 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+                                <div className="h-3 w-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/3 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                      </>
+                    )}
+                    
+                    {template.type === 'application' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="h-6 w-3/4 bg-gray-300 dark:bg-gray-600 rounded-sm mt-2 mx-auto"></div>
+                      </>
+                    )}
+                    
+                    {template.type === 'subscription' && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex items-center space-x-2 mt-2">
+                          <div className="h-4 w-4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-3 w-3/4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="h-8 w-1/3 bg-gray-300 dark:bg-gray-600 rounded mt-2 mx-auto"></div>
+                      </>
+                    )}
+                    
+                    {/* Fallback para otros tipos */}
+                    {!['contact', 'waitlist', 'survey', 'lead', 'registration', 'order', 'feedback', 'application', 'subscription'].includes(template.type) && (
+                      <>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-6 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex flex-col space-y-1">
+                          <div className="h-3 w-1/4 bg-gray-300 dark:bg-gray-600 rounded"></div>
+                          <div className="h-10 w-full bg-gray-200 dark:bg-gray-700 rounded"></div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Botón de muestra */}
+                  <div className="mt-auto pt-3">
+                    <div className="h-7 w-1/3 bg-primary/30 rounded-sm mx-auto"></div>
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm font-medium text-center text-muted-foreground">
+                {template.type.charAt(0).toUpperCase() + template.type.slice(1)}
+              </p>
             </CardContent>
             <CardFooter className="bg-muted/50 p-3">
               <Button 
-                variant="ghost" 
-                className="w-full text-xs justify-between"
+                variant={selectedTemplate === template.id ? "default" : "ghost"}
+                className={`w-full text-xs justify-between ${selectedTemplate === template.id ? "bg-primary text-primary-foreground" : "text-primary hover:bg-primary/10 hover:text-primary"}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedTemplate(template.id);
                   createFormMutation.mutate(template.id);
                 }}
               >
-                <span>Usar esta plantilla</span>
+                <span>{selectedTemplate === template.id ? "Crear con esta plantilla" : "Usar esta plantilla"}</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </CardFooter>
