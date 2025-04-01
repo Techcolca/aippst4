@@ -4,7 +4,7 @@ import {
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription,
-  DiscountCode, InsertDiscountCode
+  DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -83,6 +83,15 @@ export interface IStorage {
   incrementDiscountCodeUsage(id: number): Promise<void>;
   deleteDiscountCode(id: number): Promise<void>;
   generateDiscountCode(prefix?: string): string;
+  
+  // Pricing plan methods
+  getPricingPlans(): Promise<PricingPlan[]>;
+  getAvailablePricingPlans(): Promise<PricingPlan[]>;
+  getPricingPlan(id: number): Promise<PricingPlan | undefined>;
+  getPricingPlanByPlanId(planId: string): Promise<PricingPlan | undefined>;
+  createPricingPlan(data: InsertPricingPlan): Promise<PricingPlan>;
+  updatePricingPlan(id: number, data: Partial<PricingPlan>): Promise<PricingPlan>;
+  deletePricingPlan(id: number): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -96,6 +105,7 @@ export class MemStorage implements IStorage {
   private siteContents: Map<number, SiteContent>;
   private subscriptions: Map<number, Subscription>;
   private discountCodes: Map<number, DiscountCode>;
+  private pricingPlans: Map<number, PricingPlan>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -106,6 +116,7 @@ export class MemStorage implements IStorage {
   private siteContentIdCounter: number;
   private subscriptionIdCounter: number;
   private discountCodeIdCounter: number;
+  private pricingPlanIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -117,6 +128,7 @@ export class MemStorage implements IStorage {
     this.siteContents = new Map();
     this.subscriptions = new Map();
     this.discountCodes = new Map();
+    this.pricingPlans = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -127,6 +139,7 @@ export class MemStorage implements IStorage {
     this.siteContentIdCounter = 1;
     this.subscriptionIdCounter = 1;
     this.discountCodeIdCounter = 1;
+    this.pricingPlanIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -731,6 +744,60 @@ export class MemStorage implements IStorage {
     }
     
     return result;
+  }
+
+  // Pricing Plan methods
+  async getPricingPlans(): Promise<PricingPlan[]> {
+    return Array.from(this.pricingPlans.values());
+  }
+
+  async getAvailablePricingPlans(): Promise<PricingPlan[]> {
+    return Array.from(this.pricingPlans.values())
+      .filter(plan => plan.available);
+  }
+
+  async getPricingPlan(id: number): Promise<PricingPlan | undefined> {
+    return this.pricingPlans.get(id);
+  }
+
+  async getPricingPlanByPlanId(planId: string): Promise<PricingPlan | undefined> {
+    return Array.from(this.pricingPlans.values())
+      .find(plan => plan.planId === planId);
+  }
+
+  async createPricingPlan(data: InsertPricingPlan): Promise<PricingPlan> {
+    const id = this.pricingPlanIdCounter++;
+    const now = new Date();
+    
+    const newPlan: PricingPlan = {
+      ...data,
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    
+    this.pricingPlans.set(id, newPlan);
+    return newPlan;
+  }
+
+  async updatePricingPlan(id: number, data: Partial<PricingPlan>): Promise<PricingPlan> {
+    const plan = this.pricingPlans.get(id);
+    if (!plan) {
+      throw new Error(`Pricing plan with id ${id} not found`);
+    }
+    
+    const updatedPlan = {
+      ...plan,
+      ...data,
+      updatedAt: new Date()
+    };
+    
+    this.pricingPlans.set(id, updatedPlan);
+    return updatedPlan;
+  }
+
+  async deletePricingPlan(id: number): Promise<void> {
+    this.pricingPlans.delete(id);
   }
 
   // Dashboard methods

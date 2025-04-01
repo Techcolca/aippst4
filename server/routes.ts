@@ -23,7 +23,7 @@ import { documentProcessor } from "./lib/document-processor";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema } from "@shared/schema";
+import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema } from "@shared/schema";
 import fs from "fs";
 import path from "path";
 import multer from "multer";
@@ -2430,6 +2430,138 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error al aplicar código de descuento:", error);
       res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+
+  // ================ Pricing Plan Routes ================
+  // GET todos los planes de precios (públicos y disponibles)
+  app.get("/api/pricing-plans", async (req, res) => {
+    try {
+      const pricingPlans = await storage.getAvailablePricingPlans();
+      res.json(pricingPlans);
+    } catch (error) {
+      console.error("Error getting pricing plans:", error);
+      res.status(500).json({ message: "Error al obtener los planes de precio" });
+    }
+  });
+
+  // GET todos los planes de precios (admin, incluye no disponibles)
+  app.get("/api/admin/pricing-plans", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const pricingPlans = await storage.getPricingPlans();
+      res.json(pricingPlans);
+    } catch (error) {
+      console.error("Error getting all pricing plans:", error);
+      res.status(500).json({ message: "Error al obtener todos los planes de precio" });
+    }
+  });
+
+  // GET un plan de precios específico por ID
+  app.get("/api/admin/pricing-plans/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID de plan inválido" });
+      }
+
+      const pricingPlan = await storage.getPricingPlan(id);
+      if (!pricingPlan) {
+        return res.status(404).json({ message: "Plan de precio no encontrado" });
+      }
+
+      res.json(pricingPlan);
+    } catch (error) {
+      console.error("Error getting pricing plan:", error);
+      res.status(500).json({ message: "Error al obtener el plan de precio" });
+    }
+  });
+
+  // POST crear un nuevo plan de precios (admin)
+  app.post("/api/admin/pricing-plans", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const validatedData = insertPricingPlanSchema.parse(req.body);
+      
+      // Verificar si ya existe un plan con el mismo planId
+      if (validatedData.planId) {
+        const existingPlan = await storage.getPricingPlanByPlanId(validatedData.planId);
+        if (existingPlan) {
+          return res.status(400).json({ 
+            message: "Ya existe un plan con el mismo ID de plan (planId)" 
+          });
+        }
+      }
+      
+      const pricingPlan = await storage.createPricingPlan(validatedData);
+      res.status(201).json(pricingPlan);
+    } catch (error) {
+      console.error("Error creating pricing plan:", error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ 
+          message: "Datos de plan inválidos", 
+          errors: error.errors 
+        });
+      }
+      res.status(500).json({ message: "Error al crear el plan de precio" });
+    }
+  });
+
+  // PUT actualizar un plan de precios existente (admin)
+  app.put("/api/admin/pricing-plans/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID de plan inválido" });
+      }
+
+      // Verificar si el plan existe
+      const existingPlan = await storage.getPricingPlan(id);
+      if (!existingPlan) {
+        return res.status(404).json({ message: "Plan de precio no encontrado" });
+      }
+
+      // Si se está cambiando el planId, verificar que no exista otro plan con ese planId
+      if (req.body.planId && req.body.planId !== existingPlan.planId) {
+        const planWithSameId = await storage.getPricingPlanByPlanId(req.body.planId);
+        if (planWithSameId && planWithSameId.id !== id) {
+          return res.status(400).json({ 
+            message: "Ya existe otro plan con el mismo ID de plan (planId)" 
+          });
+        }
+      }
+
+      const updatedPlan = await storage.updatePricingPlan(id, req.body);
+      res.json(updatedPlan);
+    } catch (error) {
+      console.error("Error updating pricing plan:", error);
+      if (error.name === 'ZodError') {
+        return res.status(400).json({ 
+          message: "Datos de actualización inválidos", 
+          errors: error.errors 
+        });
+      }
+      res.status(500).json({ message: "Error al actualizar el plan de precio" });
+    }
+  });
+
+  // DELETE eliminar un plan de precios (admin)
+  app.delete("/api/admin/pricing-plans/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID de plan inválido" });
+      }
+
+      // Verificar si el plan existe
+      const existingPlan = await storage.getPricingPlan(id);
+      if (!existingPlan) {
+        return res.status(404).json({ message: "Plan de precio no encontrado" });
+      }
+
+      await storage.deletePricingPlan(id);
+      res.json({ message: "Plan de precio eliminado correctamente" });
+    } catch (error) {
+      console.error("Error deleting pricing plan:", error);
+      res.status(500).json({ message: "Error al eliminar el plan de precio" });
     }
   });
 

@@ -7,7 +7,8 @@ import {
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
-  users, integrations, conversations, messages, automations, settings, sitesContent, subscriptions, discountCodes
+  PricingPlan, InsertPricingPlan,
+  users, integrations, conversations, messages, automations, settings, sitesContent, subscriptions, discountCodes, pricingPlans
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -668,5 +669,53 @@ export class PgStorage implements IStorage {
   generateDiscountCode(prefix: string = 'AIPI'): string {
     const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
     return `${prefix}-${randomPart}`;
+  }
+  
+  // Pricing Plan methods
+  async getPricingPlans(): Promise<PricingPlan[]> {
+    return await db.select().from(pricingPlans);
+  }
+
+  async getAvailablePricingPlans(): Promise<PricingPlan[]> {
+    return await db.select()
+      .from(pricingPlans)
+      .where(eq(pricingPlans.available, true));
+  }
+
+  async getPricingPlan(id: number): Promise<PricingPlan | undefined> {
+    const result = await db.select()
+      .from(pricingPlans)
+      .where(eq(pricingPlans.id, id))
+      .limit(1);
+    return result[0];
+  }
+
+  async getPricingPlanByPlanId(planId: string): Promise<PricingPlan | undefined> {
+    const result = await db.select()
+      .from(pricingPlans)
+      .where(eq(pricingPlans.planId, planId))
+      .limit(1);
+    return result[0];
+  }
+
+  async createPricingPlan(data: InsertPricingPlan): Promise<PricingPlan> {
+    const result = await db.insert(pricingPlans)
+      .values(data)
+      .returning();
+    return result[0];
+  }
+
+  async updatePricingPlan(id: number, data: Partial<PricingPlan>): Promise<PricingPlan> {
+    const now = new Date();
+    const result = await db.update(pricingPlans)
+      .set({ ...data, updatedAt: now })
+      .where(eq(pricingPlans.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deletePricingPlan(id: number): Promise<void> {
+    await db.delete(pricingPlans)
+      .where(eq(pricingPlans.id, id));
   }
 }

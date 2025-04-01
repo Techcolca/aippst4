@@ -241,6 +241,47 @@ export const insertDiscountCodeSchema = createInsertSchema(discountCodes).pick({
 export type DiscountCode = typeof discountCodes.$inferSelect;
 export type InsertDiscountCode = z.infer<typeof insertDiscountCodeSchema>;
 
+// Tabla para planes de precios
+export const pricingPlans = pgTable("pricing_plans", {
+  id: serial("id").primaryKey(),
+  planId: text("plan_id").notNull().unique(), // Identificador único del plan (free, basic, etc.)
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  price: integer("price").notNull(), // Precio en centavos
+  priceDisplay: text("price_display").notNull(),
+  currency: text("currency").notNull().default("cad"),
+  interval: text("interval").notNull().default("month"),
+  features: json("features").notNull(), // Array de características
+  tier: text("tier").notNull(),
+  interactionsLimit: integer("interactions_limit").notNull(),
+  isAnnual: boolean("is_annual").default(false),
+  discount: integer("discount"),
+  popular: boolean("popular").default(false),
+  available: boolean("available").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertPricingPlanSchema = createInsertSchema(pricingPlans).pick({
+  planId: true,
+  name: true,
+  description: true,
+  price: true,
+  priceDisplay: true,
+  currency: true,
+  interval: true,
+  features: true,
+  tier: true,
+  interactionsLimit: true,
+  isAnnual: true,
+  discount: true,
+  popular: true,
+  available: true,
+});
+
+export type PricingPlan = typeof pricingPlans.$inferSelect;
+export type InsertPricingPlan = z.infer<typeof insertPricingPlanSchema>;
+
 // Tabla para almacenar información del sitio web scrapeado
 export const sitesContent = pgTable("sites_content", {
   id: serial("id").primaryKey(),

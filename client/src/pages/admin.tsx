@@ -15,7 +15,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
+import { PlusCircle, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   BarChart,
@@ -31,7 +34,8 @@ import {
   CreditCard,
   Percent,
   TagIcon,
-  Copy
+  Copy,
+  Package
 } from "lucide-react";
 
 // Interfaces
@@ -143,6 +147,24 @@ interface UserOverLimit {
   usage_percentage: number;
 }
 
+interface PricingPlan {
+  id: number;
+  name: string;
+  description: string;
+  tier: string;
+  interactionsLimit: number;
+  planId: string;
+  price: number;
+  priceDisplay: string;
+  currency: string;
+  billingPeriod: string;
+  features: string[];
+  popular: boolean;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const formatDate = (dateString: string) => {
   if (!dateString) return 'N/A';
   return new Date(dateString).toLocaleDateString('es-ES', {
@@ -171,6 +193,9 @@ export default function AdminPanel() {
   const [discountCodeModal, setDiscountCodeModal] = useState(false);
   const [editDiscountCodeModal, setEditDiscountCodeModal] = useState(false);
   const [selectedDiscountCode, setSelectedDiscountCode] = useState<any>(null);
+  const [pricingPlanModal, setPricingPlanModal] = useState(false);
+  const [editPricingPlanModal, setEditPricingPlanModal] = useState(false);
+  const [selectedPricingPlan, setSelectedPricingPlan] = useState<PricingPlan | null>(null);
   
   // Form states
   const [newUser, setNewUser] = useState({
@@ -216,10 +241,47 @@ export default function AdminPanel() {
     isActive: true
   });
   
+  const [newPricingPlan, setNewPricingPlan] = useState({
+    name: "",
+    description: "",
+    tier: "free",
+    interactionsLimit: 20,
+    planId: "",
+    price: 0,
+    priceDisplay: "$0 CAD",
+    currency: "CAD",
+    billingPeriod: "monthly",
+    features: [] as string[],
+    popular: false,
+    available: true
+  });
+  
+  const [editPricingPlanData, setEditPricingPlanData] = useState({
+    id: 0,
+    name: "",
+    description: "",
+    tier: "",
+    interactionsLimit: 0,
+    planId: "",
+    price: 0,
+    priceDisplay: "",
+    currency: "CAD",
+    billingPeriod: "monthly",
+    features: [] as string[],
+    popular: false,
+    available: true
+  });
+  
   // Query para obtener códigos de descuento
   const { data: discountCodes, isLoading: isLoadingDiscountCodes, refetch: refetchDiscountCodes } = useQuery({
     queryKey: ["/api/discount-codes"],
     enabled: !!user && user.username === 'admin' && activeTab === "discount-codes",
+  });
+  
+  // Query para obtener planes de precios
+  const { data: pricingPlans, isLoading: isLoadingPricingPlans, refetch: refetchPricingPlans } = useQuery<PricingPlan[]>({
+    queryKey: ["/api/admin/pricing-plans"],
+    enabled: !!user && user.username === 'admin' && activeTab === "pricing-plans",
   });
 
   // Crear un nuevo código de descuento
@@ -560,6 +622,156 @@ export default function AdminPanel() {
     }
   };
   
+  // Preparar la edición de un plan de precios
+  const handlePrepareEditPricingPlan = (plan: PricingPlan) => {
+    setEditPricingPlanData({
+      id: plan.id,
+      name: plan.name,
+      description: plan.description,
+      tier: plan.tier,
+      interactionsLimit: plan.interactionsLimit,
+      planId: plan.planId,
+      price: plan.price,
+      priceDisplay: plan.priceDisplay,
+      currency: plan.currency,
+      billingPeriod: plan.billingPeriod,
+      features: Array.isArray(plan.features) ? plan.features : [],
+      popular: !!plan.popular,
+      available: !!plan.available
+    });
+    setEditPricingPlanModal(true);
+  };
+  
+  // Crear un nuevo plan de precios
+  const handleCreatePricingPlan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newPricingPlan.name || !newPricingPlan.description || !newPricingPlan.planId) {
+      toast({
+        title: "Error",
+        description: "El nombre, la descripción y el ID del plan son obligatorios",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      // Asegurarse de que las características estén en formato correcto
+      let features = newPricingPlan.features;
+      if (typeof features === 'string') {
+        features = (features as string).split('\n').filter(line => line.trim());
+      }
+      
+      await apiRequest("POST", "/api/admin/pricing-plans", {
+        ...newPricingPlan,
+        features
+      });
+      
+      toast({
+        title: "Plan creado",
+        description: "El plan de precios ha sido creado exitosamente"
+      });
+      
+      // Cerrar modal y refrescar datos
+      setPricingPlanModal(false);
+      setNewPricingPlan({
+        name: "",
+        description: "",
+        tier: "free",
+        interactionsLimit: 20,
+        planId: "",
+        price: 0,
+        priceDisplay: "$0 CAD",
+        currency: "CAD",
+        billingPeriod: "monthly",
+        features: [],
+        popular: false,
+        available: true
+      });
+      
+      // Refrescar lista de planes
+      refetchPricingPlans();
+    } catch (error) {
+      console.error("Error creating pricing plan:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo crear el plan de precios. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+  
+  // Editar un plan de precios existente
+  const handleEditPricingPlan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!editPricingPlanData.name || !editPricingPlanData.description || !editPricingPlanData.planId) {
+      toast({
+        title: "Error",
+        description: "El nombre, la descripción y el ID del plan son obligatorios",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      // Asegurarse de que las características estén en formato correcto
+      let features = editPricingPlanData.features;
+      if (typeof features === 'string') {
+        features = (features as string).split('\n').filter(line => line.trim());
+      }
+      
+      await apiRequest("PUT", `/api/admin/pricing-plans/${editPricingPlanData.id}`, {
+        ...editPricingPlanData,
+        features
+      });
+      
+      toast({
+        title: "Plan actualizado",
+        description: "El plan de precios ha sido actualizado exitosamente"
+      });
+      
+      // Cerrar modal y refrescar datos
+      setEditPricingPlanModal(false);
+      
+      // Refrescar lista de planes
+      refetchPricingPlans();
+    } catch (error) {
+      console.error("Error updating pricing plan:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el plan de precios. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+  
+  // Eliminar un plan de precios
+  const handleDeletePricingPlan = async (id: number) => {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar este plan de precios? Esta acción no se puede deshacer.")) {
+      return;
+    }
+    
+    try {
+      await apiRequest("DELETE", `/api/admin/pricing-plans/${id}`);
+      
+      toast({
+        title: "Plan eliminado",
+        description: "El plan de precios ha sido eliminado exitosamente"
+      });
+      
+      // Refrescar lista de planes
+      refetchPricingPlans();
+    } catch (error) {
+      console.error("Error deleting pricing plan:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el plan de precios. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+  
   // Filtrar usuarios por búsqueda
   const filteredUsers = users 
     ? users.filter(user => 
@@ -593,6 +805,7 @@ export default function AdminPanel() {
                 <TabsTrigger value="users">Usuarios</TabsTrigger>
                 <TabsTrigger value="limits">Límites</TabsTrigger>
                 <TabsTrigger value="discount-codes">Códigos de Descuento</TabsTrigger>
+                <TabsTrigger value="pricing-plans">Planes de Precios</TabsTrigger>
               </TabsList>
               
               {/* Dashboard Tab */}
@@ -1064,6 +1277,100 @@ export default function AdminPanel() {
                             <TableRow>
                               <TableCell colSpan={9} className="text-center py-10 text-gray-500">
                                 No hay códigos de descuento creados aún. ¡Crea tu primer código!
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+              
+              {/* Pricing Plans Tab */}
+              <TabsContent value="pricing-plans">
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Planes de Precios</h2>
+                  <Button 
+                    onClick={() => setPricingPlanModal(true)} 
+                    className="flex items-center gap-2"
+                  >
+                    <PlusCircle className="h-4 w-4" />
+                    Crear Plan
+                  </Button>
+                </div>
+
+                {isLoadingPricingPlans ? (
+                  <div className="py-20 text-center">
+                    <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Cargando planes de precios...</p>
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="p-0">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Nombre</TableHead>
+                            <TableHead>Plan ID</TableHead>
+                            <TableHead>Nivel</TableHead>
+                            <TableHead>Límite</TableHead>
+                            <TableHead>Precio</TableHead>
+                            <TableHead>Periodo</TableHead>
+                            <TableHead>Estado</TableHead>
+                            <TableHead>Acciones</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {pricingPlans && pricingPlans.length > 0 ? (
+                            pricingPlans.map((plan) => (
+                              <TableRow key={plan.id}>
+                                <TableCell className="font-medium">
+                                  <div className="flex items-center">
+                                    {plan.name}
+                                    {plan.popular && (
+                                      <Badge variant="outline" className="ml-2 bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-300 border-amber-300">
+                                        Popular
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell>{plan.planId}</TableCell>
+                                <TableCell className="capitalize">{plan.tier}</TableCell>
+                                <TableCell>{plan.interactionsLimit.toLocaleString()} interacciones</TableCell>
+                                <TableCell>{plan.priceDisplay}</TableCell>
+                                <TableCell className="capitalize">
+                                  {plan.billingPeriod === 'monthly' ? 'Mensual' : 'Anual'}
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant={plan.available ? "success" : "destructive"} className="capitalize">
+                                    {plan.available ? 'Activo' : 'Inactivo'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handlePrepareEditPricingPlan(plan)}
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => handleDeletePricingPlan(plan.id)}
+                                    >
+                                      <Trash className="h-4 w-4 text-red-500" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={8} className="h-24 text-center">
+                                No hay planes de precios configurados
                               </TableCell>
                             </TableRow>
                           )}
@@ -1803,6 +2110,354 @@ export default function AdminPanel() {
                 <Edit className="h-4 w-4" />
                 Actualizar Código
               </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Modal para crear plan de precios */}
+      <Dialog open={pricingPlanModal} onOpenChange={setPricingPlanModal}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Crear Plan de Precios</DialogTitle>
+            <DialogDescription>
+              Configura un nuevo plan de precios para ofrecer a los clientes
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleCreatePricingPlan} className="space-y-4 mt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="plan-name">Nombre del Plan</Label>
+                <Input 
+                  id="plan-name"
+                  value={newPricingPlan.name}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, name: e.target.value})}
+                  placeholder="Basic"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-id">ID del Plan</Label>
+                <Input 
+                  id="plan-id"
+                  value={newPricingPlan.planId}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, planId: e.target.value})}
+                  placeholder="basic_monthly"
+                  required
+                />
+                <p className="text-xs text-gray-500">ID único para identificar este plan en el sistema y Stripe</p>
+              </div>
+              
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="plan-description">Descripción</Label>
+                <Textarea 
+                  id="plan-description"
+                  value={newPricingPlan.description}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, description: e.target.value})}
+                  placeholder="Ideal para pequeñas empresas que inician con IA"
+                  rows={2}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-tier">Nivel</Label>
+                <Select 
+                  value={newPricingPlan.tier}
+                  onValueChange={(value) => setNewPricingPlan({...newPricingPlan, tier: value})}
+                >
+                  <SelectTrigger id="plan-tier">
+                    <SelectValue placeholder="Seleccionar nivel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="free">Free</SelectItem>
+                    <SelectItem value="basic">Basic</SelectItem>
+                    <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-limit">Límite de Interacciones</Label>
+                <Input 
+                  id="plan-limit"
+                  type="number"
+                  min="0"
+                  value={newPricingPlan.interactionsLimit}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, interactionsLimit: parseInt(e.target.value)})}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-price">Precio</Label>
+                <Input 
+                  id="plan-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={newPricingPlan.price}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, price: parseFloat(e.target.value)})}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-price-display">Precio mostrado</Label>
+                <Input 
+                  id="plan-price-display"
+                  value={newPricingPlan.priceDisplay}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, priceDisplay: e.target.value})}
+                  placeholder="$50 CAD"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-currency">Moneda</Label>
+                <Select 
+                  value={newPricingPlan.currency}
+                  onValueChange={(value) => setNewPricingPlan({...newPricingPlan, currency: value})}
+                >
+                  <SelectTrigger id="plan-currency">
+                    <SelectValue placeholder="Seleccionar moneda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CAD">CAD - Dólar Canadiense</SelectItem>
+                    <SelectItem value="USD">USD - Dólar Americano</SelectItem>
+                    <SelectItem value="EUR">EUR - Euro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="plan-billing">Periodo de facturación</Label>
+                <Select 
+                  value={newPricingPlan.billingPeriod}
+                  onValueChange={(value) => setNewPricingPlan({...newPricingPlan, billingPeriod: value})}
+                >
+                  <SelectTrigger id="plan-billing">
+                    <SelectValue placeholder="Seleccionar periodo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Mensual</SelectItem>
+                    <SelectItem value="yearly">Anual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="plan-features">Características (una por línea)</Label>
+                <Textarea 
+                  id="plan-features"
+                  value={Array.isArray(newPricingPlan.features) ? newPricingPlan.features.join('\n') : newPricingPlan.features}
+                  onChange={(e) => setNewPricingPlan({...newPricingPlan, features: e.target.value.split('\n').filter(line => line.trim())})}
+                  placeholder="500 interacciones al mes
+Asistente en su sitio web
+Historial de conversaciones
+Soporte por email"
+                  rows={4}
+                />
+              </div>
+              
+              <div className="space-y-2 flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="plan-popular" 
+                    checked={newPricingPlan.popular}
+                    onCheckedChange={(checked) => setNewPricingPlan({...newPricingPlan, popular: !!checked})}
+                  />
+                  <Label htmlFor="plan-popular">Marcar como Popular</Label>
+                </div>
+              </div>
+              
+              <div className="space-y-2 flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="plan-available" 
+                    checked={newPricingPlan.available}
+                    onCheckedChange={(checked) => setNewPricingPlan({...newPricingPlan, available: !!checked})}
+                  />
+                  <Label htmlFor="plan-available">Disponible</Label>
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="submit">Crear Plan</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Modal para editar plan de precios */}
+      <Dialog open={editPricingPlanModal} onOpenChange={setEditPricingPlanModal}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Editar Plan de Precios</DialogTitle>
+            <DialogDescription>
+              Modifica los detalles del plan de precios
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleEditPricingPlan} className="space-y-4 mt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-name">Nombre del Plan</Label>
+                <Input 
+                  id="edit-plan-name"
+                  value={editPricingPlanData.name}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, name: e.target.value})}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-id">ID del Plan</Label>
+                <Input 
+                  id="edit-plan-id"
+                  value={editPricingPlanData.planId}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, planId: e.target.value})}
+                  required
+                />
+                <p className="text-xs text-gray-500">ID único para identificar este plan en el sistema y Stripe</p>
+              </div>
+              
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="edit-plan-description">Descripción</Label>
+                <Textarea 
+                  id="edit-plan-description"
+                  value={editPricingPlanData.description}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, description: e.target.value})}
+                  rows={2}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-tier">Nivel</Label>
+                <Select 
+                  value={editPricingPlanData.tier}
+                  onValueChange={(value) => setEditPricingPlanData({...editPricingPlanData, tier: value})}
+                >
+                  <SelectTrigger id="edit-plan-tier">
+                    <SelectValue placeholder="Seleccionar nivel" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="free">Free</SelectItem>
+                    <SelectItem value="basic">Basic</SelectItem>
+                    <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-limit">Límite de Interacciones</Label>
+                <Input 
+                  id="edit-plan-limit"
+                  type="number"
+                  min="0"
+                  value={editPricingPlanData.interactionsLimit}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, interactionsLimit: parseInt(e.target.value)})}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-price">Precio</Label>
+                <Input 
+                  id="edit-plan-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={editPricingPlanData.price}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, price: parseFloat(e.target.value)})}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-price-display">Precio mostrado</Label>
+                <Input 
+                  id="edit-plan-price-display"
+                  value={editPricingPlanData.priceDisplay}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, priceDisplay: e.target.value})}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-currency">Moneda</Label>
+                <Select 
+                  value={editPricingPlanData.currency}
+                  onValueChange={(value) => setEditPricingPlanData({...editPricingPlanData, currency: value})}
+                >
+                  <SelectTrigger id="edit-plan-currency">
+                    <SelectValue placeholder="Seleccionar moneda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CAD">CAD - Dólar Canadiense</SelectItem>
+                    <SelectItem value="USD">USD - Dólar Americano</SelectItem>
+                    <SelectItem value="EUR">EUR - Euro</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-plan-billing">Periodo de facturación</Label>
+                <Select 
+                  value={editPricingPlanData.billingPeriod}
+                  onValueChange={(value) => setEditPricingPlanData({...editPricingPlanData, billingPeriod: value})}
+                >
+                  <SelectTrigger id="edit-plan-billing">
+                    <SelectValue placeholder="Seleccionar periodo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Mensual</SelectItem>
+                    <SelectItem value="yearly">Anual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="edit-plan-features">Características (una por línea)</Label>
+                <Textarea 
+                  id="edit-plan-features"
+                  value={Array.isArray(editPricingPlanData.features) ? editPricingPlanData.features.join('\n') : editPricingPlanData.features}
+                  onChange={(e) => setEditPricingPlanData({...editPricingPlanData, features: e.target.value.split('\n').filter(line => line.trim())})}
+                  rows={4}
+                />
+              </div>
+              
+              <div className="space-y-2 flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="edit-plan-popular" 
+                    checked={editPricingPlanData.popular}
+                    onCheckedChange={(checked) => setEditPricingPlanData({...editPricingPlanData, popular: !!checked})}
+                  />
+                  <Label htmlFor="edit-plan-popular">Marcar como Popular</Label>
+                </div>
+              </div>
+              
+              <div className="space-y-2 flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="edit-plan-available" 
+                    checked={editPricingPlanData.available}
+                    onCheckedChange={(checked) => setEditPricingPlanData({...editPricingPlanData, available: !!checked})}
+                  />
+                  <Label htmlFor="edit-plan-available">Disponible</Label>
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="submit">Guardar Cambios</Button>
             </DialogFooter>
           </form>
         </DialogContent>
