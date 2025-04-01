@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { apiRequest } from "@/lib/queryClient";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -27,7 +28,9 @@ import {
   Search,
   Edit,
   User,
-  CreditCard
+  CreditCard,
+  Percent,
+  TagIcon
 } from "lucide-react";
 
 // Interfaces
@@ -63,6 +66,10 @@ interface AdminStats {
   limits: {
     users_near_limit: number;
     users_over_limit: number;
+  };
+  discount_codes?: {
+    total_codes: number;
+    active_codes: number;
   };
 }
 
@@ -160,6 +167,7 @@ export default function AdminPanel() {
   const [createUserModal, setCreateUserModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
   const [subscriptionModal, setSubscriptionModal] = useState(false);
+  const [discountCodeModal, setDiscountCodeModal] = useState(false);
   
   // Form states
   const [newUser, setNewUser] = useState({
@@ -186,6 +194,66 @@ export default function AdminPanel() {
     endDate: ""
   });
   
+  const [newDiscountCode, setNewDiscountCode] = useState({
+    name: "",
+    discountPercentage: 10,
+    applicableTier: "all",
+    expiresAt: "",
+    usageLimit: 0,
+    isActive: true
+  });
+  
+  // Query para obtener códigos de descuento
+  const { data: discountCodes, isLoading: isLoadingDiscountCodes, refetch: refetchDiscountCodes } = useQuery({
+    queryKey: ["/api/discount-codes"],
+    enabled: !!user && user.username === 'admin' && activeTab === "discount-codes",
+  });
+
+  // Crear un nuevo código de descuento
+  const handleCreateDiscountCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!newDiscountCode.name || !newDiscountCode.discountPercentage) {
+      toast({
+        title: "Error",
+        description: "El nombre y el porcentaje de descuento son obligatorios",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      await apiRequest("POST", "/api/discount-codes", newDiscountCode);
+      
+      toast({
+        title: "Código creado",
+        description: "El código de descuento ha sido creado exitosamente"
+      });
+      
+      // Cerrar modal y refrescar datos
+      setDiscountCodeModal(false);
+      setNewDiscountCode({
+        name: "",
+        discountPercentage: 10,
+        applicableTier: "all",
+        expiresAt: "",
+        usageLimit: 0,
+        isActive: true
+      });
+      
+      // Refrescar lista de códigos
+      refetchDiscountCodes();
+      refetchStats();
+    } catch (error) {
+      console.error("Error creating discount code:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo crear el código de descuento. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Verificar si el usuario es administrador
   useEffect(() => {
     console.log("Usuario actual:", user?.username);
@@ -442,6 +510,7 @@ export default function AdminPanel() {
                 <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
                 <TabsTrigger value="users">Usuarios</TabsTrigger>
                 <TabsTrigger value="limits">Límites</TabsTrigger>
+                <TabsTrigger value="discount-codes">Códigos de Descuento</TabsTrigger>
               </TabsList>
               
               {/* Dashboard Tab */}
@@ -823,6 +892,106 @@ export default function AdminPanel() {
                     )}
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              {/* Discount Codes Tab */}
+              <TabsContent value="discount-codes">
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Códigos de Descuento</h2>
+                  <Button 
+                    onClick={() => setDiscountCodeModal(true)}
+                    className="ml-4 flex items-center gap-2"
+                  >
+                    <Percent className="h-4 w-4" />
+                    Crear Código de Descuento
+                  </Button>
+                </div>
+                
+                {isLoadingDiscountCodes ? (
+                  <div className="py-20 text-center">
+                    <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <p className="text-lg text-gray-600 dark:text-gray-400">Cargando códigos de descuento...</p>
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="p-0">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Código</TableHead>
+                            <TableHead>Nombre</TableHead>
+                            <TableHead>Descuento</TableHead>
+                            <TableHead>Tier Aplicable</TableHead>
+                            <TableHead>Usos</TableHead>
+                            <TableHead>Límite</TableHead>
+                            <TableHead>Expira</TableHead>
+                            <TableHead>Estado</TableHead>
+                            <TableHead>Acciones</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {discountCodes && discountCodes.length > 0 ? (
+                            discountCodes.map((code) => (
+                              <TableRow key={code.id}>
+                                <TableCell className="font-mono">{code.code}</TableCell>
+                                <TableCell>{code.name}</TableCell>
+                                <TableCell>{code.discountPercentage}%</TableCell>
+                                <TableCell>
+                                  {code.applicableTier === 'all' ? 'Todos' : code.applicableTier}
+                                </TableCell>
+                                <TableCell>{code.usageCount}</TableCell>
+                                <TableCell>{code.usageLimit || 'Ilimitado'}</TableCell>
+                                <TableCell>{code.expiresAt ? formatDate(code.expiresAt) : 'Sin caducidad'}</TableCell>
+                                <TableCell>
+                                  <div className={`px-2 py-1 rounded-full text-xs font-medium inline-block 
+                                    ${code.isActive 
+                                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300' 
+                                      : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+                                    }`}
+                                  >
+                                    {code.isActive ? 'Activo' : 'Inactivo'}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex gap-2">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm"
+                                      onClick={() => {
+                                        // Future implementation: Edit discount code
+                                      }}
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm"
+                                      onClick={() => {
+                                        navigator.clipboard.writeText(code.code);
+                                        toast({
+                                          title: "Código copiado",
+                                          description: "El código ha sido copiado al portapapeles"
+                                        });
+                                      }}
+                                    >
+                                      <Copy className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={9} className="text-center py-10 text-gray-500">
+                                No hay códigos de descuento creados aún. ¡Crea tu primer código!
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
             </Tabs>
           ) : (
@@ -1316,6 +1485,125 @@ export default function AdminPanel() {
                 Cancelar
               </Button>
               <Button type="submit">Guardar cambios</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Crear código de descuento modal */}
+      <Dialog open={discountCodeModal} onOpenChange={setDiscountCodeModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Crear Código de Descuento</DialogTitle>
+            <DialogDescription>
+              Crea un nuevo código de descuento para tus clientes
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleCreateDiscountCode}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Nombre
+                </Label>
+                <Input
+                  id="name"
+                  className="col-span-3"
+                  value={newDiscountCode.name}
+                  onChange={(e) => setNewDiscountCode({...newDiscountCode, name: e.target.value})}
+                  placeholder="Ej: Black Friday 2025"
+                />
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="discountPercentage" className="text-right">
+                  Descuento %
+                </Label>
+                <Input
+                  id="discountPercentage"
+                  type="number"
+                  min="1"
+                  max="100"
+                  className="col-span-3"
+                  value={newDiscountCode.discountPercentage}
+                  onChange={(e) => setNewDiscountCode({...newDiscountCode, discountPercentage: parseInt(e.target.value) || 10})}
+                />
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="applicableTier" className="text-right">
+                  Tier aplicable
+                </Label>
+                <Select
+                  value={newDiscountCode.applicableTier}
+                  onValueChange={(value) => setNewDiscountCode({...newDiscountCode, applicableTier: value})}
+                >
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Seleccionar tier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los planes</SelectItem>
+                    <SelectItem value="basic">Basic</SelectItem>
+                    <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="expiresAt" className="text-right">
+                  Fecha expiración
+                </Label>
+                <Input
+                  id="expiresAt"
+                  type="date"
+                  className="col-span-3"
+                  value={newDiscountCode.expiresAt}
+                  onChange={(e) => setNewDiscountCode({...newDiscountCode, expiresAt: e.target.value})}
+                />
+                <p className="text-xs text-gray-500 col-span-4 text-right">Dejar en blanco para un código sin caducidad</p>
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="usageLimit" className="text-right">
+                  Límite de usos
+                </Label>
+                <Input
+                  id="usageLimit"
+                  type="number"
+                  min="0"
+                  className="col-span-3"
+                  value={newDiscountCode.usageLimit}
+                  onChange={(e) => setNewDiscountCode({...newDiscountCode, usageLimit: parseInt(e.target.value) || 0})}
+                />
+                <p className="text-xs text-gray-500 col-span-4 text-right">0 = usos ilimitados</p>
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="isActive" className="text-right">
+                  Estado
+                </Label>
+                <div className="flex items-center space-x-2 col-span-3">
+                  <Switch
+                    id="isActive"
+                    checked={newDiscountCode.isActive}
+                    onCheckedChange={(checked) => setNewDiscountCode({...newDiscountCode, isActive: checked})}
+                  />
+                  <Label htmlFor="isActive" className="cursor-pointer">
+                    {newDiscountCode.isActive ? 'Activo' : 'Inactivo'}
+                  </Label>
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setDiscountCodeModal(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" className="flex items-center gap-2">
+                <Percent className="h-4 w-4" />
+                Crear Código
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
