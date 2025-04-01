@@ -66,6 +66,39 @@ export class PgStorage implements IStorage {
         .where(eq(integrations.id, id));
     }
   }
+  
+  async deleteIntegration(id: number): Promise<void> {
+    // Verificar si la integración existe
+    const integration = await this.getIntegration(id);
+    if (!integration) {
+      throw new Error(`Integration with id ${id} not found`);
+    }
+    
+    // Obtener conversaciones asociadas a esta integración
+    const integrationConversations = await db.select()
+      .from(conversations)
+      .where(eq(conversations.integrationId, id));
+    
+    const conversationIds = integrationConversations.map(conv => conv.id);
+    
+    // Eliminar mensajes asociados a estas conversaciones
+    if (conversationIds.length > 0) {
+      await db.delete(messages)
+        .where(inArray(messages.conversationId, conversationIds));
+    }
+    
+    // Eliminar las conversaciones
+    await db.delete(conversations)
+      .where(eq(conversations.integrationId, id));
+    
+    // Eliminar contenido de sitio asociado
+    await db.delete(sitesContent)
+      .where(eq(sitesContent.integrationId, id));
+    
+    // Finalmente, eliminar la integración
+    await db.delete(integrations)
+      .where(eq(integrations.id, id));
+  }
 
   // Conversation methods
   async getConversations(integrationId: number): Promise<Conversation[]> {

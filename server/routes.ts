@@ -562,6 +562,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Eliminar una integración específica
+  app.delete("/api/integrations/:id", verifyToken, async (req, res) => {
+    try {
+      const integrationId = parseInt(req.params.id);
+      if (isNaN(integrationId)) {
+        return res.status(400).json({ message: "Invalid integration ID" });
+      }
+      
+      // Verificar que la integración existe
+      const integration = await storage.getIntegration(integrationId);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Comprobar si es la integración principal (Techcolca21 en este caso) y si el usuario no es Pablo
+      const isMainWebsiteIntegration = integration.name === 'Techcolca21';
+      const isPablo = req.userId === 1; // ID del usuario Pablo
+      
+      if (isMainWebsiteIntegration && !isPablo) {
+        return res.status(403).json({ message: "Solo Pablo puede eliminar el chat principal del sitio web" });
+      }
+      
+      // Verificar que el usuario es el propietario de la integración
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      // Eliminar la integración
+      await storage.deleteIntegration(integrationId);
+      
+      res.json({ message: "Integration deleted successfully" });
+    } catch (error) {
+      console.error("Delete integration error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
   // ================ Settings Routes ================
   app.get("/api/settings", verifyToken, async (req, res) => {
     try {

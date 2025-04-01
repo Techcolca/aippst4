@@ -21,6 +21,7 @@ export interface IStorage {
   getIntegrationByApiKey(apiKey: string): Promise<Integration | undefined>;
   createIntegration(integration: InsertIntegration & { apiKey: string }): Promise<Integration>;
   updateIntegration(id: number, data: Partial<Integration>): Promise<Integration>;
+  deleteIntegration(id: number): Promise<void>;
   incrementVisitorCount(id: number): Promise<void>;
 
   // Conversation methods
@@ -347,6 +348,38 @@ export class MemStorage implements IStorage {
     if (integration) {
       integration.visitorCount += 1;
       this.integrations.set(id, integration);
+    }
+  }
+  
+  async deleteIntegration(id: number): Promise<void> {
+    if (!this.integrations.has(id)) {
+      throw new Error(`Integration with id ${id} not found`);
+    }
+    
+    this.integrations.delete(id);
+    
+    // También eliminar todas las conversaciones asociadas
+    const conversationsToDelete = Array.from(this.conversations.values())
+      .filter(conv => conv.integrationId === id);
+      
+    for (const conv of conversationsToDelete) {
+      this.conversations.delete(conv.id);
+      
+      // Y también eliminar los mensajes de esas conversaciones
+      const messagesToDelete = Array.from(this.messages.values())
+        .filter(msg => msg.conversationId === conv.id);
+        
+      for (const msg of messagesToDelete) {
+        this.messages.delete(msg.id);
+      }
+    }
+    
+    // Eliminar el contenido de sitio asociado
+    const siteContentsToDelete = Array.from(this.siteContents.values())
+      .filter(content => content.integrationId === id);
+      
+    for (const content of siteContentsToDelete) {
+      this.siteContents.delete(content.id);
     }
   }
 
