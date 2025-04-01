@@ -7,8 +7,10 @@ import {
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
-  PricingPlan, InsertPricingPlan,
-  users, integrations, conversations, messages, automations, settings, sitesContent, subscriptions, discountCodes, pricingPlans
+  PricingPlan, InsertPricingPlan, Form, InsertForm, FormTemplate, InsertFormTemplate,
+  FormResponse, InsertFormResponse,
+  users, integrations, conversations, messages, automations, settings, sitesContent, 
+  subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -717,5 +719,124 @@ export class PgStorage implements IStorage {
   async deletePricingPlan(id: number): Promise<void> {
     await db.delete(pricingPlans)
       .where(eq(pricingPlans.id, id));
+  }
+
+  //========== Formularios (Forms) ==========//
+  
+  // Form methods
+  async getForms(userId: number): Promise<Form[]> {
+    return await db.select().from(forms).where(eq(forms.userId, userId));
+  }
+
+  async getForm(id: number): Promise<Form | undefined> {
+    const result = await db.select().from(forms).where(eq(forms.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getFormBySlug(slug: string): Promise<Form | undefined> {
+    const result = await db.select().from(forms).where(eq(forms.slug, slug)).limit(1);
+    return result[0];
+  }
+
+  async createForm(formData: InsertForm): Promise<Form> {
+    const result = await db.insert(forms).values(formData).returning();
+    return result[0];
+  }
+
+  async updateForm(id: number, data: Partial<Form>): Promise<Form> {
+    const now = new Date();
+    const result = await db.update(forms)
+      .set({ ...data, updatedAt: now })
+      .where(eq(forms.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async incrementFormResponseCount(id: number): Promise<void> {
+    const form = await this.getForm(id);
+    if (form) {
+      await db.update(forms)
+        .set({ responseCount: (form.responseCount || 0) + 1 })
+        .where(eq(forms.id, id));
+    }
+  }
+
+  async deleteForm(id: number): Promise<void> {
+    // Eliminar todas las respuestas asociadas al formulario
+    await db.delete(formResponses)
+      .where(eq(formResponses.formId, id));
+      
+    // Eliminar el formulario
+    await db.delete(forms)
+      .where(eq(forms.id, id));
+  }
+
+  // Form Template methods
+  async getFormTemplates(): Promise<FormTemplate[]> {
+    return await db.select().from(formTemplates);
+  }
+
+  async getDefaultFormTemplates(): Promise<FormTemplate[]> {
+    return await db.select().from(formTemplates).where(eq(formTemplates.isDefault, true));
+  }
+
+  async getTemplatesByType(type: string): Promise<FormTemplate[]> {
+    return await db.select().from(formTemplates).where(eq(formTemplates.type, type));
+  }
+
+  async getFormTemplate(id: number): Promise<FormTemplate | undefined> {
+    const result = await db.select().from(formTemplates).where(eq(formTemplates.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createFormTemplate(templateData: InsertFormTemplate): Promise<FormTemplate> {
+    const result = await db.insert(formTemplates).values(templateData).returning();
+    return result[0];
+  }
+
+  async updateFormTemplate(id: number, data: Partial<FormTemplate>): Promise<FormTemplate> {
+    const now = new Date();
+    const result = await db.update(formTemplates)
+      .set({ ...data, updatedAt: now })
+      .where(eq(formTemplates.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteFormTemplate(id: number): Promise<void> {
+    await db.delete(formTemplates)
+      .where(eq(formTemplates.id, id));
+  }
+
+  // Form Response methods
+  async getFormResponses(formId: number): Promise<FormResponse[]> {
+    return await db.select()
+      .from(formResponses)
+      .where(eq(formResponses.formId, formId))
+      .orderBy(formResponses.submittedAt);
+  }
+
+  async getFormResponse(id: number): Promise<FormResponse | undefined> {
+    const result = await db.select().from(formResponses).where(eq(formResponses.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createFormResponse(responseData: InsertFormResponse): Promise<FormResponse> {
+    const result = await db.insert(formResponses).values(responseData).returning();
+    
+    // Incrementar el contador de respuestas del formulario
+    await this.incrementFormResponseCount(responseData.formId);
+    
+    return result[0];
+  }
+
+  async deleteFormResponse(id: number): Promise<void> {
+    await db.delete(formResponses)
+      .where(eq(formResponses.id, id));
+  }
+
+  async deleteFormResponses(formId: number): Promise<void> {
+    await db.delete(formResponses)
+      .where(eq(formResponses.formId, formId));
   }
 }

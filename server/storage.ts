@@ -4,7 +4,8 @@ import {
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription,
-  DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan
+  DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan,
+  Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -92,6 +93,31 @@ export interface IStorage {
   createPricingPlan(data: InsertPricingPlan): Promise<PricingPlan>;
   updatePricingPlan(id: number, data: Partial<PricingPlan>): Promise<PricingPlan>;
   deletePricingPlan(id: number): Promise<void>;
+  
+  // Form methods
+  getForms(userId: number): Promise<Form[]>;
+  getForm(id: number): Promise<Form | undefined>;
+  getFormBySlug(slug: string): Promise<Form | undefined>;
+  createForm(formData: InsertForm): Promise<Form>;
+  updateForm(id: number, data: Partial<Form>): Promise<Form>;
+  incrementFormResponseCount(id: number): Promise<void>;
+  deleteForm(id: number): Promise<void>;
+
+  // Form Template methods
+  getFormTemplates(): Promise<FormTemplate[]>;
+  getDefaultFormTemplates(): Promise<FormTemplate[]>;
+  getTemplatesByType(type: string): Promise<FormTemplate[]>;
+  getFormTemplate(id: number): Promise<FormTemplate | undefined>;
+  createFormTemplate(templateData: InsertFormTemplate): Promise<FormTemplate>;
+  updateFormTemplate(id: number, data: Partial<FormTemplate>): Promise<FormTemplate>;
+  deleteFormTemplate(id: number): Promise<void>;
+
+  // Form Response methods
+  getFormResponses(formId: number): Promise<FormResponse[]>;
+  getFormResponse(id: number): Promise<FormResponse | undefined>;
+  createFormResponse(responseData: InsertFormResponse): Promise<FormResponse>;
+  deleteFormResponse(id: number): Promise<void>;
+  deleteFormResponses(formId: number): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -106,6 +132,9 @@ export class MemStorage implements IStorage {
   private subscriptions: Map<number, Subscription>;
   private discountCodes: Map<number, DiscountCode>;
   private pricingPlans: Map<number, PricingPlan>;
+  private forms: Map<number, Form>;
+  private formTemplates: Map<number, FormTemplate>;
+  private formResponses: Map<number, FormResponse>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -117,6 +146,9 @@ export class MemStorage implements IStorage {
   private subscriptionIdCounter: number;
   private discountCodeIdCounter: number;
   private pricingPlanIdCounter: number;
+  private formIdCounter: number;
+  private formTemplateIdCounter: number;
+  private formResponseIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -129,6 +161,9 @@ export class MemStorage implements IStorage {
     this.subscriptions = new Map();
     this.discountCodes = new Map();
     this.pricingPlans = new Map();
+    this.forms = new Map();
+    this.formTemplates = new Map();
+    this.formResponses = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -140,6 +175,9 @@ export class MemStorage implements IStorage {
     this.subscriptionIdCounter = 1;
     this.discountCodeIdCounter = 1;
     this.pricingPlanIdCounter = 1;
+    this.formIdCounter = 1;
+    this.formTemplateIdCounter = 1;
+    this.formResponseIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -291,6 +329,174 @@ export class MemStorage implements IStorage {
       updatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
     };
     this.conversations.set(demoConversation3.id, demoConversation3);
+    
+    // Add demo form templates
+    const formTemplates = [
+      {
+        id: this.formTemplateIdCounter++,
+        name: "Lista de Espera",
+        type: "waitlist",
+        description: "Formulario básico para lista de espera de productos o servicios",
+        structure: {
+          fields: [
+            { name: "nombre", label: "Nombre", type: "text", required: true },
+            { name: "email", label: "Email", type: "email", required: true },
+            { name: "interes", label: "Interés", type: "select", options: ["Producto A", "Producto B", "Servicio C"], required: true }
+          ],
+          submitButton: "Únete a la lista de espera"
+        },
+        isDefault: true,
+        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+        updatedAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      },
+      {
+        id: this.formTemplateIdCounter++,
+        name: "Contacto",
+        type: "contact",
+        description: "Formulario de contacto para clientes potenciales",
+        structure: {
+          fields: [
+            { name: "nombre", label: "Nombre", type: "text", required: true },
+            { name: "email", label: "Email", type: "email", required: true },
+            { name: "telefono", label: "Teléfono", type: "tel", required: false },
+            { name: "mensaje", label: "Mensaje", type: "textarea", required: true }
+          ],
+          submitButton: "Enviar mensaje"
+        },
+        isDefault: true,
+        createdAt: new Date(Date.now() - 29 * 24 * 60 * 60 * 1000), // 29 days ago
+        updatedAt: new Date(Date.now() - 29 * 24 * 60 * 60 * 1000)
+      },
+      {
+        id: this.formTemplateIdCounter++,
+        name: "Registro para Webinar",
+        type: "event",
+        description: "Formulario para registrarse en un webinar o evento",
+        structure: {
+          fields: [
+            { name: "nombre", label: "Nombre completo", type: "text", required: true },
+            { name: "email", label: "Email", type: "email", required: true },
+            { name: "empresa", label: "Empresa", type: "text", required: false },
+            { name: "cargo", label: "Cargo", type: "text", required: false },
+            { name: "fechaPreferida", label: "Fecha preferida", type: "select", options: ["Martes 15:00", "Jueves 17:00", "Viernes 10:00"], required: true }
+          ],
+          submitButton: "Registrarse ahora"
+        },
+        isDefault: true,
+        createdAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000), // 28 days ago
+        updatedAt: new Date(Date.now() - 28 * 24 * 60 * 60 * 1000)
+      }
+    ];
+    
+    for (const template of formTemplates) {
+      this.formTemplates.set(template.id, template as FormTemplate);
+    }
+    
+    // Add demo forms (created from templates)
+    const demoForm1: Form = {
+      id: this.formIdCounter++,
+      userId: demoUser.id,
+      name: "Waitlist para Beta",
+      slug: "waitlist-beta",
+      type: "waitlist",
+      status: "active",
+      structure: {
+        fields: [
+          { name: "nombre", label: "Nombre", type: "text", required: true },
+          { name: "email", label: "Email", type: "email", required: true },
+          { name: "empresa", label: "Empresa", type: "text", required: false },
+          { name: "interes", label: "¿Qué características te interesan más?", type: "select", options: ["Chat AI", "Automaciones", "Análisis de datos"], required: true }
+        ],
+        submitButton: "Registrarme para la beta",
+        successMessage: "¡Gracias por tu registro! Te contactaremos pronto."
+      },
+      embedCode: "<script src=\"https://example.com/form/waitlist-beta\"></script>",
+      responseCount: 24,
+      createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+      updatedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000)
+    };
+    this.forms.set(demoForm1.id, demoForm1);
+    
+    const demoForm2: Form = {
+      id: this.formIdCounter++,
+      userId: demoUser.id,
+      name: "Solicitud de Demo",
+      slug: "solicitud-demo",
+      type: "lead",
+      status: "active",
+      structure: {
+        fields: [
+          { name: "nombre", label: "Nombre completo", type: "text", required: true },
+          { name: "email", label: "Email corporativo", type: "email", required: true },
+          { name: "telefono", label: "Teléfono", type: "tel", required: true },
+          { name: "empresa", label: "Empresa", type: "text", required: true },
+          { name: "tamanoEmpresa", label: "Tamaño de empresa", type: "select", options: ["1-10", "11-50", "51-200", "201+"], required: true },
+          { name: "mensaje", label: "¿Qué te gustaría ver en la demo?", type: "textarea", required: false }
+        ],
+        submitButton: "Solicitar una demo",
+        successMessage: "Hemos recibido tu solicitud. Un representante te contactará en 24-48 horas."
+      },
+      embedCode: "<script src=\"https://example.com/form/solicitud-demo\"></script>",
+      responseCount: 18,
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+      updatedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000) // 8 days ago
+    };
+    this.forms.set(demoForm2.id, demoForm2);
+    
+    // Add some form responses
+    const demoResponses = [
+      {
+        id: this.formResponseIdCounter++,
+        formId: demoForm1.id,
+        data: {
+          nombre: "Ana García",
+          email: "ana.garcia@example.com",
+          interes: "Chat AI"
+        },
+        submittedAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) // 14 days ago
+      },
+      {
+        id: this.formResponseIdCounter++,
+        formId: demoForm1.id,
+        data: {
+          nombre: "Carlos Rodríguez",
+          email: "carlos.rodriguez@company.com",
+          empresa: "Company SL",
+          interes: "Automaciones"
+        },
+        submittedAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000) // 12 days ago
+      },
+      {
+        id: this.formResponseIdCounter++,
+        formId: demoForm2.id,
+        data: {
+          nombre: "María López",
+          email: "maria.lopez@enterprise.com",
+          telefono: "+34612345678",
+          empresa: "Enterprise Inc",
+          tamanoEmpresa: "51-200",
+          mensaje: "Me gustaría ver cómo se integra con nuestros sistemas actuales."
+        },
+        submittedAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000) // 9 days ago
+      },
+      {
+        id: this.formResponseIdCounter++,
+        formId: demoForm2.id,
+        data: {
+          nombre: "Pedro Sánchez",
+          email: "pedro.sanchez@startup.co",
+          telefono: "+34698765432",
+          empresa: "Startup Co",
+          tamanoEmpresa: "1-10",
+          mensaje: "Especialmente interesado en las capacidades de automatización."
+        },
+        submittedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days ago
+      }
+    ];
+    
+    for (const response of demoResponses) {
+      this.formResponses.set(response.id, response as FormResponse);
+    }
   }
 
   // User methods
@@ -798,6 +1004,188 @@ export class MemStorage implements IStorage {
 
   async deletePricingPlan(id: number): Promise<void> {
     this.pricingPlans.delete(id);
+  }
+  
+  // Form methods
+  async getForms(userId: number): Promise<Form[]> {
+    return Array.from(this.forms.values()).filter(
+      (form) => form.userId === userId
+    );
+  }
+
+  async getForm(id: number): Promise<Form | undefined> {
+    return this.forms.get(id);
+  }
+
+  async getFormBySlug(slug: string): Promise<Form | undefined> {
+    return Array.from(this.forms.values()).find(
+      (form) => form.slug === slug
+    );
+  }
+
+  async createForm(formData: InsertForm): Promise<Form> {
+    const id = this.formIdCounter++;
+    const now = new Date();
+    const newForm: Form = {
+      id,
+      userId: formData.userId,
+      title: formData.name || "",
+      slug: formData.slug || "",
+      type: formData.type || null,
+      description: formData.description || null,
+      status: formData.status || "draft",
+      structure: formData.structure || {},
+      settings: formData.settings || {},
+      styling: formData.styling || {},
+      published: formData.published || false,
+      responseCount: 0,
+      embedCode: formData.embedCode || null,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.forms.set(id, newForm);
+    return newForm;
+  }
+
+  async updateForm(id: number, data: Partial<Form>): Promise<Form> {
+    const form = this.forms.get(id);
+    if (!form) {
+      throw new Error(`Form with id ${id} not found`);
+    }
+
+    const updatedForm = {
+      ...form,
+      ...data,
+      updatedAt: new Date()
+    };
+    this.forms.set(id, updatedForm);
+    return updatedForm;
+  }
+
+  async incrementFormResponseCount(id: number): Promise<void> {
+    const form = this.forms.get(id);
+    if (form) {
+      form.responseCount += 1;
+      this.forms.set(id, form);
+    }
+  }
+
+  async deleteForm(id: number): Promise<void> {
+    if (!this.forms.has(id)) {
+      throw new Error(`Form with id ${id} not found`);
+    }
+    
+    // Eliminar todas las respuestas asociadas
+    await this.deleteFormResponses(id);
+    
+    // Eliminar el formulario
+    this.forms.delete(id);
+  }
+
+  // Form Template methods
+  async getFormTemplates(): Promise<FormTemplate[]> {
+    return Array.from(this.formTemplates.values());
+  }
+
+  async getDefaultFormTemplates(): Promise<FormTemplate[]> {
+    return Array.from(this.formTemplates.values()).filter(
+      (template) => template.isDefault === true
+    );
+  }
+
+  async getTemplatesByType(type: string): Promise<FormTemplate[]> {
+    return Array.from(this.formTemplates.values()).filter(
+      (template) => template.type === type
+    );
+  }
+
+  async getFormTemplate(id: number): Promise<FormTemplate | undefined> {
+    return this.formTemplates.get(id);
+  }
+
+  async createFormTemplate(templateData: InsertFormTemplate): Promise<FormTemplate> {
+    const id = this.formTemplateIdCounter++;
+    const now = new Date();
+    const newTemplate: FormTemplate = {
+      id,
+      name: templateData.name,
+      type: templateData.type,
+      description: templateData.description || null,
+      structure: templateData.structure || {},
+      settings: templateData.settings || {},
+      styling: templateData.styling || {},
+      thumbnail: templateData.thumbnail || null,
+      isDefault: templateData.isDefault || false,
+      createdBy: templateData.createdBy || null,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.formTemplates.set(id, newTemplate);
+    return newTemplate;
+  }
+
+  async updateFormTemplate(id: number, data: Partial<FormTemplate>): Promise<FormTemplate> {
+    const template = this.formTemplates.get(id);
+    if (!template) {
+      throw new Error(`Form template with id ${id} not found`);
+    }
+
+    const updatedTemplate = {
+      ...template,
+      ...data,
+      updatedAt: new Date()
+    };
+    this.formTemplates.set(id, updatedTemplate);
+    return updatedTemplate;
+  }
+
+  async deleteFormTemplate(id: number): Promise<void> {
+    this.formTemplates.delete(id);
+  }
+
+  // Form Response methods
+  async getFormResponses(formId: number): Promise<FormResponse[]> {
+    return Array.from(this.formResponses.values())
+      .filter((response) => response.formId === formId)
+      .sort((a, b) => {
+        return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
+      });
+  }
+
+  async getFormResponse(id: number): Promise<FormResponse | undefined> {
+    return this.formResponses.get(id);
+  }
+
+  async createFormResponse(responseData: InsertFormResponse): Promise<FormResponse> {
+    const id = this.formResponseIdCounter++;
+    const newResponse: FormResponse = {
+      id,
+      formId: responseData.formId,
+      data: responseData.data || {},
+      metadata: responseData.metadata || {},
+      submittedAt: new Date()
+    };
+    this.formResponses.set(id, newResponse);
+    
+    // Incrementar el contador de respuestas si hay un formId válido
+    if (responseData.formId) {
+      await this.incrementFormResponseCount(responseData.formId);
+    }
+    
+    return newResponse;
+  }
+
+  async deleteFormResponse(id: number): Promise<void> {
+    this.formResponses.delete(id);
+  }
+
+  async deleteFormResponses(formId: number): Promise<void> {
+    const responsesToDelete = Array.from(this.formResponses.values())
+      .filter(response => response.formId === formId);
+      
+    for (const response of responsesToDelete) {
+      this.formResponses.delete(response.id);
+    }
   }
 
   // Dashboard methods

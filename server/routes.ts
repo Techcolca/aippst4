@@ -2,7 +2,7 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { verifyToken, JWT_SECRET } from "./middleware/auth";
+import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier } from "./middleware/subscription";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
@@ -148,39 +148,9 @@ async function createInternalWebsiteIntegration() {
   }
 }
 
-// Middleware para verificar si un usuario es administrador
-const isAdmin = async (req: any, res: any, next: any) => {
-  try {
-    if (!req.userId) {
-      console.log("isAdmin: No userId en la petición");
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    
-    console.log("isAdmin: Verificando usuario con ID:", req.userId);
-    
-    // Obtener el usuario usando el almacén compartido
-    const user = await storage.getUser(req.userId);
-    
-    if (!user) {
-      console.log("isAdmin: Usuario no encontrado");
-      return res.status(401).json({ message: "User not found" });
-    }
-    
-    console.log("isAdmin: Usuario encontrado:", user.username, "con ID:", user.id);
-    
-    // Verificar si el usuario es admin (username === 'admin')
-    if (user.username !== 'admin') {
-      console.log("isAdmin: Acceso denegado para", user.username, "- No es administrador");
-      return res.status(403).json({ message: "Forbidden: Admin access required" });
-    }
-    
-    console.log("isAdmin: Acceso de administrador concedido para:", user.username);
-    next();
-  } catch (error) {
-    console.error("isAdmin: Error en verificación de administrador:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+// Usando el middleware isAdmin desde middleware/auth.ts
+// Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
+const isAdmin = authIsAdmin;
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Crear integración interna para el sitio principal
@@ -2682,6 +2652,354 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error synchronizing plans with Stripe:", error);
       res.status(500).json({ message: "Error al sincronizar planes con Stripe" });
+    }
+  });
+
+  // Forms API endpoints
+  app.get("/api/forms", authenticateJWT, async (req, res) => {
+    try {
+      const userId = req.user!.id;
+      const forms = await storage.getForms(userId);
+      res.json(forms);
+    } catch (error) {
+      console.error("Error getting forms:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.get("/api/forms/:id", authenticateJWT, async (req, res) => {
+    try {
+      const formId = parseInt(req.params.id);
+      const form = await storage.getForm(formId);
+      
+      if (!form) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el usuario es propietario del formulario
+      if (form.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Unauthorized access to this form" });
+      }
+      
+      res.json(form);
+    } catch (error) {
+      console.error("Error getting form:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.post("/api/forms", authenticateJWT, async (req, res) => {
+    try {
+      const userId = req.user!.id;
+      const formData = req.body;
+      
+      // Generar slug único basado en el nombre del formulario
+      const slug = formData.name.toLowerCase()
+        .replace(/\s+/g, '-')        // Reemplazar espacios con guiones
+        .replace(/[^\w\-]+/g, '')    // Eliminar caracteres especiales
+        .replace(/\-\-+/g, '-')      // Eliminar guiones múltiples
+        .replace(/^-+/, '')          // Eliminar guiones del inicio
+        .replace(/-+$/, '');         // Eliminar guiones del final
+      
+      // Verificar si ya existe un formulario con ese slug
+      const existingForm = await storage.getFormBySlug(slug);
+      
+      const finalSlug = existingForm 
+        ? `${slug}-${Math.floor(Math.random() * 1000)}` 
+        : slug;
+      
+      const newForm = await storage.createForm({
+        ...formData,
+        userId,
+        slug: finalSlug
+      });
+      
+      res.status(201).json(newForm);
+    } catch (error) {
+      console.error("Error creating form:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.put("/api/forms/:id", authenticateJWT, async (req, res) => {
+    try {
+      const formId = parseInt(req.params.id);
+      const formData = req.body;
+      
+      // Verificar que el formulario existe
+      const existingForm = await storage.getForm(formId);
+      
+      if (!existingForm) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el usuario es propietario del formulario
+      if (existingForm.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Unauthorized access to this form" });
+      }
+      
+      const updatedForm = await storage.updateForm(formId, formData);
+      res.json(updatedForm);
+    } catch (error) {
+      console.error("Error updating form:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/forms/:id", authenticateJWT, async (req, res) => {
+    try {
+      const formId = parseInt(req.params.id);
+      
+      // Verificar que el formulario existe
+      const existingForm = await storage.getForm(formId);
+      
+      if (!existingForm) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el usuario es propietario del formulario
+      if (existingForm.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Unauthorized access to this form" });
+      }
+      
+      await storage.deleteForm(formId);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting form:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Form Templates API endpoints
+  app.get("/api/form-templates", async (req, res) => {
+    try {
+      const templates = await storage.getFormTemplates();
+      res.json(templates);
+    } catch (error) {
+      console.error("Error getting form templates:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.get("/api/form-templates/default", async (req, res) => {
+    try {
+      const templates = await storage.getDefaultFormTemplates();
+      res.json(templates);
+    } catch (error) {
+      console.error("Error getting default form templates:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.get("/api/form-templates/type/:type", async (req, res) => {
+    try {
+      const type = req.params.type;
+      const templates = await storage.getTemplatesByType(type);
+      res.json(templates);
+    } catch (error) {
+      console.error("Error getting form templates by type:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.get("/api/form-templates/:id", async (req, res) => {
+    try {
+      const templateId = parseInt(req.params.id);
+      const template = await storage.getFormTemplate(templateId);
+      
+      if (!template) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      
+      res.json(template);
+    } catch (error) {
+      console.error("Error getting form template:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Solo permitir crear/editar/eliminar templates a administradores
+  app.post("/api/form-templates", authenticateJWT, isAdmin, async (req, res) => {
+    try {
+      const templateData = req.body;
+      const newTemplate = await storage.createFormTemplate(templateData);
+      res.status(201).json(newTemplate);
+    } catch (error) {
+      console.error("Error creating form template:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.put("/api/form-templates/:id", authenticateJWT, isAdmin, async (req, res) => {
+    try {
+      const templateId = parseInt(req.params.id);
+      const templateData = req.body;
+      
+      // Verificar que el template existe
+      const existingTemplate = await storage.getFormTemplate(templateId);
+      
+      if (!existingTemplate) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      
+      const updatedTemplate = await storage.updateFormTemplate(templateId, templateData);
+      res.json(updatedTemplate);
+    } catch (error) {
+      console.error("Error updating form template:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/form-templates/:id", authenticateJWT, isAdmin, async (req, res) => {
+    try {
+      const templateId = parseInt(req.params.id);
+      
+      // Verificar que el template existe
+      const existingTemplate = await storage.getFormTemplate(templateId);
+      
+      if (!existingTemplate) {
+        return res.status(404).json({ error: "Template not found" });
+      }
+      
+      await storage.deleteFormTemplate(templateId);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting form template:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Form Responses API endpoints
+  app.get("/api/forms/:formId/responses", authenticateJWT, async (req, res) => {
+    try {
+      const formId = parseInt(req.params.formId);
+      
+      // Verificar que el formulario existe
+      const existingForm = await storage.getForm(formId);
+      
+      if (!existingForm) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el usuario es propietario del formulario
+      if (existingForm.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Unauthorized access to this form's responses" });
+      }
+      
+      const responses = await storage.getFormResponses(formId);
+      res.json(responses);
+    } catch (error) {
+      console.error("Error getting form responses:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // Endpoint público para enviar respuestas de formulario
+  app.post("/api/public/form/:slug/submit", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      const responseData = req.body;
+      
+      // Verificar que el formulario existe
+      const form = await storage.getFormBySlug(slug);
+      
+      if (!form) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el formulario está activo
+      if (form.status !== "active") {
+        return res.status(403).json({ error: "This form is not active" });
+      }
+      
+      // Validar los datos de la respuesta según la estructura del formulario
+      const requiredFields = form.structure.fields
+        .filter(field => field.required)
+        .map(field => field.name);
+      
+      for (const field of requiredFields) {
+        if (!responseData.data[field]) {
+          return res.status(400).json({ 
+            error: "Missing required fields", 
+            missingFields: requiredFields.filter(f => !responseData.data[f])
+          });
+        }
+      }
+      
+      // Crear la respuesta
+      const newResponse = await storage.createFormResponse({
+        formId: form.id,
+        data: responseData.data,
+        metadata: responseData.metadata || {}
+      });
+      
+      res.status(201).json({ 
+        success: true, 
+        message: form.structure.successMessage || "Form submitted successfully" 
+      });
+    } catch (error) {
+      console.error("Error submitting form response:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/forms/:formId/responses/:responseId", authenticateJWT, async (req, res) => {
+    try {
+      const formId = parseInt(req.params.formId);
+      const responseId = parseInt(req.params.responseId);
+      
+      // Verificar que el formulario existe
+      const existingForm = await storage.getForm(formId);
+      
+      if (!existingForm) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el usuario es propietario del formulario
+      if (existingForm.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Unauthorized access to this form's responses" });
+      }
+      
+      // Verificar que la respuesta existe y pertenece a este formulario
+      const existingResponse = await storage.getFormResponse(responseId);
+      
+      if (!existingResponse || existingResponse.formId !== formId) {
+        return res.status(404).json({ error: "Response not found for this form" });
+      }
+      
+      await storage.deleteFormResponse(responseId);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting form response:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  app.delete("/api/forms/:formId/responses", authenticateJWT, async (req, res) => {
+    try {
+      const formId = parseInt(req.params.formId);
+      
+      // Verificar que el formulario existe
+      const existingForm = await storage.getForm(formId);
+      
+      if (!existingForm) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Verificar que el usuario es propietario del formulario
+      if (existingForm.userId !== req.user!.id) {
+        return res.status(403).json({ error: "Unauthorized access to this form's responses" });
+      }
+      
+      await storage.deleteFormResponses(formId);
+      
+      // Restaurar el contador de respuestas
+      await storage.updateForm(formId, { responseCount: 0 });
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting all form responses:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

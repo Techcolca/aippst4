@@ -305,3 +305,84 @@ export const insertSitesContentSchema = createInsertSchema(sitesContent).pick({
 
 export type SiteContent = typeof sitesContent.$inferSelect;
 export type InsertSiteContent = z.infer<typeof insertSitesContentSchema>;
+
+// Modelo para formularios
+export const forms = pgTable("forms", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  description: text("description"),
+  slug: text("slug").notNull().unique(),
+  type: text("type").default("standard"), // standard, waitlist, contact, survey, etc.
+  published: boolean("published").default(false),
+  structure: json("structure").notNull(), // Estructura del formulario (campos, configuración, etc.)
+  styling: json("styling"), // Estilos personalizados
+  settings: json("settings"), // Configuración adicional (notificaciones, redirecciones, etc.)
+  responseCount: integer("response_count").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertFormSchema = createInsertSchema(forms).pick({
+  userId: true,
+  title: true,
+  description: true,
+  slug: true,
+  type: true,
+  published: true,
+  structure: true,
+  styling: true,
+  settings: true,
+});
+
+// Modelo para plantillas de formularios
+export const formTemplates = pgTable("form_templates", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  type: text("type").notNull(), // standard, waitlist, contact, survey, etc.
+  thumbnail: text("thumbnail"),
+  structure: json("structure").notNull(), // Estructura predefinida de la plantilla
+  styling: json("styling"), // Estilos predefinidos
+  settings: json("settings"), // Configuración predefinida
+  isDefault: boolean("is_default").default(false),
+  createdBy: integer("created_by").references(() => users.id),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertFormTemplateSchema = createInsertSchema(formTemplates).pick({
+  name: true,
+  description: true,
+  type: true,
+  thumbnail: true,
+  structure: true,
+  styling: true,
+  settings: true,
+  isDefault: true,
+  createdBy: true,
+});
+
+// Modelo para respuestas de formularios
+export const formResponses = pgTable("form_responses", {
+  id: serial("id").primaryKey(),
+  formId: integer("form_id").references(() => forms.id, { onDelete: "cascade" }),
+  data: json("data").notNull(), // Datos de la respuesta
+  metadata: json("metadata"), // Metadatos adicionales (IP, user agent, etc.)
+  submittedAt: timestamp("submitted_at").defaultNow(),
+});
+
+export const insertFormResponseSchema = createInsertSchema(formResponses).pick({
+  formId: true,
+  data: true,
+  metadata: true,
+});
+
+export type Form = typeof forms.$inferSelect;
+export type InsertForm = z.infer<typeof insertFormSchema>;
+
+export type FormTemplate = typeof formTemplates.$inferSelect;
+export type InsertFormTemplate = z.infer<typeof insertFormTemplateSchema>;
+
+export type FormResponse = typeof formResponses.$inferSelect;
+export type InsertFormResponse = z.infer<typeof insertFormResponseSchema>;

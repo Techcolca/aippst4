@@ -5,11 +5,12 @@ import { storage } from '../storage';
 // JWT secret key
 export const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
 
-// Extend Express Request interface to include userId
+// Extend Express Request interface to include user and userId
 declare global {
   namespace Express {
     interface Request {
       userId: number;
+      user?: any; // Allow storing the user object
     }
   }
 }
@@ -91,6 +92,74 @@ export function optionalAuth(req: Request, res: Response, next: NextFunction) {
   }
   
   next();
+}
+
+/**
+ * Middleware for checking if user is an admin
+ * Must be used after authenticateJWT middleware
+ */
+export function isAdmin(req: Request, res: Response, next: NextFunction) {
+  try {
+    if (!req.userId) {
+      console.log("isAdmin: No userId en la petición");
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    
+    if (!req.user) {
+      console.log("isAdmin: No user object in request");
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    console.log("isAdmin: Verificando usuario con ID:", req.userId);
+    console.log("isAdmin: Usuario encontrado:", req.user.username, "con ID:", req.user.id);
+    
+    // Verificar si el usuario es admin (username === 'admin')
+    if (req.user.username !== 'admin') {
+      console.log("isAdmin: Acceso denegado para", req.user.username, "- No es administrador");
+      return res.status(403).json({ message: "Forbidden: Admin access required" });
+    }
+    
+    console.log("isAdmin: Acceso de administrador concedido para:", req.user.username);
+    next();
+  } catch (error) {
+    console.error("isAdmin: Error en verificación de administrador:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+/**
+ * JWT authentication middleware
+ * Verifies JWT token and attaches the user object to the request
+ */
+export async function authenticateJWT(req: Request, res: Response, next: NextFunction) {
+  // Primero obtener y verificar el token
+  const token = req.cookies?.auth_token || 
+                (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                 ? req.headers.authorization.slice(7) : null);
+  
+  if (!token) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+  
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    req.userId = decoded.userId;
+    
+    // Obtener los datos completos del usuario
+    const user = await storage.getUser(req.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Adjuntar el usuario al objeto request
+    req.user = user;
+    
+    next();
+  } catch (error) {
+    console.error('JWT authentication error:', error);
+    return res.status(401).json({ message: 'Invalid or expired token' });
+  }
 }
 
 /**
