@@ -495,14 +495,15 @@ export default function AdminPanel() {
   
   // Preparar la edición de un código de descuento
   const handlePrepareEditDiscountCode = (code: any) => {
+    console.log("Preparing edit for discount code:", code);
     setEditDiscountCodeData({
       id: code.id,
       name: code.name,
-      discountPercentage: code.discount_percentage,
-      applicableTier: code.applicable_tier,
-      expiresAt: code.expires_at ? new Date(code.expires_at).toISOString().split('T')[0] : "",
-      usageLimit: code.usage_limit || 0,
-      isActive: code.is_active
+      discountPercentage: code.discountPercentage,
+      applicableTier: code.applicableTier,
+      expiresAt: code.expiresAt ? new Date(code.expiresAt).toISOString().split('T')[0] : "",
+      usageLimit: code.usageLimit || 0,
+      isActive: code.isActive
     });
     setEditDiscountCodeModal(true);
   };
