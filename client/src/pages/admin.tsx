@@ -30,7 +30,8 @@ import {
   User,
   CreditCard,
   Percent,
-  TagIcon
+  TagIcon,
+  Copy
 } from "lucide-react";
 
 // Interfaces
