@@ -748,7 +748,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
         
         <div className="mb-8 flex items-center justify-between">
           <h3 className="text-lg font-medium">Tus Formularios</h3>
-          <Button onClick={() => setIsFormModalOpen(true)} className="flex items-center gap-2">
+          <Button onClick={() => navigate('/create-form')} className="flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
@@ -841,7 +841,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                 <p className="text-gray-500 dark:text-gray-400 mb-4">
                   Crea tu primer formulario para empezar a capturar leads
                 </p>
-                <Button onClick={() => setIsFormModalOpen(true)}>
+                <Button onClick={() => navigate('/create-form')}>
                   Crear Formulario
                 </Button>
               </div>

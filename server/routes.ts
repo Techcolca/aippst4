@@ -2691,10 +2691,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/forms", authenticateJWT, async (req, res) => {
     try {
       const userId = req.user!.id;
-      const formData = req.body;
+      const { templateId, ...formData } = req.body;
       
+      // Si se proporciona templateId, crear formulario basado en plantilla
+      if (templateId) {
+        // Obtener la plantilla
+        const template = await storage.getFormTemplate(templateId);
+        
+        if (!template) {
+          return res.status(404).json({ error: "Template not found" });
+        }
+        
+        // Crear un título para el formulario basado en la plantilla
+        const title = `${template.name} ${new Date().toLocaleDateString('es-ES')}`;
+        
+        // Generar slug único basado en el título
+        const slug = title.toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^\w\-]+/g, '')
+          .replace(/\-\-+/g, '-')
+          .replace(/^-+/, '')
+          .replace(/-+$/, '');
+        
+        // Verificar si ya existe un formulario con ese slug
+        const existingForm = await storage.getFormBySlug(slug);
+        
+        const finalSlug = existingForm 
+          ? `${slug}-${Math.floor(Math.random() * 1000)}` 
+          : slug;
+        
+        // Crear el nuevo formulario con datos de la plantilla
+        const newForm = await storage.createForm({
+          title,
+          slug: finalSlug,
+          description: template.description,
+          type: template.type,
+          published: false,
+          structure: template.structure,
+          styling: template.styling,
+          settings: template.settings,
+          userId
+        });
+        
+        return res.status(201).json(newForm);
+      }
+      
+      // Caso normal - crear formulario desde datos proporcionados
       // Generar slug único basado en el nombre del formulario
-      const slug = formData.name.toLowerCase()
+      const slug = formData.title.toLowerCase()
         .replace(/\s+/g, '-')        // Reemplazar espacios con guiones
         .replace(/[^\w\-]+/g, '')    // Eliminar caracteres especiales
         .replace(/\-\-+/g, '-')      // Eliminar guiones múltiples

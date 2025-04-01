@@ -13,6 +13,7 @@ import GetStarted from "@/pages/get-started-new";
 import Documentation from "@/pages/docs";
 import Pricing from "@/pages/pricing";
 import AdminPanel from "@/pages/admin";
+import FormTemplateSelection from "@/pages/form-template-selection";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/integrations/:id/edit" component={EditIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/admin" component={AdminPanel} />
+      <Route path="/create-form" component={FormTemplateSelection} />
       <Route component={NotFound} />
     </Switch>
   );
