@@ -798,25 +798,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Obtener los planes disponibles
   app.get("/api/pricing/plans", async (req, res) => {
     try {
-      // Obtener los productos de Stripe con sus precios
-      const products = [];
+      // Obtener los planes de precios de la base de datos
+      const pricingPlans = await storage.getAvailablePricingPlans();
       
-      // Añadir todos los planes desde nuestras constantes PRODUCTS
-      for (const [key, product] of Object.entries(PRODUCTS)) {
-        if (product.available) {
-          products.push({
-            id: key.toLowerCase(),
-            name: product.name,
-            description: product.description,
-            price: product.price / 100, // Convertir centavos a dólares para mostrar
-            currency: product.currency || "cad", // Dólares canadienses por defecto
-            interval: product.interval || "month", // Por defecto mensual
-            features: product.features || getFeaturesByTier(key.toLowerCase()),
-            tier: product.tier,
-            interactionsLimit: product.interactionsLimit,
-            isAnnual: product.isAnnual || false,
-            discount: product.discount
-          });
+      // Transformar los planes para que coincidan con el formato que espera el frontend
+      const products = pricingPlans.map(plan => ({
+        id: plan.planId.toLowerCase(),
+        name: plan.name,
+        description: plan.description,
+        price: plan.price,
+        currency: plan.currency || "cad",
+        interval: plan.interval,
+        features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+        tier: plan.tier,
+        interactionsLimit: plan.interactionsLimit,
+        isAnnual: plan.isAnnual,
+        discount: plan.discount
+      }));
+      
+      // Si no hay planes en la base de datos, utilizamos los planes predefinidos
+      if (products.length === 0) {
+        console.log("No hay planes en la base de datos, utilizando planes predefinidos");
+        
+        // Añadir todos los planes desde nuestras constantes PRODUCTS (como fallback)
+        for (const [key, product] of Object.entries(PRODUCTS)) {
+          if (product.available) {
+            products.push({
+              id: key.toLowerCase(),
+              name: product.name,
+              description: product.description,
+              price: product.price / 100, // Convertir centavos a dólares para mostrar
+              currency: product.currency || "cad", // Dólares canadienses por defecto
+              interval: product.interval || "month", // Por defecto mensual
+              features: product.features || getFeaturesByTier(key.toLowerCase()),
+              tier: product.tier,
+              interactionsLimit: product.interactionsLimit,
+              isAnnual: product.isAnnual || false,
+              discount: product.discount
+            });
+          }
         }
       }
       
@@ -1028,13 +1048,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Obtener los planes disponibles
   app.get("/api/subscription/plans", async (req, res) => {
     try {
-      // Devolver los planes disponibles desde la definición en stripe.ts
-      const plans = Object.entries(PRODUCTS)
-        .filter(([_, plan]) => plan.available)
-        .map(([id, plan]) => ({
-          id,
-          ...plan
-        }));
+      // Obtener los planes de precios disponibles desde la base de datos
+      const pricingPlans = await storage.getAvailablePricingPlans();
+      
+      // Transformar los planes para que coincidan con el formato que espera el frontend
+      const plans = pricingPlans.map(plan => ({
+        id: plan.planId,
+        tier: plan.tier,
+        name: plan.name,
+        description: plan.description,
+        price: plan.price * 100, // Convertir a centavos para mantener compatibilidad con el formato existente
+        priceDisplay: plan.priceDisplay,
+        features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+        interactionsLimit: plan.interactionsLimit,
+        popular: plan.popular,
+        available: plan.available,
+        currency: plan.currency,
+        interval: plan.interval,
+        isAnnual: plan.isAnnual,
+        discount: plan.discount,
+        metadata: {
+          tier: plan.tier,
+          interactions: plan.interactionsLimit,
+          isAnnual: plan.isAnnual
+        }
+      }));
+      
+      // Si no hay planes en la base de datos, utilizamos los planes predefinidos
+      if (plans.length === 0) {
+        console.log("No hay planes en la base de datos, utilizando planes predefinidos");
+        
+        const fallbackPlans = Object.entries(PRODUCTS)
+          .filter(([_, plan]) => plan.available)
+          .map(([id, plan]) => ({
+            id,
+            ...plan
+          }));
+        
+        return res.json(fallbackPlans);
+      }
       
       res.json(plans);
     } catch (error) {
