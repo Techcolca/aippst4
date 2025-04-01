@@ -169,6 +169,8 @@ export default function AdminPanel() {
   const [editUserModal, setEditUserModal] = useState(false);
   const [subscriptionModal, setSubscriptionModal] = useState(false);
   const [discountCodeModal, setDiscountCodeModal] = useState(false);
+  const [editDiscountCodeModal, setEditDiscountCodeModal] = useState(false);
+  const [selectedDiscountCode, setSelectedDiscountCode] = useState<any>(null);
   
   // Form states
   const [newUser, setNewUser] = useState({
@@ -198,6 +200,16 @@ export default function AdminPanel() {
   const [newDiscountCode, setNewDiscountCode] = useState({
     name: "",
     discountPercentage: 10,
+    applicableTier: "all",
+    expiresAt: "",
+    usageLimit: 0,
+    isActive: true
+  });
+  
+  const [editDiscountCodeData, setEditDiscountCodeData] = useState({
+    id: 0,
+    name: "",
+    discountPercentage: 0,
     applicableTier: "all",
     expiresAt: "",
     usageLimit: 0,
@@ -254,6 +266,8 @@ export default function AdminPanel() {
       });
     }
   };
+  
+
 
   // Verificar si el usuario es administrador
   useEffect(() => {
@@ -477,6 +491,72 @@ export default function AdminPanel() {
       endDate: subscription?.end_date ? new Date(subscription.end_date).toISOString().split('T')[0] : ""
     });
     setSubscriptionModal(true);
+  };
+  
+  // Preparar la edición de un código de descuento
+  const handlePrepareEditDiscountCode = (code: any) => {
+    setEditDiscountCodeData({
+      id: code.id,
+      name: code.name,
+      discountPercentage: code.discount_percentage,
+      applicableTier: code.applicable_tier,
+      expiresAt: code.expires_at ? new Date(code.expires_at).toISOString().split('T')[0] : "",
+      usageLimit: code.usage_limit || 0,
+      isActive: code.is_active
+    });
+    setEditDiscountCodeModal(true);
+  };
+  
+  // Editar código de descuento
+  const handleEditDiscountCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!editDiscountCodeData.name || !editDiscountCodeData.discountPercentage) {
+      toast({
+        title: "Error",
+        description: "El nombre y el porcentaje de descuento son obligatorios",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      const updateData: any = {
+        name: editDiscountCodeData.name,
+        discountPercentage: editDiscountCodeData.discountPercentage,
+        applicableTier: editDiscountCodeData.applicableTier,
+        isActive: editDiscountCodeData.isActive
+      };
+      
+      if (editDiscountCodeData.expiresAt) {
+        updateData.expiresAt = editDiscountCodeData.expiresAt;
+      }
+      
+      if (editDiscountCodeData.usageLimit) {
+        updateData.usageLimit = parseInt(editDiscountCodeData.usageLimit.toString());
+      }
+      
+      await apiRequest("PATCH", `/api/discount-codes/${editDiscountCodeData.id}`, updateData);
+      
+      toast({
+        title: "Código actualizado",
+        description: "El código de descuento ha sido actualizado exitosamente"
+      });
+      
+      // Cerrar modal y refrescar datos
+      setEditDiscountCodeModal(false);
+      
+      // Refrescar lista de códigos
+      refetchDiscountCodes();
+      refetchStats();
+    } catch (error) {
+      console.error("Error updating discount code:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el código de descuento. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
   };
   
   // Filtrar usuarios por búsqueda
@@ -958,9 +1038,7 @@ export default function AdminPanel() {
                                     <Button 
                                       variant="ghost" 
                                       size="sm"
-                                      onClick={() => {
-                                        // Future implementation: Edit discount code
-                                      }}
+                                      onClick={() => handlePrepareEditDiscountCode(code)}
                                     >
                                       <Edit className="h-4 w-4" />
                                     </Button>
@@ -1604,6 +1682,125 @@ export default function AdminPanel() {
               <Button type="submit" className="flex items-center gap-2">
                 <Percent className="h-4 w-4" />
                 Crear Código
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Editar código de descuento modal */}
+      <Dialog open={editDiscountCodeModal} onOpenChange={setEditDiscountCodeModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Editar Código de Descuento</DialogTitle>
+            <DialogDescription>
+              Actualiza la configuración del código de descuento
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleEditDiscountCode}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-name" className="text-right">
+                  Nombre
+                </Label>
+                <Input
+                  id="edit-name"
+                  className="col-span-3"
+                  value={editDiscountCodeData.name}
+                  onChange={(e) => setEditDiscountCodeData({...editDiscountCodeData, name: e.target.value})}
+                  placeholder="Ej: Black Friday 2025"
+                />
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-discountPercentage" className="text-right">
+                  Descuento %
+                </Label>
+                <Input
+                  id="edit-discountPercentage"
+                  type="number"
+                  min="1"
+                  max="100"
+                  className="col-span-3"
+                  value={editDiscountCodeData.discountPercentage}
+                  onChange={(e) => setEditDiscountCodeData({...editDiscountCodeData, discountPercentage: parseInt(e.target.value) || 10})}
+                />
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-applicableTier" className="text-right">
+                  Tier aplicable
+                </Label>
+                <Select
+                  value={editDiscountCodeData.applicableTier}
+                  onValueChange={(value) => setEditDiscountCodeData({...editDiscountCodeData, applicableTier: value})}
+                >
+                  <SelectTrigger className="col-span-3">
+                    <SelectValue placeholder="Seleccionar tier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos los planes</SelectItem>
+                    <SelectItem value="basic">Basic</SelectItem>
+                    <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-expiresAt" className="text-right">
+                  Fecha expiración
+                </Label>
+                <Input
+                  id="edit-expiresAt"
+                  type="date"
+                  className="col-span-3"
+                  value={editDiscountCodeData.expiresAt}
+                  onChange={(e) => setEditDiscountCodeData({...editDiscountCodeData, expiresAt: e.target.value})}
+                />
+                <p className="text-xs text-gray-500 col-span-4 text-right">Dejar en blanco para un código sin caducidad</p>
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-usageLimit" className="text-right">
+                  Límite de usos
+                </Label>
+                <Input
+                  id="edit-usageLimit"
+                  type="number"
+                  min="0"
+                  className="col-span-3"
+                  value={editDiscountCodeData.usageLimit}
+                  onChange={(e) => setEditDiscountCodeData({...editDiscountCodeData, usageLimit: parseInt(e.target.value) || 0})}
+                />
+                <p className="text-xs text-gray-500 col-span-4 text-right">0 = usos ilimitados</p>
+              </div>
+              
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="edit-isActive" className="text-right">
+                  Estado
+                </Label>
+                <div className="flex items-center space-x-2 col-span-3">
+                  <Switch
+                    id="edit-isActive"
+                    checked={editDiscountCodeData.isActive}
+                    onCheckedChange={(checked) => setEditDiscountCodeData({...editDiscountCodeData, isActive: checked})}
+                  />
+                  <Label htmlFor="edit-isActive" className="cursor-pointer">
+                    {editDiscountCodeData.isActive ? 'Activo' : 'Inactivo'}
+                  </Label>
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setEditDiscountCodeModal(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" className="flex items-center gap-2">
+                <Edit className="h-4 w-4" />
+                Actualizar Código
               </Button>
             </DialogFooter>
           </form>
