@@ -214,6 +214,33 @@ export const insertSubscriptionSchema = createInsertSchema(subscriptions).pick({
 export type Subscription = typeof subscriptions.$inferSelect;
 export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
 
+// Tabla para códigos de descuento
+export const discountCodes = pgTable("discount_codes", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  name: text("name").notNull(),
+  discountPercentage: integer("discount_percentage").notNull(),
+  applicableTier: text("applicable_tier").notNull(), // Puede ser 'basic', 'professional', 'enterprise' o 'all'
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at"),
+  usageLimit: integer("usage_limit"),
+  usageCount: integer("usage_count").notNull().default(0),
+});
+
+export const insertDiscountCodeSchema = createInsertSchema(discountCodes).pick({
+  code: true,
+  name: true,
+  discountPercentage: true,
+  applicableTier: true,
+  isActive: true,
+  expiresAt: true,
+  usageLimit: true,
+});
+
+export type DiscountCode = typeof discountCodes.$inferSelect;
+export type InsertDiscountCode = z.infer<typeof insertDiscountCodeSchema>;
+
 // Tabla para almacenar información del sitio web scrapeado
 export const sitesContent = pgTable("sites_content", {
   id: serial("id").primaryKey(),

@@ -2165,6 +2165,236 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error al obtener usuarios cercanos al límite" });
     }
   });
+  
+  // ================ Discount Code Routes ================
+  
+  // Obtener todos los códigos de descuento (solo admin)
+  app.get("/api/discount-codes", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const codes = await storage.getDiscountCodes();
+      res.json(codes);
+    } catch (error) {
+      console.error("Error al obtener códigos de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+  
+  // Obtener un código de descuento específico por código
+  app.get("/api/discount-codes/:code", async (req, res) => {
+    try {
+      const { code } = req.params;
+      const discountCode = await storage.getDiscountCodeByCode(code);
+      
+      if (!discountCode) {
+        return res.status(404).json({ message: "Código de descuento no encontrado" });
+      }
+      
+      if (!discountCode.isActive) {
+        return res.status(400).json({ message: "Este código de descuento ya no está activo" });
+      }
+      
+      // Verificar si el código ha expirado
+      if (discountCode.expiresAt && new Date(discountCode.expiresAt) < new Date()) {
+        return res.status(400).json({ message: "Este código de descuento ha expirado" });
+      }
+      
+      // Verificar si se ha alcanzado el límite de uso
+      if (discountCode.usageLimit && discountCode.usageCount >= discountCode.usageLimit) {
+        return res.status(400).json({ message: "Este código de descuento ha alcanzado su límite de uso" });
+      }
+      
+      res.json({
+        code: discountCode.code,
+        name: discountCode.name,
+        discountPercentage: discountCode.discountPercentage,
+        applicableTier: discountCode.applicableTier
+      });
+    } catch (error) {
+      console.error("Error al obtener código de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+  
+  // Crear un nuevo código de descuento (solo admin)
+  app.post("/api/discount-codes", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const { name, discountPercentage, applicableTier, expiresAt, usageLimit } = req.body;
+      
+      // Validaciones básicas
+      if (!name || typeof discountPercentage !== 'number' || !applicableTier) {
+        return res.status(400).json({ message: "Faltan campos requeridos o son inválidos" });
+      }
+      
+      // Validar porcentaje de descuento
+      if (discountPercentage <= 0 || discountPercentage > 100) {
+        return res.status(400).json({ message: "El porcentaje de descuento debe estar entre 1 y 100" });
+      }
+      
+      // Validar tier aplicable
+      const validTiers = ['basic', 'professional', 'enterprise', 'all'];
+      if (!validTiers.includes(applicableTier)) {
+        return res.status(400).json({ 
+          message: "Nivel inválido. Debe ser uno de: " + validTiers.join(', ')
+        });
+      }
+      
+      // Generar código único
+      const code = storage.generateDiscountCode(name.substring(0, 4).toUpperCase());
+      
+      // Crear nuevo código de descuento
+      const newDiscountCode = await storage.createDiscountCode({
+        code,
+        name,
+        discountPercentage,
+        applicableTier,
+        isActive: true,
+        expiresAt: expiresAt ? new Date(expiresAt) : null,
+        usageLimit: usageLimit || null
+      });
+      
+      res.status(201).json(newDiscountCode);
+    } catch (error) {
+      console.error("Error al crear código de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+  
+  // Actualizar un código de descuento (solo admin)
+  app.put("/api/discount-codes/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, discountPercentage, applicableTier, isActive, expiresAt, usageLimit } = req.body;
+      
+      // Verificar que el código existe
+      const existingCode = await storage.getDiscountCode(parseInt(id));
+      if (!existingCode) {
+        return res.status(404).json({ message: "Código de descuento no encontrado" });
+      }
+      
+      // Validar porcentaje de descuento si se proporciona
+      if (discountPercentage !== undefined) {
+        if (discountPercentage <= 0 || discountPercentage > 100) {
+          return res.status(400).json({ message: "El porcentaje de descuento debe estar entre 1 y 100" });
+        }
+      }
+      
+      // Validar tier aplicable si se proporciona
+      if (applicableTier !== undefined) {
+        const validTiers = ['basic', 'professional', 'enterprise', 'all'];
+        if (!validTiers.includes(applicableTier)) {
+          return res.status(400).json({ 
+            message: "Nivel inválido. Debe ser uno de: " + validTiers.join(', ')
+          });
+        }
+      }
+      
+      // Actualizar código de descuento
+      const updatedDiscountCode = await storage.updateDiscountCode(parseInt(id), {
+        name,
+        discountPercentage,
+        applicableTier,
+        isActive,
+        expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+        usageLimit
+      });
+      
+      res.json(updatedDiscountCode);
+    } catch (error) {
+      console.error("Error al actualizar código de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+  
+  // Eliminar un código de descuento (solo admin)
+  app.delete("/api/discount-codes/:id", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Verificar que el código existe
+      const existingCode = await storage.getDiscountCode(parseInt(id));
+      if (!existingCode) {
+        return res.status(404).json({ message: "Código de descuento no encontrado" });
+      }
+      
+      // Eliminar código de descuento
+      await storage.deleteDiscountCode(parseInt(id));
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error al eliminar código de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+  
+  // Validar y aplicar código de descuento
+  app.post("/api/discount-codes/validate", async (req, res) => {
+    try {
+      const { code, tier } = req.body;
+      
+      if (!code || !tier) {
+        return res.status(400).json({ message: "Se requiere código y nivel" });
+      }
+      
+      const discountCode = await storage.getDiscountCodeByCode(code);
+      
+      if (!discountCode) {
+        return res.status(404).json({ message: "Código de descuento no encontrado" });
+      }
+      
+      if (!discountCode.isActive) {
+        return res.status(400).json({ message: "Este código de descuento ya no está activo" });
+      }
+      
+      // Verificar si el código ha expirado
+      if (discountCode.expiresAt && new Date(discountCode.expiresAt) < new Date()) {
+        return res.status(400).json({ message: "Este código de descuento ha expirado" });
+      }
+      
+      // Verificar si se ha alcanzado el límite de uso
+      if (discountCode.usageLimit && discountCode.usageCount >= discountCode.usageLimit) {
+        return res.status(400).json({ message: "Este código de descuento ha alcanzado su límite de uso" });
+      }
+      
+      // Verificar si es aplicable al nivel solicitado
+      if (discountCode.applicableTier !== 'all' && discountCode.applicableTier !== tier) {
+        return res.status(400).json({ 
+          message: `Este código de descuento solo es válido para el nivel ${discountCode.applicableTier}` 
+        });
+      }
+      
+      // Todo correcto, devolver información del descuento
+      res.json({
+        valid: true,
+        code: discountCode.code,
+        discountPercentage: discountCode.discountPercentage,
+        name: discountCode.name
+      });
+    } catch (error) {
+      console.error("Error al validar código de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
+  
+  // Aplicar código de descuento (incrementa el contador de uso)
+  app.post("/api/discount-codes/:code/apply", verifyToken, async (req, res) => {
+    try {
+      const { code } = req.params;
+      
+      const discountCode = await storage.getDiscountCodeByCode(code);
+      
+      if (!discountCode) {
+        return res.status(404).json({ message: "Código de descuento no encontrado" });
+      }
+      
+      // Incrementar contador de uso
+      await storage.incrementDiscountCodeUsage(discountCode.id);
+      
+      res.json({ success: true, message: "Código de descuento aplicado correctamente" });
+    } catch (error) {
+      console.error("Error al aplicar código de descuento:", error);
+      res.status(500).json({ message: "Error del servidor" });
+    }
+  });
 
   const httpServer = createServer(app);
   

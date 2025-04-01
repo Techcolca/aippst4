@@ -6,8 +6,8 @@ import {
   Conversation, InsertConversation, Message, InsertMessage,
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
-  TopProduct, TopTopic, Subscription, InsertSubscription,
-  users, integrations, conversations, messages, automations, settings, sitesContent, subscriptions
+  TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
+  users, integrations, conversations, messages, automations, settings, sitesContent, subscriptions, discountCodes
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -573,5 +573,67 @@ export class PgStorage implements IStorage {
       .where(eq(users.id, userId))
       .returning();
     return result[0];
+  }
+  
+  // Métodos para códigos de descuento
+  async getDiscountCodes(): Promise<DiscountCode[]> {
+    return await db.select().from(discountCodes);
+  }
+
+  async getActiveDiscountCodes(): Promise<DiscountCode[]> {
+    return await db.select()
+      .from(discountCodes)
+      .where(eq(discountCodes.isActive, true));
+  }
+
+  async getDiscountCode(id: number): Promise<DiscountCode | undefined> {
+    const result = await db.select()
+      .from(discountCodes)
+      .where(eq(discountCodes.id, id))
+      .limit(1);
+    return result[0];
+  }
+
+  async getDiscountCodeByCode(code: string): Promise<DiscountCode | undefined> {
+    const result = await db.select()
+      .from(discountCodes)
+      .where(eq(discountCodes.code, code))
+      .limit(1);
+    return result[0];
+  }
+
+  async createDiscountCode(data: InsertDiscountCode): Promise<DiscountCode> {
+    const result = await db.insert(discountCodes)
+      .values(data)
+      .returning();
+    return result[0];
+  }
+
+  async updateDiscountCode(id: number, data: Partial<DiscountCode>): Promise<DiscountCode> {
+    const result = await db.update(discountCodes)
+      .set(data)
+      .where(eq(discountCodes.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async incrementDiscountCodeUsage(id: number): Promise<void> {
+    const discountCode = await this.getDiscountCode(id);
+    if (discountCode) {
+      await db.update(discountCodes)
+        .set({ usageCount: (discountCode.usageCount + 1) })
+        .where(eq(discountCodes.id, id));
+    }
+  }
+
+  async deleteDiscountCode(id: number): Promise<void> {
+    await db.delete(discountCodes)
+      .where(eq(discountCodes.id, id));
+  }
+
+  // Generar un código de descuento aleatorio
+  generateDiscountCode(prefix: string = 'AIPI'): string {
+    const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+    return `${prefix}-${randomPart}`;
   }
 }

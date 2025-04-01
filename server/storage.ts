@@ -3,7 +3,8 @@ import {
   Conversation, InsertConversation, Message, InsertMessage,
   Automation, InsertAutomation, Settings, InsertSettings,
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
-  TopProduct, TopTopic, Subscription, InsertSubscription
+  TopProduct, TopTopic, Subscription, InsertSubscription,
+  DiscountCode, InsertDiscountCode
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -70,6 +71,17 @@ export interface IStorage {
   incrementSubscriptionUsage(id: number): Promise<void>;
   getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined>;
   updateUserStripeInfo(userId: number, data: { stripeCustomerId: string, stripeSubscriptionId: string }): Promise<User>;
+  
+  // Discount code methods
+  getDiscountCodes(): Promise<DiscountCode[]>;
+  getActiveDiscountCodes(): Promise<DiscountCode[]>;
+  getDiscountCode(id: number): Promise<DiscountCode | undefined>;
+  getDiscountCodeByCode(code: string): Promise<DiscountCode | undefined>;
+  createDiscountCode(data: InsertDiscountCode): Promise<DiscountCode>;
+  updateDiscountCode(id: number, data: Partial<DiscountCode>): Promise<DiscountCode>;
+  incrementDiscountCodeUsage(id: number): Promise<void>;
+  deleteDiscountCode(id: number): Promise<void>;
+  generateDiscountCode(prefix?: string): string;
 }
 
 // In-memory storage implementation
@@ -82,6 +94,7 @@ export class MemStorage implements IStorage {
   private settings: Map<number, Settings>;
   private siteContents: Map<number, SiteContent>;
   private subscriptions: Map<number, Subscription>;
+  private discountCodes: Map<number, DiscountCode>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -91,6 +104,7 @@ export class MemStorage implements IStorage {
   private settingsIdCounter: number;
   private siteContentIdCounter: number;
   private subscriptionIdCounter: number;
+  private discountCodeIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -101,6 +115,7 @@ export class MemStorage implements IStorage {
     this.settings = new Map();
     this.siteContents = new Map();
     this.subscriptions = new Map();
+    this.discountCodes = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -110,6 +125,7 @@ export class MemStorage implements IStorage {
     this.settingsIdCounter = 1;
     this.siteContentIdCounter = 1;
     this.subscriptionIdCounter = 1;
+    this.discountCodeIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -601,6 +617,87 @@ export class MemStorage implements IStorage {
     
     this.users.set(userId, updatedUser);
     return updatedUser;
+  }
+  
+  // Discount code methods
+  async getDiscountCodes(): Promise<DiscountCode[]> {
+    return Array.from(this.discountCodes.values());
+  }
+  
+  async getActiveDiscountCodes(): Promise<DiscountCode[]> {
+    return Array.from(this.discountCodes.values())
+      .filter(code => code.isActive);
+  }
+  
+  async getDiscountCode(id: number): Promise<DiscountCode | undefined> {
+    return this.discountCodes.get(id);
+  }
+  
+  async getDiscountCodeByCode(code: string): Promise<DiscountCode | undefined> {
+    return Array.from(this.discountCodes.values())
+      .find(discountCode => discountCode.code === code);
+  }
+  
+  async createDiscountCode(data: InsertDiscountCode): Promise<DiscountCode> {
+    const id = this.discountCodeIdCounter++;
+    const newDiscountCode: DiscountCode = {
+      ...data,
+      id,
+      usageCount: 0,
+      createdAt: new Date()
+    };
+    
+    this.discountCodes.set(id, newDiscountCode);
+    return newDiscountCode;
+  }
+  
+  async updateDiscountCode(id: number, data: Partial<DiscountCode>): Promise<DiscountCode> {
+    const discountCode = this.discountCodes.get(id);
+    if (!discountCode) {
+      throw new Error(`Discount code with id ${id} not found`);
+    }
+    
+    const updatedDiscountCode = {
+      ...discountCode,
+      ...data
+    };
+    
+    this.discountCodes.set(id, updatedDiscountCode);
+    return updatedDiscountCode;
+  }
+  
+  async incrementDiscountCodeUsage(id: number): Promise<void> {
+    const discountCode = this.discountCodes.get(id);
+    if (discountCode) {
+      discountCode.usageCount += 1;
+      this.discountCodes.set(id, discountCode);
+    }
+  }
+  
+  async deleteDiscountCode(id: number): Promise<void> {
+    this.discountCodes.delete(id);
+  }
+  
+  generateDiscountCode(prefix: string = 'AIPI'): string {
+    // Generar un código alfanumérico único de 8 caracteres
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = prefix;
+    const charactersLength = characters.length;
+    
+    // Asegurar que el prefijo no sea más de 4 caracteres
+    if (result.length > 4) {
+      result = result.substring(0, 4);
+    }
+    
+    // Añadir guión después del prefijo
+    result += '-';
+    
+    // Añadir 4 caracteres aleatorios
+    for (let i = 0; i < 4; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    
+    return result;
   }
 
   // Dashboard methods
