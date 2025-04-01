@@ -157,6 +157,23 @@ export default function DashboardTabs({ initialTab = "automation" }) {
     staleTime: 1000 * 60, // 1 minute
   });
   
+  // Fetch forms
+  const { data: forms = [], isLoading: isLoadingForms } = useQuery({
+    queryKey: ["/api/forms"],
+    enabled: !!user && activeTab === "forms",
+    staleTime: 1000 * 60, // 1 minute
+  });
+  
+  // Estado para el modal de creación de formulario
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [newForm, setNewForm] = useState({
+    title: "",
+    slug: "",
+    description: "",
+    type: "contact",
+    published: true
+  });
+  
   // Mutations
   const updateSettingsMutation = useMutation({
     mutationFn: (newSettings: AppSettings) => 
@@ -722,6 +739,276 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   };
   
   // Render settings tab content
+  // Render forms tab content
+  const renderFormsTab = () => {
+    return (
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Formularios</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">Crea y gestiona formularios para capturar leads y datos de visitantes.</p>
+        
+        <div className="mb-8 flex items-center justify-between">
+          <h3 className="text-lg font-medium">Tus Formularios</h3>
+          <Button onClick={() => setIsFormModalOpen(true)} className="flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Crear Formulario
+          </Button>
+        </div>
+        
+        {isLoadingForms ? (
+          <div className="py-10 text-center">
+            <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-gray-500 dark:text-gray-400">Cargando formularios...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            {Array.isArray(forms) && forms.length > 0 ? (
+              forms.map((form: any) => (
+                <Card key={form.id} className="overflow-hidden">
+                  <div className="flex flex-col md:flex-row md:items-center">
+                    <div className="p-6 flex-grow">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="text-lg font-semibold">{form.title}</h3>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Tipo: {form.type || 'Contacto'} • 
+                            Respuestas: {form.responseCount || 0} • 
+                            Creado: {new Date(form.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div className={`px-2 py-1 text-xs rounded-full ${
+                          form.published 
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                            : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+                        }`}>
+                          {form.published ? 'Publicado' : 'Borrador'}
+                        </div>
+                      </div>
+                      {form.description && (
+                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">{form.description}</p>
+                      )}
+                    </div>
+                    <div className="p-4 md:p-6 flex flex-row md:flex-col gap-2 bg-gray-50 dark:bg-gray-800 border-t md:border-t-0 md:border-l border-gray-100 dark:border-gray-700">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 md:w-full"
+                        onClick={() => {
+                          navigate(`/forms/${form.id}/edit`);
+                        }}
+                      >
+                        Editar
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 md:w-full"
+                        onClick={() => {
+                          navigate(`/forms/${form.id}/responses`);
+                        }}
+                      >
+                        Ver Respuestas
+                      </Button>
+                      <Button
+                        variant="outline" 
+                        size="sm"
+                        className="flex-1 md:w-full"
+                        onClick={() => {
+                          // Copiar código de inserción al portapapeles
+                          const embedCode = `<script src="https://api.aipi.example.com/form.js?id=${form.slug}"></script>`;
+                          navigator.clipboard.writeText(embedCode);
+                          toast({
+                            title: "Código copiado",
+                            description: "El código de inserción ha sido copiado al portapapeles",
+                          });
+                        }}
+                      >
+                        Obtener Código
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <div className="text-center py-12 border border-dashed rounded-lg bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400 dark:text-gray-500">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium mb-2">No hay formularios</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
+                  Crea tu primer formulario para empezar a capturar leads
+                </p>
+                <Button onClick={() => setIsFormModalOpen(true)}>
+                  Crear Formulario
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* Modal para crear nuevo formulario */}
+        <Dialog open={isFormModalOpen} onOpenChange={setIsFormModalOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Crear Nuevo Formulario</DialogTitle>
+              <DialogDescription>
+                Crea un formulario personalizado para capturar leads o datos de visitantes
+              </DialogDescription>
+            </DialogHeader>
+            
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              
+              if (!newForm.title || !newForm.slug) {
+                toast({
+                  title: "Campos requeridos",
+                  description: "Por favor completa todos los campos requeridos",
+                  variant: "destructive",
+                });
+                return;
+              }
+              
+              // Crear nuevo formulario
+              fetch('/api/forms', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newForm),
+              })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Error al crear el formulario');
+                }
+                return response.json();
+              })
+              .then(data => {
+                queryClient.invalidateQueries({ queryKey: ["/api/forms"] });
+                setIsFormModalOpen(false);
+                
+                // Restablecer formulario
+                setNewForm({
+                  title: "",
+                  slug: "",
+                  description: "",
+                  type: "contact",
+                  published: true
+                });
+                
+                toast({
+                  title: "Formulario creado",
+                  description: `${data.title} ha sido creado exitosamente`,
+                });
+                
+                // Redirigir al editor de formulario
+                navigate(`/forms/${data.id}/edit`);
+              })
+              .catch(error => {
+                console.error('Error al crear formulario:', error);
+                toast({
+                  title: "Error",
+                  description: "No se pudo crear el formulario. Por favor, intenta de nuevo.",
+                  variant: "destructive",
+                });
+              });
+            }}>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="title" className="text-right">
+                    Título
+                  </Label>
+                  <Input
+                    id="title"
+                    value={newForm.title}
+                    onChange={(e) => setNewForm({...newForm, title: e.target.value})}
+                    className="col-span-3"
+                    placeholder="Ej: Formulario de Contacto"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="slug" className="text-right">
+                    Identificador
+                  </Label>
+                  <Input
+                    id="slug"
+                    value={newForm.slug}
+                    onChange={(e) => setNewForm({...newForm, slug: e.target.value.replace(/\s+/g, '-').toLowerCase()})}
+                    className="col-span-3"
+                    placeholder="identificador-unico"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="description" className="text-right">
+                    Descripción
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={newForm.description}
+                    onChange={(e) => setNewForm({...newForm, description: e.target.value})}
+                    className="col-span-3"
+                    placeholder="Descripción opcional del formulario"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="type" className="text-right">
+                    Tipo
+                  </Label>
+                  <Select
+                    value={newForm.type}
+                    onValueChange={(value) => setNewForm({...newForm, type: value})}
+                  >
+                    <SelectTrigger className="col-span-3">
+                      <SelectValue placeholder="Seleccionar tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="contact">Contacto</SelectItem>
+                      <SelectItem value="lead">Captura de Leads</SelectItem>
+                      <SelectItem value="survey">Encuesta</SelectItem>
+                      <SelectItem value="feedback">Feedback</SelectItem>
+                      <SelectItem value="registration">Registro</SelectItem>
+                      <SelectItem value="waitlist">Lista de Espera</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="published" className="text-right">
+                    Estado
+                  </Label>
+                  <div className="flex items-center space-x-2 col-span-3">
+                    <Switch
+                      id="published"
+                      checked={newForm.published}
+                      onCheckedChange={(checked) => setNewForm({...newForm, published: checked})}
+                    />
+                    <Label htmlFor="published" className="cursor-pointer">
+                      {newForm.published ? 'Publicado' : 'Borrador'}
+                    </Label>
+                  </div>
+                </div>
+              </div>
+              
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsFormModalOpen(false)}>
+                  Cancelar
+                </Button>
+                <Button type="submit">
+                  Crear Formulario
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  };
+  
   const renderSettingsTab = () => {
     console.log("Rendering settings tab with initialTab:", initialTab);
     
@@ -974,6 +1261,17 @@ export default function DashboardTabs({ initialTab = "automation" }) {
             Website Integrations
           </button>
           <button 
+            data-tab="forms" 
+            onClick={() => handleTabChange("forms")}
+            className={`py-4 px-6 font-medium rounded-t-lg ${
+              activeTab === "forms"
+                ? "bg-primary-500 text-white"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            }`}
+          >
+            Formularios
+          </button>
+          <button 
             data-tab="settings" 
             onClick={() => handleTabChange("settings")}
             className={`py-4 px-6 font-medium rounded-t-lg ${
@@ -992,6 +1290,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
         {activeTab === "automation" && renderAutomationsTab()}
         {activeTab === "conversations" && renderConversationsTab()}
         {activeTab === "integrations" && renderIntegrationsTab()}
+        {activeTab === "forms" && renderFormsTab()}
         {activeTab === "settings" && renderSettingsTab()}
       </div>
       
