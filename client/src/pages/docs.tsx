@@ -182,32 +182,25 @@ export default function Documentation() {
                 {activeTab === "overview" && (
                   <div id="overview" className="space-y-8">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">AIPI: Asistencia Inteligente para Instituciones y Empresas</h2>
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.overview.title")}</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI es una plataforma avanzada de asistencia por chat impulsada por inteligencia artificial, 
-                          diseñada específicamente para ayudar a instituciones educativas, empresas y comercios a transformar 
-                          la forma en que interactúan con sus clientes y estudiantes potenciales. En un contexto donde la 
-                          sobrecarga de información se ha vuelto un problema significativo, AIPI simplifica la experiencia 
-                          del usuario ofreciendo respuestas precisas a través de un agente virtual inteligente.
+                          {t("documentation.overview.introduction")}
                         </p>
                         
-                        <h3>Problema que Resuelve</h3>
+                        <h3>{t("documentation.overview.problem_title")}</h3>
                         <p>
-                          Actualmente, las instituciones educativas como CEGEPs y colegios, así como empresas de diversos 
-                          sectores, enfrentan el desafío de presentar grandes cantidades de información en sus sitios web. 
-                          Los visitantes a menudo se sienten abrumados por este volumen de datos y abandonan el sitio sin 
-                          encontrar lo que buscan, resultando en oportunidades perdidas tanto para la institución como para el visitante.
+                          {t("documentation.overview.problem_description")}
                         </p>
                         <p>
-                          AIPI aborda este problema permitiendo a los visitantes interactuar con un asistente virtual que:
+                          {t("documentation.overview.solution_intro")}
                         </p>
                         <ul>
-                          <li>Busca información específica entre grandes volúmenes de datos institucionales</li>
-                          <li>Responde preguntas en lenguaje natural</li>
-                          <li>Personaliza respuestas según el contexto de la conversación</li>
-                          <li>Guarda registros de las interacciones para seguimiento posterior</li>
+                          <li>{t("documentation.overview.solution_point_1")}</li>
+                          <li>{t("documentation.overview.solution_point_2")}</li>
+                          <li>{t("documentation.overview.solution_point_3")}</li>
+                          <li>{t("documentation.overview.solution_point_4")}</li>
                         </ul>
                       </div>
                     </div>
@@ -216,47 +209,47 @@ export default function Documentation() {
                       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center mb-4">
                           <MessageSquare className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-3" />
-                          <h3 className="text-xl font-bold">Respuestas Contextuales</h3>
+                          <h3 className="text-xl font-bold">{t("documentation.overview.card1_title")}</h3>
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">
-                          El asistente virtual comprende el contexto del sitio web y proporciona respuestas precisas basadas en el contenido oficial de tu institución o empresa.
+                          {t("documentation.overview.card1_text")}
                         </p>
                       </div>
                       
                       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center mb-4">
                           <Database className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-3" />
-                          <h3 className="text-xl font-bold">Base de Conocimiento</h3>
+                          <h3 className="text-xl font-bold">{t("documentation.overview.card2_title")}</h3>
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">
-                          Entrena a tu asistente con documentos específicos como PDFs, DOCXs o hojas de cálculo para responder preguntas detalladas sobre tus programas o servicios.
+                          {t("documentation.overview.card2_text")}
                         </p>
                       </div>
                       
                       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center mb-4">
                           <Users className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-3" />
-                          <h3 className="text-xl font-bold">Generación de Leads</h3>
+                          <h3 className="text-xl font-bold">{t("documentation.overview.card3_title")}</h3>
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">
-                          Captura información de contacto de visitantes interesados para seguimiento posterior, convirtiendo visitas web en oportunidades de admisión o venta.
+                          {t("documentation.overview.card3_text")}
                         </p>
                       </div>
                       
                       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center mb-4">
                           <BarChart className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-3" />
-                          <h3 className="text-xl font-bold">Análisis Detallado</h3>
+                          <h3 className="text-xl font-bold">{t("documentation.overview.card4_title")}</h3>
                         </div>
                         <p className="text-gray-700 dark:text-gray-300">
-                          Obtén estadísticas valiosas sobre conversaciones, preguntas frecuentes y áreas de mayor interés para optimizar tu oferta educativa o comercial.
+                          {t("documentation.overview.card4_text")}
                         </p>
                       </div>
                     </div>
                     
                     <div className="flex justify-center mt-10">
                       <Button size="lg" asChild>
-                        <Link href="/get-started">Comenzar Ahora</Link>
+                        <Link href="/get-started">{t("documentation.overview.start_button")}</Link>
                       </Button>
                     </div>
                   </div>
@@ -265,7 +258,7 @@ export default function Documentation() {
                 {activeTab === "features" && (
                   <div id="features" className="space-y-8">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Principales Funcionalidades</h2>
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.features.title")}</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <h3>1. Integración Flexible con Sitios Web</h3>
