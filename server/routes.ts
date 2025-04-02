@@ -1651,7 +1651,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // ================ Admin Routes ================
   // Obtener todos los usuarios con sus suscripciones (solo admin)
-  app.get("/api/admin/users", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/admin/users", authenticateJWT, isAdmin, async (req, res) => {
     try {
       // Obtener todos los usuarios con sus suscripciones en una sola consulta
       const queryResult = await pool.query(
@@ -1712,7 +1712,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Obtener detalles de un usuario específico (solo admin)
-  app.get("/api/admin/users/:id", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/admin/users/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const userId = parseInt(req.params.id);
       if (isNaN(userId)) {
@@ -1823,7 +1823,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Crear un nuevo usuario (solo admin)
-  app.post("/api/admin/users", verifyToken, isAdmin, async (req, res) => {
+  app.post("/api/admin/users", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const { username, password, email, fullName, tier } = req.body;
       
@@ -1907,7 +1907,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Modificar un usuario existente (solo admin)
-  app.patch("/api/admin/users/:id", verifyToken, isAdmin, async (req, res) => {
+  app.patch("/api/admin/users/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const userId = parseInt(req.params.id);
       if (isNaN(userId)) {
@@ -1984,7 +1984,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Modificar la suscripción de un usuario (solo admin)
-  app.patch("/api/admin/users/:id/subscription", verifyToken, isAdmin, async (req, res) => {
+  app.patch("/api/admin/users/:id/subscription", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const userId = parseInt(req.params.id);
       if (isNaN(userId)) {
@@ -2104,7 +2104,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Obtener estadísticas globales para administrador
-  app.get("/api/admin/stats", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/admin/stats", authenticateJWT, isAdmin, async (req, res) => {
     try {
       // Estadísticas de usuarios
       const usersResult = await pool.query(
@@ -2205,7 +2205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Obtener lista de usuarios cercanos a su límite
-  app.get("/api/admin/users/near-limit", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/admin/users/near-limit", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const result = await pool.query(
         `SELECT u.id, u.username, u.email, u.full_name,
@@ -2229,7 +2229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ================ Discount Code Routes ================
   
   // Obtener todos los códigos de descuento (solo admin)
-  app.get("/api/discount-codes", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/discount-codes", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const codes = await storage.getDiscountCodes();
       res.json(codes);
@@ -2276,7 +2276,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Crear un nuevo código de descuento (solo admin)
-  app.post("/api/discount-codes", verifyToken, isAdmin, async (req, res) => {
+  app.post("/api/discount-codes", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const { name, discountPercentage, applicableTier, expiresAt, usageLimit } = req.body;
       
@@ -2320,7 +2320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Actualizar un código de descuento (solo admin)
-  app.put("/api/discount-codes/:id", verifyToken, isAdmin, async (req, res) => {
+  app.put("/api/discount-codes/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const { id } = req.params;
       const { name, discountPercentage, applicableTier, isActive, expiresAt, usageLimit } = req.body;
@@ -2366,7 +2366,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Eliminar un código de descuento (solo admin)
-  app.delete("/api/discount-codes/:id", verifyToken, isAdmin, async (req, res) => {
+  app.delete("/api/discount-codes/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const { id } = req.params;
       
@@ -2469,7 +2469,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // GET todos los planes de precios (admin, incluye no disponibles)
-  app.get("/api/admin/pricing-plans", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/admin/pricing-plans", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const pricingPlans = await storage.getPricingPlans();
       res.json(pricingPlans);
@@ -2480,7 +2480,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // GET un plan de precios específico por ID
-  app.get("/api/admin/pricing-plans/:id", verifyToken, isAdmin, async (req, res) => {
+  app.get("/api/admin/pricing-plans/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -2500,7 +2500,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POST crear un nuevo plan de precios (admin)
-  app.post("/api/admin/pricing-plans", verifyToken, isAdmin, async (req, res) => {
+  app.post("/api/admin/pricing-plans", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const validatedData = insertPricingPlanSchema.parse(req.body);
       
@@ -2546,7 +2546,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // PUT actualizar un plan de precios existente (admin)
-  app.put("/api/admin/pricing-plans/:id", verifyToken, isAdmin, async (req, res) => {
+  app.put("/api/admin/pricing-plans/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -2611,7 +2611,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // DELETE eliminar un plan de precios (admin)
-  app.delete("/api/admin/pricing-plans/:id", verifyToken, isAdmin, async (req, res) => {
+  app.delete("/api/admin/pricing-plans/:id", authenticateJWT, isAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -2636,7 +2636,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Sincronizar todos los planes con Stripe (admin)
-  app.post("/api/admin/pricing-plans/sync-with-stripe", verifyToken, isAdmin, async (req, res) => {
+  app.post("/api/admin/pricing-plans/sync-with-stripe", authenticateJWT, isAdmin, async (req, res) => {
     try {
       // Obtener todos los planes de precios
       const pricingPlans = await storage.getPricingPlans();
