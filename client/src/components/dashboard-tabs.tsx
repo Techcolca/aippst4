@@ -794,7 +794,9 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                         variant="outline" 
                         size="sm" 
                         className="flex-1 md:w-full"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           navigate(`/forms/${form.id}/edit`);
                         }}
                       >
@@ -804,7 +806,9 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                         variant="outline" 
                         size="sm" 
                         className="flex-1 md:w-full"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           navigate(`/forms/${form.id}/responses`);
                         }}
                       >
@@ -814,14 +818,26 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                         variant="outline" 
                         size="sm"
                         className="flex-1 md:w-full"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           // Copiar código de inserción al portapapeles
                           const embedCode = `<script src="https://api.aipi.example.com/form.js?id=${form.slug}"></script>`;
-                          navigator.clipboard.writeText(embedCode);
-                          toast({
-                            title: "Código copiado",
-                            description: "El código de inserción ha sido copiado al portapapeles",
-                          });
+                          navigator.clipboard.writeText(embedCode)
+                            .then(() => {
+                              toast({
+                                title: "Código copiado",
+                                description: "El código de inserción ha sido copiado al portapapeles",
+                              });
+                            })
+                            .catch((err) => {
+                              console.error("Error al copiar:", err);
+                              toast({
+                                title: "Error al copiar",
+                                description: "No se pudo copiar el código. Inténtalo de nuevo.",
+                                variant: "destructive"
+                              });
+                            });
                         }}
                       >
                         Obtener Código
