@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -181,6 +182,7 @@ export default function AdminPanel() {
   const { toast } = useToast();
   const [location, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const { t } = useTranslation();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [userSearch, setUserSearch] = useState("");
   const [usersOverLimit, setUsersOverLimit] = useState<UserOverLimit[]>([]);

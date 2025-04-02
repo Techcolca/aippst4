@@ -9,9 +9,11 @@ import {
 } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { useTranslation } from "react-i18next";
 
 export default function Documentation() {
   const [activeTab, setActiveTab] = useState("overview");
+  const { t } = useTranslation();
   
   // Nuevas secciones para funcionalidades específicas
   const functionalityTabs = [
