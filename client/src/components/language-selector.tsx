@@ -10,82 +10,22 @@ import { Globe } from "lucide-react";
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import { useState, useEffect } from "react";
+import frTranslation from "../locales/fr/translation.json";
+import esTranslation from "../locales/es/translation.json";
+import enTranslation from "../locales/en/translation.json";
 
 // Inicializar i18next si no se ha hecho ya
 if (!i18next.isInitialized) {
   i18next.use(initReactI18next).init({
     resources: {
       fr: {
-        translation: {
-          "menu": "Menu",
-          "language": {
-            "select": "Langue",
-            "fr": "Français",
-            "es": "Espagnol",
-            "en": "Anglais"
-          },
-          "home": "Accueil",
-          "features": "Fonctionnalités",
-          "pricing": "Tarifs",
-          "documentation": "Documentation",
-          "login": "Connexion",
-          "signup": "S'inscrire",
-          "logout": "Déconnexion",
-          "dashboard": "Tableau de bord",
-          "integrations": "Intégrations",
-          "analytics": "Analytique",
-          "settings": "Paramètres",
-          "admin": "Administration",
-          "profile": "Profil"
-        }
+        translation: frTranslation
       },
       es: {
-        translation: {
-          "menu": "Menú",
-          "language": {
-            "select": "Idioma",
-            "fr": "Francés",
-            "es": "Español",
-            "en": "Inglés"
-          },
-          "home": "Inicio",
-          "features": "Características",
-          "pricing": "Precios",
-          "documentation": "Documentación",
-          "login": "Iniciar sesión",
-          "signup": "Registrarse",
-          "logout": "Cerrar sesión",
-          "dashboard": "Panel",
-          "integrations": "Integraciones",
-          "analytics": "Analítica",
-          "settings": "Configuración",
-          "admin": "Administración",
-          "profile": "Perfil"
-        }
+        translation: esTranslation
       },
       en: {
-        translation: {
-          "menu": "Menu",
-          "language": {
-            "select": "Language",
-            "fr": "French",
-            "es": "Spanish",
-            "en": "English"
-          },
-          "home": "Home",
-          "features": "Features",
-          "pricing": "Pricing",
-          "documentation": "Documentation",
-          "login": "Log in",
-          "signup": "Sign up",
-          "logout": "Logout",
-          "dashboard": "Dashboard",
-          "integrations": "Integrations",
-          "analytics": "Analytics",
-          "settings": "Settings",
-          "admin": "Admin Panel",
-          "profile": "Profile"
-        }
+        translation: enTranslation
       }
     },
     lng: localStorage.getItem("i18nextLng") || "fr", // Idioma predeterminado: francés

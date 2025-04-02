@@ -24,12 +24,14 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ChatInterface from "@/components/chat-interface";
 import { Bot, Code, BarChart3, Rocket, CopyIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
   const [location, setLocation] = useState("/");
   const { theme } = useTheme();
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
   
   // Función para copiar el código de integración
   const copyIntegrationCode = () => {
@@ -50,18 +52,18 @@ export default function Home() {
             <div className="flex flex-col lg:flex-row items-center">
               <div className="lg:w-1/2 mb-10 lg:mb-0">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
-                  AI-Powered Conversations for Your Website
+                  {t("welcome")}
                 </h1>
                 <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                  AIPI is the intelligent conversational platform that enhances your website with real-time AI assistance, task automation, and personalized user interactions.
+                  {t("tagline")}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button size="lg" className="bg-primary-600 hover:bg-primary-700" asChild>
-                    <Link href="/get-started">Get Started</Link>
+                    <Link href="/get-started">{t("getStarted")}</Link>
                   </Button>
                   
                   <Button size="lg" variant="outline">
-                    Watch Demo
+                    {t("learnMore")}
                   </Button>
                 </div>
               </div>
