@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, CheckCircle, Zap, BarChart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Define interface for dashboard stats
 interface DashboardStats {
@@ -22,6 +23,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const [location] = useLocation();
   const [initialTab, setInitialTab] = useState("automation");
+  const { t } = useTranslation();
   
   // Parse URL query parameters to set the initial tab
   useEffect(() => {
@@ -59,16 +61,16 @@ export default function Dashboard() {
           {/* Dashboard Header */}
           <div className="mb-8 flex flex-wrap justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">AIPI Dashboard</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t("dashboard_title")}</h1>
               <p className="mt-2 text-gray-600 dark:text-gray-400">
-                Manage your AI assistant and monitor its performance
+                {t("manage_assistant")}
               </p>
             </div>
             <div className="mt-4 md:mt-0">
               <Link href="/analytics">
                 <Button className="flex items-center gap-2">
                   <BarChart className="h-4 w-4" />
-                  View Detailed Analytics
+                  {t("analytics")}
                 </Button>
               </Link>
             </div>
@@ -77,24 +79,24 @@ export default function Dashboard() {
           {/* Dashboard Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <StatCard 
-              title="Total Conversations"
-              value={isLoadingStats ? "Loading..." : dashboardStats.totalConversations.toLocaleString()}
+              title={t("total_conversations")}
+              value={isLoadingStats ? t("loading") : dashboardStats.totalConversations.toLocaleString()}
               change={12.5}
               icon={<MessageCircle />}
               color="primary"
             />
             
             <StatCard 
-              title="Resolution Rate"
-              value={isLoadingStats ? "Loading..." : `${dashboardStats.resolutionRate.toFixed(1)}%`}
+              title={t("resolution_rate")}
+              value={isLoadingStats ? t("loading") : `${dashboardStats.resolutionRate.toFixed(1)}%`}
               change={3.2}
               icon={<CheckCircle />}
               color="secondary"
             />
             
             <StatCard 
-              title="Average Response Time"
-              value={isLoadingStats ? "Loading..." : `${dashboardStats.averageResponseTime.toFixed(1)}s`}
+              title={t("avg_response_time")}
+              value={isLoadingStats ? t("loading") : `${dashboardStats.averageResponseTime.toFixed(1)}s`}
               change={18.3}
               icon={<Zap />}
               color="accent"

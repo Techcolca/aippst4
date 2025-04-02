@@ -18,6 +18,7 @@ import IntegrationCard from "./integration-card";
 import ProfileSection from "./profile-section";
 import { useAuth } from "@/context/auth-context";
 import { Copy as CopyIcon, Info as InfoIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function DashboardTabs({ initialTab = "automation" }) {
   // Transform initialTab if it's "profile" to "settings"
@@ -741,18 +742,20 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   // Render settings tab content
   // Render forms tab content
   const renderFormsTab = () => {
+    const { t } = useTranslation();
+    
     return (
       <div>
-        <h2 className="text-xl font-semibold mb-4">Formularios</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Crea y gestiona formularios para capturar leads y datos de visitantes.</p>
+        <h2 className="text-xl font-semibold mb-4">{t("forms")}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{t("forms_description")}</p>
         
         <div className="mb-8 flex items-center justify-between">
-          <h3 className="text-lg font-medium">Tus Formularios</h3>
+          <h3 className="text-lg font-medium">{t("your_forms")}</h3>
           <Button onClick={() => navigate('/create-form')} className="flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            Crear Formulario
+            {t("create_form")}
           </Button>
         </div>
         
