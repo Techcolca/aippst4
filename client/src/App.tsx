@@ -20,7 +20,7 @@ import FormPreview from "@/pages/form-preview";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
-import { LanguageProvider } from "@/context/language-context";
+// Importamos React-i18next directamente sin provider
 
 function Router() {
   return (
@@ -48,14 +48,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <ProfileProvider>
-              <Router />
-              <Toaster />
-            </ProfileProvider>
-          </AuthProvider>
-        </LanguageProvider>
+        <AuthProvider>
+          <ProfileProvider>
+            <Router />
+            <Toaster />
+          </ProfileProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

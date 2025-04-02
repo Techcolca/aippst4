@@ -34,20 +34,20 @@ export default function Header() {
   const isAdmin = user?.username === 'admin';
   
   const navLinks = [
-    { name: "Dashboard", href: "/dashboard", auth: true },
-    { name: "Integrations", href: "/dashboard?tab=integrations", auth: true },
-    { name: "Analytics", href: "/analytics", auth: true },
-    { name: "Settings", href: "/dashboard?tab=settings", auth: true },
-    { name: "Documentation", href: "/docs", auth: true },
+    { name: t("dashboard"), href: "/dashboard", auth: true },
+    { name: t("integrations"), href: "/dashboard?tab=integrations", auth: true },
+    { name: t("analytics"), href: "/analytics", auth: true },
+    { name: t("settings"), href: "/dashboard?tab=settings", auth: true },
+    { name: t("documentation"), href: "/docs", auth: true },
     // Añadir enlace a panel de administración solo si el usuario es admin
-    ...(isAdmin ? [{ name: "Admin Panel", href: "/admin", auth: true }] : [])
+    ...(isAdmin ? [{ name: t("admin"), href: "/admin", auth: true }] : [])
   ];
   
   const publicLinks = [
-    { name: "Home", href: "/" },
-    { name: "Features", href: "/#features" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Documentation", href: "/docs" },
+    { name: t("home"), href: "/" },
+    { name: t("features"), href: "/#features" },
+    { name: t("pricing"), href: "/pricing" },
+    { name: t("documentation"), href: "/docs" },
   ];
   
   const activeLinks = user ? navLinks : publicLinks;
@@ -106,32 +106,32 @@ export default function Header() {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t("profile")}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard?tab=profile">Profile</Link>
+                    <Link href="/dashboard?tab=profile">{t("profile")}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard?tab=settings">Settings</Link>
+                    <Link href="/dashboard?tab=settings">{t("settings")}</Link>
                   </DropdownMenuItem>
                   {isAdmin && (
                     <DropdownMenuItem asChild>
-                      <Link href="/admin">Admin Panel</Link>
+                      <Link href="/admin">{t("admin")}</Link>
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
-                    Logout
+                    {t("logout")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <div className="hidden md:flex space-x-3">
                 <Button variant="outline" asChild>
-                  <Link href="/login">Log in</Link>
+                  <Link href="/login">{t("login")}</Link>
                 </Button>
                 <Button asChild>
-                  <Link href="/register">Sign up</Link>
+                  <Link href="/register">{t("signup")}</Link>
                 </Button>
               </div>
             )}
@@ -146,7 +146,7 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <SheetHeader>
-                  <SheetTitle>Menu</SheetTitle>
+                  <SheetTitle>{t("menu")}</SheetTitle>
                 </SheetHeader>
                 <div className="py-4">
                   <nav className="flex flex-col space-y-4">
@@ -172,14 +172,14 @@ export default function Header() {
                           className="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
                           onClick={() => setOpen(false)}
                         >
-                          Log in
+                          {t("login")}
                         </Link>
                         <Link 
                           href="/register" 
                           className="text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400"
                           onClick={() => setOpen(false)}
                         >
-                          Sign up
+                          {t("signup")}
                         </Link>
                       </>
                     )}
@@ -194,7 +194,7 @@ export default function Header() {
                           handleLogout();
                         }}
                       >
-                        Logout
+                        {t("logout")}
                       </a>
                     )}
                     
