@@ -1,0 +1,81 @@
+{
+  "navigation": {
+    "home": "Inicio",
+    "dashboard": "Panel de Control",
+    "analytics": "Analíticas",
+    "getStarted": "Empezar",
+    "docs": "Documentación",
+    "pricing": "Precios",
+    "admin": "Administración",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "profile": "Perfil"
+  },
+  "language": {
+    "fr": "Français",
+    "es": "Español",
+    "en": "English",
+    "select": "Idioma"
+  },
+  "home": {
+    "title": "Solución de IA avanzada para la comunicación de sitios web",
+    "subtitle": "Automatice las conversaciones con sus visitantes y aumente el compromiso",
+    "getStarted": "Comenzar gratis",
+    "learnMore": "Más información"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido a su panel de control",
+    "integrations": "Integraciones",
+    "createNew": "Crear nueva integración",
+    "conversations": "Conversaciones",
+    "forms": "Formularios",
+    "createForm": "Crear formulario",
+    "automations": "Automatizaciones",
+    "createAutomation": "Crear automatización",
+    "settings": "Configuración",
+    "subscription": "Suscripción"
+  },
+  "forms": {
+    "templates": "Plantillas de formulario",
+    "chooseTemplate": "Elija una plantilla",
+    "editor": "Editor de formulario",
+    "responses": "Respuestas",
+    "preview": "Vista previa"
+  },
+  "auth": {
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "email": "Correo electrónico",
+    "fullName": "Nombre completo",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "forgotPassword": "¿Olvidó su contraseña?",
+    "alreadyHaveAccount": "¿Ya tiene una cuenta?",
+    "dontHaveAccount": "¿No tiene una cuenta?"
+  },
+  "admin": {
+    "users": "Usuarios",
+    "statistics": "Estadísticas",
+    "discountCodes": "Códigos de descuento",
+    "pricingPlans": "Planes de precios",
+    "createUser": "Crear usuario",
+    "createDiscountCode": "Crear código de descuento",
+    "createPricingPlan": "Crear plan de precios"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "noResults": "No se encontraron resultados",
+    "success": "¡Éxito!",
+    "error": "¡Error!",
+    "confirm": "Confirmar",
+    "back": "Volver"
+  }
+}

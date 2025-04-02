@@ -1,0 +1,81 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "getStarted": "Get Started",
+    "docs": "Documentation",
+    "pricing": "Pricing",
+    "admin": "Admin",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile"
+  },
+  "language": {
+    "fr": "Français",
+    "es": "Español",
+    "en": "English",
+    "select": "Language"
+  },
+  "home": {
+    "title": "Advanced AI Solution for Website Communication",
+    "subtitle": "Automate conversations with your visitors and increase engagement",
+    "getStarted": "Start for free",
+    "learnMore": "Learn more"
+  },
+  "dashboard": {
+    "welcome": "Welcome to your dashboard",
+    "integrations": "Integrations",
+    "createNew": "Create new integration",
+    "conversations": "Conversations",
+    "forms": "Forms",
+    "createForm": "Create form",
+    "automations": "Automations",
+    "createAutomation": "Create automation",
+    "settings": "Settings",
+    "subscription": "Subscription"
+  },
+  "forms": {
+    "templates": "Form Templates",
+    "chooseTemplate": "Choose a template",
+    "editor": "Form Editor",
+    "responses": "Responses",
+    "preview": "Preview"
+  },
+  "auth": {
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "fullName": "Full Name",
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot password?",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?"
+  },
+  "admin": {
+    "users": "Users",
+    "statistics": "Statistics",
+    "discountCodes": "Discount Codes",
+    "pricingPlans": "Pricing Plans",
+    "createUser": "Create User",
+    "createDiscountCode": "Create Discount Code",
+    "createPricingPlan": "Create Pricing Plan"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "success": "Success!",
+    "error": "Error!",
+    "confirm": "Confirm",
+    "back": "Back"
+  }
+}

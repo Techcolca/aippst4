@@ -20,6 +20,7 @@ import FormPreview from "@/pages/form-preview";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
+import { LanguageProvider } from "@/context/language-context";
 
 function Router() {
   return (
@@ -47,12 +48,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AuthProvider>
-          <ProfileProvider>
-            <Router />
-            <Toaster />
-          </ProfileProvider>
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ProfileProvider>
+              <Router />
+              <Toaster />
+            </ProfileProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

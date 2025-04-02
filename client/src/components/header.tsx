@@ -15,6 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { LanguageSelector } from "@/components/language-selector";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -22,6 +24,7 @@ export default function Header() {
   const { avatarUrl } = useProfile();
   const [location] = useLocation();
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   
   const handleLogout = () => {
     logout();
@@ -77,6 +80,11 @@ export default function Header() {
           </nav>
           
           <div className="flex items-center space-x-4">
+            {/* Language selector */}
+            <div className="hidden md:block">
+              <LanguageSelector />
+            </div>
+            
             {/* Theme toggle */}
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -189,6 +197,14 @@ export default function Header() {
                         Logout
                       </a>
                     )}
+                    
+                    {/* Language selector in mobile menu */}
+                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <span className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                        {t("language.select")}
+                      </span>
+                      <LanguageSelector />
+                    </div>
                   </nav>
                 </div>
               </SheetContent>
