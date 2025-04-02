@@ -766,7 +766,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
             {Array.isArray(forms) && forms.length > 0 ? (
               forms.map((form: any) => (
                 <Card key={form.id} className="overflow-hidden">
-                  <div className="flex flex-col md:flex-row md:items-center">
+                  <div className="flex flex-col md:flex-row md:items-center" onClick={(e) => e.stopPropagation()}>
                     <div className="p-6 flex-grow">
                       <div className="flex items-start justify-between mb-2">
                         <div>
@@ -790,58 +790,72 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                       )}
                     </div>
                     <div className="p-4 md:p-6 flex flex-row md:flex-col gap-2 bg-gray-50 dark:bg-gray-800 border-t md:border-t-0 md:border-l border-gray-100 dark:border-gray-700">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                      <a 
+                        href={`/forms/${form.id}/edit`}
                         className="flex-1 md:w-full"
                         onClick={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
                           navigate(`/forms/${form.id}/edit`);
                         }}
                       >
-                        Editar
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full"
+                          type="button"
+                        >
+                          Editar
+                        </Button>
+                      </a>
+                      <a 
+                        href={`/forms/${form.id}/responses`}
                         className="flex-1 md:w-full"
                         onClick={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
                           navigate(`/forms/${form.id}/responses`);
                         }}
                       >
-                        Ver Respuestas
-                      </Button>
-                      <Button
-                        variant="outline" 
-                        size="sm"
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full"
+                          type="button"
+                        >
+                          Ver Respuestas
+                        </Button>
+                      </a>
+                      <a 
+                        href="#"
                         className="flex-1 md:w-full"
                         onClick={(e) => {
                           e.preventDefault();
-                          e.stopPropagation();
                           // Copiar código de inserción al portapapeles
                           const embedCode = `<script src="https://api.aipi.example.com/form.js?id=${form.slug}"></script>`;
-                          navigator.clipboard.writeText(embedCode)
-                            .then(() => {
-                              toast({
-                                title: "Código copiado",
-                                description: "El código de inserción ha sido copiado al portapapeles",
-                              });
-                            })
-                            .catch((err) => {
-                              console.error("Error al copiar:", err);
-                              toast({
-                                title: "Error al copiar",
-                                description: "No se pudo copiar el código. Inténtalo de nuevo.",
-                                variant: "destructive"
-                              });
+                          try {
+                            navigator.clipboard.writeText(embedCode);
+                            toast({
+                              title: "Código copiado",
+                              description: "El código de inserción ha sido copiado al portapapeles",
                             });
+                          } catch (err) {
+                            console.error("Error al copiar:", err);
+                            toast({
+                              title: "Error al copiar",
+                              description: "No se pudo copiar el código. Inténtalo de nuevo.",
+                              variant: "destructive"
+                            });
+                          }
                         }}
                       >
-                        Obtener Código
-                      </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="w-full"
+                          type="button"
+                        >
+                          Obtener Código
+                        </Button>
+                      </a>
                     </div>
                   </div>
                 </Card>
