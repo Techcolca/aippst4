@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CircleX, Clock, MessageSquare, BarChart, ArrowUp, ArrowDown, ArrowLeft } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/context/auth-context";
+import { useTranslation } from "react-i18next";
 import ProductDemandChart from "@/components/analytics/product-demand-chart";
 import TopicSentimentChart from "@/components/analytics/topic-sentiment-chart";
 import ConversationTrendChart from "@/components/analytics/conversation-trend-chart";
@@ -20,6 +21,7 @@ import {
 export default function Analytics() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
+  const { t } = useTranslation();
   
   // Fetch dashboard stats
   const { data: stats, isLoading: isLoadingStats, error: statsError } = useQuery<DashboardStats>({
@@ -78,9 +80,9 @@ export default function Analytics() {
       <div className="flex flex-col gap-8">
         <div className="flex flex-wrap justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Analytics</h1>
+            <h1 className="text-3xl font-bold mb-2">{t("analytics")}</h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Dashboard analytics and insights for your integrations and conversations.
+              {t("analytics_description")}
             </p>
           </div>
           <Button 
@@ -89,7 +91,7 @@ export default function Analytics() {
             className="flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            {t("back_to_dashboard")}
           </Button>
         </div>
 
@@ -98,14 +100,14 @@ export default function Analytics() {
           <div className="flex items-center justify-center p-8">
             <div className="text-center">
               <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-400">Loading analytics data...</p>
+              <p className="text-gray-600 dark:text-gray-400">{t("loading_analytics")}</p>
             </div>
           </div>
         ) : hasError ? (
           <div className="text-center p-8 bg-red-50 dark:bg-red-900/20 rounded-lg">
             <CircleX className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Failed to load analytics</h2>
-            <p className="text-gray-600 dark:text-gray-400">There was an error loading the analytics data. Please try again later.</p>
+            <h2 className="text-xl font-semibold mb-2">{t("analytics_error")}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{t("analytics_error_description")}</p>
           </div>
         ) : (
           <div>
@@ -113,20 +115,20 @@ export default function Analytics() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Total Conversations</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t("total_conversations")}</CardTitle>
                   <MessageSquare className="w-4 h-4 text-gray-500" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold">{dashboardStats.totalConversations.toLocaleString()}</div>
                   <p className="text-sm text-gray-500 mt-1">
-                    Across all integrations
+                    {t("all_integrations")}
                   </p>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Resolution Rate</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t("resolution_rate")}</CardTitle>
                   <BarChart className="w-4 h-4 text-gray-500" />
                 </CardHeader>
                 <CardContent>
@@ -137,13 +139,13 @@ export default function Analytics() {
                   <p className="text-sm text-gray-500 mt-1">
                     {dashboardStats.resolutionRate >= 70 ? (
                       <span className="text-green-500 flex items-center gap-1">
-                        <ArrowUp className="w-3 h-3" /> Good performance
+                        <ArrowUp className="w-3 h-3" /> {t("good_performance")}
                       </span>
                     ) : dashboardStats.resolutionRate >= 40 ? (
-                      <span className="text-yellow-500">Average performance</span>
+                      <span className="text-yellow-500">{t("average_performance")}</span>
                     ) : (
                       <span className="text-red-500 flex items-center gap-1">
-                        <ArrowDown className="w-3 h-3" /> Needs improvement
+                        <ArrowDown className="w-3 h-3" /> {t("needs_improvement")}
                       </span>
                     )}
                   </p>
@@ -152,7 +154,7 @@ export default function Analytics() {
               
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium">Average Response Time</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t("avg_response_time")}</CardTitle>
                   <Clock className="w-4 h-4 text-gray-500" />
                 </CardHeader>
                 <CardContent>
@@ -160,13 +162,13 @@ export default function Analytics() {
                   <p className="text-sm text-gray-500 mt-1">
                     {dashboardStats.averageResponseTime <= 30 ? (
                       <span className="text-green-500 flex items-center gap-1">
-                        <ArrowUp className="w-3 h-3" /> Fast responses
+                        <ArrowUp className="w-3 h-3" /> {t("fast_responses")}
                       </span>
                     ) : dashboardStats.averageResponseTime <= 60 ? (
-                      <span className="text-yellow-500">Average speed</span>
+                      <span className="text-yellow-500">{t("average_speed")}</span>
                     ) : (
                       <span className="text-red-500 flex items-center gap-1">
-                        <ArrowDown className="w-3 h-3" /> Slower than average
+                        <ArrowDown className="w-3 h-3" /> {t("slower_than_average")}
                       </span>
                     )}
                   </p>
@@ -176,7 +178,7 @@ export default function Analytics() {
 
             {/* Conversation Analytics Section */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Análisis de Conversaciones</h2>
+              <h2 className="text-2xl font-bold mb-4">{t("conversation_analysis")}</h2>
               
               {/* Products and Topics Charts */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -207,7 +209,7 @@ export default function Analytics() {
 
             {/* Integration Performance Section */}
             <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Rendimiento de Integraciones</h2>
+              <h2 className="text-2xl font-bold mb-4">{t("integration_performance")}</h2>
               
               <IntegrationPerformanceChart 
                 data={integrationPerformance || []} 
@@ -219,9 +221,9 @@ export default function Analytics() {
             <div className="mb-8">
               <Card>
                 <CardHeader>
-                  <CardTitle>Análisis Avanzado</CardTitle>
+                  <CardTitle>{t("advanced_analysis")}</CardTitle>
                   <CardDescription>
-                    Métricas adicionales para comprender mejor el comportamiento de tus integraciones
+                    {t("advanced_metrics")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

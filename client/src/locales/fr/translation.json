@@ -134,5 +134,21 @@
   "payment_method": "Méthode de paiement",
   "update_card": "Mettre à jour la carte",
   "billing_history": "Historique de facturation",
-  "download_invoice": "Télécharger la facture"
+  "download_invoice": "Télécharger la facture",
+  "analytics_description": "Analyses et statistiques du tableau de bord pour vos intégrations et conversations.",
+  "back_to_dashboard": "Retour au tableau de bord",
+  "loading_analytics": "Chargement des données d'analyse...",
+  "analytics_error": "Échec du chargement des analyses",
+  "analytics_error_description": "Une erreur s'est produite lors du chargement des données d'analyse. Veuillez réessayer plus tard.",
+  "all_integrations": "Pour toutes les intégrations",
+  "good_performance": "Bonne performance",
+  "average_performance": "Performance moyenne",
+  "needs_improvement": "Nécessite une amélioration",
+  "fast_responses": "Réponses rapides",
+  "average_speed": "Vitesse moyenne",
+  "slower_than_average": "Plus lent que la moyenne",
+  "conversation_analysis": "Analyse des Conversations",
+  "integration_performance": "Performance d'Intégration",
+  "advanced_analysis": "Analyse Avancée",
+  "advanced_metrics": "Métriques supplémentaires pour mieux comprendre le comportement de vos intégrations"
 }

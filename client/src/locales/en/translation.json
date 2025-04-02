@@ -134,5 +134,21 @@
   "payment_method": "Payment method",
   "update_card": "Update card",
   "billing_history": "Billing history",
-  "download_invoice": "Download invoice"
+  "download_invoice": "Download invoice",
+  "analytics_description": "Dashboard analytics and insights for your integrations and conversations.",
+  "back_to_dashboard": "Back to Dashboard",
+  "loading_analytics": "Loading analytics data...",
+  "analytics_error": "Failed to load analytics",
+  "analytics_error_description": "There was an error loading the analytics data. Please try again later.",
+  "all_integrations": "Across all integrations",
+  "good_performance": "Good performance",
+  "average_performance": "Average performance",
+  "needs_improvement": "Needs improvement",
+  "fast_responses": "Fast responses",
+  "average_speed": "Average speed",
+  "slower_than_average": "Slower than average",
+  "conversation_analysis": "Conversation Analysis",
+  "integration_performance": "Integration Performance",
+  "advanced_analysis": "Advanced Analysis",
+  "advanced_metrics": "Additional metrics to better understand the behavior of your integrations"
 }

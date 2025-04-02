@@ -134,5 +134,21 @@
   "payment_method": "Método de pago",
   "update_card": "Actualizar tarjeta",
   "billing_history": "Historial de facturación",
-  "download_invoice": "Descargar factura"
+  "download_invoice": "Descargar factura",
+  "analytics_description": "Análisis de panel y estadísticas para tus integraciones y conversaciones.",
+  "back_to_dashboard": "Volver al panel",
+  "loading_analytics": "Cargando datos de análisis...",
+  "analytics_error": "Error al cargar los análisis",
+  "analytics_error_description": "Hubo un error al cargar los datos de análisis. Por favor, inténtalo de nuevo más tarde.",
+  "all_integrations": "En todas las integraciones",
+  "good_performance": "Buen rendimiento",
+  "average_performance": "Rendimiento promedio",
+  "needs_improvement": "Necesita mejorar",
+  "fast_responses": "Respuestas rápidas",
+  "average_speed": "Velocidad promedio",
+  "slower_than_average": "Más lento que el promedio",
+  "conversation_analysis": "Análisis de Conversaciones",
+  "integration_performance": "Rendimiento de Integraciones",
+  "advanced_analysis": "Análisis Avanzado",
+  "advanced_metrics": "Métricas adicionales para comprender mejor el comportamiento de tus integraciones"
 }
