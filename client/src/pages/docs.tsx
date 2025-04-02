@@ -33,10 +33,10 @@ export default function Documentation() {
         <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              Documentación de AIPI
+              {t("documentation.title")}
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              Todo lo que necesitas saber sobre nuestra plataforma de asistencia inteligente
+              {t("documentation.subtitle")}
             </p>
           </div>
         </section>
@@ -54,7 +54,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <BookOpen className="w-5 h-5 mr-2" />
-                        <span>Descripción General</span>
+                        <span>{t("documentation.overview")}</span>
                       </div>
                     </a>
                     <a 
@@ -64,7 +64,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Rocket className="w-5 h-5 mr-2" />
-                        <span>Funcionalidades</span>
+                        <span>{t("documentation.features")}</span>
                       </div>
                     </a>
 
@@ -76,7 +76,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <MessageSquare className="w-4 h-4 mr-2" />
-                        <span>Integración de Widgets</span>
+                        <span>{t("documentation.widget_integration")}</span>
                       </div>
                     </a>
                     
@@ -87,7 +87,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Database className="w-4 h-4 mr-2" />
-                        <span>Comprensión Contextual</span>
+                        <span>{t("documentation.contextual_understanding")}</span>
                       </div>
                     </a>
                     
@@ -98,7 +98,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <File className="w-4 h-4 mr-2" />
-                        <span>Entrena. con Documentos</span>
+                        <span>{t("documentation.document_training")}</span>
                       </div>
                     </a>
                     
@@ -109,7 +109,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Users className="w-4 h-4 mr-2" />
-                        <span>Captura de Leads</span>
+                        <span>{t("documentation.lead_capture")}</span>
                       </div>
                     </a>
                     
@@ -120,7 +120,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <BarChart className="w-4 h-4 mr-2" />
-                        <span>Análisis y Estadísticas</span>
+                        <span>{t("documentation.analytics")}</span>
                       </div>
                     </a>
                     
@@ -131,7 +131,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Bot className="w-4 h-4 mr-2" />
-                        <span>Automatización de Tareas</span>
+                        <span>{t("documentation.task_automation")}</span>
                       </div>
                     </a>
                     <a 
@@ -141,7 +141,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <School className="w-5 h-5 mr-2" />
-                        <span>Instituciones Educativas</span>
+                        <span>{t("documentation.education")}</span>
                       </div>
                     </a>
                     <a 
@@ -151,7 +151,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Building2 className="w-5 h-5 mr-2" />
-                        <span>Empresas y Negocios</span>
+                        <span>{t("documentation.business")}</span>
                       </div>
                     </a>
                     <a 
@@ -161,7 +161,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Headset className="w-5 h-5 mr-2" />
-                        <span>Servicios Profesionales</span>
+                        <span>{t("documentation.professional")}</span>
                       </div>
                     </a>
                     <a 
@@ -171,7 +171,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <Code className="w-5 h-5 mr-2" />
-                        <span>Implementación</span>
+                        <span>{t("documentation.implementation")}</span>
                       </div>
                     </a>
                   </nav>

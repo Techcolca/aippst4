@@ -7,34 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Globe } from "lucide-react";
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
 import { useState, useEffect } from "react";
-import frTranslation from "../locales/fr/translation.json";
-import esTranslation from "../locales/es/translation.json";
-import enTranslation from "../locales/en/translation.json";
-
-// Inicializar i18next si no se ha hecho ya
-if (!i18next.isInitialized) {
-  i18next.use(initReactI18next).init({
-    resources: {
-      fr: {
-        translation: frTranslation
-      },
-      es: {
-        translation: esTranslation
-      },
-      en: {
-        translation: enTranslation
-      }
-    },
-    lng: localStorage.getItem("i18nextLng") || "fr", // Idioma predeterminado: francés
-    fallbackLng: "fr",
-    interpolation: {
-      escapeValue: false
-    }
-  });
-}
 
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();
