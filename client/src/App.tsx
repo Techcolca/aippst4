@@ -14,6 +14,8 @@ import Documentation from "@/pages/docs";
 import Pricing from "@/pages/pricing";
 import AdminPanel from "@/pages/admin";
 import FormTemplateSelection from "@/pages/form-template-selection";
+import FormEditor from "@/pages/form-editor";
+import FormResponses from "@/pages/form-responses";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -32,6 +34,8 @@ function Router() {
       <Route path="/analytics" component={Analytics} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/create-form" component={FormTemplateSelection} />
+      <Route path="/forms/:id/edit" component={FormEditor} />
+      <Route path="/forms/:id/responses" component={FormResponses} />
       <Route component={NotFound} />
     </Switch>
   );
