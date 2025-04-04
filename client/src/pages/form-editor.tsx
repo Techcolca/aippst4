@@ -14,13 +14,72 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, Save, ArrowLeft, Eye, Settings, Code, Layout } from 'lucide-react';
 import Header from '@/components/header';
 
+// Tipos para el formulario
+interface FieldOption {
+  label: string;
+  value?: string;
+}
+
+interface FormField {
+  label: string;
+  name: string;
+  type: string;
+  placeholder?: string;
+  required: boolean;
+  options?: (string | FieldOption)[];
+  defaultValue?: string;
+}
+
+interface FormStructure {
+  fields: FormField[];
+  submitButtonText: string;
+}
+
+interface FormStyling {
+  theme: 'light' | 'dark' | 'auto';
+  fontFamily: string;
+  primaryColor: string;
+  borderRadius: string;
+  spacing: string;
+}
+
+interface FormSettings {
+  redirectUrl: string;
+  sendEmailNotification: boolean;
+  emailRecipients: string;
+  successMessage: string;
+  captcha: boolean;
+  storeResponses: boolean;
+}
+
+interface FormData {
+  title: string;
+  description: string;
+  slug: string;
+  type: string;
+  published: boolean;
+  structure: FormStructure;
+  styling: FormStyling;
+  settings: FormSettings;
+}
+
+interface FieldData {
+  label: string;
+  name: string;
+  type: string;
+  placeholder: string;
+  required: boolean;
+  options: (string | FieldOption)[];
+  defaultValue: string;
+}
+
 const FormEditor = () => {
   const [, navigate] = useLocation();
   const [match, params] = useRoute<{ id: string }>('/forms/:id/edit');
   const formId = parseInt(params?.id || '0');
   const { toast } = useToast();
   
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
     slug: '',
@@ -47,8 +106,21 @@ const FormEditor = () => {
     }
   });
   
+  // Estado para el modal de edición de campos
+  const [showFieldModal, setShowFieldModal] = useState(false);
+  const [currentEditingField, setCurrentEditingField] = useState(-1);
+  const [fieldData, setFieldData] = useState<FieldData>({
+    label: '',
+    name: '',
+    type: 'text',
+    placeholder: '',
+    required: false,
+    options: [],
+    defaultValue: ''
+  });
+  
   // Obtener datos del formulario
-  const { data: form, isLoading, isError } = useQuery({
+  const { data: form, isLoading, isError } = useQuery<FormData>({
     queryKey: [`/api/forms/${formId}`],
     enabled: !!formId,
     staleTime: 1000 * 60 * 5, // 5 minutos
@@ -83,32 +155,37 @@ const FormEditor = () => {
     }
   });
 
+  // Helper para convertir la respuesta de la API en un objeto con los tipos correctos
+  const parseFormData = (apiForm: any): FormData => {
+    return {
+      title: apiForm?.title || '',
+      description: apiForm?.description || '',
+      slug: apiForm?.slug || '',
+      type: apiForm?.type || 'contact',
+      published: apiForm?.published || false,
+      structure: apiForm?.structure || { fields: [], submitButtonText: 'Enviar' },
+      styling: {
+        theme: (apiForm?.styling?.theme as FormStyling['theme']) || 'light',
+        fontFamily: apiForm?.styling?.fontFamily || 'Inter',
+        primaryColor: apiForm?.styling?.primaryColor || '#3B82F6',
+        borderRadius: apiForm?.styling?.borderRadius || 'md',
+        spacing: apiForm?.styling?.spacing || 'md'
+      },
+      settings: {
+        redirectUrl: apiForm?.settings?.redirectUrl || '',
+        sendEmailNotification: apiForm?.settings?.sendEmailNotification || false,
+        emailRecipients: apiForm?.settings?.emailRecipients || '',
+        successMessage: apiForm?.settings?.successMessage || 'Gracias por tu envío',
+        captcha: apiForm?.settings?.captcha || false,
+        storeResponses: apiForm?.settings?.storeResponses || true
+      }
+    };
+  };
+
   // Cargar datos iniciales
   useEffect(() => {
     if (form) {
-      setFormData({
-        title: form.title || '',
-        description: form.description || '',
-        slug: form.slug || '',
-        type: form.type || 'contact',
-        published: form.published || false,
-        structure: form.structure || { fields: [], submitButtonText: 'Enviar' },
-        styling: form.styling || {
-          theme: 'light',
-          fontFamily: 'Inter',
-          primaryColor: '#3B82F6',
-          borderRadius: 'md',
-          spacing: 'md'
-        },
-        settings: form.settings || {
-          redirectUrl: '',
-          sendEmailNotification: false,
-          emailRecipients: '',
-          successMessage: 'Gracias por tu envío',
-          captcha: false,
-          storeResponses: true
-        }
-      });
+      setFormData(parseFormData(form));
     }
   }, [form]);
 
@@ -308,15 +385,316 @@ const FormEditor = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {/* Aquí iría un editor de campos con drag and drop */}
-                  <p className="text-sm text-muted-foreground">
-                    El editor de campos avanzado se está desarrollando. Por ahora, puedes utilizar
-                    la plantilla predefinida para el tipo de formulario seleccionado.
-                  </p>
+                <div className="space-y-6">
+                  {/* Lista de campos existentes */}
+                  {formData.structure.fields.map((field, index) => (
+                    <div key={index} className="p-4 border rounded-md bg-muted/20">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h4 className="font-medium">{field.label || 'Campo sin etiqueta'}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            Tipo: {field.type === 'text' ? 'Texto' : 
+                                  field.type === 'email' ? 'Correo electrónico' : 
+                                  field.type === 'number' ? 'Número' : 
+                                  field.type === 'textarea' ? 'Área de texto' : 
+                                  field.type === 'select' ? 'Selección' : 
+                                  field.type === 'checkbox' ? 'Casilla de verificación' : 
+                                  field.type === 'radio' ? 'Opción única' : 
+                                  'Otro'}
+                          </p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              // Editar campo existente
+                              setCurrentEditingField(index);
+                              setShowFieldModal(true);
+                              setFieldData({
+                                label: field.label || '',
+                                name: field.name || '',
+                                type: field.type || 'text',
+                                placeholder: field.placeholder || '',
+                                required: field.required || false,
+                                options: field.options || [],
+                                defaultValue: field.defaultValue || ''
+                              });
+                            }}
+                          >
+                            Editar
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => {
+                              // Eliminar campo
+                              const updatedFields = [...formData.structure.fields];
+                              updatedFields.splice(index, 1);
+                              setFormData({
+                                ...formData,
+                                structure: {
+                                  ...formData.structure,
+                                  fields: updatedFields
+                                }
+                              });
+                            }}
+                          >
+                            Eliminar
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-2 text-sm">
+                        {field.placeholder && (
+                          <div>
+                            <span className="text-muted-foreground">Placeholder:</span> {field.placeholder}
+                          </div>
+                        )}
+                        {field.name && (
+                          <div>
+                            <span className="text-muted-foreground">Nombre:</span> {field.name}
+                          </div>
+                        )}
+                        <div>
+                          <span className="text-muted-foreground">Requerido:</span> {field.required ? 'Sí' : 'No'}
+                        </div>
+                      </div>
+                      
+                      {field.options && field.options.length > 0 && (
+                        <div className="mt-2">
+                          <span className="text-sm text-muted-foreground">Opciones:</span>
+                          <div className="grid grid-cols-2 gap-1 mt-1">
+                            {field.options.map((option, i) => (
+                              <div key={i} className="text-sm bg-muted/30 px-2 py-1 rounded">
+                                {typeof option === 'object' && option.label ? option.label : String(option)}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  
+                  {formData.structure.fields.length === 0 && (
+                    <div className="text-center p-8 border border-dashed rounded-md">
+                      <p className="text-muted-foreground mb-4">
+                        No hay campos configurados para este formulario.
+                      </p>
+                    </div>
+                  )}
+                  
+                  {/* Botón para agregar nuevo campo */}
+                  <Button 
+                    onClick={() => {
+                      // Agregar nuevo campo
+                      setCurrentEditingField(-1);
+                      setShowFieldModal(true);
+                      setFieldData({
+                        label: '',
+                        name: '',
+                        type: 'text',
+                        placeholder: '',
+                        required: false,
+                        options: [],
+                        defaultValue: ''
+                      });
+                    }}
+                    className="w-full"
+                  >
+                    Agregar campo
+                  </Button>
                 </div>
               </CardContent>
             </Card>
+            
+            {/* Modal para agregar/editar campos */}
+            {showFieldModal && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <Card className="w-full max-w-md">
+                  <CardHeader>
+                    <CardTitle>
+                      {currentEditingField === -1 ? 'Agregar campo' : 'Editar campo'}
+                    </CardTitle>
+                    <CardDescription>
+                      Configura las propiedades del campo
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="field-label">Etiqueta</Label>
+                      <Input 
+                        id="field-label" 
+                        value={fieldData.label} 
+                        onChange={(e) => setFieldData({...fieldData, label: e.target.value})}
+                        placeholder="Ej: Nombre completo"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="field-name">Nombre técnico (ID)</Label>
+                      <Input 
+                        id="field-name" 
+                        value={fieldData.name} 
+                        onChange={(e) => setFieldData({...fieldData, name: e.target.value.replace(/\s+/g, '_').toLowerCase()})}
+                        placeholder="Ej: nombre_completo"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Identificador único para el campo. Se genera automáticamente.
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="field-type">Tipo de campo</Label>
+                      <Select 
+                        value={fieldData.type} 
+                        onValueChange={(value) => setFieldData({...fieldData, type: value})}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona un tipo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="text">Texto corto</SelectItem>
+                          <SelectItem value="textarea">Área de texto</SelectItem>
+                          <SelectItem value="email">Correo electrónico</SelectItem>
+                          <SelectItem value="number">Número</SelectItem>
+                          <SelectItem value="tel">Teléfono</SelectItem>
+                          <SelectItem value="select">Selección</SelectItem>
+                          <SelectItem value="checkbox">Casilla de verificación</SelectItem>
+                          <SelectItem value="radio">Opción única</SelectItem>
+                          <SelectItem value="date">Fecha</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    {(fieldData.type === 'text' || fieldData.type === 'textarea' || 
+                     fieldData.type === 'email' || fieldData.type === 'tel' || 
+                     fieldData.type === 'number' || fieldData.type === 'date') && (
+                      <div className="space-y-2">
+                        <Label htmlFor="field-placeholder">Texto de marcador</Label>
+                        <Input 
+                          id="field-placeholder" 
+                          value={fieldData.placeholder} 
+                          onChange={(e) => setFieldData({...fieldData, placeholder: e.target.value})}
+                          placeholder="Ej: Escribe tu nombre completo"
+                        />
+                      </div>
+                    )}
+                    
+                    {(fieldData.type === 'select' || fieldData.type === 'radio') && (
+                      <div className="space-y-2">
+                        <Label htmlFor="field-options">Opciones</Label>
+                        <div className="space-y-2">
+                          {fieldData.options.map((option, index) => (
+                            <div key={index} className="flex items-center space-x-2">
+                              <Input 
+                                value={typeof option === 'string' ? option : option.label || ''} 
+                                onChange={(e) => {
+                                  const newOptions = [...fieldData.options];
+                                  if (typeof option === 'string') {
+                                    newOptions[index] = e.target.value;
+                                  } else {
+                                    newOptions[index] = { ...option, label: e.target.value };
+                                  }
+                                  setFieldData({...fieldData, options: newOptions});
+                                }}
+                                placeholder={`Opción ${index + 1}`}
+                              />
+                              <Button 
+                                variant="destructive" 
+                                size="icon"
+                                onClick={() => {
+                                  const newOptions = [...fieldData.options];
+                                  newOptions.splice(index, 1);
+                                  setFieldData({...fieldData, options: newOptions});
+                                }}
+                              >
+                                ×
+                              </Button>
+                            </div>
+                          ))}
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => {
+                              setFieldData({
+                                ...fieldData, 
+                                options: [...fieldData.options, '']
+                              });
+                            }}
+                          >
+                            Agregar opción
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center space-x-2">
+                      <Switch 
+                        id="field-required" 
+                        checked={fieldData.required} 
+                        onCheckedChange={(checked) => setFieldData({...fieldData, required: checked})}
+                      />
+                      <Label htmlFor="field-required">
+                        Campo obligatorio
+                      </Label>
+                    </div>
+                  </CardContent>
+                  <div className="flex justify-end space-x-2 p-6 border-t">
+                    <Button 
+                      variant="outline"
+                      onClick={() => setShowFieldModal(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        // Si el nombre está vacío, generarlo a partir de la etiqueta
+                        const fieldName = fieldData.name || 
+                                         fieldData.label.toLowerCase().replace(/\s+/g, '_');
+                        
+                        const newField = {
+                          label: fieldData.label,
+                          name: fieldName,
+                          type: fieldData.type,
+                          placeholder: fieldData.placeholder,
+                          required: fieldData.required,
+                          options: fieldData.type === 'select' || fieldData.type === 'radio' ? 
+                                  fieldData.options : undefined,
+                          defaultValue: fieldData.defaultValue
+                        };
+                        
+                        if (currentEditingField === -1) {
+                          // Agregar nuevo campo
+                          setFormData({
+                            ...formData,
+                            structure: {
+                              ...formData.structure,
+                              fields: [...formData.structure.fields, newField]
+                            }
+                          });
+                        } else {
+                          // Actualizar campo existente
+                          const updatedFields = [...formData.structure.fields];
+                          updatedFields[currentEditingField] = newField;
+                          setFormData({
+                            ...formData,
+                            structure: {
+                              ...formData.structure,
+                              fields: updatedFields
+                            }
+                          });
+                        }
+                        
+                        setShowFieldModal(false);
+                      }}
+                    >
+                      {currentEditingField === -1 ? 'Agregar' : 'Guardar cambios'}
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+            )}
           </TabsContent>
           
           {/* Pestaña de Apariencia */}
@@ -333,7 +711,7 @@ const FormEditor = () => {
                   <Label htmlFor="theme">Tema</Label>
                   <Select 
                     value={formData.styling?.theme || 'light'} 
-                    onValueChange={(value) => setFormData({
+                    onValueChange={(value: 'light' | 'dark' | 'auto') => setFormData({
                       ...formData, 
                       styling: {...formData.styling, theme: value}
                     })}
