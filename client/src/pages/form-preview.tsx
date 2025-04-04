@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute, useLocation } from 'wouter';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,7 @@ const FormPreview = () => {
   const [, navigate] = useLocation();
   const [match, params] = useRoute<{ id: string }>('/forms/:id');
   const formId = parseInt(params?.id || '0');
+  const queryClient = useQueryClient();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -35,10 +36,20 @@ const FormPreview = () => {
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [submitted, setSubmitted] = useState(false);
   
+  // Invalidar caché y refrescar datos al montar el componente
+  useEffect(() => {
+    if (formId) {
+      console.log("Invalidando caché y recargando datos del formulario:", formId);
+      queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
+    }
+  }, [formId, queryClient]);
+  
   // Obtener datos del formulario
   const { data: form, isLoading, isError } = useQuery({
     queryKey: [`/api/forms/${formId}`],
     enabled: !!formId,
+    staleTime: 0, // Siempre considerar datos obsoletos para forzar la recarga
+    refetchOnWindowFocus: true, // Refrescar al enfocar la ventana
   });
 
   // Cargar datos iniciales

@@ -252,7 +252,14 @@ const FormEditor = () => {
             <Button 
               variant="outline" 
               size="sm"
-              onClick={() => navigate(`/forms/${formId}`)}
+              onClick={() => {
+                // Guardar antes de previsualizar para asegurar que todos los cambios están aplicados
+                handleSaveForm();
+                // Esperar un momento para que la mutación termine y luego navegar
+                setTimeout(() => {
+                  navigate(`/forms/${formId}`);
+                }, 300);
+              }}
             >
               <Eye className="h-4 w-4 mr-2" />
               Previsualizar
@@ -429,13 +436,24 @@ const FormEditor = () => {
                               // Eliminar campo
                               const updatedFields = [...formData.structure.fields];
                               updatedFields.splice(index, 1);
-                              setFormData({
+                              
+                              // Crear un nuevo objeto con los datos actualizados
+                              const updatedFormData = {
                                 ...formData,
                                 structure: {
                                   ...formData.structure,
                                   fields: updatedFields
                                 }
-                              });
+                              };
+                              
+                              // Actualizar el estado
+                              setFormData(updatedFormData);
+                              
+                              // Guardar automáticamente con los datos actualizados
+                              console.log("Guardando formulario automáticamente después de eliminar campo");
+                              setTimeout(() => {
+                                updateFormMutation.mutate(updatedFormData);
+                              }, 100);
                             }}
                           >
                             Eliminar
