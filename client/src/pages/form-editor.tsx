@@ -128,11 +128,13 @@ const FormEditor = () => {
 
   // Actualizar formulario
   const updateFormMutation = useMutation({
-    mutationFn: (data: any) => 
-      fetch(`/api/forms/${formId}`, {
+    mutationFn: (data: any) => {
+      const token = document.cookie.split('; ').find(row => row.startsWith('auth_token='))?.split('=')[1];
+      return fetch(`/api/forms/${formId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(data)
       }).then(res => {
