@@ -2770,6 +2770,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const formId = parseInt(req.params.id);
       const formData = req.body;
       
+      console.log("Actualizando formulario ID:", formId);
+      console.log("Datos recibidos:", JSON.stringify(formData, null, 2));
+
       // Verificar que el formulario existe
       const existingForm = await storage.getForm(formId);
       
@@ -2783,6 +2786,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const updatedForm = await storage.updateForm(formId, formData);
+      console.log("Formulario actualizado:", JSON.stringify(updatedForm, null, 2));
       res.json(updatedForm);
     } catch (error) {
       console.error("Error updating form:", error);

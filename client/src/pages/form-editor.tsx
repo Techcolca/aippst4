@@ -130,7 +130,7 @@ const FormEditor = () => {
   const updateFormMutation = useMutation({
     mutationFn: (data: any) => 
       fetch(`/api/forms/${formId}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -191,6 +191,7 @@ const FormEditor = () => {
 
   // Guardar cambios
   const handleSaveForm = () => {
+    console.log("Guardando formulario con datos:", formData);
     updateFormMutation.mutate(formData);
   };
 
@@ -490,6 +491,7 @@ const FormEditor = () => {
                       // Agregar nuevo campo
                       setCurrentEditingField(-1);
                       setShowFieldModal(true);
+                      console.log("Iniciando creación de un nuevo campo");
                       setFieldData({
                         label: '',
                         name: '',
@@ -666,7 +668,15 @@ const FormEditor = () => {
                         
                         if (currentEditingField === -1) {
                           // Agregar nuevo campo
+                          console.log("Añadiendo nuevo campo al formulario:", newField);
                           setFormData({
+                            ...formData,
+                            structure: {
+                              ...formData.structure,
+                              fields: [...formData.structure.fields, newField]
+                            }
+                          });
+                          console.log("Estructura del formulario después de añadir:", {
                             ...formData,
                             structure: {
                               ...formData.structure,
