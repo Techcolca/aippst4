@@ -66,38 +66,43 @@ export default function PricingPage() {
           description: "Necesitas iniciar sesión para suscribirte a un plan.",
           variant: "default",
         });
+        
+        // Redirigir a la página de login con redirect a checkout
+        window.location.href = `/login?redirect=/checkout/${planId}`;
         return;
       }
 
       setCheckoutInProgress(planId);
+      
+      // Si es el plan gratuito, procesarlo directamente
+      if (planId === 'free') {
+        const response = await fetch('/api/subscription/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ 
+            planId,
+            billingType
+          }),
+        });
 
-      const response = await fetch('/api/pricing/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          planId,
-          billingType // Incluir el tipo de facturación seleccionado (mensual o anual)
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.sessionId) {
-        // Si es un plan de pago, redirigir a Stripe Checkout
-        const stripe = await stripePromise;
-        await stripe?.redirectToCheckout({ sessionId: result.sessionId });
-      } else if (result.redirectUrl) {
-        // Si es un plan gratuito, redirigir directamente
-        window.location.href = result.redirectUrl;
-      } else {
-        // Mostrar mensaje de éxito/error
+        const result = await response.json();
+        
         toast({
           title: result.success ? "Éxito" : "Error",
-          description: result.message,
+          description: result.message || "Plan gratuito activado con éxito",
           variant: result.success ? "default" : "destructive",
         });
+        
+        // Redirigir al dashboard
+        if (result.success) {
+          window.location.href = '/dashboard';
+        }
+      } else {
+        // Para planes pagos, redirigir a la página de checkout
+        window.location.href = `/checkout/${planId}`;
       }
     } catch (error) {
       console.error('Error al iniciar el checkout:', error);

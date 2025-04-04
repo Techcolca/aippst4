@@ -907,6 +907,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Verificar status de suscripción después de un pago exitoso
+  app.get("/api/subscription/verify", verifyToken, async (req, res) => {
+    try {
+      const sessionId = req.query.session_id as string;
+      
+      if (!sessionId) {
+        return res.status(400).json({ success: false, message: "Se requiere ID de sesión" });
+      }
+      
+      const user = await storage.getUser(req.userId);
+      if (!user) {
+        return res.status(404).json({ success: false, message: "Usuario no encontrado" });
+      }
+      
+      // Verificar la sesión con Stripe
+      if (!stripe) {
+        return res.status(500).json({ success: false, message: "Stripe no está configurado" });
+      }
+      
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      
+      if (!session) {
+        return res.status(404).json({ success: false, message: "Sesión no encontrada" });
+      }
+      
+      // Si la sesión fue exitosa y tiene una suscripción
+      if (session.status === "complete" && session.subscription) {
+        const subscriptionId = session.subscription as string;
+        
+        // Recuperar los detalles de la suscripción
+        const subscription = await retrieveSubscription(subscriptionId);
+        
+        if (!subscription) {
+          return res.status(404).json({ success: false, message: "Suscripción no encontrada" });
+        }
+        
+        // Actualizar los datos del usuario en nuestra base de datos
+        await storage.updateUserStripeInfo(user.id, {
+          stripeCustomerId: session.customer as string,
+          stripeSubscriptionId: subscriptionId
+        });
+        
+        // Retornar información de la suscripción
+        const planItem = subscription.items.data[0];
+        const productId = planItem.price.product as string;
+        const product = await stripe.products.retrieve(productId);
+        
+        const transformedSubscription = {
+          id: subscription.id,
+          status: subscription.status,
+          plan: product.name,
+          interval: planItem.plan.interval,
+          amount: planItem.price.unit_amount / 100, // Convertir de centavos a unidades
+          currency: planItem.price.currency,
+          currentPeriodStart: subscription.current_period_start * 1000, // Convertir a milisegundos
+          currentPeriodEnd: subscription.current_period_end * 1000, // Convertir a milisegundos
+        };
+        
+        return res.json({ success: true, subscription: transformedSubscription });
+      } else {
+        return res.status(400).json({ success: false, message: "La sesión no fue completada exitosamente" });
+      }
+    } catch (error: any) {
+      console.error("Error verificando suscripción:", error);
+      res.status(500).json({ success: false, message: error.message || "Error verificando el estado de la suscripción" });
+    }
+  });
+  
   // Webhook para eventos de Stripe
   app.post("/api/webhook/stripe", express.raw({ type: 'application/json' }), async (req, res) => {
     try {

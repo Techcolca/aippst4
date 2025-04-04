@@ -10,12 +10,58 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, ArrowLeft, PenSquare } from 'lucide-react';
 import Header from '@/components/header';
+import { useToast } from '@/hooks/use-toast';
+
+// Definir tipo para los datos del formulario
+interface FormData {
+  id: number;
+  title: string;
+  description: string | null;
+  slug: string;
+  type: string | null;
+  published: boolean | null;
+  structure: {
+    fields: Array<{
+      label: string;
+      name: string;
+      type: string;
+      placeholder?: string;
+      required: boolean;
+      options?: (string | { label: string; value: string })[];
+      defaultValue?: string;
+      helpText?: string;
+      id?: string; // ID opcional para el elemento DOM
+      rows?: number; // Número de filas para textarea
+    }>;
+    submitButtonText: string;
+  };
+  styling: {
+    theme: 'light' | 'dark' | 'auto';
+    fontFamily: string;
+    primaryColor: string;
+    borderRadius: string;
+    spacing: string;
+  };
+  settings: {
+    redirectUrl: string;
+    sendEmailNotification: boolean;
+    emailRecipients: string;
+    successMessage: string;
+    captcha: boolean;
+    storeResponses: boolean;
+  };
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  userId: number;
+  responseCount: number | null;
+}
 
 const FormPreview = () => {
   const [, navigate] = useLocation();
   const [match, params] = useRoute<{ id: string }>('/forms/:id');
   const formId = parseInt(params?.id || '0');
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -35,21 +81,52 @@ const FormPreview = () => {
   
   const [formValues, setFormValues] = useState<Record<string, any>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   
-  // Invalidar caché y refrescar datos al montar el componente
+  // Refrescar datos cuando el componente se monta o cuando se cambia manualmente
   useEffect(() => {
-    if (formId) {
-      console.log("Invalidando caché y recargando datos del formulario:", formId);
-      queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
-    }
-  }, [formId, queryClient]);
+    const loadFormData = async () => {
+      if (formId) {
+        console.log(`Forzando la carga de datos del formulario ${formId} (intento ${refreshTrigger})`);
+        
+        try {
+          // Invalidar caché para forzar una recarga fresca
+          await queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
+          
+          // Opcional: intentar cargar directamente con fetch si hay problemas
+          if (refreshTrigger > 1) {
+            const token = localStorage.getItem('auth_token');
+            const response = await fetch(`/api/forms/${formId}`, {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            if (response.ok) {
+              const freshData = await response.json();
+              console.log("Datos obtenidos directamente:", freshData);
+              // Actualizar caché manual
+              queryClient.setQueryData([`/api/forms/${formId}`], freshData);
+            }
+          }
+        } catch (error) {
+          console.error("Error al refrescar datos del formulario:", error);
+        }
+      }
+    };
+    
+    loadFormData();
+  }, [formId, refreshTrigger, queryClient]);
   
   // Obtener datos del formulario
-  const { data: form, isLoading, isError } = useQuery({
+  const { data: form, isLoading, isError, refetch } = useQuery<FormData>({
     queryKey: [`/api/forms/${formId}`],
     enabled: !!formId,
-    staleTime: 0, // Siempre considerar datos obsoletos para forzar la recarga
-    refetchOnWindowFocus: true, // Refrescar al enfocar la ventana
+    staleTime: 0, // Nunca usar caché
+    gcTime: 0, // No almacenar en caché (en v5 cacheTime se llama gcTime)
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    refetchInterval: 2000, // Refrescar cada 2 segundos mientras esté visible
   });
 
   // Cargar datos iniciales
@@ -140,7 +217,7 @@ const FormPreview = () => {
   };
 
   // Renderizar campo de formulario según su tipo
-  const renderFormField = (field: any, index: number) => {
+  const renderFormField = (field: FormData['structure']['fields'][0], index: number) => {
     switch (field.type) {
       case 'text':
       case 'email':
@@ -203,11 +280,16 @@ const FormPreview = () => {
                 <SelectValue placeholder={field.placeholder || 'Seleccionar...'} />
               </SelectTrigger>
               <SelectContent>
-                {field.options && field.options.map((option: any, i: number) => (
-                  <SelectItem key={i} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
+                {field.options && field.options.map((option, i: number) => {
+                  // Manejar cuando la opción es un string o un objeto con label/value
+                  const optionValue = typeof option === 'string' ? option : option.value || '';
+                  const optionLabel = typeof option === 'string' ? option : option.label || '';
+                  return (
+                    <SelectItem key={i} value={optionValue}>
+                      {optionLabel}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
             {field.helpText && (
@@ -293,16 +375,40 @@ const FormPreview = () => {
               Volver
             </Button>
             <h1 className="text-2xl font-bold">Vista previa</h1>
+            
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => {
+                // Incrementar contador de refrescos para activar nueva carga
+                setRefreshTrigger(prev => prev + 1);
+                toast({
+                  title: "Actualizando datos",
+                  description: "Recargando información del formulario...",
+                });
+              }}
+            >
+              <svg className="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Actualizar
+            </Button>
           </div>
           
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleEdit}
-          >
-            <PenSquare className="h-4 w-4 mr-2" />
-            Editar formulario
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleEdit}
+            >
+              <PenSquare className="h-4 w-4 mr-2" />
+              Editar formulario
+            </Button>
+            
+            <span className="text-xs text-muted-foreground">
+              {formData.structure.fields.length} campo(s)
+            </span>
+          </div>
         </div>
         
         {/* Formulario */}

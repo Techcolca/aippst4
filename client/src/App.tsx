@@ -12,6 +12,9 @@ import Analytics from "@/pages/analytics";
 import GetStarted from "@/pages/get-started-new";
 import Documentation from "@/pages/docs";
 import Pricing from "@/pages/pricing";
+import Checkout from "@/pages/checkout";
+import SubscriptionSuccess from "@/pages/subscription-success";
+import SubscriptionCancel from "@/pages/subscription-cancel";
 import AdminPanel from "@/pages/admin";
 import FormTemplateSelection from "@/pages/form-template-selection";
 import FormEditor from "@/pages/form-editor";
@@ -32,6 +35,9 @@ function Router() {
       <Route path="/get-started" component={GetStarted} />
       <Route path="/docs" component={Documentation} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/checkout/:planId" component={Checkout} />
+      <Route path="/dashboard/subscription/success" component={SubscriptionSuccess} />
+      <Route path="/dashboard/subscription/cancel" component={SubscriptionCancel} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/admin" component={AdminPanel} />

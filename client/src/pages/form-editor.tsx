@@ -249,21 +249,80 @@ const FormEditor = () => {
           </div>
           
           <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                // Guardar antes de previsualizar para asegurar que todos los cambios están aplicados
-                handleSaveForm();
-                // Esperar un momento para que la mutación termine y luego navegar
-                setTimeout(() => {
-                  navigate(`/forms/${formId}`);
-                }, 300);
-              }}
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              Previsualizar
-            </Button>
+            <div className="flex space-x-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={async () => {
+                  // Guardar antes de previsualizar para asegurar que todos los cambios están aplicados
+                  // Usar un enfoque basado en promesas para asegurar que la mutación se complete
+                  try {
+                    console.log("Guardando cambios antes de previsualizar");
+                    await updateFormMutation.mutateAsync(formData);
+                    console.log("Cambios guardados exitosamente, navegando a vista previa");
+                    
+                    // Invalidar la caché para forzar una recarga fresca en el componente de vista previa
+                    queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
+                    
+                    // Navegar después de que la mutación se complete exitosamente
+                    navigate(`/forms/${formId}`);
+                  } catch (error) {
+                    console.error("Error al guardar el formulario antes de previsualizar:", error);
+                    toast({
+                      variant: "destructive",
+                      title: "Error",
+                      description: "No se pudieron guardar los cambios antes de previsualizar"
+                    });
+                  }
+                }}
+                disabled={updateFormMutation.isPending}
+              >
+                {updateFormMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Guardando...
+                  </>
+                ) : (
+                  <>
+                    <Eye className="h-4 w-4 mr-2" />
+                    Previsualizar
+                  </>
+                )}
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={async () => {
+                  try {
+                    // Guardar primero
+                    await updateFormMutation.mutateAsync(formData);
+                    
+                    // Abrir en una nueva pestaña
+                    const url = `${window.location.origin}/forms/${formId}?t=${Date.now()}`;
+                    window.open(url, '_blank');
+                    
+                    toast({
+                      title: "Formulario guardado",
+                      description: "Se ha abierto la vista previa en una nueva pestaña"
+                    });
+                  } catch (error) {
+                    console.error("Error al guardar el formulario:", error);
+                    toast({
+                      variant: "destructive",
+                      title: "Error",
+                      description: "No se pudo guardar el formulario"
+                    });
+                  }
+                }}
+                disabled={updateFormMutation.isPending}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Nueva pestaña
+              </Button>
+            </div>
             
             <Button
               size="sm"
