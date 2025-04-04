@@ -21,6 +21,7 @@ import { Copy as CopyIcon, Info as InfoIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function DashboardTabs({ initialTab = "automation" }) {
+  const { t } = useTranslation();
   // Transform initialTab if it's "profile" to "settings"
   const normalizedInitialTab = initialTab === "profile" ? "settings" : initialTab;
   const [activeTab, setActiveTab] = useState(normalizedInitialTab);
@@ -742,8 +743,6 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   // Render settings tab content
   // Render forms tab content
   const renderFormsTab = () => {
-    const { t } = useTranslation();
-    
     return (
       <div>
         <h2 className="text-xl font-semibold mb-4">{t("forms")}</h2>
