@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute, useLocation } from 'wouter';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { queryClient } from '@/lib/queryClient';
+import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -129,18 +129,12 @@ const FormEditor = () => {
   // Actualizar formulario
   const updateFormMutation = useMutation({
     mutationFn: (data: any) => {
-      const token = document.cookie.split('; ').find(row => row.startsWith('auth_token='))?.split('=')[1];
-      return fetch(`/api/forms/${formId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-      }).then(res => {
-        if (!res.ok) throw new Error('Error al actualizar el formulario');
-        return res.json();
-      });
+      // Usar apiRequest de queryClient que ya maneja la autenticación correctamente
+      return apiRequest('PUT', `/api/forms/${formId}`, data)
+        .then(res => {
+          if (!res.ok) throw new Error('Error al actualizar el formulario');
+          return res.json();
+        });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
@@ -672,34 +666,49 @@ const FormEditor = () => {
                         if (currentEditingField === -1) {
                           // Agregar nuevo campo
                           console.log("Añadiendo nuevo campo al formulario:", newField);
-                          setFormData({
+                          // Crear un nuevo objeto con los datos actualizados
+                          const updatedFormData = {
                             ...formData,
                             structure: {
                               ...formData.structure,
                               fields: [...formData.structure.fields, newField]
                             }
-                          });
-                          console.log("Estructura del formulario después de añadir:", {
-                            ...formData,
-                            structure: {
-                              ...formData.structure,
-                              fields: [...formData.structure.fields, newField]
-                            }
-                          });
+                          };
+                          
+                          // Actualizar el estado
+                          setFormData(updatedFormData);
+                          console.log("Estructura del formulario después de añadir:", updatedFormData);
+                          
+                          // Cerrar modal
+                          setShowFieldModal(false);
+                          
+                          // Guardar automáticamente con los datos actualizados
+                          console.log("Guardando formulario automáticamente después de añadir campo");
+                          updateFormMutation.mutate(updatedFormData);
                         } else {
                           // Actualizar campo existente
                           const updatedFields = [...formData.structure.fields];
                           updatedFields[currentEditingField] = newField;
-                          setFormData({
+                          
+                          // Crear un nuevo objeto con los datos actualizados
+                          const updatedFormData = {
                             ...formData,
                             structure: {
                               ...formData.structure,
                               fields: updatedFields
                             }
-                          });
+                          };
+                          
+                          // Actualizar el estado
+                          setFormData(updatedFormData);
+                          
+                          // Cerrar modal
+                          setShowFieldModal(false);
+                          
+                          // Guardar automáticamente con los datos actualizados
+                          console.log("Guardando formulario automáticamente después de editar campo");
+                          updateFormMutation.mutate(updatedFormData);
                         }
-                        
-                        setShowFieldModal(false);
                       }}
                     >
                       {currentEditingField === -1 ? 'Agregar' : 'Guardar cambios'}

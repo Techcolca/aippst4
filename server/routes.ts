@@ -2772,6 +2772,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log("Actualizando formulario ID:", formId);
       console.log("Datos recibidos:", JSON.stringify(formData, null, 2));
+      console.log("Usuario autenticado:", req.user.username);
 
       // Verificar que el formulario existe
       const existingForm = await storage.getForm(formId);
@@ -2782,6 +2783,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Verificar que el usuario es propietario del formulario
       if (existingForm.userId !== req.user!.id) {
+        console.log(`Error de autorización: el formulario pertenece al usuario ${existingForm.userId} pero el usuario actual es ${req.user!.id}`);
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
       

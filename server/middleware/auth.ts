@@ -132,17 +132,43 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
  * Verifies JWT token and attaches the user object to the request
  */
 export async function authenticateJWT(req: Request, res: Response, next: NextFunction) {
-  // Primero obtener y verificar el token
-  const token = req.cookies?.auth_token || 
-                (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                 ? req.headers.authorization.slice(7) : null);
+  // Obtener el token de diferentes fuentes
+  let token = null;
+  
+  // 1. Intentar obtener de las cookies
+  if (req.cookies?.auth_token) {
+    token = req.cookies.auth_token;
+    console.log("Token encontrado en cookies");
+  }
+  // 2. Intentar obtener del header Authorization
+  else if (req.headers.authorization) {
+    // Depuración para el header de autorización
+    console.log("Headers:", JSON.stringify(req.headers));
+    
+    if (req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.slice(7);
+      console.log("Token encontrado en header Authorization con formato Bearer");
+    } else {
+      token = req.headers.authorization;
+      console.log("Token encontrado en header Authorization sin formato Bearer");
+    }
+  }
+  
+  // Registrar la disponibilidad del token
+  console.log("Token encontrado:", token ? "Sí" : "No");
   
   if (!token) {
+    console.log("No se encontró token de autenticación");
+    console.log("Cookies disponibles:", req.cookies);
+    console.log("Headers:", req.headers);
     return res.status(401).json({ message: 'Authentication required' });
   }
   
   try {
+    // Verificar el token
+    console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    console.log("Token verificado correctamente. ID de usuario:", decoded.userId);
     req.userId = decoded.userId;
     
     // Obtener los datos completos del usuario
