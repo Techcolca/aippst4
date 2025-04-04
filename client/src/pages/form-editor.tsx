@@ -140,7 +140,8 @@ const FormEditor = () => {
       }).then(res => {
         if (!res.ok) throw new Error('Error al actualizar el formulario');
         return res.json();
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
       toast({
