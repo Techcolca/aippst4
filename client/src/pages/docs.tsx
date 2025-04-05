@@ -1388,6 +1388,38 @@ export default function Documentation() {
                           <li><strong>Publicación</strong>: Genera un enlace único o código de inserción para tu sitio web</li>
                         </ol>
                         
+                        <h3>Integración de Formularios en Sitios Web</h3>
+                        <p>
+                          Una vez creado tu formulario, puedes integrarlo fácilmente en tu sitio web mediante el código de inserción:
+                        </p>
+                        
+                        <ol>
+                          <li><strong>Obtén el Código</strong>: Desde la vista de tu formulario, haz clic en "Obtener Código" para abrir el modal con el código de inserción</li>
+                          <li><strong>Copia el Código</strong>: El sistema te proporcionará un fragmento HTML que puedes copiar directamente</li>
+                          <li><strong>Inserta en tu Sitio</strong>: Pega el código en la sección de tu sitio web donde deseas que aparezca el formulario</li>
+                        </ol>
+                        
+                        <p>El código de inserción tendrá un aspecto similar a este:</p>
+                        
+                        <pre><code>&lt;script src="https://tu-dominio.com/api/forms/embed/[ID_DEL_FORMULARIO]"&gt;&lt;/script&gt;
+&lt;div id="aipi-form-[ID_DEL_FORMULARIO]"&gt;&lt;/div&gt;</code></pre>
+                        
+                        <p><strong>Opciones de Personalización</strong>: El modal también incluye instrucciones para:</p>
+                        <ul>
+                          <li>Personalizar el estilo del formulario para adaptarlo a tu sitio</li>
+                          <li>Configurar acciones después del envío (redirecciones, mensajes)</li>
+                          <li>Implementar validaciones personalizadas</li>
+                          <li>Integrar con sistemas de análisis para seguimiento de conversiones</li>
+                        </ul>
+                        
+                        <p><strong>Consideraciones Técnicas</strong>:</p>
+                        <ul>
+                          <li>El código funciona en cualquier sitio HTML, incluidos CMS como WordPress, Wix, o Shopify</li>
+                          <li>El formulario se carga de forma asíncrona para no afectar el rendimiento de la página</li>
+                          <li>Los datos se envían directamente a los servidores de AIPI para mayor seguridad</li>
+                          <li>Se incluye automáticamente protección contra spam y ataques CSRF</li>
+                        </ul>
+                        
                         <h3>Gestión de Respuestas</h3>
                         <p>Una vez que los visitantes empiezan a completar tu formulario, puedes:</p>
                         <ul>

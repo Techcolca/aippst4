@@ -168,6 +168,8 @@ export default function DashboardTabs({ initialTab = "automation" }) {
   
   // Estado para el modal de creación de formulario
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isEmbedCodeModalOpen, setIsEmbedCodeModalOpen] = useState(false);
+  const [currentFormEmbed, setCurrentFormEmbed] = useState({ slug: "", title: "" });
   const [newForm, setNewForm] = useState({
     title: "",
     slug: "",
@@ -831,22 +833,12 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                         className="flex-1 md:w-full"
                         onClick={(e) => {
                           e.preventDefault();
-                          // Copiar código de inserción al portapapeles
-                          const embedCode = `<script src="https://api.aipi.example.com/form.js?id=${form.slug}"></script>`;
-                          try {
-                            navigator.clipboard.writeText(embedCode);
-                            toast({
-                              title: "Código copiado",
-                              description: "El código de inserción ha sido copiado al portapapeles",
-                            });
-                          } catch (err) {
-                            console.error("Error al copiar:", err);
-                            toast({
-                              title: "Error al copiar",
-                              description: "No se pudo copiar el código. Inténtalo de nuevo.",
-                              variant: "destructive"
-                            });
-                          }
+                          // Mostrar modal con código de inserción e instrucciones
+                          setCurrentFormEmbed({
+                            slug: form.slug,
+                            title: form.title
+                          });
+                          setIsEmbedCodeModalOpen(true);
                         }}
                       >
                         <Button 
@@ -1542,6 +1534,97 @@ export default function DashboardTabs({ initialTab = "automation" }) {
               <Button type="submit">Create Automation</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal para código de inserción de formulario */}
+      <Dialog open={isEmbedCodeModalOpen} onOpenChange={setIsEmbedCodeModalOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Código de Inserción para Formulario</DialogTitle>
+            <DialogDescription>
+              Inserta este código en tu sitio web para mostrar el formulario "{currentFormEmbed.title}"
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 my-4">
+            <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-md">
+              <div className="flex justify-between items-center mb-2">
+                <Label className="text-sm font-medium">Código de Inserción</Label>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {
+                    const embedCode = `<script src="https://api.aipi.example.com/form.js?id=${currentFormEmbed.slug}"></script>\n<div id="aipi-form-${currentFormEmbed.slug}"></div>`;
+                    try {
+                      navigator.clipboard.writeText(embedCode);
+                      toast({
+                        title: "Código copiado",
+                        description: "El código de inserción ha sido copiado al portapapeles",
+                      });
+                    } catch (err) {
+                      console.error("Error al copiar:", err);
+                      toast({
+                        title: "Error al copiar",
+                        description: "No se pudo copiar el código. Inténtalo de nuevo.",
+                        variant: "destructive"
+                      });
+                    }
+                  }}
+                >
+                  <CopyIcon className="h-4 w-4 mr-1" /> Copiar
+                </Button>
+              </div>
+              <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto">
+                <code>{`<script src="https://api.aipi.example.com/form.js?id=${currentFormEmbed.slug}"></script>
+<div id="aipi-form-${currentFormEmbed.slug}"></div>`}</code>
+              </pre>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Instrucciones de Instalación</h3>
+              <ol className="text-sm text-gray-600 dark:text-gray-400 list-decimal pl-4 space-y-2">
+                <li>Copia el código anterior</li>
+                <li>Pega el código en tu sitio web donde deseas que aparezca el formulario</li>
+                <li>Asegúrate de colocarlo dentro de un elemento HTML (div, section, etc.)</li>
+                <li>El formulario se adaptará automáticamente al tamaño del contenedor</li>
+              </ol>
+            </div>
+
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 rounded-md text-sm flex">
+              <InfoIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+              <div>
+                <p>Puedes personalizar la apariencia del formulario con CSS, o usando nuestras opciones de configuración avanzada.</p>
+                <p className="mt-1">Para más opciones, visita la <a href="/docs#form-creation" className="underline" target="_blank">documentación de formularios</a>.</p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">Configuración Adicional (Opcional)</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Agrega estos atributos al div para personalizar aún más el formulario:
+              </p>
+              <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto">
+                <code>{`<div id="aipi-form-${currentFormEmbed.slug}" 
+  data-theme="light" 
+  data-success-url="https://tudominio.com/gracias"
+  data-button-color="#3B82F6">
+</div>`}</code>
+              </pre>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEmbedCodeModalOpen(false)}>
+              Cerrar
+            </Button>
+            <Button onClick={() => {
+              setIsEmbedCodeModalOpen(false);
+              window.open(`/forms/${currentFormEmbed.slug}/preview`, '_blank');
+            }}>
+              Ver Formulario
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
