@@ -783,6 +783,346 @@ export default function Documentation() {
                   </div>
                 )}
                 
+                {activeTab === "document-training" && (
+                  <div id="document-training" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Entrenamiento con Documentos</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          AIPI permite enriquecer la base de conocimientos de su asistente virtual mediante la carga de documentos específicos de su institución o empresa. Esta característica es fundamental para proporcionar respuestas precisas y personalizadas basadas en su información oficial.
+                        </p>
+                        
+                        <h3>Tipos de Documentos Soportados</h3>
+                        <p>La plataforma acepta diversos formatos para maximizar la flexibilidad:</p>
+                        
+                        <ul>
+                          <li><strong>Documentos PDF</strong>: Ideal para catálogos de cursos, manuales, folletos institucionales o especificaciones de productos</li>
+                          <li><strong>Archivos DOCX</strong>: Perfecto para preguntas frecuentes, políticas institucionales o contenido estructurado</li>
+                          <li><strong>Hojas de Cálculo Excel</strong>: Útil para horarios, tarifas, listas de programas o cualquier información tabulada</li>
+                          <li><strong>URLs de Sitios Web</strong>: Permite extraer información directamente de páginas web específicas</li>
+                        </ul>
+                        
+                        <h3>Proceso de Entrenamiento</h3>
+                        <ol>
+                          <li><strong>Carga de Documentos</strong>: Suba sus archivos a través de la interfaz intuitiva del dashboard</li>
+                          <li><strong>Procesamiento Automático</strong>: AIPI analiza y estructura la información de forma inteligente</li>
+                          <li><strong>Categorización</strong>: Organice los documentos por temas para facilitar su gestión</li>
+                          <li><strong>Enriquecimiento</strong>: Añada metadatos y etiquetas para mejorar la precisión de las respuestas</li>
+                          <li><strong>Validación</strong>: Verifique la calidad de las respuestas mediante pruebas interactivas</li>
+                        </ol>
+                        
+                        <h3>Beneficios del Entrenamiento con Documentos</h3>
+                        <ul>
+                          <li><strong>Precisión Mejorada</strong>: Respuestas basadas en datos oficiales verificados</li>
+                          <li><strong>Personalización Total</strong>: Asistente adaptado específicamente a su dominio</li>
+                          <li><strong>Actualización Sencilla</strong>: Mantenga la información al día con actualizaciones regulares</li>
+                          <li><strong>Reducción de Respuestas Genéricas</strong>: Minimice las respuestas imprecisas o demasiado generales</li>
+                          <li><strong>Consistencia en la Información</strong>: Garantice que todos los visitantes reciban datos uniformes</li>
+                        </ul>
+                        
+                        <h3>Recomendaciones para un Entrenamiento Efectivo</h3>
+                        <ul>
+                          <li>Priorice documentos actualizados y de alta calidad</li>
+                          <li>Divida documentos extensos en secciones temáticas para mejorar la precisión</li>
+                          <li>Incluya preguntas frecuentes con sus respuestas oficiales</li>
+                          <li>Actualice la base de conocimientos regularmente para mantener su relevancia</li>
+                          <li>Combine múltiples formatos para una cobertura completa</li>
+                        </ul>
+                        
+                        <h3>Límites y Consideraciones</h3>
+                        <p>Para garantizar un rendimiento óptimo:</p>
+                        <ul>
+                          <li>Tamaño máximo por documento: 10 MB</li>
+                          <li>Longitud de texto recomendada: ~10,000 caracteres por documento</li>
+                          <li>Evite documentos con contenido puramente visual (use descripciones)</li>
+                          <li>Asegúrese de tener los derechos necesarios sobre el material cargado</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "lead-capture" && (
+                  <div id="lead-capture" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Captura de Leads</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          Una de las características más valiosas de AIPI es su capacidad para convertir las conversaciones con visitantes en oportunidades de negocio tangibles mediante la captura y gestión inteligente de leads.
+                        </p>
+                        
+                        <h3>Cómo Funciona la Captura de Leads</h3>
+                        <p>El sistema utiliza un enfoque no intrusivo para recopilar información valiosa de los visitantes interesados:</p>
+                        
+                        <ol>
+                          <li><strong>Identificación de Intenciones</strong>: El asistente detecta automáticamente cuándo un visitante muestra interés genuino en servicios o productos</li>
+                          <li><strong>Solicitud Contextual</strong>: En el momento oportuno, solicita información de contacto explicando el beneficio para el usuario</li>
+                          <li><strong>Almacenamiento Seguro</strong>: Los datos se guardan cumpliendo normativas de protección de datos</li>
+                          <li><strong>Clasificación Automática</strong>: Cada lead se categoriza según su nivel de interés y área específica</li>
+                          <li><strong>Alertas en Tiempo Real</strong>: Notificaciones inmediatas para seguimiento por parte del equipo comercial</li>
+                        </ol>
+                        
+                        <h3>Datos Capturados</h3>
+                        <p>AIPI puede recopilar, con consentimiento explícito del usuario:</p>
+                        
+                        <ul>
+                          <li><strong>Información Básica</strong>: Nombre, correo electrónico, teléfono</li>
+                          <li><strong>Intereses Específicos</strong>: Productos, servicios o programas de interés</li>
+                          <li><strong>Nivel de Urgencia</strong>: Horizonte temporal para la toma de decisiones</li>
+                          <li><strong>Preferencias de Contacto</strong>: Canal y horario preferido para seguimiento</li>
+                          <li><strong>Contexto Completo</strong>: Historial de la conversación para entender necesidades</li>
+                        </ul>
+                        
+                        <h3>Gestión de Leads</h3>
+                        <p>Desde el dashboard, podrá gestionar eficientemente todos los leads capturados:</p>
+                        
+                        <ul>
+                          <li><strong>Vista Centralizada</strong>: Todos los leads organizados en un panel intuitivo</li>
+                          <li><strong>Filtros Avanzados</strong>: Segmentación por fecha, fuente, interés y estatus</li>
+                          <li><strong>Asignación</strong>: Distribución de leads entre miembros del equipo</li>
+                          <li><strong>Seguimiento</strong>: Registro de interacciones y próximos pasos</li>
+                          <li><strong>Etiquetado</strong>: Clasificación personalizada según sus flujos de trabajo</li>
+                          <li><strong>Exportación</strong>: Descarga en formatos compatibles con CRM (CSV, Excel)</li>
+                        </ul>
+                        
+                        <h3>Integraciones con CRM</h3>
+                        <p>Para optimizar su flujo de trabajo, AIPI permite:</p>
+                        
+                        <ul>
+                          <li>Sincronización automática con sistemas CRM populares</li>
+                          <li>Webhooks personalizables para integraciones específicas</li>
+                          <li>Notificaciones por email a equipos comerciales</li>
+                          <li>API para desarrollar integraciones personalizadas</li>
+                        </ul>
+                        
+                        <h3>Protección de Datos</h3>
+                        <p>AIPI cumple con las normativas de protección de datos:</p>
+                        
+                        <ul>
+                          <li>Obtención de consentimiento explícito antes de capturar datos</li>
+                          <li>Explicación clara del propósito de la recopilación</li>
+                          <li>Almacenamiento seguro con encriptación</li>
+                          <li>Acceso controlado según roles y permisos</li>
+                          <li>Política de retención y eliminación de datos configurable</li>
+                        </ul>
+                        
+                        <h3>Métricas y Análisis</h3>
+                        <p>Evalúe el rendimiento de su estrategia de captura de leads con:</p>
+                        
+                        <ul>
+                          <li><strong>Tasa de Conversión</strong>: Porcentaje de visitantes que proporcionan información</li>
+                          <li><strong>Calidad de Leads</strong>: Análisis de calificación y seguimiento efectivo</li>
+                          <li><strong>Fuentes Más Efectivas</strong>: Qué canales generan mejores leads</li>
+                          <li><strong>Tiempo de Respuesta</strong>: Velocidad de seguimiento del equipo</li>
+                          <li><strong>ROI</strong>: Retorno de inversión basado en conversiones finales</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "analytics" && (
+                  <div id="analytics" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Análisis y Estadísticas</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          AIPI ofrece un potente panel de análisis y estadísticas que proporciona información valiosa sobre el rendimiento de sus asistentes virtuales, las tendencias en las conversaciones y el comportamiento de los visitantes.
+                        </p>
+                        
+                        <h3>Métricas Principales</h3>
+                        <p>El dashboard muestra indicadores clave para evaluar el rendimiento global:</p>
+                        
+                        <ul>
+                          <li><strong>Total de Visitantes</strong>: Número de usuarios únicos que han interactuado con su asistente</li>
+                          <li><strong>Total de Conversaciones</strong>: Cantidad total de sesiones de chat iniciadas</li>
+                          <li><strong>Tasa de Resolución</strong>: Porcentaje de consultas resueltas satisfactoriamente</li>
+                          <li><strong>Tiempo Medio de Respuesta</strong>: Velocidad promedio de respuesta del asistente</li>
+                          <li><strong>Integraciones Activas</strong>: Número de implementaciones funcionando actualmente</li>
+                          <li><strong>Tendencia de Conversaciones</strong>: Evolución temporal del volumen de interacciones</li>
+                        </ul>
+                        
+                        <h3>Análisis de Conversaciones</h3>
+                        <p>Comprenda en profundidad las interacciones de los usuarios:</p>
+                        
+                        <ul>
+                          <li><strong>Temas Populares</strong>: Asuntos más consultados por los visitantes</li>
+                          <li><strong>Palabras Clave</strong>: Términos más frecuentes en las consultas</li>
+                          <li><strong>Patrones de Conversación</strong>: Flujos típicos y ramificaciones comunes</li>
+                          <li><strong>Preguntas Sin Respuesta</strong>: Identificación de vacíos de conocimiento</li>
+                          <li><strong>Sentimiento</strong>: Análisis de la satisfacción de los usuarios</li>
+                        </ul>
+                        
+                        <h3>Rendimiento por Integración</h3>
+                        <p>Evalúe cada implementación específica:</p>
+                        
+                        <ul>
+                          <li><strong>Comparativa</strong>: Rendimiento relativo entre diferentes integraciones</li>
+                          <li><strong>Tasa de Interacción</strong>: Porcentaje de visitantes que utilizan el asistente</li>
+                          <li><strong>Duración Media</strong>: Tiempo promedio de las conversaciones</li>
+                          <li><strong>Horarios de Mayor Actividad</strong>: Distribución temporal de las consultas</li>
+                          <li><strong>Dispositivos</strong>: Uso por tipo de dispositivo (móvil, escritorio, tablet)</li>
+                        </ul>
+                        
+                        <h3>Análisis de Comercialización</h3>
+                        <p>Información orientada a la conversión de visitantes en clientes:</p>
+                        
+                        <ul>
+                          <li><strong>Productos/Servicios Más Consultados</strong>: Ofertas que generan mayor interés</li>
+                          <li><strong>Tasa de Captura de Leads</strong>: Efectividad en la obtención de información de contacto</li>
+                          <li><strong>Puntos de Abandono</strong>: Momentos en que los usuarios suelen finalizar la conversación</li>
+                          <li><strong>Conversiones</strong>: Seguimiento de objetivos completados (formularios, registros)</li>
+                          <li><strong>Camino hacia la Conversión</strong>: Análisis de la ruta típica hasta la acción deseada</li>
+                        </ul>
+                        
+                        <h3>Visualización de Datos</h3>
+                        <p>AIPI presenta la información de forma clara e intuitiva mediante:</p>
+                        
+                        <ul>
+                          <li><strong>Gráficos Interactivos</strong>: Visualizaciones dinámicas con filtros ajustables</li>
+                          <li><strong>Mapas de Calor</strong>: Representación visual de áreas de mayor interés</li>
+                          <li><strong>Diagramas de Flujo</strong>: Visualización de recorridos de conversación</li>
+                          <li><strong>Indicadores Comparativos</strong>: Métricas actuales vs períodos anteriores</li>
+                          <li><strong>Dashboards Personalizables</strong>: Adapte la visualización a sus prioridades</li>
+                        </ul>
+                        
+                        <h3>Exportación e Informes</h3>
+                        <p>Comparta y analice datos de forma flexible:</p>
+                        
+                        <ul>
+                          <li><strong>Informes Programados</strong>: Reciba estadísticas periódicas por email</li>
+                          <li><strong>Exportación de Datos</strong>: Descargue información en CSV, Excel o PDF</li>
+                          <li><strong>Informes Personalizados</strong>: Cree reportes a medida con las métricas relevantes</li>
+                          <li><strong>API de Análisis</strong>: Integre datos con sus sistemas de business intelligence</li>
+                        </ul>
+                        
+                        <h3>Privacidad y Seguridad</h3>
+                        <p>Todos los análisis se realizan respetando:</p>
+                        
+                        <ul>
+                          <li>Anonimización de datos personales</li>
+                          <li>Cumplimiento de normativas de privacidad (GDPR, CCPA)</li>
+                          <li>Control de acceso basado en roles</li>
+                          <li>Políticas de retención de datos configurables</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "task-automation" && (
+                  <div id="task-automation" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Automatización de Tareas</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          El módulo de Automatización de Tareas (Task Automation) de AIPI permite crear flujos de trabajo inteligentes que ejecutan acciones predefinidas en respuesta a desencadenantes específicos. Esta funcionalidad avanzada reduce la carga de trabajo manual y garantiza respuestas consistentes y rápidas a situaciones recurrentes.
+                        </p>
+                        
+                        <h3>¿Qué es la Automatización de Tareas?</h3>
+                        <p>
+                          Task Automation permite configurar respuestas automáticas y secuencias de acciones basadas en criterios predefinidos. Estas automatizaciones permiten que su asistente virtual realice tareas complejas como:
+                        </p>
+                        
+                        <ul>
+                          <li>Responder automáticamente preguntas frecuentes con información detallada</li>
+                          <li>Programar seguimientos basados en el interés mostrado por los visitantes</li>
+                          <li>Proporcionar información preliminar antes de conectar con un representante humano</li>
+                          <li>Recopilar datos específicos necesarios para procesos de admisión o ventas</li>
+                          <li>Generar alertas para el equipo cuando se detecten consultas prioritarias</li>
+                          <li>Clasificar automáticamente las consultas por departamento o área de interés</li>
+                        </ul>
+                        
+                        <h3>Componentes Principales</h3>
+                        <p>Cada automatización consta de tres elementos fundamentales:</p>
+                        
+                        <ol>
+                          <li><strong>Desencadenantes (Triggers)</strong>: Condiciones que activan la automatización
+                            <ul>
+                              <li>Palabras clave específicas en las consultas</li>
+                              <li>Patrones detectados en la conversación</li>
+                              <li>Horarios específicos (ej. fuera del horario de oficina)</li>
+                              <li>Datos proporcionados por el usuario</li>
+                              <li>Número de interacciones o duración de la conversación</li>
+                            </ul>
+                          </li>
+                          <li><strong>Condiciones</strong>: Criterios adicionales que deben cumplirse
+                            <ul>
+                              <li>Segmentación por ubicación del usuario</li>
+                              <li>Tipo de dispositivo utilizado</li>
+                              <li>Historial previo del visitante</li>
+                              <li>Estado actual de la conversación</li>
+                            </ul>
+                          </li>
+                          <li><strong>Acciones</strong>: Respuestas o tareas que se ejecutan automáticamente
+                            <ul>
+                              <li>Envío de respuestas predefinidas</li>
+                              <li>Recopilación estructurada de información</li>
+                              <li>Generación de notificaciones internas</li>
+                              <li>Transferencia a agentes humanos</li>
+                              <li>Activación de integraciones con sistemas externos</li>
+                            </ul>
+                          </li>
+                        </ol>
+                        
+                        <h3>Cómo Crear una Automatización</h3>
+                        <p>Para implementar una nueva automatización, siga estos pasos:</p>
+                        
+                        <ol>
+                          <li><strong>Acceda al Dashboard</strong>: Navegue a la sección "Task Automation" en su panel de control</li>
+                          <li><strong>Inicie una Nueva Automatización</strong>: Haga clic en "Crear Nueva" y asigne un nombre descriptivo</li>
+                          <li><strong>Configure los Desencadenantes</strong>: Defina qué condiciones activarán esta automatización</li>
+                          <li><strong>Establezca las Condiciones</strong>: Especifique criterios adicionales si es necesario</li>
+                          <li><strong>Diseñe las Acciones</strong>: Determine qué hará el sistema cuando se active</li>
+                          <li><strong>Personalice las Respuestas</strong>: Cree mensajes efectivos y adaptados a su marca</li>
+                          <li><strong>Configure Opciones Avanzadas</strong>: Ajuste prioridades, limitaciones y comportamientos secundarios</li>
+                          <li><strong>Pruebe la Automatización</strong>: Verifique su funcionamiento en un entorno de prueba</li>
+                          <li><strong>Active y Monitoree</strong>: Implemente la automatización y supervise su rendimiento</li>
+                        </ol>
+                        
+                        <h3>Escenarios de Uso Comunes</h3>
+                        
+                        <h4>Para Instituciones Educativas:</h4>
+                        <ul>
+                          <li><strong>Consultas sobre Admisiones</strong>: Proporcionar información sobre requisitos, fechas y procesos</li>
+                          <li><strong>Preguntas sobre Programas</strong>: Detallar cursos, planes de estudio y salidas profesionales</li>
+                          <li><strong>Soporte a Estudiantes</strong>: Resolver dudas frecuentes sobre procedimientos administrativos</li>
+                        </ul>
+                        
+                        <h4>Para Empresas:</h4>
+                        <ul>
+                          <li><strong>Atención al Cliente Básica</strong>: Responder preguntas frecuentes sobre productos/servicios</li>
+                          <li><strong>Calificación de Clientes Potenciales</strong>: Evaluar y categorizar leads según su potencial</li>
+                          <li><strong>Soporte Técnico Inicial</strong>: Diagnóstico preliminar y resolución de problemas comunes</li>
+                        </ul>
+                        
+                        <h4>Para Servicios Profesionales:</h4>
+                        <ul>
+                          <li><strong>Programación de Consultas</strong>: Facilitar la reserva de citas con profesionales</li>
+                          <li><strong>Evaluación Preliminar</strong>: Recopilar información relevante antes de la consulta personal</li>
+                          <li><strong>Seguimiento Post-Servicio</strong>: Mantener contacto con clientes después de una prestación</li>
+                        </ul>
+                        
+                        <h3>Mejores Prácticas</h3>
+                        <p>Para maximizar la efectividad de sus automatizaciones:</p>
+                        
+                        <ul>
+                          <li>Mantenga las respuestas concisas y conversacionales</li>
+                          <li>Combine automatizaciones con intervención humana cuando sea necesario</li>
+                          <li>Revise y actualice regularmente sus automatizaciones</li>
+                          <li>Comience con escenarios simples y evolucione hacia flujos más complejos</li>
+                          <li>Analice el rendimiento con las métricas disponibles y optimice continuamente</li>
+                          <li>Asegúrese de que las automatizaciones reflejen correctamente el tono y valores de su marca</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 {activeTab === "education" && (
                   <div id="education" className="space-y-8">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
