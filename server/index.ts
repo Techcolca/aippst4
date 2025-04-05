@@ -69,7 +69,10 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  // En Replit, siempre usamos la configuración de desarrollo
+  // para evitar problemas de acceso a la aplicación
+  const isReplit = process.env.REPL_ID !== undefined;
+  if (app.get("env") === "development" || isReplit) {
     await setupVite(app, server);
   } else {
     serveStatic(app);
