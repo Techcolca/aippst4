@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Database, Code, Building2, School, Headset, Rocket, BookOpen, 
-  MessageSquare, BarChart, Users, Bot, File, Monitor, Smartphone, 
+  MessageSquare, BarChart, Users, Bot, File, FileText, Monitor, Smartphone, 
   ExternalLink, CheckCircle2, BarChart3, LineChart
 } from "lucide-react";
 import Header from "@/components/header";
@@ -22,7 +22,8 @@ export default function Documentation() {
     "document-training", 
     "lead-capture", 
     "analytics", 
-    "task-automation"
+    "task-automation",
+    "form-creation"
   ];
 
   return (
@@ -132,6 +133,17 @@ export default function Documentation() {
                       <div className="flex items-center">
                         <Bot className="w-4 h-4 mr-2" />
                         <span>{t("documentation.task_automation")}</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#form-creation" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("form-creation"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "form-creation" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <FileText className="w-4 h-4 mr-2" />
+                        <span>{t("documentation.form_creation")}</span>
                       </div>
                     </a>
                     <a 
@@ -986,6 +998,89 @@ export default function Documentation() {
                           </Button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "form-creation" && (
+                  <div id="form-creation" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Creación de Formularios</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          AIPI incluye un poderoso sistema de creación de formularios personalizables para capturar información de los visitantes de manera eficiente. Esta funcionalidad te permite crear diferentes tipos de formularios, desde formularios de contacto simples hasta encuestas complejas.
+                        </p>
+                        
+                        <h3>Tipos de Formularios Disponibles</h3>
+                        <p>La plataforma proporciona plantillas prediseñadas para diversos propósitos:</p>
+                        
+                        <ul>
+                          <li><strong>Formularios de Contacto</strong>: Captura información básica de contacto de los visitantes interesados</li>
+                          <li><strong>Formularios de Lista de Espera</strong>: Ideal para gestionar solicitudes de inscripción anticipada</li>
+                          <li><strong>Encuestas de Satisfacción</strong>: Recopila feedback de clientes o estudiantes</li>
+                          <li><strong>Formularios de Feedback</strong>: Obtén comentarios sobre productos, servicios o contenidos específicos</li>
+                          <li><strong>Formularios de Captación de Leads</strong>: Diseñados para capturar información cualificada de prospectos</li>
+                          <li><strong>Formularios Personalizados</strong>: Crea desde cero para necesidades específicas</li>
+                        </ul>
+                        
+                        <h3>Características Principales</h3>
+                        <ul>
+                          <li><strong>Diseño Flexible</strong>: Personaliza colores, fuentes y estilos para que coincidan con tu marca</li>
+                          <li><strong>Campos Configurables</strong>: Añade diversos tipos de campos (texto, selección, casillas, fechas, etc.)</li>
+                          <li><strong>Validación Avanzada</strong>: Configura reglas para asegurar que los datos capturados sean válidos</li>
+                          <li><strong>Lógica Condicional</strong>: Muestra u oculta campos según las respuestas anteriores</li>
+                          <li><strong>Integración con IA</strong>: Análisis automático de las respuestas para identificar patrones y preferencias</li>
+                          <li><strong>Protección Captcha</strong>: Previene envíos automatizados y spam</li>
+                          <li><strong>Notificaciones por Email</strong>: Recibe alertas cuando se envían nuevas respuestas</li>
+                          <li><strong>Análisis Detallado</strong>: Estadísticas sobre tasas de conversión y patrones de completado</li>
+                        </ul>
+                        
+                        <h3>Proceso de Creación de Formularios</h3>
+                        <ol>
+                          <li><strong>Accede al Dashboard</strong>: Navega a la sección "Formularios" en tu panel de control</li>
+                          <li><strong>Crea un Nuevo Formulario</strong>: Haz clic en "Crear Formulario" y elige si quieres partir de una plantilla o desde cero</li>
+                          <li><strong>Configuración Básica</strong>: Define nombre, descripción y propósito del formulario</li>
+                          <li><strong>Diseño y Campos</strong>: Configura la apariencia y añade los campos necesarios</li>
+                          <li><strong>Personalización</strong>: Ajusta colores, fuentes y estilos para que coincidan con tu marca</li>
+                          <li><strong>Configuración Avanzada</strong>: Define mensajes de agradecimiento, redirecciones y notificaciones</li>
+                          <li><strong>Vista Previa</strong>: Prueba el funcionamiento del formulario antes de publicarlo</li>
+                          <li><strong>Publicación</strong>: Genera un enlace único o código de inserción para tu sitio web</li>
+                        </ol>
+                        
+                        <h3>Gestión de Respuestas</h3>
+                        <p>Una vez que los visitantes empiezan a completar tu formulario, puedes:</p>
+                        <ul>
+                          <li><strong>Ver Respuestas</strong>: Accede a todas las respuestas desde tu dashboard</li>
+                          <li><strong>Exportar Datos</strong>: Descarga las respuestas en formato CSV para análisis externos</li>
+                          <li><strong>Filtrar y Buscar</strong>: Encuentra rápidamente respuestas específicas</li>
+                          <li><strong>Análisis Automático</strong>: Visualiza estadísticas y tendencias generadas por la IA</li>
+                          <li><strong>Seguimiento</strong>: Marca respuestas como atendidas o pendientes de seguimiento</li>
+                        </ul>
+                        
+                        <h3>Integración con el Widget de AIPI</h3>
+                        <p>Los formularios pueden integrarse con el asistente virtual de AIPI para:</p>
+                        <ul>
+                          <li>Presentar formularios en momentos clave de la conversación</li>
+                          <li>Completar automáticamente campos con información ya proporcionada en el chat</li>
+                          <li>Seguir la conversación después del envío del formulario</li>
+                          <li>Proporcionar asistencia durante el proceso de completado</li>
+                        </ul>
+                        
+                        <h3>Casos de Uso Populares</h3>
+                        <ul>
+                          <li><strong>Educación</strong>: Formularios de solicitud de información, inscripción a eventos o programas</li>
+                          <li><strong>Negocios</strong>: Captura de leads, solicitudes de presupuesto, evaluación de satisfacción</li>
+                          <li><strong>Servicios Profesionales</strong>: Consultas iniciales, reserva de citas, recopilación de antecedentes</li>
+                          <li><strong>E-commerce</strong>: Feedback de productos, solicitudes de soporte, registro en listas VIP</li>
+                        </ul>
+                      </div>
+                    </div>
+                    
+                    <div className="flex justify-center mt-6">
+                      <Button size="lg" asChild>
+                        <Link href="/dashboard/forms">Crear mi Primer Formulario</Link>
+                      </Button>
                     </div>
                   </div>
                 )}
