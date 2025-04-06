@@ -205,13 +205,21 @@ const FormEditor = () => {
     // Intercambiar posiciones
     [updatedFields[index-1], updatedFields[index]] = [updatedFields[index], updatedFields[index-1]];
     
-    setFormData({
+    // Crear un nuevo objeto con los datos actualizados
+    const updatedFormData = {
       ...formData,
       structure: {
         ...formData.structure,
         fields: updatedFields
       }
-    });
+    };
+    
+    // Actualizar el estado
+    setFormData(updatedFormData);
+    
+    // Guardar automáticamente con los datos actualizados
+    console.log("Guardando formulario automáticamente después de mover campo hacia arriba");
+    updateFormMutation.mutate(updatedFormData);
     
     toast({
       title: "Campo reordenado",
@@ -227,13 +235,21 @@ const FormEditor = () => {
     // Intercambiar posiciones
     [updatedFields[index], updatedFields[index+1]] = [updatedFields[index+1], updatedFields[index]];
     
-    setFormData({
+    // Crear un nuevo objeto con los datos actualizados
+    const updatedFormData = {
       ...formData,
       structure: {
         ...formData.structure,
         fields: updatedFields
       }
-    });
+    };
+    
+    // Actualizar el estado
+    setFormData(updatedFormData);
+    
+    // Guardar automáticamente con los datos actualizados
+    console.log("Guardando formulario automáticamente después de mover campo hacia abajo");
+    updateFormMutation.mutate(updatedFormData);
     
     toast({
       title: "Campo reordenado",
