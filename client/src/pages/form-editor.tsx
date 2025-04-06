@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Save, ArrowLeft, Eye, Settings, Code, Layout } from 'lucide-react';
+import { Loader2, Save, ArrowLeft, Eye, Settings, Code, Layout, ArrowUp, ArrowDown } from 'lucide-react';
 import Header from '@/components/header';
 
 // Tipos para el formulario
@@ -195,6 +195,50 @@ const FormEditor = () => {
   // Volver a la lista de formularios
   const handleBack = () => {
     navigate('/dashboard?tab=forms');
+  };
+  
+  // Mover un campo hacia arriba (intercambiar con el anterior)
+  const handleMoveFieldUp = (index: number) => {
+    if (index <= 0) return; // No se puede mover el primer elemento hacia arriba
+    
+    const updatedFields = [...formData.structure.fields];
+    // Intercambiar posiciones
+    [updatedFields[index-1], updatedFields[index]] = [updatedFields[index], updatedFields[index-1]];
+    
+    setFormData({
+      ...formData,
+      structure: {
+        ...formData.structure,
+        fields: updatedFields
+      }
+    });
+    
+    toast({
+      title: "Campo reordenado",
+      description: "El campo se ha movido hacia arriba"
+    });
+  };
+  
+  // Mover un campo hacia abajo (intercambiar con el siguiente)
+  const handleMoveFieldDown = (index: number) => {
+    if (index >= formData.structure.fields.length - 1) return; // No se puede mover el último elemento hacia abajo
+    
+    const updatedFields = [...formData.structure.fields];
+    // Intercambiar posiciones
+    [updatedFields[index], updatedFields[index+1]] = [updatedFields[index+1], updatedFields[index]];
+    
+    setFormData({
+      ...formData,
+      structure: {
+        ...formData.structure,
+        fields: updatedFields
+      }
+    });
+    
+    toast({
+      title: "Campo reordenado",
+      description: "El campo se ha movido hacia abajo"
+    });
   };
 
   if (isLoading) {
@@ -468,6 +512,24 @@ const FormEditor = () => {
                           </p>
                         </div>
                         <div className="flex space-x-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            title="Mover hacia arriba"
+                            onClick={() => handleMoveFieldUp(index)}
+                            disabled={index === 0} // Deshabilitar si es el primer elemento
+                          >
+                            <ArrowUp className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            title="Mover hacia abajo"
+                            onClick={() => handleMoveFieldDown(index)}
+                            disabled={index === formData.structure.fields.length - 1} // Deshabilitar si es el último elemento
+                          >
+                            <ArrowDown className="h-4 w-4" />
+                          </Button>
                           <Button 
                             variant="outline" 
                             size="sm"
