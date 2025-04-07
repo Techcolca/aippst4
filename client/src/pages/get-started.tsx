@@ -120,11 +120,11 @@ export default function GetStarted() {
         
         <section className="py-12 bg-white dark:bg-gray-900">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Tabs defaultValue="bubble" className="w-full">
+            <Tabs defaultValue="forms" className="w-full">
               <TabsList className="grid w-full grid-cols-3 mb-8">
-                <TabsTrigger value="bubble" className="text-lg py-3">Widget flotante (burbuja)</TabsTrigger>
-                <TabsTrigger value="fullscreen" className="text-lg py-3">Pantalla completa (estilo ChatGPT)</TabsTrigger>
-                <TabsTrigger value="forms" className="text-lg py-3">Formularios</TabsTrigger>
+                <TabsTrigger value="bubble" className="text-lg py-3 px-2">Widget flotante</TabsTrigger>
+                <TabsTrigger value="fullscreen" className="text-lg py-3 px-2">Pantalla completa</TabsTrigger>
+                <TabsTrigger value="forms" className="text-lg py-3 px-2">Formularios</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
