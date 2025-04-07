@@ -9,8 +9,9 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import EditIntegration from "@/pages/edit-integration";
 import Analytics from "@/pages/analytics";
-import GetStarted from "@/pages/get-started-new";
+import GetStarted from "@/pages/get-started";
 import Documentation from "@/pages/docs";
+import FormsGuide from "@/pages/forms-guide";
 import Pricing from "@/pages/pricing";
 import Checkout from "@/pages/checkout";
 import SubscriptionSuccess from "@/pages/subscription-success";
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/get-started" component={GetStarted} />
+      <Route path="/forms-guide" component={FormsGuide} />
       <Route path="/docs" component={Documentation} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/checkout/:planId" component={Checkout} />
