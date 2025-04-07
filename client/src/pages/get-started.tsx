@@ -121,10 +121,10 @@ export default function GetStarted() {
         <section className="py-12 bg-white dark:bg-gray-900">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Tabs defaultValue="forms" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8">
-                <TabsTrigger value="bubble" className="text-lg py-3 px-2">Widget flotante</TabsTrigger>
-                <TabsTrigger value="fullscreen" className="text-lg py-3 px-2">Pantalla completa</TabsTrigger>
-                <TabsTrigger value="forms" className="text-lg py-3 px-2">Formularios</TabsTrigger>
+              <TabsList className="flex w-full justify-between mb-8">
+                <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">Widget</TabsTrigger>
+                <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">Pantalla</TabsTrigger>
+                <TabsTrigger value="forms" className="flex-1 text-lg py-3 px-2">Formularios</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
