@@ -1555,7 +1555,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                   variant="ghost" 
                   size="sm"
                   onClick={() => {
-                    const embedCode = `<script src="https://api.aipi.example.com/form.js?id=${currentFormEmbed.slug}"></script>\n<div id="aipi-form-${currentFormEmbed.slug}"></div>`;
+                    const embedCode = `<script src="${window.location.origin}/static/form-embed.js?id=${currentFormEmbed.slug}"></script>\n<div id="aipi-form-container"></div>`;
                     try {
                       navigator.clipboard.writeText(embedCode);
                       toast({
@@ -1576,8 +1576,8 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                 </Button>
               </div>
               <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto">
-                <code>{`<script src="https://api.aipi.example.com/form.js?id=${currentFormEmbed.slug}"></script>
-<div id="aipi-form-${currentFormEmbed.slug}"></div>`}</code>
+                <code>{`<script src="${window.location.origin}/static/form-embed.js?id=${currentFormEmbed.slug}"></script>
+<div id="aipi-form-container"></div>`}</code>
               </pre>
             </div>
 
@@ -1605,7 +1605,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                 Agrega estos atributos al div para personalizar aún más el formulario:
               </p>
               <pre className="bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm overflow-x-auto">
-                <code>{`<div id="aipi-form-${currentFormEmbed.slug}" 
+                <code>{`<div id="aipi-form-container" 
   data-theme="light" 
   data-success-url="https://tudominio.com/gracias"
   data-button-color="#3B82F6">

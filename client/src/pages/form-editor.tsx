@@ -1084,13 +1084,13 @@ const FormEditor = () => {
                 <div className="space-y-4">
                   <div className="p-4 bg-muted rounded-md">
                     <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
-                      {`<script src="https://api.aipi.example.com/form.js?id=${formData.slug}"></script>`}
+                      {`<script src="${window.location.origin}/static/form-embed.js?id=${formData.slug}"></script>\n<div id="aipi-form-container"></div>`}
                     </pre>
                   </div>
                   
                   <Button 
                     onClick={() => {
-                      navigator.clipboard.writeText(`<script src="https://api.aipi.example.com/form.js?id=${formData.slug}"></script>`);
+                      navigator.clipboard.writeText(`<script src="${window.location.origin}/static/form-embed.js?id=${formData.slug}"></script>\n<div id="aipi-form-container"></div>`);
                       toast({
                         title: "Código copiado",
                         description: "El código de inserción ha sido copiado al portapapeles",

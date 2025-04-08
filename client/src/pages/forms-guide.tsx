@@ -28,9 +28,9 @@ export default function FormsGuide() {
   const { toast } = useToast();
   
   // URL para el script de integración
-  const baseUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
+  // Usar window.location.origin para obtener la URL base del sitio
   const formEmbedCode = `<!-- Código de ejemplo para integrar un formulario de AIPI -->
-<script src="${baseUrl}/static/form-embed.js?id=tu_id_de_formulario"></script>
+<script src="${window.location.origin}/static/form-embed.js?id=tu_id_de_formulario"></script>
 <div id="aipi-form-container"></div>`;
   
   // Función para copiar código al portapapeles
@@ -62,7 +62,7 @@ export default function FormsGuide() {
         } else if (inputValue.toLowerCase().includes('campos') || inputValue.toLowerCase().includes('field')) {
           botResponse = 'AIPI soporta diversos tipos de campos para tus formularios:\n\n• Texto corto\n• Texto largo (área de texto)\n• Email\n• Número\n• Teléfono\n• Fecha\n• Hora\n• Selección (dropdown)\n• Botones de radio\n• Casillas de verificación\n• Archivos\n• Dirección\n• URL\n• Consentimiento\n\nPuedes añadir, eliminar y reordenar estos campos según tus necesidades.';
         } else if (inputValue.toLowerCase().includes('url') || inputValue.toLowerCase().includes('link')) {
-          botResponse = `La URL correcta para el script de integración de formularios es:\n\n\`\`\`html\n<script src="${baseUrl}/static/form-embed.js?id=tu_id_de_formulario"></script>\n\`\`\`\n\nDonde "tu_id_de_formulario" debe ser reemplazado por el slug o ID específico de tu formulario. Este ID lo puedes encontrar en la página de detalles del formulario en tu dashboard.`;
+          botResponse = `La URL correcta para el script de integración de formularios es:\n\n\`\`\`html\n<script src="${window.location.origin}/static/form-embed.js?id=tu_id_de_formulario"></script>\n\`\`\`\n\nDonde "tu_id_de_formulario" debe ser reemplazado por el slug o ID específico de tu formulario. Este ID lo puedes encontrar en la página de detalles del formulario en tu dashboard.`;
         } else if (inputValue.toLowerCase().includes('respuestas') || inputValue.toLowerCase().includes('datos')) {
           botResponse = 'Las respuestas de tus formularios se almacenan de forma segura en tu cuenta de AIPI. Puedes:\n\n• Verlas en tiempo real desde el dashboard\n• Exportarlas en formato CSV\n• Configurar notificaciones por email cuando recibas nuevas respuestas\n• Analizar tendencias y patrones en los datos recibidos\n\nTodas las respuestas están protegidas y solo tú puedes acceder a ellas.';
         } else {

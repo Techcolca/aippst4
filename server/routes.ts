@@ -2987,6 +2987,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public Form API endpoints
+  app.get("/api/forms/public/:slug", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      
+      // Obtener el formulario por su slug
+      const form = await storage.getFormBySlug(slug);
+      
+      if (!form) {
+        return res.status(404).json({ error: "Form not found" });
+      }
+      
+      // Devolver solo la información pública necesaria para renderizar el formulario
+      // Excluimos información sensible
+      const publicFormData = {
+        id: form.id,
+        title: form.title,
+        description: form.description,
+        buttonColor: form.settings?.buttonColor || '#2563EB',
+        submitButtonText: form.settings?.submitButtonText || 'Enviar',
+        successMessage: form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.',
+        successUrl: form.settings?.successRedirectUrl,
+        fields: form.fields
+      };
+      
+      res.json(publicFormData);
+    } catch (error) {
+      console.error("Error getting public form:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+  // El endpoint de envío de formularios ya existe como "/api/public/form/:slug/submit"
+
   // Form Responses API endpoints
   app.get("/api/forms/:formId/responses", authenticateJWT, async (req, res) => {
     try {
