@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { FileText, CheckCircle2, Copy } from "lucide-react";
+import { FileText, CheckCircle2, Copy, SendHorizonal, Bot, ArrowDown } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/context/auth-context";
+import { useToast } from "@/hooks/use-toast";
 
 export default function FormsGuide() {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [messages, setMessages] = useState<{content: string, role: 'user' | 'assistant'}[]>([
+    {
+      role: 'assistant',
+      content: 'Hola, soy tu asistente de AIPI. Estoy aquí para responder cualquier pregunta sobre la personalización de formularios y la integración con tu sitio web. ¿En qué puedo ayudarte?'
+    }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
   
   // URL para el script de integración
   const baseUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
@@ -22,6 +38,58 @@ export default function FormsGuide() {
     navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+  
+  // Función para enviar mensaje al asistente
+  const sendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
+    
+    // Añadir mensaje del usuario
+    const userMessage = { content: inputValue, role: 'user' as const };
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
+    
+    try {
+      // Simulamos una respuesta del asistente (en producción, esto llamaría a una API)
+      setTimeout(() => {
+        let botResponse = '';
+        
+        if (inputValue.toLowerCase().includes('personalizar') || inputValue.toLowerCase().includes('personalización')) {
+          botResponse = 'Puedes personalizar tus formularios de varias maneras:\n\n1. Cambia los colores para que coincidan con tu marca\n2. Modifica el estilo y tamaño de fuente\n3. Ajusta el espaciado y bordes\n4. Personaliza los textos de los botones y mensajes\n5. Añade tu logotipo\n\nTodo esto lo puedes hacer desde el editor de formularios en tu dashboard.';
+        } else if (inputValue.toLowerCase().includes('integrar') || inputValue.toLowerCase().includes('integración')) {
+          botResponse = `Para integrar un formulario en tu sitio web, debes:\n\n1. Crear y publicar tu formulario desde el dashboard\n2. Copiar el código de integración que se proporciona\n3. Pegar este código en tu sitio web donde quieras que aparezca el formulario\n\nEl código se verá así:\n\`\`\`html\n${formEmbedCode}\n\`\`\`\n\nDonde "tu_id_de_formulario" será reemplazado por el ID único de tu formulario.`;
+        } else if (inputValue.toLowerCase().includes('campos') || inputValue.toLowerCase().includes('field')) {
+          botResponse = 'AIPI soporta diversos tipos de campos para tus formularios:\n\n• Texto corto\n• Texto largo (área de texto)\n• Email\n• Número\n• Teléfono\n• Fecha\n• Hora\n• Selección (dropdown)\n• Botones de radio\n• Casillas de verificación\n• Archivos\n• Dirección\n• URL\n• Consentimiento\n\nPuedes añadir, eliminar y reordenar estos campos según tus necesidades.';
+        } else if (inputValue.toLowerCase().includes('url') || inputValue.toLowerCase().includes('link')) {
+          botResponse = `La URL correcta para el script de integración de formularios es:\n\n\`\`\`html\n<script src="${baseUrl}/static/form-embed.js?id=tu_id_de_formulario"></script>\n\`\`\`\n\nDonde "tu_id_de_formulario" debe ser reemplazado por el slug o ID específico de tu formulario. Este ID lo puedes encontrar en la página de detalles del formulario en tu dashboard.`;
+        } else if (inputValue.toLowerCase().includes('respuestas') || inputValue.toLowerCase().includes('datos')) {
+          botResponse = 'Las respuestas de tus formularios se almacenan de forma segura en tu cuenta de AIPI. Puedes:\n\n• Verlas en tiempo real desde el dashboard\n• Exportarlas en formato CSV\n• Configurar notificaciones por email cuando recibas nuevas respuestas\n• Analizar tendencias y patrones en los datos recibidos\n\nTodas las respuestas están protegidas y solo tú puedes acceder a ellas.';
+        } else {
+          botResponse = 'Gracias por tu pregunta. Puedo ayudarte con la personalización de formularios, tipos de campos disponibles, cómo integrar formularios en tu sitio web, y cómo administrar las respuestas. Si tienes preguntas específicas sobre alguno de estos temas, no dudes en preguntar.';
+        }
+        
+        setMessages(prev => [...prev, { content: botResponse, role: 'assistant' }]);
+        setIsLoading(false);
+        scrollToBottom();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error al enviar mensaje:', error);
+      toast({
+        title: 'Error al enviar mensaje',
+        description: 'Hubo un problema al comunicarse con el asistente. Por favor, intenta de nuevo.',
+        variant: 'destructive',
+      });
+      setIsLoading(false);
+    }
+  };
+  
+  // Función para desplazarse al último mensaje
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   return (
@@ -189,6 +257,86 @@ export default function FormsGuide() {
                 <p className="text-sm text-gray-500 dark:text-gray-400 italic">
                   Nota: Crear tu primer formulario es gratuito. Para formularios adicionales y funcionalidades avanzadas, consulta nuestros planes de precios.
                 </p>
+              </div>
+            </div>
+            
+            <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 mt-10">
+              <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700 flex items-center">
+                <Bot className="mr-2 text-primary-600 dark:text-primary-400" />
+                <h2 className="text-2xl font-bold">Asistente de Personalización</h2>
+              </div>
+              <div className="p-6 bg-white dark:bg-gray-900">
+                <p className="mb-6 text-gray-700 dark:text-gray-300">
+                  Nuestro asistente virtual está aquí para responder todas tus preguntas sobre la personalización de formularios y cómo integrarlos en tu sitio web. Prueba haciendo preguntas como "¿Cómo personalizo los colores?" o "¿Cuál es la URL correcta para integración?".
+                </p>
+                
+                <Card className="border-gray-200 dark:border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="h-96 overflow-y-auto mb-4 space-y-4 p-3">
+                      {messages.map((message, index) => (
+                        <div 
+                          key={index} 
+                          className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div 
+                            className={`max-w-[80%] rounded-lg p-3 ${
+                              message.role === 'user' 
+                                ? 'bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-100' 
+                                : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
+                            }`}
+                          >
+                            {message.role === 'assistant' && (
+                              <div className="flex items-center mb-2">
+                                <Avatar className="h-6 w-6 mr-2">
+                                  <AvatarFallback className="bg-primary-600 text-white text-xs">AI</AvatarFallback>
+                                </Avatar>
+                                <span className="font-semibold text-sm">Asistente AIPI</span>
+                              </div>
+                            )}
+                            <div className="whitespace-pre-wrap text-sm">
+                              {message.content}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {isLoading && (
+                        <div className="flex justify-start">
+                          <div className="max-w-[80%] rounded-lg p-3 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
+                            <div className="flex items-center mb-2">
+                              <Avatar className="h-6 w-6 mr-2">
+                                <AvatarFallback className="bg-primary-600 text-white text-xs">AI</AvatarFallback>
+                              </Avatar>
+                              <span className="font-semibold text-sm">Asistente AIPI</span>
+                            </div>
+                            <div className="flex space-x-1 items-center">
+                              <div className="w-2 h-2 rounded-full bg-primary-600 animate-bounce"></div>
+                              <div className="w-2 h-2 rounded-full bg-primary-600 animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                              <div className="w-2 h-2 rounded-full bg-primary-600 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      <div ref={chatEndRef} />
+                    </div>
+                    
+                    <div className="flex mt-4">
+                      <Input
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                        placeholder="Escribe tu pregunta aquí..."
+                        className="flex-1 mr-2"
+                      />
+                      <Button 
+                        onClick={sendMessage} 
+                        disabled={isLoading || !inputValue.trim()}
+                        className="px-3"
+                      >
+                        <SendHorizonal size={18} />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
             
