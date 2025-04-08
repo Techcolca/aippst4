@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,11 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Bot, X, SendHorizonal, Copy, Check, Globe } from "lucide-react";
 import { useTheme } from "@/context/theme-context";
 import { useAuth } from "@/context/auth-context";
+import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { Copy, Check, Globe } from "lucide-react";
+import CustomizationAssistant from "@/components/customization-assistant";
 
 export default function GetStarted() {
   const [location, setLocation] = useLocation();
@@ -328,6 +333,9 @@ export default function GetStarted() {
       </main>
       
       <Footer />
+      
+      {/* Asistente de personalización flotante */}
+      <CustomizationAssistant />
     </div>
   );
 }
