@@ -41,12 +41,18 @@ export default function CustomizationAssistant() {
       response = "El mensaje de bienvenida puede personalizarse desde el panel de control en la sección 'Integraciones'. Puedes establecer un mensaje amigable que refleje la personalidad de tu marca y explique a los visitantes cómo puede ayudarles el asistente.";
     } else if (lowerCaseMessage.includes("idioma") || lowerCaseMessage.includes("traducción") || lowerCaseMessage.includes("lenguaje")) {
       response = "AIPI soporta múltiples idiomas. Puedes configurar el idioma principal y los idiomas adicionales en la sección 'Configuración' de tu panel de control. El asistente detectará automáticamente el idioma del usuario o respetará la configuración que establezcas.";
+    } else if (lowerCaseMessage.includes("script") && (lowerCaseMessage.includes("formulario") || lowerCaseMessage.includes("form"))) {
+      response = "El script para formularios tiene este formato: `<script src=\"https://api.aipi.example.com/form.js?id=ID-DEL-FORMULARIO\"></script>`\n\nDonde la URL completa sería: https://api.aipi.example.com/form/ID-DEL-FORMULARIO\n\nPor ejemplo, con un script como `<script src=\"https://api.aipi.example.com/form.js?id=registro-a-newsletter-242025\"></script>`, la URL del formulario sería: https://api.aipi.example.com/form/registro-a-newsletter-242025\n\nPuedes compartir esta URL directamente o incrustar el script en tu página web para mostrar el formulario.";
+    } else if (lowerCaseMessage.includes("url") && (lowerCaseMessage.includes("formulario") || lowerCaseMessage.includes("form"))) {
+      response = "Para cada formulario que creas, se genera un ID único (como 'registro-a-newsletter-242025'). La URL del formulario se construye así:\n\nhttps://api.aipi.example.com/form/[ID-DEL-FORMULARIO]\n\nEsta URL es directamente accesible y puedes compartirla con tus usuarios. También puedes obtener un código de incrustación desde el panel de control para mostrar el formulario dentro de tu sitio web.";
     } else if (lowerCaseMessage.includes("formulario") || lowerCaseMessage.includes("form")) {
-      response = "Puedes crear y personalizar formularios en la sección 'Formularios' de tu panel de control. Tenemos varios tipos prediseñados (contacto, encuesta, registro) que puedes adaptar a tus necesidades. Para más detalles, consulta la 'Guía de Formularios' en la página de inicio.";
+      response = "Puedes crear y personalizar formularios en la sección 'Formularios' de tu panel de control. Tenemos varios tipos prediseñados (contacto, encuesta, registro) que puedes adaptar a tus necesidades. Para cada formulario, se genera un código de incrustación y una URL única. El código tiene el formato: `<script src=\"https://api.aipi.example.com/form.js?id=ID-DEL-FORMULARIO\"></script>` y la URL sería: https://api.aipi.example.com/form/ID-DEL-FORMULARIO";
     } else if (lowerCaseMessage.includes("error") || lowerCaseMessage.includes("no funciona")) {
       response = "Si estás experimentando problemas con la integración, verifica: 1) Que el código esté correctamente insertado antes del cierre de </body>, 2) Que tu suscripción esté activa, 3) Que no haya bloqueadores de scripts en el navegador. Si el problema persiste, contacta a nuestro soporte técnico.";
     } else if (lowerCaseMessage.includes("precio") || lowerCaseMessage.includes("costo") || lowerCaseMessage.includes("plan")) {
       response = "AIPI ofrece diferentes planes según tus necesidades: Free (limitado), Basic, Professional y Enterprise. Puedes ver los detalles de cada plan y sus precios en la página de Precios. También ofrecemos descuentos para suscripciones anuales.";
+    } else if (lowerCaseMessage.includes("id") && lowerCaseMessage.includes("formulario")) {
+      response = "El ID de un formulario es una cadena única que identifica tu formulario en nuestro sistema. Por ejemplo, 'registro-a-newsletter-242025'. Este ID se genera automáticamente cuando creas un formulario y aparece en el código de incrustación: `<script src=\"https://api.aipi.example.com/form.js?id=ID-DEL-FORMULARIO\"></script>`. También puedes encontrar el ID en tu panel de control, en la sección 'Formularios'.";
     } else {
       response = "Gracias por tu pregunta. Para personalizar cualquier aspecto de AIPI, generalmente necesitarás acceder a tu panel de control. Allí encontrarás opciones para cambiar la apariencia, comportamiento, mensajes y mucho más. ¿Hay algo específico que te gustaría saber?";
     }
@@ -102,6 +108,28 @@ export default function CustomizationAssistant() {
       handleSendMessage();
     }
   };
+  
+  // Formatear el contenido del mensaje con código
+  const formatMessageContent = (content: string): React.ReactNode => {
+    if (!content.includes('`')) return content;
+    
+    // Dividir el contenido en segmentos de código y texto regular
+    const segments = content.split(/(`[^`]+`)/);
+    
+    return segments.map((segment, i) => {
+      if (segment.startsWith('`') && segment.endsWith('`')) {
+        // Es un segmento de código, lo formateamos especialmente
+        const code = segment.substring(1, segment.length - 1);
+        return (
+          <code key={i} className="bg-gray-200 dark:bg-gray-700 px-1 rounded font-mono text-sm">
+            {code}
+          </code>
+        );
+      }
+      // Es texto regular
+      return <span key={i}>{segment}</span>;
+    });
+  };
 
   return (
     <>
@@ -146,13 +174,13 @@ export default function CustomizationAssistant() {
                     </Avatar>
                   )}
                   <div 
-                    className={`py-2 px-3 rounded-lg ${
+                    className={`py-2 px-3 rounded-lg whitespace-pre-wrap ${
                       msg.role === "user" 
                         ? "bg-primary text-white rounded-tr-none" 
                         : "bg-gray-100 dark:bg-gray-800 rounded-tl-none"
                     }`}
                   >
-                    {msg.content}
+                    {formatMessageContent(msg.content)}
                   </div>
                 </div>
               </div>
