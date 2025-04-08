@@ -11,6 +11,7 @@
     font: "inter",
     visitorId: "",
     conversationId: null,
+    customWelcomeMessage: null, // Nuevo campo para mensaje de bienvenida personalizado
     serverUrl: window.location.origin, // Will be overridden by script URL source
   };
   
@@ -87,6 +88,14 @@
       // Update config with server response
       if (data.integration) {
         config.themeColor = data.integration.themeColor || config.themeColor;
+        
+        // Verificar si hay un mensaje de bienvenida personalizado en botBehavior
+        if (data.integration.botBehavior) {
+          const behavior = data.integration.botBehavior.split('\n');
+          if (behavior[0]) {
+            config.customWelcomeMessage = behavior[0];
+          }
+        }
       }
       
       if (data.settings) {
@@ -96,6 +105,26 @@
         config.userBubbleColor = data.settings.userBubbleColor || config.userBubbleColor;
         config.assistantBubbleColor = data.settings.assistantBubbleColor || config.assistantBubbleColor;
         config.font = data.settings.font || config.font;
+        
+        // Leer el mensaje de bienvenida personalizado de los ajustes si existe
+        if (data.settings.welcomeMessage) {
+          config.customWelcomeMessage = data.settings.welcomeMessage;
+        }
+      }
+      
+      // Obtener mensaje de bienvenida personalizado del parámetro del script
+      const scriptTags = document.getElementsByTagName('script');
+      for (let i = 0; i < scriptTags.length; i++) {
+        const scriptTag = scriptTags[i];
+        const src = scriptTag.src || '';
+        
+        if (src.includes('fullscreen-embed.js')) {
+          const welcomeMessage = scriptTag.getAttribute('data-welcome-message');
+          if (welcomeMessage) {
+            config.customWelcomeMessage = welcomeMessage;
+          }
+          break;
+        }
       }
       
       // Create widget DOM elements
@@ -560,8 +589,9 @@
         config.conversationId = data.id;
         conversationStarted = true;
         
-        // Add initial greeting
-        addMessage(config.greetingMessage, 'assistant');
+        // Add initial greeting - usar mensaje personalizado si existe
+        const welcomeMessage = config.customWelcomeMessage || config.greetingMessage;
+        addMessage(welcomeMessage, 'assistant');
         console.log('AIPI Fullscreen Widget: Conversation started successfully');
       }
     } catch (error) {
