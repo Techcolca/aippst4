@@ -9,7 +9,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChevronLeft, BarChart2, PieChart, LineChart, Users, MessageSquare, CheckCircle } from "lucide-react";
+import { 
+  ChevronLeft, 
+  BarChart2, 
+  PieChart, 
+  LineChart, 
+  Users, 
+  MessageSquare, 
+  CheckCircle,
+  ShoppingCart,
+  MessageCircle,
+  Tag
+} from "lucide-react";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,6 +37,8 @@ import {
   Cell,
   LineChart as ReLineChart,
   Line,
+  AreaChart,
+  Area,
 } from "recharts";
 
 // Colores para los gráficos
@@ -53,46 +66,30 @@ export default function IntegrationAnalytics() {
 
   // Función para preparar datos para el gráfico de tendencias (podrían ser por día)
   const prepareConversationTrendData = () => {
-    if (!conversations) return [];
-    
-    // Agrupar conversaciones por día
-    const lastDays = 7; // Últimos 7 días
-    const groupedByDay: {[key: string]: number} = {};
-    
-    // Inicializar los últimos días con 0 conversaciones
-    for (let i = 0; i < lastDays; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      groupedByDay[dateStr] = 0;
-    }
-    
-    // Contar conversaciones por día
-    conversations.forEach((conv: any) => {
-      const dateStr = new Date(conv.createdAt).toISOString().split('T')[0];
-      // Solo contar si está dentro de los últimos días
-      if (groupedByDay[dateStr] !== undefined) {
-        groupedByDay[dateStr]++;
-      }
-    });
-    
-    // Convertir a formato para gráfico
-    return Object.entries(groupedByDay)
-      .map(([date, count]) => ({ date, count }))
-      .sort((a, b) => a.date.localeCompare(b.date));
+    if (!stats?.conversationTrend) return [];
+    return stats.conversationTrend;
   };
 
   // Función para preparar datos para el gráfico de resolución
   const prepareResolutionData = () => {
-    if (!conversations) return [];
-    
-    const resolved = conversations.filter((conv: any) => conv.resolved).length;
-    const active = conversations.length - resolved;
+    if (!stats) return [];
     
     return [
-      { name: t('resolved'), value: resolved },
-      { name: t('active'), value: active }
+      { name: t('resolved'), value: stats.resolvedConversations || 0 },
+      { name: t('active'), value: (stats.totalConversations || 0) - (stats.resolvedConversations || 0) }
     ];
+  };
+
+  // Preparar datos para top productos
+  const prepareTopProductsData = () => {
+    if (!stats?.topProducts) return [];
+    return stats.topProducts.slice(0, 5); // Solo los top 5
+  };
+
+  // Preparar datos para top temas
+  const prepareTopTopicsData = () => {
+    if (!stats?.topTopics) return [];
+    return stats.topTopics.slice(0, 5); // Solo los top 5
   };
 
   return (
@@ -152,16 +149,10 @@ export default function IntegrationAnalytics() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {conversations?.length || 0}
+                    {stats?.totalConversations || 0}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {conversations && conversations.length > 0 
-                      ? t('since_first_conversation', {
-                          date: new Date(
-                            Math.min(...conversations.map((c: any) => new Date(c.createdAt).getTime()))
-                          ).toLocaleDateString()
-                        })
-                      : t('no_conversations_yet')}
+                    {stats?.messageCount ? t('total_messages', { count: stats.messageCount }) : t('no_messages')}
                   </p>
                 </CardContent>
               </Card>
@@ -175,15 +166,15 @@ export default function IntegrationAnalytics() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {conversations && conversations.length > 0 
-                      ? `${Math.round((conversations.filter((c: any) => c.resolved).length / conversations.length) * 100)}%`
+                    {stats?.totalConversations 
+                      ? `${Math.round((stats.resolvedConversations / stats.totalConversations) * 100)}%`
                       : '0%'}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {conversations && conversations.length > 0 
+                    {stats?.totalConversations 
                       ? t('resolved_conversations_count', { 
-                          count: conversations.filter((c: any) => c.resolved).length,
-                          total: conversations.length
+                          count: stats.resolvedConversations,
+                          total: stats.totalConversations
                         })
                       : t('no_conversations_to_resolve')}
                   </p>
@@ -193,32 +184,25 @@ export default function IntegrationAnalytics() {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    {t('unique_visitors')}
+                    {t('message_distribution')}
                   </CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <MessageCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {conversations 
-                      ? new Set(conversations.map((c: any) => c.visitorId).filter(Boolean)).size
-                      : 0}
+                    {stats?.userMessageCount 
+                      ? `${Math.round((stats.userMessageCount / stats.messageCount) * 100)}% / ${Math.round((stats.assistantMessageCount / stats.messageCount) * 100)}%`
+                      : '0% / 0%'}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {conversations && conversations.length > 0
-                      ? t('unique_visitors_percentage', {
-                          percentage: Math.round(
-                            (new Set(conversations.map((c: any) => c.visitorId).filter(Boolean)).size / 
-                            conversations.length) * 100
-                          )
-                        })
-                      : t('no_visitor_data')}
+                    {t('user_vs_assistant_messages')}
                   </p>
                 </CardContent>
               </Card>
             </div>
 
-            {/* Gráficos */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Gráficos principales */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <Card>
                 <CardHeader>
                   <CardTitle>{t('conversation_trend')}</CardTitle>
@@ -229,7 +213,7 @@ export default function IntegrationAnalytics() {
                 <CardContent>
                   <div className="h-80">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ReLineChart
+                      <AreaChart
                         data={prepareConversationTrendData()}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                       >
@@ -238,14 +222,15 @@ export default function IntegrationAnalytics() {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Line
+                        <Area
                           type="monotone"
                           dataKey="count"
                           name={t('conversations')}
                           stroke="#8884d8"
-                          activeDot={{ r: 8 }}
+                          fill="#8884d8"
+                          fillOpacity={0.3}
                         />
-                      </ReLineChart>
+                      </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
@@ -279,6 +264,69 @@ export default function IntegrationAnalytics() {
                         <Tooltip />
                         <Legend />
                       </RePieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Gráficos de productos y temas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <div>
+                    <CardTitle>{t('top_products')}</CardTitle>
+                    <CardDescription>
+                      {t('most_mentioned_products')}
+                    </CardDescription>
+                  </div>
+                  <ShoppingCart className="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={prepareTopProductsData()}
+                        layout="vertical"
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis type="number" />
+                        <YAxis dataKey="name" type="category" width={150} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="frequency" name={t('mentions')} fill="#00C49F" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <div>
+                    <CardTitle>{t('top_topics')}</CardTitle>
+                    <CardDescription>
+                      {t('most_discussed_topics')}
+                    </CardDescription>
+                  </div>
+                  <Tag className="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart
+                        data={prepareTopTopicsData()}
+                        layout="vertical"
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis type="number" />
+                        <YAxis dataKey="topic" type="category" width={150} />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="frequency" name={t('mentions')} fill="#8884d8" />
+                      </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </CardContent>
