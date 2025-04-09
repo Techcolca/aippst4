@@ -47,7 +47,7 @@ export default function ConversationDetails() {
 
   return (
     <DashboardLayout>
-      <div className="container py-6">
+      <div className="w-full max-w-full px-6 py-6">
         <div className="flex items-center mb-6">
           <Button 
             variant="ghost" 
