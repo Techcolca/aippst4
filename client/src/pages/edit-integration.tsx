@@ -601,7 +601,19 @@ export default function EditIntegration() {
                             setSelectedFiles(null);
                             
                             // Refrescar los datos de la integración
-                            queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+                            await queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+                            
+                            // Actualizar la integración local
+                            const updatedIntegration = await storage.getIntegration(integration.id);
+                            if (updatedIntegration) {
+                              setFormData(prev => ({
+                                ...prev,
+                                documentsData: updatedIntegration.documentsData
+                              }));
+                            }
+                            
+                            // Limpiar archivos seleccionados
+                            setSelectedFiles(null);
                           } catch (err) {
                             console.error("Error al subir documentos:", err);
                             toast({
@@ -652,7 +664,16 @@ export default function EditIntegration() {
                                 });
                                 
                                 // Refrescar los datos de la integración
-                                queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+                                await queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+                                
+                                // Actualizar el estado local
+                                if (integration) {
+                                  const updatedDocs = integration.documentsData.filter(d => d.id !== doc.id);
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    documentsData: updatedDocs
+                                  }));
+                                }
                               } catch (err) {
                                 console.error("Error al eliminar documento:", err);
                                 toast({
