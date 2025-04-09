@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Eye } from "lucide-react";
+import { Calendar, Eye, Filter } from "lucide-react";
 
 interface IntegrationCardProps {
   name: string;
@@ -8,6 +8,7 @@ interface IntegrationCardProps {
   active: boolean;
   visitorCount: number;
   installedDate: string;
+  ignoredSections?: string[];
   onEdit: () => void;
   onViewAnalytics: () => void;
   onViewConversations?: () => void;
@@ -19,6 +20,7 @@ export default function IntegrationCard({
   active,
   visitorCount,
   installedDate,
+  ignoredSections = [],
   onEdit,
   onViewAnalytics,
   onViewConversations
@@ -53,10 +55,31 @@ export default function IntegrationCard({
           <Eye className="w-4 h-4 mr-2" />
           Visitors helped: {visitorCount ? visitorCount.toLocaleString() : '0'}
         </div>
-        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
           <Calendar className="w-4 h-4 mr-2" />
           Installed: {installedDate}
         </div>
+        {ignoredSections && ignoredSections.length > 0 && (
+          <div className="flex items-start text-sm text-gray-600 dark:text-gray-400">
+            <Filter className="w-4 h-4 mr-2 mt-0.5" />
+            <div>
+              <span>Ignored sections: </span>
+              <span className="text-primary-600 dark:text-primary-400">{ignoredSections.length}</span>
+              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                {ignoredSections.slice(0, 2).map((section, index) => (
+                  <span key={index} className="inline-block bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded mr-1 mb-1">
+                    {section}
+                  </span>
+                ))}
+                {ignoredSections.length > 2 && (
+                  <span className="inline-block bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">
+                    +{ignoredSections.length - 2} more
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="flex flex-wrap gap-2 justify-between">

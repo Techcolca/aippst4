@@ -589,6 +589,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     url={integration.url}
                     active={integration.active || false}
                     visitorCount={integration.visitorCount || 0}
+                    ignoredSections={integration.ignoredSections || []}
                     installedDate={new Date(integration.createdAt).toLocaleDateString()}
                     onEdit={() => navigate(`/integrations/${integration.id}/edit`)}
                     onViewAnalytics={() => navigate('/analytics')}
