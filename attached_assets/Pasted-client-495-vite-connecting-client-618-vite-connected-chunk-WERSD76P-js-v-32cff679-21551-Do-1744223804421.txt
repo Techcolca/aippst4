@@ -1,0 +1,59 @@
+client:495 [vite] connecting...
+client:618 [vite] connected.
+chunk-WERSD76P.js?v=32cff679:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+i18next.js?v=32cff679:209 i18next: languageChanged fr
+i18next.js?v=32cff679:209 i18next: initialized Object
+i18next.js?v=32cff679:209 i18next: languageChanged fr
+auth-context.tsx:43 Verificando estado de autenticación...
+auth-context.tsx:49 Token encontrado en localStorage, usando para autenticación
+auth-context.tsx:59 Estado de la respuesta: 200
+auth-context.tsx:63 Usuario autenticado encontrado: Object
+i18next.js?v=32cff679:209 i18next: languageChanged fr
+queryClient.ts:56 Ejecutando consulta para: /api/integrations
+dashboard.tsx:34 Dashboard: Setting initialTab to integrations from URL query parameters
+queryClient.ts:56 Ejecutando consulta para: /api/dashboard/stats
+queryClient.ts:70 Respuesta: 200 OK
+queryClient.ts:70 Respuesta: 200 OK
+i18next.js?v=32cff679:209 i18next: languageChanged fr
+dashboard.tsx:34 Dashboard: Setting initialTab to integrations from URL query parameters
+client:223 [vite] hot updated: /src/components/integration-card.tsx
+client:223 [vite] hot updated: /src/index.css?v=Adpuv-0SxwH3AvEOrVp2B
+client:223 [vite] hot updated: /src/components/integration-card.tsx
+client:223 [vite] hot updated: /src/index.css?v=Adpuv-0SxwH3AvEOrVp2B
+client:223 [vite] hot updated: /src/components/integration-card.tsx
+client:223 [vite] hot updated: /src/index.css?v=Adpuv-0SxwH3AvEOrVp2B
+client:223 [vite] hot updated: /src/App.tsx?v=Adpuv-0SxwH3AvEOrVp2B
+client:223 [vite] hot updated: /src/index.css?v=Adpuv-0SxwH3AvEOrVp2B
+i18next.js?v=32cff679:209 i18next: languageChanged fr
+dashboard.tsx:34 Dashboard: Setting initialTab to integrations from URL query parameters
+queryClient.ts:56 Ejecutando consulta para: /api/integrations/5
+queryClient.ts:70 Respuesta: 200 OK
+/api/site-content/5:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)
+edit-integration.tsx:158 Error cargando contenido: Error: Error al cargar el contenido del sitio
+    at loadSiteContent (edit-integration.tsx:152:15)
+loadSiteContent @ edit-integration.tsx:158
+queryClient.ts:56 Ejecutando consulta para: /api/integrations/5
+queryClient.ts:70 Respuesta: 200 OK
+/api/site-content/5:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)
+edit-integration.tsx:158 Error cargando contenido: Error: Error al cargar el contenido del sitio
+    at loadSiteContent (edit-integration.tsx:152:15)
+loadSiteContent @ edit-integration.tsx:158
+/api/scrape:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)
+edit-integration.tsx:738 Error en extracción: Error: Authentication required
+    at onClick (edit-integration.tsx:726:35)
+onClick @ edit-integration.tsx:738
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.

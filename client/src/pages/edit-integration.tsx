@@ -147,7 +147,19 @@ export default function EditIntegration() {
     if (!integration) return;
     
     try {
-      const response = await fetch(`/api/site-content/${integration.id}`);
+      // Obtener el token de autenticación
+      const authToken = localStorage.getItem('auth_token');
+      const headers: Record<string, string> = {};
+      
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
+      
+      const response = await fetch(`/api/site-content/${integration.id}`, {
+        headers: headers,
+        credentials: "include"
+      });
+      
       if (!response.ok) {
         throw new Error("Error al cargar el contenido del sitio");
       }
@@ -709,11 +721,20 @@ export default function EditIntegration() {
                             description: "El proceso puede tardar unos minutos",
                           });
                           
+                          // Obtener el token de autenticación
+                          const authToken = localStorage.getItem('auth_token');
+                          const headers: Record<string, string> = {
+                            'Content-Type': 'application/json',
+                          };
+                          
+                          if (authToken) {
+                            headers['Authorization'] = `Bearer ${authToken}`;
+                          }
+                          
                           const response = await fetch('/api/scrape', {
                             method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
+                            headers: headers,
+                            credentials: "include",
                             body: JSON.stringify({
                               url,
                               integrationId: integration?.id,
@@ -798,8 +819,18 @@ export default function EditIntegration() {
                                 className="h-6 w-6 text-red-500 hover:text-red-700 flex-shrink-0"
                                 onClick={async () => {
                                   try {
+                                    // Obtener el token de autenticación
+                                    const authToken = localStorage.getItem('auth_token');
+                                    const headers: Record<string, string> = {};
+                                    
+                                    if (authToken) {
+                                      headers['Authorization'] = `Bearer ${authToken}`;
+                                    }
+                                    
                                     const response = await fetch(`/api/site-content/${content.id}`, {
                                       method: 'DELETE',
+                                      headers: headers,
+                                      credentials: "include"
                                     });
                                     
                                     if (!response.ok) {
