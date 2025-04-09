@@ -94,42 +94,44 @@ export default function IntegrationAnalytics() {
 
   return (
     <DashboardLayout>
-      <div className="container py-6">
-        <div className="flex items-center mb-6">
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="mr-2" 
-            onClick={() => navigate("/dashboard?tab=integrations")}
-            title={t('back')}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">
-              {isLoadingIntegration 
-                ? t('loading') 
-                : `${t('analytics_for')} ${integration?.name || id}`}
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400">
-              {t('view_performance_metrics_for_integration')}
-            </p>
+      <div className="w-full max-w-full px-6 py-6">
+        <div className="flex flex-wrap items-center justify-between mb-6">
+          <div className="flex items-center">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="mr-2" 
+              onClick={() => navigate("/dashboard?tab=integrations")}
+              title={t('back')}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-2xl font-bold">
+                {isLoadingIntegration 
+                  ? t('loading') 
+                  : `${t('analytics_for')} ${integration?.name || id}`}
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400">
+                {t('view_performance_metrics_for_integration')}
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="flex gap-4 mb-6">
-          <Button 
-            onClick={() => navigate(`/integrations/${id}/edit`)}
-            variant="outline"
-          >
-            {t('edit_integration')}
-          </Button>
-          <Button 
-            onClick={() => navigate(`/integrations/${id}/conversations`)}
-            variant="outline"
-          >
-            {t('view_conversations')}
-          </Button>
+          <div className="flex gap-4">
+            <Button 
+              onClick={() => navigate(`/integrations/${id}/edit`)}
+              variant="outline"
+            >
+              {t('edit_integration')}
+            </Button>
+            <Button 
+              onClick={() => navigate(`/integrations/${id}/conversations`)}
+              variant="outline"
+            >
+              {t('view_conversations')}
+            </Button>
+          </div>
         </div>
 
         {isLoadingStats || isLoadingConversations ? (
