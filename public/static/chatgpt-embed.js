@@ -127,12 +127,8 @@
           config.position = data.integration.position;
         }
         
-        if (data.integration.botBehavior) {
-          const behavior = data.integration.botBehavior.split('\n');
-          if (behavior[0]) {
-            config.greetingMessage = behavior[0];
-          }
-        }
+        // El botBehavior no debe usarse como mensaje de bienvenida
+        // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
       
       console.log('AIPI Widget: Configuración cargada correctamente');

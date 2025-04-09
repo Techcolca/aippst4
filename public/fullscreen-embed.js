@@ -91,13 +91,8 @@
         config.themeColor = data.integration.themeColor || config.themeColor;
         config.ignoredSections = data.integration.ignoredSections || [];
         
-        // Verificar si hay un mensaje de bienvenida personalizado en botBehavior
-        if (data.integration.botBehavior) {
-          const behavior = data.integration.botBehavior.split('\n');
-          if (behavior[0]) {
-            config.customWelcomeMessage = behavior[0];
-          }
-        }
+        // El botBehavior no debe usarse como mensaje de bienvenida
+        // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
       
       if (data.settings) {
