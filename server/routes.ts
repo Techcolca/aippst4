@@ -300,6 +300,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // API para obtener los análisis de conversaciones (con datos reales)
+  // Obtener analíticas para una integración específica
+  app.get("/api/analytics/integration/:integrationId", authenticateJWT, async (req, res) => {
+    try {
+      const integrationId = parseInt(req.params.integrationId);
+      
+      // Verificar que la integración pertenece al usuario
+      const integration = await storage.getIntegration(integrationId);
+      
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      // Obtener las conversaciones para esta integración
+      const conversations = await storage.getConversations(integrationId);
+      
+      // Calcular estadísticas básicas
+      const totalConversations = conversations.length;
+      const resolvedConversations = conversations.filter(conv => conv.resolved).length;
+      const resolutionRate = totalConversations > 0 ? resolvedConversations / totalConversations : 0;
+      
+      // Obtener todos los mensajes de estas conversaciones
+      let allMessages = [];
+      for (const conversation of conversations) {
+        const messages = await storage.getConversationMessages(conversation.id);
+        allMessages.push(...messages);
+      }
+      
+      // Extraer temas populares, productos, etc.
+      const topTopics = storage.extractTopTopics ? storage.extractTopTopics(allMessages) : [];
+      const topProducts = storage.extractTopProducts ? storage.extractTopProducts(allMessages) : [];
+      
+      // Agrupar conversaciones por fecha para mostrar tendencias
+      const conversationsByDate = storage.getConversationTrend ? storage.getConversationTrend(conversations) : [];
+      
+      res.json({
+        integrationId,
+        integrationName: integration.name,
+        totalConversations,
+        resolvedConversations,
+        resolutionRate,
+        messageCount: allMessages.length,
+        userMessageCount: allMessages.filter(msg => msg.role === 'user').length,
+        assistantMessageCount: allMessages.filter(msg => msg.role === 'assistant').length,
+        topTopics,
+        topProducts,
+        conversationTrend: conversationsByDate
+      });
+    } catch (error) {
+      console.error("Error getting integration analytics:", error);
+      res.status(500).json({ message: "Error getting integration analytics" });
+    }
+  });
+
   app.get("/api/analytics/conversation", verifyToken, async (req, res) => {
     try {
       const userId = req.userId;

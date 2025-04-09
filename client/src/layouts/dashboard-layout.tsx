@@ -1,91 +1,109 @@
-import React from "react";
+import { ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { useAuth } from "@/context/auth-context";
-import { Button } from "@/components/ui/button";
-import { LogOut, Moon, Sun, User } from "lucide-react";
-import { useTheme } from "@/context/theme-context";
 import { useTranslation } from "react-i18next";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  User,
+  Settings,
+  BellRing,
+  LogOut,
+  ChevronDown,
+  Inbox,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/auth-context";
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const { t } = useTranslation();
   const [, navigate] = useLocation();
-  const { user, logout } = useAuth();
-  const { theme, setTheme } = useTheme();
-  const { t, i18n } = useTranslation();
+  const { logout, user } = useAuth();
   
-  const handleLogout = async () => {
-    await logout();
+  // Obtener perfil del usuario para mostrar nombre y avatar
+  const { data: profile } = useQuery({
+    queryKey: ["/api/profile"],
+    enabled: !!user,
+  });
+
+  const handleLogout = () => {
+    logout();
     navigate("/login");
-  };
-  
-  const toggleLanguage = () => {
-    const nextLang = i18n.language === 'en' ? 'es' : i18n.language === 'es' ? 'fr' : 'en';
-    i18n.changeLanguage(nextLang);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <h1 
-              className="text-xl font-bold text-primary cursor-pointer"
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+      {/* Header */}
+      <header className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div className="container flex items-center justify-between h-16">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              className="font-semibold text-lg"
               onClick={() => navigate("/dashboard")}
             >
               AIPI
-            </h1>
+            </Button>
           </div>
           
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              title={theme === 'dark' ? t('switch_to_light') : t('switch_to_dark')}
-            >
-              {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              onClick={toggleLanguage}
-              className="text-sm"
-            >
-              {i18n.language.toUpperCase()}
-            </Button>
-            
+          <div className="flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
-                  <User className="h-5 w-5" />
+                  <BellRing className="h-5 w-5" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <div className="px-2 py-1.5">
-                  <p className="text-sm font-medium">{user?.username || 'Usuario'}</p>
-                  <p className="text-xs text-gray-500 truncate">{user?.email || 'correo@ejemplo.com'}</p>
+                <DropdownMenuLabel>{t('notifications')}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <div className="max-h-[300px] overflow-auto">
+                  <div className="p-4 text-sm text-center text-gray-500 dark:text-gray-400">
+                    {t('no_new_notifications')}
+                  </div>
                 </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-sm font-medium">
+                      {profile?.username || user?.username || t('user')}
+                    </span>
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{t('account')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/profile")}>
-                  {t('profile')}
+                <DropdownMenuItem onClick={() => navigate("/dashboard?tab=settings")}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>{t('settings')}</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/settings")}>
-                  {t('settings')}
+                <DropdownMenuItem onClick={() => navigate("/dashboard?tab=subscription")}>
+                  <Inbox className="mr-2 h-4 w-4" />
+                  <span>{t('subscription')}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="text-red-500">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  {t('logout')}
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>{t('logout')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -93,13 +111,47 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </header>
       
-      <main>
+      {/* Main content */}
+      <main className="flex-1 bg-gray-50 dark:bg-gray-950">
         {children}
       </main>
       
-      <footer className="py-6 border-t border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
-          &copy; {new Date().getFullYear()} AIPI. {t('all_rights_reserved')}
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 py-6">
+        <div className="container">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                © 2025 AIPI.
+              </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button
+                variant="link"
+                size="sm"
+                className="text-gray-500 dark:text-gray-400"
+                onClick={() => navigate("/docs")}
+              >
+                {t('documentation')}
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                className="text-gray-500 dark:text-gray-400"
+                onClick={() => navigate("/pricing")}
+              >
+                {t('pricing')}
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                className="text-gray-500 dark:text-gray-400"
+                onClick={() => navigate("/get-started")}
+              >
+                {t('get_started')}
+              </Button>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

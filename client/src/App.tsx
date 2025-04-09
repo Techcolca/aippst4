@@ -23,6 +23,8 @@ import FormEditor from "@/pages/form-editor";
 import FormResponses from "@/pages/form-responses";
 import FormPreview from "@/pages/form-preview";
 import ConversationDetails from "@/pages/conversation-details";
+import IntegrationConversations from "@/pages/integration-conversations";
+import IntegrationAnalytics from "@/pages/integration-analytics";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -43,8 +45,8 @@ function Router() {
       <Route path="/dashboard/subscription/success" component={SubscriptionSuccess} />
       <Route path="/dashboard/subscription/cancel" component={SubscriptionCancel} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
-      <Route path="/integrations/:id/conversations" component={Analytics} />
-      <Route path="/integrations/:id/analytics" component={Analytics} />
+      <Route path="/integrations/:id/conversations" component={IntegrationConversations} />
+      <Route path="/integrations/:id/analytics" component={IntegrationAnalytics} />
       <Route path="/create-integration" component={CreateIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/admin" component={AdminPanel} />
