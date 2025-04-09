@@ -15,6 +15,7 @@
     visitorId: "",
     conversationId: null,
     widgetType: "bubble", // "bubble" or "fullscreen"
+    ignoredSections: [], // Secciones del sitio web a ignorar
     serverUrl: "https://api.aipi.example.com", // Will be overridden by script URL source
     fontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
   };
@@ -105,6 +106,7 @@
         config.position = data.integration.position || config.position;
         config.themeColor = data.integration.themeColor || config.themeColor;
         config.widgetType = data.integration.widgetType || config.widgetType;
+        config.ignoredSections = data.integration.ignoredSections || [];
       }
       
       if (data.settings) {
@@ -143,7 +145,14 @@
       document.querySelectorAll('h1, h2').forEach(heading => {
         const text = heading.textContent.trim();
         if (text) {
-          headings.push(`${heading.tagName}: ${text}`);
+          // Verificar si este encabezado corresponde a una sección ignorada
+          const shouldIgnore = config.ignoredSections && config.ignoredSections.some(section => 
+            text.toLowerCase().includes(section.toLowerCase())
+          );
+          
+          if (!shouldIgnore) {
+            headings.push(`${heading.tagName}: ${text}`);
+          }
         }
       });
       
@@ -174,6 +183,47 @@
             const unwanted = clone.querySelectorAll('script, style, iframe, nav, aside, .comment, .comments, .sidebar, .widget, .ad, .ads, .advertisement');
             unwanted.forEach(unwantedEl => unwantedEl.remove());
             
+            // Eliminar secciones ignoradas
+            if (config.ignoredSections && config.ignoredSections.length > 0) {
+              config.ignoredSections.forEach(section => {
+                if (section && section.trim()) {
+                  // Buscar secciones por encabezados que contienen el texto
+                  clone.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
+                    if (heading.textContent.toLowerCase().includes(section.toLowerCase())) {
+                      // Encontrar el contenedor de la sección (hermanos hasta el siguiente encabezado del mismo nivel o superior)
+                      let currentElement = heading;
+                      const headingLevel = parseInt(heading.tagName.substring(1));
+                      
+                      // Eliminar el encabezado mismo
+                      heading.parentNode?.removeChild(heading);
+                      
+                      // Eliminar elementos hasta el siguiente encabezado del mismo nivel o superior
+                      while (currentElement.nextElementSibling) {
+                        const nextElement = currentElement.nextElementSibling;
+                        const tagName = nextElement.tagName.toLowerCase();
+                        
+                        // Si encontramos un encabezado del mismo nivel o superior, detenemos la eliminación
+                        if (tagName.startsWith('h') && parseInt(tagName.substring(1)) <= headingLevel) {
+                          break;
+                        }
+                        
+                        nextElement.parentNode?.removeChild(nextElement);
+                      }
+                    }
+                  });
+                  
+                  // También buscar por contenedores que pueden tener un ID o clase que coincida con la sección
+                  clone.querySelectorAll(`[id*="${section}"], [class*="${section}"], section, div, article`).forEach(element => {
+                    // Verificar si el elemento o alguno de sus padres contiene el texto de la sección
+                    const elementText = element.textContent.toLowerCase();
+                    if (elementText.includes(section.toLowerCase())) {
+                      element.parentNode?.removeChild(element);
+                    }
+                  });
+                }
+              });
+            }
+            
             contents.push(clone.textContent.trim());
           });
           
@@ -203,12 +253,40 @@
         
         elementsToRemove.forEach(el => el.remove());
         
+        // Eliminar secciones ignoradas del body
+        if (config.ignoredSections && config.ignoredSections.length > 0) {
+          config.ignoredSections.forEach(section => {
+            if (section && section.trim()) {
+              // Buscar todas las secciones que contienen el texto en encabezados
+              bodyClone.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
+                if (heading.textContent.toLowerCase().includes(section.toLowerCase())) {
+                  heading.parentNode?.removeChild(heading);
+                }
+              });
+              
+              // Buscar contenedores que puedan contener la sección
+              bodyClone.querySelectorAll(`[id*="${section}"], [class*="${section}"], section, div, article`).forEach(element => {
+                const elementText = element.textContent.toLowerCase();
+                if (elementText.includes(section.toLowerCase())) {
+                  element.parentNode?.removeChild(element);
+                }
+              });
+            }
+          });
+        }
+        
         // Obtener párrafos significativos (con suficiente texto)
         const paragraphs = [];
         bodyClone.querySelectorAll('p').forEach(p => {
           const text = p.textContent.trim();
-          // Solo incluir párrafos con al menos 100 caracteres
-          if (text.length > 100) {
+          
+          // Verificar que este párrafo no pertenezca a una sección ignorada
+          const shouldIgnore = config.ignoredSections && config.ignoredSections.some(section => 
+            text.toLowerCase().includes(section.toLowerCase())
+          );
+          
+          // Solo incluir párrafos con al menos 100 caracteres y que no estén en secciones ignoradas
+          if (text.length > 100 && !shouldIgnore) {
             paragraphs.push(text);
           }
         });

@@ -37,6 +37,7 @@ export const integrations = pgTable("integrations", {
   botBehavior: text("bot_behavior").default("Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web."),
   documentsData: json("documents_data").default([]), // Almacenará metadatos de los documentos subidos
   widgetType: text("widget_type").default("bubble"), // Tipo de widget: "bubble" (original) o "fullscreen" (estilo ChatGPT)
+  ignoredSections: json("ignored_sections").default([]), // Lista de nombres de secciones a ignorar (ej: "Our Services", "Contact", etc.)
 });
 
 export const insertIntegrationSchema = createInsertSchema(integrations).pick({
@@ -48,6 +49,7 @@ export const insertIntegrationSchema = createInsertSchema(integrations).pick({
   botBehavior: true,
   widgetType: true,
   documentsData: true,
+  ignoredSections: true,
 });
 
 // Conversation schema

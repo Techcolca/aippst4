@@ -306,7 +306,52 @@
     try {
       // Extraer contenido de la página
       const pageTitle = document.title;
-      const pageContent = document.body.innerText.substring(0, 10000); // Limitar a 10k caracteres
+      
+      // Extraer contenido excluyendo secciones ignoradas
+      let pageContent = "";
+      try {
+        // Crear una copia del body para manipular
+        const bodyClone = document.body.cloneNode(true);
+        
+        // Eliminar elementos no deseados
+        const elementsToRemove = bodyClone.querySelectorAll(
+          'script, style, link, meta, noscript, iframe, ' + 
+          'nav, footer, header, aside'
+        );
+        elementsToRemove.forEach(el => el.remove());
+        
+        // Eliminar secciones ignoradas
+        if (config.ignoredSections && config.ignoredSections.length > 0) {
+          config.ignoredSections.forEach(section => {
+            if (section && section.trim()) {
+              // Buscar secciones por encabezados que contienen el texto
+              bodyClone.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => {
+                if (heading.textContent.toLowerCase().includes(section.toLowerCase())) {
+                  // Eliminar el encabezado y sus contenidos relacionados
+                  heading.parentNode?.removeChild(heading);
+                }
+              });
+              
+              // Buscar contenedores que puedan contener la sección
+              bodyClone.querySelectorAll(`[id*="${section}"], [class*="${section}"], section, div`).forEach(element => {
+                const elementText = element.textContent.toLowerCase();
+                if (elementText.includes(section.toLowerCase())) {
+                  element.parentNode?.removeChild(element);
+                }
+              });
+            }
+          });
+        }
+        
+        // Extraer el contenido del cuerpo limpio
+        pageContent = bodyClone.innerText.substring(0, 10000); // Limitado a 10k caracteres
+        
+        console.log('AIPI Simple Widget: Contenido de página escaneado con éxito');
+      } catch (error) {
+        console.error('AIPI Simple Widget: Error al escanear contenido', error);
+        // Fallback a la extracción simple
+        pageContent = document.body.innerText.substring(0, 10000);
+      }
       
       // Crear conversación en el servidor
       const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/conversation`, {

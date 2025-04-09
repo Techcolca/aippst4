@@ -398,6 +398,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         position: req.body.position || "bottom-right",
         userId: req.userId,
         botBehavior: req.body.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
+        widgetType: req.body.widgetType || "bubble",
+        ignoredSections: req.body.ignoredSections || [],
       };
       
       console.log("Cleaned integration data:", integrationData);
@@ -520,6 +522,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         name: req.body.name,
         url: req.body.url,
         themeColor: req.body.themeColor,
+        ignoredSections: req.body.ignoredSections || [],
         position: req.body.position,
         active: req.body.active,
         widgetType: req.body.widgetType,

@@ -28,6 +28,7 @@ interface Integration {
   botBehavior?: string;
   documentsData?: any[];
   widgetType?: string;
+  ignoredSections?: string[];
 }
 
 interface SiteContent {
@@ -50,7 +51,8 @@ export default function EditIntegration() {
     position: "bottom-right",
     active: true,
     botBehavior: "",
-    widgetType: "bubble"
+    widgetType: "bubble",
+    ignoredSections: [] as string[]
   });
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [scriptExample, setScriptExample] = useState('');
@@ -114,7 +116,8 @@ export default function EditIntegration() {
         position: integration.position || "bottom-right",
         active: integration.active,
         botBehavior: integration.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
-        widgetType: integration.widgetType || "bubble"
+        widgetType: integration.widgetType || "bubble",
+        ignoredSections: integration.ignoredSections || []
       });
       
       // Actualizar el script de ejemplo con la API Key
@@ -348,6 +351,61 @@ export default function EditIntegration() {
                 />
                 <p className="text-sm text-muted-foreground mt-1">
                   Define la personalidad y el comportamiento del chatbot. Sea formal, amigable, profesional, etc.
+                </p>
+              </div>
+              
+              <div>
+                <Label htmlFor="ignoredSections">Secciones a ignorar</Label>
+                <div className="space-y-2 mt-2">
+                  {formData.ignoredSections.map((section, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Input
+                        value={section}
+                        onChange={(e) => {
+                          const newSections = [...formData.ignoredSections];
+                          newSections[index] = e.target.value;
+                          setFormData(prev => ({
+                            ...prev,
+                            ignoredSections: newSections
+                          }));
+                        }}
+                        placeholder="Ej: Nuestros Servicios"
+                        className="flex-1"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          const newSections = [...formData.ignoredSections];
+                          newSections.splice(index, 1);
+                          setFormData(prev => ({
+                            ...prev,
+                            ignoredSections: newSections
+                          }));
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-2 w-full"
+                    onClick={() => {
+                      setFormData(prev => ({
+                        ...prev,
+                        ignoredSections: [...prev.ignoredSections, ""]
+                      }));
+                    }}
+                  >
+                    Añadir sección a ignorar
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Añade nombres de secciones de tu sitio web que quieres que el chatbot ignore. Por ejemplo: "Nuestros Servicios", "Contacto", etc.
                 </p>
               </div>
             </div>
