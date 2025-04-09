@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Eye, Filter } from "lucide-react";
+import { Calendar, Eye, Filter, Trash2 } from "lucide-react";
 
 interface IntegrationCardProps {
   name: string;
@@ -10,6 +10,7 @@ interface IntegrationCardProps {
   installedDate: string;
   ignoredSections?: string[];
   onEdit: () => void;
+  onDelete: () => void; // Nueva función para eliminar integraciones
   onViewAnalytics: () => void;
   onViewConversations?: () => void;
 }
@@ -22,6 +23,7 @@ export default function IntegrationCard({
   installedDate,
   ignoredSections = [],
   onEdit,
+  onDelete,
   onViewAnalytics,
   onViewConversations
 }: IntegrationCardProps) {
@@ -83,14 +85,26 @@ export default function IntegrationCard({
       </div>
       
       <div className="flex flex-wrap gap-2 justify-between">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={onEdit}
-          className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-        >
-          Edit
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={onEdit}
+            className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          >
+            Edit
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={onDelete}
+            className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 transition-colors flex items-center"
+          >
+            <Trash2 className="w-3 h-3 mr-1" />
+            Delete
+          </Button>
+        </div>
         
         <div className="flex gap-2">
           {onViewConversations && (

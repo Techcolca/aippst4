@@ -230,6 +230,26 @@ export default function DashboardTabs({ initialTab = "automation" }) {
     },
   });
   
+  // Mutación para eliminar integraciones
+  const deleteIntegrationMutation = useMutation({
+    mutationFn: (integrationId: number) => 
+      apiRequest("DELETE", `/api/integrations/${integrationId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/integrations"] });
+      toast({
+        title: "Integración eliminada",
+        description: "La integración ha sido eliminada exitosamente",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar la integración. Por favor, intenta de nuevo.",
+        variant: "destructive",
+      });
+    },
+  });
+  
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     
@@ -383,6 +403,14 @@ export default function DashboardTabs({ initialTab = "automation" }) {
         variant: "destructive",
       });
     });
+  };
+  
+  // Función para eliminar una integración
+  const handleDeleteIntegration = (integrationId: number) => {
+    // Mostrar confirmación antes de eliminar
+    if (window.confirm("¿Estás seguro de que deseas eliminar esta integración? Esta acción no se puede deshacer.")) {
+      deleteIntegrationMutation.mutate(integrationId);
+    }
   };
   
   // Función para generar una API Key aleatoria
@@ -592,6 +620,7 @@ export default function DashboardTabs({ initialTab = "automation" }) {
                     ignoredSections={integration.ignoredSections || []}
                     installedDate={new Date(integration.createdAt).toLocaleDateString()}
                     onEdit={() => navigate(`/integrations/${integration.id}/edit`)}
+                    onDelete={() => handleDeleteIntegration(integration.id)}
                     onViewAnalytics={() => navigate('/analytics')}
                     onViewConversations={() => {
                       // Change tab to conversations and filter by integration
