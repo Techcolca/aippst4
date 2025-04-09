@@ -114,7 +114,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             variant="outline"
             size="sm"
             className="flex-1"
-            onClick={() => navigate(`/edit-integration/${integration.id}`)}
+            onClick={() => navigate(`/integrations/${integration.id}/edit`)}
           >
             <Edit className="h-4 w-4 mr-1" />
             Edit
@@ -124,7 +124,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             variant="outline"
             size="sm"
             className="flex-1"
-            onClick={() => navigate(`/integration/${integration.id}/conversations`)}
+            onClick={() => navigate(`/integrations/${integration.id}/conversations`)}
           >
             Conversations
           </Button>
@@ -133,7 +133,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             variant="outline"
             size="sm"
             className="flex-1"
-            onClick={() => navigate(`/integration/${integration.id}/analytics`)}
+            onClick={() => navigate(`/integrations/${integration.id}/analytics`)}
           >
             Analytics
           </Button>

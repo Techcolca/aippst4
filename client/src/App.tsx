@@ -42,6 +42,8 @@ function Router() {
       <Route path="/dashboard/subscription/success" component={SubscriptionSuccess} />
       <Route path="/dashboard/subscription/cancel" component={SubscriptionCancel} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
+      <Route path="/integrations/:id/conversations" component={Analytics} />
+      <Route path="/integrations/:id/analytics" component={Analytics} />
       <Route path="/create-integration" component={CreateIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/admin" component={AdminPanel} />
