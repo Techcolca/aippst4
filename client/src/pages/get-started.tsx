@@ -17,7 +17,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Bot, X, SendHorizonal, Copy, Check, Globe } from "lucide-react";
+import { Bot, X, SendHorizonal, Copy, Check, Globe, CheckCircle2 } from "lucide-react";
 import { useTheme } from "@/context/theme-context";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/hooks/use-toast";
