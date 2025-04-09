@@ -1015,6 +1015,141 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ================ Document Management Routes ================
+  
+  // Ruta para subir documentos adicionales a una integración existente
+  app.post('/api/documents/upload', verifyToken, upload.array('documents'), async (req, res) => {
+    try {
+      const { integrationId } = req.body;
+      
+      if (!integrationId) {
+        return res.status(400).json({ message: 'ID de integración no proporcionado' });
+      }
+      
+      // Obtener la integración
+      const integration = await storage.getIntegration(parseInt(integrationId));
+      
+      if (!integration) {
+        return res.status(404).json({ message: 'Integración no encontrada' });
+      }
+      
+      // Verificar que el usuario autenticado sea dueño de la integración
+      const user = req.user as { id: number };
+      if (integration.userId !== user.id) {
+        return res.status(403).json({ message: 'No tienes permiso para modificar esta integración' });
+      }
+      
+      const uploadedFiles = req.files as Express.Multer.File[];
+      
+      if (!uploadedFiles || uploadedFiles.length === 0) {
+        return res.status(400).json({ message: 'No se subieron archivos' });
+      }
+      
+      console.log(`Subiendo ${uploadedFiles.length} documentos a la integración ${integrationId}`);
+      
+      // Preparar la información de los documentos subidos
+      const documentsData = uploadedFiles.map(file => ({
+        id: crypto.randomUUID(),  // Asignar un ID único a cada documento
+        filename: file.originalname,
+        path: file.path,
+        mimetype: file.mimetype,
+        size: file.size,
+        originalName: file.originalname,
+      }));
+      
+      // Actualizar documentsData en la integración
+      const currentDocs = Array.isArray(integration.documentsData) ? integration.documentsData : [];
+      const updatedDocs = [...currentDocs, ...documentsData];
+      
+      console.log(`Actualizando integración ${integrationId} con ${updatedDocs.length} documentos`);
+      
+      // Actualizar la integración con los nuevos documentos
+      const updatedIntegration = await storage.updateIntegration(integration.id, {
+        documentsData: updatedDocs
+      });
+      
+      console.log(`Integración actualizada correctamente. Nuevos documentos añadidos: ${documentsData.length}`);
+      
+      res.json({ 
+        success: true, 
+        message: `${documentsData.length} documentos subidos correctamente`,
+        documents: documentsData,
+        integration: updatedIntegration
+      });
+    } catch (error) {
+      console.error('Error en carga de documentos:', error);
+      res.status(500).json({ 
+        message: 'Error al procesar la carga de documentos',
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+  
+  // Ruta para eliminar un documento específico de una integración
+  app.delete('/api/documents/:id', verifyToken, async (req, res) => {
+    try {
+      const documentId = req.params.id;
+      console.log(`Intentando eliminar documento con ID: ${documentId}`);
+      
+      if (!documentId) {
+        return res.status(400).json({ message: 'ID de documento no proporcionado' });
+      }
+      
+      // Como necesitamos buscar en todas las integraciones del usuario para encontrar el documento,
+      // primero obtenemos todas las integraciones del usuario autenticado
+      const user = req.user as { id: number };
+      const integrations = await storage.getIntegrations(user.id);
+      
+      // Buscar la integración que contiene el documento
+      let foundIntegration = null;
+      let foundDocumentIndex = -1;
+      
+      for (const integration of integrations) {
+        if (Array.isArray(integration.documentsData)) {
+          const docIndex = integration.documentsData.findIndex(doc => doc.id === documentId);
+          if (docIndex !== -1) {
+            foundIntegration = integration;
+            foundDocumentIndex = docIndex;
+            break;
+          }
+        }
+      }
+      
+      if (!foundIntegration || foundDocumentIndex === -1) {
+        return res.status(404).json({ message: 'Documento no encontrado' });
+      }
+      
+      // Eliminar el archivo físico si existe
+      const doc = foundIntegration.documentsData[foundDocumentIndex];
+      if (doc.path && fs.existsSync(doc.path)) {
+        fs.unlinkSync(doc.path);
+      }
+      
+      // Eliminar el documento de la lista de documentos
+      const updatedDocs = [...foundIntegration.documentsData];
+      updatedDocs.splice(foundDocumentIndex, 1);
+      
+      console.log(`Actualizando integración ${foundIntegration.id} después de eliminar documento. Documentos restantes: ${updatedDocs.length}`);
+      
+      // Actualizar la integración con la lista de documentos actualizada
+      await storage.updateIntegration(foundIntegration.id, {
+        documentsData: updatedDocs
+      });
+      
+      res.json({ 
+        success: true, 
+        message: 'Documento eliminado correctamente',
+        integrationId: foundIntegration.id
+      });
+    } catch (error) {
+      console.error('Error al eliminar documento:', error);
+      res.status(500).json({ 
+        message: 'Error al eliminar el documento',
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+  
   // ================ Subscription Routes ================
 
   // Obtener el estado de la suscripción del usuario
