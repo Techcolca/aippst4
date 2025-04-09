@@ -603,13 +603,28 @@ export default function EditIntegration() {
                             // Refrescar los datos de la integración
                             await queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
                             
-                            // Actualizar la integración local
-                            const updatedIntegration = await storage.getIntegration(integration.id);
-                            if (updatedIntegration) {
-                              setFormData(prev => ({
-                                ...prev,
-                                documentsData: updatedIntegration.documentsData
-                              }));
+                            // Obtener directamente la integración actualizada mediante una petición fetch
+                            try {
+                              // Obtener el token de autenticación
+                              const authToken = localStorage.getItem('auth_token');
+                              const headers: Record<string, string> = {};
+                              
+                              if (authToken) {
+                                headers['Authorization'] = `Bearer ${authToken}`;
+                              }
+                              
+                              const updatedDataResponse = await fetch(`/api/integrations/${integration.id}`, {
+                                headers: headers,
+                                credentials: "include"
+                              });
+                              
+                              if (updatedDataResponse.ok) {
+                                const updatedIntegration = await updatedDataResponse.json();
+                                // Recargar la página para mostrar los cambios actualizados
+                                window.location.reload();
+                              }
+                            } catch (error) {
+                              console.error("Error al obtener datos actualizados:", error);
                             }
                             
                             // Limpiar archivos seleccionados
@@ -666,13 +681,27 @@ export default function EditIntegration() {
                                 // Refrescar los datos de la integración
                                 await queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
                                 
-                                // Actualizar el estado local
-                                if (integration) {
-                                  const updatedDocs = integration.documentsData.filter(d => d.id !== doc.id);
-                                  setFormData(prev => ({
-                                    ...prev,
-                                    documentsData: updatedDocs
-                                  }));
+                                // Obtener directamente la integración actualizada mediante una petición fetch
+                                try {
+                                  // Obtener el token de autenticación
+                                  const authToken = localStorage.getItem('auth_token');
+                                  const headers: Record<string, string> = {};
+                                  
+                                  if (authToken) {
+                                    headers['Authorization'] = `Bearer ${authToken}`;
+                                  }
+                                  
+                                  const updatedDataResponse = await fetch(`/api/integrations/${integration.id}`, {
+                                    headers: headers,
+                                    credentials: "include"
+                                  });
+                                  
+                                  if (updatedDataResponse.ok) {
+                                    // Recargar la página para mostrar los cambios actualizados
+                                    window.location.reload();
+                                  }
+                                } catch (error) {
+                                  console.error("Error al obtener datos actualizados:", error);
                                 }
                               } catch (err) {
                                 console.error("Error al eliminar documento:", err);
