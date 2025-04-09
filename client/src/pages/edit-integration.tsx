@@ -584,8 +584,18 @@ export default function EditIntegration() {
                           formData.append('integrationId', integration.id.toString());
                           
                           try {
+                            // Obtener el token de autenticación
+                            const authToken = localStorage.getItem('auth_token');
+                            const headers: Record<string, string> = {};
+                            
+                            if (authToken) {
+                              headers['Authorization'] = `Bearer ${authToken}`;
+                            }
+                            
                             const response = await fetch('/api/documents/upload', {
                               method: 'POST',
+                              headers: headers,
+                              credentials: 'include',
                               body: formData,
                             });
                             
@@ -665,8 +675,18 @@ export default function EditIntegration() {
                             className="h-6 w-6 text-red-500 hover:text-red-700"
                             onClick={async () => {
                               try {
+                                // Obtener el token de autenticación
+                                const authToken = localStorage.getItem('auth_token');
+                                const headers: Record<string, string> = {};
+                                
+                                if (authToken) {
+                                  headers['Authorization'] = `Bearer ${authToken}`;
+                                }
+                                
                                 const response = await fetch(`/api/documents/${doc.id}`, {
                                   method: 'DELETE',
+                                  headers: headers,
+                                  credentials: 'include'
                                 });
                                 
                                 if (!response.ok) {

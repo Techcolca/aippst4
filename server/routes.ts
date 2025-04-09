@@ -1018,7 +1018,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ================ Document Management Routes ================
   
   // Ruta para subir documentos adicionales a una integración existente
-  app.post('/api/documents/upload', verifyToken, upload.array('documents'), async (req, res) => {
+  app.post('/api/documents/upload', authenticateJWT, upload.array('documents'), async (req, res) => {
     try {
       const { integrationId } = req.body;
       
@@ -1086,7 +1086,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Ruta para eliminar un documento específico de una integración
-  app.delete('/api/documents/:id', verifyToken, async (req, res) => {
+  app.delete('/api/documents/:id', authenticateJWT, async (req, res) => {
     try {
       const documentId = req.params.id;
       console.log(`Intentando eliminar documento con ID: ${documentId}`);
