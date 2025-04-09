@@ -8,6 +8,7 @@ import Home from "@/pages/home";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import EditIntegration from "@/pages/edit-integration";
+import CreateIntegration from "@/pages/create-integration";
 import Analytics from "@/pages/analytics";
 import GetStarted from "@/pages/get-started";
 import Documentation from "@/pages/docs";
@@ -41,6 +42,7 @@ function Router() {
       <Route path="/dashboard/subscription/success" component={SubscriptionSuccess} />
       <Route path="/dashboard/subscription/cancel" component={SubscriptionCancel} />
       <Route path="/integrations/:id/edit" component={EditIntegration} />
+      <Route path="/create-integration" component={CreateIntegration} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/admin" component={AdminPanel} />
       <Route path="/create-form" component={FormTemplateSelection} />

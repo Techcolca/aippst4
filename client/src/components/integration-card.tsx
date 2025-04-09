@@ -1,133 +1,183 @@
+import { useLocation } from "wouter";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Eye, Filter, Trash2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Eye, Calendar, Users, Trash, Edit } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
-interface IntegrationCardProps {
+// Definición de tipos
+interface Integration {
+  id: number;
   name: string;
   url: string;
-  active: boolean;
+  type: string;
+  apiKey: string;
+  userId: number;
+  createdAt: string;
+  status: string;
   visitorCount: number;
-  installedDate: string;
-  ignoredSections?: string[];
-  onEdit: () => void;
-  onDelete: () => void; // Nueva función para eliminar integraciones
-  onViewAnalytics: () => void;
-  onViewConversations?: () => void;
+  description?: string;
 }
 
-export default function IntegrationCard({
-  name,
-  url,
-  active,
-  visitorCount,
-  installedDate,
-  ignoredSections = [],
-  onEdit,
-  onDelete,
-  onViewAnalytics,
-  onViewConversations
-}: IntegrationCardProps) {
+interface IntegrationCardProps {
+  integration: Integration;
+}
+
+export function IntegrationCard({ integration }: IntegrationCardProps) {
+  const [, navigate] = useLocation();
+  const { toast } = useToast();
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  
+  // Formatear fecha de instalación
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+
+  // Obtener etiqueta de estado
+  const getStatusBadge = (status: string) => {
+    const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium";
+    
+    switch (status) {
+      case "active":
+        return <span className={`${baseClasses} bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`}>Active</span>;
+      case "inactive":
+        return <span className={`${baseClasses} bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200`}>Inactive</span>;
+      case "in_testing":
+        return <span className={`${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200`}>Testing</span>;
+      default:
+        return <span className={`${baseClasses} bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200`}>{status}</span>;
+    }
+  };
+
+  // Mutación para eliminar la integración
+  const deleteIntegrationMutation = useMutation({
+    mutationFn: () => {
+      return apiRequest("DELETE", `/api/integrations/${integration.id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/integrations"] });
+      toast({
+        title: "Integración eliminada",
+        description: "La integración se ha eliminado correctamente",
+      });
+      setIsConfirmingDelete(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error al eliminar la integración",
+        description: error.message || "Ha ocurrido un error al eliminar la integración",
+        variant: "destructive",
+      });
+      setIsConfirmingDelete(false);
+    },
+  });
+
+  // Abrir diálogo de confirmación de eliminación
+  const handleDeleteClick = () => {
+    setIsConfirmingDelete(true);
+  };
+
+  // Confirmar eliminación
+  const confirmDelete = () => {
+    deleteIntegrationMutation.mutate();
+  };
+
   return (
-    <Card className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="font-medium">{name}</h3>
-          <a 
-            href={url} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm text-primary-600 dark:text-primary-400 hover:underline"
-          >
-            {url}
-          </a>
+    <>
+      <Card className="p-5 relative overflow-hidden">
+        <div className="absolute top-3 right-3">
+          {getStatusBadge(integration.status)}
         </div>
-        <div className="flex items-center">
-          <span className={`px-2 py-1 text-xs ${
-            active 
-              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" 
-              : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-          } rounded-full`}>
-            {active ? "Active" : "Inactive"}
-          </span>
-        </div>
-      </div>
-      
-      <div className="mb-4">
-        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-          <Eye className="w-4 h-4 mr-2" />
-          Visitors helped: {visitorCount ? visitorCount.toLocaleString() : '0'}
-        </div>
-        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
-          <Calendar className="w-4 h-4 mr-2" />
-          Installed: {installedDate}
-        </div>
-        {ignoredSections && ignoredSections.length > 0 && (
-          <div className="flex items-start text-sm text-gray-600 dark:text-gray-400">
-            <Filter className="w-4 h-4 mr-2 mt-0.5" />
-            <div>
-              <span>Ignored sections: </span>
-              <span className="text-primary-600 dark:text-primary-400">{ignoredSections.length}</span>
-              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                {ignoredSections.slice(0, 2).map((section, index) => (
-                  <span key={index} className="inline-block bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded mr-1 mb-1">
-                    {section}
-                  </span>
-                ))}
-                {ignoredSections.length > 2 && (
-                  <span className="inline-block bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">
-                    +{ignoredSections.length - 2} more
-                  </span>
-                )}
-              </div>
-            </div>
+        
+        <h3 className="text-lg font-semibold mb-1">{integration.name}</h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4 truncate">{integration.url}</p>
+        
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
+            <Eye className="h-4 w-4 mr-1" />
+            <span>Visitors helped: {integration.visitorCount}</span>
           </div>
-        )}
-      </div>
-      
-      <div className="flex flex-wrap gap-2 justify-between">
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onEdit}
-            className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
+            <Calendar className="h-4 w-4 mr-1" />
+            <span>Installed: {formatDate(integration.createdAt)}</span>
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={() => navigate(`/edit-integration/${integration.id}`)}
           >
+            <Edit className="h-4 w-4 mr-1" />
             Edit
           </Button>
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={onDelete}
-            className="px-3 py-1 text-sm bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800 transition-colors flex items-center"
-          >
-            <Trash2 className="w-3 h-3 mr-1" />
-            Delete
-          </Button>
-        </div>
-        
-        <div className="flex gap-2">
-          {onViewConversations && (
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={onViewConversations}
-              className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-            >
-              Conversations
-            </Button>
-          )}
-          
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
-            onClick={onViewAnalytics}
-            className="px-3 py-1 text-sm bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-800 transition-colors"
+            className="flex-1"
+            onClick={() => navigate(`/integration/${integration.id}/conversations`)}
+          >
+            Conversations
+          </Button>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1"
+            onClick={() => navigate(`/integration/${integration.id}/analytics`)}
           >
             Analytics
           </Button>
+          
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 text-red-500 hover:text-red-700 hover:border-red-300"
+            onClick={handleDeleteClick}
+          >
+            <Trash className="h-4 w-4 mr-1" />
+            Delete
+          </Button>
         </div>
-      </div>
-    </Card>
+      </Card>
+
+      {/* Diálogo de confirmación de eliminación */}
+      <Dialog open={isConfirmingDelete} onOpenChange={setIsConfirmingDelete}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>¿Estás seguro?</DialogTitle>
+            <DialogDescription>
+              Esta acción eliminará permanentemente la integración "{integration.name}" y no se puede deshacer.
+              El widget dejará de funcionar en tu sitio web.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex space-x-2 justify-end">
+            <Button variant="outline" onClick={() => setIsConfirmingDelete(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteIntegrationMutation.isPending}
+              className="gap-2"
+            >
+              {deleteIntegrationMutation.isPending && (
+                <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" aria-hidden="true" />
+              )}
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
