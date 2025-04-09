@@ -1694,7 +1694,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // ================ Conversation Routes ================
   // Get all conversations for a user (from all their integrations)
-  app.get("/api/conversations", verifyToken, async (req, res) => {
+  app.get("/api/conversations", authenticateJWT, async (req, res) => {
     try {
       // Obtener todas las integraciones del usuario
       const integrations = await storage.getIntegrations(req.userId);
@@ -1738,9 +1738,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+
+  // Get one conversation by ID
+  app.get("/api/conversations/:id", authenticateJWT, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.id);
+      
+      if (isNaN(conversationId)) {
+        return res.status(400).json({ message: "Invalid conversation ID" });
+      }
+      
+      // Get conversation
+      const conversation = await storage.getConversation(conversationId);
+      
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Verify that user owns the integration this conversation belongs to
+      const integration = await storage.getIntegration(conversation.integrationId);
+      
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized to view this conversation" });
+      }
+      
+      // Get integration details to add to response
+      const integrationData = {
+        name: integration.name,
+        url: integration.url
+      };
+      
+      // Get message count for this conversation
+      const messages = await storage.getConversationMessages(conversationId);
+      const messageCount = messages.length;
+      
+      // Enhance the conversation with additional data
+      const enhancedConversation = {
+        ...conversation,
+        integrationName: integration.name,
+        integrationUrl: integration.url,
+        messageCount
+      };
+      
+      res.json(enhancedConversation);
+    } catch (error) {
+      console.error("Get conversation error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
   
   // Get conversations for a specific integration
-  app.get("/api/integrations/:integrationId/conversations", verifyToken, async (req, res) => {
+  app.get("/api/integrations/:integrationId/conversations", authenticateJWT, async (req, res) => {
     try {
       const { integrationId } = req.params;
       
@@ -1764,7 +1812,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Get messages for a specific conversation
-  app.get("/api/conversations/:conversationId/messages", verifyToken, async (req, res) => {
+  app.get("/api/conversations/:conversationId/messages", authenticateJWT, async (req, res) => {
     try {
       const conversationId = parseInt(req.params.conversationId);
       
