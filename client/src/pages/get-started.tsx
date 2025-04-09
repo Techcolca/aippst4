@@ -270,7 +270,80 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 3: Configura las respuestas</h2>
+                    <h2 className="text-2xl font-bold">Paso 3: Configura las secciones ignoradas</h2>
+                  </div>
+                  <div className="p-6 bg-white dark:bg-gray-900">
+                    <div className="bg-primary-50 dark:bg-primary-900/20 rounded-lg p-4 border border-primary-200 dark:border-primary-800 mb-5">
+                      <h3 className="text-lg font-semibold text-primary-800 dark:text-primary-300 mb-2">
+                        ¡Novedad! Control preciso del contenido analizado
+                      </h3>
+                      <p className="text-gray-700 dark:text-gray-300 mb-3">
+                        La función "Secciones ignoradas" te permite excluir partes específicas de tu sitio web 
+                        del análisis del chatbot, mejorando la precisión y relevancia de las respuestas.
+                      </p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
+                        <div className="flex items-start">
+                          <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
+                            <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                          </span>
+                          <p className="text-sm">Excluye menús, pies de página y barras laterales irrelevantes</p>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
+                            <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                          </span>
+                          <p className="text-sm">Mejora la privacidad excluyendo información sensible</p>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
+                            <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                          </span>
+                          <p className="text-sm">Reduce costos al optimizar el uso de tokens</p>
+                        </div>
+                        <div className="flex items-start">
+                          <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
+                            <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
+                          </span>
+                          <p className="text-sm">Obtén respuestas más precisas y relevantes</p>
+                        </div>
+                      </div>
+                      <div className="mt-3 bg-gray-50 dark:bg-gray-800 rounded p-3">
+                        <p className="text-sm font-medium mb-1">Ejemplo de configuración:</p>
+                        <pre className="text-xs bg-gray-900 text-gray-100 p-2 rounded overflow-x-auto">
+{`aipi('init', {
+  apiKey: 'TU_API_KEY',
+  // Otras configuraciones...
+  ignoredSections: ['Menú principal', 'Footer', 'Sidebar', 'Publicidad'],
+});`}
+                        </pre>
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <p className="mb-4 text-gray-700 dark:text-gray-300">
+                        Configura qué secciones ignorar desde el panel de administración:
+                      </p>
+                      <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
+                        <li>Accede a la sección "Integraciones" del panel</li>
+                        <li>Selecciona la integración que deseas configurar</li>
+                        <li>Busca el apartado "Secciones a ignorar"</li>
+                        <li>Agrega los nombres de las secciones que quieres excluir</li>
+                      </ol>
+                      {user ? (
+                        <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
+                          Configurar Secciones
+                        </Button>
+                      ) : (
+                        <Button size="lg" onClick={() => setLocation("/register")}>
+                          Crear Cuenta
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                  <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-2xl font-bold">Paso 4: Configura las respuestas</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">

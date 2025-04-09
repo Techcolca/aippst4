@@ -600,7 +600,49 @@ export default function Documentation() {
                           <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">position</code>: Ubicación en la pantalla (para widget tipo burbuja)</li>
                           <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">themeColor</code>: Color principal que se usará en el widget</li>
                           <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">welcomeMessage</code>: Mensaje inicial que se mostrará al abrir el chat</li>
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">ignoredSections</code>: Array de secciones del sitio web que el asistente debe ignorar</li>
                         </ul>
+                        
+                        <h3 className="text-xl font-bold mt-8 mb-4">Función de Secciones Ignoradas</h3>
+                        
+                        <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 p-4 rounded-lg my-4">
+                          <h4 className="font-semibold mb-2 text-primary-800 dark:text-primary-300">Control preciso sobre el contenido analizado</h4>
+                          <p className="mb-3">
+                            La función "Secciones ignoradas" permite especificar qué partes de tu sitio web no deberían ser analizadas 
+                            por el asistente al escanear el contenido de la página, proporcionando un control detallado sobre la 
+                            información que el chatbot utiliza para responder preguntas.
+                          </p>
+                          
+                          <h5 className="font-medium mt-4 mb-2">Beneficios:</h5>
+                          <ul className="list-disc pl-5 space-y-1 mb-4">
+                            <li><strong>Privacidad mejorada:</strong> Excluye secciones con información sensible o confidencial</li>
+                            <li><strong>Respuestas más precisas:</strong> Elimina secciones irrelevantes como menús, pies de página o anuncios</li>
+                            <li><strong>Optimización de rendimiento:</strong> Reduce la cantidad de texto procesado</li>
+                            <li><strong>Focalización de contenido:</strong> Dirige al asistente hacia las secciones más importantes</li>
+                          </ul>
+
+                          <h5 className="font-medium mt-4 mb-2">Configuración en el panel de administración:</h5>
+                          <p className="mb-2">Las secciones ignoradas se pueden configurar fácilmente desde la sección "Editar Integración" en tu panel de AIPI:</p>
+                          <ol className="list-decimal pl-5 space-y-1">
+                            <li>Navega a "Integraciones" y selecciona la integración a configurar</li>
+                            <li>Encuentra la sección "Secciones a ignorar"</li>
+                            <li>Agrega nombres descriptivos de secciones del sitio (ej: "Testimonios", "Contacto", "Precios")</li>
+                            <li>Guarda los cambios y el widget automáticamente filtrará estas secciones</li>
+                          </ol>
+                          
+                          <h5 className="font-medium mt-4 mb-2">Implementación técnica:</h5>
+                          <div className="bg-gray-800 text-gray-200 p-3 rounded-lg overflow-x-auto mt-2 mb-3">
+                            <pre><code>{`aipi('init', { 
+  apiKey: 'TU_API_KEY',
+  // Otras configuraciones...
+  ignoredSections: ['Nuestros Servicios', 'Testimonios', 'Contacto']
+});`}</code></pre>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Todos los widgets de AIPI (flotante, pantalla completa y simple) procesarán automáticamente 
+                            esta configuración para excluir las secciones especificadas del análisis de contenido.
+                          </p>
+                        </div>
                         
                         <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                           <div className="flex items-start">
