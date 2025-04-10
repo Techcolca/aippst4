@@ -334,19 +334,19 @@
     modal.style.alignItems = 'center';
     modal.style.justifyContent = 'center';
     
-    // Contenedor del contenido del modal
+    // Contenedor del contenido del modal (totalmente responsive)
     const modalContent = document.createElement('div');
     modalContent.style.backgroundColor = 'white';
     modalContent.style.borderRadius = '8px';
     modalContent.style.width = config.modalWidth || '600px';
-    modalContent.style.maxWidth = '95%';
+    modalContent.style.maxWidth = '94%'; // Más restrictivo para pantallas pequeñas
     modalContent.style.height = 'auto';
-    modalContent.style.maxHeight = '90vh';
+    modalContent.style.maxHeight = '90vh'; // Límite para dispositivos pequeños
     modalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
     modalContent.style.display = 'flex';
     modalContent.style.flexDirection = 'column';
     modalContent.style.overflow = 'hidden'; // Evitamos scroll en el contenedor principal
-    modalContent.style.margin = '20px';
+    modalContent.style.margin = '10px'; // Margen reducido para pantallas pequeñas
     
     // Encabezado del modal con título y botón de cierre
     const modalHeader = document.createElement('div');
@@ -382,12 +382,13 @@
     iframeContainer.style.overflow = 'auto'; // Permitir scroll dentro del contenedor
     iframeContainer.style.minHeight = '200px'; // Altura mínima para que se vea algo
     
-    // Crear iframe para cargar el formulario
+    // Crear iframe para cargar el formulario (con mejorada responsividad)
     const iframe = document.createElement('iframe');
     iframe.src = getFormUrl();
     iframe.style.width = '100%';
     iframe.style.border = 'none';
-    iframe.style.height = config.modalHeight || '800px'; // Usamos altura predeterminada fija
+    // Altura adaptable en móviles: menor en pantallas pequeñas
+    iframe.style.height = window.innerWidth < 600 ? '95vh' : (config.modalHeight || '800px');
     iframe.style.display = 'block';
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('allowtransparency', 'true');
@@ -430,70 +431,129 @@
   }
   
   /**
-   * Muestra el formulario en un panel deslizante
+   * Muestra el formulario en un panel deslizante (completamente reescrito para mejor responsividad)
    */
   function showSlideInForm() {
-    // Crear el panel deslizante si no existe
-    let slideIn = document.querySelector('.aipi-form-slidein');
-    if (!slideIn) {
-      slideIn = document.createElement('div');
-      slideIn.className = 'aipi-form-slidein';
-      
-      const slideInContent = document.createElement('div');
-      slideInContent.className = 'aipi-form-slidein-content';
-      
-      // Agregar header para mejor experiencia visual
-      const slideInHeader = document.createElement('div');
-      slideInHeader.className = 'aipi-form-slidein-header';
-      
-      const slideInTitle = document.createElement('h3');
-      slideInTitle.className = 'aipi-form-slidein-title';
-      slideInTitle.textContent = config.text || 'Formulario';
-      
-      const headerCloseButton = document.createElement('button');
-      headerCloseButton.style.background = 'none';
-      headerCloseButton.style.border = 'none';
-      headerCloseButton.style.cursor = 'pointer';
-      headerCloseButton.style.padding = '5px';
-      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-      headerCloseButton.addEventListener('click', closeSlideIn);
-      
-      slideInHeader.appendChild(slideInTitle);
-      slideInHeader.appendChild(headerCloseButton);
-      
-      // Botón de cierre adicional (más visible)
-      const closeButton = document.createElement('div');
-      closeButton.className = 'aipi-form-slidein-close';
-      closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-      closeButton.addEventListener('click', closeSlideIn);
-      
-      const iframe = document.createElement('iframe');
-      iframe.className = 'aipi-form-iframe';
-      iframe.src = getFormUrl();
-      iframe.style.height = '100%';
-      iframe.style.width = '100%';
-      iframe.style.minHeight = '600px'; /* Mantenemos esta altura para el panel deslizante */
-      iframe.setAttribute('frameborder', '0');
-      iframe.setAttribute('allowtransparency', 'true');
-      
-      slideInContent.appendChild(slideInHeader);
-      slideInContent.appendChild(iframe);
-      slideIn.appendChild(slideInContent);
-      slideIn.appendChild(closeButton); // Botón flotante fuera del contenido
-      document.body.appendChild(slideIn);
+    // Eliminar cualquier panel deslizante anterior
+    let existingSlideIn = document.querySelector('.aipi-form-slidein');
+    if (existingSlideIn) {
+      existingSlideIn.remove();
     }
     
-    // Mostrar panel deslizante
-    slideIn.style.display = 'block';
+    // Crear nuevo panel deslizante desde cero
+    const slideIn = document.createElement('div');
+    slideIn.className = 'aipi-form-slidein';
+    slideIn.style.position = 'fixed';
+    slideIn.style.top = '0';
+    slideIn.style.right = '0';
+    slideIn.style.bottom = '0';
+    slideIn.style.width = '100%';
+    slideIn.style.maxWidth = '450px'; // Ancho máximo para el panel
+    slideIn.style.backgroundColor = 'white';
+    slideIn.style.boxShadow = '-2px 0 10px rgba(0,0,0,0.2)';
+    slideIn.style.transform = 'translateX(100%)';
+    slideIn.style.transition = 'transform 0.3s ease-out';
+    slideIn.style.zIndex = '99998'; // Alto z-index pero inferior al modal
+    slideIn.style.display = 'flex';
+    slideIn.style.flexDirection = 'column';
+    slideIn.style.height = '100%';
+    
+    // Encabezado del panel deslizante
+    const slideInHeader = document.createElement('div');
+    slideInHeader.style.padding = '15px';
+    slideInHeader.style.borderBottom = '1px solid #e9ecef';
+    slideInHeader.style.backgroundColor = '#f8f9fa';
+    slideInHeader.style.display = 'flex';
+    slideInHeader.style.justifyContent = 'space-between';
+    slideInHeader.style.alignItems = 'center';
+    slideInHeader.style.position = 'sticky';
+    slideInHeader.style.top = '0';
+    slideInHeader.style.zIndex = '1';
+    
+    const slideInTitle = document.createElement('h3');
+    slideInTitle.style.margin = '0';
+    slideInTitle.style.fontSize = '16px';
+    slideInTitle.style.fontWeight = 'bold';
+    slideInTitle.textContent = config.text || 'Formulario';
+    
+    const closeButton = document.createElement('button');
+    closeButton.style.background = 'none';
+    closeButton.style.border = 'none';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.padding = '5px';
+    closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+    closeButton.addEventListener('click', closeSlideIn);
+    
+    slideInHeader.appendChild(slideInTitle);
+    slideInHeader.appendChild(closeButton);
+    
+    // Contenedor del contenido (iframe)
+    const contentContainer = document.createElement('div');
+    contentContainer.style.flex = '1';
+    contentContainer.style.overflow = 'auto';
+    contentContainer.style.position = 'relative';
+    
+    // Iframe para el contenido
+    const iframe = document.createElement('iframe');
+    iframe.src = getFormUrl();
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.style.display = 'block';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowtransparency', 'true');
+    iframe.setAttribute('scrolling', 'yes');
+    
+    // Ensamblar todo
+    contentContainer.appendChild(iframe);
+    slideIn.appendChild(slideInHeader);
+    slideIn.appendChild(contentContainer);
+    document.body.appendChild(slideIn);
+    
+    // Crear overlay para cerrar al hacer clic fuera en dispositivos móviles
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    overlay.style.zIndex = '99997'; // Por debajo del panel
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.3s ease';
+    overlay.style.display = 'none';
+    overlay.addEventListener('click', closeSlideIn);
+    document.body.appendChild(overlay);
+    
+    // Mostrar el panel deslizante
     setTimeout(() => {
-      slideIn.classList.add('active');
+      overlay.style.display = 'block';
+      setTimeout(() => {
+        overlay.style.opacity = '1';
+      }, 10);
+      slideIn.style.transform = 'translateX(0)';
     }, 10);
     
+    // Restringir el scroll en el body
+    document.body.style.overflow = 'hidden';
+    
+    // Función para cerrar
     function closeSlideIn() {
-      slideIn.classList.remove('active');
+      slideIn.style.transform = 'translateX(100%)';
+      overlay.style.opacity = '0';
+      document.body.style.overflow = '';
+      
       setTimeout(() => {
-        slideIn.style.display = 'none';
+        overlay.style.display = 'none';
+        // Opcional: eliminar completamente los elementos del DOM
+        setTimeout(() => {
+          slideIn.remove();
+          overlay.remove();
+        }, 300);
       }, 300);
     }
+    
+    // Exponer globalmente para que se pueda cerrar desde el iframe si es necesario
+    window.closeAipiFormSlideIn = closeSlideIn;
   }
 })();
