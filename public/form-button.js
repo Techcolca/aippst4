@@ -328,14 +328,15 @@
       const modalContent = document.createElement('div');
       modalContent.style.backgroundColor = 'white';
       modalContent.style.borderRadius = '8px';
-      modalContent.style.width = '500px'; // Mayor ancho para acomodar todos los campos
+      modalContent.style.width = '600px'; // Mayor ancho para acomodar todos los campos
       modalContent.style.maxWidth = '96%'; // Respuesta en dispositivos pequeños
-      modalContent.style.minHeight = '600px'; // Altura considerable para mostrar todos los campos
-      modalContent.style.maxHeight = '90vh'; // Limitar altura para pantallas pequeñas
+      modalContent.style.minHeight = '800px'; // Altura considerable para mostrar todos los campos
+      modalContent.style.maxHeight = '95vh'; // Casi toda la pantalla para ver formularios extensos
       modalContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
       modalContent.style.display = 'flex';
       modalContent.style.flexDirection = 'column';
       modalContent.style.overflow = 'visible'; // Permitir que se vea todo el contenido
+      modalContent.style.margin = '20px'; // Espacio para mejor visualización
       
       // Header para mejor experiencia visual
       const modalHeader = document.createElement('div');
@@ -373,11 +374,24 @@
       const iframe = document.createElement('iframe');
       iframe.src = getFormUrl();
       iframe.style.width = '100%';
-      iframe.style.height = '550px'; // Altura mayor para mostrar todos los campos
+      iframe.style.height = '800px'; // Altura aún mayor para mostrar TODOS los campos
       iframe.style.border = 'none';
       iframe.style.display = 'block';
       iframe.setAttribute('frameborder', '0');
       iframe.setAttribute('allowtransparency', 'true');
+      
+      // Añadir mensaje al iframe cargado para asegurar que se muestren todos los campos
+      iframe.onload = function() {
+        try {
+          iframe.style.height = '800px'; // Reforzar altura al cargar
+          // Intentar acceder al contenido del iframe si está en el mismo dominio
+          if (iframe.contentWindow.document) {
+            iframe.contentWindow.document.body.style.overflow = 'visible';
+          }
+        } catch (e) {
+          console.log("No se puede acceder al contenido del iframe por restricciones de seguridad");
+        }
+      };
       
       iframeContainer.appendChild(iframe);
       
