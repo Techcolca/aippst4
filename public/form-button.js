@@ -330,12 +330,12 @@
       modalContent.style.borderRadius = '8px';
       modalContent.style.width = '600px'; // Mayor ancho para acomodar todos los campos
       modalContent.style.maxWidth = '96%'; // Respuesta en dispositivos pequeños
-      modalContent.style.minHeight = '800px'; // Altura considerable para mostrar todos los campos
+      /* No establecer una altura mínima para que se adapte al contenido */
       modalContent.style.maxHeight = '95vh'; // Casi toda la pantalla para ver formularios extensos
       modalContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
       modalContent.style.display = 'flex';
       modalContent.style.flexDirection = 'column';
-      modalContent.style.overflow = 'visible'; // Permitir que se vea todo el contenido
+      modalContent.style.overflow = 'auto'; // Permitir scroll dentro del modal
       modalContent.style.margin = '20px'; // Espacio para mejor visualización
       
       // Header para mejor experiencia visual
@@ -374,22 +374,45 @@
       const iframe = document.createElement('iframe');
       iframe.src = getFormUrl();
       iframe.style.width = '100%';
-      iframe.style.height = '800px'; // Altura aún mayor para mostrar TODOS los campos
+      iframe.style.height = '100%'; // Adaptarse dinámicamente al contenedor
+      iframe.style.minHeight = '400px'; // Altura mínima inicial
       iframe.style.border = 'none';
       iframe.style.display = 'block';
       iframe.setAttribute('frameborder', '0');
       iframe.setAttribute('allowtransparency', 'true');
+      iframe.setAttribute('scrolling', 'yes'); // Permitir scroll dentro del iframe
       
       // Añadir mensaje al iframe cargado para asegurar que se muestren todos los campos
       iframe.onload = function() {
         try {
-          iframe.style.height = '800px'; // Reforzar altura al cargar
-          // Intentar acceder al contenido del iframe si está en el mismo dominio
-          if (iframe.contentWindow.document) {
-            iframe.contentWindow.document.body.style.overflow = 'visible';
+          // Intentar ajustar la altura del iframe para mostrar todo el contenido
+          const resizeIframe = () => {
+            try {
+              // Si el iframe y su contenido son del mismo origen, ajustar altura automáticamente
+              if (iframe.contentWindow.document) {
+                const iframeHeight = iframe.contentWindow.document.body.scrollHeight;
+                iframe.style.height = (iframeHeight + 50) + 'px'; // Añadir margen
+                iframe.contentWindow.document.body.style.overflow = 'visible';
+              }
+            } catch (e) {
+              // Fallback para cross-origin: usar altura predeterminada
+              iframe.style.height = '800px';
+            }
+          };
+          
+          // Intentar ajustar la altura inicialmente
+          resizeIframe();
+          
+          // Establecer un observador para detectar cambios en el tamaño
+          if (window.ResizeObserver) {
+            try {
+              const observer = new ResizeObserver(() => resizeIframe());
+              observer.observe(iframe);
+            } catch (e) {}
           }
         } catch (e) {
           console.log("No se puede acceder al contenido del iframe por restricciones de seguridad");
+          iframe.style.height = '800px'; // Altura predeterminada significativa
         }
       };
       
