@@ -62,7 +62,7 @@
   function addStyles() {
     const styleElement = document.createElement('style');
     styleElement.textContent = `
-      /* Estilos para el botón flotante AIPI */
+      /* Estilos para el botón flotante AIPI (optimizado para móviles) */
       .aipi-form-button {
         position: fixed;
         z-index: 9999;
@@ -74,6 +74,11 @@
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
         transition: all 0.3s ease;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        /* Mejoras para móviles */
+        max-width: calc(100vw - 40px);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       
       .aipi-form-button:hover {
@@ -83,6 +88,7 @@
       
       .aipi-form-button svg {
         margin-right: 8px;
+        min-width: 16px; /* Evita que el svg se comprima */
       }
       
       /* Tamaños */
@@ -140,7 +146,7 @@
         background-color: white;
         border-radius: 8px;
         width: 600px; /* Mayor ancho para acomodar todos los campos */
-        max-width: 96%; /* Adaptable a pantallas pequeñas */
+        max-width: 90%; /* Adaptable a pantallas pequeñas (reducido para móviles) */
         height: auto;
         min-height: 500px; /* Mayor altura para mostrar más campos */
         max-height: 90vh; /* Casi toda la altura de la pantalla */
@@ -151,21 +157,20 @@
         flex-direction: column;
       }
       
-      /* Removido el botón de cierre flotante ya que ahora usamos uno en el header */
-      
-      /* Panel deslizante */
+      /* Panel deslizante completamente optimizado para móviles */
       .aipi-form-slidein {
         display: none;
         position: fixed;
         top: 0;
         right: 0;
         width: 100%;
-        max-width: 400px;
+        max-width: 450px;
         height: 100%;
         z-index: 10000;
         box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
         transform: translateX(100%);
         transition: transform 0.3s ease;
+        background-color: white;
       }
       
       .aipi-form-slidein.active {
@@ -178,6 +183,8 @@
         height: 100%;
         overflow: auto;
         position: relative;
+        display: flex;
+        flex-direction: column;
       }
       
       .aipi-form-slidein-close {
@@ -220,14 +227,45 @@
         margin: 0;
       }
       
-      /* Iframe */
+      /* Iframe mejorado para móviles */
       .aipi-form-iframe {
         width: 100%;
         height: 100%;
-        min-height: 600px; /* Mayor altura para mostrar todos los campos */
+        min-height: 80vh; /* Altura relativa a la pantalla */
         flex: 1; /* Toma el espacio disponible restante */
         border: none;
         display: block;
+      }
+      
+      /* Media queries específicas para diferentes dispositivos */
+      @media (max-width: 480px) {
+        .aipi-form-button {
+          font-size: 13px;
+          padding: 8px 14px;
+          max-width: calc(100vw - 20px); /* Más espacio en pantallas muy pequeñas */
+        }
+        
+        .aipi-form-slidein {
+          width: 100%;
+          max-width: 100%; /* En móviles ocupa toda la pantalla */
+        }
+        
+        .aipi-form-modal-content {
+          max-width: 98%;
+          margin: 0 4px;
+          border-radius: 4px; /* Bordes menos pronunciados */
+        }
+      }
+      
+      @media (min-width: 481px) and (max-width: 768px) {
+        .aipi-form-slidein {
+          max-width: 90%; /* En tablets ocupa casi toda la pantalla */
+        }
+        
+        .aipi-form-modal-content {
+          width: 550px;
+          max-width: 95%;
+        }
       }
     `;
     document.head.appendChild(styleElement);
