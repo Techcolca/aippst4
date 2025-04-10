@@ -246,7 +246,9 @@ export default function FormIntegration() {
   data-type="${buttonConfig.displayType}"
   data-icon="${buttonConfig.icon}"
   data-size="${buttonConfig.size}"
-  data-radius="${buttonConfig.borderRadius}px">
+  data-radius="${buttonConfig.borderRadius}px"
+  data-modal-width="600px"
+  data-modal-height="800px">
 </script>`;
   };
   

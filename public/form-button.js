@@ -13,6 +13,8 @@
     icon: 'form',
     size: 'medium',
     radius: '4px',
+    modalWidth: '600px',
+    modalHeight: '800px',
   };
   
   // Obtener configuración del script tag
@@ -33,6 +35,8 @@
     icon: scriptTag.getAttribute('data-icon') || DEFAULT_CONFIG.icon,
     size: scriptTag.getAttribute('data-size') || DEFAULT_CONFIG.size,
     radius: scriptTag.getAttribute('data-radius') || DEFAULT_CONFIG.radius,
+    modalWidth: scriptTag.getAttribute('data-modal-width') || DEFAULT_CONFIG.modalWidth,
+    modalHeight: scriptTag.getAttribute('data-modal-height') || DEFAULT_CONFIG.modalHeight,
   };
   
   // Si no se proporcionó un ID de formulario, mostrar un error
@@ -328,7 +332,7 @@
       const modalContent = document.createElement('div');
       modalContent.style.backgroundColor = 'white';
       modalContent.style.borderRadius = '8px';
-      modalContent.style.width = '600px'; // Mayor ancho para acomodar todos los campos
+      modalContent.style.width = config.modalWidth || '600px'; // Usar el ancho configurado o valor predeterminado
       modalContent.style.maxWidth = '96%'; // Respuesta en dispositivos pequeños
       /* No establecer una altura mínima para que se adapte al contenido */
       modalContent.style.maxHeight = '95vh'; // Casi toda la pantalla para ver formularios extensos
@@ -395,8 +399,8 @@
                 iframe.contentWindow.document.body.style.overflow = 'visible';
               }
             } catch (e) {
-              // Fallback para cross-origin: usar altura predeterminada
-              iframe.style.height = '800px';
+              // Fallback para cross-origin: usar altura configurada o predeterminada
+              iframe.style.height = config.modalHeight || '800px';
             }
           };
           
