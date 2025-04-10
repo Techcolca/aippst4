@@ -139,14 +139,14 @@
       .aipi-form-modal-content {
         background-color: white;
         border-radius: 8px;
-        width: 400px; /* Ancho fijo exacto como en la imagen de ejemplo */
-        max-width: 400px; /* Limitado para asegurar tamaño consistente */
+        width: 600px; /* Mayor ancho para acomodar todos los campos */
+        max-width: 96%; /* Adaptable a pantallas pequeñas */
         height: auto;
-        min-height: 300px; /* Reducida para mostrar solo dos campos */
-        max-height: 350px; /* Limitada para evitar espacio en blanco */
+        min-height: 500px; /* Mayor altura para mostrar más campos */
+        max-height: 90vh; /* Casi toda la altura de la pantalla */
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
-        overflow: hidden; /* Sin scroll para evitar controles adicionales */
+        overflow: auto; /* Permitir scroll para ver todo el contenido */
         display: flex;
         flex-direction: column;
       }
@@ -224,7 +224,7 @@
       .aipi-form-iframe {
         width: 100%;
         height: 100%;
-        min-height: 350px; /* Altura ajustada para el modal */
+        min-height: 600px; /* Mayor altura para mostrar todos los campos */
         flex: 1; /* Toma el espacio disponible restante */
         border: none;
         display: block;
@@ -379,7 +379,7 @@
       iframe.src = getFormUrl();
       iframe.style.width = '100%';
       iframe.style.height = '100%'; // Adaptarse dinámicamente al contenedor
-      iframe.style.minHeight = '400px'; // Altura mínima inicial
+      iframe.style.minHeight = config.modalHeight || '600px'; // Usar altura configurada o predeterminada
       iframe.style.border = 'none';
       iframe.style.display = 'block';
       iframe.setAttribute('frameborder', '0');
