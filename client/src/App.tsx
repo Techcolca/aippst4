@@ -22,6 +22,7 @@ import FormTemplateSelection from "@/pages/form-template-selection";
 import FormEditor from "@/pages/form-editor";
 import FormResponses from "@/pages/form-responses";
 import FormPreview from "@/pages/form-preview";
+import FormIntegration from "@/pages/form-integration";
 import ConversationDetails from "@/pages/conversation-details";
 import IntegrationConversations from "@/pages/integration-conversations";
 import IntegrationAnalytics from "@/pages/integration-analytics";
@@ -53,6 +54,7 @@ function Router() {
       <Route path="/create-form" component={FormTemplateSelection} />
       <Route path="/forms/:id/edit" component={FormEditor} />
       <Route path="/forms/:id/responses" component={FormResponses} />
+      <Route path="/forms/:id/integrate" component={FormIntegration} />
       <Route path="/forms/:id" component={FormPreview} />
       <Route path="/conversations/:id" component={ConversationDetails} />
       <Route component={NotFound} />
