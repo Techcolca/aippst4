@@ -138,11 +138,11 @@
         width: 400px; /* Ancho fijo exacto como en la imagen de ejemplo */
         max-width: 400px; /* Limitado para asegurar tamaño consistente */
         height: auto;
-        min-height: 400px; /* Altura pequeña como la imagen de ejemplo */
-        max-height: 500px; /* Limitado para mantener estilo compacto */
+        min-height: 300px; /* Reducida para mostrar solo dos campos */
+        max-height: 350px; /* Limitada para evitar espacio en blanco */
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
-        overflow: auto; /* Con scroll si es necesario */
+        overflow: hidden; /* Sin scroll para evitar controles adicionales */
         display: flex;
         flex-direction: column;
       }
@@ -314,20 +314,34 @@
     if (!modal) {
       modal = document.createElement('div');
       modal.className = 'aipi-form-modal';
+      modal.style.display = 'none';
+      modal.style.position = 'fixed';
+      modal.style.top = '0';
+      modal.style.left = '0';
+      modal.style.width = '100%';
+      modal.style.height = '100%';
+      modal.style.zIndex = '10000';
+      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
       
       const modalContent = document.createElement('div');
-      modalContent.className = 'aipi-form-modal-content';
-      modalContent.style.width = '400px'; // Ancho exacto del modal que necesitas
-      modalContent.style.maxWidth = '400px'; // Limitado para mantener tamaño consistente
-      modalContent.style.maxHeight = '500px'; // Altura máxima como en la imagen
-      modalContent.style.height = 'auto';
-      modalContent.style.minHeight = '400px'; // Altura fija similar a la imagen
+      modalContent.style.backgroundColor = 'white';
+      modalContent.style.borderRadius = '8px';
+      modalContent.style.width = '500px'; // Mayor ancho para acomodar todos los campos
+      modalContent.style.maxWidth = '96%'; // Respuesta en dispositivos pequeños
+      modalContent.style.minHeight = '600px'; // Altura considerable para mostrar todos los campos
+      modalContent.style.maxHeight = '90vh'; // Limitar altura para pantallas pequeñas
+      modalContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
+      modalContent.style.display = 'flex';
+      modalContent.style.flexDirection = 'column';
+      modalContent.style.overflow = 'visible'; // Permitir que se vea todo el contenido
       
-      // Agregamos un header para mejor experiencia visual (más compacto)
+      // Header para mejor experiencia visual
       const modalHeader = document.createElement('div');
-      modalHeader.style.padding = '10px 15px'; // Padding reducido
+      modalHeader.style.padding = '15px';
       modalHeader.style.display = 'flex';
-      modalHeader.style.justifyContent = 'space-between';
+      modalHeader.style.justifyContent = 'space-between'; // Título a la izquierda, botón a la derecha
       modalHeader.style.alignItems = 'center';
       modalHeader.style.borderBottom = '1px solid #e9ecef';
       modalHeader.style.backgroundColor = '#f8f9fa';
@@ -336,34 +350,30 @@
       
       const modalTitle = document.createElement('h3');
       modalTitle.style.margin = '0';
-      modalTitle.style.fontSize = '14px'; // Tamaño de fuente reducido
-      modalTitle.style.fontWeight = 'normal'; // Menos énfasis
+      modalTitle.style.fontSize = '16px';
+      modalTitle.style.fontWeight = 'bold';
       modalTitle.textContent = config.text || 'Formulario';
       
       const headerCloseButton = document.createElement('button');
       headerCloseButton.style.background = 'none';
       headerCloseButton.style.border = 'none';
       headerCloseButton.style.cursor = 'pointer';
-      headerCloseButton.style.padding = '3px'; // Botón más pequeño
-      headerCloseButton.style.marginLeft = '10px';
-      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      headerCloseButton.style.padding = '5px';
+      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
       headerCloseButton.addEventListener('click', closeModal);
       
       modalHeader.appendChild(modalTitle);
       modalHeader.appendChild(headerCloseButton);
       
-      // Container para el iframe, más compacto
+      // Container para el iframe con dimensiones mayores
       const iframeContainer = document.createElement('div');
       iframeContainer.style.flex = '1';
-      iframeContainer.style.display = 'flex';
-      iframeContainer.style.flexDirection = 'column';
       iframeContainer.style.overflow = 'auto'; // Scroll si es necesario
       
       const iframe = document.createElement('iframe');
-      iframe.className = 'aipi-form-iframe';
       iframe.src = getFormUrl();
       iframe.style.width = '100%';
-      iframe.style.height = '350px'; // Altura fija más pequeña como en la imagen
+      iframe.style.height = '550px'; // Altura mayor para mostrar todos los campos
       iframe.style.border = 'none';
       iframe.style.display = 'block';
       iframe.setAttribute('frameborder', '0');
