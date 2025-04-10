@@ -140,7 +140,7 @@
         max-height: 90vh;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
-        overflow: hidden;
+        overflow: auto; /* Cambiado de 'hidden' a 'auto' para permitir scroll */
       }
       
       .aipi-form-modal-close {
@@ -190,22 +190,43 @@
       }
       
       .aipi-form-slidein-close {
-        position: absolute;
+        position: fixed;
         top: 10px;
         right: 10px;
-        width: 24px;
-        height: 24px;
-        background: rgba(0, 0, 0, 0.1);
+        width: 32px;
+        height: 32px;
+        background: rgba(0, 0, 0, 0.15);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        z-index: 1;
+        z-index: 10001;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
       
       .aipi-form-slidein-close:hover {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.25);
+      }
+      
+      .aipi-form-slidein-header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1;
+      }
+      
+      .aipi-form-slidein-title {
+        font-weight: bold;
+        font-size: 16px;
+        margin: 0;
       }
       
       /* Iframe */
@@ -225,7 +246,7 @@
     const button = document.createElement('button');
     button.className = `aipi-form-button ${config.position} ${config.size}`;
     button.style.backgroundColor = config.color;
-    button.style.color = '#FFFFFF';
+    button.style.color = scriptTag.getAttribute('data-text-color') || '#FFFFFF';
     button.style.borderRadius = config.radius;
     
     // Agregar ícono si se especificó
@@ -268,8 +289,16 @@
         showSlideInForm();
         break;
       case 'redirect':
-        // Redirigir a la URL del formulario
-        window.location.href = getFormUrl();
+        // Comprobar si es posible abrir en una nueva pestaña
+        if (window.confirm('Se abrirá el formulario en una nueva ventana. ¿Continuar?')) {
+          // Intentar abrir en nueva pestaña primero (puede ser bloqueado por el navegador)
+          const newWindow = window.open(getFormUrl(), '_blank');
+          
+          // Si fue bloqueado o falló, redirigir en la misma ventana
+          if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+            window.location.href = getFormUrl();
+          }
+        }
         break;
       default:
         showModalForm();
@@ -346,6 +375,26 @@
       const slideInContent = document.createElement('div');
       slideInContent.className = 'aipi-form-slidein-content';
       
+      // Agregar header para mejor experiencia visual
+      const slideInHeader = document.createElement('div');
+      slideInHeader.className = 'aipi-form-slidein-header';
+      
+      const slideInTitle = document.createElement('h3');
+      slideInTitle.className = 'aipi-form-slidein-title';
+      slideInTitle.textContent = config.text || 'Formulario';
+      
+      const headerCloseButton = document.createElement('button');
+      headerCloseButton.style.background = 'none';
+      headerCloseButton.style.border = 'none';
+      headerCloseButton.style.cursor = 'pointer';
+      headerCloseButton.style.padding = '5px';
+      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      headerCloseButton.addEventListener('click', closeSlideIn);
+      
+      slideInHeader.appendChild(slideInTitle);
+      slideInHeader.appendChild(headerCloseButton);
+      
+      // Botón de cierre adicional (más visible)
       const closeButton = document.createElement('div');
       closeButton.className = 'aipi-form-slidein-close';
       closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
@@ -355,9 +404,10 @@
       iframe.className = 'aipi-form-iframe';
       iframe.src = getFormUrl();
       
-      slideInContent.appendChild(closeButton);
+      slideInContent.appendChild(slideInHeader);
       slideInContent.appendChild(iframe);
       slideIn.appendChild(slideInContent);
+      slideIn.appendChild(closeButton); // Botón flotante fuera del contenido
       document.body.appendChild(slideIn);
     }
     
