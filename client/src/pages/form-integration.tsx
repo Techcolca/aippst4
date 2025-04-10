@@ -150,6 +150,8 @@ export default function FormIntegration() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
   
   // Obtener detalles del formulario
   const { data: form = {} as Form, isLoading: isLoadingForm } = useQuery<Form>({
@@ -168,21 +170,67 @@ export default function FormIntegration() {
     borderRadius: "4",
   });
   
-  // Actualizar el texto del botón cuando se cargue el formulario
+  // Mutación para guardar la configuración del botón
+  const saveConfigMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest("PATCH", `/api/forms/${id}`, {
+        settings: {
+          ...(form.settings || {}),
+          buttonConfig: buttonConfig
+        }
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Configuración guardada",
+        description: "La configuración del botón ha sido guardada correctamente",
+      });
+      // Actualizar los datos del formulario en caché
+      queryClient.invalidateQueries({ queryKey: [`/api/forms/${id}`] });
+    },
+    onError: (error) => {
+      console.error("Error al guardar la configuración:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo guardar la configuración. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      setIsSaving(false);
+    }
+  });
+  
+  // Función para guardar la configuración
+  const saveButtonConfig = () => {
+    setIsSaving(true);
+    saveConfigMutation.mutate();
+  };
+  
+  // Cargar configuración guardada y actualizar texto e ícono según el tipo de formulario
   useEffect(() => {
     if (form?.title) {
-      const buttonText = form.type === 'contact' ? 'Contactar' : 
-                         form.type === 'order' ? 'Hacer pedido' : 
-                         form.type === 'survey' ? 'Responder encuesta' : 
-                         'Abrir formulario';
-      setButtonConfig(prev => ({ ...prev, text: buttonText }));
-      
-      // También actualizar el ícono según el tipo de formulario si está disponible
-      const iconType = form.type === 'contact' ? 'contact' : 
-                       form.type === 'order' ? 'order' : 
-                       form.type === 'survey' ? 'survey' : 
-                       'form';
-      setButtonConfig(prev => ({ ...prev, icon: iconType }));
+      // Si hay una configuración guardada, cárgala
+      if (form.settings?.buttonConfig) {
+        setButtonConfig(form.settings.buttonConfig);
+      } else {
+        // Configuración predeterminada según el tipo de formulario
+        const buttonText = form.type === 'contact' ? 'Contactar' : 
+                          form.type === 'order' ? 'Hacer pedido' : 
+                          form.type === 'survey' ? 'Responder encuesta' : 
+                          'Abrir formulario';
+        
+        const iconType = form.type === 'contact' ? 'contact' : 
+                        form.type === 'order' ? 'order' : 
+                        form.type === 'survey' ? 'survey' : 
+                        'form';
+                        
+        setButtonConfig(prev => ({ 
+          ...prev, 
+          text: buttonText,
+          icon: iconType
+        }));
+      }
     }
   }, [form]);
   
@@ -475,6 +523,25 @@ export default function FormIntegration() {
                       />
                     </div>
                   </CardContent>
+                  <CardFooter className="flex justify-end">
+                    <Button 
+                      onClick={saveButtonConfig} 
+                      disabled={isSaving}
+                      className="flex items-center gap-2"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Guardando...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="h-4 w-4" />
+                          Guardar cambios
+                        </>
+                      )}
+                    </Button>
+                  </CardFooter>
                 </Card>
                 
                 {/* Vista previa y código */}
