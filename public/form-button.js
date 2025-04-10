@@ -130,20 +130,20 @@
         background-color: rgba(0, 0, 0, 0.5);
         align-items: center;
         justify-content: center;
-        padding: 15px; /* Asegura que haya espacio alrededor del modal */
+        padding: 20px; /* Más espacio alrededor del modal */
       }
       
       .aipi-form-modal-content {
         background-color: white;
         border-radius: 8px;
         width: 98%; /* Mayor ancho */
-        max-width: 600px; /* Aumentado para mostrar mejor el formulario */
+        max-width: 800px; /* Considerablemente aumentado para mostrar todo el formulario */
         height: auto;
-        min-height: 650px; /* Aumentado significativamente para todas las preguntas */
-        max-height: 90vh; /* Usando más espacio vertical de la pantalla */
+        min-height: 750px; /* Altura mínima muy grande para ver todas las preguntas */
+        max-height: 95vh; /* Usando casi todo el espacio vertical */
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
-        overflow: visible; /* Permitimos que el contenido sea totalmente visible */
+        overflow: hidden; /* Evitar desbordamiento */
         display: flex;
         flex-direction: column;
       }
@@ -310,16 +310,158 @@
    * Muestra el formulario en una ventana modal
    */
   function showModalForm() {
-    // En lugar de usar un modal, simplemente redirigir a la página del formulario
-    // Ya que los modales están causando problemas con el tamaño y la visualización
-    window.open(getFormUrl(), '_blank');
+    // Crear el contenedor modal si no existe
+    let modal = document.querySelector('.aipi-form-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.className = 'aipi-form-modal';
+      
+      const modalContent = document.createElement('div');
+      modalContent.className = 'aipi-form-modal-content';
+      modalContent.style.width = '96%';
+      modalContent.style.maxWidth = '700px'; // Extra ancho para acomodar formularios
+      modalContent.style.maxHeight = '90vh'; // Alto máximo para ver todo el contenido
+      modalContent.style.height = 'auto';
+      modalContent.style.minHeight = '700px'; // Altura fija considerable
+      
+      // Agregamos un header para mejor experiencia visual
+      const modalHeader = document.createElement('div');
+      modalHeader.style.padding = '15px';
+      modalHeader.style.display = 'flex';
+      modalHeader.style.justifyContent = 'space-between';
+      modalHeader.style.alignItems = 'center';
+      modalHeader.style.borderBottom = '1px solid #e9ecef';
+      modalHeader.style.backgroundColor = '#f8f9fa';
+      modalHeader.style.borderTopLeftRadius = '8px';
+      modalHeader.style.borderTopRightRadius = '8px';
+      
+      const modalTitle = document.createElement('h3');
+      modalTitle.style.margin = '0';
+      modalTitle.style.fontSize = '16px';
+      modalTitle.style.fontWeight = 'bold';
+      modalTitle.textContent = config.text || 'Formulario';
+      
+      const headerCloseButton = document.createElement('button');
+      headerCloseButton.style.background = 'none';
+      headerCloseButton.style.border = 'none';
+      headerCloseButton.style.cursor = 'pointer';
+      headerCloseButton.style.padding = '5px';
+      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      headerCloseButton.addEventListener('click', closeModal);
+      
+      modalHeader.appendChild(modalTitle);
+      modalHeader.appendChild(headerCloseButton);
+      
+      // Container principal que ocupa todo el espacio disponible
+      const iframeContainer = document.createElement('div');
+      iframeContainer.style.flex = '1';
+      iframeContainer.style.display = 'flex';
+      iframeContainer.style.flexDirection = 'column';
+      iframeContainer.style.height = '700px'; // Altura fija grande
+      
+      const iframe = document.createElement('iframe');
+      iframe.className = 'aipi-form-iframe';
+      iframe.src = getFormUrl();
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      iframe.style.display = 'block';
+      iframe.style.flex = '1';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowtransparency', 'true');
+      
+      iframeContainer.appendChild(iframe);
+      
+      modalContent.appendChild(modalHeader);
+      modalContent.appendChild(iframeContainer);
+      modal.appendChild(modalContent);
+      document.body.appendChild(modal);
+      
+      // Cerrar modal al hacer clic fuera
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+    }
+    
+    // Mostrar modal
+    modal.style.display = 'flex';
+    
+    // Prevenir scroll del body
+    document.body.style.overflow = 'hidden';
+    
+    function closeModal() {
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
   }
   
   /**
    * Muestra el formulario en un panel deslizante
    */
   function showSlideInForm() {
-    // También cambiamos esta opción para simplificar y garantizar la visualización
-    window.open(getFormUrl(), '_blank');
+    // Crear el panel deslizante si no existe
+    let slideIn = document.querySelector('.aipi-form-slidein');
+    if (!slideIn) {
+      slideIn = document.createElement('div');
+      slideIn.className = 'aipi-form-slidein';
+      
+      const slideInContent = document.createElement('div');
+      slideInContent.className = 'aipi-form-slidein-content';
+      
+      // Agregar header para mejor experiencia visual
+      const slideInHeader = document.createElement('div');
+      slideInHeader.className = 'aipi-form-slidein-header';
+      
+      const slideInTitle = document.createElement('h3');
+      slideInTitle.className = 'aipi-form-slidein-title';
+      slideInTitle.textContent = config.text || 'Formulario';
+      
+      const headerCloseButton = document.createElement('button');
+      headerCloseButton.style.background = 'none';
+      headerCloseButton.style.border = 'none';
+      headerCloseButton.style.cursor = 'pointer';
+      headerCloseButton.style.padding = '5px';
+      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      headerCloseButton.addEventListener('click', closeSlideIn);
+      
+      slideInHeader.appendChild(slideInTitle);
+      slideInHeader.appendChild(headerCloseButton);
+      
+      // Botón de cierre adicional (más visible)
+      const closeButton = document.createElement('div');
+      closeButton.className = 'aipi-form-slidein-close';
+      closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      closeButton.addEventListener('click', closeSlideIn);
+      
+      const iframe = document.createElement('iframe');
+      iframe.className = 'aipi-form-iframe';
+      iframe.src = getFormUrl();
+      iframe.style.height = '100%';
+      iframe.style.width = '100%';
+      iframe.style.minHeight = '600px'; /* Altura mínima para asegurar visualización */
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowtransparency', 'true');
+      
+      slideInContent.appendChild(slideInHeader);
+      slideInContent.appendChild(iframe);
+      slideIn.appendChild(slideInContent);
+      slideIn.appendChild(closeButton); // Botón flotante fuera del contenido
+      document.body.appendChild(slideIn);
+    }
+    
+    // Mostrar panel deslizante
+    slideIn.style.display = 'block';
+    setTimeout(() => {
+      slideIn.classList.add('active');
+    }, 10);
+    
+    function closeSlideIn() {
+      slideIn.classList.remove('active');
+      setTimeout(() => {
+        slideIn.style.display = 'none';
+      }, 300);
+    }
   }
 })();
