@@ -416,7 +416,7 @@
           }
         } catch (e) {
           console.log("No se puede acceder al contenido del iframe por restricciones de seguridad");
-          iframe.style.height = '800px'; // Altura predeterminada significativa
+          iframe.style.height = config.modalHeight || '800px'; // Usar altura configurada o predeterminada
         }
       };
       
