@@ -130,37 +130,25 @@
         background-color: rgba(0, 0, 0, 0.5);
         align-items: center;
         justify-content: center;
+        padding: 15px; /* Asegura que haya espacio alrededor del modal */
       }
       
       .aipi-form-modal-content {
         background-color: white;
         border-radius: 8px;
-        width: 90%;
-        max-width: 800px;
-        max-height: 90vh;
+        width: 96%;
+        max-width: 600px; /* Reducido para mejor experiencia en móviles */
+        height: auto;
+        min-height: 200px;
+        max-height: calc(100vh - 40px); /* Asegura que no sea más alto que la ventana menos el padding */
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
-        overflow: auto; /* Cambiado de 'hidden' a 'auto' para permitir scroll */
-      }
-      
-      .aipi-form-modal-close {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 24px;
-        height: 24px;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 50%;
+        overflow: visible; /* Permitimos que el contenido sea totalmente visible */
         display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 1;
+        flex-direction: column;
       }
       
-      .aipi-form-modal-close:hover {
-        background: rgba(0, 0, 0, 0.2);
-      }
+      /* Removido el botón de cierre flotante ya que ahora usamos uno en el header */
       
       /* Panel deslizante */
       .aipi-form-slidein {
@@ -233,7 +221,10 @@
       .aipi-form-iframe {
         width: 100%;
         height: 100%;
+        min-height: 250px; /* Altura mínima para que sea usable */
+        flex: 1; /* Toma el espacio disponible restante */
         border: none;
+        display: block;
       }
     `;
     document.head.appendChild(styleElement);
@@ -328,17 +319,52 @@
       const modalContent = document.createElement('div');
       modalContent.className = 'aipi-form-modal-content';
       
-      const closeButton = document.createElement('div');
-      closeButton.className = 'aipi-form-modal-close';
-      closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-      closeButton.addEventListener('click', closeModal);
+      // Agregamos un header para mejor experiencia visual
+      const modalHeader = document.createElement('div');
+      modalHeader.style.padding = '15px';
+      modalHeader.style.display = 'flex';
+      modalHeader.style.justifyContent = 'space-between';
+      modalHeader.style.alignItems = 'center';
+      modalHeader.style.borderBottom = '1px solid #e9ecef';
+      modalHeader.style.backgroundColor = '#f8f9fa';
+      modalHeader.style.borderTopLeftRadius = '8px';
+      modalHeader.style.borderTopRightRadius = '8px';
+      
+      const modalTitle = document.createElement('h3');
+      modalTitle.style.margin = '0';
+      modalTitle.style.fontSize = '16px';
+      modalTitle.style.fontWeight = 'bold';
+      modalTitle.textContent = config.text || 'Formulario';
+      
+      const headerCloseButton = document.createElement('button');
+      headerCloseButton.style.background = 'none';
+      headerCloseButton.style.border = 'none';
+      headerCloseButton.style.cursor = 'pointer';
+      headerCloseButton.style.padding = '5px';
+      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+      headerCloseButton.addEventListener('click', closeModal);
+      
+      modalHeader.appendChild(modalTitle);
+      modalHeader.appendChild(headerCloseButton);
+      
+      // Contenedor adicional para el iframe con scroll si es necesario
+      const iframeContainer = document.createElement('div');
+      iframeContainer.style.flex = '1';
+      iframeContainer.style.overflow = 'auto';
+      iframeContainer.style.WebkitOverflowScrolling = 'touch';
       
       const iframe = document.createElement('iframe');
       iframe.className = 'aipi-form-iframe';
       iframe.src = getFormUrl();
+      iframe.style.height = '100%';
+      iframe.style.width = '100%';
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowtransparency', 'true');
       
-      modalContent.appendChild(closeButton);
-      modalContent.appendChild(iframe);
+      iframeContainer.appendChild(iframe);
+      
+      modalContent.appendChild(modalHeader);
+      modalContent.appendChild(iframeContainer);
       modal.appendChild(modalContent);
       document.body.appendChild(modal);
       
