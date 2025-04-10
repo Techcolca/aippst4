@@ -139,7 +139,7 @@
         width: 96%;
         max-width: 400px; /* Ajustado para coincidir con el panel deslizante */
         height: auto;
-        min-height: 200px;
+        min-height: 500px; /* Aumentado para mostrar más contenido */
         max-height: calc(100vh - 40px); /* Asegura que no sea más alto que la ventana menos el padding */
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         position: relative;
@@ -221,7 +221,7 @@
       .aipi-form-iframe {
         width: 100%;
         height: 100%;
-        min-height: 250px; /* Altura mínima para que sea usable */
+        min-height: 400px; /* Altura mínima aumentada para mostrar más preguntas */
         flex: 1; /* Toma el espacio disponible restante */
         border: none;
         display: block;
@@ -352,12 +352,15 @@
       iframeContainer.style.flex = '1';
       iframeContainer.style.overflow = 'auto';
       iframeContainer.style.WebkitOverflowScrolling = 'touch';
+      iframeContainer.style.maxHeight = '600px'; /* Altura fijada para el modal */
+      iframeContainer.style.minHeight = '500px'; /* Altura mínima para asegurar visibilidad del formulario */
       
       const iframe = document.createElement('iframe');
       iframe.className = 'aipi-form-iframe';
       iframe.src = getFormUrl();
       iframe.style.height = '100%';
       iframe.style.width = '100%';
+      iframe.style.minHeight = '500px'; /* Asegura altura mínima */
       iframe.setAttribute('frameborder', '0');
       iframe.setAttribute('allowtransparency', 'true');
       
@@ -429,6 +432,11 @@
       const iframe = document.createElement('iframe');
       iframe.className = 'aipi-form-iframe';
       iframe.src = getFormUrl();
+      iframe.style.height = '100%';
+      iframe.style.width = '100%';
+      iframe.style.minHeight = '500px'; /* Asegura altura mínima */
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('allowtransparency', 'true');
       
       slideInContent.appendChild(slideInHeader);
       slideInContent.appendChild(iframe);
