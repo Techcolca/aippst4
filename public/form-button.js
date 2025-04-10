@@ -313,138 +313,120 @@
    * Muestra el formulario en una ventana modal
    */
   function showModalForm() {
-    // Crear el contenedor modal si no existe
-    let modal = document.querySelector('.aipi-form-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.className = 'aipi-form-modal';
-      modal.style.display = 'none';
-      modal.style.position = 'fixed';
-      modal.style.top = '0';
-      modal.style.left = '0';
-      modal.style.width = '100%';
-      modal.style.height = '100%';
-      modal.style.zIndex = '10000';
-      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-      modal.style.alignItems = 'center';
-      modal.style.justifyContent = 'center';
-      
-      const modalContent = document.createElement('div');
-      modalContent.style.backgroundColor = 'white';
-      modalContent.style.borderRadius = '8px';
-      modalContent.style.width = config.modalWidth || '600px'; // Usar el ancho configurado o valor predeterminado
-      modalContent.style.maxWidth = '96%'; // Respuesta en dispositivos pequeños
-      /* No establecer una altura mínima para que se adapte al contenido */
-      modalContent.style.maxHeight = '95vh'; // Casi toda la pantalla para ver formularios extensos
-      modalContent.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
-      modalContent.style.display = 'flex';
-      modalContent.style.flexDirection = 'column';
-      modalContent.style.overflow = 'auto'; // Permitir scroll dentro del modal
-      modalContent.style.margin = '20px'; // Espacio para mejor visualización
-      
-      // Header para mejor experiencia visual
-      const modalHeader = document.createElement('div');
-      modalHeader.style.padding = '15px';
-      modalHeader.style.display = 'flex';
-      modalHeader.style.justifyContent = 'space-between'; // Título a la izquierda, botón a la derecha
-      modalHeader.style.alignItems = 'center';
-      modalHeader.style.borderBottom = '1px solid #e9ecef';
-      modalHeader.style.backgroundColor = '#f8f9fa';
-      modalHeader.style.borderTopLeftRadius = '8px';
-      modalHeader.style.borderTopRightRadius = '8px';
-      
-      const modalTitle = document.createElement('h3');
-      modalTitle.style.margin = '0';
-      modalTitle.style.fontSize = '16px';
-      modalTitle.style.fontWeight = 'bold';
-      modalTitle.textContent = config.text || 'Formulario';
-      
-      const headerCloseButton = document.createElement('button');
-      headerCloseButton.style.background = 'none';
-      headerCloseButton.style.border = 'none';
-      headerCloseButton.style.cursor = 'pointer';
-      headerCloseButton.style.padding = '5px';
-      headerCloseButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-      headerCloseButton.addEventListener('click', closeModal);
-      
-      modalHeader.appendChild(modalTitle);
-      modalHeader.appendChild(headerCloseButton);
-      
-      // Container para el iframe con dimensiones mayores
-      const iframeContainer = document.createElement('div');
-      iframeContainer.style.flex = '1';
-      iframeContainer.style.overflow = 'auto'; // Scroll si es necesario
-      
-      const iframe = document.createElement('iframe');
-      iframe.src = getFormUrl();
-      iframe.style.width = '100%';
-      iframe.style.height = '100%'; // Adaptarse dinámicamente al contenedor
-      iframe.style.minHeight = config.modalHeight || '600px'; // Usar altura configurada o predeterminada
-      iframe.style.border = 'none';
-      iframe.style.display = 'block';
-      iframe.setAttribute('frameborder', '0');
-      iframe.setAttribute('allowtransparency', 'true');
-      iframe.setAttribute('scrolling', 'yes'); // Permitir scroll dentro del iframe
-      
-      // Añadir mensaje al iframe cargado para asegurar que se muestren todos los campos
-      iframe.onload = function() {
-        try {
-          // Intentar ajustar la altura del iframe para mostrar todo el contenido
-          const resizeIframe = () => {
-            try {
-              // Si el iframe y su contenido son del mismo origen, ajustar altura automáticamente
-              if (iframe.contentWindow.document) {
-                const iframeHeight = iframe.contentWindow.document.body.scrollHeight;
-                iframe.style.height = (iframeHeight + 50) + 'px'; // Añadir margen
-                iframe.contentWindow.document.body.style.overflow = 'visible';
-              }
-            } catch (e) {
-              // Fallback para cross-origin: usar altura configurada o predeterminada
-              iframe.style.height = config.modalHeight || '800px';
-            }
-          };
-          
-          // Intentar ajustar la altura inicialmente
-          resizeIframe();
-          
-          // Establecer un observador para detectar cambios en el tamaño
-          if (window.ResizeObserver) {
-            try {
-              const observer = new ResizeObserver(() => resizeIframe());
-              observer.observe(iframe);
-            } catch (e) {}
-          }
-        } catch (e) {
-          console.log("No se puede acceder al contenido del iframe por restricciones de seguridad");
-          iframe.style.height = config.modalHeight || '800px'; // Usar altura configurada o predeterminada
-        }
-      };
-      
-      iframeContainer.appendChild(iframe);
-      
-      modalContent.appendChild(modalHeader);
-      modalContent.appendChild(iframeContainer);
-      modal.appendChild(modalContent);
-      document.body.appendChild(modal);
-      
-      // Cerrar modal al hacer clic fuera
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-          closeModal();
-        }
-      });
+    // Crear el contenedor modal como elemento completamente nuevo
+    // Eliminamos cualquier modal existente para evitar conflictos
+    let existingModal = document.querySelector('.aipi-form-modal');
+    if (existingModal) {
+      existingModal.remove();
     }
     
-    // Mostrar modal
+    // Crear nuevo modal desde cero
+    const modal = document.createElement('div');
+    modal.className = 'aipi-form-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.zIndex = '99999'; // Mayor z-index para asegurar visibilidad
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
     
-    // Prevenir scroll del body
+    // Contenedor del contenido del modal
+    const modalContent = document.createElement('div');
+    modalContent.style.backgroundColor = 'white';
+    modalContent.style.borderRadius = '8px';
+    modalContent.style.width = config.modalWidth || '600px';
+    modalContent.style.maxWidth = '95%';
+    modalContent.style.height = 'auto';
+    modalContent.style.maxHeight = '90vh';
+    modalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+    modalContent.style.display = 'flex';
+    modalContent.style.flexDirection = 'column';
+    modalContent.style.overflow = 'hidden'; // Evitamos scroll en el contenedor principal
+    modalContent.style.margin = '20px';
+    
+    // Encabezado del modal con título y botón de cierre
+    const modalHeader = document.createElement('div');
+    modalHeader.style.padding = '15px';
+    modalHeader.style.borderBottom = '1px solid #e9ecef';
+    modalHeader.style.display = 'flex';
+    modalHeader.style.justifyContent = 'space-between';
+    modalHeader.style.alignItems = 'center';
+    modalHeader.style.backgroundColor = '#f8f9fa';
+    modalHeader.style.borderTopLeftRadius = '8px';
+    modalHeader.style.borderTopRightRadius = '8px';
+    
+    const modalTitle = document.createElement('h3');
+    modalTitle.style.margin = '0';
+    modalTitle.style.fontSize = '16px';
+    modalTitle.style.fontWeight = 'bold';
+    modalTitle.textContent = config.text || 'Formulario';
+    
+    const closeButton = document.createElement('button');
+    closeButton.style.background = 'none';
+    closeButton.style.border = 'none';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.padding = '5px';
+    closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+    closeButton.addEventListener('click', closeModal);
+    
+    modalHeader.appendChild(modalTitle);
+    modalHeader.appendChild(closeButton);
+    
+    // Contenedor del iframe con scroll propio
+    const iframeContainer = document.createElement('div');
+    iframeContainer.style.flex = '1';
+    iframeContainer.style.overflow = 'auto'; // Permitir scroll dentro del contenedor
+    iframeContainer.style.minHeight = '200px'; // Altura mínima para que se vea algo
+    
+    // Crear iframe para cargar el formulario
+    const iframe = document.createElement('iframe');
+    iframe.src = getFormUrl();
+    iframe.style.width = '100%';
+    iframe.style.border = 'none';
+    iframe.style.height = config.modalHeight || '800px'; // Usamos altura predeterminada fija
+    iframe.style.display = 'block';
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowtransparency', 'true');
+    iframe.setAttribute('scrolling', 'yes'); // Permitir scroll
+    iframe.style.overflow = 'auto'; // Asegurar que tiene scroll
+    
+    // Asignar un ID único para fácil acceso
+    const iframeId = 'aipi-form-iframe-' + Date.now();
+    iframe.id = iframeId;
+    
+    iframeContainer.appendChild(iframe);
+    
+    // Añadir los elementos al DOM
+    modalContent.appendChild(modalHeader);
+    modalContent.appendChild(iframeContainer);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Prevenir scroll del body cuando el modal está abierto
     document.body.style.overflow = 'hidden';
     
+    // Permitir cerrar el modal al hacer clic fuera
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // Función para cerrar el modal
     function closeModal() {
       modal.style.display = 'none';
       document.body.style.overflow = '';
+      setTimeout(() => {
+        modal.remove(); // Eliminamos completamente el modal del DOM
+      }, 100);
     }
+    
+    // Exponer la función de cierre globalmente para permitir cerrar desde el iframe
+    window.closeAipiFormModal = closeModal;
   }
   
   /**
