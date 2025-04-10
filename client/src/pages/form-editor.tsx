@@ -11,7 +11,7 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Save, ArrowLeft, Eye, Settings, Code, Layout, ArrowUp, ArrowDown } from 'lucide-react';
+import { Loader2, Save, ArrowLeft, Eye, Settings, Code, Layout, ArrowUp, ArrowDown, Share2 } from 'lucide-react';
 import Header from '@/components/header';
 
 // Tipos para el formulario
@@ -381,6 +381,36 @@ const FormEditor = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
                 Nueva pestaña
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={async () => {
+                  try {
+                    // Guardar primero
+                    await updateFormMutation.mutateAsync(formData);
+                    
+                    // Navegar a la página de integración
+                    navigate(`/forms/${formId}/integrate`);
+                    
+                    toast({
+                      title: "Formulario guardado",
+                      description: "Ahora puedes integrar tu formulario"
+                    });
+                  } catch (error) {
+                    console.error("Error al guardar el formulario:", error);
+                    toast({
+                      variant: "destructive",
+                      title: "Error",
+                      description: "No se pudo guardar el formulario"
+                    });
+                  }
+                }}
+                disabled={updateFormMutation.isPending}
+              >
+                <Share2 className="h-4 w-4 mr-2" />
+                Integrar
               </Button>
             </div>
             
