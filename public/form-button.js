@@ -137,7 +137,7 @@
         background-color: white;
         border-radius: 8px;
         width: 96%;
-        max-width: 600px; /* Reducido para mejor experiencia en móviles */
+        max-width: 400px; /* Ajustado para coincidir con el panel deslizante */
         height: auto;
         min-height: 200px;
         max-height: calc(100vh - 40px); /* Asegura que no sea más alto que la ventana menos el padding */
