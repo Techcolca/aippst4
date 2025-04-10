@@ -140,7 +140,7 @@ export default function FormIntegration() {
   const [copied, setCopied] = useState(false);
   
   // Obtener detalles del formulario
-  const { data: form, isLoading: isLoadingForm } = useQuery<Form>({
+  const { data: form = {} as Form, isLoading: isLoadingForm } = useQuery<Form>({
     queryKey: [`/api/forms/${id}`],
   });
 
