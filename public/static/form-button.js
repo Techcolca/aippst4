@@ -9,6 +9,7 @@
     text: 'Abrir formulario',
     position: 'bottom-right',
     color: '#4a90e2',
+    textColor: '#FFFFFF',
     type: 'modal',
     icon: 'form',
     size: 'medium',
@@ -29,6 +30,7 @@
     text: scriptTag.getAttribute('data-text') || DEFAULT_CONFIG.text,
     position: scriptTag.getAttribute('data-position') || DEFAULT_CONFIG.position,
     color: scriptTag.getAttribute('data-color') || DEFAULT_CONFIG.color,
+    textColor: scriptTag.getAttribute('data-text-color') || DEFAULT_CONFIG.textColor,
     type: scriptTag.getAttribute('data-type') || DEFAULT_CONFIG.type,
     icon: scriptTag.getAttribute('data-icon') || DEFAULT_CONFIG.icon,
     size: scriptTag.getAttribute('data-size') || DEFAULT_CONFIG.size,
@@ -225,7 +227,7 @@
     const button = document.createElement('button');
     button.className = `aipi-form-button ${config.position} ${config.size}`;
     button.style.backgroundColor = config.color;
-    button.style.color = '#FFFFFF';
+    button.style.color = config.textColor; // Usar el color de texto configurado
     button.style.borderRadius = config.radius;
     
     // Agregar ícono si se especificó

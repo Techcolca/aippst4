@@ -149,6 +149,7 @@ export default function FormIntegration() {
     text: "Abrir formulario",
     position: "bottom-right",
     color: "#4a90e2",
+    textColor: "#ffffff", // Color del texto, por defecto blanco
     displayType: "modal",
     icon: "form",
     size: "medium",
@@ -181,6 +182,7 @@ export default function FormIntegration() {
   data-text="${buttonConfig.text}" 
   data-position="${buttonConfig.position}"
   data-color="${buttonConfig.color}"
+  data-text-color="${buttonConfig.textColor}"
   data-type="${buttonConfig.displayType}"
   data-icon="${buttonConfig.icon}"
   data-size="${buttonConfig.size}"
@@ -220,9 +222,10 @@ export default function FormIntegration() {
       
       <button 
         className={`absolute ${buttonConfig.position.includes('top') ? 'top-4' : 'bottom-4'} ${buttonConfig.position.includes('right') ? 'right-4' : 'left-4'} 
-                   flex items-center justify-center px-4 py-2 rounded-md text-white`}
+                   flex items-center justify-center px-4 py-2 rounded-md`}
         style={{ 
           backgroundColor: buttonConfig.color,
+          color: buttonConfig.textColor, // Aplicamos el color de texto seleccionado
           fontSize: buttonConfig.size === 'small' ? '14px' : buttonConfig.size === 'large' ? '18px' : '16px',
           padding: buttonConfig.size === 'small' ? '6px 12px' : buttonConfig.size === 'large' ? '12px 24px' : '8px 16px',
           borderRadius: `${buttonConfig.borderRadius}px`
@@ -354,6 +357,34 @@ export default function FormIntegration() {
                             className={`h-8 rounded-md transition-all ${buttonConfig.color === color.value ? 'ring-2 ring-primary ring-offset-2' : ''}`}
                             style={{ backgroundColor: color.value }}
                             onClick={() => setButtonConfig({...buttonConfig, color: color.value})}
+                            title={color.label}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="text-color">{t('text_color') || "Color del texto"}</Label>
+                      <div className="grid grid-cols-4 gap-2">
+                        {[
+                          { value: "#ffffff", label: "Blanco" },
+                          { value: "#000000", label: "Negro" },
+                          { value: "#f8f9fa", label: "Gris claro" },
+                          { value: "#343a40", label: "Gris oscuro" },
+                          { value: "#e9ecef", label: "Crema" },
+                          { value: "#ffff00", label: "Amarillo" },
+                          { value: "#28a745", label: "Verde" },
+                          { value: "#dc3545", label: "Rojo" }
+                        ].map((color) => (
+                          <button
+                            key={color.value}
+                            type="button"
+                            className={`h-8 rounded-md transition-all ${buttonConfig.textColor === color.value ? 'ring-2 ring-primary ring-offset-2' : ''}`}
+                            style={{ 
+                              backgroundColor: color.value,
+                              border: color.value === "#ffffff" ? "1px solid #e2e8f0" : "none"
+                            }}
+                            onClick={() => setButtonConfig({...buttonConfig, textColor: color.value})}
                             title={color.label}
                           />
                         ))}
