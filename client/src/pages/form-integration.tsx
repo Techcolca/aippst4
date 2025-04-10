@@ -125,7 +125,7 @@ export default function FormIntegration() {
   
   // Generar el código para incrustar el botón con la configuración actual
   const generateButtonCode = () => {
-    return `<script src="${window.location.origin}/form-button.js" 
+    return `<script src="${window.location.origin}/static/form-button.js" 
   id="aipi-form-button" 
   data-form-id="${id}" 
   data-text="${buttonConfig.text}" 

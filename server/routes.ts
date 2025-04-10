@@ -3434,6 +3434,452 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ error: "Internal server error" });
     }
   });
+  
+  // Ruta para la vista pública del formulario (página completa)
+  app.get("/forms/:id/view", async (req, res) => {
+    try {
+      const formId = parseInt(req.params.id);
+      
+      // Obtener el formulario
+      const form = await storage.getForm(formId);
+      
+      if (!form) {
+        return res.status(404).send('Formulario no encontrado');
+      }
+      
+      // Renderizar una página HTML completa para ver el formulario
+      const html = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${form.title || 'Formulario AIPI'}</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+              color: #333;
+              background-color: #f5f5f5;
+              min-height: 100vh;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .branding {
+              font-size: 0.8rem;
+              text-align: center;
+              margin-top: 2rem;
+              color: #888;
+            }
+            
+            .branding a {
+              color: #666;
+              text-decoration: none;
+            }
+            
+            .branding a:hover {
+              text-decoration: underline;
+            }
+            
+            .container {
+              width: 100%;
+              max-width: 600px;
+              margin: 2rem auto;
+              padding: 2rem;
+              background-color: white;
+              border-radius: 8px;
+              box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            h1 {
+              font-size: 1.8rem;
+              margin-bottom: 1rem;
+              color: #333;
+            }
+            
+            p {
+              margin-bottom: 1.5rem;
+              color: #666;
+            }
+            
+            .form-container {
+              max-width: 100%;
+            }
+            
+            form {
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+            }
+            
+            label {
+              font-weight: 500;
+              margin-bottom: 0.25rem;
+              display: block;
+            }
+            
+            input, textarea, select {
+              width: 100%;
+              padding: 0.75rem;
+              border: 1px solid #ddd;
+              border-radius: 4px;
+              font-size: 1rem;
+              font-family: inherit;
+              box-sizing: border-box;
+            }
+            
+            button {
+              background-color: ${form.styling?.primaryColor || '#3B82F6'};
+              color: white;
+              border: none;
+              padding: 0.75rem 1rem;
+              border-radius: 4px;
+              font-size: 1rem;
+              cursor: pointer;
+              font-weight: 500;
+              margin-top: 0.5rem;
+              transition: background-color 0.2s;
+            }
+            
+            button:hover {
+              opacity: 0.9;
+            }
+            
+            .required:after {
+              content: " *";
+              color: #e53e3e;
+            }
+            
+            .form-field {
+              margin-bottom: 1rem;
+            }
+            
+            @media (max-width: 640px) {
+              .container {
+                padding: 1.5rem;
+                margin: 1rem;
+                width: auto;
+              }
+              
+              h1 {
+                font-size: 1.5rem;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="form-container">
+              <h1>${form.title || 'Formulario'}</h1>
+              ${form.description ? `<p>${form.description}</p>` : ''}
+              
+              <form id="aipi-form">
+                ${form.structure.fields.map(field => `
+                  <div class="form-field">
+                    <label for="${field.name}" class="${field.required ? 'required' : ''}">${field.label}</label>
+                    ${field.type === 'text' ? `
+                      <input type="text" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                    ` : field.type === 'email' ? `
+                      <input type="email" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                    ` : field.type === 'number' ? `
+                      <input type="number" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                    ` : field.type === 'textarea' ? `
+                      <textarea id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" rows="4" ${field.required ? 'required' : ''}></textarea>
+                    ` : field.type === 'select' ? `
+                      <select id="${field.name}" name="${field.name}" ${field.required ? 'required' : ''}>
+                        <option value="">Selecciona una opción</option>
+                        ${field.options && field.options.map(option => {
+                          const optionValue = typeof option === 'string' ? option : option.value || option.label;
+                          const optionLabel = typeof option === 'string' ? option : option.label;
+                          return `<option value="${optionValue}">${optionLabel}</option>`;
+                        }).join('')}
+                      </select>
+                    ` : `
+                      <input type="text" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                    `}
+                  </div>
+                `).join('')}
+                
+                <button type="submit">${form.structure.submitButtonText || 'Enviar'}</button>
+              </form>
+              
+              <div id="success-message" style="display: none; margin-top: 1rem; padding: 1rem; background-color: #f0fff4; color: #2f855a; border-radius: 4px; border: 1px solid #c6f6d5;">
+                ${form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.'}
+              </div>
+            </div>
+          </div>
+          
+          <div class="branding">
+            Formulario creado con <a href="${req.protocol}://${req.get('host')}/" target="_blank">AIPI Forms</a>
+          </div>
+          
+          <script>
+            document.getElementById('aipi-form').addEventListener('submit', async function(e) {
+              e.preventDefault();
+              
+              const formData = new FormData(this);
+              const formDataObj = Object.fromEntries(formData.entries());
+              
+              try {
+                const response = await fetch('/api/form-responses', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    formId: ${formId},
+                    data: formDataObj
+                  })
+                });
+                
+                if (response.ok) {
+                  // Mostrar mensaje de éxito
+                  document.getElementById('aipi-form').style.display = 'none';
+                  document.getElementById('success-message').style.display = 'block';
+                  
+                  // Si hay URL de redirección configurada, redirigir después de un breve retraso
+                  ${form.settings?.redirectUrl ? `
+                    setTimeout(() => {
+                      window.location.href = "${form.settings.redirectUrl}";
+                    }, 3000);
+                  ` : ''}
+                } else {
+                  alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                }
+              } catch (error) {
+                console.error('Error al enviar el formulario:', error);
+                alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+              }
+            });
+          </script>
+        </body>
+        </html>
+      `;
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.send(html);
+    } catch (error) {
+      console.error("Error al renderizar la vista pública del formulario:", error);
+      res.status(500).send('Error interno del servidor');
+    }
+  });
+
+  // Ruta para la vista embebida de formularios
+  app.get("/forms/:id/embed", async (req, res) => {
+    try {
+      const formId = parseInt(req.params.id);
+      
+      // Obtener el formulario
+      const form = await storage.getForm(formId);
+      
+      if (!form) {
+        return res.status(404).send('Formulario no encontrado');
+      }
+      
+      // Renderizar una página HTML simple con el formulario embebido
+      // Este HTML será servido en un iframe
+      const html = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${form.title || 'Formulario AIPI'}</title>
+          <style>
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+              margin: 0;
+              padding: 16px;
+              color: #333;
+              background-color: #fff;
+            }
+            
+            h1 {
+              font-size: 1.5rem;
+              margin-bottom: 1rem;
+            }
+            
+            p {
+              margin-bottom: 1.5rem;
+              color: #666;
+            }
+            
+            .form-container {
+              max-width: 100%;
+              border-radius: ${form.styling?.borderRadius || '8px'};
+              overflow: hidden;
+            }
+            
+            form {
+              display: flex;
+              flex-direction: column;
+              gap: 1rem;
+            }
+            
+            label {
+              font-weight: 500;
+              margin-bottom: 0.25rem;
+              display: block;
+            }
+            
+            input, textarea, select {
+              width: 100%;
+              padding: 0.5rem;
+              border: 1px solid #ddd;
+              border-radius: 4px;
+              font-size: 1rem;
+              font-family: inherit;
+            }
+            
+            button {
+              background-color: ${form.styling?.primaryColor || '#3B82F6'};
+              color: white;
+              border: none;
+              padding: 0.75rem 1rem;
+              border-radius: 4px;
+              font-size: 1rem;
+              cursor: pointer;
+              font-weight: 500;
+              margin-top: 0.5rem;
+            }
+            
+            button:hover {
+              opacity: 0.9;
+            }
+            
+            .required:after {
+              content: " *";
+              color: #e53e3e;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="form-container">
+            <h1>${form.title || 'Formulario'}</h1>
+            ${form.description ? `<p>${form.description}</p>` : ''}
+            
+            <form id="aipi-form">
+              ${form.structure.fields.map(field => `
+                <div class="form-field">
+                  <label for="${field.name}" class="${field.required ? 'required' : ''}">${field.label}</label>
+                  ${field.type === 'text' ? `
+                    <input type="text" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                  ` : field.type === 'email' ? `
+                    <input type="email" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                  ` : field.type === 'number' ? `
+                    <input type="number" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                  ` : field.type === 'textarea' ? `
+                    <textarea id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" rows="4" ${field.required ? 'required' : ''}></textarea>
+                  ` : field.type === 'select' ? `
+                    <select id="${field.name}" name="${field.name}" ${field.required ? 'required' : ''}>
+                      <option value="">Selecciona una opción</option>
+                      ${field.options && field.options.map(option => {
+                        const optionValue = typeof option === 'string' ? option : option.value || option.label;
+                        const optionLabel = typeof option === 'string' ? option : option.label;
+                        return `<option value="${optionValue}">${optionLabel}</option>`;
+                      }).join('')}
+                    </select>
+                  ` : `
+                    <input type="text" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
+                  `}
+                </div>
+              `).join('')}
+              
+              <button type="submit">${form.structure.submitButtonText || 'Enviar'}</button>
+            </form>
+            
+            <div id="success-message" style="display: none; margin-top: 1rem; padding: 1rem; background-color: #f0fff4; color: #2f855a; border-radius: 4px; border: 1px solid #c6f6d5;">
+              ${form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.'}
+            </div>
+          </div>
+          
+          <script>
+            document.getElementById('aipi-form').addEventListener('submit', async function(e) {
+              e.preventDefault();
+              
+              const formData = new FormData(this);
+              const formDataObj = Object.fromEntries(formData.entries());
+              
+              try {
+                const response = await fetch('/api/form-responses', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    formId: ${formId},
+                    data: formDataObj
+                  })
+                });
+                
+                if (response.ok) {
+                  // Mostrar mensaje de éxito
+                  document.getElementById('aipi-form').style.display = 'none';
+                  document.getElementById('success-message').style.display = 'block';
+                  
+                  // Si hay URL de redirección configurada, redirigir después de un breve retraso
+                  ${form.settings?.redirectUrl ? `
+                    setTimeout(() => {
+                      window.top.location.href = "${form.settings.redirectUrl}";
+                    }, 3000);
+                  ` : ''}
+                } else {
+                  alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                }
+              } catch (error) {
+                console.error('Error al enviar el formulario:', error);
+                alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+              }
+            });
+          </script>
+        </body>
+        </html>
+      `;
+      
+      res.setHeader('Content-Type', 'text/html');
+      res.send(html);
+    } catch (error) {
+      console.error("Error al renderizar el formulario embebido:", error);
+      res.status(500).send('Error interno del servidor');
+    }
+  });
+  
+  // Ruta para manejar las respuestas de formularios
+  app.post("/api/form-responses", async (req, res) => {
+    try {
+      const { formId, data } = req.body;
+      
+      if (!formId || !data) {
+        return res.status(400).json({ error: "Faltan datos requeridos" });
+      }
+      
+      // Validar que el formulario existe
+      const form = await storage.getForm(parseInt(formId));
+      
+      if (!form) {
+        return res.status(404).json({ error: "Formulario no encontrado" });
+      }
+      
+      // Crear la respuesta del formulario
+      const response = await storage.createFormResponse({
+        formId: parseInt(formId),
+        data: data,
+        createdAt: new Date(),
+      });
+      
+      // Incrementar el contador de respuestas del formulario
+      await storage.incrementFormResponseCount(parseInt(formId));
+      
+      res.status(201).json({ success: true, responseId: response.id });
+    } catch (error) {
+      console.error("Error al procesar la respuesta del formulario:", error);
+      res.status(500).json({ error: "Error interno del servidor" });
+    }
+  });
 
   const httpServer = createServer(app);
   
