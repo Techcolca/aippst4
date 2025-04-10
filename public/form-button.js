@@ -7,7 +7,7 @@
   const DEFAULT_CONFIG = {
     formId: '',
     text: 'Abrir formulario',
-    position: 'bottom-right',
+    position: 'bottom-center', // Ahora centrado por defecto
     color: '#4a90e2',
     type: 'modal',
     icon: 'form',
@@ -126,6 +126,19 @@
       .aipi-form-button.top-left {
         top: 20px;
         left: 20px;
+      }
+      
+      /* Nuevas posiciones centradas */
+      .aipi-form-button.bottom-center {
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .aipi-form-button.top-center {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
       }
       
       /* Modal */
@@ -255,6 +268,18 @@
           margin: 0 4px;
           border-radius: 4px; /* Bordes menos pronunciados */
         }
+        
+        /* Ajuste para botones centrados en móviles */
+        .aipi-form-button.bottom-center,
+        .aipi-form-button.top-center {
+          min-width: 60%;
+          max-width: 90%;
+          left: 50%;
+          transform: translateX(-50%);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
       
       @media (min-width: 481px) and (max-width: 768px) {
@@ -265,6 +290,16 @@
         .aipi-form-modal-content {
           width: 550px;
           max-width: 95%;
+        }
+        
+        /* Ajuste para botones centrados en tablets */
+        .aipi-form-button.bottom-center,
+        .aipi-form-button.top-center {
+          min-width: auto;
+          max-width: 50%;
+          white-space: nowrap;
+          left: 50%;
+          transform: translateX(-50%);
         }
       }
     `;
