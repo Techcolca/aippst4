@@ -1,6 +1,6 @@
 import { useParams, useLocation } from "wouter";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,9 +35,11 @@ import {
   ExternalLink,
   Loader2,
   Check,
+  Save,
 } from "lucide-react";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useTranslation } from "react-i18next";
+import { apiRequest } from "@/lib/queryClient";
 
 // Interfaces para el tipo de formulario
 interface FormField {
@@ -72,6 +74,16 @@ interface FormSettings {
   storeResponses?: boolean;
   buttonColor?: string;
   submitButtonText?: string;
+  buttonConfig?: {
+    text: string;
+    position: string;
+    color: string;
+    textColor: string;
+    displayType: string;
+    icon: string;
+    size: string;
+    borderRadius: string;
+  };
 }
 
 interface Form {
