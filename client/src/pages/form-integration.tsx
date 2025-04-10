@@ -39,6 +39,56 @@ import {
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useTranslation } from "react-i18next";
 
+// Interfaces para el tipo de formulario
+interface FormField {
+  label: string;
+  name: string;
+  type: string;
+  placeholder?: string;
+  required: boolean;
+  options?: Array<string | { label: string; value?: string }>;
+  defaultValue?: string;
+}
+
+interface FormStructure {
+  fields: FormField[];
+  submitButtonText: string;
+}
+
+interface FormStyling {
+  theme?: 'light' | 'dark' | 'auto';
+  fontFamily?: string;
+  primaryColor?: string;
+  borderRadius?: string;
+  spacing?: string;
+}
+
+interface FormSettings {
+  redirectUrl?: string;
+  sendEmailNotification?: boolean;
+  emailRecipients?: string;
+  successMessage?: string;
+  captcha?: boolean;
+  storeResponses?: boolean;
+  buttonColor?: string;
+  submitButtonText?: string;
+}
+
+interface Form {
+  id: number;
+  title: string;
+  description?: string;
+  type?: string;
+  slug: string;
+  published?: boolean;
+  structure: FormStructure;
+  styling: FormStyling;
+  settings: FormSettings;
+  responseCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // Colores disponibles para el botón
 const COLORS = [
   { value: "#4a90e2", label: "Azul" },
@@ -90,7 +140,7 @@ export default function FormIntegration() {
   const [copied, setCopied] = useState(false);
   
   // Obtener detalles del formulario
-  const { data: form, isLoading: isLoadingForm } = useQuery({
+  const { data: form, isLoading: isLoadingForm } = useQuery<Form>({
     queryKey: [`/api/forms/${id}`],
   });
 
