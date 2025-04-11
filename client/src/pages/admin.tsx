@@ -1600,12 +1600,12 @@ export default function AdminPanel() {
                   <div className="flex justify-between items-center">
                     <CardTitle className="text-lg">Suscripciones</CardTitle>
                     {userDetails.subscriptions && userDetails.subscriptions.length > 0 ? (
-                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id, userDetails.subscriptions[0])}>
+                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id, userDetails.user.username, userDetails.subscriptions[0])}>
                         <CreditCard className="h-4 w-4 mr-2" />
                         Editar suscripción
                       </Button>
                     ) : (
-                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id)}>
+                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id, userDetails.user.username)}>
                         <CreditCard className="h-4 w-4 mr-2" />
                         Agregar suscripción
                       </Button>
@@ -1950,7 +1950,7 @@ export default function AdminPanel() {
           <DialogHeader>
             <DialogTitle>Editar suscripción</DialogTitle>
             <DialogDescription>
-              Modifica la suscripción del usuario ID: {editSubscriptionData.userId}
+              Modifica la suscripción del usuario: <span className="font-medium">{editSubscriptionData.username}</span> (ID: {editSubscriptionData.userId})
             </DialogDescription>
           </DialogHeader>
           
