@@ -370,340 +370,39 @@ export default function FormIntegration() {
             <Loader2 className="h-10 w-10 animate-spin text-primary" />
           </div>
         ) : (
-          <Tabs defaultValue="button">
-            <TabsList className="mb-6">
-              <TabsTrigger value="button">{t('floating_button')}</TabsTrigger>
-              <TabsTrigger value="embed">{t('direct_embed')}</TabsTrigger>
-              <TabsTrigger value="link">{t('direct_link')}</TabsTrigger>
-            </TabsList>
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold mb-4">{t('direct_embed')}</h2>
             
-            {/* Pestaña del botón flotante */}
-            <TabsContent value="button">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Configuración del botón */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>{t('configure_button')}</CardTitle>
-                    <CardDescription>
-                      {t('customize_floating_button')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="button-text">{t('button_text')}</Label>
-                      <Input 
-                        id="button-text" 
-                        value={buttonConfig.text}
-                        onChange={(e) => setButtonConfig({...buttonConfig, text: e.target.value})}
-                        maxLength={30}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="button-position">{t('position')}</Label>
-                      <Select 
-                        value={buttonConfig.position} 
-                        onValueChange={(value) => setButtonConfig({...buttonConfig, position: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('select_position')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {POSITIONS.map((pos) => (
-                            <SelectItem key={pos.value} value={pos.value}>
-                              {pos.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="button-color">{t('color')}</Label>
-                      <div className="grid grid-cols-4 gap-2">
-                        {COLORS.map((color) => (
-                          <button
-                            key={color.value}
-                            type="button"
-                            className={`h-8 rounded-md transition-all ${buttonConfig.color === color.value ? 'ring-2 ring-primary ring-offset-2' : ''}`}
-                            style={{ backgroundColor: color.value }}
-                            onClick={() => setButtonConfig({...buttonConfig, color: color.value})}
-                            title={color.label}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="text-color">{t('text_color') || "Color del texto"}</Label>
-                      <div className="grid grid-cols-4 gap-2">
-                        {[
-                          { value: "#ffffff", label: "Blanco" },
-                          { value: "#000000", label: "Negro" },
-                          { value: "#f8f9fa", label: "Gris claro" },
-                          { value: "#343a40", label: "Gris oscuro" },
-                          { value: "#e9ecef", label: "Crema" },
-                          { value: "#ffff00", label: "Amarillo" },
-                          { value: "#28a745", label: "Verde" },
-                          { value: "#dc3545", label: "Rojo" }
-                        ].map((color) => (
-                          <button
-                            key={color.value}
-                            type="button"
-                            className={`h-8 rounded-md transition-all ${buttonConfig.textColor === color.value ? 'ring-2 ring-primary ring-offset-2' : ''}`}
-                            style={{ 
-                              backgroundColor: color.value,
-                              border: color.value === "#ffffff" ? "1px solid #e2e8f0" : "none"
-                            }}
-                            onClick={() => setButtonConfig({...buttonConfig, textColor: color.value})}
-                            title={color.label}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="button-icon">{t('icon')}</Label>
-                      <Select 
-                        value={buttonConfig.icon} 
-                        onValueChange={(value) => setButtonConfig({...buttonConfig, icon: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('select_icon')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ICONS.map((icon) => (
-                            <SelectItem key={icon.value} value={icon.value}>
-                              {icon.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="display-type">{t('display_type')}</Label>
-                      <Select 
-                        value={buttonConfig.displayType} 
-                        onValueChange={(value) => setButtonConfig({...buttonConfig, displayType: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('select_display_type')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {DISPLAY_TYPES.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="button-size">{t('size')}</Label>
-                      <Select 
-                        value={buttonConfig.size} 
-                        onValueChange={(value) => setButtonConfig({...buttonConfig, size: value})}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('select_size')} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {SIZES.map((size) => (
-                            <SelectItem key={size.value} value={size.value}>
-                              {size.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <Label htmlFor="button-radius">{t('border_radius')}</Label>
-                        <span className="text-sm text-gray-500">{buttonConfig.borderRadius}px</span>
-                      </div>
-                      <Slider
-                        id="button-radius"
-                        min={0}
-                        max={24}
-                        step={1}
-                        value={[parseInt(buttonConfig.borderRadius)]}
-                        onValueChange={(values) => setButtonConfig({...buttonConfig, borderRadius: values[0].toString()})}
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex justify-end">
-                    <Button 
-                      onClick={saveButtonConfig} 
-                      disabled={isSaving}
-                      className="flex items-center gap-2"
-                    >
-                      {isSaving ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Guardando...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4" />
-                          Guardar cambios
-                        </>
-                      )}
-                    </Button>
-                  </CardFooter>
-                </Card>
-                
-                {/* Vista previa y código */}
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>{t('preview')}</CardTitle>
-                      <CardDescription>
-                        {t('button_preview_description')}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ButtonPreview />
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>{t('integration_code')}</CardTitle>
-                      <CardDescription>
-                        {t('add_code_to_website')}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-4 relative">
-                        <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
-                          <code>{generateButtonCode()}</code>
-                        </pre>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute top-2 right-2"
-                          onClick={() => copyToClipboard(generateButtonCode())}
-                        >
-                          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {t('paste_code_before_body_tag')}
-                      </p>
-                    </CardFooter>
-                  </Card>
+            {/* Solo mostramos la opción de incrustación directa */}
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('embed_form')}</CardTitle>
+                <CardDescription>
+                  {t('embed_form_description')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-4 relative">
+                  <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
+                    <code>{generateEmbedCode()}</code>
+                  </pre>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={() => copyToClipboard(generateEmbedCode())}
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
                 </div>
-              </div>
-            </TabsContent>
-            
-            {/* Pestaña de incrustación directa */}
-            <TabsContent value="embed">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('embed_form')}</CardTitle>
-                  <CardDescription>
-                    {t('embed_form_description')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-4 relative">
-                    <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
-                      <code>{generateEmbedCode()}</code>
-                    </pre>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-2 right-2"
-                      onClick={() => copyToClipboard(generateEmbedCode())}
-                    >
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {t('paste_embed_code_anywhere')}
-                  </p>
-                </CardFooter>
-              </Card>
-            </TabsContent>
-            
-            {/* Pestaña de enlace directo */}
-            <TabsContent value="link">
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t('direct_link')}</CardTitle>
-                  <CardDescription>
-                    {t('direct_link_description')}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      readOnly
-                      value={`${window.location.origin}/forms/${id}/view`}
-                    />
-                    <Button
-                      variant="outline"
-                      onClick={() => copyToClipboard(`${window.location.origin}/forms/${id}/view`)}
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="h-4 w-4 mr-2" />
-                          {t('copied')}
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4 mr-2" />
-                          {t('copy')}
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => window.open(`${window.location.origin}/forms/${id}/view`, '_blank')}
-                    >
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      {t('open')}
-                    </Button>
-                  </div>
-                </CardContent>
-                <CardFooter className="flex flex-col items-start space-y-4">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {t('direct_link_usage')}
-                  </p>
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-4 w-full">
-                    <pre className="text-sm">
-                      <code>{`<a href="${window.location.origin}/forms/${id}/view" target="_blank">${form?.title || 'Abrir formulario'}</a>`}</code>
-                    </pre>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() => copyToClipboard(`<a href="${window.location.origin}/forms/${id}/view" target="_blank">${form?.title || 'Abrir formulario'}</a>`)}
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="h-4 w-4 mr-2" />
-                          {t('copied')}
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-4 w-4 mr-2" />
-                          {t('copy_html')}
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </CardFooter>
-              </Card>
-            </TabsContent>
-          </Tabs>
+              </CardContent>
+              <CardFooter>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t('paste_embed_code_anywhere')}
+                </p>
+              </CardFooter>
+            </Card>
+          </div>
         )}
       </div>
     </DashboardLayout>
