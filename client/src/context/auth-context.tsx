@@ -36,6 +36,8 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false); // Control para evitar peticiones simultáneas
+  const [lastRefreshed, setLastRefreshed] = useState(0); // Timestamp de la última actualización
   const { toast } = useToast();
   
   // Verificar si el token ha expirado
@@ -64,6 +66,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Función para verificar y actualizar el estado de autenticación
   const refreshAuth = async (): Promise<boolean> => {
     try {
+      // Control para evitar múltiples peticiones simultáneas
+      if (isRefreshing) {
+        console.log("Ya hay una verificación en curso. Omitiendo...");
+        return !!user; // Devolver el estado actual
+      }
+      
+      // Control para limitar la frecuencia de peticiones (mínimo 30 segundos entre peticiones)
+      const now = Date.now();
+      const timeSinceLastRefresh = now - lastRefreshed;
+      if (timeSinceLastRefresh < 30000 && lastRefreshed > 0) {
+        console.log(`Última verificación hace ${Math.round(timeSinceLastRefresh/1000)}s. Omitiendo...`);
+        return !!user; // Devolver el estado actual si verificamos hace menos de 30 segundos
+      }
+      
+      setIsRefreshing(true);
       setIsLoading(true);
       
       console.log("Verificando estado de autenticación...");
@@ -74,6 +91,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (!authToken) {
         console.log("No hay token almacenado.");
         setUser(null);
+        setLastRefreshed(now);
         return false;
       }
       
@@ -91,6 +109,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           variant: "default"
         });
         
+        setLastRefreshed(now);
         return false;
       }
       
@@ -111,6 +130,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const userData = await response.json();
         console.log("Usuario autenticado encontrado:", userData);
         setUser(userData);
+        setLastRefreshed(now);
         return true;
       } else {
         console.log("Sesión inválida o expirada.");
@@ -126,6 +146,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
         
         setUser(null);
+        setLastRefreshed(now);
         return false;
       }
     } catch (error) {
@@ -134,6 +155,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return false;
     } finally {
       setIsLoading(false);
+      setIsRefreshing(false);
     }
   };
   
@@ -141,17 +163,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     refreshAuth();
     
-    // Configurar verificación periódica de la sesión (cada 5 minutos)
+    // Configurar verificación periódica de la sesión (cada 15 minutos)
     const interval = setInterval(() => {
       console.log("Verificando estado de sesión...");
       refreshAuth();
-    }, 5 * 60 * 1000);
+    }, 15 * 60 * 1000); // Aumentado a 15 minutos para reducir carga en el servidor
     
     return () => clearInterval(interval);
   }, []);
   
   // Login function
   const login = async (username: string, password: string) => {
+    // Actualizar el timestamp de última actualización al iniciar sesión
+    setLastRefreshed(Date.now());
     try {
       console.log("Intentando iniciar sesión para el usuario:", username);
       
