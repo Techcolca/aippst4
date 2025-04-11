@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectLabel } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -1364,6 +1364,25 @@ export default function AdminPanel() {
                 <div className="mb-6 flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Planes de Precios</h2>
                   <div className="flex items-center gap-2">
+                    <Select
+                      value={planSortOrder}
+                      onValueChange={(value) => setPlanSortOrder(value as any)}
+                    >
+                      <SelectTrigger className="w-[180px] mr-2">
+                        <SelectValue placeholder="Ordenar por" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Ordenar por</SelectLabel>
+                          <SelectItem value="price-asc">Precio (menor a mayor)</SelectItem>
+                          <SelectItem value="price-desc">Precio (mayor a menor)</SelectItem>
+                          <SelectItem value="name-asc">Nombre (A-Z)</SelectItem>
+                          <SelectItem value="name-desc">Nombre (Z-A)</SelectItem>
+                          <SelectItem value="tier-asc">Nivel (A-Z)</SelectItem>
+                          <SelectItem value="tier-desc">Nivel (Z-A)</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                     <Button 
                       onClick={handleSyncPlansWithStripe} 
                       variant="outline"
@@ -1405,7 +1424,26 @@ export default function AdminPanel() {
                         </TableHeader>
                         <TableBody>
                           {pricingPlans && pricingPlans.length > 0 ? (
-                            pricingPlans.map((plan) => (
+                            [...pricingPlans]
+                              .sort((a, b) => {
+                                switch (planSortOrder) {
+                                  case 'price-asc':
+                                    return a.price - b.price;
+                                  case 'price-desc':
+                                    return b.price - a.price;
+                                  case 'name-asc':
+                                    return a.name.localeCompare(b.name);
+                                  case 'name-desc':
+                                    return b.name.localeCompare(a.name);
+                                  case 'tier-asc':
+                                    return a.tier.localeCompare(b.tier);
+                                  case 'tier-desc':
+                                    return b.tier.localeCompare(a.tier);
+                                  default:
+                                    return a.price - b.price;
+                                }
+                              })
+                              .map((plan) => (
                               <TableRow key={plan.id}>
                                 <TableCell className="font-medium">
                                   <div className="flex items-center">
