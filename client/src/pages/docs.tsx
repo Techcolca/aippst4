@@ -1238,7 +1238,7 @@ export default function Documentation() {
                         
                         <div className="mt-8">
                           <Button size="lg" asChild>
-                            <Link href="/get-started">Implementar en Mi Institución</Link>
+                            <Link href="/get-started">{t("education.implement_button")}</Link>
                           </Button>
                         </div>
                       </div>
@@ -1311,7 +1311,7 @@ export default function Documentation() {
                         
                         <div className="mt-8">
                           <Button size="lg" asChild>
-                            <Link href="/get-started">Implementar en Mi Empresa</Link>
+                            <Link href="/get-started">{t("business.implement_button")}</Link>
                           </Button>
                         </div>
                       </div>
@@ -1385,7 +1385,7 @@ export default function Documentation() {
                         
                         <div className="mt-8">
                           <Button size="lg" asChild>
-                            <Link href="/get-started">Integrar en Mi Práctica Profesional</Link>
+                            <Link href="/get-started">{t("professional.implement_button")}</Link>
                           </Button>
                         </div>
                       </div>
@@ -1396,7 +1396,7 @@ export default function Documentation() {
                 {activeTab === "form-creation" && (
                   <div id="form-creation" className="space-y-8">
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Creación de Formularios</h2>
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.form_creation")}</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
@@ -1510,7 +1510,7 @@ export default function Documentation() {
                     
                     <div className="flex justify-center mt-6">
                       <Button size="lg" asChild>
-                        <Link href="/dashboard/forms">Crear mi Primer Formulario</Link>
+                        <Link href="/dashboard/forms">{t("forms.create_first_button")}</Link>
                       </Button>
                     </div>
                   </div>
@@ -1521,7 +1521,7 @@ export default function Documentation() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                       <div className="flex items-center mb-4">
                         <Code className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Implementación Simple</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.implementation")}</h2>
                       </div>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -1600,7 +1600,7 @@ export default function Documentation() {
                         
                         <div className="mt-8">
                           <Button size="lg" asChild>
-                            <Link href="/get-started">Comenzar Implementación</Link>
+                            <Link href="/get-started">{t("implementation.start_button")}</Link>
                           </Button>
                         </div>
                       </div>
