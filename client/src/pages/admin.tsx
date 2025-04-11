@@ -572,9 +572,9 @@ export default function AdminPanel() {
   const handlePrepareEditUser = (user: UserInfo) => {
     setEditUserData({
       id: user.id,
-      username: "",
-      email: "",
-      fullName: "",
+      username: user.username || "",
+      email: user.email || "",
+      fullName: user.full_name || "",
       password: ""
     });
     setEditUserModal(true);
@@ -1882,7 +1882,7 @@ export default function AdminPanel() {
           <DialogHeader>
             <DialogTitle>Editar usuario</DialogTitle>
             <DialogDescription>
-              Modifica la información del usuario ID: {editUserData.id}
+              Modifica la información del usuario: <span className="font-medium">{editUserData.username}</span> (ID: {editUserData.id})
             </DialogDescription>
           </DialogHeader>
           
