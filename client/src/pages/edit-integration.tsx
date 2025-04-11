@@ -474,10 +474,25 @@ export default function EditIntegration() {
                 <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Instrucciones de integración</h3>
                 <ol className="list-decimal list-inside text-sm text-blue-700 dark:text-blue-300 space-y-2">
                   <li>Copia el código de integración mostrado arriba.</li>
-                  <li>Pega el código justo antes de la etiqueta de cierre <code>&lt;/body&gt;</code> en tu sitio web.</li>
+                  <li>En tu sitio web, abre el archivo HTML donde deseas que aparezca el chat (por ejemplo, index.html).</li>
+                  <li>Localiza la etiqueta de cierre <code>&lt;/body&gt;</code> cerca del final del archivo.</li>
+                  <li>Pega el código justo antes de esta etiqueta.</li>
+                  <li>Si usas un sistema de gestión de contenido (CMS):
+                    <ul className="list-disc list-inside ml-4 mt-2">
+                      <li>WordPress: Usa un plugin como "Insert Headers and Footers" o edita footer.php en tu tema</li>
+                      <li>Wix: Ve a Configuración del Sitio > Código Personalizado > Agregar Código</li>
+                      <li>Shopify: Ve a Tema > Acciones > Editar código > footer.liquid</li>
+                    </ul>
+                  </li>
                   <li>Guarda los cambios y actualiza tu sitio web.</li>
-                  <li>El widget de chat aparecerá en la posición seleccionada.</li>
+                  <li>El widget de chat aparecerá automáticamente en la posición seleccionada.</li>
                 </ol>
+                
+                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 rounded border border-yellow-200 dark:border-yellow-800">
+                  <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                    <strong>Nota:</strong> Asegúrate de probar el widget en una página de prueba antes de implementarlo en tu sitio web principal.
+                  </p>
+                </div>
               </div>
               
               {formData.widgetType === "fullscreen" && (
