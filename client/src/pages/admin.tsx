@@ -6,6 +6,8 @@ import Footer from "@/components/footer";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -178,7 +180,7 @@ const formatDate = (dateString: string) => {
 };
 
 export default function AdminPanel() {
-  const { user } = useAuth();
+  const { user, refreshAuth } = useAuth();
   const { toast } = useToast();
   const [location, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -186,6 +188,7 @@ export default function AdminPanel() {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [userSearch, setUserSearch] = useState("");
   const [usersOverLimit, setUsersOverLimit] = useState<UserOverLimit[]>([]);
+  const [authError, setAuthError] = useState(false);
   
   // Modals
   const [userDetailsModal, setUserDetailsModal] = useState(false);
@@ -333,26 +336,57 @@ export default function AdminPanel() {
   
 
 
-  // Verificar si el usuario es administrador
+  // Verificar si el usuario es administrador e implementar verificación mejorada de autenticación
   useEffect(() => {
-    console.log("Usuario actual:", user?.username);
-    if (!user) {
-      // Si no hay usuario, esperar a que se cargue
-      return;
-    }
+    const checkAdminAuth = async () => {
+      console.log("Verificando autenticación para panel de administración...");
+      // Primero verificar si hay sesión activa usando refreshAuth
+      const isAuthenticated = await refreshAuth();
+      
+      if (!isAuthenticated || !user) {
+        console.log("No hay sesión activa. Redirigiendo al login...");
+        setAuthError(true);
+        toast({
+          title: "Sesión no iniciada",
+          description: "Debes iniciar sesión como administrador para acceder al panel",
+          variant: "destructive"
+        });
+        // Redirigir al inicio de sesión después de un breve retraso
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+        return;
+      }
+      
+      // Verificar si es administrador
+      if (user.username !== 'admin') {
+        console.log("Acceso denegado al panel de administración para:", user.username);
+        setAuthError(true);
+        toast({
+          title: "Acceso restringido",
+          description: "No tienes permisos para acceder al panel de administración",
+          variant: "destructive"
+        });
+        // Redirigir al dashboard
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
+      } else {
+        console.log("Acceso autorizado al panel de administración para:", user.username);
+        setAuthError(false);
+      }
+    };
     
-    if (user.username !== 'admin') {
-      console.log("Acceso denegado al panel de administración para:", user.username);
-      toast({
-        title: "Acceso restringido",
-        description: "No tienes permisos para acceder al panel de administración",
-        variant: "destructive"
-      });
-      navigate("/dashboard");
-    } else {
-      console.log("Acceso autorizado al panel de administración para:", user.username);
-    }
-  }, [user, navigate, toast]);
+    checkAdminAuth();
+    
+    // Configurar verificación periódica de la sesión (cada 2 minutos)
+    const interval = setInterval(() => {
+      console.log("Verificando estado de autenticación del administrador...");
+      checkAdminAuth();
+    }, 2 * 60 * 1000);
+    
+    return () => clearInterval(interval);
+  }, [user, navigate, toast, refreshAuth]);
   
   // Query para obtener estadísticas de administrador
   const { data: adminStats, isLoading: isLoadingStats, refetch: refetchStats } = useQuery<AdminStats>({
