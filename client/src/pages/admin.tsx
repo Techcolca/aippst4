@@ -1790,6 +1790,7 @@ export default function AdminPanel() {
                 <Input 
                   id="password" 
                   type="password"
+                  autoComplete="new-password"
                   value={newUser.password}
                   onChange={(e) => setNewUser({...newUser, password: e.target.value})}
                   required
