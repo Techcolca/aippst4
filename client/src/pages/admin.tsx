@@ -846,6 +846,18 @@ export default function AdminPanel() {
       
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Error de autenticación */}
+          {authError && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error de autenticación</AlertTitle>
+              <AlertDescription>
+                No tienes una sesión activa o no cuentas con permisos para acceder al panel de administración.
+                Serás redirigido en unos momentos.
+              </AlertDescription>
+            </Alert>
+          )}
+          
           {/* Panel Header */}
           <div className="mb-8 flex flex-wrap justify-between items-center">
             <div>
@@ -1031,7 +1043,7 @@ export default function AdminPanel() {
                                 </p>
                               </div>
                               <div className="text-2xl font-bold">
-                                {(adminStats?.conversations.avg_duration ? parseFloat(adminStats.conversations.avg_duration).toFixed(1) : '0')}s
+                                {(adminStats?.conversations.avg_duration ? parseFloat(String(adminStats.conversations.avg_duration)).toFixed(1) : '0')}s
                               </div>
                             </div>
                             
@@ -1284,8 +1296,8 @@ export default function AdminPanel() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {discountCodes && discountCodes.length > 0 ? (
-                            discountCodes.map((code) => (
+                          {discountCodes && Array.isArray(discountCodes) && discountCodes.length > 0 ? (
+                            discountCodes.map((code: any) => (
                               <TableRow key={code.id}>
                                 <TableCell className="font-mono">{code.code}</TableCell>
                                 <TableCell>{code.name}</TableCell>
@@ -1412,7 +1424,7 @@ export default function AdminPanel() {
                                   {plan.billingPeriod === 'monthly' ? 'Mensual' : 'Anual'}
                                 </TableCell>
                                 <TableCell>
-                                  <Badge variant={plan.available ? "success" : "destructive"} className="capitalize">
+                                  <Badge variant={plan.available ? "outline" : "destructive"} className="capitalize">
                                     {plan.available ? 'Activo' : 'Inactivo'}
                                   </Badge>
                                 </TableCell>
@@ -1474,7 +1486,28 @@ export default function AdminPanel() {
               <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
               <p className="text-lg text-gray-600 dark:text-gray-400">Cargando detalles...</p>
             </div>
-          ) : userDetails && userDetails.user ? (
+          ) : !userDetails || !userDetails.user ? (
+            <div className="py-10">
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error al cargar datos</AlertTitle>
+                <AlertDescription>
+                  No se pudo cargar la información del usuario. Esto puede deberse a un problema de conexión o a que la sesión ha expirado.
+                </AlertDescription>
+              </Alert>
+              <div className="flex justify-end mt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setUserDetailsModal(false);
+                    setTimeout(() => refreshAuth(), 500);
+                  }}
+                >
+                  Cerrar y verificar sesión
+                </Button>
+              </div>
+            </div>
+          ) : (
             <div className="space-y-6">
               {/* Información del usuario */}
               <Card>
@@ -1485,35 +1518,37 @@ export default function AdminPanel() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-gray-500">ID</p>
-                      <p className="font-medium">{userDetails.user.id}</p>
+                      <p className="font-medium">{userDetails?.user?.id || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Nombre de usuario</p>
-                      <p className="font-medium">{userDetails.user.username}</p>
+                      <p className="font-medium">{userDetails?.user?.username || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Email</p>
-                      <p className="font-medium">{userDetails.user.email}</p>
+                      <p className="font-medium">{userDetails?.user?.email || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Nombre completo</p>
-                      <p className="font-medium">{userDetails.user.full_name || '-'}</p>
+                      <p className="font-medium">{userDetails?.user?.full_name || '-'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Fecha de creación</p>
-                      <p className="font-medium">{formatDate(userDetails.user.created_at)}</p>
+                      <p className="font-medium">{userDetails?.user?.created_at ? formatDate(userDetails.user.created_at) : 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">API Key</p>
-                      <p className="font-medium text-xs truncate">{userDetails.user.api_key}</p>
+                      <p className="font-medium text-xs truncate">{userDetails?.user?.api_key || 'N/A'}</p>
                     </div>
                   </div>
                   
                   <div className="mt-4 flex space-x-2">
-                    <Button variant="outline" size="sm" onClick={() => handlePrepareEditUser(userDetails.user)}>
-                      <Edit className="h-4 w-4 mr-2" />
-                      Editar usuario
-                    </Button>
+                    {userDetails?.user && (
+                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditUser(userDetails.user)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Editar usuario
+                      </Button>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -1705,9 +1740,9 @@ export default function AdminPanel() {
                 </CardContent>
               </Card>
             </div>
-          ) : (
-            <p className="text-center py-4 text-gray-500">No se pudo cargar la información del usuario</p>
           )}
+          
+          {/* Este condicional estaba sobrando, lo eliminamos */}
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setUserDetailsModal(false)}>
