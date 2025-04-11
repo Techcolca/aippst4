@@ -135,12 +135,9 @@ export default function Analytics() {
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
-          doc.setTextColor(100, 100, 100);
+          doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
           doc.text('Las barras más largas indican productos/servicios mencionados con mayor frecuencia', 15, lastY + 8);
           doc.text('en las conversaciones, lo que sugiere mayor interés o demanda.', 15, lastY + 12);
-          
-          // Restaurar el color de texto
-          doc.setTextColor(40, 40, 40);
           
           const productsCanvas = await html2canvas(productsChartElement);
           const productsImgData = productsCanvas.toDataURL('image/png');
@@ -197,12 +194,9 @@ export default function Analytics() {
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
-          doc.setTextColor(100, 100, 100);
+          doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
           doc.text('Las barras muestran la frecuencia de cada tema y el color indica el sentimiento asociado.', 15, lastY + 8);
           doc.text('Un mayor porcentaje indica un nivel más alto de satisfacción con ese tema.', 15, lastY + 12);
-          
-          // Restaurar el color de texto
-          doc.setTextColor(40, 40, 40);
           
           const topicsCanvas = await html2canvas(topicsChartElement);
           const topicsImgData = topicsCanvas.toDataURL('image/png');
@@ -257,12 +251,9 @@ export default function Analytics() {
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
-          doc.setTextColor(100, 100, 100);
+          doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
           doc.text('La línea muestra cómo cambia el volumen de conversaciones a lo largo del tiempo.', 15, lastY + 8);
           doc.text('Los picos indican días con mayor actividad, útil para identificar patrones y tendencias.', 15, lastY + 12);
-          
-          // Restaurar el color de texto
-          doc.setTextColor(40, 40, 40);
           
           const trendCanvas = await html2canvas(trendChartElement);
           const trendImgData = trendCanvas.toDataURL('image/png');
@@ -313,12 +304,9 @@ export default function Analytics() {
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
-          doc.setTextColor(100, 100, 100);
+          doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
           doc.text('Las palabras más grandes aparecen con mayor frecuencia en las conversaciones.', 15, lastY + 8);
           doc.text('Esto ayuda a identificar los términos e intereses principales de los visitantes.', 15, lastY + 12);
-          
-          // Restaurar el color de texto
-          doc.setTextColor(40, 40, 40);
           
           const keywordsCanvas = await html2canvas(keywordsElement);
           const keywordsImgData = keywordsCanvas.toDataURL('image/png');
@@ -367,12 +355,9 @@ export default function Analytics() {
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
-          doc.setTextColor(100, 100, 100);
+          doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
           doc.text('Las barras muestran el rendimiento de cada integración en 3 métricas: tiempo de respuesta (azul),', 15, lastY + 8);
           doc.text('tasa de resolución (verde) y satisfacción del usuario (naranja). Valores más altos indican mejor rendimiento.', 15, lastY + 12);
-          
-          // Restaurar el color de texto
-          doc.setTextColor(40, 40, 40);
           
           const performanceCanvas = await html2canvas(integrationPerformanceElement);
           const performanceImgData = performanceCanvas.toDataURL('image/png');
