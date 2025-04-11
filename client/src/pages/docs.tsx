@@ -1179,7 +1179,7 @@ export default function Documentation() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                       <div className="flex items-center mb-4">
                         <School className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Para Instituciones Educativas</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.education")}</h2>
                       </div>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -1251,7 +1251,7 @@ export default function Documentation() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                       <div className="flex items-center mb-4">
                         <Building2 className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Para Empresas y Negocios</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.business")}</h2>
                       </div>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -1324,7 +1324,7 @@ export default function Documentation() {
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
                       <div className="flex items-center mb-4">
                         <Headset className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Para Servicios Profesionales</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.professional")}</h2>
                       </div>
                       
                       <div className="prose dark:prose-invert max-w-none">
