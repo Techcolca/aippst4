@@ -346,7 +346,7 @@ export default function DashboardTabs() {
                     <Button size="sm" variant="outline">{t("view_logs", "View Logs")}</Button>
                   </Link>
                   <Link href={`/automations/${automation.id}/edit`}>
-                    <Button size="sm">Edit</Button>
+                    <Button size="sm">{t("edit", "Edit")}</Button>
                   </Link>
                 </div>
               </Card>
@@ -354,12 +354,12 @@ export default function DashboardTabs() {
           </div>
         ) : (
           <Card className="p-6 text-center">
-            <h3 className="text-lg font-medium mb-2">No automations yet</h3>
+            <h3 className="text-lg font-medium mb-2">{t("no_automations", "No automations yet")}</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Create your first automation to streamline repetitive tasks with AI
+              {t("automations_empty_message", "Create your first automation to streamline repetitive tasks with AI")}
             </p>
             <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/automations/create")}>
-              Create Automation
+              {t("create_automation", "Create Automation")}
             </Button>
           </Card>
         )}
