@@ -1400,7 +1400,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI incluye un poderoso sistema de creación de formularios personalizables para capturar información de los visitantes de manera eficiente. Esta funcionalidad te permite crear diferentes tipos de formularios, desde formularios de contacto simples hasta encuestas complejas.
+                          AIPI incluye un potente sistema de creación de formularios personalizables para capturar información de los visitantes de manera eficiente. Esta funcionalidad te permite crear diferentes tipos de formularios, desde formularios de contacto simples hasta encuestas complejas, con opciones de integración simplificadas.
                         </p>
                         
                         <h3>Tipos de Formularios Disponibles</h3>
@@ -1425,6 +1425,7 @@ export default function Documentation() {
                           <li><strong>Protección Captcha</strong>: Previene envíos automatizados y spam</li>
                           <li><strong>Notificaciones por Email</strong>: Recibe alertas cuando se envían nuevas respuestas</li>
                           <li><strong>Análisis Detallado</strong>: Estadísticas sobre tasas de conversión y patrones de completado</li>
+                          <li><strong>Ordenamiento de Respuestas</strong>: Nuevas capacidades para filtrar y ordenar respuestas por fecha o campos específicos</li>
                         </ul>
                         
                         <h3>Proceso de Creación de Formularios</h3>
@@ -1439,7 +1440,12 @@ export default function Documentation() {
                           <li><strong>Publicación</strong>: Genera un enlace único o código de inserción para tu sitio web</li>
                         </ol>
                         
-                        <h3>Integración de Formularios en Sitios Web</h3>
+                        <h3>Métodos de Integración Simplificados</h3>
+                        <p>
+                          AIPI ha simplificado el proceso de integración de formularios, centrándose exclusivamente en la opción de integración directa:
+                        </p>
+                        
+                        <h4>Integración Directa (Direct Embed)</h4>
                         <p>
                           Una vez creado tu formulario, puedes integrarlo fácilmente en tu sitio web mediante el código de inserción:
                         </p>
@@ -1455,7 +1461,7 @@ export default function Documentation() {
                         <pre><code>&lt;script src="https://tu-dominio.com/api/forms/embed/[ID_DEL_FORMULARIO]"&gt;&lt;/script&gt;
 &lt;div id="aipi-form-[ID_DEL_FORMULARIO]"&gt;&lt;/div&gt;</code></pre>
                         
-                        <p><strong>Opciones de Personalización</strong>: El modal también incluye instrucciones para:</p>
+                        <p><strong>Opciones de Personalización</strong>: El modal incluye instrucciones para:</p>
                         <ul>
                           <li>Personalizar el estilo del formulario para adaptarlo a tu sitio</li>
                           <li>Configurar acciones después del envío (redirecciones, mensajes)</li>
@@ -1469,16 +1475,18 @@ export default function Documentation() {
                           <li>El formulario se carga de forma asíncrona para no afectar el rendimiento de la página</li>
                           <li>Los datos se envían directamente a los servidores de AIPI para mayor seguridad</li>
                           <li>Se incluye automáticamente protección contra spam y ataques CSRF</li>
+                          <li>Diseño responsivo que se adapta a cualquier dispositivo (móvil, tablet o escritorio)</li>
                         </ul>
                         
-                        <h3>Gestión de Respuestas</h3>
-                        <p>Una vez que los visitantes empiezan a completar tu formulario, puedes:</p>
+                        <h3>Gestión de Respuestas Mejorada</h3>
+                        <p>La plataforma ahora incluye capacidades avanzadas para gestionar las respuestas:</p>
                         <ul>
-                          <li><strong>Ver Respuestas</strong>: Accede a todas las respuestas desde tu dashboard</li>
+                          <li><strong>Ver Respuestas</strong>: Accede a todas las respuestas desde tu dashboard con vista mejorada</li>
                           <li><strong>Exportar Datos</strong>: Descarga las respuestas en formato CSV para análisis externos</li>
-                          <li><strong>Filtrar y Buscar</strong>: Encuentra rápidamente respuestas específicas</li>
+                          <li><strong>Filtrar y Ordenar</strong>: Encuentra rápidamente respuestas específicas con filtros avanzados y opciones de ordenamiento</li>
                           <li><strong>Análisis Automático</strong>: Visualiza estadísticas y tendencias generadas por la IA</li>
                           <li><strong>Seguimiento</strong>: Marca respuestas como atendidas o pendientes de seguimiento</li>
+                          <li><strong>Notificaciones en Tiempo Real</strong>: Recibe alertas inmediatas cuando se completa un formulario</li>
                         </ul>
                         
                         <h3>Integración con el Widget de AIPI</h3>
