@@ -129,16 +129,34 @@
       }
       
       /* Nuevas posiciones centradas */
-      .aipi-form-button.bottom-center {
+      .aipi-form-button.bottom-center,
+      .aipi-form-button.bottom-center-mobile {
         bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: center !important;
       }
       
-      .aipi-form-button.top-center {
+      .aipi-form-button.top-center,
+      .aipi-form-button.top-center-mobile {
         top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: center !important;
+      }
+      
+      /* Forzar centrado completo en posicionamiento absoluto */
+      [data-mobile-view="true"] {
+        width: auto !important;
+        min-width: 200px !important;
+        max-width: calc(100% - 40px) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        text-align: center !important;
       }
       
       /* Modal */
@@ -269,20 +287,21 @@
           border-radius: 4px; /* Bordes menos pronunciados */
         }
         
-        /* Ajuste para botones centrados en móviles */
-        .aipi-form-button.bottom-center,
-        .aipi-form-button.top-center {
-          min-width: 60%;
-          max-width: 90%;
-          left: 50%;
-          transform: translateX(-50%);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+        /* Ajuste para TODOS los botones en móviles - SIEMPRE centrados */
+        .aipi-form-button {
+          min-width: 60% !important;
+          max-width: 90% !important;
+          left: 50% !important;
+          right: auto !important;
+          transform: translateX(-50%) !important;
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          text-align: center !important;
         }
       }
       
-      @media (min-width: 481px) and (max-width: 768px) {
+      @media (min-width: 481px) and (max-width: 992px) {
         .aipi-form-slidein {
           max-width: 90%; /* En tablets ocupa casi toda la pantalla */
         }
@@ -292,14 +311,15 @@
           max-width: 95%;
         }
         
-        /* Ajuste para botones centrados en tablets */
-        .aipi-form-button.bottom-center,
-        .aipi-form-button.top-center {
-          min-width: auto;
-          max-width: 50%;
-          white-space: nowrap;
-          left: 50%;
-          transform: translateX(-50%);
+        /* Ajuste para TODOS los botones en tablets - SIEMPRE centrados */
+        .aipi-form-button {
+          min-width: auto !important;
+          max-width: 50% !important;
+          white-space: nowrap !important;
+          left: 50% !important;
+          right: auto !important;
+          transform: translateX(-50%) !important;
+          text-align: center !important;
         }
       }
     `;
@@ -313,23 +333,21 @@
     const button = document.createElement('button');
     
     // Detectar si estamos en móvil o tablet para forzar posición centrada
-    const isMobileOrTablet = window.innerWidth <= 768;
+    const isMobileOrTablet = window.innerWidth <= 992; // Umbral más alto para asegurar compatibilidad
     
-    // En móvil y tablet, ignoramos la posición configurada y forzamos al centro
-    // En PC usamos la posición configurada por el usuario
-    const positionClass = isMobileOrTablet ? 
-      (config.position.includes('top') ? 'top-center' : 'bottom-center') : 
-      config.position;
+    // SIEMPRE aplicar clase para la posición centrada en dispositivos móviles/tablets
+    let positionClass = config.position;
+    
+    if (isMobileOrTablet) {
+      // Forzar posición centrada en móviles/tablets, independientemente de la configuración
+      positionClass = config.position.includes('top') ? 'top-center-mobile' : 'bottom-center-mobile';
+      button.setAttribute('data-mobile-view', 'true');
+    }
     
     button.className = `aipi-form-button ${positionClass} ${config.size}`;
     button.style.backgroundColor = config.color;
     button.style.color = scriptTag.getAttribute('data-text-color') || '#FFFFFF';
     button.style.borderRadius = config.radius;
-    
-    // Para móvil/tablet, agregar atributo de datos para identificarlo en CSS
-    if (isMobileOrTablet) {
-      button.setAttribute('data-mobile-view', 'true');
-    }
     
     // Agregar ícono si se especificó
     if (config.icon && config.icon !== 'none') {
@@ -338,17 +356,35 @@
       button.textContent = config.text;
     }
     
+    // Para dispositivos móviles, aplicar posicionamiento directamente con estilos en línea para asegurar que funcione
+    if (isMobileOrTablet) {
+      button.style.position = 'fixed';
+      button.style.left = '50%';
+      button.style.transform = 'translateX(-50%)';
+      button.style.zIndex = '9999';
+      
+      if (positionClass.includes('top')) {
+        button.style.top = '20px';
+      } else {
+        button.style.bottom = '20px';
+      }
+      button.style.maxWidth = 'calc(100% - 40px)';
+      button.style.width = 'auto';
+      button.style.minWidth = '200px';
+      button.style.textAlign = 'center';
+    }
+    
     // Agregar evento de clic
     button.addEventListener('click', showForm);
     
     // Agregar al DOM
     document.body.appendChild(button);
     
-    // Agregar listener para redimensionamiento de ventana y ajustar posición
+    // Agregar listener para redimensionamiento de ventana
     window.addEventListener('resize', handleResize);
     
     function handleResize() {
-      const newIsMobileOrTablet = window.innerWidth <= 768;
+      const newIsMobileOrTablet = window.innerWidth <= 992;
       if (newIsMobileOrTablet !== isMobileOrTablet) {
         // Si cambió entre móvil/desktop, recargar para actualizar posición
         window.location.reload();
