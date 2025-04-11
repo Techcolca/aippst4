@@ -305,11 +305,74 @@ export default function Analytics() {
         }
       }
       
+      // Añadir nube de palabras clave
+      if (keywordsElement && lastY < pageHeight - 100) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Palabras Clave', 15, lastY);
+          
+          // Añadir descripción explicativa
+          doc.setFontSize(9);
+          doc.setTextColor(100, 100, 100);
+          doc.text('Las palabras más grandes aparecen con mayor frecuencia en las conversaciones.', 15, lastY + 8);
+          doc.text('Esto ayuda a identificar los términos e intereses principales de los visitantes.', 15, lastY + 12);
+          
+          // Restaurar el color de texto
+          doc.setTextColor(40, 40, 40);
+          
+          const keywordsCanvas = await html2canvas(keywordsElement);
+          const keywordsImgData = keywordsCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            keywordsImgData, 
+            'PNG', 
+            15, // x
+            lastY + 16, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 25;
+          
+          // Si no hay espacio suficiente, nueva página
+          if (lastY > pageHeight - 100) {
+            doc.addPage();
+            lastY = 20;
+          }
+        } catch (error) {
+          console.error('Error al capturar nube de palabras:', error);
+          
+          // Mostrar mensaje si falla la captura del gráfico
+          doc.setFontSize(10);
+          doc.text('No fue posible generar la nube de palabras clave.', 15, lastY + 5);
+          lastY += 15;
+          
+          // Si no hay espacio suficiente, nueva página
+          if (lastY > pageHeight - 100) {
+            doc.addPage();
+            lastY = 20;
+          }
+        }
+      }
+      
       // Si hay espacio, añadir rendimiento de integraciones
       if (lastY < pageHeight - 100 && integrationPerformanceElement) {
         try {
           doc.setFontSize(14);
           doc.text('Rendimiento de Integraciones', 15, lastY);
+          
+          // Añadir descripción explicativa
+          doc.setFontSize(9);
+          doc.setTextColor(100, 100, 100);
+          doc.text('Las barras muestran el rendimiento de cada integración en 3 métricas: tiempo de respuesta (azul),', 15, lastY + 8);
+          doc.text('tasa de resolución (verde) y satisfacción del usuario (naranja). Valores más altos indican mejor rendimiento.', 15, lastY + 12);
+          
+          // Restaurar el color de texto
+          doc.setTextColor(40, 40, 40);
           
           const performanceCanvas = await html2canvas(integrationPerformanceElement);
           const performanceImgData = performanceCanvas.toDataURL('image/png');
