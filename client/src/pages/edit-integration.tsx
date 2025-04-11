@@ -480,8 +480,8 @@ export default function EditIntegration() {
                   <li>Si usas un sistema de gestión de contenido (CMS):
                     <ul className="list-disc list-inside ml-4 mt-2">
                       <li>WordPress: Usa un plugin como "Insert Headers and Footers" o edita footer.php en tu tema</li>
-                      <li>Wix: Ve a Configuración del Sitio > Código Personalizado > Agregar Código</li>
-                      <li>Shopify: Ve a Tema > Acciones > Editar código > footer.liquid</li>
+                      <li>Wix: Ve a Configuración del Sitio &gt; Código Personalizado &gt; Agregar Código</li>
+                      <li>Shopify: Ve a Tema &gt; Acciones &gt; Editar código &gt; footer.liquid</li>
                     </ul>
                   </li>
                   <li>Guarda los cambios y actualiza tu sitio web.</li>
