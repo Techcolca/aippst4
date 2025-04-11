@@ -436,7 +436,7 @@ const FormEditor = () => {
         
         {/* Pestañas de edición */}
         <Tabs defaultValue="content">
-          <TabsList className="grid grid-cols-4 w-full max-w-md">
+          <TabsList className="grid grid-cols-3 w-full max-w-md">
             <TabsTrigger value="content">
               <Layout className="h-4 w-4 mr-2" />
               Contenido
@@ -448,10 +448,6 @@ const FormEditor = () => {
             <TabsTrigger value="settings">
               <Settings className="h-4 w-4 mr-2" />
               Ajustes
-            </TabsTrigger>
-            <TabsTrigger value="embed">
-              <Code className="h-4 w-4 mr-2" />
-              Embeber
             </TabsTrigger>
           </TabsList>
           
@@ -1101,49 +1097,7 @@ const FormEditor = () => {
             </Card>
           </TabsContent>
           
-          {/* Pestaña de Código Embed */}
-          <TabsContent value="embed" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Código de inserción</CardTitle>
-                <CardDescription>
-                  Copia este código para insertar el formulario en tu sitio web
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="p-4 bg-muted rounded-md">
-                    <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
-                      {`<script src="${window.location.origin}/static/form-embed.js?id=${formData.slug}"></script>\n<div id="aipi-form-container"></div>`}
-                    </pre>
-                  </div>
-                  
-                  <Button 
-                    onClick={() => {
-                      navigator.clipboard.writeText(`<script src="${window.location.origin}/static/form-embed.js?id=${formData.slug}"></script>\n<div id="aipi-form-container"></div>`);
-                      toast({
-                        title: "Código copiado",
-                        description: "El código de inserción ha sido copiado al portapapeles",
-                      });
-                    }}
-                    variant="outline"
-                  >
-                    Copiar código
-                  </Button>
-                  
-                  <div className="pt-4">
-                    <h3 className="text-lg font-medium mb-2">Instrucciones de instalación</h3>
-                    <ol className="list-decimal list-inside space-y-2 text-sm text-muted-foreground">
-                      <li>Copia el código de arriba</li>
-                      <li>Pega el código en tu sitio web, antes del cierre de la etiqueta <code className="text-primary">{'</body>'}</code></li>
-                      <li>El formulario se cargará automáticamente y aparecerá cuando un visitante haga clic en cualquier elemento con el atributo <code className="text-primary">data-form-id="{formData.slug}"</code></li>
-                      <li>También puedes abrir el formulario programáticamente con <code className="text-primary">window.AIPI_FORM.open('{formData.slug}')</code></li>
-                    </ol>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+
         </Tabs>
       </div>
     </div>
