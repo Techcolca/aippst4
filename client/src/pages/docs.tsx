@@ -972,7 +972,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI ofrece un potente panel de análisis y estadísticas que proporciona información valiosa sobre el rendimiento de sus asistentes virtuales, las tendencias en las conversaciones y el comportamiento de los visitantes.
+                          AIPI ofrece un potente panel de análisis y estadísticas que proporciona información valiosa sobre el rendimiento de sus asistentes virtuales, las tendencias en las conversaciones y el comportamiento de los visitantes. Las herramientas de análisis están diseñadas para facilitar la toma de decisiones estratégicas basadas en datos reales.
                         </p>
                         
                         <h3>Métricas Principales</h3>
@@ -991,18 +991,18 @@ export default function Documentation() {
                         <p>Comprenda en profundidad las interacciones de los usuarios:</p>
                         
                         <ul>
-                          <li><strong>Temas Populares</strong>: Asuntos más consultados por los visitantes</li>
-                          <li><strong>Palabras Clave</strong>: Términos más frecuentes en las consultas</li>
+                          <li><strong>Temas Populares</strong>: Asuntos más consultados por los visitantes, representados visualmente en gráficos interactivos</li>
+                          <li><strong>Palabras Clave</strong>: Términos más frecuentes en las consultas, con análisis de frecuencia</li>
                           <li><strong>Patrones de Conversación</strong>: Flujos típicos y ramificaciones comunes</li>
-                          <li><strong>Preguntas Sin Respuesta</strong>: Identificación de vacíos de conocimiento</li>
-                          <li><strong>Sentimiento</strong>: Análisis de la satisfacción de los usuarios</li>
+                          <li><strong>Preguntas Sin Respuesta</strong>: Identificación de vacíos de conocimiento para mejorar el entrenamiento</li>
+                          <li><strong>Sentimiento</strong>: Análisis de la satisfacción de los usuarios con métricas de sentimiento positivo, neutral y negativo</li>
                         </ul>
                         
                         <h3>Rendimiento por Integración</h3>
                         <p>Evalúe cada implementación específica:</p>
                         
                         <ul>
-                          <li><strong>Comparativa</strong>: Rendimiento relativo entre diferentes integraciones</li>
+                          <li><strong>Comparativa</strong>: Rendimiento relativo entre diferentes integraciones con clasificaciones de desempeño</li>
                           <li><strong>Tasa de Interacción</strong>: Porcentaje de visitantes que utilizan el asistente</li>
                           <li><strong>Duración Media</strong>: Tiempo promedio de las conversaciones</li>
                           <li><strong>Horarios de Mayor Actividad</strong>: Distribución temporal de las consultas</li>
@@ -1013,7 +1013,7 @@ export default function Documentation() {
                         <p>Información orientada a la conversión de visitantes en clientes:</p>
                         
                         <ul>
-                          <li><strong>Productos/Servicios Más Consultados</strong>: Ofertas que generan mayor interés</li>
+                          <li><strong>Productos/Servicios Más Consultados</strong>: Ofertas que generan mayor interés, visualizadas en gráficos de demanda</li>
                           <li><strong>Tasa de Captura de Leads</strong>: Efectividad en la obtención de información de contacto</li>
                           <li><strong>Puntos de Abandono</strong>: Momentos en que los usuarios suelen finalizar la conversación</li>
                           <li><strong>Conversiones</strong>: Seguimiento de objetivos completados (formularios, registros)</li>
@@ -1024,31 +1024,40 @@ export default function Documentation() {
                         <p>AIPI presenta la información de forma clara e intuitiva mediante:</p>
                         
                         <ul>
-                          <li><strong>Gráficos Interactivos</strong>: Visualizaciones dinámicas con filtros ajustables</li>
-                          <li><strong>Mapas de Calor</strong>: Representación visual de áreas de mayor interés</li>
-                          <li><strong>Diagramas de Flujo</strong>: Visualización de recorridos de conversación</li>
-                          <li><strong>Indicadores Comparativos</strong>: Métricas actuales vs períodos anteriores</li>
-                          <li><strong>Dashboards Personalizables</strong>: Adapte la visualización a sus prioridades</li>
+                          <li><strong>Gráficos Interactivos</strong>: Visualizaciones dinámicas con filtros ajustables y múltiples tipos de gráficos (barras, líneas, circulares)</li>
+                          <li><strong>Tendencias Temporales</strong>: Gráficos de línea que muestran la evolución de conversaciones a lo largo del tiempo</li>
+                          <li><strong>Gráficos de Sentimiento</strong>: Visualización del sentimiento de los usuarios respecto a diferentes temas</li>
+                          <li><strong>Indicadores Comparativos</strong>: Métricas actuales vs períodos anteriores con indicadores de cambio porcentual</li>
+                          <li><strong>Dashboards Personalizables</strong>: Adapte la visualización a sus prioridades y necesidades específicas</li>
                         </ul>
                         
-                        <h3>Exportación e Informes</h3>
-                        <p>Comparta y analice datos de forma flexible:</p>
+                        <h3>Exportación e Informes en PDF</h3>
+                        <p>La plataforma ofrece capacidades avanzadas de generación de informes:</p>
                         
                         <ul>
-                          <li><strong>Informes Programados</strong>: Reciba estadísticas periódicas por email</li>
-                          <li><strong>Exportación de Datos</strong>: Descargue información en CSV, Excel o PDF</li>
-                          <li><strong>Informes Personalizados</strong>: Cree reportes a medida con las métricas relevantes</li>
-                          <li><strong>API de Análisis</strong>: Integre datos con sus sistemas de business intelligence</li>
+                          <li><strong>Exportación a PDF</strong>: Genere informes completos con un solo clic, incluyendo todos los gráficos y métricas relevantes</li>
+                          <li><strong>Informes Personalizados</strong>: Los PDF generados incluyen:
+                            <ul>
+                              <li>Resumen ejecutivo con métricas clave</li>
+                              <li>Gráficos de tendencias de conversación</li>
+                              <li>Análisis de temas populares con gráficos</li>
+                              <li>Rendimiento comparativo entre integraciones</li>
+                              <li>Análisis de demanda de productos/servicios</li>
+                            </ul>
+                          </li>
+                          <li><strong>Exportación de Datos</strong>: Descargue información en CSV para análisis adicionales</li>
+                          <li><strong>Presentación Profesional</strong>: Diseño optimizado para presentaciones e informes ejecutivos</li>
                         </ul>
                         
                         <h3>Privacidad y Seguridad</h3>
                         <p>Todos los análisis se realizan respetando:</p>
                         
                         <ul>
-                          <li>Anonimización de datos personales</li>
+                          <li>Anonimización de datos personales en todos los informes</li>
                           <li>Cumplimiento de normativas de privacidad (GDPR, CCPA)</li>
-                          <li>Control de acceso basado en roles</li>
+                          <li>Control de acceso basado en roles para informes sensibles</li>
                           <li>Políticas de retención de datos configurables</li>
+                          <li>Cifrado de datos en informes exportados</li>
                         </ul>
                       </div>
                     </div>
