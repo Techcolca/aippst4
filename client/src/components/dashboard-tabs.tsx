@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IntegrationCard } from "./integration-card";
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 
 // Definición de tipos
 interface Integration {
@@ -24,6 +25,7 @@ interface Integration {
 export default function DashboardTabs() {
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("integrations");
+  const { t } = useTranslation();
   
   // Consulta para obtener las integraciones
   const { data: integrations, isLoading: isLoadingIntegrations } = useQuery<Integration[]>({
