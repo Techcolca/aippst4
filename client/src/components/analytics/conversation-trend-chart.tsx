@@ -61,7 +61,7 @@ export default function ConversationTrendChart({ data, loading = false }: Conver
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[240px]">
+        <div className="h-[240px]" id="trend-chart">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={data}

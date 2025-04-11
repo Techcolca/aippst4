@@ -308,8 +308,8 @@ export default function Analytics() {
             const performanceData = integrationPerformance.map(item => [
               item.integrationName || 'Desconocido',
               item.conversationCount || 0,
-              item.visitorsCount || 0,
-              `${Math.round(item.resolutionRate || 0)}%`
+              `${Math.round(item.resolutionRate || 0)}%`,
+              `${Math.round(item.userSatisfaction || 0)}%`
             ]);
             
             autoTable(doc, {
@@ -353,14 +353,25 @@ export default function Analytics() {
               {t("analytics_description")}
             </p>
           </div>
-          <Button 
-            onClick={() => navigate('/dashboard')}
-            variant="outline" 
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {t("back_to_dashboard")}
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              onClick={downloadPdfReport}
+              variant="default" 
+              className="flex items-center gap-2"
+              disabled={isLoading || hasError}
+            >
+              <Download className="w-4 h-4" />
+              {t("export_pdf")}
+            </Button>
+            <Button 
+              onClick={() => navigate('/dashboard')}
+              variant="outline" 
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {t("back_to_dashboard")}
+            </Button>
+          </div>
         </div>
 
 

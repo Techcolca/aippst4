@@ -136,7 +136,7 @@ export default function KeywordCloud({ data, loading = false }: KeywordCloudProp
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[240px] w-full relative">
+        <div className="h-[240px] w-full relative" id="keywords-chart">
           <canvas 
             ref={canvasRef} 
             width={500} 

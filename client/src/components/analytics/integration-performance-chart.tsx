@@ -109,7 +109,7 @@ export default function IntegrationPerformanceChart({ data, loading = false }: I
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px]">
+        <div className="h-[300px]" id="integration-performance-chart">
           {data.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <p className="text-gray-500">No hay datos suficientes para mostrar</p>
