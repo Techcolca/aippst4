@@ -100,120 +100,235 @@ export default function IntegrationAnalytics() {
   const downloadPdfReport = async () => {
     if (!integration || !stats) return;
     
-    // Crear nuevo documento PDF
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const date = new Date().toLocaleDateString();
-    
-    // Título y metadatos del informe
-    doc.setFontSize(18);
-    doc.text(`Reporte de Analíticas: ${integration.name}`, pageWidth / 2, 20, { align: 'center' });
-    doc.setFontSize(10);
-    doc.text(`Generado: ${date}`, pageWidth / 2, 28, { align: 'center' });
-    doc.setLineWidth(0.5);
-    doc.line(15, 35, pageWidth - 15, 35);
-    
-    // Resumen de estadísticas
-    doc.setFontSize(14);
-    doc.text('Resumen', 15, 45);
-    
-    const summaryData = [
-      ['Conversaciones Totales', stats.totalConversations || 0],
-      ['Conversaciones Resueltas', stats.resolvedConversations || 0],
-      ['Tasa de Resolución', stats.totalConversations 
-        ? `${Math.round((stats.resolvedConversations / stats.totalConversations) * 100)}%`
-        : '0%'],
-      ['Mensajes Totales', stats.messageCount || 0],
-      ['Mensajes de Usuario', stats.userMessageCount || 0],
-      ['Mensajes del Asistente', stats.assistantMessageCount || 0],
-      ['Visitantes Únicos', stats.uniqueVisitors || 0],
-    ];
-    
-    // Añadir tabla de resumen
-    autoTable(doc, {
-      head: [['Métrica', 'Valor']],
-      body: summaryData,
-      startY: 50,
-      theme: 'grid',
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [66, 66, 66] }
-    });
-    
-    // Añadir tendencia de conversaciones
-    doc.setFontSize(14);
-    let lastY = 140; // Estimación después de la primera tabla
-    doc.text('Tendencia de Conversaciones', 15, lastY);
-    
-    if (stats.conversationTrend && stats.conversationTrend.length > 0) {
-      const trendData = stats.conversationTrend.map(item => [item.date, item.count]);
+    try {
+      // Capturar gráficos como imágenes
+      const trendChartElement = document.getElementById('trend-chart');
+      const resolutionChartElement = document.getElementById('resolution-chart');
+      const productsChartElement = document.getElementById('products-chart');
+      const topicsChartElement = document.getElementById('topics-chart');
       
+      // Crear nuevo documento PDF
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const date = new Date().toLocaleDateString();
+      
+      // Título y metadatos del informe
+      doc.setFontSize(18);
+      doc.text(`Reporte de Analíticas: ${integration.name}`, pageWidth / 2, 20, { align: 'center' });
+      doc.setFontSize(10);
+      doc.text(`Generado: ${date}`, pageWidth / 2, 28, { align: 'center' });
+      doc.setLineWidth(0.5);
+      doc.line(15, 35, pageWidth - 15, 35);
+      
+      // Resumen de estadísticas
+      doc.setFontSize(14);
+      doc.text('Resumen', 15, 45);
+      
+      const summaryData = [
+        ['Conversaciones Totales', stats.totalConversations || 0],
+        ['Conversaciones Resueltas', stats.resolvedConversations || 0],
+        ['Tasa de Resolución', stats.totalConversations 
+          ? `${Math.round((stats.resolvedConversations / stats.totalConversations) * 100)}%`
+          : '0%'],
+        ['Mensajes Totales', stats.messageCount || 0],
+        ['Mensajes de Usuario', stats.userMessageCount || 0],
+        ['Mensajes del Asistente', stats.assistantMessageCount || 0],
+        ['Visitantes Únicos', stats.uniqueVisitors || 0],
+      ];
+      
+      // Añadir tabla de resumen
       autoTable(doc, {
-        head: [['Fecha', 'Número de Conversaciones']],
-        body: trendData,
-        startY: lastY + 5,
+        head: [['Métrica', 'Valor']],
+        body: summaryData,
+        startY: 50,
         theme: 'grid',
         styles: { fontSize: 10 },
         headStyles: { fillColor: [66, 66, 66] }
       });
-    } else {
-      doc.setFontSize(10);
-      doc.text('No hay datos de tendencia disponibles.', 15, lastY + 5);
-    }
-    
-    // Nueva página para productos y temas
-    doc.addPage();
-    
-    // Añadir productos más mencionados
-    doc.setFontSize(14);
-    doc.text('Productos más Mencionados', 15, 20);
-    
-    if (stats.topProducts && stats.topProducts.length > 0) {
-      const productsData = stats.topProducts.map(item => [item.name, item.frequency]);
       
-      autoTable(doc, {
-        head: [['Producto', 'Menciones']],
-        body: productsData,
-        startY: 25,
-        theme: 'grid',
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [66, 66, 66] }
-      });
-    } else {
-      doc.setFontSize(10);
-      doc.text('No hay datos de productos disponibles.', 15, 25);
-    }
-    
-    // Añadir temas más discutidos
-    doc.setFontSize(14);
-    let topicsY = 140; // Estimación
-    doc.text('Temas más Discutidos', 15, topicsY);
-    
-    if (stats.topTopics && stats.topTopics.length > 0) {
-      const topicsData = stats.topTopics.map(item => [item.topic, item.frequency]);
+      // Obtener posición después de la tabla
+      let lastY = 130;
       
-      autoTable(doc, {
-        head: [['Tema', 'Menciones']],
-        body: topicsData,
-        startY: topicsY + 5,
-        theme: 'grid',
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [66, 66, 66] }
-      });
-    } else {
-      doc.setFontSize(10);
-      doc.text('No hay datos de temas disponibles.', 15, topicsY + 5);
+      // Añadir tendencia de conversaciones (gráfico)
+      if (trendChartElement) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Tendencia de Conversaciones', 15, lastY);
+          
+          const trendCanvas = await html2canvas(trendChartElement);
+          const trendImgData = trendCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            trendImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 15;
+        } catch (error) {
+          console.error('Error al capturar gráfico de tendencias:', error);
+          doc.setFontSize(10);
+          doc.text('Error al generar gráfico de tendencias', 15, lastY + 5);
+          lastY += 10;
+        }
+      }
+      
+      // Añadir detalles de resolución (gráfico)
+      if (resolutionChartElement && lastY < pageHeight - 30) {
+        try {
+          // Si no hay espacio suficiente, nueva página
+          if (lastY > pageHeight - 120) {
+            doc.addPage();
+            lastY = 20;
+          }
+          
+          doc.setFontSize(14);
+          doc.text('Estado de Resolución', 15, lastY);
+          
+          const resolutionCanvas = await html2canvas(resolutionChartElement);
+          const resolutionImgData = resolutionCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            resolutionImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 15;
+        } catch (error) {
+          console.error('Error al capturar gráfico de resolución:', error);
+        }
+      }
+      
+      // Nueva página para productos y temas
+      doc.addPage();
+      lastY = 20;
+      
+      // Añadir productos más mencionados (gráfico)
+      if (productsChartElement) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Productos más Mencionados', 15, lastY);
+          
+          const productsCanvas = await html2canvas(productsChartElement);
+          const productsImgData = productsCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            productsImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 15;
+        } catch (error) {
+          console.error('Error al capturar gráfico de productos:', error);
+          
+          // Mostrar datos en forma de tabla si falla la captura del gráfico
+          if (stats.topProducts && stats.topProducts.length > 0) {
+            const productsData = stats.topProducts.map(item => [item.name, item.frequency]);
+            
+            autoTable(doc, {
+              head: [['Producto', 'Menciones']],
+              body: productsData,
+              startY: lastY + 5,
+              theme: 'grid',
+              styles: { fontSize: 10 },
+              headStyles: { fillColor: [66, 66, 66] }
+            });
+            lastY += 50; // Estimación después de tabla
+          } else {
+            doc.setFontSize(10);
+            doc.text('No hay datos de productos disponibles.', 15, lastY + 5);
+            lastY += 10;
+          }
+        }
+      }
+      
+      // Añadir temas más discutidos (gráfico)
+      if (topicsChartElement && lastY < pageHeight - 30) {
+        try {
+          // Si no hay espacio suficiente, nueva página
+          if (lastY > pageHeight - 120) {
+            doc.addPage();
+            lastY = 20;
+          }
+          
+          doc.setFontSize(14);
+          doc.text('Temas más Discutidos', 15, lastY);
+          
+          const topicsCanvas = await html2canvas(topicsChartElement);
+          const topicsImgData = topicsCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            topicsImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+        } catch (error) {
+          console.error('Error al capturar gráfico de temas:', error);
+          
+          // Mostrar datos en forma de tabla si falla la captura del gráfico
+          if (stats.topTopics && stats.topTopics.length > 0) {
+            const topicsData = stats.topTopics.map(item => [item.topic, item.frequency]);
+            
+            autoTable(doc, {
+              head: [['Tema', 'Menciones']],
+              body: topicsData,
+              startY: lastY + 5,
+              theme: 'grid',
+              styles: { fontSize: 10 },
+              headStyles: { fillColor: [66, 66, 66] }
+            });
+          } else {
+            doc.setFontSize(10);
+            doc.text('No hay datos de temas disponibles.', 15, lastY + 5);
+          }
+        }
+      }
+      
+      // Añadir pie de página
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.text(`Página ${i} de ${pageCount} - AIPI Analytics`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+      }
+      
+      // Guardar el PDF
+      doc.save(`analytics_${integration.name.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.pdf`);
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      alert('Hubo un error al generar el PDF. Por favor intente de nuevo.');
     }
-    
-    // Añadir pie de página
-    const pageCount = doc.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.text(`Página ${i} de ${pageCount} - AIPI Analytics`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
-    }
-    
-    // Guardar el PDF
-    doc.save(`analytics_${integration.name.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.pdf`);
   };
 
   return (
@@ -346,7 +461,7 @@ export default function IntegrationAnalytics() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
+                  <div className="h-80" id="trend-chart">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart
                         data={prepareConversationTrendData()}
@@ -379,7 +494,7 @@ export default function IntegrationAnalytics() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
+                  <div className="h-80" id="resolution-chart">
                     <ResponsiveContainer width="100%" height="100%">
                       <RePieChart>
                         <Pie
@@ -418,7 +533,7 @@ export default function IntegrationAnalytics() {
                   <ShoppingCart className="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
+                  <div className="h-80" id="products-chart">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
                         data={prepareTopProductsData()}
@@ -448,7 +563,7 @@ export default function IntegrationAnalytics() {
                   <Tag className="h-5 w-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="h-80">
+                  <div className="h-80" id="topics-chart">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart
                         data={prepareTopTopicsData()}
