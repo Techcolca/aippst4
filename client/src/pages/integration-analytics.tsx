@@ -19,7 +19,8 @@ import {
   CheckCircle,
   ShoppingCart,
   MessageCircle,
-  Tag
+  Tag,
+  Download
 } from "lucide-react";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useTranslation } from "react-i18next";
@@ -40,6 +41,9 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { jsPDF } from "jspdf";
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 
 // Colores para los gráficos
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
@@ -91,6 +95,124 @@ export default function IntegrationAnalytics() {
     if (!stats?.topTopics) return [];
     return stats.topTopics.slice(0, 5); // Solo los top 5
   };
+  
+  // Función para generar y descargar el informe PDF
+  const downloadPdfReport = async () => {
+    if (!integration || !stats) return;
+    
+    // Crear nuevo documento PDF
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const date = new Date().toLocaleDateString();
+    
+    // Título y metadatos del informe
+    doc.setFontSize(18);
+    doc.text(`Reporte de Analíticas: ${integration.name}`, pageWidth / 2, 20, { align: 'center' });
+    doc.setFontSize(10);
+    doc.text(`Generado: ${date}`, pageWidth / 2, 28, { align: 'center' });
+    doc.setLineWidth(0.5);
+    doc.line(15, 35, pageWidth - 15, 35);
+    
+    // Resumen de estadísticas
+    doc.setFontSize(14);
+    doc.text('Resumen', 15, 45);
+    
+    const summaryData = [
+      ['Conversaciones Totales', stats.totalConversations || 0],
+      ['Conversaciones Resueltas', stats.resolvedConversations || 0],
+      ['Tasa de Resolución', stats.totalConversations 
+        ? `${Math.round((stats.resolvedConversations / stats.totalConversations) * 100)}%`
+        : '0%'],
+      ['Mensajes Totales', stats.messageCount || 0],
+      ['Mensajes de Usuario', stats.userMessageCount || 0],
+      ['Mensajes del Asistente', stats.assistantMessageCount || 0],
+      ['Visitantes Únicos', stats.uniqueVisitors || 0],
+    ];
+    
+    // Añadir tabla de resumen
+    (doc as any).autoTable({
+      head: [['Métrica', 'Valor']],
+      body: summaryData,
+      startY: 50,
+      theme: 'grid',
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [66, 66, 66] }
+    });
+    
+    // Añadir tendencia de conversaciones
+    doc.setFontSize(14);
+    doc.text('Tendencia de Conversaciones', 15, (doc as any).lastAutoTable.finalY + 20);
+    
+    if (stats.conversationTrend && stats.conversationTrend.length > 0) {
+      const trendData = stats.conversationTrend.map(item => [item.date, item.count]);
+      
+      (doc as any).autoTable({
+        head: [['Fecha', 'Número de Conversaciones']],
+        body: trendData,
+        startY: (doc as any).lastAutoTable.finalY + 25,
+        theme: 'grid',
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [66, 66, 66] }
+      });
+    } else {
+      doc.setFontSize(10);
+      doc.text('No hay datos de tendencia disponibles.', 15, (doc as any).lastAutoTable.finalY + 25);
+    }
+    
+    // Nueva página para productos y temas
+    doc.addPage();
+    
+    // Añadir productos más mencionados
+    doc.setFontSize(14);
+    doc.text('Productos más Mencionados', 15, 20);
+    
+    if (stats.topProducts && stats.topProducts.length > 0) {
+      const productsData = stats.topProducts.map(item => [item.name, item.frequency]);
+      
+      (doc as any).autoTable({
+        head: [['Producto', 'Menciones']],
+        body: productsData,
+        startY: 25,
+        theme: 'grid',
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [66, 66, 66] }
+      });
+    } else {
+      doc.setFontSize(10);
+      doc.text('No hay datos de productos disponibles.', 15, 25);
+    }
+    
+    // Añadir temas más discutidos
+    doc.setFontSize(14);
+    doc.text('Temas más Discutidos', 15, (doc as any).lastAutoTable.finalY + 20);
+    
+    if (stats.topTopics && stats.topTopics.length > 0) {
+      const topicsData = stats.topTopics.map(item => [item.topic, item.frequency]);
+      
+      (doc as any).autoTable({
+        head: [['Tema', 'Menciones']],
+        body: topicsData,
+        startY: (doc as any).lastAutoTable.finalY + 25,
+        theme: 'grid',
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [66, 66, 66] }
+      });
+    } else {
+      doc.setFontSize(10);
+      doc.text('No hay datos de temas disponibles.', 15, (doc as any).lastAutoTable.finalY + 25);
+    }
+    
+    // Añadir pie de página
+    const pageCount = doc.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.text(`Página ${i} de ${pageCount} - AIPI Analytics`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+    }
+    
+    // Guardar el PDF
+    doc.save(`analytics_${integration.name.replace(/\s+/g, '_')}_${date.replace(/\//g, '-')}.pdf`);
+  };
 
   return (
     <DashboardLayout>
@@ -130,6 +252,15 @@ export default function IntegrationAnalytics() {
               variant="outline"
             >
               {t('view_conversations')}
+            </Button>
+            <Button 
+              onClick={downloadPdfReport}
+              variant="default"
+              className="flex items-center gap-2"
+              disabled={isLoadingStats || isLoadingIntegration}
+            >
+              <Download className="h-4 w-4" />
+              {t('download_pdf') || "Descargar PDF"}
             </Button>
           </div>
         </div>
