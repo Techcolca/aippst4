@@ -311,10 +311,25 @@
    */
   function createFloatingButton() {
     const button = document.createElement('button');
-    button.className = `aipi-form-button ${config.position} ${config.size}`;
+    
+    // Detectar si estamos en móvil o tablet para forzar posición centrada
+    const isMobileOrTablet = window.innerWidth <= 768;
+    
+    // En móvil y tablet, ignoramos la posición configurada y forzamos al centro
+    // En PC usamos la posición configurada por el usuario
+    const positionClass = isMobileOrTablet ? 
+      (config.position.includes('top') ? 'top-center' : 'bottom-center') : 
+      config.position;
+    
+    button.className = `aipi-form-button ${positionClass} ${config.size}`;
     button.style.backgroundColor = config.color;
     button.style.color = scriptTag.getAttribute('data-text-color') || '#FFFFFF';
     button.style.borderRadius = config.radius;
+    
+    // Para móvil/tablet, agregar atributo de datos para identificarlo en CSS
+    if (isMobileOrTablet) {
+      button.setAttribute('data-mobile-view', 'true');
+    }
     
     // Agregar ícono si se especificó
     if (config.icon && config.icon !== 'none') {
@@ -328,6 +343,17 @@
     
     // Agregar al DOM
     document.body.appendChild(button);
+    
+    // Agregar listener para redimensionamiento de ventana y ajustar posición
+    window.addEventListener('resize', handleResize);
+    
+    function handleResize() {
+      const newIsMobileOrTablet = window.innerWidth <= 768;
+      if (newIsMobileOrTablet !== isMobileOrTablet) {
+        // Si cambió entre móvil/desktop, recargar para actualizar posición
+        window.location.reload();
+      }
+    }
   }
   
   /**
@@ -393,6 +419,9 @@
       existingModal.remove();
     }
     
+    // Detectar si estamos en móvil o tablet para optimizar la visualización
+    const isMobileOrTablet = window.innerWidth <= 768;
+    
     // Crear nuevo modal desde cero
     const modal = document.createElement('div');
     modal.className = 'aipi-form-modal';
@@ -410,16 +439,25 @@
     // Contenedor del contenido del modal (totalmente responsive)
     const modalContent = document.createElement('div');
     modalContent.style.backgroundColor = 'white';
-    modalContent.style.borderRadius = '8px';
-    modalContent.style.width = config.modalWidth || '600px';
-    modalContent.style.maxWidth = '94%'; // Más restrictivo para pantallas pequeñas
+    modalContent.style.borderRadius = isMobileOrTablet ? '6px' : '8px';
+    
+    // En dispositivos móviles y tablets, ignoramos el ancho configurado y usamos un valor óptimo
+    if (isMobileOrTablet) {
+      modalContent.style.width = '98%';
+      modalContent.style.maxWidth = '100%';
+      modalContent.setAttribute('data-mobile-view', 'true');
+    } else {
+      modalContent.style.width = config.modalWidth || '600px';
+      modalContent.style.maxWidth = '94%';
+    }
+    
     modalContent.style.height = 'auto';
-    modalContent.style.maxHeight = '90vh'; // Límite para dispositivos pequeños
+    modalContent.style.maxHeight = isMobileOrTablet ? '98vh' : '90vh'; // Mayor espacio en móviles
     modalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
     modalContent.style.display = 'flex';
     modalContent.style.flexDirection = 'column';
     modalContent.style.overflow = 'hidden'; // Evitamos scroll en el contenedor principal
-    modalContent.style.margin = '10px'; // Margen reducido para pantallas pequeñas
+    modalContent.style.margin = isMobileOrTablet ? '4px' : '10px'; // Margen reducido para dispositivos pequeños
     
     // Encabezado del modal con título y botón de cierre
     const modalHeader = document.createElement('div');
@@ -513,6 +551,9 @@
       existingSlideIn.remove();
     }
     
+    // Detectar si estamos en móvil o tablet para optimizar la visualización
+    const isMobileOrTablet = window.innerWidth <= 768;
+    
     // Crear nuevo panel deslizante desde cero
     const slideIn = document.createElement('div');
     slideIn.className = 'aipi-form-slidein';
@@ -521,7 +562,15 @@
     slideIn.style.right = '0';
     slideIn.style.bottom = '0';
     slideIn.style.width = '100%';
-    slideIn.style.maxWidth = '450px'; // Ancho máximo para el panel
+    
+    // En móviles, ocupamos toda la pantalla; en tablets y desktop respetamos un ancho máximo
+    if (isMobileOrTablet) {
+      slideIn.style.maxWidth = window.innerWidth < 480 ? '100%' : '90%';
+      slideIn.setAttribute('data-mobile-view', 'true');
+    } else {
+      slideIn.style.maxWidth = '450px'; // Ancho máximo para PC
+    }
+    
     slideIn.style.backgroundColor = 'white';
     slideIn.style.boxShadow = '-2px 0 10px rgba(0,0,0,0.2)';
     slideIn.style.transform = 'translateX(100%)';

@@ -115,6 +115,8 @@ const COLORS = [
 
 // Posiciones disponibles para el botón
 const POSITIONS = [
+  { value: "bottom-center", label: "Inferior centro" },
+  { value: "top-center", label: "Superior centro" },
   { value: "bottom-right", label: "Inferior derecha" },
   { value: "bottom-left", label: "Inferior izquierda" },
   { value: "top-right", label: "Superior derecha" },
@@ -283,8 +285,15 @@ export default function FormIntegration() {
       </div>
       
       <button 
-        className={`absolute ${buttonConfig.position.includes('top') ? 'top-4' : 'bottom-4'} ${buttonConfig.position.includes('right') ? 'right-4' : 'left-4'} 
-                   flex items-center justify-center px-4 py-2 rounded-md`}
+        className={`absolute 
+          ${buttonConfig.position.includes('top') ? 'top-4' : 'bottom-4'} 
+          ${buttonConfig.position.includes('center') 
+            ? 'left-1/2 transform -translate-x-1/2' 
+            : buttonConfig.position.includes('right') 
+              ? 'right-4' 
+              : 'left-4'
+          }
+          flex items-center justify-center px-4 py-2 rounded-md`}
         style={{ 
           backgroundColor: buttonConfig.color,
           color: buttonConfig.textColor, // Aplicamos el color de texto seleccionado
