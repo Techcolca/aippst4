@@ -133,6 +133,15 @@ export default function Analytics() {
           doc.setFontSize(14);
           doc.text('Productos y Servicios Más Demandados', 15, lastY);
           
+          // Añadir descripción explicativa
+          doc.setFontSize(9);
+          doc.setTextColor(100, 100, 100);
+          doc.text('Las barras más largas indican productos/servicios mencionados con mayor frecuencia', 15, lastY + 8);
+          doc.text('en las conversaciones, lo que sugiere mayor interés o demanda.', 15, lastY + 12);
+          
+          // Restaurar el color de texto
+          doc.setTextColor(40, 40, 40);
+          
           const productsCanvas = await html2canvas(productsChartElement);
           const productsImgData = productsCanvas.toDataURL('image/png');
           
@@ -186,6 +195,15 @@ export default function Analytics() {
           doc.setFontSize(14);
           doc.text('Temas Más Discutidos', 15, lastY);
           
+          // Añadir descripción explicativa
+          doc.setFontSize(9);
+          doc.setTextColor(100, 100, 100);
+          doc.text('Las barras muestran la frecuencia de cada tema y el color indica el sentimiento asociado.', 15, lastY + 8);
+          doc.text('Un mayor porcentaje indica un nivel más alto de satisfacción con ese tema.', 15, lastY + 12);
+          
+          // Restaurar el color de texto
+          doc.setTextColor(40, 40, 40);
+          
           const topicsCanvas = await html2canvas(topicsChartElement);
           const topicsImgData = topicsCanvas.toDataURL('image/png');
           
@@ -236,6 +254,15 @@ export default function Analytics() {
         try {
           doc.setFontSize(14);
           doc.text('Tendencia de Conversaciones', 15, lastY);
+          
+          // Añadir descripción explicativa
+          doc.setFontSize(9);
+          doc.setTextColor(100, 100, 100);
+          doc.text('La línea muestra cómo cambia el volumen de conversaciones a lo largo del tiempo.', 15, lastY + 8);
+          doc.text('Los picos indican días con mayor actividad, útil para identificar patrones y tendencias.', 15, lastY + 12);
+          
+          // Restaurar el color de texto
+          doc.setTextColor(40, 40, 40);
           
           const trendCanvas = await html2canvas(trendChartElement);
           const trendImgData = trendCanvas.toDataURL('image/png');
