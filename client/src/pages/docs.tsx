@@ -1184,56 +1184,51 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          CEGEPs, colegios y universidades enfrentan desafíos únicos en la era digital. 
-                          Estudiantes potenciales navegan entre múltiples opciones educativas y a menudo 
-                          se sienten abrumados por la cantidad de información disponible. AIPI transforma 
-                          este proceso haciéndolo más accesible, personalizado y efectivo.
+                          {t("education.intro_text")}
                         </p>
                         
-                        <h3>Beneficios Específicos</h3>
+                        <h3>{t("education.specific_benefits")}</h3>
                         
-                        <h4>Mejora del Proceso de Admisiones</h4>
+                        <h4>{t("education.admission_process")}</h4>
                         <ul>
-                          <li>Responde preguntas específicas sobre requisitos de admisión, fechas límite y documentación necesaria</li>
-                          <li>Guía a los estudiantes paso a paso a través del proceso de solicitud</li>
-                          <li>Elimina barreras de acceso a la información crítica para tomar decisiones</li>
+                          <li>{t("education.admission_benefit1")}</li>
+                          <li>{t("education.admission_benefit2")}</li>
+                          <li>{t("education.admission_benefit3")}</li>
                         </ul>
                         
-                        <h4>Presentación Efectiva de Programas Académicos</h4>
+                        <h4>{t("education.program_presentation")}</h4>
                         <ul>
-                          <li>Proporciona detalles sobre planes de estudio, profesores y salidas profesionales</li>
-                          <li>Ayuda a comparar diferentes opciones académicas dentro de la institución</li>
-                          <li>Responde preguntas específicas sobre contenidos de cursos y metodologías</li>
+                          <li>{t("education.program_detail1")}</li>
+                          <li>{t("education.program_detail2")}</li>
+                          <li>{t("education.program_detail3")}</li>
                         </ul>
                         
-                        <h4>Captación y Seguimiento de Interesados</h4>
+                        <h4>{t("education.lead_capture")}</h4>
                         <ul>
-                          <li>Identifica estudiantes con alto potencial de matriculación</li>
-                          <li>Registra áreas específicas de interés para seguimiento personalizado</li>
-                          <li>Permite al departamento de admisiones priorizar sus esfuerzos en candidatos cualificados</li>
+                          <li>{t("education.lead_capture1")}</li>
+                          <li>{t("education.lead_capture2")}</li>
+                          <li>{t("education.lead_capture3")}</li>
                         </ul>
                         
-                        <h4>Soporte 24/7 para Estudiantes Internacionales</h4>
+                        <h4>{t("education.international_support")}</h4>
                         <ul>
-                          <li>Proporciona información en múltiples idiomas</li>
-                          <li>Atiende consultas fuera del horario laboral, esencial para diferentes zonas horarias</li>
-                          <li>Ofrece orientación sobre visados, alojamiento y otros aspectos relevantes</li>
+                          <li>{t("education.international1")}</li>
+                          <li>{t("education.international2")}</li>
+                          <li>{t("education.international3")}</li>
                         </ul>
                         
-                        <h4>Análisis de Tendencias en la Demanda Educativa de Tu Institución</h4>
+                        <h4>{t("education.trend_analysis")}</h4>
                         <ul>
-                          <li>Identifica los programas más consultados en tu sitio web</li>
-                          <li>Analiza las preocupaciones más frecuentes de tus estudiantes potenciales</li>
-                          <li>Proporciona datos valiosos específicos para la planificación estratégica de tu oferta académica</li>
-                          <li>Estadísticas segregadas por cuenta de usuario, sin mezclar datos con otras instituciones</li>
+                          <li>{t("education.trend1")}</li>
+                          <li>{t("education.trend2")}</li>
+                          <li>{t("education.trend3")}</li>
+                          <li>{t("education.trend4")}</li>
                         </ul>
                         
-                        <h3>Testimonios</h3>
+                        <h3>{t("education.testimonials")}</h3>
                         <blockquote>
-                          "Desde que implementamos AIPI en nuestro sitio web, hemos visto un incremento del 35% en las solicitudes 
-                          de información que se convierten en candidaturas reales. El asistente virtual ha sido clave para ayudar 
-                          a los estudiantes a navegar nuestros más de 50 programas académicos."
-                          <cite>— Directora de Admisiones, CEGEP Saint-Laurent</cite>
+                          {t("education.testimonial_text")}
+                          <cite>{t("education.testimonial_author")}</cite>
                         </blockquote>
                         
                         <div className="mt-8">
@@ -1256,57 +1251,51 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          En el entorno empresarial actual, la rapidez en la atención al cliente y la capacidad para 
-                          convertir visitantes web en clientes potenciales son factores críticos para el éxito. AIPI 
-                          proporciona una solución integral que mejora la experiencia del cliente mientras optimiza 
-                          los recursos de atención comercial.
+                          {t("business.intro_text")}
                         </p>
                         
-                        <h3>Beneficios Específicos</h3>
+                        <h3>{t("business.specific_benefits")}</h3>
                         
-                        <h4>Generación y Calificación de Leads</h4>
+                        <h4>{t("business.lead_generation")}</h4>
                         <ul>
-                          <li>Identifica visitantes con intención de compra real</li>
-                          <li>Recopila información de contacto y necesidades específicas</li>
-                          <li>Califica automáticamente leads según el nivel de interés y la etapa del embudo de ventas</li>
+                          <li>{t("business.lead_gen1")}</li>
+                          <li>{t("business.lead_gen2")}</li>
+                          <li>{t("business.lead_gen3")}</li>
                         </ul>
                         
-                        <h4>Soporte al Cliente 24/7</h4>
+                        <h4>{t("business.customer_support")}</h4>
                         <ul>
-                          <li>Responde consultas frecuentes sin intervención humana</li>
-                          <li>Proporciona información detallada sobre productos y servicios</li>
-                          <li>Deriva a atención humana solo cuando es estrictamente necesario</li>
+                          <li>{t("business.support1")}</li>
+                          <li>{t("business.support2")}</li>
+                          <li>{t("business.support3")}</li>
                         </ul>
                         
-                        <h4>Presentación Efectiva de Catálogos y Servicios</h4>
+                        <h4>{t("business.catalog_presentation")}</h4>
                         <ul>
-                          <li>Guía a los visitantes a través de extensos catálogos de productos</li>
-                          <li>Sugiere productos relevantes basados en las necesidades expresadas</li>
-                          <li>Facilita comparaciones y ayuda en la toma de decisiones de compra</li>
+                          <li>{t("business.catalog1")}</li>
+                          <li>{t("business.catalog2")}</li>
+                          <li>{t("business.catalog3")}</li>
                         </ul>
                         
-                        <h4>Optimización del Proceso de Ventas</h4>
+                        <h4>{t("business.sales_optimization")}</h4>
                         <ul>
-                          <li>Proporciona información preliminar valiosa al equipo de ventas</li>
-                          <li>Reduce el tiempo dedicado a consultas básicas o no cualificadas</li>
-                          <li>Permite que los comerciales se concentren en prospectos de alta calidad</li>
+                          <li>{t("business.sales_opt1")}</li>
+                          <li>{t("business.sales_opt2")}</li>
+                          <li>{t("business.sales_opt3")}</li>
                         </ul>
                         
-                        <h4>Análisis del Comportamiento de Tus Clientes</h4>
+                        <h4>{t("business.behavior_analysis")}</h4>
                         <ul>
-                          <li>Identifica tendencias en las consultas y necesidades específicas de tu mercado</li>
-                          <li>Proporciona insights exclusivos sobre objeciones frecuentes de tus clientes</li>
-                          <li>Ayuda a refinar ofertas y mensajes comerciales basados en tus datos propios</li>
-                          <li>Métricas segmentadas por cuenta de usuario para mantener la privacidad y relevancia</li>
+                          <li>{t("business.behavior1")}</li>
+                          <li>{t("business.behavior2")}</li>
+                          <li>{t("business.behavior3")}</li>
+                          <li>{t("business.behavior4")}</li>
                         </ul>
                         
-                        <h3>Testimonios</h3>
+                        <h3>{t("business.testimonials")}</h3>
                         <blockquote>
-                          "Al implementar AIPI, conseguimos reducir en un 45% el tiempo que nuestro equipo 
-                          dedicaba a responder consultas básicas. Ahora pueden concentrarse en cerrar ventas, 
-                          mientras el asistente virtual se encarga de educar a los clientes y recopilar información 
-                          crucial para nuestro seguimiento comercial."
-                          <cite>— Director Comercial, TechSolutions Inc.</cite>
+                          {t("business.testimonial_text")}
+                          <cite>{t("business.testimonial_author")}</cite>
                         </blockquote>
                         
                         <div className="mt-8">
@@ -1329,58 +1318,52 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          Abogados, contadores, consultores, agencias de marketing y otros profesionales independientes 
-                          pueden beneficiarse enormemente de la implementación de AIPI en sus sitios web. La solución 
-                          permite ofrecer una experiencia de alto nivel a potenciales clientes mientras se optimiza 
-                          el tiempo dedicado a la captación.
+                          {t("professional.intro_text")}
                         </p>
                         
-                        <h3>Beneficios Específicos</h3>
+                        <h3>{t("professional.specific_benefits")}</h3>
                         
-                        <h4>Pre-cualificación de Clientes</h4>
+                        <h4>{t("professional.client_qualification")}</h4>
                         <ul>
-                          <li>Identifica las necesidades específicas del cliente antes del primer contacto</li>
-                          <li>Determina si el caso o proyecto se ajusta a la especialización del profesional</li>
-                          <li>Recopila información preliminar para agilizar la primera consulta</li>
+                          <li>{t("professional.qualification1")}</li>
+                          <li>{t("professional.qualification2")}</li>
+                          <li>{t("professional.qualification3")}</li>
                         </ul>
                         
-                        <h4>Programación Eficiente de Citas</h4>
+                        <h4>{t("professional.appointment_scheduling")}</h4>
                         <ul>
-                          <li>Gestiona la agenda y disponibilidad para consultas iniciales</li>
-                          <li>Reduce las llamadas telefónicas para programar reuniones</li>
-                          <li>Envía recordatorios automáticos para reducir las cancelaciones</li>
+                          <li>{t("professional.scheduling1")}</li>
+                          <li>{t("professional.scheduling2")}</li>
+                          <li>{t("professional.scheduling3")}</li>
                         </ul>
                         
-                        <h4>Educación Preliminar del Cliente</h4>
+                        <h4>{t("professional.client_education")}</h4>
                         <ul>
-                          <li>Proporciona información básica sobre procesos y servicios</li>
-                          <li>Responde preguntas frecuentes sobre tarifas, plazos y metodologías</li>
-                          <li>Prepara al cliente para una interacción más productiva con el profesional</li>
+                          <li>{t("professional.education1")}</li>
+                          <li>{t("professional.education2")}</li>
+                          <li>{t("professional.education3")}</li>
                         </ul>
                         
-                        <h4>Gestión de Expectativas</h4>
+                        <h4>{t("professional.expectation_management")}</h4>
                         <ul>
-                          <li>Comunica claramente los alcances y límites de los servicios ofrecidos</li>
-                          <li>Explica los procesos habituales y tiempos estimados</li>
-                          <li>Evita malentendidos que pueden afectar la relación profesional</li>
+                          <li>{t("professional.expectation1")}</li>
+                          <li>{t("professional.expectation2")}</li>
+                          <li>{t("professional.expectation3")}</li>
                         </ul>
                         
-                        <h4>Marketing de Contenidos Interactivo y Datos Analíticos</h4>
+                        <h4>{t("professional.content_marketing")}</h4>
                         <ul>
-                          <li>Presenta información valiosa de manera conversacional</li>
-                          <li>Demuestra experiencia y conocimiento en tu campo específico</li>
-                          <li>Genera confianza antes del contacto personal</li>
-                          <li>Proporciona estadísticas exclusivas de tu práctica profesional</li>
-                          <li>Métricas aisladas por cuenta, garantizando la privacidad de tus datos</li>
+                          <li>{t("professional.marketing1")}</li>
+                          <li>{t("professional.marketing2")}</li>
+                          <li>{t("professional.marketing3")}</li>
+                          <li>{t("professional.marketing4")}</li>
+                          <li>{t("professional.marketing5")}</li>
                         </ul>
                         
-                        <h3>Testimonios</h3>
+                        <h3>{t("professional.testimonials")}</h3>
                         <blockquote>
-                          "Como bufete especializado, solíamos perder mucho tiempo con consultas que no encajaban 
-                          con nuestra práctica. AIPI no solo filtra estas consultas, sino que deriva a los 
-                          potenciales clientes al abogado adecuado dentro de nuestra firma, basándose en sus 
-                          necesidades específicas. Nuestra productividad ha aumentado significativamente."
-                          <cite>— Socio Director, Asesoría Legal Global</cite>
+                          {t("professional.testimonial_text")}
+                          <cite>{t("professional.testimonial_author")}</cite>
                         </blockquote>
                         
                         <div className="mt-8">
@@ -1400,110 +1383,110 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI incluye un potente sistema de creación de formularios personalizables para capturar información de los visitantes de manera eficiente. Esta funcionalidad te permite crear diferentes tipos de formularios, desde formularios de contacto simples hasta encuestas complejas, con opciones de integración simplificadas.
+                          {t("forms.intro_text")}
                         </p>
                         
-                        <h3>Tipos de Formularios Disponibles</h3>
-                        <p>La plataforma proporciona plantillas prediseñadas para diversos propósitos:</p>
+                        <h3>{t("forms.available_types")}</h3>
+                        <p>{t("forms.templates_intro")}</p>
                         
                         <ul>
-                          <li><strong>Formularios de Contacto</strong>: Captura información básica de contacto de los visitantes interesados</li>
-                          <li><strong>Formularios de Lista de Espera</strong>: Ideal para gestionar solicitudes de inscripción anticipada</li>
-                          <li><strong>Encuestas de Satisfacción</strong>: Recopila feedback de clientes o estudiantes</li>
-                          <li><strong>Formularios de Feedback</strong>: Obtén comentarios sobre productos, servicios o contenidos específicos</li>
-                          <li><strong>Formularios de Captación de Leads</strong>: Diseñados para capturar información cualificada de prospectos</li>
-                          <li><strong>Formularios Personalizados</strong>: Crea desde cero para necesidades específicas</li>
+                          <li><strong>{t("forms.contact_form")}</strong>: {t("forms.contact_form_desc")}</li>
+                          <li><strong>{t("forms.waitlist_form")}</strong>: {t("forms.waitlist_form_desc")}</li>
+                          <li><strong>{t("forms.survey_form")}</strong>: {t("forms.survey_form_desc")}</li>
+                          <li><strong>{t("forms.feedback_form")}</strong>: {t("forms.feedback_form_desc")}</li>
+                          <li><strong>{t("forms.lead_capture_form")}</strong>: {t("forms.lead_capture_form_desc")}</li>
+                          <li><strong>{t("forms.custom_form")}</strong>: {t("forms.custom_form_desc")}</li>
                         </ul>
                         
-                        <h3>Características Principales</h3>
+                        <h3>{t("forms.main_features")}</h3>
                         <ul>
-                          <li><strong>Diseño Flexible</strong>: Personaliza colores, fuentes y estilos para que coincidan con tu marca</li>
-                          <li><strong>Campos Configurables</strong>: Añade diversos tipos de campos (texto, selección, casillas, fechas, etc.)</li>
-                          <li><strong>Validación Avanzada</strong>: Configura reglas para asegurar que los datos capturados sean válidos</li>
-                          <li><strong>Lógica Condicional</strong>: Muestra u oculta campos según las respuestas anteriores</li>
-                          <li><strong>Integración con IA</strong>: Análisis automático de las respuestas para identificar patrones y preferencias</li>
-                          <li><strong>Protección Captcha</strong>: Previene envíos automatizados y spam</li>
-                          <li><strong>Notificaciones por Email</strong>: Recibe alertas cuando se envían nuevas respuestas</li>
-                          <li><strong>Análisis Detallado</strong>: Estadísticas sobre tasas de conversión y patrones de completado</li>
-                          <li><strong>Ordenamiento de Respuestas</strong>: Nuevas capacidades para filtrar y ordenar respuestas por fecha o campos específicos</li>
+                          <li><strong>{t("forms.flexible_design")}</strong>: {t("forms.flexible_design_desc")}</li>
+                          <li><strong>{t("forms.configurable_fields")}</strong>: {t("forms.configurable_fields_desc")}</li>
+                          <li><strong>{t("forms.advanced_validation")}</strong>: {t("forms.advanced_validation_desc")}</li>
+                          <li><strong>{t("forms.conditional_logic")}</strong>: {t("forms.conditional_logic_desc")}</li>
+                          <li><strong>{t("forms.ai_integration")}</strong>: {t("forms.ai_integration_desc")}</li>
+                          <li><strong>{t("forms.captcha_protection")}</strong>: {t("forms.captcha_protection_desc")}</li>
+                          <li><strong>{t("forms.email_notifications")}</strong>: {t("forms.email_notifications_desc")}</li>
+                          <li><strong>{t("forms.detailed_analytics")}</strong>: {t("forms.detailed_analytics_desc")}</li>
+                          <li><strong>{t("forms.response_sorting")}</strong>: {t("forms.response_sorting_desc")}</li>
                         </ul>
                         
-                        <h3>Proceso de Creación de Formularios</h3>
+                        <h3>{t("forms.creation_process")}</h3>
                         <ol>
-                          <li><strong>Accede al Dashboard</strong>: Navega a la sección "Formularios" en tu panel de control</li>
-                          <li><strong>Crea un Nuevo Formulario</strong>: Haz clic en "Crear Formulario" y elige si quieres partir de una plantilla o desde cero</li>
-                          <li><strong>Configuración Básica</strong>: Define nombre, descripción y propósito del formulario</li>
-                          <li><strong>Diseño y Campos</strong>: Configura la apariencia y añade los campos necesarios</li>
-                          <li><strong>Personalización</strong>: Ajusta colores, fuentes y estilos para que coincidan con tu marca</li>
-                          <li><strong>Configuración Avanzada</strong>: Define mensajes de agradecimiento, redirecciones y notificaciones</li>
-                          <li><strong>Vista Previa</strong>: Prueba el funcionamiento del formulario antes de publicarlo</li>
-                          <li><strong>Publicación</strong>: Genera un enlace único o código de inserción para tu sitio web</li>
+                          <li><strong>{t("forms.access_dashboard")}</strong>: {t("forms.access_dashboard_desc")}</li>
+                          <li><strong>{t("forms.create_new")}</strong>: {t("forms.create_new_desc")}</li>
+                          <li><strong>{t("forms.basic_config")}</strong>: {t("forms.basic_config_desc")}</li>
+                          <li><strong>{t("forms.design_fields")}</strong>: {t("forms.design_fields_desc")}</li>
+                          <li><strong>{t("forms.customization")}</strong>: {t("forms.customization_desc")}</li>
+                          <li><strong>{t("forms.advanced_config")}</strong>: {t("forms.advanced_config_desc")}</li>
+                          <li><strong>{t("forms.preview")}</strong>: {t("forms.preview_desc")}</li>
+                          <li><strong>{t("forms.publication")}</strong>: {t("forms.publication_desc")}</li>
                         </ol>
                         
-                        <h3>Métodos de Integración Simplificados</h3>
+                        <h3>{t("forms.integration_methods")}</h3>
                         <p>
-                          AIPI ha simplificado el proceso de integración de formularios, centrándose exclusivamente en la opción de integración directa:
+                          {t("forms.simplified_process")}
                         </p>
                         
-                        <h4>Integración Directa (Direct Embed)</h4>
+                        <h4>{t("forms.direct_embed")}</h4>
                         <p>
-                          Una vez creado tu formulario, puedes integrarlo fácilmente en tu sitio web mediante el código de inserción:
+                          {t("forms.direct_embed_desc")}
                         </p>
                         
                         <ol>
-                          <li><strong>Obtén el Código</strong>: Desde la vista de tu formulario, haz clic en "Obtener Código" para abrir el modal con el código de inserción</li>
-                          <li><strong>Copia el Código</strong>: El sistema te proporcionará un fragmento HTML que puedes copiar directamente</li>
-                          <li><strong>Inserta en tu Sitio</strong>: Pega el código en la sección de tu sitio web donde deseas que aparezca el formulario</li>
+                          <li><strong>{t("forms.get_code")}</strong>: {t("forms.get_code_desc")}</li>
+                          <li><strong>{t("forms.copy_code")}</strong>: {t("forms.copy_code_desc")}</li>
+                          <li><strong>{t("forms.insert_code")}</strong>: {t("forms.insert_code_desc")}</li>
                         </ol>
                         
-                        <p>El código de inserción tendrá un aspecto similar a este:</p>
+                        <p>{t("forms.code_example")}</p>
                         
                         <pre><code>&lt;script src="https://tu-dominio.com/api/forms/embed/[ID_DEL_FORMULARIO]"&gt;&lt;/script&gt;
 &lt;div id="aipi-form-[ID_DEL_FORMULARIO]"&gt;&lt;/div&gt;</code></pre>
                         
-                        <p><strong>Opciones de Personalización</strong>: El modal incluye instrucciones para:</p>
+                        <p><strong>{t("forms.customization_options")}</strong>: {t("forms.modal_instructions")}</p>
                         <ul>
-                          <li>Personalizar el estilo del formulario para adaptarlo a tu sitio</li>
-                          <li>Configurar acciones después del envío (redirecciones, mensajes)</li>
-                          <li>Implementar validaciones personalizadas</li>
-                          <li>Integrar con sistemas de análisis para seguimiento de conversiones</li>
+                          <li>{t("forms.customize_style")}</li>
+                          <li>{t("forms.configure_actions")}</li>
+                          <li>{t("forms.implement_validations")}</li>
+                          <li>{t("forms.analytics_integration")}</li>
                         </ul>
                         
-                        <p><strong>Consideraciones Técnicas</strong>:</p>
+                        <p><strong>{t("forms.technical_considerations")}</strong>:</p>
                         <ul>
-                          <li>El código funciona en cualquier sitio HTML, incluidos CMS como WordPress, Wix, o Shopify</li>
-                          <li>El formulario se carga de forma asíncrona para no afectar el rendimiento de la página</li>
-                          <li>Los datos se envían directamente a los servidores de AIPI para mayor seguridad</li>
-                          <li>Se incluye automáticamente protección contra spam y ataques CSRF</li>
-                          <li>Diseño responsivo que se adapta a cualquier dispositivo (móvil, tablet o escritorio)</li>
+                          <li>{t("forms.works_with_cms")}</li>
+                          <li>{t("forms.async_loading")}</li>
+                          <li>{t("forms.secure_data")}</li>
+                          <li>{t("forms.spam_protection")}</li>
+                          <li>{t("forms.responsive_design")}</li>
                         </ul>
                         
-                        <h3>Gestión de Respuestas Mejorada</h3>
-                        <p>La plataforma ahora incluye capacidades avanzadas para gestionar las respuestas:</p>
+                        <h3>{t("forms.improved_response_management")}</h3>
+                        <p>{t("forms.advanced_capabilities")}</p>
                         <ul>
-                          <li><strong>Ver Respuestas</strong>: Accede a todas las respuestas desde tu dashboard con vista mejorada</li>
-                          <li><strong>Exportar Datos</strong>: Descarga las respuestas en formato CSV para análisis externos</li>
-                          <li><strong>Filtrar y Ordenar</strong>: Encuentra rápidamente respuestas específicas con filtros avanzados y opciones de ordenamiento</li>
-                          <li><strong>Análisis Automático</strong>: Visualiza estadísticas y tendencias generadas por la IA</li>
-                          <li><strong>Seguimiento</strong>: Marca respuestas como atendidas o pendientes de seguimiento</li>
-                          <li><strong>Notificaciones en Tiempo Real</strong>: Recibe alertas inmediatas cuando se completa un formulario</li>
+                          <li><strong>{t("forms.view_responses")}</strong>: {t("forms.view_responses_desc")}</li>
+                          <li><strong>{t("forms.export_data")}</strong>: {t("forms.export_data_desc")}</li>
+                          <li><strong>{t("forms.filter_sort")}</strong>: {t("forms.filter_sort_desc")}</li>
+                          <li><strong>{t("forms.automatic_analysis")}</strong>: {t("forms.automatic_analysis_desc")}</li>
+                          <li><strong>{t("forms.follow_up")}</strong>: {t("forms.follow_up_desc")}</li>
+                          <li><strong>{t("forms.realtime_notifications")}</strong>: {t("forms.realtime_notifications_desc")}</li>
                         </ul>
                         
-                        <h3>Integración con el Widget de AIPI</h3>
-                        <p>Los formularios pueden integrarse con el asistente virtual de AIPI para:</p>
+                        <h3>{t("forms.widget_integration")}</h3>
+                        <p>{t("forms.widget_integration_desc")}</p>
                         <ul>
-                          <li>Presentar formularios en momentos clave de la conversación</li>
-                          <li>Completar automáticamente campos con información ya proporcionada en el chat</li>
-                          <li>Seguir la conversación después del envío del formulario</li>
-                          <li>Proporcionar asistencia durante el proceso de completado</li>
+                          <li>{t("forms.present_forms")}</li>
+                          <li>{t("forms.autocomplete_fields")}</li>
+                          <li>{t("forms.continue_conversation")}</li>
+                          <li>{t("forms.provide_assistance")}</li>
                         </ul>
                         
-                        <h3>Casos de Uso Populares</h3>
+                        <h3>{t("forms.popular_use_cases")}</h3>
                         <ul>
-                          <li><strong>Educación</strong>: Formularios de solicitud de información, inscripción a eventos o programas</li>
-                          <li><strong>Negocios</strong>: Captura de leads, solicitudes de presupuesto, evaluación de satisfacción</li>
-                          <li><strong>Servicios Profesionales</strong>: Consultas iniciales, reserva de citas, recopilación de antecedentes</li>
-                          <li><strong>E-commerce</strong>: Feedback de productos, solicitudes de soporte, registro en listas VIP</li>
+                          <li><strong>{t("forms.education_use")}</strong>: {t("forms.education_use_desc")}</li>
+                          <li><strong>{t("forms.business_use")}</strong>: {t("forms.business_use_desc")}</li>
+                          <li><strong>{t("forms.professional_use")}</strong>: {t("forms.professional_use_desc")}</li>
+                          <li><strong>{t("forms.ecommerce_use")}</strong>: {t("forms.ecommerce_use_desc")}</li>
                         </ul>
                       </div>
                     </div>
@@ -1526,76 +1509,70 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          La implementación de AIPI ha sido diseñada para ser extremadamente sencilla, 
-                          sin necesidad de conocimientos técnicos avanzados. En pocos pasos, podrás tener 
-                          funcionando un asistente virtual inteligente en tu sitio web.
+                          {t("implementation.intro_text")}
                         </p>
                         
-                        <h3>Proceso de Implementación</h3>
+                        <h3>{t("implementation.process_title")}</h3>
                         
-                        <h4>Paso 1: Integración con tu Sitio Web</h4>
+                        <h4>{t("implementation.step1_title")}</h4>
                         <p>
-                          Simplemente agrega un fragmento de código HTML a tu sitio web, justo antes de la etiqueta 
-                          de cierre &lt;/body&gt;. Tenemos opciones para:
+                          {t("implementation.step1_desc")}
                         </p>
                         <ul>
-                          <li>Widget flotante (burbuja) que aparece en una esquina de tu sitio</li>
-                          <li>Experiencia de pantalla completa estilo ChatGPT</li>
+                          <li>{t("implementation.widget_option")}</li>
+                          <li>{t("implementation.fullscreen_option")}</li>
                         </ul>
                         <p>
-                          Si utilizas WordPress, puedes agregar el código en el tema (footer.php) o utilizar un plugin 
-                          que permita insertar código HTML.
+                          {t("implementation.wordpress_note")}
                         </p>
                         
-                        <h4>Paso 2: Personalización del Asistente</h4>
+                        <h4>{t("implementation.step2_title")}</h4>
                         <p>
-                          Desde tu panel de control de AIPI, podrás personalizar múltiples aspectos:
+                          {t("implementation.step2_desc")}
                         </p>
                         <ul>
-                          <li>Colores y estilo visual para que coincida con tu marca</li>
-                          <li>Posición en la pantalla (para el widget flotante)</li>
-                          <li>Mensaje de bienvenida y comportamiento inicial</li>
-                          <li>Idiomas soportados</li>
-                          <li>Nombre y "personalidad" del asistente</li>
+                          <li>{t("implementation.customize_colors")}</li>
+                          <li>{t("implementation.customize_position")}</li>
+                          <li>{t("implementation.customize_welcome")}</li>
+                          <li>{t("implementation.customize_languages")}</li>
+                          <li>{t("implementation.customize_personality")}</li>
                         </ul>
                         
-                        <h4>Paso 3: Entrenamiento del Asistente</h4>
+                        <h4>{t("implementation.step3_title")}</h4>
                         <p>
-                          Para que tu asistente proporcione respuestas útiles y relevantes:
+                          {t("implementation.step3_desc")}
                         </p>
                         <ul>
-                          <li>Sube documentos PDF con información sobre tus servicios o programas</li>
-                          <li>Agrega archivos DOCX con preguntas frecuentes y sus respuestas</li>
-                          <li>Incluye hojas de cálculo Excel con datos estructurados</li>
-                          <li>Escribe instrucciones específicas sobre el tono y estilo de las respuestas</li>
+                          <li>{t("implementation.upload_pdf")}</li>
+                          <li>{t("implementation.upload_docx")}</li>
+                          <li>{t("implementation.upload_excel")}</li>
+                          <li>{t("implementation.write_instructions")}</li>
                         </ul>
                         <p>
-                          También puedes indicar URLs específicas de tu sitio para que el asistente 
-                          extraiga y aprenda de ese contenido automáticamente.
+                          {t("implementation.urls_note")}
                         </p>
                         
-                        <h4>Paso 4: Activación y Monitoreo Personalizado</h4>
+                        <h4>{t("implementation.step4_title")}</h4>
                         <p>
-                          Una vez configurado, el asistente estará listo para interactuar con tus visitantes. 
-                          Desde tu panel de control particular podrás:
+                          {t("implementation.step4_desc")}
                         </p>
                         <ul>
-                          <li>Monitorear conversaciones en tiempo real solo de tus integraciones</li>
-                          <li>Revisar métricas de uso y efectividad exclusivas de tu cuenta</li>
-                          <li>Acceder a leads capturados en tu sitio web</li>
-                          <li>Refinar el entrenamiento basado en interacciones reales con tus visitantes</li>
-                          <li>Obtener estadísticas completamente aisladas de otros usuarios del sistema</li>
+                          <li>{t("implementation.monitor_conversations")}</li>
+                          <li>{t("implementation.review_metrics")}</li>
+                          <li>{t("implementation.access_leads")}</li>
+                          <li>{t("implementation.refine_training")}</li>
+                          <li>{t("implementation.isolated_stats")}</li>
                         </ul>
                         
-                        <h3>Requisitos Técnicos</h3>
+                        <h3>{t("implementation.technical_requirements")}</h3>
                         <p>
-                          AIPI está diseñado para funcionar con prácticamente cualquier sitio web moderno:
+                          {t("implementation.compatibility_intro")}
                         </p>
                         <ul>
-                          <li>Compatible con todos los CMS populares (WordPress, Drupal, Joomla, etc.)</li>
-                          <li>Funciona con sitios estáticos HTML</li>
-                          <li>Se integra con aplicaciones JavaScript (React, Angular, Vue, etc.)</li>
-                          <li>No requiere modificaciones al servidor</li>
+                          <li>{t("implementation.cms_compatibility")}</li>
+                          <li>{t("implementation.html_compatibility")}</li>
+                          <li>{t("implementation.js_compatibility")}</li>
+                          <li>{t("implementation.no_server_mods")}</li>
                         </ul>
                         
                         <div className="mt-8">
