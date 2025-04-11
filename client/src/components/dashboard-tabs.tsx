@@ -190,7 +190,7 @@ export default function DashboardTabs() {
               <Card key={conversation.id} className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-medium">Visitor #{conversation.visitorId || 'Anonymous'}</h3>
+                    <h3 className="font-medium">{t("visitor", "Visitor")} #{conversation.visitorId || t("anonymous", "Anonymous")}</h3>
                     <p className="text-sm text-gray-500">
                       {new Date(conversation.createdAt).toLocaleString()}
                     </p>
@@ -201,10 +201,10 @@ export default function DashboardTabs() {
                         ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' 
                         : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
                     }`}>
-                      {conversation.status === 'completed' ? 'Completed' : 'Active'}
+                      {conversation.status === 'completed' ? t("completed", "Completed") : t("active", "Active")}
                     </span>
                     <Link href={`/conversations/${conversation.id}`}>
-                      <Button size="sm" variant="outline">View</Button>
+                      <Button size="sm" variant="outline">{t("view", "View")}</Button>
                     </Link>
                   </div>
                 </div>
