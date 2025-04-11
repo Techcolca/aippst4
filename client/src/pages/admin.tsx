@@ -189,6 +189,7 @@ export default function AdminPanel() {
   const [userSearch, setUserSearch] = useState("");
   const [usersOverLimit, setUsersOverLimit] = useState<UserOverLimit[]>([]);
   const [authError, setAuthError] = useState(false);
+  const [planSortOrder, setPlanSortOrder] = useState<"price-asc" | "price-desc" | "name-asc" | "name-desc" | "tier-asc" | "tier-desc">("price-asc");
   
   // Modals
   const [userDetailsModal, setUserDetailsModal] = useState(false);
