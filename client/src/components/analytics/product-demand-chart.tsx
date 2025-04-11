@@ -61,7 +61,7 @@ export default function ProductDemandChart({ data, loading = false }: ProductDem
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[240px]">
+        <div className="h-[240px]" id="products-chart">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}

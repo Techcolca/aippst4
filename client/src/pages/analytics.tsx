@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CircleX, Clock, MessageSquare, BarChart, ArrowUp, ArrowDown, ArrowLeft } from "lucide-react";
+import { CircleX, Clock, MessageSquare, BarChart, ArrowUp, ArrowDown, ArrowLeft, Download } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/context/auth-context";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,9 @@ import {
   ConversationAnalytics, 
   IntegrationPerformance 
 } from "@shared/schema";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import autoTable from "jspdf-autotable";
 
 export default function Analytics() {
   const { user } = useAuth();
@@ -74,6 +77,271 @@ export default function Analytics() {
   // Verifica si hay algún error en las peticiones
   const hasError = statsError || conversationError || performanceError;
   const isLoading = isLoadingStats || isLoadingConversation || isLoadingPerformance;
+  
+  // Función para generar y descargar el informe PDF
+  const downloadPdfReport = async () => {
+    if (!stats || !conversationAnalytics || !integrationPerformance) return;
+    
+    try {
+      // Capturar gráficos como imágenes
+      const productsChartElement = document.getElementById('products-chart');
+      const topicsChartElement = document.getElementById('topics-chart');
+      const trendChartElement = document.getElementById('trend-chart');
+      const keywordsElement = document.getElementById('keywords-chart');
+      const integrationPerformanceElement = document.getElementById('integration-performance-chart');
+      
+      // Crear nuevo documento PDF
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const date = new Date().toLocaleDateString();
+      
+      // Título y metadatos del informe
+      doc.setFontSize(18);
+      doc.text(`Reporte de Analíticas AIPI`, pageWidth / 2, 20, { align: 'center' });
+      doc.setFontSize(10);
+      doc.text(`Generado: ${date}`, pageWidth / 2, 28, { align: 'center' });
+      doc.setLineWidth(0.5);
+      doc.line(15, 35, pageWidth - 15, 35);
+      
+      // Resumen de estadísticas
+      doc.setFontSize(14);
+      doc.text('Resumen', 15, 45);
+      
+      const summaryData = [
+        ['Conversaciones Totales', dashboardStats.totalConversations || 0],
+        ['Tasa de Resolución', `${formatPercentage(dashboardStats.resolutionRate)}`],
+        ['Tiempo Promedio de Respuesta', formatTime(dashboardStats.averageResponseTime)],
+      ];
+      
+      // Añadir tabla de resumen
+      autoTable(doc, {
+        head: [['Métrica', 'Valor']],
+        body: summaryData,
+        startY: 50,
+        theme: 'grid',
+        styles: { fontSize: 10 },
+        headStyles: { fillColor: [66, 66, 66] }
+      });
+      
+      // Obtener posición después de la tabla
+      let lastY = 120;
+      
+      // Añadir gráfico de productos más demandados
+      if (productsChartElement) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Productos y Servicios Más Demandados', 15, lastY);
+          
+          const productsCanvas = await html2canvas(productsChartElement);
+          const productsImgData = productsCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            productsImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 15;
+        } catch (error) {
+          console.error('Error al capturar gráfico de productos:', error);
+          
+          // Mostrar datos en forma de tabla si falla la captura del gráfico
+          if (conversationAnalytics?.topProducts && conversationAnalytics.topProducts.length > 0) {
+            const productsData = conversationAnalytics.topProducts.map(item => [item.name, item.count]);
+            
+            autoTable(doc, {
+              head: [['Producto', 'Menciones']],
+              body: productsData,
+              startY: lastY + 5,
+              theme: 'grid',
+              styles: { fontSize: 10 },
+              headStyles: { fillColor: [66, 66, 66] }
+            });
+            lastY += 50; // Estimación después de tabla
+          } else {
+            doc.setFontSize(10);
+            doc.text('No hay datos de productos disponibles.', 15, lastY + 5);
+            lastY += 10;
+          }
+        }
+      }
+      
+      // Si no hay espacio suficiente, nueva página
+      if (lastY > pageHeight - 100) {
+        doc.addPage();
+        lastY = 20;
+      }
+      
+      // Añadir gráfico de temas más discutidos
+      if (topicsChartElement) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Temas Más Discutidos', 15, lastY);
+          
+          const topicsCanvas = await html2canvas(topicsChartElement);
+          const topicsImgData = topicsCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            topicsImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 15;
+        } catch (error) {
+          console.error('Error al capturar gráfico de temas:', error);
+          
+          // Mostrar datos en forma de tabla si falla la captura del gráfico
+          if (conversationAnalytics?.topTopics && conversationAnalytics.topTopics.length > 0) {
+            const topicsData = conversationAnalytics.topTopics.map(item => [item.topic, item.sentiment]);
+            
+            autoTable(doc, {
+              head: [['Tema', 'Sentimiento']],
+              body: topicsData,
+              startY: lastY + 5,
+              theme: 'grid',
+              styles: { fontSize: 10 },
+              headStyles: { fillColor: [66, 66, 66] }
+            });
+            lastY += 50;
+          } else {
+            doc.setFontSize(10);
+            doc.text('No hay datos de temas disponibles.', 15, lastY + 5);
+            lastY += 10;
+          }
+        }
+      }
+      
+      // Nueva página para tendencia y palabras clave
+      doc.addPage();
+      lastY = 20;
+      
+      // Añadir gráfico de tendencia de conversaciones
+      if (trendChartElement) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Tendencia de Conversaciones', 15, lastY);
+          
+          const trendCanvas = await html2canvas(trendChartElement);
+          const trendImgData = trendCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            trendImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+          lastY += imgHeight + 15;
+        } catch (error) {
+          console.error('Error al capturar gráfico de tendencia:', error);
+          
+          // Mostrar datos en forma de tabla si falla la captura del gráfico
+          if (conversationAnalytics?.conversationsByDay && conversationAnalytics.conversationsByDay.length > 0) {
+            const trendData = conversationAnalytics.conversationsByDay.map(item => [item.date, item.count]);
+            
+            autoTable(doc, {
+              head: [['Fecha', 'Número de Conversaciones']],
+              body: trendData,
+              startY: lastY + 5,
+              theme: 'grid',
+              styles: { fontSize: 10 },
+              headStyles: { fillColor: [66, 66, 66] }
+            });
+            lastY += 50;
+          } else {
+            doc.setFontSize(10);
+            doc.text('No hay datos de tendencia disponibles.', 15, lastY + 5);
+            lastY += 10;
+          }
+        }
+      }
+      
+      // Si hay espacio, añadir rendimiento de integraciones
+      if (lastY < pageHeight - 100 && integrationPerformanceElement) {
+        try {
+          doc.setFontSize(14);
+          doc.text('Rendimiento de Integraciones', 15, lastY);
+          
+          const performanceCanvas = await html2canvas(integrationPerformanceElement);
+          const performanceImgData = performanceCanvas.toDataURL('image/png');
+          
+          // Ajustar tamaño para que quepa en la página
+          const imgWidth = 180;
+          const imgHeight = 100;
+          
+          doc.addImage(
+            performanceImgData, 
+            'PNG', 
+            15, // x
+            lastY + 5, // y
+            imgWidth, 
+            imgHeight
+          );
+          
+        } catch (error) {
+          console.error('Error al capturar gráfico de rendimiento:', error);
+          
+          // Mostrar datos en forma de tabla si falla la captura del gráfico
+          if (integrationPerformance && integrationPerformance.length > 0) {
+            const performanceData = integrationPerformance.map(item => [
+              item.integrationName || 'Desconocido',
+              item.conversationCount || 0,
+              item.visitorsCount || 0,
+              `${Math.round(item.resolutionRate || 0)}%`
+            ]);
+            
+            autoTable(doc, {
+              head: [['Integración', 'Conversaciones', 'Visitantes', 'Tasa de Resolución']],
+              body: performanceData,
+              startY: lastY + 5,
+              theme: 'grid',
+              styles: { fontSize: 9 },
+              headStyles: { fillColor: [66, 66, 66] }
+            });
+          } else {
+            doc.setFontSize(10);
+            doc.text('No hay datos de rendimiento disponibles.', 15, lastY + 5);
+          }
+        }
+      }
+      
+      // Añadir pie de página
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.text(`Página ${i} de ${pageCount} - AIPI Analytics`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+      }
+      
+      // Guardar el PDF
+      doc.save(`analytics_report_${date.replace(/\//g, '-')}.pdf`);
+    } catch (error) {
+      console.error('Error al generar PDF:', error);
+      alert('Hubo un error al generar el PDF. Por favor intente de nuevo.');
+    }
+  };
 
   return (
     <div className="container px-4 mx-auto py-8">

@@ -66,7 +66,7 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-[240px]">
+        <div className="h-[240px]" id="topics-chart">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
