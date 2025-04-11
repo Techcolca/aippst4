@@ -210,7 +210,7 @@ export default function DashboardTabs() {
                 </div>
                 {conversation.lastMessage && (
                   <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm">
-                    <span className="font-medium">Last message: </span>
+                    <span className="font-medium">{t("last_message", "Last message")}: </span>
                     {conversation.lastMessage.length > 100
                       ? conversation.lastMessage.substring(0, 100) + '...'
                       : conversation.lastMessage}
@@ -221,9 +221,9 @@ export default function DashboardTabs() {
           </div>
         ) : (
           <Card className="p-6 text-center">
-            <h3 className="text-lg font-medium mb-2">No conversations yet</h3>
+            <h3 className="text-lg font-medium mb-2">{t("no_conversations", "No conversations yet")}</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              When visitors interact with your chat widget, their conversations will appear here
+              {t("conversations_empty_message", "When visitors interact with your chat widget, their conversations will appear here")}
             </p>
           </Card>
         )}
@@ -259,21 +259,21 @@ export default function DashboardTabs() {
                   <div>
                     <h3 className="text-lg font-medium">{form.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {form.description || "No description"}
+                      {form.description || t("no_description", "No description")}
                     </p>
                   </div>
                 </div>
                 <div className="flex-grow"></div>
                 <div className="flex justify-between mt-4">
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {form.responseCount || 0} responses
+                    {form.responseCount || 0} {t("responses", "responses")}
                   </div>
                   <div className="flex space-x-2">
                     <Link href={`/forms/${form.id}/responses`}>
-                      <Button size="sm" variant="outline">Responses</Button>
+                      <Button size="sm" variant="outline">{t("responses", "Responses")}</Button>
                     </Link>
                     <Link href={`/forms/${form.id}/edit`}>
-                      <Button size="sm">Edit</Button>
+                      <Button size="sm">{t("edit", "Edit")}</Button>
                     </Link>
                   </div>
                 </div>
@@ -282,12 +282,12 @@ export default function DashboardTabs() {
           </div>
         ) : (
           <Card className="p-6 text-center">
-            <h3 className="text-lg font-medium mb-2">No forms yet</h3>
+            <h3 className="text-lg font-medium mb-2">{t("no_forms", "No forms yet")}</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Create a new form to collect information from your visitors
+              {t("forms_empty_message", "Create a new form to collect information from your visitors")}
             </p>
             <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/create-form")}>
-              Create Form
+              {t("create_form", "Create Form")}
             </Button>
           </Card>
         )}
@@ -330,12 +330,12 @@ export default function DashboardTabs() {
                             ? 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                             : 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
                       }`}>
-                        {automation.status === 'active' ? 'Active' : 
-                         automation.status === 'inactive' ? 'Inactive' : 'Testing'}
+                        {automation.status === 'active' ? t("active", "Active") : 
+                         automation.status === 'inactive' ? t("inactive", "Inactive") : t("testing", "Testing")}
                       </span>
                     </div>
                     <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      {automation.description || "No description"}
+                      {automation.description || t("no_description", "No description")}
                     </p>
                   </div>
                 </div>
@@ -343,7 +343,7 @@ export default function DashboardTabs() {
                 <div className="flex-grow"></div>
                 <div className="flex justify-end mt-4 space-x-2">
                   <Link href={`/automations/${automation.id}/logs`}>
-                    <Button size="sm" variant="outline">View Logs</Button>
+                    <Button size="sm" variant="outline">{t("view_logs", "View Logs")}</Button>
                   </Link>
                   <Link href={`/automations/${automation.id}/edit`}>
                     <Button size="sm">Edit</Button>
