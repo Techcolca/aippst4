@@ -42,8 +42,8 @@ import {
   Area,
 } from "recharts";
 import { jsPDF } from "jspdf";
-import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
+import autoTable from 'jspdf-autotable';
 
 // Colores para los gráficos
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
@@ -130,7 +130,7 @@ export default function IntegrationAnalytics() {
     ];
     
     // Añadir tabla de resumen
-    (doc as any).autoTable({
+    autoTable(doc, {
       head: [['Métrica', 'Valor']],
       body: summaryData,
       startY: 50,
@@ -141,22 +141,23 @@ export default function IntegrationAnalytics() {
     
     // Añadir tendencia de conversaciones
     doc.setFontSize(14);
-    doc.text('Tendencia de Conversaciones', 15, (doc as any).lastAutoTable.finalY + 20);
+    let lastY = 140; // Estimación después de la primera tabla
+    doc.text('Tendencia de Conversaciones', 15, lastY);
     
     if (stats.conversationTrend && stats.conversationTrend.length > 0) {
       const trendData = stats.conversationTrend.map(item => [item.date, item.count]);
       
-      (doc as any).autoTable({
+      autoTable(doc, {
         head: [['Fecha', 'Número de Conversaciones']],
         body: trendData,
-        startY: (doc as any).lastAutoTable.finalY + 25,
+        startY: lastY + 5,
         theme: 'grid',
         styles: { fontSize: 10 },
         headStyles: { fillColor: [66, 66, 66] }
       });
     } else {
       doc.setFontSize(10);
-      doc.text('No hay datos de tendencia disponibles.', 15, (doc as any).lastAutoTable.finalY + 25);
+      doc.text('No hay datos de tendencia disponibles.', 15, lastY + 5);
     }
     
     // Nueva página para productos y temas
@@ -169,7 +170,7 @@ export default function IntegrationAnalytics() {
     if (stats.topProducts && stats.topProducts.length > 0) {
       const productsData = stats.topProducts.map(item => [item.name, item.frequency]);
       
-      (doc as any).autoTable({
+      autoTable(doc, {
         head: [['Producto', 'Menciones']],
         body: productsData,
         startY: 25,
@@ -184,22 +185,23 @@ export default function IntegrationAnalytics() {
     
     // Añadir temas más discutidos
     doc.setFontSize(14);
-    doc.text('Temas más Discutidos', 15, (doc as any).lastAutoTable.finalY + 20);
+    let topicsY = 140; // Estimación
+    doc.text('Temas más Discutidos', 15, topicsY);
     
     if (stats.topTopics && stats.topTopics.length > 0) {
       const topicsData = stats.topTopics.map(item => [item.topic, item.frequency]);
       
-      (doc as any).autoTable({
+      autoTable(doc, {
         head: [['Tema', 'Menciones']],
         body: topicsData,
-        startY: (doc as any).lastAutoTable.finalY + 25,
+        startY: topicsY + 5,
         theme: 'grid',
         styles: { fontSize: 10 },
         headStyles: { fillColor: [66, 66, 66] }
       });
     } else {
       doc.setFontSize(10);
-      doc.text('No hay datos de temas disponibles.', 15, (doc as any).lastAutoTable.finalY + 25);
+      doc.text('No hay datos de temas disponibles.', 15, topicsY + 5);
     }
     
     // Añadir pie de página
