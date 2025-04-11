@@ -1885,6 +1885,7 @@ export default function AdminPanel() {
                 <Input 
                   id="edit-password" 
                   type="password"
+                  autoComplete="new-password"
                   value={editUserData.password}
                   onChange={(e) => setEditUserData({...editUserData, password: e.target.value})}
                   placeholder="Dejar en blanco para mantener actual"
