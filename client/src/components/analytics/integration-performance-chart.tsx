@@ -107,6 +107,9 @@ export default function IntegrationPerformanceChart({ data, loading = false }: I
         <p className="text-sm text-gray-500">
           Comparativa de las métricas de rendimiento entre tus integraciones
         </p>
+        <p className="text-xs text-gray-500 mt-1">
+          <strong>¿Qué significa?</strong> Las barras muestran el rendimiento de cada integración en 3 métricas: tiempo de respuesta (azul), tasa de resolución (verde) y satisfacción del usuario (naranja). Valores más altos indican mejor rendimiento.
+        </p>
       </CardHeader>
       <CardContent>
         <div className="h-[300px]" id="integration-performance-chart">

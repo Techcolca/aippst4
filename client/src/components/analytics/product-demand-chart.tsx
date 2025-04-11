@@ -59,6 +59,9 @@ export default function ProductDemandChart({ data, loading = false }: ProductDem
         <p className="text-sm text-gray-500">
           Análisis de los productos y servicios más consultados por los visitantes
         </p>
+        <p className="text-xs text-gray-500 mt-1">
+          <strong>¿Qué significa?</strong> Las barras más largas indican los productos o servicios mencionados con mayor frecuencia en las conversaciones, lo que sugiere mayor interés o demanda.
+        </p>
       </CardHeader>
       <CardContent>
         <div className="h-[240px]" id="products-chart">

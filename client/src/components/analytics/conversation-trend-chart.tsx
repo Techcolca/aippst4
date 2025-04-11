@@ -59,6 +59,9 @@ export default function ConversationTrendChart({ data, loading = false }: Conver
         <p className="text-sm text-gray-500">
           Evolución del número de conversaciones durante los últimos 30 días
         </p>
+        <p className="text-xs text-gray-500 mt-1">
+          <strong>¿Qué significa?</strong> La línea muestra cómo cambia el volumen de conversaciones a lo largo del tiempo. Los picos indican días con mayor actividad, útil para identificar patrones y tendencias.
+        </p>
       </CardHeader>
       <CardContent>
         <div className="h-[240px]" id="trend-chart">

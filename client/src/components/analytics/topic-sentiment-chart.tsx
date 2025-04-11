@@ -64,6 +64,9 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
         <p className="text-sm text-gray-500">
           Análisis de los temas más discutidos y el sentimiento asociado
         </p>
+        <p className="text-xs text-gray-500 mt-1">
+          <strong>¿Qué significa?</strong> Las barras muestran la frecuencia de cada tema y el color indica el sentimiento (verde = positivo, amarillo = neutro, rojo = negativo). El porcentaje a la derecha muestra el nivel de satisfacción con ese tema.
+        </p>
       </CardHeader>
       <CardContent>
         <div className="h-[240px]" id="topics-chart">

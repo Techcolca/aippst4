@@ -134,6 +134,9 @@ export default function KeywordCloud({ data, loading = false }: KeywordCloudProp
         <p className="text-sm text-gray-500">
           Términos más frecuentes en las conversaciones con los visitantes
         </p>
+        <p className="text-xs text-gray-500 mt-1">
+          <strong>¿Qué significa?</strong> Las palabras más grandes aparecen con mayor frecuencia en las conversaciones. Esto ayuda a identificar los términos e intereses principales de los visitantes.
+        </p>
       </CardHeader>
       <CardContent>
         <div className="h-[240px] w-full relative" id="keywords-chart">
