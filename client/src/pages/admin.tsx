@@ -222,6 +222,7 @@ export default function AdminPanel() {
   
   const [editSubscriptionData, setEditSubscriptionData] = useState({
     userId: 0,
+    username: "",
     tier: "",
     status: "active",
     interactionsLimit: 0,
@@ -581,9 +582,10 @@ export default function AdminPanel() {
   };
   
   // Preparar la edición de una suscripción
-  const handlePrepareEditSubscription = (userId: number, subscription?: UserDetails['subscriptions'][0]) => {
+  const handlePrepareEditSubscription = (userId: number, username: string = "", subscription?: UserDetails['subscriptions'][0]) => {
     setEditSubscriptionData({
       userId,
+      username,
       tier: subscription?.tier || "free",
       status: subscription?.status || "active",
       interactionsLimit: subscription?.interactions_limit || 0,
@@ -1142,7 +1144,7 @@ export default function AdminPanel() {
                                     <Button 
                                       variant="ghost" 
                                       size="sm"
-                                      onClick={() => handlePrepareEditSubscription(user.id)}
+                                      onClick={() => handlePrepareEditSubscription(user.id, user.username)}
                                     >
                                       <CreditCard className="h-4 w-4" />
                                     </Button>
@@ -1233,7 +1235,7 @@ export default function AdminPanel() {
                                 <Button 
                                   variant="outline" 
                                   size="sm"
-                                  onClick={() => handlePrepareEditSubscription(user.id, {
+                                  onClick={() => handlePrepareEditSubscription(user.id, user.username, {
                                     id: 0,
                                     tier: user.tier,
                                     status: user.status,
