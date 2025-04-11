@@ -38,13 +38,13 @@ export default function DashboardTabs() {
       <div>
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h2 className="text-xl font-semibold">Website Integrations</h2>
+            <h2 className="text-xl font-semibold">{t("integrations")}</h2>
             <p className="text-gray-600 dark:text-gray-400">
-              Create and manage website integrations for AIPI.
+              {t("integrations_description", "Create and manage website integrations for AIPI.")}
             </p>
           </div>
           <Button onClick={() => navigate("/create-integration")}>
-            Create Integration
+            {t("create_integration", "Create Integration")}
           </Button>
         </div>
 
@@ -61,12 +61,12 @@ export default function DashboardTabs() {
         ) : (
           <>
             <Card className="p-6 text-center">
-              <h3 className="text-lg font-medium mb-2">No integrations yet</h3>
+              <h3 className="text-lg font-medium mb-2">{t("no_integrations", "No integrations yet")}</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                Add a new website integration to connect AIPI with your site
+                {t("add_new_integration_desc", "Add a new website integration to connect AIPI with your site")}
               </p>
               <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/create-integration")}>
-                Create Integration
+                {t("create_integration", "Create Integration")}
               </Button>
             </Card>
           </>
@@ -84,8 +84,8 @@ export default function DashboardTabs() {
   const renderSettingsTab = () => {
     return (
       <div>
-        <h2 className="text-xl font-semibold mb-4">Settings</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Configure your AIPI assistant settings.</p>
+        <h2 className="text-xl font-semibold mb-4">{t("settings")}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{t("settings_description", "Configure your AIPI assistant settings.")}</p>
         
         {isLoadingSettings ? (
           <div className="flex items-center justify-center h-60">
@@ -177,8 +177,8 @@ export default function DashboardTabs() {
   const renderConversationsTab = () => {
     return (
       <div>
-        <h2 className="text-xl font-semibold mb-4">Conversations</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Review and manage conversations with your visitors.</p>
+        <h2 className="text-xl font-semibold mb-4">{t("conversations")}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{t("conversations_description", "Review and manage conversations with your visitors.")}</p>
         
         {isLoadingConversations ? (
           <div className="flex items-center justify-center h-60">
@@ -240,11 +240,11 @@ export default function DashboardTabs() {
   const renderFormsTab = () => {
     return (
       <div>
-        <h2 className="text-xl font-semibold mb-4">Forms</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Create and manage your forms.</p>
+        <h2 className="text-xl font-semibold mb-4">{t("forms")}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{t("forms_description", "Create and manage your forms.")}</p>
         
         <div className="flex justify-end mb-4">
-          <Button onClick={() => navigate("/create-form")}>Create Form</Button>
+          <Button onClick={() => navigate("/create-form")}>{t("create_form", "Create Form")}</Button>
         </div>
         
         {isLoadingForms ? (
@@ -304,11 +304,11 @@ export default function DashboardTabs() {
   const renderAutomationTab = () => {
     return (
       <div>
-        <h2 className="text-xl font-semibold mb-4">Task Automation</h2>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">Set up automated tasks and workflows powered by AI.</p>
+        <h2 className="text-xl font-semibold mb-4">{t("task_automation")}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">{t("task_automation_description", "Set up automated tasks and workflows powered by AI.")}</p>
         
         <div className="flex justify-end mb-4">
-          <Button onClick={() => navigate("/automations/create")}>Create Automation</Button>
+          <Button onClick={() => navigate("/automations/create")}>{t("create_automation", "Create Automation")}</Button>
         </div>
         
         {isLoadingAutomations ? (
@@ -371,11 +371,11 @@ export default function DashboardTabs() {
     <div className="space-y-4">
       <Tabs defaultValue="integrations" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-4">
-          <TabsTrigger value="automation">Task Automation</TabsTrigger>
-          <TabsTrigger value="conversations">Conversations</TabsTrigger>
-          <TabsTrigger value="integrations">Integrations</TabsTrigger>
-          <TabsTrigger value="forms">Forms</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsTrigger value="automation">{t("task_automation")}</TabsTrigger>
+          <TabsTrigger value="conversations">{t("conversations")}</TabsTrigger>
+          <TabsTrigger value="integrations">{t("integrations")}</TabsTrigger>
+          <TabsTrigger value="forms">{t("forms")}</TabsTrigger>
+          <TabsTrigger value="settings">{t("settings")}</TabsTrigger>
         </TabsList>
         
         <TabsContent value="automation">{renderAutomationTab()}</TabsContent>
