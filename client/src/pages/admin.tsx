@@ -1440,7 +1440,7 @@ export default function AdminPanel() {
               <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
               <p className="text-lg text-gray-600 dark:text-gray-400">Cargando detalles...</p>
             </div>
-          ) : userDetails ? (
+          ) : userDetails && userDetails.user ? (
             <div className="space-y-6">
               {/* Información del usuario */}
               <Card>
@@ -1489,14 +1489,21 @@ export default function AdminPanel() {
                 <CardHeader className="pb-2">
                   <div className="flex justify-between items-center">
                     <CardTitle className="text-lg">Suscripciones</CardTitle>
-                    <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id, userDetails.subscriptions[0])}>
-                      <CreditCard className="h-4 w-4 mr-2" />
-                      Editar suscripción
-                    </Button>
+                    {userDetails.subscriptions && userDetails.subscriptions.length > 0 ? (
+                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id, userDetails.subscriptions[0])}>
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        Editar suscripción
+                      </Button>
+                    ) : (
+                      <Button variant="outline" size="sm" onClick={() => handlePrepareEditSubscription(userDetails.user.id)}>
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        Agregar suscripción
+                      </Button>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {userDetails.subscriptions.length > 0 ? (
+                  {userDetails.subscriptions && userDetails.subscriptions.length > 0 ? (
                     <div className="space-y-4">
                       {userDetails.subscriptions.map((sub) => (
                         <div key={sub.id} className="border rounded-lg p-4">
@@ -1556,23 +1563,23 @@ export default function AdminPanel() {
                   <div className="grid grid-cols-3 gap-4">
                     <div className="border rounded-lg p-4 text-center">
                       <p className="text-sm text-gray-500">Conversaciones</p>
-                      <p className="text-2xl font-bold">{userDetails.usage.total_conversations || 0}</p>
+                      <p className="text-2xl font-bold">{userDetails.usage?.total_conversations || 0}</p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {userDetails.usage.resolved_conversations || 0} resueltas
+                        {userDetails.usage?.resolved_conversations || 0} resueltas
                       </p>
                     </div>
                     <div className="border rounded-lg p-4 text-center">
                       <p className="text-sm text-gray-500">Mensajes</p>
-                      <p className="text-2xl font-bold">{userDetails.usage.total_messages || 0}</p>
+                      <p className="text-2xl font-bold">{userDetails.usage?.total_messages || 0}</p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {userDetails.usage.user_messages || 0} usuarios / {userDetails.usage.assistant_messages || 0} AI
+                        {userDetails.usage?.user_messages || 0} usuarios / {userDetails.usage?.assistant_messages || 0} AI
                       </p>
                     </div>
                     <div className="border rounded-lg p-4 text-center">
                       <p className="text-sm text-gray-500">Tokens estimados</p>
-                      <p className="text-2xl font-bold">{userDetails.usage.estimated_tokens?.toLocaleString() || 0}</p>
+                      <p className="text-2xl font-bold">{userDetails.usage?.estimated_tokens?.toLocaleString() || 0}</p>
                       <p className="text-xs text-gray-500 mt-1">
-                        ${(userDetails.usage.estimated_tokens / 1000000 * 5).toFixed(2)} estimados
+                        ${((userDetails.usage?.estimated_tokens || 0) / 1000000 * 5).toFixed(2)} estimados
                       </p>
                     </div>
                   </div>
@@ -1582,10 +1589,10 @@ export default function AdminPanel() {
               {/* Integraciones */}
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Integraciones ({userDetails.integrations.length})</CardTitle>
+                  <CardTitle className="text-lg">Integraciones ({userDetails.integrations?.length || 0})</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {userDetails.integrations.length > 0 ? (
+                  {userDetails.integrations && userDetails.integrations.length > 0 ? (
                     <div className="space-y-4">
                       {userDetails.integrations.map((integration) => (
                         <div key={integration.id} className="border rounded-lg p-4">
@@ -1624,10 +1631,10 @@ export default function AdminPanel() {
               {/* Conversaciones recientes */}
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Conversaciones recientes ({userDetails.recentConversations.length})</CardTitle>
+                  <CardTitle className="text-lg">Conversaciones recientes ({userDetails.recentConversations?.length || 0})</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {userDetails.recentConversations.length > 0 ? (
+                  {userDetails.recentConversations && userDetails.recentConversations.length > 0 ? (
                     <div className="overflow-x-auto">
                       <Table>
                         <TableHeader>
