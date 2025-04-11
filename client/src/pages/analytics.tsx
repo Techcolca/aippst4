@@ -313,7 +313,7 @@ export default function Analytics() {
             ]);
             
             autoTable(doc, {
-              head: [['Integración', 'Conversaciones', 'Visitantes', 'Tasa de Resolución']],
+              head: [['Integración', 'Conversaciones', 'Tasa de Resolución', 'Satisfacción']],
               body: performanceData,
               startY: lastY + 5,
               theme: 'grid',
@@ -358,7 +358,7 @@ export default function Analytics() {
               onClick={downloadPdfReport}
               variant="default" 
               className="flex items-center gap-2"
-              disabled={isLoading || hasError}
+              disabled={Boolean(isLoading || hasError)}
             >
               <Download className="w-4 h-4" />
               {t("export_pdf")}
