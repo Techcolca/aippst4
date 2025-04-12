@@ -148,6 +148,7 @@ export class MemStorage implements IStorage {
   private forms: Map<number, Form>;
   private formTemplates: Map<number, FormTemplate>;
   private formResponses: Map<number, FormResponse>;
+  private appointments: Map<number, Appointment>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -162,6 +163,7 @@ export class MemStorage implements IStorage {
   private formIdCounter: number;
   private formTemplateIdCounter: number;
   private formResponseIdCounter: number;
+  private appointmentIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -177,6 +179,7 @@ export class MemStorage implements IStorage {
     this.forms = new Map();
     this.formTemplates = new Map();
     this.formResponses = new Map();
+    this.appointments = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -191,6 +194,7 @@ export class MemStorage implements IStorage {
     this.formIdCounter = 1;
     this.formTemplateIdCounter = 1;
     this.formResponseIdCounter = 1;
+    this.appointmentIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -1199,6 +1203,119 @@ export class MemStorage implements IStorage {
     for (const response of responsesToDelete) {
       this.formResponses.delete(response.id);
     }
+  }
+  
+  // Appointment methods
+  async getAppointments(integrationId: number): Promise<Appointment[]> {
+    return Array.from(this.appointments.values())
+      .filter(appointment => appointment.integrationId === integrationId)
+      .sort((a, b) => {
+        // Ordenar por fecha/hora de la cita
+        const dateComparison = new Date(a.appointmentDate + ' ' + a.appointmentTime).getTime() - 
+                              new Date(b.appointmentDate + ' ' + b.appointmentTime).getTime();
+        return dateComparison;
+      });
+  }
+  
+  async getAppointmentsByConversation(conversationId: number): Promise<Appointment[]> {
+    return Array.from(this.appointments.values())
+      .filter(appointment => appointment.conversationId === conversationId)
+      .sort((a, b) => {
+        // Ordenar por fecha/hora de la cita
+        const dateComparison = new Date(a.appointmentDate + ' ' + a.appointmentTime).getTime() - 
+                              new Date(b.appointmentDate + ' ' + b.appointmentTime).getTime();
+        return dateComparison;
+      });
+  }
+  
+  async getAppointment(id: number): Promise<Appointment | undefined> {
+    return this.appointments.get(id);
+  }
+  
+  async createAppointment(appointmentData: InsertAppointment): Promise<Appointment> {
+    const id = this.appointmentIdCounter++;
+    const newAppointment: Appointment = {
+      ...appointmentData,
+      id,
+      createdAt: new Date()
+    };
+    this.appointments.set(id, newAppointment);
+    return newAppointment;
+  }
+  
+  async updateAppointment(id: number, data: Partial<Appointment>): Promise<Appointment> {
+    const appointment = this.appointments.get(id);
+    if (!appointment) {
+      throw new Error(`Appointment with id ${id} not found`);
+    }
+    
+    const updatedAppointment = { ...appointment, ...data };
+    this.appointments.set(id, updatedAppointment);
+    return updatedAppointment;
+  }
+  
+  async updateAppointmentStatus(id: number, status: string): Promise<Appointment> {
+    const appointment = this.appointments.get(id);
+    if (!appointment) {
+      throw new Error(`Appointment with id ${id} not found`);
+    }
+    
+    const updatedAppointment = { ...appointment, status };
+    this.appointments.set(id, updatedAppointment);
+    return updatedAppointment;
+  }
+  
+  async updateCalendarEventId(id: number, calendarEventId: string, calendarProvider: string): Promise<Appointment> {
+    const appointment = this.appointments.get(id);
+    if (!appointment) {
+      throw new Error(`Appointment with id ${id} not found`);
+    }
+    
+    const updatedAppointment = { 
+      ...appointment, 
+      calendarEventId,
+      calendarProvider
+    };
+    this.appointments.set(id, updatedAppointment);
+    return updatedAppointment;
+  }
+  
+  async markReminderSent(id: number): Promise<Appointment> {
+    const appointment = this.appointments.get(id);
+    if (!appointment) {
+      throw new Error(`Appointment with id ${id} not found`);
+    }
+    
+    const updatedAppointment = { ...appointment, reminderSent: true };
+    this.appointments.set(id, updatedAppointment);
+    return updatedAppointment;
+  }
+  
+  async deleteAppointment(id: number): Promise<void> {
+    if (!this.appointments.has(id)) {
+      throw new Error(`Appointment with id ${id} not found`);
+    }
+    
+    this.appointments.delete(id);
+  }
+  
+  async getUpcomingAppointmentsForReminders(): Promise<Appointment[]> {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    
+    const dayAfterTomorrow = new Date(tomorrow);
+    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1);
+    
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    
+    return Array.from(this.appointments.values())
+      .filter(appointment => {
+        // Filtrar citas para mañana que no han recibido recordatorio
+        return appointment.appointmentDate === tomorrowStr && 
+               appointment.status !== 'cancelled' &&
+               !appointment.reminderSent;
+      });
   }
 
   // Dashboard methods

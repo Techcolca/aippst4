@@ -3897,5 +3897,387 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   const httpServer = createServer(app);
   
+  // ================ Appointment Routes ================
+  // GET appointments for an integration
+  app.get("/api/appointments/integration/:integrationId", authenticateJWT, async (req, res) => {
+    try {
+      const integrationId = parseInt(req.params.integrationId);
+      
+      // Verificar que la integración pertenece al usuario
+      const integration = await storage.getIntegration(integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para acceder a esta integración" });
+      }
+      
+      const appointments = await storage.getAppointments(integrationId);
+      res.json(appointments);
+    } catch (error) {
+      console.error("Error al obtener citas:", error);
+      res.status(500).json({ message: "Error al obtener citas" });
+    }
+  });
+  
+  // GET appointments for a specific conversation
+  app.get("/api/appointments/conversation/:conversationId", authenticateJWT, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.conversationId);
+      
+      // Verificar que la conversación pertenece a una integración del usuario
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversación no encontrada" });
+      }
+      
+      const integration = await storage.getIntegration(conversation.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para acceder a esta conversación" });
+      }
+      
+      const appointments = await storage.getAppointmentsByConversation(conversationId);
+      res.json(appointments);
+    } catch (error) {
+      console.error("Error al obtener citas por conversación:", error);
+      res.status(500).json({ message: "Error al obtener citas por conversación" });
+    }
+  });
+  
+  // GET specific appointment
+  app.get("/api/appointments/:id", authenticateJWT, async (req, res) => {
+    try {
+      const appointmentId = parseInt(req.params.id);
+      const appointment = await storage.getAppointment(appointmentId);
+      
+      if (!appointment) {
+        return res.status(404).json({ message: "Cita no encontrada" });
+      }
+      
+      // Verificar que la cita está asociada a una integración del usuario
+      const integration = await storage.getIntegration(appointment.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para acceder a esta cita" });
+      }
+      
+      res.json(appointment);
+    } catch (error) {
+      console.error("Error al obtener detalles de la cita:", error);
+      res.status(500).json({ message: "Error al obtener detalles de la cita" });
+    }
+  });
+  
+  // POST create new appointment
+  app.post("/api/appointments", authenticateJWT, async (req, res) => {
+    try {
+      const {
+        integrationId,
+        conversationId,
+        visitorName,
+        visitorEmail,
+        appointmentDate,
+        appointmentTime,
+        duration,
+        purpose,
+        notes,
+        status,
+        calendarProvider
+      } = req.body;
+      
+      // Validar datos mínimos requeridos
+      if (!integrationId || !visitorName || !visitorEmail || !appointmentDate || !appointmentTime || !purpose) {
+        return res.status(400).json({ message: "Faltan datos obligatorios para crear la cita" });
+      }
+      
+      // Verificar que la integración pertenece al usuario
+      const integration = await storage.getIntegration(integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para crear citas en esta integración" });
+      }
+      
+      // Crear la cita
+      const newAppointment = await storage.createAppointment({
+        integrationId,
+        conversationId: conversationId || null,
+        visitorName,
+        visitorEmail,
+        appointmentDate,
+        appointmentTime,
+        duration: duration || 30, // Duración predeterminada de 30 minutos
+        purpose,
+        notes: notes || null,
+        status: status || 'pending',
+        calendarProvider: calendarProvider || null,
+        calendarEventId: null,
+        reminderSent: false,
+        createdAt: new Date()
+      });
+      
+      // Obtener la configuración del usuario para las notificaciones
+      const settings = await storage.getSettings(req.userId);
+      
+      // Sincronizar con el servicio de calendario si se especificó un proveedor
+      if (calendarProvider) {
+        try {
+          let calendarEventId = null;
+          
+          // Aquí simularíamos la obtención del token de OAuth del usuario.
+          // En una implementación real, esto vendría de una tabla de tokens OAuth o similar
+          const mockAccessToken = "mock_access_token";
+          
+          if (calendarProvider === 'google') {
+            calendarEventId = await createGoogleCalendarEvent(
+              newAppointment, 
+              integration.userId.toString(), 
+              mockAccessToken
+            );
+          } else if (calendarProvider === 'outlook') {
+            calendarEventId = await createOutlookCalendarEvent(
+              newAppointment, 
+              integration.userId.toString(), 
+              mockAccessToken
+            );
+          }
+          
+          if (calendarEventId) {
+            // Actualizar la cita con el ID del evento del calendario
+            await storage.updateCalendarEventId(newAppointment.id, calendarEventId, calendarProvider);
+            newAppointment.calendarEventId = calendarEventId;
+          }
+        } catch (calendarError) {
+          console.error("Error al sincronizar con el calendario:", calendarError);
+          // Continuamos aunque falle la sincronización del calendario
+        }
+      }
+      
+      // Enviar confirmación por correo electrónico si está configurado SendGrid
+      if (process.env.SENDGRID_API_KEY) {
+        try {
+          const fromEmail = settings.emailNotificationAddress || 'info@example.com';
+          const companyName = settings.assistantName || 'AIPI';
+          
+          await sendAppointmentConfirmation(newAppointment, fromEmail, companyName);
+        } catch (emailError) {
+          console.error("Error al enviar confirmación por correo:", emailError);
+          // Continuamos aunque falle el envío del correo
+        }
+      } else {
+        console.log("SendGrid API Key no configurada, no se envió email de confirmación");
+      }
+      
+      res.status(201).json(newAppointment);
+    } catch (error) {
+      console.error("Error al crear cita:", error);
+      res.status(500).json({ message: "Error al crear cita" });
+    }
+  });
+  
+  // PATCH update appointment 
+  app.patch("/api/appointments/:id", authenticateJWT, async (req, res) => {
+    try {
+      const appointmentId = parseInt(req.params.id);
+      const appointment = await storage.getAppointment(appointmentId);
+      
+      if (!appointment) {
+        return res.status(404).json({ message: "Cita no encontrada" });
+      }
+      
+      // Verificar que la cita está asociada a una integración del usuario
+      const integration = await storage.getIntegration(appointment.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para modificar esta cita" });
+      }
+      
+      // Actualizar la cita
+      const updatedAppointment = await storage.updateAppointment(appointmentId, req.body);
+      
+      // Si hay cambios en la fecha o la hora y existe un ID de evento de calendario, actualizar el evento
+      if ((req.body.appointmentDate || req.body.appointmentTime) && appointment.calendarEventId && appointment.calendarProvider) {
+        try {
+          // Aquí simularíamos la obtención del token de OAuth del usuario.
+          const mockAccessToken = "mock_access_token";
+          
+          if (appointment.calendarProvider === 'google') {
+            await updateGoogleCalendarEvent(
+              updatedAppointment, 
+              appointment.calendarEventId, 
+              mockAccessToken
+            );
+          } else if (appointment.calendarProvider === 'outlook') {
+            await updateOutlookCalendarEvent(
+              updatedAppointment, 
+              appointment.calendarEventId, 
+              mockAccessToken
+            );
+          }
+        } catch (calendarError) {
+          console.error("Error al actualizar evento en el calendario:", calendarError);
+          // Continuamos aunque falle la actualización del calendario
+        }
+      }
+      
+      res.json(updatedAppointment);
+    } catch (error) {
+      console.error("Error al actualizar cita:", error);
+      res.status(500).json({ message: "Error al actualizar cita" });
+    }
+  });
+  
+  // PATCH update appointment status
+  app.patch("/api/appointments/:id/status", authenticateJWT, async (req, res) => {
+    try {
+      const appointmentId = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (!status || !['pending', 'confirmed', 'cancelled', 'completed'].includes(status)) {
+        return res.status(400).json({ message: "Estado no válido" });
+      }
+      
+      const appointment = await storage.getAppointment(appointmentId);
+      
+      if (!appointment) {
+        return res.status(404).json({ message: "Cita no encontrada" });
+      }
+      
+      // Verificar que la cita está asociada a una integración del usuario
+      const integration = await storage.getIntegration(appointment.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para modificar esta cita" });
+      }
+      
+      // Actualizar el estado de la cita
+      const updatedAppointment = await storage.updateAppointmentStatus(appointmentId, status);
+      
+      // Si se cancela la cita y existe un ID de evento de calendario, cancelar el evento
+      if (status === 'cancelled' && appointment.calendarEventId && appointment.calendarProvider) {
+        try {
+          // Aquí simularíamos la obtención del token de OAuth del usuario.
+          const mockAccessToken = "mock_access_token";
+          
+          if (appointment.calendarProvider === 'google') {
+            await cancelGoogleCalendarEvent(
+              appointment.calendarEventId, 
+              mockAccessToken
+            );
+          } else if (appointment.calendarProvider === 'outlook') {
+            await cancelOutlookCalendarEvent(
+              appointment.calendarEventId, 
+              mockAccessToken
+            );
+          }
+        } catch (calendarError) {
+          console.error("Error al cancelar evento en el calendario:", calendarError);
+          // Continuamos aunque falle la cancelación en el calendario
+        }
+      }
+      
+      res.json(updatedAppointment);
+    } catch (error) {
+      console.error("Error al actualizar estado de la cita:", error);
+      res.status(500).json({ message: "Error al actualizar estado de la cita" });
+    }
+  });
+  
+  // DELETE appointment
+  app.delete("/api/appointments/:id", authenticateJWT, async (req, res) => {
+    try {
+      const appointmentId = parseInt(req.params.id);
+      const appointment = await storage.getAppointment(appointmentId);
+      
+      if (!appointment) {
+        return res.status(404).json({ message: "Cita no encontrada" });
+      }
+      
+      // Verificar que la cita está asociada a una integración del usuario
+      const integration = await storage.getIntegration(appointment.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para eliminar esta cita" });
+      }
+      
+      // Si existe un ID de evento de calendario, cancelar el evento
+      if (appointment.calendarEventId && appointment.calendarProvider) {
+        try {
+          // Aquí simularíamos la obtención del token de OAuth del usuario.
+          const mockAccessToken = "mock_access_token";
+          
+          if (appointment.calendarProvider === 'google') {
+            await cancelGoogleCalendarEvent(
+              appointment.calendarEventId, 
+              mockAccessToken
+            );
+          } else if (appointment.calendarProvider === 'outlook') {
+            await cancelOutlookCalendarEvent(
+              appointment.calendarEventId, 
+              mockAccessToken
+            );
+          }
+        } catch (calendarError) {
+          console.error("Error al cancelar evento en el calendario:", calendarError);
+          // Continuamos aunque falle la cancelación en el calendario
+        }
+      }
+      
+      // Eliminar la cita
+      await storage.deleteAppointment(appointmentId);
+      
+      res.status(204).end();
+    } catch (error) {
+      console.error("Error al eliminar cita:", error);
+      res.status(500).json({ message: "Error al eliminar cita" });
+    }
+  });
+  
+  // Endpoint para enviar recordatorios de citas (a ejecutar por un cronjob)
+  app.post("/api/appointments/send-reminders", async (req, res) => {
+    try {
+      // Verificar que la solicitud proviene de un origen autorizado
+      // En una implementación real, deberíamos verificar algún tipo de secreto o auth
+      // para este endpoint que se ejecutaría como un cronjob
+      
+      // Obtener todas las citas programadas para mañana que no han recibido recordatorio
+      const upcomingAppointments = await storage.getUpcomingAppointmentsForReminders();
+      let sentCount = 0;
+      
+      if (upcomingAppointments.length === 0) {
+        return res.json({ message: "No hay recordatorios pendientes para enviar" });
+      }
+      
+      for (const appointment of upcomingAppointments) {
+        // Obtener la integración y los ajustes correspondientes
+        const integration = await storage.getIntegration(appointment.integrationId);
+        if (!integration) continue;
+        
+        const settings = await storage.getSettings(integration.userId);
+        
+        // Enviar el recordatorio por correo electrónico
+        if (process.env.SENDGRID_API_KEY) {
+          try {
+            const fromEmail = settings.emailNotificationAddress || 'info@example.com';
+            const companyName = settings.assistantName || 'AIPI';
+            
+            const success = await sendAppointmentReminder(appointment, fromEmail, companyName);
+            
+            if (success) {
+              // Marcar que se ha enviado el recordatorio
+              await storage.markReminderSent(appointment.id);
+              sentCount++;
+            }
+          } catch (emailError) {
+            console.error(`Error al enviar recordatorio para cita ${appointment.id}:`, emailError);
+          }
+        } else {
+          console.log("SendGrid API Key no configurada, no se pueden enviar recordatorios");
+          break;
+        }
+      }
+      
+      res.json({ 
+        message: `Se enviaron ${sentCount} recordatorios de citas`, 
+        sent: sentCount, 
+        total: upcomingAppointments.length 
+      });
+    } catch (error) {
+      console.error("Error al enviar recordatorios de citas:", error);
+      res.status(500).json({ message: "Error al enviar recordatorios de citas" });
+    }
+  });
+
   return httpServer;
 }
