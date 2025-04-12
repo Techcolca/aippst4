@@ -226,7 +226,8 @@ export class MemStorage implements IStorage {
       font: "inter",
       conversationStyle: "professional",
       knowledgeBase: "default",
-      enableLearning: true
+      enableLearning: true,
+      emailNotificationAddress: "notifications@example.com"
     };
     this.settings.set(demoSettings.id, demoSettings);
 
@@ -760,7 +761,8 @@ export class MemStorage implements IStorage {
       font: "inter",
       conversationStyle: "professional",
       knowledgeBase: "default",
-      enableLearning: true
+      enableLearning: true,
+      emailNotificationAddress: "notifications@example.com"
     };
     this.settings.set(id, newSettings);
     return newSettings;
