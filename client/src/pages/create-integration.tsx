@@ -336,6 +336,64 @@ export default function CreateIntegration() {
               )}
             />
 
+            <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md mb-6">
+              <h3 className="font-medium text-lg mb-4">Subir documentos adicionales</h3>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Sube documentos (PDF, DOCX, Excel) para entrenar al chatbot con información adicional que no está en tu sitio web.
+              </div>
+              
+              <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md p-6 text-center">
+                <div className="flex flex-col items-center justify-center">
+                  <div className="mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  </div>
+                  <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Selecciona archivos para subir
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Arrastra archivos aquí o haz clic para seleccionarlos
+                  </p>
+                </div>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="mt-4"
+                  onClick={() => alert("Esta función estará disponible después de crear la integración")}
+                >
+                  Seleccionar archivos
+                </Button>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md mb-6">
+              <h3 className="font-medium text-lg mb-4">Entrenamiento con contenido del sitio</h3>
+              <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                URL del sitio web para extraer contenido
+              </div>
+              
+              <div className="flex gap-2 mb-4">
+                <Input 
+                  placeholder="localhost" 
+                  className="flex-grow"
+                  value={form.getValues("url")}
+                  readOnly
+                />
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  onClick={() => alert("Esta función estará disponible después de crear la integración")}
+                >
+                  Extraer contenido
+                </Button>
+              </div>
+              
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Esta función analiza el contenido de tu sitio web para que el chat pueda responder preguntas sobre él.
+              </div>
+            </div>
+
             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md">
               <h3 className="font-medium text-lg mb-4">Opciones de personalización</h3>
 
