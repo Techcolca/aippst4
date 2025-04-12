@@ -5,7 +5,8 @@ import {
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription,
   DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan,
-  Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse
+  Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse,
+  Appointment, InsertAppointment
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -118,6 +119,18 @@ export interface IStorage {
   createFormResponse(responseData: InsertFormResponse): Promise<FormResponse>;
   deleteFormResponse(id: number): Promise<void>;
   deleteFormResponses(formId: number): Promise<void>;
+  
+  // Appointment methods
+  getAppointments(integrationId: number): Promise<Appointment[]>;
+  getAppointmentsByConversation(conversationId: number): Promise<Appointment[]>;
+  getAppointment(id: number): Promise<Appointment | undefined>;
+  createAppointment(appointmentData: InsertAppointment): Promise<Appointment>;
+  updateAppointment(id: number, data: Partial<Appointment>): Promise<Appointment>;
+  updateAppointmentStatus(id: number, status: string): Promise<Appointment>;
+  updateCalendarEventId(id: number, calendarEventId: string, calendarProvider: string): Promise<Appointment>;
+  markReminderSent(id: number): Promise<Appointment>;
+  deleteAppointment(id: number): Promise<void>;
+  getUpcomingAppointmentsForReminders(): Promise<Appointment[]>;
 }
 
 // In-memory storage implementation
