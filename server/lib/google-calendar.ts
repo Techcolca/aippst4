@@ -1,3 +1,6 @@
+/**
+ * Módulo de integración con Google Calendar
+ */
 import axios from 'axios';
 import { Appointment } from '@shared/schema';
 
@@ -34,31 +37,25 @@ interface GoogleCalendarEvent {
  * @returns ID del evento creado
  */
 export async function createGoogleCalendarEvent(
-  appointment: Appointment,
-  userEmail: string,
+  appointment: Appointment, 
+  userEmail: string, 
   accessToken: string
 ): Promise<string> {
   try {
-    // Construir la fecha y hora de inicio
-    const startDateTime = new Date(appointment.appointmentDate);
-    const startTime = appointment.appointmentTime.split(':');
-    startDateTime.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0, 0);
+    // Construir el objeto con los datos del evento
+    const startDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+    const endDateTime = new Date(startDateTime.getTime() + (appointment.duration || 30) * 60000);
     
-    // Construir la fecha y hora de fin (basado en la duración)
-    const endDateTime = new Date(startDateTime);
-    endDateTime.setMinutes(endDateTime.getMinutes() + (appointment.duration || 30));
-    
-    // Crear el objeto de evento para Google Calendar
     const event: GoogleCalendarEvent = {
-      summary: `Cita con ${appointment.visitorName}`,
-      description: appointment.purpose + (appointment.notes ? `\n\nNotas: ${appointment.notes}` : ''),
+      summary: `Cita: ${appointment.purpose}`,
+      description: `Cita con ${appointment.visitorName}.\n${appointment.notes || ''}`,
       start: {
         dateTime: startDateTime.toISOString(),
-        timeZone: 'America/Toronto'  // Ajustar según la zona horaria necesaria
+        timeZone: 'UTC'
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'America/Toronto'  // Ajustar según la zona horaria necesaria
+        timeZone: 'UTC'
       },
       attendees: [
         { email: appointment.visitorEmail, name: appointment.visitorName },
@@ -67,13 +64,13 @@ export async function createGoogleCalendarEvent(
       reminders: {
         useDefault: false,
         overrides: [
-          { method: 'email', minutes: 24 * 60 },  // Recordatorio por email 24 horas antes
-          { method: 'popup', minutes: 30 }  // Recordatorio emergente 30 minutos antes
+          { method: 'email', minutes: 24 * 60 }, // Recordatorio por email 24 horas antes
+          { method: 'popup', minutes: 30 } // Recordatorio popup 30 minutos antes
         ]
       }
     };
     
-    // Enviar solicitud a la API de Google Calendar
+    // Hacer la solicitud a la API de Google Calendar
     const response = await axios.post(
       'https://www.googleapis.com/calendar/v3/calendars/primary/events',
       event,
@@ -85,10 +82,12 @@ export async function createGoogleCalendarEvent(
       }
     );
     
+    // Devolver el ID del evento creado
     return response.data.id;
+    
   } catch (error) {
-    console.error('Error al crear evento en Google Calendar:', error);
-    throw new Error('No se pudo crear el evento en Google Calendar');
+    console.error('Error creating Google Calendar event:', error);
+    throw new Error('Failed to create Google Calendar event');
   }
 }
 
@@ -100,37 +99,32 @@ export async function createGoogleCalendarEvent(
  * @param accessToken Token de acceso OAuth
  */
 export async function updateGoogleCalendarEvent(
-  appointment: Appointment,
-  eventId: string,
+  appointment: Appointment, 
+  eventId: string, 
   accessToken: string
 ): Promise<void> {
   try {
-    // Similar a createGoogleCalendarEvent, pero con una solicitud PATCH
-    const startDateTime = new Date(appointment.appointmentDate);
-    const startTime = appointment.appointmentTime.split(':');
-    startDateTime.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0, 0);
+    // Construir el objeto con los datos actualizados del evento
+    const startDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+    const endDateTime = new Date(startDateTime.getTime() + (appointment.duration || 30) * 60000);
     
-    const endDateTime = new Date(startDateTime);
-    endDateTime.setMinutes(endDateTime.getMinutes() + (appointment.duration || 30));
-    
-    // Datos actualizados para el evento
-    const updatedEvent = {
-      summary: `Cita con ${appointment.visitorName}`,
-      description: appointment.purpose + (appointment.notes ? `\n\nNotas: ${appointment.notes}` : ''),
+    const event = {
+      summary: `Cita: ${appointment.purpose}`,
+      description: `Cita con ${appointment.visitorName}.\n${appointment.notes || ''}`,
       start: {
         dateTime: startDateTime.toISOString(),
-        timeZone: 'America/Toronto'
+        timeZone: 'UTC'
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'America/Toronto'
+        timeZone: 'UTC'
       }
     };
     
-    // Enviar solicitud de actualización
+    // Hacer la solicitud a la API de Google Calendar
     await axios.patch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
-      updatedEvent,
+      event,
       {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -138,9 +132,10 @@ export async function updateGoogleCalendarEvent(
         }
       }
     );
+    
   } catch (error) {
-    console.error('Error al actualizar evento en Google Calendar:', error);
-    throw new Error('No se pudo actualizar el evento en Google Calendar');
+    console.error('Error updating Google Calendar event:', error);
+    throw new Error('Failed to update Google Calendar event');
   }
 }
 
@@ -151,10 +146,11 @@ export async function updateGoogleCalendarEvent(
  * @param accessToken Token de acceso OAuth
  */
 export async function cancelGoogleCalendarEvent(
-  eventId: string,
+  eventId: string, 
   accessToken: string
 ): Promise<void> {
   try {
+    // Hacer la solicitud a la API de Google Calendar
     await axios.delete(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`,
       {
@@ -163,8 +159,9 @@ export async function cancelGoogleCalendarEvent(
         }
       }
     );
+    
   } catch (error) {
-    console.error('Error al cancelar evento en Google Calendar:', error);
-    throw new Error('No se pudo cancelar el evento en Google Calendar');
+    console.error('Error canceling Google Calendar event:', error);
+    throw new Error('Failed to cancel Google Calendar event');
   }
 }

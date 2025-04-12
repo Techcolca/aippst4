@@ -1,3 +1,6 @@
+/**
+ * Módulo de integración con Outlook Calendar
+ */
 import axios from 'axios';
 import { Appointment } from '@shared/schema';
 
@@ -15,9 +18,6 @@ interface OutlookCalendarEvent {
     dateTime: string;
     timeZone: string;
   };
-  location: {
-    displayName: string;
-  };
   attendees: {
     emailAddress: {
       address: string;
@@ -30,45 +30,36 @@ interface OutlookCalendarEvent {
 }
 
 /**
- * Crea un evento en Outlook Calendar
+ * Crea un evento en Outlook Calendar 
  * 
  * @param appointment Datos de la cita
  * @param userEmail Email del propietario del calendario
- * @param accessToken Token de acceso de OAuth para Microsoft Graph
+ * @param accessToken Token de acceso de OAuth
  * @returns ID del evento creado
  */
 export async function createOutlookCalendarEvent(
-  appointment: Appointment,
-  userEmail: string,
+  appointment: Appointment, 
+  userEmail: string, 
   accessToken: string
 ): Promise<string> {
   try {
-    // Construir la fecha y hora de inicio
-    const startDateTime = new Date(appointment.appointmentDate);
-    const startTime = appointment.appointmentTime.split(':');
-    startDateTime.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0, 0);
+    // Construir el objeto con los datos del evento
+    const startDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+    const endDateTime = new Date(startDateTime.getTime() + (appointment.duration || 30) * 60000);
     
-    // Construir la fecha y hora de fin (basado en la duración)
-    const endDateTime = new Date(startDateTime);
-    endDateTime.setMinutes(endDateTime.getMinutes() + (appointment.duration || 30));
-    
-    // Crear el objeto de evento para Outlook Calendar
     const event: OutlookCalendarEvent = {
-      subject: `Cita con ${appointment.visitorName}`,
+      subject: `Cita: ${appointment.purpose}`,
       body: {
         contentType: 'HTML',
-        content: `<p>${appointment.purpose}</p>${appointment.notes ? `<p>Notas: ${appointment.notes}</p>` : ''}`
+        content: `<p>Cita con ${appointment.visitorName}.</p><p>${appointment.notes || ''}</p>`
       },
       start: {
         dateTime: startDateTime.toISOString(),
-        timeZone: 'America/Toronto'  // Ajustar según la zona horaria necesaria
+        timeZone: 'UTC'
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'America/Toronto'  // Ajustar según la zona horaria necesaria
-      },
-      location: {
-        displayName: 'Virtual'
+        timeZone: 'UTC'
       },
       attendees: [
         {
@@ -89,7 +80,7 @@ export async function createOutlookCalendarEvent(
       reminderMinutesBeforeStart: 15
     };
     
-    // Enviar solicitud a Microsoft Graph API
+    // Hacer la solicitud a la API de Microsoft Graph
     const response = await axios.post(
       'https://graph.microsoft.com/v1.0/me/events',
       event,
@@ -101,10 +92,12 @@ export async function createOutlookCalendarEvent(
       }
     );
     
+    // Devolver el ID del evento creado
     return response.data.id;
+    
   } catch (error) {
-    console.error('Error al crear evento en Outlook Calendar:', error);
-    throw new Error('No se pudo crear el evento en Outlook Calendar');
+    console.error('Error creating Outlook Calendar event:', error);
+    throw new Error('Failed to create Outlook Calendar event');
   }
 }
 
@@ -113,43 +106,38 @@ export async function createOutlookCalendarEvent(
  * 
  * @param appointment Datos actualizados de la cita
  * @param eventId ID del evento en Outlook Calendar
- * @param accessToken Token de acceso OAuth para Microsoft Graph
+ * @param accessToken Token de acceso OAuth
  */
 export async function updateOutlookCalendarEvent(
-  appointment: Appointment,
-  eventId: string,
+  appointment: Appointment, 
+  eventId: string, 
   accessToken: string
 ): Promise<void> {
   try {
-    // Similar a createOutlookCalendarEvent, pero con una solicitud PATCH
-    const startDateTime = new Date(appointment.appointmentDate);
-    const startTime = appointment.appointmentTime.split(':');
-    startDateTime.setHours(parseInt(startTime[0]), parseInt(startTime[1]), 0, 0);
+    // Construir el objeto con los datos actualizados del evento
+    const startDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+    const endDateTime = new Date(startDateTime.getTime() + (appointment.duration || 30) * 60000);
     
-    const endDateTime = new Date(startDateTime);
-    endDateTime.setMinutes(endDateTime.getMinutes() + (appointment.duration || 30));
-    
-    // Datos actualizados para el evento
-    const updatedEvent = {
-      subject: `Cita con ${appointment.visitorName}`,
+    const event = {
+      subject: `Cita: ${appointment.purpose}`,
       body: {
         contentType: 'HTML',
-        content: `<p>${appointment.purpose}</p>${appointment.notes ? `<p>Notas: ${appointment.notes}</p>` : ''}`
+        content: `<p>Cita con ${appointment.visitorName}.</p><p>${appointment.notes || ''}</p>`
       },
       start: {
         dateTime: startDateTime.toISOString(),
-        timeZone: 'America/Toronto'
+        timeZone: 'UTC'
       },
       end: {
         dateTime: endDateTime.toISOString(),
-        timeZone: 'America/Toronto'
+        timeZone: 'UTC'
       }
     };
     
-    // Enviar solicitud de actualización
+    // Hacer la solicitud a la API de Microsoft Graph
     await axios.patch(
       `https://graph.microsoft.com/v1.0/me/events/${eventId}`,
-      updatedEvent,
+      event,
       {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -157,9 +145,10 @@ export async function updateOutlookCalendarEvent(
         }
       }
     );
+    
   } catch (error) {
-    console.error('Error al actualizar evento en Outlook Calendar:', error);
-    throw new Error('No se pudo actualizar el evento en Outlook Calendar');
+    console.error('Error updating Outlook Calendar event:', error);
+    throw new Error('Failed to update Outlook Calendar event');
   }
 }
 
@@ -167,13 +156,14 @@ export async function updateOutlookCalendarEvent(
  * Cancela un evento en Outlook Calendar
  * 
  * @param eventId ID del evento en Outlook Calendar
- * @param accessToken Token de acceso OAuth para Microsoft Graph
+ * @param accessToken Token de acceso OAuth
  */
 export async function cancelOutlookCalendarEvent(
-  eventId: string,
+  eventId: string, 
   accessToken: string
 ): Promise<void> {
   try {
+    // Hacer la solicitud a la API de Microsoft Graph
     await axios.delete(
       `https://graph.microsoft.com/v1.0/me/events/${eventId}`,
       {
@@ -182,8 +172,9 @@ export async function cancelOutlookCalendarEvent(
         }
       }
     );
+    
   } catch (error) {
-    console.error('Error al cancelar evento en Outlook Calendar:', error);
-    throw new Error('No se pudo cancelar el evento en Outlook Calendar');
+    console.error('Error canceling Outlook Calendar event:', error);
+    throw new Error('Failed to cancel Outlook Calendar event');
   }
 }

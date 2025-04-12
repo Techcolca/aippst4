@@ -21,6 +21,9 @@ import stripe, {
 import { createOrUpdateStripeProduct, syncPlansWithStripe } from "./lib/stripe-utils";
 import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
+import { createGoogleCalendarEvent, updateGoogleCalendarEvent, cancelGoogleCalendarEvent } from "./lib/google-calendar";
+import { createOutlookCalendarEvent, updateOutlookCalendarEvent, cancelOutlookCalendarEvent } from "./lib/outlook-calendar";
+import { sendAppointmentConfirmation, sendAppointmentReminder, sendAppointmentUpdateNotification, sendAppointmentCancellationNotification } from "./lib/aws-email";
 import { 
   createGoogleCalendarEvent, 
   updateGoogleCalendarEvent, 
