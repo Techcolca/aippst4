@@ -556,15 +556,50 @@ export default function CreateIntegration() {
                 <Button 
                   type="button" 
                   variant="outline"
-                  onClick={() => alert("Esta función estará disponible después de crear la integración")}
+                  disabled={!form.getValues("url") || isExtracting}
+                  className="min-w-24"
+                  onClick={() => {
+                    toast({
+                      title: "Información",
+                      description: "El contenido se extraerá automáticamente después de crear la integración",
+                    });
+                  }}
                 >
-                  Extraer contenido
+                  {isExtracting ? (
+                    <span className="flex items-center gap-2">
+                      <Loader className="h-4 w-4 animate-spin" />
+                      Extrayendo...
+                    </span>
+                  ) : "Extraer contenido"}
                 </Button>
               </div>
               
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 Esta función analiza el contenido de tu sitio web para que el chat pueda responder preguntas sobre él.
               </div>
+
+              {extractedContent.length > 0 && (
+                <div className="mt-4 border rounded-md p-3 max-h-48 overflow-y-auto">
+                  <h4 className="font-medium mb-2 text-sm">Contenido extraído:</h4>
+                  <ul className="space-y-1">
+                    {extractedContent.map((content, index) => (
+                      <li key={index} className="flex items-start text-sm p-2 bg-white dark:bg-gray-800 rounded-md">
+                        <span className="flex-grow overflow-hidden">
+                          <p className="font-medium truncate">{content.title || "Sin título"}</p>
+                          <a 
+                            href={content.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-500 hover:underline truncate block"
+                          >
+                            {content.url}
+                          </a>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md">
