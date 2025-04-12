@@ -118,6 +118,7 @@ export const settings = pgTable("settings", {
   conversationStyle: text("conversation_style").default("professional"),
   knowledgeBase: text("knowledge_base").default("default"),
   enableLearning: boolean("enable_learning").default(true),
+  emailNotificationAddress: text("email_notification_address"),
 });
 
 export const insertSettingsSchema = createInsertSchema(settings).pick({

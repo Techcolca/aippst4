@@ -21,9 +21,6 @@ import stripe, {
 import { createOrUpdateStripeProduct, syncPlansWithStripe } from "./lib/stripe-utils";
 import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
-import { createGoogleCalendarEvent, updateGoogleCalendarEvent, cancelGoogleCalendarEvent } from "./lib/google-calendar";
-import { createOutlookCalendarEvent, updateOutlookCalendarEvent, cancelOutlookCalendarEvent } from "./lib/outlook-calendar";
-import { sendAppointmentConfirmation, sendAppointmentReminder, sendAppointmentUpdateNotification, sendAppointmentCancellationNotification } from "./lib/aws-email";
 import { 
   createGoogleCalendarEvent, 
   updateGoogleCalendarEvent, 
@@ -36,8 +33,10 @@ import {
 } from "./lib/outlook-calendar";
 import { 
   sendAppointmentConfirmation, 
-  sendAppointmentReminder 
-} from "./lib/email-notification";
+  sendAppointmentReminder,
+  sendAppointmentUpdateNotification,
+  sendAppointmentCancellationNotification
+} from "./lib/aws-email";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
@@ -4050,19 +4049,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       
-      // Enviar confirmación por correo electrónico si está configurado SendGrid
-      if (process.env.SENDGRID_API_KEY) {
+      // Enviar confirmación por correo electrónico si están configuradas las credenciales AWS
+      if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
         try {
           const fromEmail = settings.emailNotificationAddress || 'info@example.com';
-          const companyName = settings.assistantName || 'AIPI';
           
-          await sendAppointmentConfirmation(newAppointment, fromEmail, companyName);
+          // Enviar confirmación por email usando AWS SES
+          await sendAppointmentConfirmation(newAppointment, fromEmail, settings);
         } catch (emailError) {
           console.error("Error al enviar confirmación por correo:", emailError);
           // Continuamos aunque falle el envío del correo
         }
       } else {
-        console.log("SendGrid API Key no configurada, no se envió email de confirmación");
+        console.log("AWS credenciales no configuradas, no se envió email de confirmación");
       }
       
       res.status(201).json(newAppointment);
@@ -4249,24 +4248,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         const settings = await storage.getSettings(integration.userId);
         
-        // Enviar el recordatorio por correo electrónico
-        if (process.env.SENDGRID_API_KEY) {
+        // Enviar el recordatorio por correo electrónico usando AWS SES
+        if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
           try {
             const fromEmail = settings.emailNotificationAddress || 'info@example.com';
-            const companyName = settings.assistantName || 'AIPI';
             
-            const success = await sendAppointmentReminder(appointment, fromEmail, companyName);
+            // Enviar recordatorio por email usando AWS SES
+            await sendAppointmentReminder(appointment, fromEmail);
             
-            if (success) {
-              // Marcar que se ha enviado el recordatorio
-              await storage.markReminderSent(appointment.id);
-              sentCount++;
-            }
+            // Marcar que se ha enviado el recordatorio
+            await storage.markReminderSent(appointment.id);
+            sentCount++;
           } catch (emailError) {
             console.error(`Error al enviar recordatorio para cita ${appointment.id}:`, emailError);
           }
         } else {
-          console.log("SendGrid API Key no configurada, no se pueden enviar recordatorios");
+          console.log("AWS credenciales no configuradas, no se pueden enviar recordatorios");
           break;
         }
       }
