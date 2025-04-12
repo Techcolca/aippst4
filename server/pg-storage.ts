@@ -8,9 +8,9 @@ import {
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
   PricingPlan, InsertPricingPlan, Form, InsertForm, FormTemplate, InsertFormTemplate,
-  FormResponse, InsertFormResponse,
+  FormResponse, InsertFormResponse, Appointment, InsertAppointment,
   users, integrations, conversations, messages, automations, settings, sitesContent, 
-  subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses
+  subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 

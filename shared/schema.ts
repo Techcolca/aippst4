@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, json, date, time } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -388,3 +388,38 @@ export type InsertFormTemplate = z.infer<typeof insertFormTemplateSchema>;
 
 export type FormResponse = typeof formResponses.$inferSelect;
 export type InsertFormResponse = z.infer<typeof insertFormResponseSchema>;
+
+// Modelo para agendamiento de citas
+export const appointments = pgTable("appointments", {
+  id: serial("id").primaryKey(),
+  integrationId: integer("integration_id").notNull().references(() => integrations.id, { onDelete: "cascade" }),
+  conversationId: integer("conversation_id").references(() => conversations.id, { onDelete: "cascade" }),
+  visitorName: text("visitor_name").notNull(),
+  visitorEmail: text("visitor_email").notNull(),
+  purpose: text("purpose").notNull(),
+  appointmentDate: date("appointment_date").notNull(),
+  appointmentTime: time("appointment_time").notNull(),
+  duration: integer("duration").default(30), // duración en minutos
+  status: text("status").default("pending"), // pending, confirmed, cancelled, completed
+  calendarEventId: text("calendar_event_id"), // ID del evento en Google Calendar/Outlook
+  calendarProvider: text("calendar_provider"), // google, outlook, etc.
+  notes: text("notes"),
+  reminderSent: boolean("reminder_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertAppointmentSchema = createInsertSchema(appointments).pick({
+  integrationId: true,
+  conversationId: true,
+  visitorName: true,
+  visitorEmail: true,
+  purpose: true,
+  appointmentDate: true,
+  appointmentTime: true,
+  duration: true,
+  notes: true,
+});
+
+export type Appointment = typeof appointments.$inferSelect;
+export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
