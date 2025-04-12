@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Info, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Info, ArrowLeft, CheckCircle2, Loader, File, RefreshCw, Upload } from "lucide-react";
 
 // Esquema de validación para el formulario
 const formSchema = z.object({
@@ -56,6 +56,11 @@ export default function CreateIntegration() {
   const { toast } = useToast();
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractedContent, setExtractedContent] = useState<Array<{url: string, title: string}>>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Inicializamos el formulario
   const form = useForm<FormValues>({
@@ -83,10 +88,146 @@ export default function CreateIntegration() {
     },
   });
 
+  // Función para manejar la selección de archivos
+  const handleFileSelection = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  // Función para manejar el cambio de archivos
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFiles(e.target.files);
+    }
+  };
+
+  // Función para subir documentos
+  const uploadFiles = async (integrationId: number) => {
+    if (!selectedFiles || selectedFiles.length === 0) {
+      return [];
+    }
+
+    setIsUploadingFiles(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append("integrationId", integrationId.toString());
+      
+      for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append("documents", selectedFiles[i]);
+      }
+      
+      const response = await fetch("/api/documents/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al subir los documentos");
+      }
+      
+      const data = await response.json();
+      
+      toast({
+        title: "Documentos subidos",
+        description: `Se han subido ${data.uploadedFiles.length} documentos correctamente`,
+      });
+      
+      return data.uploadedFiles;
+    } catch (error) {
+      console.error("Error al subir documentos:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron subir los documentos. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+      return [];
+    } finally {
+      setIsUploadingFiles(false);
+    }
+  };
+
+  // Función para extraer contenido del sitio
+  const extractSiteContent = async (integrationId: number) => {
+    const url = form.getValues("url");
+    
+    if (!url) {
+      toast({
+        title: "Error",
+        description: "Debes introducir una URL válida",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    setIsExtracting(true);
+    
+    try {
+      const response = await fetch("/api/site-content/extract", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          integrationId,
+          url,
+          maxPages: 5,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al extraer el contenido");
+      }
+      
+      const data = await response.json();
+      
+      setExtractedContent(data.savedContent.map((content: any) => ({
+        url: content.url,
+        title: content.title,
+      })));
+      
+      toast({
+        title: "Extracción completada",
+        description: `Se procesaron ${data.pagesProcessed} páginas y se guardó el contenido.`,
+      });
+      
+      return true;
+    } catch (error) {
+      console.error("Error en extracción:", error);
+      toast({
+        title: "Error en extracción",
+        description: "Ocurrió un error al procesar el sitio",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setIsExtracting(false);
+    }
+  };
+
   // Mutación para crear la integración
   const createIntegrationMutation = useMutation({
-    mutationFn: (data: FormValues) => {
-      return apiRequest("POST", "/api/integrations", data);
+    mutationFn: async (data: FormValues) => {
+      // Primero creamos la integración
+      const response = await apiRequest("POST", "/api/integrations", data);
+      const integration = await response.json();
+      
+      // Luego subimos documentos si hay seleccionados
+      if (selectedFiles && selectedFiles.length > 0) {
+        await uploadFiles(integration.id);
+      }
+      
+      // Y finalmente extraemos el contenido del sitio si hay URL
+      if (data.url) {
+        await extractSiteContent(integration.id);
+      }
+      
+      return integration;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/integrations"] });
@@ -342,12 +483,22 @@ export default function CreateIntegration() {
                 Sube documentos (PDF, DOCX, Excel) para entrenar al chatbot con información adicional que no está en tu sitio web.
               </div>
               
-              <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md p-6 text-center">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                multiple 
+                accept=".pdf,.docx,.xlsx,.xls,.csv,.doc" 
+                onChange={handleFileChange}
+              />
+              
+              <div 
+                className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md p-6 text-center"
+                onClick={handleFileSelection}
+              >
                 <div className="flex flex-col items-center justify-center">
                   <div className="mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
+                    <Upload className="h-10 w-10 text-gray-400" />
                   </div>
                   <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
                     Selecciona archivos para subir
@@ -360,11 +511,33 @@ export default function CreateIntegration() {
                   type="button" 
                   variant="outline" 
                   className="mt-4"
-                  onClick={() => alert("Esta función estará disponible después de crear la integración")}
+                  onClick={handleFileSelection}
                 >
-                  Seleccionar archivos
+                  {selectedFiles && selectedFiles.length > 0 ? (
+                    <span className="flex items-center gap-2">
+                      <File className="h-4 w-4" />
+                      {selectedFiles.length} {selectedFiles.length === 1 ? 'archivo seleccionado' : 'archivos seleccionados'}
+                    </span>
+                  ) : 'Seleccionar archivos'}
                 </Button>
               </div>
+
+              {selectedFiles && selectedFiles.length > 0 && (
+                <div className="mt-4 bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+                  <h4 className="font-medium mb-2">Archivos seleccionados:</h4>
+                  <ul className="space-y-1">
+                    {Array.from(selectedFiles).map((file, index) => (
+                      <li key={index} className="flex items-center text-sm">
+                        <File className="h-4 w-4 mr-2 text-blue-500" />
+                        <span className="truncate">{file.name}</span>
+                        <span className="ml-2 text-gray-500 dark:text-gray-400 text-xs">
+                          ({(file.size / 1024).toFixed(0)} KB)
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md mb-6">
