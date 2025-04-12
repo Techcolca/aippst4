@@ -752,7 +752,9 @@ export class PgStorage implements IStorage {
     return result[0];
   }
 
-  async incrementFormResponseCount(id: number): Promise<void> {
+  async incrementFormResponseCount(id: number | null | undefined): Promise<void> {
+    if (!id) return;
+    
     const form = await this.getForm(id);
     if (form) {
       await db.update(forms)
@@ -825,7 +827,9 @@ export class PgStorage implements IStorage {
     const result = await db.insert(formResponses).values(responseData).returning();
     
     // Incrementar el contador de respuestas del formulario
-    await this.incrementFormResponseCount(responseData.formId);
+    if (responseData.formId) {
+      await this.incrementFormResponseCount(responseData.formId);
+    }
     
     return result[0];
   }
@@ -838,5 +842,77 @@ export class PgStorage implements IStorage {
   async deleteFormResponses(formId: number): Promise<void> {
     await db.delete(formResponses)
       .where(eq(formResponses.formId, formId));
+  }
+
+  // Métodos para agendamiento de citas
+  async getAppointments(integrationId: number): Promise<Appointment[]> {
+    return await db.select()
+      .from(appointments)
+      .where(eq(appointments.integrationId, integrationId))
+      .orderBy(appointments.appointmentDate, appointments.appointmentTime);
+  }
+
+  async getAppointmentsByConversation(conversationId: number): Promise<Appointment[]> {
+    return await db.select()
+      .from(appointments)
+      .where(eq(appointments.conversationId, conversationId))
+      .orderBy(appointments.appointmentDate, appointments.appointmentTime);
+  }
+
+  async getAppointment(id: number): Promise<Appointment | undefined> {
+    const result = await db.select()
+      .from(appointments)
+      .where(eq(appointments.id, id))
+      .limit(1);
+    return result[0];
+  }
+
+  async createAppointment(appointmentData: InsertAppointment): Promise<Appointment> {
+    const result = await db.insert(appointments)
+      .values(appointmentData)
+      .returning();
+    return result[0];
+  }
+
+  async updateAppointment(id: number, data: Partial<Appointment>): Promise<Appointment> {
+    const now = new Date();
+    const result = await db.update(appointments)
+      .set({ ...data, updatedAt: now })
+      .where(eq(appointments.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async updateAppointmentStatus(id: number, status: string): Promise<Appointment> {
+    return this.updateAppointment(id, { status });
+  }
+
+  async updateCalendarEventId(id: number, calendarEventId: string, calendarProvider: string): Promise<Appointment> {
+    return this.updateAppointment(id, { calendarEventId, calendarProvider });
+  }
+
+  async markReminderSent(id: number): Promise<Appointment> {
+    return this.updateAppointment(id, { reminderSent: true });
+  }
+
+  async deleteAppointment(id: number): Promise<void> {
+    await db.delete(appointments)
+      .where(eq(appointments.id, id));
+  }
+
+  // Obtener citas próximas para enviar recordatorios
+  async getUpcomingAppointmentsForReminders(): Promise<Appointment[]> {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    return await db.select()
+      .from(appointments)
+      .where(
+        and(
+          eq(appointments.status, 'confirmed'),
+          eq(appointments.reminderSent, false),
+          eq(appointments.appointmentDate, tomorrow.toISOString().split('T')[0])
+        )
+      );
   }
 }
