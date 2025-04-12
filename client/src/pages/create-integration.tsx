@@ -24,11 +24,19 @@ import { Info, ArrowLeft, CheckCircle2 } from "lucide-react";
 const formSchema = z.object({
   name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
   url: z.string().url({ message: "Debe ser una URL válida" }),
-  type: z.enum(["widget", "fullscreen"], { 
-    required_error: "Debes seleccionar un tipo de integración" 
-  }),
+  themeColor: z.string().default("#3B82F6"),
+  position: z.enum(["bottom-right", "bottom-left", "top-right", "top-left"], {
+    required_error: "Debes seleccionar una posición"
+  }).default("bottom-right"),
+  active: z.boolean().default(true),
+  botBehavior: z.string().optional(),
+  widgetType: z.enum(["bubble", "fullscreen"], {
+    required_error: "Debes seleccionar un tipo de widget"
+  }).default("bubble"),
+  ignoredSections: z.array(z.string()).default([]),
+  ignoredSectionsText: z.string().optional(),
   description: z.string().optional(),
-  ignoredSections: z.string().optional(),
+  // Mantenemos customization para compatibilidad
   customization: z.object({
     assistantName: z.string().optional(),
     defaultGreeting: z.string().optional(),
@@ -55,9 +63,14 @@ export default function CreateIntegration() {
     defaultValues: {
       name: "",
       url: "",
-      type: "widget",
+      themeColor: "#3B82F6",
+      position: "bottom-right",
+      active: true,
+      botBehavior: "",
+      widgetType: "bubble",
+      ignoredSections: [],
+      ignoredSectionsText: "",
       description: "",
-      ignoredSections: "",
       customization: {
         assistantName: "AIPI Assistant",
         defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
@@ -150,7 +163,84 @@ export default function CreateIntegration() {
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="themeColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Color del tema</FormLabel>
+                    <div className="flex items-center gap-2">
+                      <FormControl>
+                        <Input {...field} type="color" className="w-10 h-10 p-1" />
+                      </FormControl>
+                      <Input 
+                        value={field.value} 
+                        onChange={field.onChange}
+                        className="flex-grow"
+                      />
+                    </div>
+                    <FormDescription>
+                      El color principal del widget
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="position"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Posición del widget</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona una posición" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="bottom-right">Abajo a la derecha</SelectItem>
+                        <SelectItem value="bottom-left">Abajo a la izquierda</SelectItem>
+                        <SelectItem value="top-right">Arriba a la derecha</SelectItem>
+                        <SelectItem value="top-left">Arriba a la izquierda</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Dónde aparecerá el widget en la página
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+
+            <FormField
+              control={form.control}
+              name="active"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Integración activa
+                    </FormLabel>
+                    <FormDescription>
+                      Si está desactivada, el widget no se mostrará en tu sitio web
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -172,7 +262,7 @@ export default function CreateIntegration() {
 
             <FormField
               control={form.control}
-              name="type"
+              name="widgetType"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipo de integración</FormLabel>
@@ -186,7 +276,7 @@ export default function CreateIntegration() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="widget">Widget flotante (burbuja)</SelectItem>
+                      <SelectItem value="bubble">Widget flotante (burbuja)</SelectItem>
                       <SelectItem value="fullscreen">Pantalla completa (estilo ChatGPT)</SelectItem>
                     </SelectContent>
                   </Select>
@@ -200,7 +290,28 @@ export default function CreateIntegration() {
 
             <FormField
               control={form.control}
-              name="ignoredSections"
+              name="botBehavior"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Comportamiento del bot (opcional)</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Instrucciones específicas para guiar el comportamiento del asistente..." 
+                      className="resize-none" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Define cómo debe comportarse el asistente al interactuar con los visitantes
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="ignoredSectionsText"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Secciones ignoradas (opcional)</FormLabel>
@@ -208,7 +319,13 @@ export default function CreateIntegration() {
                     <Textarea 
                       placeholder="footer, #sidebar, .navigation" 
                       className="resize-none" 
-                      {...field} 
+                      value={field.value}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        // Actualizar también ignoredSections como array
+                        const sections = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+                        form.setValue('ignoredSections', sections);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
