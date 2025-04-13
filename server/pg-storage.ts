@@ -8,9 +8,10 @@ import {
   SiteContent, InsertSiteContent, ConversationAnalytics, IntegrationPerformance,
   TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
   PricingPlan, InsertPricingPlan, Form, InsertForm, FormTemplate, InsertFormTemplate,
-  FormResponse, InsertFormResponse, Appointment, InsertAppointment,
+  FormResponse, InsertFormResponse, Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
   users, integrations, conversations, messages, automations, settings, sitesContent, 
-  subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments
+  subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments,
+  calendarTokens
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -914,5 +915,54 @@ export class PgStorage implements IStorage {
           eq(appointments.appointmentDate, tomorrow.toISOString().split('T')[0])
         )
       );
+  }
+
+  // Calendar OAuth Token methods
+  async getCalendarTokens(userId: number): Promise<CalendarToken[]> {
+    return await db.select()
+      .from(calendarTokens)
+      .where(eq(calendarTokens.userId, userId));
+  }
+
+  async getCalendarToken(id: number): Promise<CalendarToken | undefined> {
+    const result = await db.select()
+      .from(calendarTokens)
+      .where(eq(calendarTokens.id, id))
+      .limit(1);
+    return result[0];
+  }
+
+  async getCalendarTokenByProvider(userId: number, provider: string): Promise<CalendarToken | undefined> {
+    const result = await db.select()
+      .from(calendarTokens)
+      .where(
+        and(
+          eq(calendarTokens.userId, userId),
+          eq(calendarTokens.provider, provider)
+        )
+      )
+      .limit(1);
+    return result[0];
+  }
+
+  async createCalendarToken(tokenData: InsertCalendarToken): Promise<CalendarToken> {
+    const result = await db.insert(calendarTokens)
+      .values(tokenData)
+      .returning();
+    return result[0];
+  }
+
+  async updateCalendarToken(id: number, data: Partial<CalendarToken>): Promise<CalendarToken> {
+    const now = new Date();
+    const result = await db.update(calendarTokens)
+      .set({ ...data, updatedAt: now })
+      .where(eq(calendarTokens.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async deleteCalendarToken(id: number): Promise<void> {
+    await db.delete(calendarTokens)
+      .where(eq(calendarTokens.id, id));
   }
 }

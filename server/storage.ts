@@ -157,6 +157,7 @@ export class MemStorage implements IStorage {
   private formTemplates: Map<number, FormTemplate>;
   private formResponses: Map<number, FormResponse>;
   private appointments: Map<number, Appointment>;
+  private calendarTokens: Map<number, CalendarToken>;
 
   private userIdCounter: number;
   private integrationIdCounter: number;
@@ -172,6 +173,7 @@ export class MemStorage implements IStorage {
   private formTemplateIdCounter: number;
   private formResponseIdCounter: number;
   private appointmentIdCounter: number;
+  private calendarTokenIdCounter: number;
 
   constructor() {
     this.users = new Map();
@@ -188,6 +190,7 @@ export class MemStorage implements IStorage {
     this.formTemplates = new Map();
     this.formResponses = new Map();
     this.appointments = new Map();
+    this.calendarTokens = new Map();
 
     this.userIdCounter = 1;
     this.integrationIdCounter = 1;
@@ -203,6 +206,7 @@ export class MemStorage implements IStorage {
     this.formTemplateIdCounter = 1;
     this.formResponseIdCounter = 1;
     this.appointmentIdCounter = 1;
+    this.calendarTokenIdCounter = 1;
 
     // Initialize with some demo data
     this.initializeDemoData();
@@ -1326,6 +1330,59 @@ export class MemStorage implements IStorage {
                appointment.status !== 'cancelled' &&
                !appointment.reminderSent;
       });
+  }
+
+  // Calendar OAuth Token methods
+  async getCalendarTokens(userId: number): Promise<CalendarToken[]> {
+    return Array.from(this.calendarTokens.values()).filter(
+      (token) => token.userId === userId
+    );
+  }
+
+  async getCalendarToken(id: number): Promise<CalendarToken | undefined> {
+    return this.calendarTokens.get(id);
+  }
+
+  async getCalendarTokenByProvider(userId: number, provider: string): Promise<CalendarToken | undefined> {
+    return Array.from(this.calendarTokens.values()).find(
+      (token) => token.userId === userId && token.provider === provider
+    );
+  }
+
+  async createCalendarToken(tokenData: InsertCalendarToken): Promise<CalendarToken> {
+    const id = this.calendarTokenIdCounter++;
+    const now = new Date();
+    const newToken: CalendarToken = {
+      ...tokenData,
+      id,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.calendarTokens.set(id, newToken);
+    return newToken;
+  }
+
+  async updateCalendarToken(id: number, data: Partial<CalendarToken>): Promise<CalendarToken> {
+    const token = this.calendarTokens.get(id);
+    if (!token) {
+      throw new Error(`Calendar token with id ${id} not found`);
+    }
+
+    const updatedToken = { 
+      ...token, 
+      ...data,
+      updatedAt: new Date()
+    };
+    this.calendarTokens.set(id, updatedToken);
+    return updatedToken;
+  }
+
+  async deleteCalendarToken(id: number): Promise<void> {
+    if (!this.calendarTokens.has(id)) {
+      throw new Error(`Calendar token with id ${id} not found`);
+    }
+    
+    this.calendarTokens.delete(id);
   }
 
   // Dashboard methods

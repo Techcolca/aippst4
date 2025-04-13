@@ -23,13 +23,17 @@ import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
 import { 
   createGoogleCalendarEvent, 
-  updateGoogleCalendarEvent, 
-  cancelGoogleCalendarEvent 
+  getGoogleAuthUrl,
+  updateGoogleCalendarEvent,
+  exchangeCodeForTokens as exchangeGoogleCodeForTokens,
+  deleteGoogleCalendarEvent as cancelGoogleCalendarEvent
 } from "./lib/google-calendar";
 import { 
   createOutlookCalendarEvent, 
-  updateOutlookCalendarEvent, 
-  cancelOutlookCalendarEvent 
+  getOutlookAuthUrl,
+  updateOutlookCalendarEvent,
+  exchangeCodeForTokens as exchangeOutlookCodeForTokens,
+  deleteOutlookCalendarEvent as cancelOutlookCalendarEvent
 } from "./lib/outlook-calendar";
 import { 
   sendAppointmentConfirmation, 
