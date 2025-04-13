@@ -14,7 +14,23 @@ const GOOGLE_API_SCOPES = [
 // Cliente ID y secreto deben estar guardados como variables de entorno
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URL = process.env.APP_URL ? `${process.env.APP_URL}/api/auth/google-calendar/callback` : 'https://localhost:5000/api/auth/google-calendar/callback';
+// Determinar la URL de redireccionamiento basada en el entorno
+const REDIRECT_URL = (() => {
+  // Si APP_URL está definido, usarlo (prioridad más alta)
+  if (process.env.APP_URL) {
+    return `${process.env.APP_URL}/api/auth/google-calendar/callback`;
+  }
+  
+  // En un entorno de Replit, construir la URL basada en la información del entorno de Replit
+  const replitSlug = process.env.REPL_SLUG;
+  const replitOwner = process.env.REPL_OWNER;
+  if (replitSlug && replitOwner) {
+    return `https://${replitSlug}.${replitOwner}.repl.co/api/auth/google-calendar/callback`;
+  }
+  
+  // URL por defecto como último recurso
+  return 'https://localhost:5000/api/auth/google-calendar/callback';
+})();
 
 /**
  * Genera la URL para autorización OAuth de Google
