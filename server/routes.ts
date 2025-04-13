@@ -4299,8 +4299,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       redirectUrl: {
         google: process.env.APP_URL ? 
           `${process.env.APP_URL}/api/auth/google-calendar/callback` : 
-          (process.env.REPL_SLUG && process.env.REPL_OWNER) ? 
-            `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/auth/google-calendar/callback` :
+          process.env.REPL_ID ? 
+            `https://${process.env.REPL_ID}-00.picard.replit.dev/api/auth/google-calendar/callback` :
             'https://localhost:5000/api/auth/google-calendar/callback'
       },
       authConfigured: {
