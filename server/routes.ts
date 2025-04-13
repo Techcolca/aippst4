@@ -4284,7 +4284,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ================ Calendar OAuth Routes ================
-  // Google Calendar Auth
+  // Google Calendar Auth - URL endpoint
+  app.get("/api/auth/google-calendar-url", authenticateJWT, async (req, res) => {
+    try {
+      const userId = req.userId;
+      const authUrl = getGoogleAuthUrl(userId);
+      res.json({ authUrl });
+    } catch (error) {
+      console.error("Error al obtener URL de autenticación con Google Calendar:", error);
+      res.status(500).json({ message: "Error al obtener URL de autenticación" });
+    }
+  });
+
+  // Google Calendar Auth - Direct endpoint (deprecado pero mantenido por compatibilidad)
   app.get("/api/auth/google-calendar", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;

@@ -112,12 +112,58 @@ export default function SettingsEdit() {
     setSettings(prev => ({ ...prev, [id]: color }));
   };
 
-  const connectGoogleCalendar = () => {
-    window.location.href = "/api/auth/google-calendar";
+  const connectGoogleCalendar = async () => {
+    try {
+      // Usar fetch para conseguir la URL de redirección
+      const response = await fetch("/api/auth/google-calendar-url", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al obtener la URL de autorización");
+      }
+      
+      const data = await response.json();
+      // Redirigir al usuario a la URL de Google
+      window.location.href = data.authUrl;
+    } catch (error) {
+      console.error("Error connecting to Google Calendar:", error);
+      toast({
+        title: "Error",
+        description: "Error al conectar con Google Calendar",
+        variant: "destructive",
+      });
+    }
   };
 
-  const connectOutlookCalendar = () => {
-    window.location.href = "/api/auth/outlook-calendar";
+  const connectOutlookCalendar = async () => {
+    try {
+      // Usar fetch para conseguir la URL de redirección
+      const response = await fetch("/api/auth/outlook-calendar-url", {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al obtener la URL de autorización");
+      }
+      
+      const data = await response.json();
+      // Redirigir al usuario a la URL de Microsoft
+      window.location.href = data.authUrl;
+    } catch (error) {
+      console.error("Error connecting to Outlook Calendar:", error);
+      toast({
+        title: "Error",
+        description: "Error al conectar con Outlook Calendar",
+        variant: "destructive",
+      });
+    }
   };
 
   const disconnectCalendar = async (id: number) => {
