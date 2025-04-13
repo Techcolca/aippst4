@@ -1,0 +1,228 @@
+ [vite] connecting...
+ Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+ i18next: languageChanged es
+ i18next: initialized Object
+ [vite] connected.
+ i18next::translator: missingKey es translation edit_settings edit_settings
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation general general
+ i18next::translator: missingKey es translation appearance appearance
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation assistant_settings assistant_settings
+ i18next::translator: missingKey es translation assistant_settings_description assistant_settings_description
+ i18next::translator: missingKey es translation assistant_name assistant_name
+ i18next::translator: missingKey es translation default_greeting default_greeting
+ i18next::translator: missingKey es translation conversation_style conversation_style
+ i18next::translator: missingKey es translation select_style select_style
+ i18next::translator: missingKey es translation professional professional
+ i18next::translator: missingKey es translation casual casual
+ i18next::translator: missingKey es translation friendly friendly
+ i18next::translator: missingKey es translation formal formal
+ i18next::translator: missingKey es translation show_availability show_availability
+ i18next::translator: missingKey es translation appearance_settings appearance_settings
+ i18next::translator: missingKey es translation appearance_settings_description appearance_settings_description
+ i18next::translator: missingKey es translation chat_font chat_font
+ i18next::translator: missingKey es translation select_font select_font
+ i18next::translator: missingKey es translation system_default system_default
+ i18next::translator: missingKey es translation user_message_color user_message_color
+ i18next::translator: missingKey es translation assistant_message_color assistant_message_color
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation calendar_integrations_description Conecta tus calendarios para programar citas automáticamente
+ i18next::translator: missingKey es translation connected_calendars connected_calendars
+ i18next::translator: missingKey es translation no_calendars_connected no_calendars_connected
+ i18next::translator: missingKey es translation connect_calendar_description Conecta tu calendario para gestionar tus citas automáticamente
+ i18next::translator: missingKey es translation connect_new_calendar connect_new_calendar
+ i18next::translator: missingKey es translation connect_google_calendar connect_google_calendar
+ i18next::translator: missingKey es translation connect_outlook_calendar connect_outlook_calendar
+ i18next::translator: missingKey es translation how_calendar_integration_works how_calendar_integration_works
+ i18next::translator: missingKey es translation calendar_integration_description Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation save_settings save_settings
+ Verificando estado de autenticación...
+/api/settings:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+/api/calendar-tokens:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+ Error fetching settings: 
+fetchSettings @ settings-edit.tsx:60
+ Error fetching calendar tokens: 
+fetchCalendarTokens @ settings-edit.tsx:76
+ i18next::translator: missingKey es translation edit_settings edit_settings
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation general general
+ i18next::translator: missingKey es translation appearance appearance
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation assistant_settings assistant_settings
+ i18next::translator: missingKey es translation assistant_settings_description assistant_settings_description
+ i18next::translator: missingKey es translation assistant_name assistant_name
+ i18next::translator: missingKey es translation default_greeting default_greeting
+ i18next::translator: missingKey es translation conversation_style conversation_style
+ i18next::translator: missingKey es translation select_style select_style
+ i18next::translator: missingKey es translation professional professional
+ i18next::translator: missingKey es translation casual casual
+ i18next::translator: missingKey es translation friendly friendly
+ i18next::translator: missingKey es translation formal formal
+ i18next::translator: missingKey es translation show_availability show_availability
+ i18next::translator: missingKey es translation appearance_settings appearance_settings
+ i18next::translator: missingKey es translation appearance_settings_description appearance_settings_description
+ i18next::translator: missingKey es translation chat_font chat_font
+ i18next::translator: missingKey es translation select_font select_font
+ i18next::translator: missingKey es translation system_default system_default
+ i18next::translator: missingKey es translation user_message_color user_message_color
+ i18next::translator: missingKey es translation assistant_message_color assistant_message_color
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation calendar_integrations_description Conecta tus calendarios para programar citas automáticamente
+ i18next::translator: missingKey es translation connected_calendars connected_calendars
+ i18next::translator: missingKey es translation no_calendars_connected no_calendars_connected
+ i18next::translator: missingKey es translation connect_calendar_description Conecta tu calendario para gestionar tus citas automáticamente
+ i18next::translator: missingKey es translation connect_new_calendar connect_new_calendar
+ i18next::translator: missingKey es translation connect_google_calendar connect_google_calendar
+ i18next::translator: missingKey es translation connect_outlook_calendar connect_outlook_calendar
+ i18next::translator: missingKey es translation how_calendar_integration_works how_calendar_integration_works
+ i18next::translator: missingKey es translation calendar_integration_description Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation save_settings save_settings
+ Estado de la respuesta: 200
+ Usuario autenticado encontrado: Object
+ i18next::translator: missingKey es translation edit_settings edit_settings
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation general general
+ i18next::translator: missingKey es translation appearance appearance
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation assistant_settings assistant_settings
+ i18next::translator: missingKey es translation assistant_settings_description assistant_settings_description
+ i18next::translator: missingKey es translation assistant_name assistant_name
+ i18next::translator: missingKey es translation default_greeting default_greeting
+ i18next::translator: missingKey es translation conversation_style conversation_style
+ i18next::translator: missingKey es translation select_style select_style
+ i18next::translator: missingKey es translation professional professional
+ i18next::translator: missingKey es translation casual casual
+ i18next::translator: missingKey es translation friendly friendly
+ i18next::translator: missingKey es translation formal formal
+ i18next::translator: missingKey es translation show_availability show_availability
+ i18next::translator: missingKey es translation appearance_settings appearance_settings
+ i18next::translator: missingKey es translation appearance_settings_description appearance_settings_description
+ i18next::translator: missingKey es translation chat_font chat_font
+ i18next::translator: missingKey es translation select_font select_font
+ i18next::translator: missingKey es translation system_default system_default
+ i18next::translator: missingKey es translation user_message_color user_message_color
+ i18next::translator: missingKey es translation assistant_message_color assistant_message_color
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation calendar_integrations_description Conecta tus calendarios para programar citas automáticamente
+ i18next::translator: missingKey es translation connected_calendars connected_calendars
+ i18next::translator: missingKey es translation no_calendars_connected no_calendars_connected
+ i18next::translator: missingKey es translation connect_calendar_description Conecta tu calendario para gestionar tus citas automáticamente
+ i18next::translator: missingKey es translation connect_new_calendar connect_new_calendar
+ i18next::translator: missingKey es translation connect_google_calendar connect_google_calendar
+ i18next::translator: missingKey es translation connect_outlook_calendar connect_outlook_calendar
+ i18next::translator: missingKey es translation how_calendar_integration_works how_calendar_integration_works
+ i18next::translator: missingKey es translation calendar_integration_description Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation save_settings save_settings
+ i18next: languageChanged es
+ Ejecutando consulta para: /api/integrations
+ Ejecutando consulta para: /api/settings
+ Ejecutando consulta para: /api/conversations
+ Ejecutando consulta para: /api/forms
+ Ejecutando consulta para: /api/automations
+ Dashboard: Setting initialTab to settings from URL query parameters
+ Ejecutando consulta para: /api/dashboard/stats
+/api/settings:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+ Respuesta: 500 Internal Server Error
+ Respuesta: 200 OK
+ Respuesta: 200 OK
+ Respuesta: 200 OK
+ Respuesta: 200 OK
+ Respuesta: 200 OK
+ i18next::translator: missingKey es translation edit_settings edit_settings
+ i18next::translator: missingKey es translation cancel cancel
+ i18next::translator: missingKey es translation general general
+ i18next::translator: missingKey es translation appearance appearance
+ i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+ i18next::translator: missingKey es translation assistant_settings assistant_settings
+ i18next::translator: missingKey es translation assistant_settings_description assistant_settings_description
+ i18next::translator: missingKey es translation assistant_name assistant_name
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation default_greeting default_greeting
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation conversation_style conversation_style
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation select_style select_style
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation professional professional
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation casual casual
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation friendly friendly
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation formal formal
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation show_availability show_availability
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation appearance_settings appearance_settings
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation appearance_settings_description appearance_settings_description
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation chat_font chat_font
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation select_font select_font
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation system_default system_default
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation user_message_color user_message_color
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation assistant_message_color assistant_message_color
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integrations_description Conecta tus calendarios para programar citas automáticamente
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connected_calendars connected_calendars
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation no_calendars_connected no_calendars_connected
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_calendar_description Conecta tu calendario para gestionar tus citas automáticamente
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_new_calendar connect_new_calendar
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_google_calendar connect_google_calendar
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_outlook_calendar connect_outlook_calendar
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation how_calendar_integration_works how_calendar_integration_works
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integration_description Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation cancel cancel
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation save_settings save_settings
+/api/settings:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+settings-edit.tsx:52 Error fetching settings: Error: 500: {"message":"Internal server error"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:33:3)
+    at async fetchSettings (settings-edit.tsx:48:26)
+fetchSettings @ settings-edit.tsx:52
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation edit_settings edit_settings
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation cancel cancel
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation general general
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation appearance appearance
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation assistant_settings assistant_settings
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation assistant_settings_description assistant_settings_description
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation assistant_name assistant_name
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation default_greeting default_greeting
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation conversation_style conversation_style
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation select_style select_style
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation professional professional
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation casual casual
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation friendly friendly
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation formal formal
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation show_availability show_availability
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation appearance_settings appearance_settings
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation appearance_settings_description appearance_settings_description
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation chat_font chat_font
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation select_font select_font
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation system_default system_default
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation user_message_color user_message_color
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation assistant_message_color assistant_message_color
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integrations calendar_integrations
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integrations_description Conecta tus calendarios para programar citas automáticamente
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connected_calendars connected_calendars
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation no_calendars_connected no_calendars_connected
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_calendar_description Conecta tu calendario para gestionar tus citas automáticamente
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_new_calendar connect_new_calendar
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_google_calendar connect_google_calendar
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation connect_outlook_calendar connect_outlook_calendar
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation how_calendar_integration_works how_calendar_integration_works
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation calendar_integration_description Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation cancel cancel
+i18next.js?v=eafb6732:209 i18next::translator: missingKey es translation save_settings save_settings
+/api/calendar-tokens:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+settings-edit.tsx:69 Error fetching calendar tokens: Error: 500: {"message":"Error al obtener tokens de calendario"}
+    at throwIfResNotOk (queryClient.ts:6:11)
+    at async apiRequest (queryClient.ts:33:3)
+    at async fetchCalendarTokens (settings-edit.tsx:65:26)
+fetchCalendarTokens @ settings-edit.tsx:69
+
+                
+          
+          
+          
+         Chrome is moving towards a new experience that allows users to choose to browse without third-party cookies.
