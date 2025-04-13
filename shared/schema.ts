@@ -424,3 +424,26 @@ export const insertAppointmentSchema = createInsertSchema(appointments).pick({
 
 export type Appointment = typeof appointments.$inferSelect;
 export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
+
+// Modelo para tokens OAuth de calendario
+export const calendarTokens = pgTable("calendar_tokens", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  provider: text("provider").notNull(), // "google" o "outlook"
+  accessToken: text("access_token").notNull(),
+  refreshToken: text("refresh_token"),
+  expiresAt: timestamp("expires_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertCalendarTokenSchema = createInsertSchema(calendarTokens).pick({
+  userId: true,
+  provider: true,
+  accessToken: true,
+  refreshToken: true,
+  expiresAt: true,
+});
+
+export type CalendarToken = typeof calendarTokens.$inferSelect;
+export type InsertCalendarToken = z.infer<typeof insertCalendarTokenSchema>;
