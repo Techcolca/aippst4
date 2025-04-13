@@ -4363,7 +4363,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Outlook Calendar Auth
+  // Outlook Calendar Auth - URL endpoint
+  app.get("/api/auth/outlook-calendar-url", authenticateJWT, async (req, res) => {
+    try {
+      const userId = req.userId;
+      const authUrl = getOutlookAuthUrl(userId);
+      res.json({ authUrl });
+    } catch (error) {
+      console.error("Error al obtener URL de autenticación con Outlook Calendar:", error);
+      res.status(500).json({ message: "Error al obtener URL de autenticación" });
+    }
+  });
+
+  // Outlook Calendar Auth - Direct endpoint (deprecado pero mantenido por compatibilidad)
   app.get("/api/auth/outlook-calendar", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;
