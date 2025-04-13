@@ -27,6 +27,7 @@ import FormIntegration from "@/pages/form-integration";
 import ConversationDetails from "@/pages/conversation-details";
 import IntegrationConversations from "@/pages/integration-conversations";
 import IntegrationAnalytics from "@/pages/integration-analytics";
+import SettingsEdit from "@/pages/settings-edit";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -58,6 +59,7 @@ function Router() {
       <Route path="/forms/:id/integrate" component={FormIntegration} />
       <Route path="/forms/:id" component={FormPreview} />
       <Route path="/conversations/:id" component={ConversationDetails} />
+      <Route path="/settings/edit" component={SettingsEdit} />
       <Route component={NotFound} />
     </Switch>
   );
