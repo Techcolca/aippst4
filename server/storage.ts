@@ -6,7 +6,7 @@ import {
   TopProduct, TopTopic, Subscription, InsertSubscription,
   DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan,
   Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse,
-  Appointment, InsertAppointment
+  Appointment, InsertAppointment, CalendarToken, InsertCalendarToken
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 
@@ -131,6 +131,14 @@ export interface IStorage {
   markReminderSent(id: number): Promise<Appointment>;
   deleteAppointment(id: number): Promise<void>;
   getUpcomingAppointmentsForReminders(): Promise<Appointment[]>;
+  
+  // Calendar OAuth Token methods
+  getCalendarTokens(userId: number): Promise<CalendarToken[]>;
+  getCalendarToken(id: number): Promise<CalendarToken | undefined>;
+  getCalendarTokenByProvider(userId: number, provider: string): Promise<CalendarToken | undefined>;
+  createCalendarToken(tokenData: InsertCalendarToken): Promise<CalendarToken>;
+  updateCalendarToken(id: number, data: Partial<CalendarToken>): Promise<CalendarToken>;
+  deleteCalendarToken(id: number): Promise<void>;
 }
 
 // In-memory storage implementation
