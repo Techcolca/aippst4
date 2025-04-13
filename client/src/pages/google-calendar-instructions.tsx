@@ -9,16 +9,45 @@ export default function GoogleCalendarInstructions() {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [authUrl, setAuthUrl] = useState("");
-  const redirectUrl = "https://workspace.techcolca.repl.co/api/auth/google-calendar/callback";
+  const [loading, setLoading] = useState(true);
+  const [redirectUrl, setRedirectUrl] = useState("");
   
   useEffect(() => {
-    // Comprobar si hay una URL de autenticación guardada en localStorage
-    const savedAuthUrl = localStorage.getItem("googleAuthUrl");
-    if (savedAuthUrl) {
-      setAuthUrl(savedAuthUrl);
-      // Limpiar después de obtenerla
-      localStorage.removeItem("googleAuthUrl");
+    async function fetchData() {
+      try {
+        setLoading(true);
+        
+        // Obtener la URL de redirección actual del servidor
+        const response = await fetch('/api/debug/environment', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error("Error al obtener información del entorno");
+        }
+        
+        const data = await response.json();
+        // Usar la URL de redirección correcta
+        console.log("URL de redirección detectada:", data.redirectUrl.google);
+        setRedirectUrl(data.redirectUrl.google);
+        
+        // Comprobar si hay una URL de autenticación guardada en localStorage
+        const savedAuthUrl = localStorage.getItem("googleAuthUrl");
+        if (savedAuthUrl) {
+          setAuthUrl(savedAuthUrl);
+          // Limpiar después de obtenerla
+          localStorage.removeItem("googleAuthUrl");
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      } finally {
+        setLoading(false);
+      }
     }
+    
+    fetchData();
   }, []);
 
   const copyToClipboard = () => {

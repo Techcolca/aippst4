@@ -15,27 +15,50 @@ const GOOGLE_API_SCOPES = [
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 // Determinar la URL de redireccionamiento basada en el entorno
-const REDIRECT_URL = (() => {
-  // Si APP_URL está definido, usarlo (prioridad más alta)
+// Usamos un método en lugar de una constante para poder actualizar dinámicamente la URL 
+// según el entorno actual
+function getRedirectUrl(req?: any): string {
+  // Usamos el hostname de la solicitud actual si está disponible
+  if (req && req.headers && req.headers.host) {
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    console.log(`Usando URL de redirección dinámica: ${protocol}://${req.headers.host}/api/auth/google-calendar/callback`);
+    return `${protocol}://${req.headers.host}/api/auth/google-calendar/callback`;
+  }
+  
+  // Si APP_URL está definido, usarlo (prioridad media)
   if (process.env.APP_URL) {
+    console.log(`Usando APP_URL: ${process.env.APP_URL}/api/auth/google-calendar/callback`);
     return `${process.env.APP_URL}/api/auth/google-calendar/callback`;
   }
   
-  // En un entorno de Replit, construir la URL basada en la información del entorno de Replit
-  const replitSlug = process.env.REPL_SLUG;
-  const replitOwner = process.env.REPL_OWNER;
-  if (replitSlug && replitOwner) {
-    return `https://${replitSlug}.${replitOwner}.repl.co/api/auth/google-calendar/callback`;
+  // Construir URL basada en información de Replit (prioridad baja)
+  const replitId = process.env.REPL_ID || '';
+  if (replitId) {
+    const url = `https://${replitId}-00.picard.replit.dev/api/auth/google-calendar/callback`;
+    console.log(`Usando URL de Replit ID: ${url}`);
+    return url;
   }
   
   // URL por defecto como último recurso
+  console.log('Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback');
   return 'https://localhost:5000/api/auth/google-calendar/callback';
-})();
+}
+
+// Variable para almacenar la URL actual (se actualizará en cada solicitud)
+let REDIRECT_URL = getRedirectUrl();
 
 /**
  * Genera la URL para autorización OAuth de Google
  */
-export function getGoogleAuthUrl(userId: number, state?: string): string {
+export function getGoogleAuthUrl(userId: number, state?: string, req?: any): string {
+  // Actualizar la URL de redirección con la solicitud actual
+  if (req) {
+    REDIRECT_URL = getRedirectUrl(req);
+    console.log("INFO REDIRECCIÓN GOOGLE CALENDAR:");
+    console.log("URL de autorización:", REDIRECT_URL);
+    console.log("REDIRECT_URL completa:", encodeURIComponent(REDIRECT_URL));
+  }
+  
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID!,
     redirect_uri: REDIRECT_URL,
