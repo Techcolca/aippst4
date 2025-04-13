@@ -62,6 +62,7 @@ function Router() {
       <Route path="/conversations/:id" component={ConversationDetails} />
       <Route path="/settings/edit" component={SettingsEdit} />
       <Route path="/debug/environment" component={DebugEnvironment} />
+      <Route path="/google-calendar-instructions" component={() => import("@/pages/google-calendar-instructions").then(mod => mod.default)} />
       <Route component={NotFound} />
     </Switch>
   );

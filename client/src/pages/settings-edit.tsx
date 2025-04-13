@@ -127,8 +127,16 @@ export default function SettingsEdit() {
       }
       
       const data = await response.json();
-      // Redirigir al usuario a la URL de Google
-      window.location.href = data.authUrl;
+      
+      // Mostrar alerta informativa
+      toast({
+        title: "Información de conexión",
+        description: "Redireccionando a la página de instrucciones para conectar Google Calendar...",
+        duration: 3000,
+      });
+      
+      // Redirigir a la página de instrucciones en lugar de ir directamente a Google
+      navigate("/google-calendar-instructions");
     } catch (error) {
       console.error("Error connecting to Google Calendar:", error);
       toast({
