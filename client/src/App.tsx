@@ -28,6 +28,7 @@ import ConversationDetails from "@/pages/conversation-details";
 import IntegrationConversations from "@/pages/integration-conversations";
 import IntegrationAnalytics from "@/pages/integration-analytics";
 import SettingsEdit from "@/pages/settings-edit";
+import DebugEnvironment from "@/pages/debug-environment";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -60,6 +61,7 @@ function Router() {
       <Route path="/forms/:id" component={FormPreview} />
       <Route path="/conversations/:id" component={ConversationDetails} />
       <Route path="/settings/edit" component={SettingsEdit} />
+      <Route path="/debug/environment" component={DebugEnvironment} />
       <Route component={NotFound} />
     </Switch>
   );

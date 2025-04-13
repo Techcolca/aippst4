@@ -4284,11 +4284,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ================ Calendar OAuth Routes ================
+  
+  // Ruta de diagnóstico para obtener información sobre las variables de entorno
+  app.get("/api/debug/environment", authenticateJWT, (req, res) => {
+    // Recopilamos información del entorno sin exponer secretos
+    const envInfo = {
+      host: req.headers.host,
+      origin: req.headers.origin,
+      replit: {
+        slug: process.env.REPL_SLUG || 'no disponible',
+        owner: process.env.REPL_OWNER || 'no disponible',
+        id: process.env.REPL_ID || 'no disponible'
+      },
+      redirectUrl: {
+        google: process.env.APP_URL ? 
+          `${process.env.APP_URL}/api/auth/google-calendar/callback` : 
+          (process.env.REPL_SLUG && process.env.REPL_OWNER) ? 
+            `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co/api/auth/google-calendar/callback` :
+            'https://localhost:5000/api/auth/google-calendar/callback'
+      },
+      authConfigured: {
+        google: !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET,
+        outlook: !!process.env.MS_CLIENT_ID && !!process.env.MS_CLIENT_SECRET
+      }
+    };
+    
+    res.json(envInfo);
+  });
   // Google Calendar Auth - URL endpoint
   app.get("/api/auth/google-calendar-url", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;
       const authUrl = getGoogleAuthUrl(userId);
+      
+      // Loguear información para verificar
+      console.log("INFO REDIRECCIÓN GOOGLE CALENDAR:");
+      console.log("URL de autorización:", authUrl);
+      console.log("REDIRECT_URL completa:", authUrl.match(/redirect_uri=([^&]*)/)?.[1]);
+      
       res.json({ authUrl });
     } catch (error) {
       console.error("Error al obtener URL de autenticación con Google Calendar:", error);
