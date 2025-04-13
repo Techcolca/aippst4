@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import React, { lazy, Suspense } from 'react';
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -34,6 +35,9 @@ import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
 // Importamos React-i18next directamente sin provider
 
+// Lazy load componentes que no son críticos para la carga inicial
+const GoogleCalendarInstructions = lazy(() => import("@/pages/google-calendar-instructions"));
+
 function Router() {
   return (
     <Switch>
@@ -62,7 +66,13 @@ function Router() {
       <Route path="/conversations/:id" component={ConversationDetails} />
       <Route path="/settings/edit" component={SettingsEdit} />
       <Route path="/debug/environment" component={DebugEnvironment} />
-      <Route path="/google-calendar-instructions" component={() => import("@/pages/google-calendar-instructions").then(mod => mod.default)} />
+      <Route path="/google-calendar-instructions">
+        <Suspense fallback={<div className="container mx-auto py-10 flex items-center justify-center">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        </div>}>
+          <GoogleCalendarInstructions />
+        </Suspense>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );

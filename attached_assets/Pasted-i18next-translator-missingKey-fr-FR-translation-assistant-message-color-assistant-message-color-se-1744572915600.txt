@@ -1,0 +1,117 @@
+i18next::translator: missingKey fr-FR translation assistant_message_color assistant_message_color
+settings-edit.tsx:338 i18next::translator: missingKey fr-FR translation calendar_integrations calendar_integrations
+settings-edit.tsx:340 i18next::translator: missingKey fr-FR translation calendar_integrations_description Conecta tus calendarios para programar citas automáticamente
+settings-edit.tsx:345 i18next::translator: missingKey fr-FR translation connected_calendars connected_calendars
+settings-edit.tsx:379 i18next::translator: missingKey fr-FR translation no_calendars_connected no_calendars_connected
+settings-edit.tsx:380 i18next::translator: missingKey fr-FR translation connect_calendar_description Conecta tu calendario para gestionar tus citas automáticamente
+settings-edit.tsx:386 i18next::translator: missingKey fr-FR translation connect_new_calendar connect_new_calendar
+settings-edit.tsx:397 i18next::translator: missingKey fr-FR translation connect_google_calendar connect_google_calendar
+settings-edit.tsx:409 i18next::translator: missingKey fr-FR translation connect_outlook_calendar connect_outlook_calendar
+settings-edit.tsx:420 i18next::translator: missingKey fr-FR translation how_calendar_integration_works how_calendar_integration_works
+settings-edit.tsx:422 i18next::translator: missingKey fr-FR translation calendar_integration_description Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.
+settings-edit.tsx:438 i18next::translator: missingKey fr-FR translation cancel cancel
+settings-edit.tsx:444 i18next::translator: missingKey fr-FR translation save_settings save_settings
+chunk-WERSD76P.js?v=eafb6732:9934 Uncaught Error: Objects are not valid as a React child (found: [object Promise]). If you meant to render a collection of children, use an array instead.
+    at throwOnInvalidObjectType (chunk-WERSD76P.js?v=eafb6732:9934:17)
+    at reconcileChildFibers2 (chunk-WERSD76P.js?v=eafb6732:10564:15)
+    at reconcileChildren (chunk-WERSD76P.js?v=eafb6732:14290:37)
+    at mountIndeterminateComponent (chunk-WERSD76P.js?v=eafb6732:14986:13)
+    at beginWork (chunk-WERSD76P.js?v=eafb6732:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-WERSD76P.js?v=eafb6732:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-WERSD76P.js?v=eafb6732:3699:24)
+    at invokeGuardedCallback (chunk-WERSD76P.js?v=eafb6732:3733:39)
+    at beginWork$1 (chunk-WERSD76P.js?v=eafb6732:19765:15)
+    at performUnitOfWork (chunk-WERSD76P.js?v=eafb6732:19198:20)
+throwOnInvalidObjectType @ chunk-WERSD76P.js?v=eafb6732:9934
+reconcileChildFibers2 @ chunk-WERSD76P.js?v=eafb6732:10564
+reconcileChildren @ chunk-WERSD76P.js?v=eafb6732:14290
+mountIndeterminateComponent @ chunk-WERSD76P.js?v=eafb6732:14986
+beginWork @ chunk-WERSD76P.js?v=eafb6732:15914
+callCallback2 @ chunk-WERSD76P.js?v=eafb6732:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=eafb6732:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=eafb6732:3733
+beginWork$1 @ chunk-WERSD76P.js?v=eafb6732:19765
+performUnitOfWork @ chunk-WERSD76P.js?v=eafb6732:19198
+workLoopSync @ chunk-WERSD76P.js?v=eafb6732:19137
+renderRootSync @ chunk-WERSD76P.js?v=eafb6732:19116
+performSyncWorkOnRoot @ chunk-WERSD76P.js?v=eafb6732:18874
+flushSyncCallbacks @ chunk-WERSD76P.js?v=eafb6732:9119
+(anonymous) @ chunk-WERSD76P.js?v=eafb6732:18627Understand this error
+chunk-WERSD76P.js?v=eafb6732:9934 Uncaught Error: Objects are not valid as a React child (found: [object Promise]). If you meant to render a collection of children, use an array instead.
+    at throwOnInvalidObjectType (chunk-WERSD76P.js?v=eafb6732:9934:17)
+    at reconcileChildFibers2 (chunk-WERSD76P.js?v=eafb6732:10564:15)
+    at reconcileChildren (chunk-WERSD76P.js?v=eafb6732:14290:37)
+    at mountIndeterminateComponent (chunk-WERSD76P.js?v=eafb6732:14986:13)
+    at beginWork (chunk-WERSD76P.js?v=eafb6732:15914:22)
+    at HTMLUnknownElement.callCallback2 (chunk-WERSD76P.js?v=eafb6732:3674:22)
+    at Object.invokeGuardedCallbackDev (chunk-WERSD76P.js?v=eafb6732:3699:24)
+    at invokeGuardedCallback (chunk-WERSD76P.js?v=eafb6732:3733:39)
+    at beginWork$1 (chunk-WERSD76P.js?v=eafb6732:19765:15)
+    at performUnitOfWork (chunk-WERSD76P.js?v=eafb6732:19198:20)
+throwOnInvalidObjectType @ chunk-WERSD76P.js?v=eafb6732:9934
+reconcileChildFibers2 @ chunk-WERSD76P.js?v=eafb6732:10564
+reconcileChildren @ chunk-WERSD76P.js?v=eafb6732:14290
+mountIndeterminateComponent @ chunk-WERSD76P.js?v=eafb6732:14986
+beginWork @ chunk-WERSD76P.js?v=eafb6732:15914
+callCallback2 @ chunk-WERSD76P.js?v=eafb6732:3674
+invokeGuardedCallbackDev @ chunk-WERSD76P.js?v=eafb6732:3699
+invokeGuardedCallback @ chunk-WERSD76P.js?v=eafb6732:3733
+beginWork$1 @ chunk-WERSD76P.js?v=eafb6732:19765
+performUnitOfWork @ chunk-WERSD76P.js?v=eafb6732:19198
+workLoopSync @ chunk-WERSD76P.js?v=eafb6732:19137
+renderRootSync @ chunk-WERSD76P.js?v=eafb6732:19116
+recoverFromConcurrentError @ chunk-WERSD76P.js?v=eafb6732:18736
+performSyncWorkOnRoot @ chunk-WERSD76P.js?v=eafb6732:18879
+flushSyncCallbacks @ chunk-WERSD76P.js?v=eafb6732:9119
+(anonymous) @ chunk-WERSD76P.js?v=eafb6732:18627Understand this error
+chunk-WERSD76P.js?v=eafb6732:14032 The above error occurred in the <component> component:
+
+    at component
+    at Route (https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=eafb6732:323:16)
+    at Switch (https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=eafb6732:379:17)
+    at Router
+    at ProfileProvider (https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/src/context/profile-context.tsx:32:35)
+    at AuthProvider (https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/src/context/auth-context.tsx:36:32)
+    at ThemeProvider (https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/src/context/theme-context.tsx:29:33)
+    at QueryClientProvider (https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=eafb6732:2805:3)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-WERSD76P.js?v=eafb6732:14032
+update.callback @ chunk-WERSD76P.js?v=eafb6732:14052
+callCallback @ chunk-WERSD76P.js?v=eafb6732:11248
+commitUpdateQueue @ chunk-WERSD76P.js?v=eafb6732:11265
+commitLayoutEffectOnFiber @ chunk-WERSD76P.js?v=eafb6732:17093
+commitLayoutMountEffects_complete @ chunk-WERSD76P.js?v=eafb6732:17980
+commitLayoutEffects_begin @ chunk-WERSD76P.js?v=eafb6732:17969
+commitLayoutEffects @ chunk-WERSD76P.js?v=eafb6732:17920
+commitRootImpl @ chunk-WERSD76P.js?v=eafb6732:19353
+commitRoot @ chunk-WERSD76P.js?v=eafb6732:19277
+performSyncWorkOnRoot @ chunk-WERSD76P.js?v=eafb6732:18895
+flushSyncCallbacks @ chunk-WERSD76P.js?v=eafb6732:9119
+(anonymous) @ chunk-WERSD76P.js?v=eafb6732:18627Understand this error
+chunk-WERSD76P.js?v=eafb6732:9934 Uncaught Error: Objects are not valid as a React child (found: [object Promise]). If you meant to render a collection of children, use an array instead.
+    at throwOnInvalidObjectType (chunk-WERSD76P.js?v=eafb6732:9934:17)
+    at reconcileChildFibers2 (chunk-WERSD76P.js?v=eafb6732:10564:15)
+    at reconcileChildren (chunk-WERSD76P.js?v=eafb6732:14290:37)
+    at mountIndeterminateComponent (chunk-WERSD76P.js?v=eafb6732:14986:13)
+    at beginWork (chunk-WERSD76P.js?v=eafb6732:15914:22)
+    at beginWork$1 (chunk-WERSD76P.js?v=eafb6732:19753:22)
+    at performUnitOfWork (chunk-WERSD76P.js?v=eafb6732:19198:20)
+    at workLoopSync (chunk-WERSD76P.js?v=eafb6732:19137:13)
+    at renderRootSync (chunk-WERSD76P.js?v=eafb6732:19116:15)
+    at recoverFromConcurrentError (chunk-WERSD76P.js?v=eafb6732:18736:28)
+throwOnInvalidObjectType @ chunk-WERSD76P.js?v=eafb6732:9934
+reconcileChildFibers2 @ chunk-WERSD76P.js?v=eafb6732:10564
+reconcileChildren @ chunk-WERSD76P.js?v=eafb6732:14290
+mountIndeterminateComponent @ chunk-WERSD76P.js?v=eafb6732:14986
+beginWork @ chunk-WERSD76P.js?v=eafb6732:15914
+beginWork$1 @ chunk-WERSD76P.js?v=eafb6732:19753
+performUnitOfWork @ chunk-WERSD76P.js?v=eafb6732:19198
+workLoopSync @ chunk-WERSD76P.js?v=eafb6732:19137
+renderRootSync @ chunk-WERSD76P.js?v=eafb6732:19116
+recoverFromConcurrentError @ chunk-WERSD76P.js?v=eafb6732:18736
+performSyncWorkOnRoot @ chunk-WERSD76P.js?v=eafb6732:18879
+flushSyncCallbacks @ chunk-WERSD76P.js?v=eafb6732:9119
+(anonymous) @ chunk-WERSD76P.js?v=eafb6732:18627Understand this error

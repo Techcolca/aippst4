@@ -2,11 +2,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function GoogleCalendarInstructions() {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const [authUrl, setAuthUrl] = useState("");
   const redirectUrl = "https://workspace.techcolca.repl.co/api/auth/google-calendar/callback";
+  
+  useEffect(() => {
+    // Comprobar si hay una URL de autenticación guardada en localStorage
+    const savedAuthUrl = localStorage.getItem("googleAuthUrl");
+    if (savedAuthUrl) {
+      setAuthUrl(savedAuthUrl);
+      // Limpiar después de obtenerla
+      localStorage.removeItem("googleAuthUrl");
+    }
+  }, []);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(redirectUrl);
@@ -74,6 +87,19 @@ export default function GoogleCalendarInstructions() {
             Una vez que agregue la URL a la lista de redirecciones autorizadas, la autenticación debería
             funcionar correctamente.
           </p>
+          
+          {authUrl && (
+            <div className="mt-6 border-t pt-4">
+              <h3 className="font-semibold text-lg mb-2">Continuar con la autorización</h3>
+              <p className="mb-4">Después de actualizar las URLs de redirección en Google Cloud, puede continuar con el proceso de autorización:</p>
+              <Button 
+                onClick={() => window.location.href = authUrl}
+                className="w-full"
+              >
+                Continuar con la autorización de Google Calendar
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
