@@ -77,17 +77,25 @@ export default function GoogleCalendarInstructions() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="p-4 bg-muted rounded-md flex justify-between items-center">
-            <code className="text-sm font-mono break-all">{redirectUrl}</code>
-            <Button 
-              variant="outline"
-              size="sm"
-              onClick={copyToClipboard}
-              className="ml-2"
-            >
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center p-6">
+              <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" 
+                   aria-label="Cargando" />
+              <span className="ml-3">Obteniendo URL de redirección...</span>
+            </div>
+          ) : (
+            <div className="p-4 bg-muted rounded-md flex justify-between items-center">
+              <code className="text-sm font-mono break-all">{redirectUrl}</code>
+              <Button 
+                variant="outline"
+                size="sm"
+                onClick={copyToClipboard}
+                className="ml-2"
+              >
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </div>
+          )}
           
           <h3 className="font-semibold text-lg mt-4">Pasos a seguir:</h3>
           <ol className="list-decimal pl-6 space-y-2">

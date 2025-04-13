@@ -4315,7 +4315,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/google-calendar-url", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;
-      const authUrl = getGoogleAuthUrl(userId);
+      // Pasar la solicitud para obtener la URL correcta
+      const authUrl = getGoogleAuthUrl(userId, undefined, req);
       
       // Loguear información para verificar
       console.log("INFO REDIRECCIÓN GOOGLE CALENDAR:");
@@ -4333,7 +4334,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/google-calendar", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;
-      const authUrl = getGoogleAuthUrl(userId);
+      // Usar req para obtener la URL de redirección correcta
+      const authUrl = getGoogleAuthUrl(userId, undefined, req);
       res.redirect(authUrl);
     } catch (error) {
       console.error("Error al iniciar la autenticación con Google Calendar:", error);
