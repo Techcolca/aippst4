@@ -4283,5 +4283,172 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ================ Calendar OAuth Routes ================
+  // Google Calendar Auth
+  app.get("/api/auth/google-calendar", authenticateJWT, async (req, res) => {
+    try {
+      const userId = req.userId;
+      const authUrl = getGoogleAuthUrl(userId);
+      res.redirect(authUrl);
+    } catch (error) {
+      console.error("Error al iniciar la autenticación con Google Calendar:", error);
+      res.redirect("/dashboard?tab=settings&error=google_auth_failed");
+    }
+  });
+
+  // Google Calendar Auth Callback
+  app.get("/api/auth/google-calendar/callback", async (req, res) => {
+    try {
+      const { code, state } = req.query;
+      
+      if (!code) {
+        throw new Error("No se recibió el código de autorización");
+      }
+      
+      // Extraer el ID de usuario del estado
+      const stateStr = state as string;
+      const userIdMatch = stateStr.match(/user_id=(\d+)/);
+      
+      if (!userIdMatch || !userIdMatch[1]) {
+        throw new Error("No se pudo identificar al usuario");
+      }
+      
+      const userId = parseInt(userIdMatch[1]);
+      
+      // Intercambiar el código por tokens
+      const tokens = await exchangeGoogleCodeForTokens(code as string);
+      
+      // Calcular la fecha de expiración del token
+      const expiresAt = new Date();
+      expiresAt.setSeconds(expiresAt.getSeconds() + tokens.expires_in);
+      
+      // Verificar si ya existe un token para este usuario y proveedor
+      const existingToken = await storage.getCalendarTokenByProvider(userId, 'google');
+      
+      if (existingToken) {
+        // Actualizar el token existente
+        await storage.updateCalendarToken(existingToken.id, {
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token || existingToken.refreshToken,
+          expiresAt
+        });
+      } else {
+        // Crear un nuevo registro de token
+        await storage.createCalendarToken({
+          userId,
+          provider: 'google',
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+          expiresAt
+        });
+      }
+      
+      // Redirigir al usuario de vuelta a la página de configuración
+      res.redirect("/dashboard?tab=settings&success=google_calendar_connected");
+    } catch (error) {
+      console.error("Error en el callback de Google Calendar:", error);
+      res.redirect("/dashboard?tab=settings&error=google_auth_callback_failed");
+    }
+  });
+
+  // Outlook Calendar Auth
+  app.get("/api/auth/outlook-calendar", authenticateJWT, async (req, res) => {
+    try {
+      const userId = req.userId;
+      const authUrl = getOutlookAuthUrl(userId);
+      res.redirect(authUrl);
+    } catch (error) {
+      console.error("Error al iniciar la autenticación con Outlook Calendar:", error);
+      res.redirect("/dashboard?tab=settings&error=outlook_auth_failed");
+    }
+  });
+
+  // Outlook Calendar Auth Callback
+  app.get("/api/auth/outlook-calendar/callback", async (req, res) => {
+    try {
+      const { code, state } = req.query;
+      
+      if (!code) {
+        throw new Error("No se recibió el código de autorización");
+      }
+      
+      // Extraer el ID de usuario del estado
+      const stateStr = state as string;
+      const userIdMatch = stateStr.match(/user_id=(\d+)/);
+      
+      if (!userIdMatch || !userIdMatch[1]) {
+        throw new Error("No se pudo identificar al usuario");
+      }
+      
+      const userId = parseInt(userIdMatch[1]);
+      
+      // Intercambiar el código por tokens
+      const tokens = await exchangeOutlookCodeForTokens(code as string);
+      
+      // Calcular la fecha de expiración del token
+      const expiresAt = new Date();
+      expiresAt.setSeconds(expiresAt.getSeconds() + tokens.expires_in);
+      
+      // Verificar si ya existe un token para este usuario y proveedor
+      const existingToken = await storage.getCalendarTokenByProvider(userId, 'outlook');
+      
+      if (existingToken) {
+        // Actualizar el token existente
+        await storage.updateCalendarToken(existingToken.id, {
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token || existingToken.refreshToken,
+          expiresAt
+        });
+      } else {
+        // Crear un nuevo registro de token
+        await storage.createCalendarToken({
+          userId,
+          provider: 'outlook',
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+          expiresAt
+        });
+      }
+      
+      // Redirigir al usuario de vuelta a la página de configuración
+      res.redirect("/dashboard?tab=settings&success=outlook_calendar_connected");
+    } catch (error) {
+      console.error("Error en el callback de Outlook Calendar:", error);
+      res.redirect("/dashboard?tab=settings&error=outlook_auth_callback_failed");
+    }
+  });
+
+  // Calendar Token Management
+  app.get("/api/calendar-tokens", authenticateJWT, async (req, res) => {
+    try {
+      const tokens = await storage.getCalendarTokens(req.userId);
+      res.json(tokens);
+    } catch (error) {
+      console.error("Error al obtener tokens de calendario:", error);
+      res.status(500).json({ message: "Error al obtener tokens de calendario" });
+    }
+  });
+
+  app.delete("/api/calendar-tokens/:id", authenticateJWT, async (req, res) => {
+    try {
+      const tokenId = parseInt(req.params.id);
+      const token = await storage.getCalendarToken(tokenId);
+      
+      if (!token) {
+        return res.status(404).json({ message: "Token no encontrado" });
+      }
+      
+      if (token.userId !== req.userId) {
+        return res.status(403).json({ message: "No tienes permiso para eliminar este token" });
+      }
+      
+      await storage.deleteCalendarToken(tokenId);
+      res.status(204).end();
+    } catch (error) {
+      console.error("Error al eliminar token de calendario:", error);
+      res.status(500).json({ message: "Error al eliminar token de calendario" });
+    }
+  });
+
   return httpServer;
 }

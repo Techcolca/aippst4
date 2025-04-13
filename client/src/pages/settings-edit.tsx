@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { ColorPicker } from "@/components/color-picker";
+import { ColorPicker } from "../components/color-picker";
 import { CalendarSearch, Check, Calendar, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -113,11 +113,11 @@ export default function SettingsEdit() {
   };
 
   const connectGoogleCalendar = () => {
-    window.location.href = "/api/google-auth";
+    window.location.href = "/api/auth/google-calendar";
   };
 
   const connectOutlookCalendar = () => {
-    window.location.href = "/api/outlook-auth";
+    window.location.href = "/api/auth/outlook-calendar";
   };
 
   const disconnectCalendar = async (id: number) => {
