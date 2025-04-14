@@ -1,0 +1,134 @@
+2025-04-14 19:21:30.41
+0c31e8c4
+User
+Usando URL de Replit ID: https://0c31e8c4-4293-41a9-83aa-917b5107f03f-00.picard.replit.dev/api/auth/google-calendar/callback
+2025-04-14 19:21:30.42
+0c31e8c4
+User
+(node:42) NOTE: The AWS SDK for JavaScript (v2) is in maintenance mode.
+2025-04-14 19:21:30.42
+0c31e8c4
+User
+SDK releases are limited to address critical bug fixes and security issues only.
+2025-04-14 19:21:30.42
+0c31e8c4
+User
+2025-04-14 19:21:30.42
+0c31e8c4
+User
+Please migrate your code to use AWS SDK for JavaScript (v3).
+2025-04-14 19:21:30.42
+0c31e8c4
+User
+For more information, check the blog post at https://a.co/cUPnyil
+2025-04-14 19:21:30.42
+0c31e8c4
+User
+(Use `node --trace-warnings ...` to show where the warning was created)
+2025-04-14 19:21:31.24
+0c31e8c4
+User
+La integración interna para el sitio web principal ya existe
+2025-04-14 19:21:31.24
+0c31e8c4
+User
+Sirviendo archivos estáticos desde: /home/runner/workspace/public/static
+2025-04-14 19:21:31.29
+0c31e8c4
+User
+Re-optimizing dependencies because vite config has changed
+2025-04-14 19:21:32.78
+0c31e8c4
+User
+11:21:32 PM [express] serving on port 5000
+2025-04-14 19:21:33.10
+0c31e8c4
+User
+11:21:33 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=50SpdADIlrfpIlRRWQ7fO (resolved id: /src/main.tsx?v=50SpdADIlrfpIlRRWQ7fO). Does the file exist?
+2025-04-14 19:21:33.13
+0c31e8c4
+User
+npm notice
+2025-04-14 19:21:33.13
+0c31e8c4
+User
+npm notice New major version of npm available! 10.8.2 -> 11.3.0
+2025-04-14 19:21:33.13
+0c31e8c4
+User
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.3.0
+2025-04-14 19:21:33.13
+0c31e8c4
+User
+npm notice To update run: npm install -g npm@11.3.0
+2025-04-14 19:21:33.13
+0c31e8c4
+User
+npm notice
+2025-04-14 19:21:33.14
+0c31e8c4
+System
+command finished with error [npm run start]: exit status 1
+2025-04-14 19:21:33.37
+0c31e8c4
+User
+> rest-express@1.0.0 start
+2025-04-14 19:21:33.37
+0c31e8c4
+User
+> NODE_ENV=production node dist/index.js
+2025-04-14 19:22:38.38
+0c31e8c4
+User
+Usando URL de Replit ID: https://0c31e8c4-4293-41a9-83aa-917b5107f03f-00.picard.replit.dev/api/auth/google-calendar/callback
+2025-04-14 19:22:38.39
+0c31e8c4
+User
+(node:147) NOTE: The AWS SDK for JavaScript (v2) is in maintenance mode.
+2025-04-14 19:22:38.39
+0c31e8c4
+User
+SDK releases are limited to address critical bug fixes and security issues only.
+2025-04-14 19:22:38.39
+0c31e8c4
+User
+2025-04-14 19:22:38.39
+0c31e8c4
+User
+Please migrate your code to use AWS SDK for JavaScript (v3).
+2025-04-14 19:22:38.39
+0c31e8c4
+User
+For more information, check the blog post at https://a.co/cUPnyil
+2025-04-14 19:22:38.39
+0c31e8c4
+User
+(Use `node --trace-warnings ...` to show where the warning was created)
+2025-04-14 19:22:40.31
+0c31e8c4
+User
+La integración interna para el sitio web principal ya existe
+2025-04-14 19:22:40.31
+0c31e8c4
+User
+Sirviendo archivos estáticos desde: /home/runner/workspace/public/static
+2025-04-14 19:22:55.31
+0c31e8c4
+User
+11:22:53 PM [express] serving on port 5000
+2025-04-14 19:23:10.65
+0c31e8c4
+User
+11:23:10 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=CONfH35yc38c8eYS7v5Lo (resolved id: /src/main.tsx?v=CONfH35yc38c8eYS7v5Lo). Does the file exist?
+2025-04-14 19:23:11.91
+0c31e8c4
+System
+command finished with error [npm run start]: exit status 1
+2025-04-14 19:23:40.61
+0c31e8c4
+User
+> rest-express@1.0.0 start
+2025-04-14 19:23:40.61
+0c31e8c4
+User
+> NODE_ENV=production node dist/index.js
