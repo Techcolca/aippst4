@@ -56,10 +56,10 @@ let REDIRECT_URL = getRedirectUrl();
 /**
  * Genera la URL para autorización OAuth de Google
  */
-export function getGoogleAuthUrl(userId: number, state?: string, req?: any): string {
-  // Actualizar la URL de redirección con la solicitud actual
-  if (req) {
-    REDIRECT_URL = getRedirectUrl(req);
+export function getGoogleAuthUrl(userId: number, state?: string, req?: any, customUrl?: string): string {
+  // Actualizar la URL de redirección con la solicitud actual o URL personalizada
+  if (customUrl || req) {
+    REDIRECT_URL = getRedirectUrl(req, customUrl);
     console.log("INFO REDIRECCIÓN GOOGLE CALENDAR:");
     console.log("URL de autorización:", REDIRECT_URL);
     console.log("REDIRECT_URL completa:", encodeURIComponent(REDIRECT_URL));
@@ -131,19 +131,19 @@ export async function refreshAccessToken(refreshToken: string): Promise<string> 
 export async function getValidAccessToken(calendarToken: CalendarToken): Promise<string> {
   // Verificar si el token ha expirado
   const now = new Date();
-  const tokenExpiry = new Date(calendarToken.tokenExpiry!);
+  const tokenExpiry = new Date(calendarToken.expiresAt!);
 
   if (now >= tokenExpiry && calendarToken.refreshToken) {
     // El token ha expirado, refrescar usando refresh token
     const newAccessToken = await refreshAccessToken(calendarToken.refreshToken);
     
     // Actualizar el token en la base de datos
-    const expiryTime = new Date();
-    expiryTime.setSeconds(expiryTime.getSeconds() + 3600); // Típicamente 1 hora para Google
+    const expiresAt = new Date();
+    expiresAt.setSeconds(expiresAt.getSeconds() + 3600); // Típicamente 1 hora para Google
     
     await storage.updateCalendarToken(calendarToken.id, {
       accessToken: newAccessToken,
-      tokenExpiry: expiryTime
+      expiresAt: expiresAt
     });
     
     return newAccessToken;

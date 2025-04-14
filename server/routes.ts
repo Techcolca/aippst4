@@ -4315,13 +4315,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/google-calendar-url", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;
-      // Pasar la solicitud para obtener la URL correcta
-      const authUrl = getGoogleAuthUrl(userId, undefined, req);
+      
+      // Verificar si se proporciona una URL personalizada
+      const customRedirectUrl = req.query.customRedirectUrl as string;
+      
+      // Pasar la solicitud para obtener la URL correcta (con URL personalizada si está disponible)
+      const authUrl = getGoogleAuthUrl(userId, undefined, req, customRedirectUrl);
       
       // Loguear información para verificar
       console.log("INFO REDIRECCIÓN GOOGLE CALENDAR:");
       console.log("URL de autorización:", authUrl);
       console.log("REDIRECT_URL completa:", authUrl.match(/redirect_uri=([^&]*)/)?.[1]);
+      console.log("URL personalizada proporcionada:", customRedirectUrl || "No");
       
       res.json({ authUrl });
     } catch (error) {
@@ -4334,8 +4339,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/auth/google-calendar", authenticateJWT, async (req, res) => {
     try {
       const userId = req.userId;
+      
+      // Verificar si se proporciona una URL personalizada
+      const customRedirectUrl = req.query.customRedirectUrl as string;
+      
       // Usar req para obtener la URL de redirección correcta
-      const authUrl = getGoogleAuthUrl(userId, undefined, req);
+      const authUrl = getGoogleAuthUrl(userId, undefined, req, customRedirectUrl);
       res.redirect(authUrl);
     } catch (error) {
       console.error("Error al iniciar la autenticación con Google Calendar:", error);
