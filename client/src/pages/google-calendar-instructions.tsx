@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +13,8 @@ export default function GoogleCalendarInstructions() {
   const [authUrl, setAuthUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [redirectUrl, setRedirectUrl] = useState("");
+  const [customUrl, setCustomUrl] = useState("");
+  const [useCustomUrl, setUseCustomUrl] = useState(false);
   
   useEffect(() => {
     async function fetchData() {
@@ -84,16 +88,58 @@ export default function GoogleCalendarInstructions() {
               <span className="ml-3">Obteniendo URL de redirección...</span>
             </div>
           ) : (
-            <div className="p-4 bg-muted rounded-md flex justify-between items-center">
-              <code className="text-sm font-mono break-all">{redirectUrl}</code>
-              <Button 
-                variant="outline"
-                size="sm"
-                onClick={copyToClipboard}
-                className="ml-2"
-              >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </Button>
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Checkbox 
+                  id="useCustomUrl" 
+                  checked={useCustomUrl} 
+                  onCheckedChange={(checked) => setUseCustomUrl(checked === true)}
+                />
+                <label htmlFor="useCustomUrl" className="text-sm font-medium">
+                  Usar URL personalizada para la redirección
+                </label>
+              </div>
+              
+              {useCustomUrl ? (
+                <div className="space-y-2">
+                  <div className="flex">
+                    <Input 
+                      value={customUrl}
+                      onChange={(e) => setCustomUrl(e.target.value)}
+                      placeholder="https://midominiopersonalizado.com/api/auth/google-calendar/callback"
+                      className="flex-1"
+                    />
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        navigator.clipboard.writeText(customUrl);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className="ml-2"
+                    >
+                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Ingrese la URL completa que utilizará en su entorno de producción. 
+                    Esta URL debe terminar con "/api/auth/google-calendar/callback"
+                  </p>
+                </div>
+              ) : (
+                <div className="p-4 bg-muted rounded-md flex justify-between items-center">
+                  <code className="text-sm font-mono break-all">{redirectUrl}</code>
+                  <Button 
+                    variant="outline"
+                    size="sm"
+                    onClick={copyToClipboard}
+                    className="ml-2"
+                  >
+                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
           
@@ -125,18 +171,48 @@ export default function GoogleCalendarInstructions() {
             funcionar correctamente.
           </p>
           
-          {authUrl && (
-            <div className="mt-6 border-t pt-4">
-              <h3 className="font-semibold text-lg mb-2">Continuar con la autorización</h3>
-              <p className="mb-4">Después de actualizar las URLs de redirección en Google Cloud, puede continuar con el proceso de autorización:</p>
+          <div className="mt-6 border-t pt-4">
+            <h3 className="font-semibold text-lg mb-2">Continuar con la autorización</h3>
+            <p className="mb-4">Después de actualizar las URLs de redirección en Google Cloud, puede continuar con el proceso de autorización:</p>
+            
+            {authUrl ? (
               <Button 
                 onClick={() => window.location.href = authUrl}
                 className="w-full"
               >
                 Continuar con la autorización de Google Calendar
               </Button>
-            </div>
-          )}
+            ) : (
+              <Button 
+                onClick={async () => {
+                  try {
+                    setLoading(true);
+                    const response = await fetch(`/api/auth/google-calendar-url${useCustomUrl ? `?customRedirectUrl=${encodeURIComponent(customUrl)}` : ''}`, {
+                      headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                      }
+                    });
+                    
+                    if (!response.ok) {
+                      throw new Error("Error al obtener URL de autenticación");
+                    }
+                    
+                    const data = await response.json();
+                    window.location.href = data.authUrl;
+                  } catch (error) {
+                    console.error("Error al iniciar la autenticación:", error);
+                    alert("Error al obtener URL de autenticación. Por favor, intente nuevamente.");
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                className="w-full"
+                disabled={useCustomUrl && !customUrl.trim()}
+              >
+                Obtener URL de autorización de Google Calendar
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

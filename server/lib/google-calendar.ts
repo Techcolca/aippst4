@@ -17,7 +17,13 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 // Determinar la URL de redireccionamiento basada en el entorno
 // Usamos un método en lugar de una constante para poder actualizar dinámicamente la URL 
 // según el entorno actual
-function getRedirectUrl(req?: any): string {
+function getRedirectUrl(req?: any, customUrl?: string): string {
+  // Si se proporciona una URL personalizada, usarla con la prioridad más alta
+  if (customUrl && customUrl.trim()) {
+    console.log(`Usando URL personalizada: ${customUrl}`);
+    return customUrl;
+  }
+
   // Usamos el hostname de la solicitud actual si está disponible
   if (req && req.headers && req.headers.host) {
     const protocol = req.headers['x-forwarded-proto'] || 'http';
