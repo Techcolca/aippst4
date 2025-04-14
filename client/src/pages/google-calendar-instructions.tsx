@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, Check, Copy } from "lucide-react";
+import { AlertCircle, AlertTriangle, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ export default function GoogleCalendarInstructions() {
   const [redirectUrl, setRedirectUrl] = useState("");
   const [customUrl, setCustomUrl] = useState("");
   const [useCustomUrl, setUseCustomUrl] = useState(false);
+  const [lastUsedUrl, setLastUsedUrl] = useState<string>("");
+  const [showUrlComparison, setShowUrlComparison] = useState(false);
   
   useEffect(() => {
     async function fetchData() {
@@ -124,8 +126,18 @@ export default function GoogleCalendarInstructions() {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Ingrese la URL completa que utilizará en su entorno de producción. 
-                    Esta URL debe terminar con "/api/auth/google-calendar/callback"
+                    Esta URL debe terminar con "/api/auth/google-calendar/callback" y debe ser 
+                    <strong>exactamente igual</strong> a la configurada en la Consola de Google Cloud.
                   </p>
+                  <div className="bg-yellow-50 text-amber-800 p-3 text-xs rounded border border-amber-200 mt-2">
+                    <p className="font-bold">Nota importante:</p>
+                    <p>Para evitar el error "redirect_uri_mismatch", debe copiar exactamente esta URL en Google Cloud Console. Asegúrese que no haya diferencias en:</p>
+                    <ul className="list-disc ml-4 mt-1 space-y-1">
+                      <li>Protocolo (https:// vs http://)</li>
+                      <li>Subdominios (incluyendo los IDs de Replit)</li>
+                      <li>La ruta completa (/api/auth/google-calendar/callback)</li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <div className="p-4 bg-muted rounded-md flex justify-between items-center">
@@ -158,7 +170,7 @@ export default function GoogleCalendarInstructions() {
       
       <Card>
         <CardHeader>
-          <CardTitle>Información adicional</CardTitle>
+          <CardTitle>Diagnóstico del error</CardTitle>
         </CardHeader>
         <CardContent>
           <p>
@@ -166,8 +178,54 @@ export default function GoogleCalendarInstructions() {
             estén explícitamente autorizadas por motivos de seguridad. La URL que está intentando usar no coincide
             con ninguna de las URLs configuradas en su consola de Google Cloud.
           </p>
+          
+          <div className="mt-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowUrlComparison(!showUrlComparison)}
+              className="mb-2"
+            >
+              {showUrlComparison ? "Ocultar detalles técnicos" : "Mostrar detalles técnicos"}
+            </Button>
+            
+            {showUrlComparison && (
+              <div className="bg-muted p-4 rounded-md mt-2 text-sm">
+                <h4 className="font-semibold mb-2 flex items-center">
+                  <AlertTriangle className="h-4 w-4 mr-2 text-amber-500" />
+                  Diagnóstico de error redirect_uri_mismatch
+                </h4>
+                
+                <div className="space-y-3">
+                  <div>
+                    <div className="font-medium">URL configurada en Google Cloud (debe verificar):</div>
+                    <div className="bg-gray-100 p-2 rounded border font-mono text-xs break-all">
+                      https://...your-configured-url.../api/auth/google-calendar/callback
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="font-medium">URL actual que se está usando:</div>
+                    <div className="bg-gray-100 p-2 rounded border font-mono text-xs break-all">
+                      {useCustomUrl ? customUrl : redirectUrl}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-amber-50 p-3 rounded border border-amber-200 text-xs">
+                    <p>La solución es asegurarse de que las URL sean <strong>exactamente iguales</strong>, con:</p>
+                    <ul className="list-disc ml-4 mt-1">
+                      <li>El mismo protocolo (https:// o http://)</li>
+                      <li>El mismo dominio y subdominio completo</li>
+                      <li>La misma ruta (/api/auth/google-calendar/callback)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          
           <p className="mt-4">
-            Una vez que agregue la URL a la lista de redirecciones autorizadas, la autenticación debería
+            Una vez que agregue la URL correcta a la lista de redirecciones autorizadas, la autenticación debería
             funcionar correctamente.
           </p>
           
