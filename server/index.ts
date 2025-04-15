@@ -78,10 +78,10 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // Serving the app on port 5017 for deployment compatibility
+  // Serving the app on port 3000 for deployment compatibility
   // this serves both the API and the client.
   // Changed from 5000 to 5017 to avoid port conflicts in deployment.
-  const port = 5017;
+  const port = 3000;
   server.listen({
     port,
     host: "0.0.0.0",

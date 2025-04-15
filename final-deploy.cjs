@@ -9,38 +9,70 @@ const path = require('path');
 const fs = require('fs');
 
 // Puerto para el despliegue (el que Replit espera)
-const DEPLOY_PORT = process.env.PORT || 3000;
+const DEPLOY_PORT = process.env.PORT || 8080;
 // Puertos donde podría estar corriendo la aplicación (por orden de prioridad)
-const APP_PORTS = [5017, 5000, 3000, 8080, 8000];
+const APP_PORTS = [3000, 5017, 5000, 8080, 8000];
 
 console.log('🚀 Iniciando servidor de despliegue para AIPI...');
 console.log(`📅 Fecha y hora: ${new Date().toLocaleString()}`);
 
 /**
  * Verificar si el servidor interno está funcionando en un puerto específico
+ * Intentando varias rutas y métodos
  */
 function checkPort(port) {
   return new Promise((resolve) => {
-    const req = http.request({
-      method: 'HEAD',
-      hostname: 'localhost',
-      port: port,
-      path: '/',
-      timeout: 1500
-    }, (res) => {
-      resolve(res.statusCode < 500);
-    });
+    // Intentar diferentes métodos y rutas
+    const checkMethods = [
+      { method: 'GET', path: '/' },
+      { method: 'HEAD', path: '/' },
+      { method: 'GET', path: '/api/health' },
+      { method: 'GET', path: '/healthz' }
+    ];
     
-    req.on('error', () => {
-      resolve(false);
-    });
+    let checksCompleted = 0;
+    let portAvailable = false;
     
-    req.on('timeout', () => {
-      req.destroy();
-      resolve(false);
-    });
+    // Función para intentar un solo método
+    function tryMethod(method, path) {
+      const req = http.request({
+        method: method,
+        hostname: 'localhost',
+        port: port,
+        path: path,
+        timeout: 1000
+      }, (res) => {
+        // Cualquier respuesta (incluso errores 4xx) indica que el puerto está en uso
+        portAvailable = true;
+        checksCompleted++;
+        
+        if (checksCompleted >= checkMethods.length || portAvailable) {
+          resolve(portAvailable);
+        }
+      });
+      
+      req.on('error', () => {
+        checksCompleted++;
+        if (checksCompleted >= checkMethods.length && !portAvailable) {
+          resolve(false);
+        }
+      });
+      
+      req.on('timeout', () => {
+        req.destroy();
+        checksCompleted++;
+        if (checksCompleted >= checkMethods.length && !portAvailable) {
+          resolve(false);
+        }
+      });
+      
+      req.end();
+    }
     
-    req.end();
+    // Intentar cada método
+    for (const { method, path } of checkMethods) {
+      tryMethod(method, path);
+    }
   });
 }
 
