@@ -1,18 +1,13 @@
 /**
- * Servidor de producción optimizado para AIPI
+ * Servidor de producción optimizado para AIPI (versión CommonJS)
  * Este archivo maneja health checks, inicio de aplicación y proxy en un solo lugar
  */
 
-import express from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import { spawn } from 'child_process';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-
-// Obtener __dirname en ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const { spawn } = require('child_process');
+const path = require('path');
+const fs = require('fs');
 
 // Configuración básica
 const PORT = process.env.PORT || 3000;

@@ -1,13 +1,8 @@
 /**
- * Script para optimizar el build antes del despliegue
+ * Script para optimizar el build antes del despliegue (versión CommonJS)
  */
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-// Obtener __dirname en ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const fs = require('fs');
+const path = require('path');
 
 console.log('🔍 Optimizando build para despliegue...');
 
@@ -17,10 +12,10 @@ if (!fs.existsSync(path.join(__dirname, 'dist'))) {
   console.log('✅ Directorio dist creado');
 }
 
-// Crear una copia simplificada del production-server.js en dist
+// Crear una copia simplificada del production-server.cjs en dist
 fs.copyFileSync(
-  path.join(__dirname, 'production-server.js'),
-  path.join(__dirname, 'dist', 'production-server.js')
+  path.join(__dirname, 'production-server.cjs'),
+  path.join(__dirname, 'dist', 'production-server.cjs')
 );
 
 console.log('✅ Servidor de producción copiado a dist/');
@@ -28,15 +23,15 @@ console.log('✅ Servidor de producción copiado a dist/');
 // Crear un archivo index.js compatible en dist para respaldo
 const indexContent = `// Archivo generado automáticamente para despliegue
 process.env.NODE_ENV = 'production';
-import '../production-server.js';
+require('../production-server.cjs');
 `;
 
 fs.writeFileSync(
-  path.join(__dirname, 'dist', 'index.js'),
+  path.join(__dirname, 'dist', 'index.cjs'),
   indexContent
 );
 
-console.log('✅ Archivo index.js creado en dist/');
+console.log('✅ Archivo index.cjs creado en dist/');
 
 // Verificar archivos estáticos
 const clientDistPath = path.join(__dirname, 'dist', 'client');
