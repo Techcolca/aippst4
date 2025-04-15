@@ -4301,7 +4301,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           `${process.env.APP_URL}/api/auth/google-calendar/callback` : 
           process.env.REPL_ID ? 
             `https://${process.env.REPL_ID}-00.picard.replit.dev/api/auth/google-calendar/callback` :
-            'https://localhost:5000/api/auth/google-calendar/callback'
+            'https://localhost:5017/api/auth/google-calendar/callback'
       },
       authConfigured: {
         google: !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET,

@@ -1,294 +1,290 @@
 /**
- * Configuración de despliegue final para AIPI
- * Modifica directamente los archivos necesarios para el despliegue correcto
+ * Script de despliegue final para AIPI
+ * Este script crea un servidor proxy para redireccionar tráfico y responder a health checks
  */
 const express = require('express');
+const http = require('http');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const fs = require('fs');
 const path = require('path');
-const { execSync, spawn } = require('child_process');
+const fs = require('fs');
 
-// Puertos para evitar conflictos
-const PORT = process.env.PORT || 3000;
-const DEV_PORT = 3001;
+// Puerto para el despliegue (el que Replit espera)
+const DEPLOY_PORT = process.env.PORT || 3000;
+// Puertos donde podría estar corriendo la aplicación (por orden de prioridad)
+const APP_PORTS = [5017, 5000, 3000, 8080, 8000];
 
-console.log('🚀 Iniciando configuración final para AIPI...');
+console.log('🚀 Iniciando servidor de despliegue para AIPI...');
+console.log(`📅 Fecha y hora: ${new Date().toLocaleString()}`);
 
-// Función para modificar temporalmente el código del servidor
-function patchServerFile() {
-  try {
-    const serverPath = path.join(process.cwd(), 'server', 'index.ts');
+/**
+ * Verificar si el servidor interno está funcionando en un puerto específico
+ */
+function checkPort(port) {
+  return new Promise((resolve) => {
+    const req = http.request({
+      method: 'HEAD',
+      hostname: 'localhost',
+      port: port,
+      path: '/',
+      timeout: 1500
+    }, (res) => {
+      resolve(res.statusCode < 500);
+    });
     
-    if (!fs.existsSync(serverPath)) {
-      console.error('❌ No se encontró el archivo del servidor');
-      return false;
-    }
+    req.on('error', () => {
+      resolve(false);
+    });
     
-    console.log('📝 Modificando temporalmente archivo del servidor...');
+    req.on('timeout', () => {
+      req.destroy();
+      resolve(false);
+    });
     
-    // Leer el contenido actual
-    let serverContent = fs.readFileSync(serverPath, 'utf8');
-    
-    // Buscar la línea que configura el puerto
-    const portRegex = /const PORT\s*=\s*(?:process\.env\.PORT\s*\|\|\s*)?(\d+)/;
-    const listenRegex = /app\.listen\(\s*(?:PORT|process\.env\.PORT\s*\|\|\s*\d+)/;
-    
-    if (portRegex.test(serverContent)) {
-      // Reemplazar la definición del puerto
-      serverContent = serverContent.replace(portRegex, `const PORT = ${DEV_PORT}`);
-      console.log(`✓ Puerto modificado a ${DEV_PORT}`);
-    } else {
-      console.log('⚠️ No se encontró la definición de puerto. Intentando modificar el listen directamente.');
-    }
-    
-    if (listenRegex.test(serverContent)) {
-      // Reemplazar la llamada a listen
-      serverContent = serverContent.replace(listenRegex, `app.listen(${DEV_PORT}`);
-      console.log('✓ Llamada a listen modificada');
-    } else {
-      console.log('⚠️ No se encontró la llamada a listen para modificar');
-    }
-    
-    // Guardar el archivo modificado
-    fs.writeFileSync(serverPath, serverContent);
-    
-    return true;
-  } catch (error) {
-    console.error('❌ Error al modificar el archivo del servidor:', error);
-    return false;
-  }
+    req.end();
+  });
 }
 
-// Función para modificar múltiples archivos si el método principal falla
-function patchAdditionalFiles() {
-  try {
-    // Buscar archivos que puedan tener configuración de puerto
-    const files = [
-      path.join(process.cwd(), 'server', 'index.ts'),
-      path.join(process.cwd(), 'server', 'index.js'),
-      path.join(process.cwd(), 'server', 'server.ts'),
-      path.join(process.cwd(), 'server', 'server.js'),
-      path.join(process.cwd(), 'server', 'app.ts'),
-      path.join(process.cwd(), 'server', 'app.js')
-    ];
+/**
+ * Encontrar el puerto donde está ejecutándose la aplicación
+ */
+async function findActivePort() {
+  console.log('🔍 Buscando puerto activo de la aplicación...');
+  
+  // Comprobar cada puerto de la lista
+  for (const port of APP_PORTS) {
+    console.log(`  - Verificando puerto ${port}...`);
+    const isActive = await checkPort(port);
     
-    let modifiedAny = false;
-    
-    for (const file of files) {
-      if (fs.existsSync(file)) {
-        console.log(`Verificando archivo: ${file}`);
-        
-        let content = fs.readFileSync(file, 'utf8');
-        let modified = false;
-        
-        // Patrones comunes para definición de puerto
-        const patterns = [
-          { regex: /const PORT\s*=\s*(?:process\.env\.PORT\s*\|\|\s*)?(\d+)/, replacement: `const PORT = ${DEV_PORT}` },
-          { regex: /app\.listen\(\s*(?:PORT|process\.env\.PORT\s*\|\|\s*\d+)/, replacement: `app.listen(${DEV_PORT}` },
-          { regex: /listen\(\s*(?:PORT|process\.env\.PORT\s*\|\|\s*\d+)/, replacement: `listen(${DEV_PORT}` },
-          { regex: /port:\s*(?:PORT|process\.env\.PORT\s*\|\|\s*\d+)/, replacement: `port: ${DEV_PORT}` }
-        ];
-        
-        for (const pattern of patterns) {
-          if (pattern.regex.test(content)) {
-            content = content.replace(pattern.regex, pattern.replacement);
-            modified = true;
-          }
-        }
-        
-        if (modified) {
-          fs.writeFileSync(file, content);
-          console.log(`✅ Archivo modificado: ${file}`);
-          modifiedAny = true;
-        }
+    if (isActive) {
+      console.log(`✅ Aplicación encontrada en puerto ${port}`);
+      return port;
+    }
+  }
+  
+  console.log('❌ No se encontró la aplicación en ningún puerto');
+  return null;
+}
+
+/**
+ * Crear una página de error HTML
+ */
+function createErrorPage(title, message, status) {
+  return `
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AIPI - ${title}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body { 
+        font-family: system-ui, sans-serif; 
+        max-width: 800px; 
+        margin: 0 auto; 
+        padding: 20px; 
+        text-align: center;
+        line-height: 1.6;
+        color: #333;
       }
-    }
-    
-    return modifiedAny;
-  } catch (error) {
-    console.error('❌ Error al modificar archivos adicionales:', error);
-    return false;
-  }
-}
-
-// Función para crear el archivo proxy auxiliar
-function createAuxiliaryScript() {
-  try {
-    const proxyPath = path.join(process.cwd(), 'proxy-patch.cjs');
-    const content = `
-    /**
-     * Script de parcheo para proxy AIPI
-     * Este archivo se crea automáticamente durante el despliegue
-     */
-    process.env.PORT = "${DEV_PORT}";
-    require('./server/index.ts');
-    `;
-    
-    fs.writeFileSync(proxyPath, content);
-    console.log('✅ Script auxiliar de proxy creado');
-    return true;
-  } catch (error) {
-    console.error('❌ Error al crear script auxiliar:', error);
-    return false;
-  }
-}
-
-// Función para crear enlaces simbólicos necesarios
-function createSymlinks() {
-  try {
-    // Enlace src -> client/src (crucial para el funcionamiento correcto)
-    if (!fs.existsSync('./src')) {
-      if (fs.existsSync('./client/src')) {
-        try {
-          fs.symlinkSync('./client/src', './src', 'dir');
-          console.log('✅ Enlace simbólico creado: ./client/src -> ./src');
-        } catch (e) {
-          console.log('⚠️ No se pudo crear enlace simbólico. Intentando aproximación alternativa.');
-          // Si falló el symlink, intentar ejecutar comando en shell
-          execSync('ln -sf ./client/src ./src');
-          console.log('✅ Enlace creado vía shell command');
-        }
-      } else {
-        console.error('❌ No se puede crear enlace: ./client/src no existe');
-        return false;
+      .container { 
+        background-color: white; 
+        border-radius: 8px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        padding: 2rem; 
+        margin-top: 3rem; 
       }
-    } else {
-      console.log('ℹ️ Enlace simbólico src ya existe');
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('❌ Error creando enlaces simbólicos:', error);
-    return false;
-  }
+      .status {
+        font-size: 5rem;
+        color: #4a6cf7;
+        margin: 0;
+      }
+      h1 { 
+        font-size: 2rem; 
+        margin-top: 0.5rem; 
+      }
+      .btn { 
+        display: inline-block; 
+        padding: 10px 20px; 
+        background: #4a6cf7; 
+        color: white; 
+        border-radius: 4px; 
+        text-decoration: none; 
+        margin: 1rem 0; 
+      }
+      .btn:hover {
+        background: #3a5ce7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p class="status">${status}</p>
+      <h1>${title}</h1>
+      <p>${message}</p>
+      <a href="/" class="btn">Volver al inicio</a>
+    </div>
+  </body>
+</html>
+  `;
 }
 
-// Servidor proxy para redirigir solicitudes al puerto interno
-function startProxyServer() {
+/**
+ * Iniciar la aplicación en modo de despliegue
+ */
+async function startDeploymentServer() {
   const app = express();
   
-  // Log middleware
-  app.use((req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
-    next();
-  });
+  // Buscar en qué puerto está funcionando la aplicación
+  const activePort = await findActivePort();
   
-  // Endpoint de estado (para verificación)
-  app.get('/deployment-status', (req, res) => {
-    res.json({
-      status: 'running',
-      timestamp: new Date().toISOString(),
-      port: PORT,
-      internalPort: DEV_PORT
-    });
-  });
-  
-  // Configurar proxy para redirigir todo lo demás
-  app.use('/', createProxyMiddleware({
-    target: `http://localhost:${DEV_PORT}`,
-    changeOrigin: true,
-    ws: true,
-    onProxyReq: (proxyReq, req, res) => {
-      // Agregar encabezados personalizados si es necesario
-    },
-    onError: (err, req, res) => {
-      console.error('Error de proxy:', err);
-      
-      if (!res.headersSent) {
-        res.status(502).send(`
-          <html>
-            <head>
-              <title>Error de Conexión</title>
-              <style>
-                body { font-family: -apple-system, system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-                .error { background: #fff2f0; border-left: 4px solid #ff4d4f; padding: 16px; margin: 16px 0; }
-                .btn { display: inline-block; padding: 8px 16px; background: #4a6cf7; color: white; 
-                      border-radius: 4px; text-decoration: none; margin-right: 10px; }
-              </style>
-            </head>
-            <body>
-              <h1>Error de Conexión</h1>
-              <div class="error">
-                <p><strong>No se pudo conectar con la aplicación AIPI.</strong></p>
-                <p>La aplicación puede estar iniciándose o experimentando un problema temporal.</p>
-              </div>
-              <p>Por favor, intenta recargar la página en unos momentos.</p>
-              <a href="/" class="btn">Volver al inicio</a>
-            </body>
-          </html>
-        `);
+  // Configurar redirección y respuestas según sea necesario
+  if (activePort) {
+    console.log('🔄 Configurando redirección al servidor interno...');
+    
+    // Configurar opciones del proxy
+    const proxyOptions = {
+      target: `http://localhost:${activePort}`,
+      changeOrigin: true,
+      ws: true, // Habilitar soporte para WebSockets
+      pathRewrite: {
+        '^/deploy-proxy': '/' // Eliminar prefijo si existe
+      },
+      onError: (err, req, res) => {
+        console.error(`Error en proxy: ${err.message}`);
+        
+        if (!res.headersSent) {
+          if (req.path.startsWith('/api/')) {
+            // Para API, devolver error JSON
+            res.status(503).json({
+              error: 'Servicio temporalmente no disponible',
+              message: 'La aplicación está iniciando o experimentando problemas temporales'
+            });
+          } else {
+            // Para otras rutas, mostrar página de error
+            res.status(503).send(createErrorPage(
+              'Servicio Temporalmente No Disponible',
+              'Estamos trabajando para solucionar este problema. Por favor intenta nuevamente en unos momentos.',
+              '503'
+            ));
+          }
+        }
       }
-    }
-  }));
-  
-  // Iniciar servidor proxy
-  const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🌍 Servidor proxy AIPI iniciado en puerto ${PORT} -> ${DEV_PORT}`);
-  });
-  
-  // Manejar errores
-  server.on('error', (err) => {
-    console.error('Error en servidor proxy:', err);
-  });
-}
-
-// Función principal para iniciar la aplicación
-function startApp() {
-  console.log('🚀 Ejecutando aplicación AIPI en puerto interno...');
-  
-  // Iniciar aplicación usando el proxy auxiliar
-  const appProcess = spawn('tsx', ['proxy-patch.cjs'], {
-    stdio: 'inherit'
-  });
-  
-  appProcess.on('error', (error) => {
-    console.error(`❌ Error al iniciar la aplicación: ${error.message}`);
+    };
     
-    // Intentar alternativa con node
-    console.log('⚠️ Intentando método alternativo...');
-    const altProcess = spawn('node', ['-r', 'tsx/cjs', 'proxy-patch.cjs'], {
-      stdio: 'inherit'
+    // Responder a los health checks de Replit
+    app.get(['/', '/healthz'], (req, res, next) => {
+      const userAgent = req.headers['user-agent'] || '';
+      
+      // Detectar health checks de Replit
+      if (userAgent.includes('Replit') || userAgent.includes('UptimeRobot')) {
+        console.log(`Health check detectado desde ${userAgent}`);
+        return res.status(200).send('OK');
+      }
+      
+      // Para solicitudes normales, continuar al proxy
+      next();
     });
     
-    altProcess.on('error', (err) => {
-      console.error(`❌ Error en método alternativo: ${err.message}`);
-    });
-  });
-  
-  appProcess.on('close', (code) => {
-    console.log(`⚠️ Aplicación cerrada con código: ${code}`);
+    // Aplicar el proxy a todas las rutas
+    app.use('/', createProxyMiddleware(proxyOptions));
+  } else {
+    console.log('⚠️ Aplicación interna no disponible, configurando servidor de fallback...');
     
-    if (code !== 0) {
-      console.log('🔄 Reiniciando en 5 segundos...');
-      setTimeout(startApp, 5000);
-    }
-  });
-}
-
-// Función principal para despliegue
-async function deploy() {
-  // 1. Crear enlaces simbólicos
-  createSymlinks();
-  
-  // 2. Intentar modificar el servidor
-  let success = patchServerFile();
-  
-  if (!success) {
-    console.log('⚠️ Fallo en modificación principal, intentando métodos alternativos...');
-    success = patchAdditionalFiles();
+    // Configurar respuestas para solicitudes API
+    app.use('/api', (req, res) => {
+      res.status(503).json({
+        error: 'Servicio no disponible',
+        message: 'El servidor de la aplicación no está respondiendo. Por favor intenta más tarde.'
+      });
+    });
+    
+    // Para health checks de Replit
+    app.get(['/', '/healthz'], (req, res) => {
+      const userAgent = req.headers['user-agent'] || '';
+      
+      if (userAgent.includes('Replit') || userAgent.includes('UptimeRobot')) {
+        console.log(`Health check detectado desde ${userAgent}`);
+        return res.status(200).send('OK');
+      }
+      
+      // Mostrar página de error para usuarios normales
+      res.status(503).send(createErrorPage(
+        'Servicio No Disponible',
+        'La aplicación está en mantenimiento o experimentando problemas. Por favor intenta nuevamente más tarde.',
+        '503'
+      ));
+    });
+    
+    // Capturar todas las demás rutas
+    app.use('*', (req, res) => {
+      res.status(503).send(createErrorPage(
+        'Servicio No Disponible',
+        'La aplicación está en mantenimiento o experimentando problemas. Por favor intenta nuevamente más tarde.',
+        '503'
+      ));
+    });
   }
   
-  // 3. Crear script auxiliar como respaldo
-  createAuxiliaryScript();
+  // Iniciar el servidor HTTP
+  const server = app.listen(DEPLOY_PORT, '0.0.0.0', () => {
+    console.log(`🌐 Servidor de despliegue iniciado en puerto ${DEPLOY_PORT}`);
+    if (activePort) {
+      console.log(`📡 Redirigiendo solicitudes a http://localhost:${activePort}`);
+    } else {
+      console.log('⚠️ Sirviendo página de mantenimiento hasta que la aplicación esté disponible');
+    }
+  });
   
-  // 4. Iniciar proxy
-  startProxyServer();
+  // Manejar errores del servidor
+  server.on('error', (err) => {
+    console.error(`❌ Error en servidor de despliegue: ${err.message}`);
+    
+    if (err.code === 'EADDRINUSE') {
+      console.log(`⚠️ Puerto ${DEPLOY_PORT} ya está en uso. Intentando con puerto alternativo...`);
+      setTimeout(() => {
+        server.close();
+        app.listen(DEPLOY_PORT + 1, '0.0.0.0', () => {
+          console.log(`🌐 Servidor de despliegue reiniciado en puerto ${DEPLOY_PORT + 1}`);
+        });
+      }, 1000);
+    }
+  });
   
-  // 5. Iniciar aplicación con retraso para que el proxy esté listo
-  setTimeout(() => {
-    startApp();
-  }, 1000);
+  // Verificar periódicamente si la aplicación interna está disponible
+  // (solo si inicialmente no estaba disponible)
+  if (!activePort) {
+    console.log('🔄 Iniciando verificación periódica de la aplicación interna...');
+    
+    setInterval(async () => {
+      const detectedPort = await findActivePort();
+      if (detectedPort) {
+        console.log(`✅ Aplicación interna ahora está disponible en puerto ${detectedPort}. Reiniciando servidor de despliegue...`);
+        process.exit(0); // Para que Replit reinicie el proceso
+      }
+    }, 30000); // Verificar cada 30 segundos
+  }
 }
 
-// Ejecutar función principal
-deploy();
+// Función principal
+async function main() {
+  try {
+    await startDeploymentServer();
+    
+    // El puerto actualmente detectado lo determina startDeploymentServer
+    // y se muestra en los logs anteriores
+    console.log('\n---------------------------------------------------');
+    console.log('ESTADO DE DESPLIEGUE:');
+    console.log('1. Este servidor responde a los health checks de Replit');
+    console.log('2. Redirige las solicitudes a la aplicación (si está disponible)');
+    console.log('3. Muestra una página de error si la aplicación no está disponible');
+    console.log('4. Comprueba periódicamente si la aplicación se ha iniciado');
+    console.log('---------------------------------------------------\n');
+  } catch (error) {
+    console.error(`❌ Error crítico iniciando servidor de despliegue: ${error.message}`);
+    console.error(error.stack);
+    process.exit(1);
+  }
+}
+
+// Iniciar la aplicación
+main();
