@@ -40,10 +40,15 @@ app.get(['/healthz'], (req, res) => {
 
 // Ruta raíz que redirige a la aplicación cuando está lista o muestra página de carga
 app.get('/', (req, res) => {
-  // Si la aplicación está lista, hacer proxy a la aplicación real
-  if (appReady) {
+  // Si la aplicación está lista, hacer proxy a la aplicación real, excepto cuando se solicita
+  // explícitamente la página de inicialización
+  if (appReady && req.query.initializing !== 'true') {
+    console.log(`[${new Date().toISOString()}] Aplicación lista. Proxy para la ruta raíz.`);
     return createProxyMiddleware(proxyOptions)(req, res);
   }
+  
+  // Calcular tiempo de inicio
+  const uptime = Math.floor((Date.now() - appStartTime) / 1000);
   
   // Si la aplicación todavía está iniciando, mostrar página de carga
   res.send(`
@@ -54,24 +59,31 @@ app.get('/', (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="refresh" content="5"> <!-- Recargar cada 5 segundos -->
         <style>
-          body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; }
-          .container { background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 2rem; margin-top: 3rem; }
-          .spinner { display: inline-block; width: 50px; height: 50px; border: 5px solid rgba(74, 108, 247, 0.3); border-radius: 50%; border-top-color: #4a6cf7; animation: spin 1s ease-in-out infinite; margin-bottom: 1rem; }
+          body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; background-color: #f9fafe; }
+          .container { background-color: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); padding: 2.5rem; margin-top: 4rem; }
+          .spinner { display: inline-block; width: 60px; height: 60px; border: 6px solid rgba(74, 108, 247, 0.3); border-radius: 50%; border-top-color: #4a6cf7; animation: spin 1s ease-in-out infinite; margin-bottom: 1.5rem; }
           @keyframes spin { to { transform: rotate(360deg); } }
+          .title { font-size: 2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 1rem; }
+          .text { font-size: 1.1rem; color: #4a5568; line-height: 1.6; }
+          .status { display: inline-block; background-color: #f7f7f7; padding: 0.5rem 1rem; border-radius: 9999px; font-weight: 500; margin: 1rem 0; }
+          .gradient-text { background: linear-gradient(to right, #4a6cf7, #2dd4bf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+          .reload-text { font-size: 0.9rem; color: #718096; margin-top: 2rem; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="spinner"></div>
-          <h1>AIPI está iniciando</h1>
-          <p>El servicio se está iniciando, por favor espere un momento...</p>
-          <p>Tiempo de inicio: ${Math.floor((Date.now() - appStartTime) / 1000)} segundos</p>
+          <h1 class="title">AIPI <span class="gradient-text">está iniciando</span></h1>
+          <p class="text">El servicio se está preparando, por favor espere un momento.</p>
+          <div class="status">Tiempo de inicio: ${uptime} segundos</div>
+          <p class="text">La página se actualizará automáticamente cuando el sistema esté listo.</p>
+          <p class="reload-text">Si esta página persiste por más de 3 minutos, contacte al administrador del sistema.</p>
         </div>
       </body>
     </html>
   `);
   
-  console.log(`[${new Date().toISOString()}] Sirviendo página de carga (Aplicación iniciando...)`);
+  console.log(`[${new Date().toISOString()}] Sirviendo página de carga (Tiempo transcurrido: ${uptime}s)`);
 });
 
 // Ruta para diagnosticar estado detallado (solo informativo)
@@ -230,6 +242,10 @@ const proxyOptions = {
   }
 };
 
+// Servir archivos estáticos desde la carpeta dist/client
+app.use(express.static(path.join(__dirname, 'dist', 'client')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Aplicar el middleware de proxy para todas las rutas excepto health checks
 app.use((req, res, next) => {
   // Para la ruta raíz, solo usamos el proxy si la aplicación está lista (se maneja en la ruta '/')
@@ -247,7 +263,24 @@ app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] Sirviendo archivo estático: ${req.path}`);
   }
   
-  // Para todas las demás rutas, intentar proxy
+  // Mostrar pantalla de carga si la aplicación aún no está lista
+  if (!appReady) {
+    console.log(`[${new Date().toISOString()}] Aplicación aún iniciando. Mostrando pantalla de carga para: ${req.path}`);
+    
+    // Si es una API, devolver error
+    if (req.path.startsWith('/api/')) {
+      return res.status(503).json({ 
+        error: 'Servicio iniciando', 
+        message: 'La aplicación aún está iniciando, por favor inténtelo nuevamente en unos momentos',
+        uptime: Math.floor((Date.now() - appStartTime) / 1000) 
+      });
+    }
+    
+    // Para rutas normales, redireccionar a página de inicio
+    return res.redirect('/?initializing=true');
+  }
+  
+  // Si la aplicación está lista, continuar con el proxy
   return createProxyMiddleware(proxyOptions)(req, res, next);
 });
 
