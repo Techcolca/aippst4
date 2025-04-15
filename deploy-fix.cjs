@@ -1,63 +1,38 @@
 /**
- * Este script corrige los errores comunes durante el despliegue
- * Para ejecutar: node deploy-fix.cjs
+ * Script de corrección para despliegue con la aplicación real
+ * Este script configura correctamente el servidor para usar la app real
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-console.log('🔧 Iniciando corrección para errores de despliegue...');
+console.log('🔧 Iniciando proceso de corrección para despliegue de la aplicación real...');
 
-// 1. Verificar la estructura de archivos
-console.log('Verificando estructura de archivos...');
-if (!fs.existsSync('./client/src/main.tsx')) {
-  console.error('❌ Error: No se encontró el archivo client/src/main.tsx');
-  process.exit(1);
-}
-
-// 2. Crear enlace simbólico de src a client/src
-if (!fs.existsSync('./src')) {
-  try {
-    console.log('Creando enlace simbólico src -> client/src...');
-    if (process.platform === 'win32') {
-      // En Windows
-      execSync('mklink /D src client\\src');
-    } else {
-      // En Linux/Mac
-      execSync('ln -s client/src src');
-    }
-    console.log('✅ Enlace simbólico creado correctamente');
-  } catch (error) {
-    console.log('Error creando enlace simbólico, intentando crear directorio...');
-    try {
-      fs.mkdirSync('./src', { recursive: true });
-      
-      // Copiar archivos esenciales de client/src a src
-      const files = fs.readdirSync('./client/src');
-      files.forEach(file => {
-        const srcPath = path.join('./client/src', file);
-        const destPath = path.join('./src', file);
-        if (fs.statSync(srcPath).isFile()) {
-          fs.copyFileSync(srcPath, destPath);
-          console.log(`Copiado: ${file}`);
-        }
-      });
-      
-      console.log('✅ Archivos copiados correctamente');
-    } catch (err) {
-      console.error('❌ Error creando directorio src:', err);
-    }
+// Crear los enlaces simbólicos necesarios
+try {
+  // Eliminar el directorio src si existe (para evitar errores)
+  if (fs.existsSync('./src')) {
+    fs.rmdirSync('./src', { recursive: true });
+    console.log('✅ Directorio src eliminado para preparar enlace simbólico');
   }
-} else {
-  console.log('✅ El directorio src ya existe');
+
+  // Crear enlace simbólico de ./client/src a ./src
+  execSync('ln -s ./client/src ./src');
+  console.log('✅ Enlace simbólico creado: ./client/src -> ./src');
+
+  // Crear enlace simbólico para assets si no existe
+  if (!fs.existsSync('./assets') && fs.existsSync('./client/src/assets')) {
+    execSync('ln -s ./client/src/assets ./assets');
+    console.log('✅ Enlace simbólico creado: ./client/src/assets -> ./assets');
+  }
+} catch (error) {
+  console.error('❌ Error creando enlaces simbólicos:', error);
 }
 
-// 3. Crear un script de inicio simplificado
-console.log('Creando script de inicio simplificado...');
-const simplifiedServerContent = `
-/**
- * Servidor simplificado para despliegue
+// Crear servidor de producción que servirá la aplicación real
+const serverContent = `/**
+ * Servidor de producción para la aplicación completa
  */
 const express = require('express');
 const path = require('path');
@@ -66,137 +41,170 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Variables para el seguimiento de errores
+let startTime = Date.now();
+let serverErrors = [];
+
+// Middleware para logging
+app.use((req, res, next) => {
+  console.log(\`[\${new Date().toISOString()}] \${req.method} \${req.url}\`);
+  next();
+});
+
+// Middleware para CORS y headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
+    return res.status(200).json({});
+  }
+  next();
+});
+
+// Middleware para JSON y urlencoded
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Servir archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client', 'dist')));
 app.use(express.static(path.join(__dirname, 'dist', 'client')));
 
-// Ruta de estado
+// Rutas de diagnóstico
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Servidor funcionando' });
+  const uptime = Math.floor((Date.now() - startTime) / 1000);
+  res.json({
+    status: 'ok',
+    version: '1.0.0',
+    uptime: \`\${uptime} segundos\`,
+    serverTime: new Date().toISOString(),
+    errors: serverErrors.slice(-10) // Últimos 10 errores
+  });
 });
 
-// Ruta de API fallback
-app.get('/api/*', (req, res) => {
-  res.status(404).json({ error: 'API endpoint not found' });
+app.get('/api/debug', (req, res) => {
+  // Información de depuración
+  const dirs = {
+    cwd: process.cwd(),
+    dirname: __dirname,
+    exists: {
+      'client/dist/index.html': fs.existsSync(path.join(__dirname, 'client', 'dist', 'index.html')),
+      'dist/client/index.html': fs.existsSync(path.join(__dirname, 'dist', 'client', 'index.html')),
+      'client/src': fs.existsSync(path.join(__dirname, 'client', 'src')),
+      'src': fs.existsSync(path.join(__dirname, 'src')),
+    },
+    env: {
+      NODE_ENV: process.env.NODE_ENV,
+      PORT: process.env.PORT
+    }
+  };
+  
+  res.json(dirs);
+});
+
+// Endpoint de redirección para la SPA
+app.get('/login', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/dashboard*', (req, res) => {
+  res.redirect('/');
 });
 
 // Ruta catch-all para SPA
 app.get('*', (req, res) => {
-  // Intentar servir index.html
-  const indexPath = path.join(__dirname, 'dist', 'client', 'index.html');
-  const fallbackPath = path.join(__dirname, 'public', 'index.html');
-  
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else if (fs.existsSync(fallbackPath)) {
-    res.sendFile(fallbackPath);
-  } else {
-    res.send('<h1>AIPI - Servidor en Mantenimiento</h1><p>El servidor está en modo de mantenimiento.</p>');
+  // Evitar rutas de API
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
   }
-});
-
-// Iniciar servidor
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(\`🚀 Servidor iniciado en http://0.0.0.0:\${PORT}\`);
-});
-`;
-
-fs.writeFileSync('deploy-server.cjs', simplifiedServerContent);
-console.log('✅ Script de inicio simplificado creado: deploy-server.cjs');
-
-// 4. Verificar y actualizar el archivo vite.config.ts
-if (fs.existsSync('./vite.config.ts')) {
-  console.log('Verificando vite.config.ts...');
-  let viteConfig = fs.readFileSync('./vite.config.ts', 'utf8');
   
-  // Verificar si necesita actualización
-  if (!viteConfig.includes('root: path.resolve(__dirname, "client")')) {
-    console.log('Actualizando vite.config.ts para apuntar a client/...');
-    
-    // Hacer una copia de seguridad
-    fs.writeFileSync('./vite.config.ts.bak', viteConfig);
-    
-    // Actualizar configuración
-    viteConfig = viteConfig.replace(
-      'export default defineConfig({',
-      'export default defineConfig({\n  root: path.resolve(__dirname, "client"),'
-    );
-    
-    // Si no tiene import path, añadirlo
-    if (!viteConfig.includes("import path from 'path'")) {
-      viteConfig = "import path from 'path';\n" + viteConfig;
+  // Buscar el archivo index.html en varias ubicaciones posibles
+  const possiblePaths = [
+    path.join(__dirname, 'client', 'dist', 'index.html'),
+    path.join(__dirname, 'dist', 'client', 'index.html'),
+    path.join(__dirname, 'public', 'index.html')
+  ];
+  
+  // Usar el primer archivo que exista
+  for (const indexPath of possiblePaths) {
+    if (fs.existsSync(indexPath)) {
+      return res.sendFile(indexPath);
     }
-    
-    fs.writeFileSync('./vite.config.ts', viteConfig);
-    console.log('✅ vite.config.ts actualizado');
-  } else {
-    console.log('✅ vite.config.ts ya está correctamente configurado');
   }
-}
-
-// 5. Crear un index.html básico en public
-if (!fs.existsSync('./public')) {
-  fs.mkdirSync('./public', { recursive: true });
-}
-
-const basicIndexHtml = `<!DOCTYPE html>
+  
+  // Si no se encuentra ningún archivo, servir un HTML básico
+  const fallbackHtml = \`<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIPI - Plataforma en Mantenimiento</title>
+  <title>AIPI - Plataforma de IA Conversacional</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f7f9fc;
-    }
-    .container {
-      text-align: center;
-      max-width: 600px;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      color: #4a6cf7;
-    }
-    .status {
-      margin: 20px 0;
-      padding: 15px;
-      background-color: #f0f4ff;
-      border-left: 5px solid #4a6cf7;
-      text-align: left;
-    }
+    body { font-family: -apple-system, system-ui, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: #4a6cf7; }
+    .banner { background-color: #e6f7ff; border-left: 4px solid #1890ff; padding: 15px; margin: 20px 0; }
+    .btn { display: inline-block; background: linear-gradient(90deg, #4a6cf7, #0096ff); color: white; padding: 10px 20px; 
+           border-radius: 5px; text-decoration: none; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>AIPI - Plataforma de IA Conversacional</h1>
-    <div class="status">
-      <p><strong>Estado:</strong> Mantenimiento programado</p>
-      <p>Estamos realizando mejoras en nuestra plataforma. Volveremos pronto con una experiencia mejorada.</p>
-    </div>
-    <p>Gracias por su paciencia.</p>
+  <h1>AIPI - Plataforma de IA Conversacional</h1>
+  
+  <div class="banner">
+    <p><strong>Estado:</strong> Configurando aplicación</p>
+    <p>Estamos preparando tu aplicación. Por favor recarga la página en unos segundos.</p>
   </div>
+  
+  <p>La aplicación AIPI está siendo inicializada. Si continúas viendo esta página después de varios intentos,
+  verifica la configuración del despliegue.</p>
+  
+  <a href="/" class="btn">Recargar Aplicación</a>
 </body>
-</html>`;
+</html>\`;
+  
+  res.send(fallbackHtml);
+});
 
-fs.writeFileSync('./public/index.html', basicIndexHtml);
-console.log('✅ index.html básico creado en public/');
+// Manejador de errores global
+app.use((err, req, res, next) => {
+  console.error('Error en servidor:', err);
+  serverErrors.push({
+    time: new Date().toISOString(),
+    message: err.message,
+    stack: err.stack
+  });
+  res.status(500).json({ error: 'Error interno del servidor' });
+});
 
-console.log('\n✅ Correcciones completadas correctamente.');
-console.log('\n📋 Instrucciones para despliegue:');
-console.log('1. Inicia el servidor de despliegue:');
-console.log('   node deploy-server.cjs');
-console.log('2. En la configuración de despliegue de Replit, usa:');
-console.log('   Comando de inicio: node deploy-server.cjs');
-console.log('\nUna vez que el despliegue funcione, podrás volver al comando normal.');
+// Iniciar servidor
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(\`🚀 Servidor de producción iniciado en http://0.0.0.0:\${PORT}\`);
+  console.log(\`Modo: \${process.env.NODE_ENV || 'development'}\`);
+  console.log('Directorios disponibles:', fs.readdirSync('.').join(', '));
+  
+  // Intentar hacer build si es necesario
+  try {
+    if (!fs.existsSync('./client/dist') && !fs.existsSync('./dist/client')) {
+      console.log('No se encontró el directorio de build, generando...');
+      execSync('cd client && npm run build');
+      console.log('Build completado exitosamente');
+    }
+  } catch (error) {
+    console.error('Error al generar build:', error.message);
+    serverErrors.push({
+      time: new Date().toISOString(),
+      message: 'Error al generar build',
+      details: error.message
+    });
+  }
+});
+`;
+
+fs.writeFileSync('./deploy-server.cjs', serverContent);
+console.log('✅ Archivo deploy-server.cjs creado con la configuración para la aplicación real');
+
+// Mensaje final
+console.log('\n✅ Preparación completada. Ahora puedes desplegar usando:');
+console.log('node deploy-server.cjs');
+console.log('\nEsto debería cargar la aplicación real completa en lugar de la versión simplificada.');
