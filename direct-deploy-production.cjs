@@ -1,35 +1,34 @@
+#!/usr/bin/env node
 /**
- * Script de despliegue exacto para AIPI
- * 
- * Este script replica el entorno de desarrollo exactamente en producción:
- * - Construye el frontend con `vite build`
- * - Empaqueta el backend con `esbuild`
- * - Lanza el servidor usando `tsx server/index.ts`
- * - Mantiene todos los archivos estáticos y configuraciones
+ * Script optimizado de despliegue para producción en Replit
+ * Este script asegura que la aplicación se ejecute correctamente en producción
+ * evitando conflictos de puertos y otras problemáticas.
  */
-
 const express = require('express');
-const { spawn, execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const http = require('http');
+const find = require('find-process');
 
-// Configuración - Usar puertos dinámicos para evitar conflictos
-const PORT = process.env.PORT || 8080;       // Puerto principal para el proxy
-let INTERNAL_PORT = 5173;                    // Puerto interno para la aplicación (diferente a los utilizados)
+// Configuración de puertos - usando valores altos para evitar conflictos
+const PORT = process.env.PORT || 8080;            // Puerto principal asignado por Replit
+const INTERNAL_PORT = process.env.INTERNAL_PORT || 9173;  // Puerto interno alto para evitar conflictos
 let SERVER_PROCESS = null;
 
-console.log('🚀 AIPI - Despliegue exacto (preservando entorno de desarrollo)');
+console.log('🚀 AIPI - Despliegue optimizado para producción');
 console.log(`⏱️ Inicio: ${new Date().toISOString()}`);
-
-// Verificar entorno Node.js
 console.log(`📊 Información del entorno:`);
 console.log(`- Node.js: ${process.version}`);
 console.log(`- Plataforma: ${process.platform}`);
 console.log(`- Directorio: ${process.cwd()}`);
+console.log(`- Puerto asignado: ${PORT}`);
+console.log(`- Puerto interno: ${INTERNAL_PORT}`);
 
-// Función para verificar si un puerto está en uso
+/**
+ * Verifica si un puerto está en uso
+ */
 function isPortInUse(port) {
   return new Promise((resolve) => {
     const server = http.createServer();
@@ -42,9 +41,80 @@ function isPortInUse(port) {
   });
 }
 
-// Función para compilar el frontend y backend exactamente como en desarrollo
+/**
+ * Intenta liberar un puerto específico terminando los procesos que lo usan
+ */
+async function freePort(port) {
+  console.log(`🔍 Intentando liberar puerto ${port}...`);
+  
+  try {
+    // Encontrar procesos usando el puerto
+    const processes = await find('port', port);
+    
+    if (processes.length === 0) {
+      console.log(`✅ No se encontraron procesos usando el puerto ${port}`);
+      return true;
+    }
+    
+    console.log(`⚠️ Encontrados ${processes.length} procesos usando el puerto ${port}`);
+    
+    // Intentar terminar los procesos
+    for (const proc of processes) {
+      console.log(`🔄 Terminando proceso: PID ${proc.pid} (${proc.name})`);
+      try {
+        process.kill(proc.pid);
+        console.log(`✅ Proceso ${proc.pid} terminado`);
+      } catch (e) {
+        console.log(`⚠️ No se pudo terminar el proceso ${proc.pid}: ${e.message}`);
+        if (process.platform !== 'win32') {
+          try {
+            execSync(`kill -9 ${proc.pid}`);
+            console.log(`✅ Proceso ${proc.pid} terminado forzosamente`);
+          } catch (e2) {
+            console.log(`❌ No se pudo terminar forzosamente el proceso ${proc.pid}`);
+          }
+        }
+      }
+    }
+    
+    // Verificar nuevamente
+    const stillInUse = await isPortInUse(port);
+    if (stillInUse) {
+      console.log(`⚠️ El puerto ${port} sigue ocupado después de intentar liberarlo`);
+      return false;
+    } else {
+      console.log(`✅ Puerto ${port} liberado correctamente`);
+      return true;
+    }
+  } catch (error) {
+    console.error(`❌ Error al intentar liberar el puerto ${port}:`, error);
+    return false;
+  }
+}
+
+/**
+ * Encuentra un puerto disponible en un rango específico
+ */
+async function findAvailablePort(start, end) {
+  console.log(`🔍 Buscando puerto disponible entre ${start} y ${end}...`);
+  
+  for (let port = start; port <= end; port++) {
+    const inUse = await isPortInUse(port);
+    if (!inUse) {
+      console.log(`✅ Puerto ${port} disponible`);
+      return port;
+    }
+  }
+  
+  console.log(`❌ No se encontró ningún puerto disponible entre ${start} y ${end}`);
+  return null;
+}
+
+/**
+ * Compila la aplicación para producción
+ */
 async function buildApplication() {
-  console.log('\n🏗️ Paso 1: Compilando aplicación...');
+  console.log('\n🏗️ Paso 1: Compilando aplicación para producción...');
   
   try {
     // Compilar frontend con vite
@@ -65,62 +135,45 @@ async function buildApplication() {
   }
 }
 
-// Función para iniciar la aplicación exactamente como en desarrollo
-async function startExactApplication() {
+/**
+ * Inicia la aplicación con el puerto adecuado
+ */
+async function startApplication() {
   console.log('\n🚀 Paso 2: Iniciando aplicación AIPI...');
   
-  // Verificar todos los puertos críticos
-  console.log('🔍 Verificando disponibilidad de puertos...');
-  
-  // Lista de puertos a verificar
-  const portsToCheck = [INTERNAL_PORT, 3000, 5000, 5173];
-  
-  for (const port of portsToCheck) {
-    const portInUse = await isPortInUse(port);
-    if (portInUse) {
-      console.log(`⚠️ El puerto ${port} ya está en uso. Intentando liberar...`);
-      try {
-        // En Linux/Mac podemos intentar matar el proceso
-        if (process.platform !== 'win32') {
-          execSync(`kill $(lsof -t -i:${port})`);
-          console.log(`✅ Proceso en puerto ${port} terminado`);
-        }
-      } catch (e) {
-        console.log(`⚠️ No se pudo liberar el puerto ${port}: ${e.message}`);
-      }
-    } else {
-      console.log(`✅ Puerto ${port} disponible`);
+  // Verificar puertos críticos y liberar si es necesario
+  const criticalPorts = [3000, 5000, 5173, 8000, INTERNAL_PORT];
+  for (const port of criticalPorts) {
+    const inUse = await isPortInUse(port);
+    if (inUse) {
+      await freePort(port);
     }
   }
   
-  // Verificación adicional para el puerto interno
-  const finalCheck = await isPortInUse(INTERNAL_PORT);
-  if (finalCheck) {
-    console.log(`⚠️ El puerto ${INTERNAL_PORT} sigue ocupado. Intentando usar un puerto alternativo...`);
-    // Intentar encontrar un puerto disponible
-    for (const altPort of [8081, 8082, 8083, 8000, 9000]) {
-      if (!(await isPortInUse(altPort))) {
-        console.log(`✅ Puerto alternativo ${altPort} está disponible, usando este puerto...`);
-        INTERNAL_PORT = altPort;
-        break;
-      }
+  // Si el puerto interno está ocupado, encontrar otro disponible
+  if (await isPortInUse(INTERNAL_PORT)) {
+    const newPort = await findAvailablePort(9000, 9999);
+    if (newPort) {
+      console.log(`⚠️ Cambiando puerto interno de ${INTERNAL_PORT} a ${newPort}`);
+      INTERNAL_PORT = newPort;
+    } else {
+      console.error('❌ No se pudo encontrar un puerto disponible. Usando puerto original.');
     }
   }
   
   try {
-    // Usar tsx exactamente como en desarrollo
-    console.log('🔄 Iniciando servidor con tsx server/index.ts...');
+    // Usar tsx para iniciar el servidor
+    console.log(`🔄 Iniciando servidor en puerto ${INTERNAL_PORT}...`);
     
-    // Configurar variables de entorno - Asegurarnos de usar el puerto interno 
-    // y dejar el puerto principal para el proxy
+    // Configurar variables de entorno
     const env = {
       ...process.env,
-      PORT: INTERNAL_PORT.toString(), // Usar puerto interno para la aplicación
-      NODE_ENV: 'development', // Mantener modo desarrollo para compatibilidad
-      FORCE_COLOR: '1'
+      PORT: INTERNAL_PORT.toString(),
+      FORCE_COLOR: '1',
+      NODE_ENV: 'production'
     };
     
-    // Iniciar el servidor exactamente como en desarrollo
+    // Iniciar el servidor con tsx
     SERVER_PROCESS = spawn('npx', ['tsx', 'server/index.ts'], {
       env,
       stdio: 'pipe'
@@ -139,31 +192,79 @@ async function startExactApplication() {
       console.log(`⚠️ La aplicación AIPI se cerró con código: ${code}`);
       
       // Reintentar automáticamente si falla
-      if (code !== 0) {
+      if (code !== 0 && code !== null) {
         console.log('🔄 Reintentando iniciar aplicación en 5 segundos...');
-        setTimeout(startExactApplication, 5000);
+        setTimeout(() => startApplication(), 5000);
       }
     });
     
-    return true;
+    // Esperar a que el servidor esté listo
+    return await waitForServerReady();
   } catch (error) {
     console.error('❌ Error al iniciar la aplicación:', error);
     return false;
   }
 }
 
-// Función para configurar el servidor proxy
+/**
+ * Espera a que el servidor esté listo verificando el puerto
+ */
+function waitForServerReady() {
+  return new Promise((resolve) => {
+    let attempts = 0;
+    const maxAttempts = 20;
+    const checkInterval = 1000;
+    
+    console.log(`🕒 Esperando a que el servidor esté listo en el puerto ${INTERNAL_PORT}...`);
+    
+    const checkServer = async () => {
+      attempts++;
+      
+      try {
+        // Verificar si el puerto está en uso (lo que indicaría que el servidor está funcionando)
+        const serverRunning = await isPortInUse(INTERNAL_PORT);
+        
+        if (serverRunning) {
+          console.log(`✅ Servidor detectado funcionando en el puerto ${INTERNAL_PORT} después de ${attempts} intentos`);
+          resolve(true);
+          return;
+        }
+        
+        if (attempts >= maxAttempts) {
+          console.log(`⚠️ El servidor no respondió después de ${maxAttempts} intentos`);
+          resolve(false);
+          return;
+        }
+        
+        setTimeout(checkServer, checkInterval);
+      } catch (error) {
+        console.error('❌ Error al verificar el servidor:', error);
+        if (attempts >= maxAttempts) {
+          resolve(false);
+        } else {
+          setTimeout(checkServer, checkInterval);
+        }
+      }
+    };
+    
+    checkServer();
+  });
+}
+
+/**
+ * Configura el servidor proxy para manejar las solicitudes
+ */
 function setupProxyServer() {
   console.log('\n🔄 Paso 3: Configurando servidor proxy...');
   
   const app = express();
   
-  // Configurar health checks
+  // Configurar health checks para deployment
   app.get('/healthz', (req, res) => {
     res.status(200).send('OK');
   });
   
-  // Servir archivos estáticos desde múltiples ubicaciones, exactamente como especificaste
+  // Servir archivos estáticos desde múltiples ubicaciones
   const staticPaths = [
     path.join(process.cwd(), 'public'),
     path.join(process.cwd(), 'dist/client'),
@@ -258,7 +359,9 @@ function setupProxyServer() {
   });
 }
 
-// Ejecución principal
+/**
+ * Función principal de ejecución
+ */
 async function main() {
   try {
     // Verificar si estamos en un despliegue
@@ -271,12 +374,12 @@ async function main() {
     }
     
     // Iniciar la aplicación
-    await startExactApplication();
+    await startApplication();
     
     // Configurar el servidor proxy
     setupProxyServer();
     
-    console.log('\n✨ Despliegue exacto completado. Aplicación AIPI en ejecución.');
+    console.log('\n✨ Despliegue optimizado completado. Aplicación AIPI en ejecución.');
   } catch (error) {
     console.error('❌ Error crítico durante el despliegue:', error);
     process.exit(1);
