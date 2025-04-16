@@ -1,121 +1,156 @@
-#!/usr/bin/env node
-
 /**
- * Script de despliegue compatible con CommonJS
- * Este archivo debe usarse como comando de ejecución en la configuración de despliegue
+ * Script simple para despliegue en producción
+ * Este archivo maneja la iniciación y mantenimiento del servidor en producción
  */
-
-// Uso de require() para compatibilidad con CommonJS
 const express = require('express');
-const http = require('http');
-const fs = require('fs');
+const { spawn } = require('child_process');
 const path = require('path');
+const fs = require('fs');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
-// Crear app Express para el despliegue
+// Usar puerto dinámico asignado por Replit
+const PORT = process.env.PORT || 8080;
+const INTERNAL_PORT = 5173;
+let SERVER_PROCESS = null;
+
+console.log('🚀 AIPI - Iniciando servidor de producción');
+console.log(`⏱️ Inicio: ${new Date().toISOString()}`);
+
+// Configurar el servidor proxy
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-console.log('🚀 Iniciando servidor de despliegue AIPI...');
-console.log(`📅 Fecha y hora: ${new Date().toLocaleString()}`);
+// Configurar health checks
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
 
-// Responder directamente a las comprobaciones de estado de Replit
-app.get(['/', '/healthz'], (req, res) => {
-  const userAgent = req.headers['user-agent'] || '';
-  
-  if (userAgent.includes('Replit') || userAgent.includes('UptimeRobot')) {
-    return res.status(200).send('OK');
+// Servir archivos estáticos desde múltiples ubicaciones
+const staticPaths = [
+  path.join(process.cwd(), 'public'),
+  path.join(process.cwd(), 'dist/client'),
+  path.join(process.cwd(), 'client/dist')
+];
+
+// Servir archivos estáticos
+staticPaths.forEach(staticPath => {
+  if (fs.existsSync(staticPath)) {
+    app.use(express.static(staticPath));
+    console.log(`📄 Sirviendo archivos estáticos desde: ${staticPath}`);
   }
+});
+
+// Iniciar el servidor de aplicación
+function startAppServer() {
+  // Usar el script start de package.json
+  const env = {
+    ...process.env,
+    PORT: INTERNAL_PORT.toString(),
+    NODE_ENV: 'production'
+  };
   
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>AIPI - Aplicación Desplegada</title>
-      <style>
-        body {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          background-color: #f8fafc;
-          color: #1e293b;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-          margin: 0;
-          padding: 1rem;
-        }
-        
-        .container {
-          max-width: 800px;
-          background: white;
-          border-radius: 12px;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-          padding: 2rem;
-          text-align: center;
-        }
-        
-        .logo {
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin-bottom: 1.5rem;
-          background: linear-gradient(90deg, #4a6cf7, #0096ff);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        
-        h1 {
-          font-size: 1.75rem;
-          margin-bottom: 1rem;
-        }
-        
-        p {
-          margin-bottom: 1.5rem;
-          color: #64748b;
-        }
-        
-        .btn {
-          display: inline-block;
-          padding: 0.75rem 1.5rem;
-          background: #4a6cf7;
-          color: white;
-          border-radius: 6px;
-          font-weight: 500;
-          text-decoration: none;
-          transition: opacity 0.2s;
-          margin: 0.5rem;
-        }
-        
-        .btn:hover {
-          opacity: 0.9;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="logo">AIPI</div>
-        
-        <h1>¡Aplicación Desplegada Correctamente!</h1>
-        
-        <p>Tu aplicación AIPI ha sido desplegada con éxito. A continuación, puedes acceder a la aplicación o volver al panel de control.</p>
-        
-        <a href="https://aipps.replit.app" class="btn">Acceder a la Aplicación</a>
-        <a href="https://replit.com/@Pablo/workspace" class="btn">Volver al Panel</a>
-      </div>
-    </body>
-    </html>
-  `);
-});
-
-// Ruta para opciones avanzadas
-app.get('/api/deployment/status', (req, res) => {
-  res.json({
-    status: 'deployed',
-    timestamp: new Date().toISOString()
+  SERVER_PROCESS = spawn('node', ['dist/index.js'], {
+    env,
+    stdio: 'pipe'
   });
+  
+  // Capturar salida
+  SERVER_PROCESS.stdout.on('data', (data) => {
+    console.log(`📱 [AIPI]: ${data.toString().trim()}`);
+  });
+  
+  SERVER_PROCESS.stderr.on('data', (data) => {
+    console.error(`⚠️ [AIPI Error]: ${data.toString().trim()}`);
+  });
+  
+  SERVER_PROCESS.on('close', (code) => {
+    console.log(`⚠️ La aplicación AIPI se cerró con código: ${code}`);
+    
+    // Reintentar automáticamente si falla
+    if (code !== 0 && code !== null) {
+      console.log('🔄 Reintentando iniciar aplicación en 5 segundos...');
+      setTimeout(startAppServer, 5000);
+    }
+  });
+}
+
+// Configurar proxy
+const proxyOptions = {
+  target: `http://localhost:${INTERNAL_PORT}`,
+  changeOrigin: true,
+  ws: true,
+  logLevel: 'silent',
+  onError: (err, req, res) => {
+    console.error(`Error de proxy: ${err.message}`);
+    
+    if (!res.headersSent) {
+      if (req.path.startsWith('/api/')) {
+        res.status(503).json({
+          error: 'Servicio temporalmente no disponible',
+          message: 'La aplicación está iniciando. Por favor intente nuevamente en unos momentos.'
+        });
+      } else {
+        res.status(503).send(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>AIPI - Iniciando servicio</title>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <meta http-equiv="refresh" content="5">
+              <style>
+                body { font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; background-color: #f9fafe; }
+                .container { background-color: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); padding: 2.5rem; margin-top: 4rem; }
+                .spinner { display: inline-block; width: 60px; height: 60px; border: 6px solid rgba(74, 108, 247, 0.3); border-radius: 50%; border-top-color: #4a6cf7; animation: spin 1s ease-in-out infinite; margin-bottom: 1.5rem; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                .title { font-size: 2rem; font-weight: 700; color: #1a1a1a; margin-bottom: 1rem; }
+                .text { font-size: 1.1rem; color: #4a5568; line-height: 1.6; }
+                .gradient-text { background: linear-gradient(to right, #4a6cf7, #2dd4bf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+              </style>
+            </head>
+            <body>
+              <div class="container">
+                <div class="spinner"></div>
+                <h1 class="title">AIPI <span class="gradient-text">está iniciando</span></h1>
+                <p class="text">El servicio se está preparando, por favor espere un momento.</p>
+                <p class="text">La página se actualizará automáticamente.</p>
+              </div>
+            </body>
+          </html>
+        `);
+      }
+    }
+  }
+};
+
+// Usar proxy para todas las rutas excepto los health checks
+app.use((req, res, next) => {
+  if (req.path === '/healthz') {
+    return next();
+  }
+  return createProxyMiddleware(proxyOptions)(req, res, next);
 });
 
-// Iniciar servidor
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🌍 Servidor de despliegue iniciado en puerto ${PORT}`);
+// Iniciar el servidor proxy
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Servidor proxy iniciado en puerto ${PORT}`);
+  console.log(`🔄 Redirigiendo solicitudes a puerto ${INTERNAL_PORT}`);
+  
+  // Iniciar el servidor de aplicación
+  startAppServer();
+});
+
+// Manejar señales de cierre
+process.on('SIGTERM', () => {
+  console.log('🛑 Recibida señal SIGTERM, cerrando servidores...');
+  
+  server.close(() => {
+    console.log('✅ Servidor proxy cerrado correctamente');
+    
+    if (SERVER_PROCESS) {
+      SERVER_PROCESS.kill('SIGTERM');
+      console.log('✅ Proceso de aplicación AIPI terminado');
+    }
+    
+    process.exit(0);
+  });
 });
