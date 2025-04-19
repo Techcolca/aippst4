@@ -141,7 +141,10 @@ export interface IStorage {
   deleteCalendarToken(id: number): Promise<void>;
 }
 
-// In-memory storage implementation
+// Re-export DatabaseStorage from pg-storage.ts
+export { DatabaseStorage } from './pg-storage';
+
+// In-memory storage implementation (fallback)
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private integrations: Map<number, Integration>;
@@ -1627,4 +1630,6 @@ export class MemStorage implements IStorage {
 import { PgStorage } from './pg-storage';
 
 // Use PostgreSQL storage instead of in-memory storage
+// Use DatabaseStorage for production
+// Si no tenemos un servidor alternativo funcionando, es mejor usar PgStorage
 export const storage = new PgStorage();
