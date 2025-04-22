@@ -1,0 +1,37 @@
+# Archivos y carpetas a ignorar durante el despliegue en Railway
+
+# Archivos temporales de desarrollo
+node_modules
+.cache
+.env
+.env.*
+!.env.example
+
+# Archivos de configuración específicos de Replit
+.replit
+replit.nix
+.config/
+
+# Archivos de logs
+*.log
+logs/
+
+# Archivos de prueba
+__tests__
+test
+tests
+*.test.js
+*.spec.js
+
+# Documentación
+docs/
+*.md
+!README.md
+!README-RAILWAY.md
+
+# Archivos de datos de ejemplo
+example-data/
+
+# Archivos específicos de entorno local
+.vscode/
+.idea/
