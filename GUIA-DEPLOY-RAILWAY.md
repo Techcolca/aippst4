@@ -1,102 +1,91 @@
-# Guía Paso a Paso para Desplegar en Railway.app
+# Guía de Despliegue en Railway (Español)
+
+Esta guía te ayudará a desplegar tu aplicación AIPI en Railway de manera rápida y sencilla.
 
 ## Requisitos Previos
 
-1. Tener una cuenta en [Railway.app](https://railway.app/)
-2. Tener el código de la aplicación en un repositorio Git (GitHub, GitLab, etc.)
+1. Una cuenta en [Railway](https://railway.app/)
+2. Tu proyecto AIPI listo para desplegar desde GitHub
+3. Claves de API necesarias (Stripe, etc.)
 
-## Paso 1: Preparar el Repositorio
+## Pasos para el Despliegue
 
-Asegúrate de tener los siguientes archivos en tu repositorio:
+### 1. Iniciar Sesión en Railway
 
-- `railway.json` (ya creado)
-- `.env.example` (ya creado)
-- `Procfile` (ya creado)
-- `.npmrc` (ya creado)
-- `.gitignore` (ya creado)
+- Ve a [Railway](https://railway.app/)
+- Inicia sesión con tu cuenta o crea una nueva
 
-## Paso 2: Configurar Railway.app
+### 2. Crear un Nuevo Proyecto
 
-### Desde la Interfaz Web
+- Haz clic en "New Project"
+- Selecciona "Deploy from GitHub repo"
+- Conecta tu cuenta de GitHub si aún no lo has hecho
+- Busca y selecciona tu repositorio AIPI
 
-1. Inicia sesión en [Railway.app](https://railway.app/)
-2. Haz clic en "New Project" → "Deploy from GitHub repo"
-3. Selecciona tu repositorio
-4. Railway detectará automáticamente el proyecto Node.js
+### 3. Configurar la Base de Datos PostgreSQL
 
-### Configuración Manual del Proyecto
+- Después de crear el proyecto, haz clic en "New"
+- Selecciona "Database" y luego "PostgreSQL"
+- Railway creará automáticamente una instancia de PostgreSQL
+- La variable de entorno `DATABASE_URL` se añadirá automáticamente a tu proyecto
 
-Si Railway no detecta automáticamente la configuración:
+### 4. Configurar Variables de Entorno
 
-1. Selecciona "Deploy from GitHub repo"
-2. Elige tu repositorio
-3. Configura el "Start Command" como `npm start`
-4. Configura el "Build Command" como `npm run build`
+En la sección "Variables" de tu proyecto, añade las siguientes variables de entorno:
 
-## Paso 3: Configurar Variables de Entorno
+- `STRIPE_SECRET_KEY`: Tu clave secreta de Stripe
+- `VITE_STRIPE_PUBLIC_KEY`: Tu clave pública de Stripe
+- `NODE_ENV`: Establece como "production"
 
-En la sección "Variables", configura las siguientes:
+Nota: Railway ya habrá añadido automáticamente `DATABASE_URL`.
 
-```
-NODE_ENV=production
-PORT=3000 (Railway establecerá esto automáticamente, pero puedes definirlo)
-DATABASE_URL=<El valor lo generará Railway si agregas un servicio de PostgreSQL>
-JWT_SECRET=<Genera un valor aleatorio seguro>
-APP_URL=<La URL de tu aplicación en Railway>
-```
+### 5. Configurar la Implementación
 
-## Paso 4: Configurar la Base de Datos
+Railway detectará automáticamente:
+- El comando de construcción desde tu package.json
+- El Procfile para iniciar tu aplicación
 
-1. Haz clic en "New" → "Database" → "PostgreSQL"
-2. Railway conectará automáticamente la base de datos a tu proyecto y configurará la variable `DATABASE_URL`
-3. Para ejecutar migraciones, ve a la pestaña "Settings" → "Shell" y ejecuta:
-   ```
-   npm run db:push
-   ```
+No necesitas configurar nada más, ya que hemos preparado los scripts necesarios para:
+- Construir la aplicación
+- Migrar la base de datos
+- Iniciar el servidor
 
-## Paso 5: Dominios y HTTPS
+### 6. Desplegar
 
-1. Ve a la pestaña "Settings" → "Domains"
-2. Railway proporciona un dominio gratuito para tu aplicación (ej. tu-app.up.railway.app)
-3. También puedes configurar un dominio personalizado
+- Haz clic en "Deploy" 
+- Railway comenzará a construir e implementar tu aplicación
 
-## Paso 6: Monitoreo
+### 7. Configurar Dominio (Opcional)
 
-1. Railway proporciona logs en tiempo real en la pestaña "Deployments"
-2. También puedes ver el uso de recursos en la pestaña "Metrics"
+- Ve a la sección "Settings" de tu proyecto
+- Haz clic en "Domains"
+- Puedes usar un subdominio gratuito de Railway o configurar tu propio dominio personalizado
 
-## Solución de Problemas Comunes
+## Solución de Problemas
 
-### La Aplicación No Inicia
+### Error en las Migraciones de Base de Datos
 
-1. Revisa los logs en la pestaña "Deployments"
-2. Asegúrate de que todas las variables de entorno estén configuradas
-3. Verifica que el comando `npm start` funcione correctamente
+Si las migraciones de la base de datos fallan durante el despliegue:
 
-### Errores de Base de Datos
+1. Ve a la pestaña "Deployments" para ver los registros
+2. Verifica que la variable `DATABASE_URL` esté correctamente configurada
+3. Consulta los errores específicos en los registros
 
-1. Verifica que la conexión a la base de datos funcione
-2. Asegúrate de haber ejecutado las migraciones
-3. Verifica que la variable `DATABASE_URL` esté correctamente configurada
+### Error de Stripe
 
-### Problemas de Rendimiento
+Si tienes problemas con Stripe:
 
-1. Ajusta los recursos de tu proyecto en la sección "Settings" → "Resources"
-2. Considera agregar más instancias para manejar más tráfico
+1. Verifica que las claves de API de Stripe estén correctamente configuradas
+2. La aplicación seguirá funcionando incluso sin las claves de Stripe, aunque las funciones de pago no estarán disponibles
 
-## Buenas Prácticas
+## Mantenimiento y Actualizaciones
 
-1. Habilita despliegues automáticos desde tu repositorio Git
-2. Usa branches de desarrollo para probar cambios antes de desplegar a producción
-3. Monitorea regularmente los logs y el rendimiento
-4. Configura notificaciones para eventos importantes del proyecto
+Para actualizaciones futuras:
 
-## Comprobar que la Aplicación Funciona
+1. Haz cambios en tu repositorio de GitHub
+2. Railway detectará los cambios y volverá a implementar automáticamente
+3. Las migraciones de base de datos se ejecutarán automáticamente durante cada despliegue
 
-Después del despliegue, visita la URL proporcionada por Railway para verificar que tu aplicación funciona correctamente. Asegúrate de probar todas las funcionalidades críticas.
+---
 
-## Recursos Adicionales
-
-- [Documentación oficial de Railway](https://docs.railway.app/)
-- [Guía de precios de Railway](https://railway.app/pricing)
-- [Comunidad de Railway en Discord](https://discord.com/invite/railway)
+Si necesitas ayuda adicional, consulta la [documentación oficial de Railway](https://docs.railway.app/) o contacta al soporte.

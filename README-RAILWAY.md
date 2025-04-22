@@ -1,78 +1,91 @@
-# Instrucciones para Desplegar en Railway.app
+# Guía de Despliegue en Railway
 
-## Preparación
+Esta guía te ayudará a desplegar tu aplicación AIPI en Railway de manera rápida y sencilla.
 
-1. Crea una cuenta en [Railway.app](https://railway.app/) si aún no tienes una
-2. Instala el CLI de Railway:
-   ```
-   npm i -g @railway/cli
-   ```
-3. Inicia sesión con el CLI:
-   ```
-   railway login
-   ```
+## Requisitos Previos
 
-## Despliegue
+1. Una cuenta en [Railway](https://railway.app/)
+2. Tu proyecto AIPI listo para desplegar desde GitHub
+3. Claves de API necesarias (Stripe, etc.)
 
-### Opción 1: Despliegue desde la interfaz web
+## Pasos para el Despliegue
 
-1. Conecta tu repositorio de GitHub a Railway
-2. Railway detectará automáticamente la configuración del proyecto
-3. Configura las variables de entorno necesarias (ver más abajo)
-4. Railway construirá y desplegará automáticamente la aplicación
+### 1. Iniciar Sesión en Railway
 
-### Opción 2: Despliegue desde el CLI
+- Ve a [Railway](https://railway.app/)
+- Inicia sesión con tu cuenta o crea una nueva
 
-1. Crea un nuevo proyecto en Railway:
-   ```
-   railway init
-   ```
-2. Despliega tu código:
-   ```
-   railway up
-   ```
-3. Configura las variables de entorno:
-   ```
-   railway vars set DATABASE_URL=tu_url_de_postgres JWT_SECRET=tu_jwt_secret
-   ```
+### 2. Crear un Nuevo Proyecto
 
-## Variables de Entorno Requeridas
+- Haz clic en "New Project"
+- Selecciona "Deploy from GitHub repo"
+- Conecta tu cuenta de GitHub si aún no lo has hecho
+- Busca y selecciona tu repositorio AIPI
 
-Asegúrate de configurar estas variables en Railway:
+### 3. Configurar la Base de Datos PostgreSQL
 
-- `DATABASE_URL`: URL de conexión a PostgreSQL (Railway puede crear esto automáticamente si agregas un servicio de PostgreSQL)
-- `NODE_ENV`: Establécelo como "production"
-- `JWT_SECRET`: Una cadena aleatoria y segura para firmar tokens JWT
-- Otras variables específicas de tu aplicación (API keys, etc.)
+- Después de crear el proyecto, haz clic en "New"
+- Selecciona "Database" y luego "PostgreSQL"
+- Railway creará automáticamente una instancia de PostgreSQL
+- La variable de entorno `DATABASE_URL` se añadirá automáticamente a tu proyecto
 
-## Base de Datos
+### 4. Configurar Variables de Entorno
 
-1. En Railway, agrega un servicio de PostgreSQL
-2. Railway generará automáticamente la variable `DATABASE_URL`
-3. Ejecuta las migraciones:
-   ```
-   railway run npm run db:push
-   ```
+En la sección "Variables" de tu proyecto, añade las siguientes variables de entorno:
 
-## Mantenimiento
+- `STRIPE_SECRET_KEY`: Tu clave secreta de Stripe
+- `VITE_STRIPE_PUBLIC_KEY`: Tu clave pública de Stripe
+- `NODE_ENV`: Establece como "production"
 
-- Para ver los logs:
-  ```
-  railway logs
-  ```
-- Para actualizar la aplicación después de cambios:
-  ```
-  railway up
-  ```
+Nota: Railway ya habrá añadido automáticamente `DATABASE_URL`.
 
-## Dominio Personalizado
+### 5. Configurar la Implementación
 
-1. En la interfaz web de Railway, ve a Settings > Domains
-2. Agrega tu dominio personalizado
-3. Sigue las instrucciones para configurar los registros DNS
+Railway detectará automáticamente:
+- El comando de construcción desde tu package.json
+- El Procfile para iniciar tu aplicación
 
-## Solución de Problemas Comunes
+No necesitas configurar nada más, ya que hemos preparado los scripts necesarios para:
+- Construir la aplicación
+- Migrar la base de datos
+- Iniciar el servidor
 
-- **Error de conexión a la base de datos**: Verifica que `DATABASE_URL` esté correctamente configurado
-- **Error en el build**: Asegúrate de que todos los archivos necesarios estén incluidos en el repositorio
-- **Error en el tiempo de ejecución**: Revisa los logs con `railway logs`
+### 6. Desplegar
+
+- Haz clic en "Deploy" 
+- Railway comenzará a construir e implementar tu aplicación
+
+### 7. Configurar Dominio (Opcional)
+
+- Ve a la sección "Settings" de tu proyecto
+- Haz clic en "Domains"
+- Puedes usar un subdominio gratuito de Railway o configurar tu propio dominio personalizado
+
+## Solución de Problemas
+
+### Error en las Migraciones de Base de Datos
+
+Si las migraciones de la base de datos fallan durante el despliegue:
+
+1. Ve a la pestaña "Deployments" para ver los registros
+2. Verifica que la variable `DATABASE_URL` esté correctamente configurada
+3. Consulta los errores específicos en los registros
+
+### Error de Stripe
+
+Si tienes problemas con Stripe:
+
+1. Verifica que las claves de API de Stripe estén correctamente configuradas
+2. La aplicación seguirá funcionando incluso sin las claves de Stripe, aunque las funciones de pago no estarán disponibles
+
+## Mantenimiento y Actualizaciones
+
+Para actualizaciones futuras:
+
+1. Haz cambios en tu repositorio de GitHub
+2. Railway detectará los cambios y volverá a implementar automáticamente
+3. Las migraciones de base de datos se ejecutarán automáticamente durante cada despliegue
+
+---
+
+Si necesitas ayuda adicional, consulta la [documentación oficial de Railway](https://docs.railway.app/) o contacta al soporte.
