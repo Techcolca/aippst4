@@ -1040,10 +1040,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Verificar la sesión con Stripe
       if (!stripe) {
-        return res.status(500).json({ success: false, message: "Stripe no está configurado" });
+        console.warn("API de Stripe no configurada. No se puede verificar la suscripción.");
+        return res.status(503).json({ 
+          success: false, 
+          message: "El servicio de pagos no está disponible actualmente. Contacte al administrador.",
+          code: "STRIPE_NOT_CONFIGURED" 
+        });
       }
       
-      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      let session;
+      try {
+        session = await stripe.checkout.sessions.retrieve(sessionId);
+      } catch (stripeError) {
+        console.error("Error recuperando sesión de Stripe:", stripeError);
+        return res.status(404).json({ 
+          success: false, 
+          message: "No se pudo recuperar la información de la sesión de pago" 
+        });
+      }
       
       if (!session) {
         return res.status(404).json({ success: false, message: "Sesión no encontrada" });
@@ -1069,7 +1083,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Retornar información de la suscripción
         const planItem = subscription.items.data[0];
         const productId = planItem.price.product as string;
-        const product = await stripe.products.retrieve(productId);
+        
+        let product;
+        try {
+          product = await stripe.products.retrieve(productId);
+        } catch (productError) {
+          console.error("Error recuperando producto de Stripe:", productError);
+          // Continuar con datos parciales en caso de error
+          product = { name: "Plan desconocido" };
+        }
         
         const transformedSubscription = {
           id: subscription.id,
