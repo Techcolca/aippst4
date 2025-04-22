@@ -46,8 +46,8 @@ function getRedirectUrl(req?: any, customUrl?: string): string {
   }
   
   // URL por defecto como último recurso
-  console.log('Usando URL por defecto: https://localhost:5017/api/auth/google-calendar/callback');
-  return 'https://localhost:5017/api/auth/google-calendar/callback';
+  console.log('Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback');
+  return 'https://localhost:5000/api/auth/google-calendar/callback';
 }
 
 // Variable para almacenar la URL actual (se actualizará en cada solicitud)
