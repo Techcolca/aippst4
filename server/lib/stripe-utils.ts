@@ -1,13 +1,17 @@
 import Stripe from 'stripe';
 import { PricingPlan } from '@shared/schema';
 
+// Advertencia en lugar de error cuando la clave no está disponible
 if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
+  console.warn("STRIPE_SECRET_KEY no está establecido. Las funciones de Stripe no estarán disponibles.");
 }
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2023-10-16",
-});
+// Crear cliente de Stripe solo si la clave está disponible
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2023-10-16",
+    })
+  : null;
 
 /**
  * Crea o actualiza un producto y su precio en Stripe
@@ -18,6 +22,15 @@ export async function createOrUpdateStripeProduct(plan: PricingPlan): Promise<{
   stripeProductId: string, 
   stripePriceId: string 
 }> {
+  // Si Stripe no está configurado, devuelve los IDs existentes o vacíos
+  if (!stripe) {
+    console.warn("No se puede interactuar con Stripe: API key no configurada");
+    return { 
+      stripeProductId: plan.stripeProductId || 'stripe_not_configured', 
+      stripePriceId: plan.stripePriceId || 'stripe_not_configured' 
+    };
+  }
+  
   try {
     // 1. Crear o actualizar el producto
     let stripeProductId = plan.stripeProductId;
