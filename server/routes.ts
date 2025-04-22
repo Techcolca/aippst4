@@ -986,6 +986,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Plan no encontrado" });
       }
       
+      // Verificar si Stripe está disponible
+      if (!stripe) {
+        console.warn("API de Stripe no disponible. Redirigiendo a página de contacto.");
+        return res.status(503).json({ 
+          success: false, 
+          message: "El sistema de pagos no está disponible en este momento. Por favor contacte al administrador.",
+          redirectUrl: "/contact" 
+        });
+      }
+      
       // Crear o recuperar producto en Stripe
       const stripeProduct = await createOrRetrieveProduct(selectedProduct);
       if (!stripeProduct) {
@@ -1006,12 +1016,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const successUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/success?session_id={CHECKOUT_SESSION_ID}`;
       const cancelUrl = `${req.protocol}://${req.get('host')}/dashboard/subscription/cancel`;
       
-      const session = await createCheckoutSession(
-        user.stripeCustomerId || undefined,
-        price.id,
-        successUrl,
-        cancelUrl
-      );
+      let session;
+      try {
+        session = await createCheckoutSession(
+          user.stripeCustomerId || undefined,
+          price.id,
+          successUrl,
+          cancelUrl
+        );
+        
+        if (!session) {
+          throw new Error("No se pudo crear la sesión de checkout");
+        }
+      } catch (sessionError) {
+        console.error("Error creando la sesión de checkout:", sessionError);
+        return res.status(500).json({ 
+          success: false, 
+          message: "Error al crear la sesión de pago. Por favor intente más tarde."
+        });
+      }
       
       res.json({ 
         success: true, 
