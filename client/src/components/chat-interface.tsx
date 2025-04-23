@@ -28,7 +28,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
       setMessages([
         { 
           role: 'assistant', 
-          content: '👋 ¡Hola! Soy AIPI, tu asistente de IA. ¿En qué puedo ayudarte hoy?' 
+          content: '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?' 
         }
       ]);
       
@@ -48,7 +48,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
   const startConversation = async () => {
     try {
       // Using a default API key for testing within the app itself
-      const apiKey = 'aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
+      const apiKey = 'aipps_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
       
       // Create a visitor ID (could be more sophisticated in a real app)
       const visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
@@ -160,7 +160,7 @@ Debes ser informativo, profesional y claro en tus respuestas en español.
         }
       } else if (conversationId) {
         // Real API response using the widget API
-        const apiKey = 'aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
+        const apiKey = 'aipps_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
         
         const messageResponse = await fetch(`/api/widget/${apiKey}/message`, {
           method: 'POST',

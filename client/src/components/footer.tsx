@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AIPI</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AIPPS</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
               Plataforma de inteligencia artificial para integrar capacidades de conversación avanzadas en tu sitio web.
             </p>
@@ -73,8 +73,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:support@aipi.ca" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  support@aipi.ca
+                <a href="mailto:support@aipps.ca" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
+                  support@aipps.ca
                 </a>
               </li>
             </ul>
@@ -83,7 +83,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-600 dark:text-gray-300 text-sm">
-            &copy; {new Date().getFullYear()} AIPI. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} AIPPS. Todos los derechos reservados.
           </p>
           
           <div className="flex space-x-4 mt-4 md:mt-0">
