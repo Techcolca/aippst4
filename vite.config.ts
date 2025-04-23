@@ -22,6 +22,15 @@ export default defineConfig({
         ]
       : []),
   ],
+  server: {
+    hmr: {
+      overlay: true,
+      protocol: 'ws',
+      host: '0.0.0.0',
+    },
+    host: '0.0.0.0',
+    port: 5000,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
