@@ -669,7 +669,7 @@ export class PgStorage implements IStorage {
   }
 
   // Generar un código de descuento aleatorio
-  generateDiscountCode(prefix: string = 'AIPI'): string {
+  generateDiscountCode(prefix: string = 'AIPPS'): string {
     const randomPart = Math.random().toString(36).substring(2, 8).toUpperCase();
     return `${prefix}-${randomPart}`;
   }

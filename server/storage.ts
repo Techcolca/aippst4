@@ -229,8 +229,8 @@ export class MemStorage implements IStorage {
     const demoSettings: Settings = {
       id: this.settingsIdCounter++,
       userId: demoUser.id,
-      assistantName: "AIPI Assistant",
-      defaultGreeting: "👋 Hi there! I'm AIPI, your AI assistant. How can I help you today?",
+      assistantName: "AIPPS Assistant",
+      defaultGreeting: "👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?",
       showAvailability: true,
       avatarUrl: null,
       userBubbleColor: "#3B82F6",
@@ -961,7 +961,7 @@ export class MemStorage implements IStorage {
     this.discountCodes.delete(id);
   }
   
-  generateDiscountCode(prefix: string = 'AIPI'): string {
+  generateDiscountCode(prefix: string = 'AIPPS'): string {
     // Generar un código alfanumérico único de 8 caracteres
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = prefix;
