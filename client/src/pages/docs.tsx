@@ -972,7 +972,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI ofrece un potente panel de análisis y estadísticas que proporciona información valiosa sobre el rendimiento de sus asistentes virtuales, las tendencias en las conversaciones y el comportamiento de los visitantes. Las herramientas de análisis están diseñadas para facilitar la toma de decisiones estratégicas basadas en datos reales.
+                          AIPPS ofrece un potente panel de análisis y estadísticas que proporciona información valiosa sobre el rendimiento de sus asistentes virtuales, las tendencias en las conversaciones y el comportamiento de los visitantes. Las herramientas de análisis están diseñadas para facilitar la toma de decisiones estratégicas basadas en datos reales.
                         </p>
                         
                         <h3>Métricas Principales</h3>
@@ -1021,7 +1021,7 @@ export default function Documentation() {
                         </ul>
                         
                         <h3>Visualización de Datos</h3>
-                        <p>AIPI presenta la información de forma clara e intuitiva mediante:</p>
+                        <p>AIPPS presenta la información de forma clara e intuitiva mediante:</p>
                         
                         <ul>
                           <li><strong>Gráficos Interactivos</strong>: Visualizaciones dinámicas con filtros ajustables y múltiples tipos de gráficos (barras, líneas, circulares)</li>
@@ -1071,7 +1071,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          El módulo de Automatización de Tareas (Task Automation) de AIPI permite crear flujos de trabajo inteligentes que ejecutan acciones predefinidas en respuesta a desencadenantes específicos. Esta funcionalidad avanzada reduce la carga de trabajo manual y garantiza respuestas consistentes y rápidas a situaciones recurrentes.
+                          El módulo de Automatización de Tareas (Task Automation) de AIPPS permite crear flujos de trabajo inteligentes que ejecutan acciones predefinidas en respuesta a desencadenantes específicos. Esta funcionalidad avanzada reduce la carga de trabajo manual y garantiza respuestas consistentes y rápidas a situaciones recurrentes.
                         </p>
                         
                         <h3>¿Qué es la Automatización de Tareas?</h3>
