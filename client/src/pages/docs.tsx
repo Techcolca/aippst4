@@ -671,7 +671,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          Una de las características más poderosas de AIPI es su capacidad para comprender y analizar 
+                          Una de las características más poderosas de AIPPS es su capacidad para comprender y analizar 
                           automáticamente el contenido de tu sitio web, brindando respuestas contextuales precisas sin 
                           necesidad de programación manual o entrenamiento específico.
                         </p>
@@ -730,12 +730,12 @@ export default function Documentation() {
                           </div>
                           
                           <div className="mb-4">
-                            <h5 className="font-medium mb-2">Proceso de AIPI:</h5>
+                            <h5 className="font-medium mb-2">Proceso de AIPPS:</h5>
                             <ol className="list-decimal pl-5 space-y-2">
                               <li>
                                 <strong>Análisis de Contexto:</strong> 
                                 <p className="text-sm">
-                                  AIPI detectó que el usuario estaba viendo la página de un modelo específico de laptop.
+                                  AIPPS detectó que el usuario estaba viendo la página de un modelo específico de laptop.
                                 </p>
                               </li>
                               <li>
@@ -789,7 +789,7 @@ export default function Documentation() {
                           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                             <h4 className="font-semibold mb-2 text-primary-700 dark:text-primary-400">Cero Mantenimiento Manual</h4>
                             <p>
-                              A diferencia de los sistemas tradicionales de FAQs, AIPI se actualiza automáticamente 
+                              A diferencia de los sistemas tradicionales de FAQs, AIPPS se actualiza automáticamente 
                               cuando modificas el contenido de tu sitio web.
                             </p>
                           </div>
@@ -832,7 +832,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI permite enriquecer la base de conocimientos de su asistente virtual mediante la carga de documentos específicos de su institución o empresa. Esta característica es fundamental para proporcionar respuestas precisas y personalizadas basadas en su información oficial.
+                          AIPPS permite enriquecer la base de conocimientos de su asistente virtual mediante la carga de documentos específicos de su institución o empresa. Esta característica es fundamental para proporcionar respuestas precisas y personalizadas basadas en su información oficial.
                         </p>
                         
                         <h3>Tipos de Documentos Soportados</h3>
@@ -848,7 +848,7 @@ export default function Documentation() {
                         <h3>Proceso de Entrenamiento</h3>
                         <ol>
                           <li><strong>Carga de Documentos</strong>: Suba sus archivos a través de la interfaz intuitiva del dashboard</li>
-                          <li><strong>Procesamiento Automático</strong>: AIPI analiza y estructura la información de forma inteligente</li>
+                          <li><strong>Procesamiento Automático</strong>: AIPPS analiza y estructura la información de forma inteligente</li>
                           <li><strong>Categorización</strong>: Organice los documentos por temas para facilitar su gestión</li>
                           <li><strong>Enriquecimiento</strong>: Añada metadatos y etiquetas para mejorar la precisión de las respuestas</li>
                           <li><strong>Validación</strong>: Verifique la calidad de las respuestas mediante pruebas interactivas</li>
@@ -892,7 +892,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          Una de las características más valiosas de AIPI es su capacidad para convertir las conversaciones con visitantes en oportunidades de negocio tangibles mediante la captura y gestión inteligente de leads.
+                          Una de las características más valiosas de AIPPS es su capacidad para convertir las conversaciones con visitantes en oportunidades de negocio tangibles mediante la captura y gestión inteligente de leads.
                         </p>
                         
                         <h3>Cómo Funciona la Captura de Leads</h3>
@@ -907,7 +907,7 @@ export default function Documentation() {
                         </ol>
                         
                         <h3>Datos Capturados</h3>
-                        <p>AIPI puede recopilar, con consentimiento explícito del usuario:</p>
+                        <p>AIPPS puede recopilar, con consentimiento explícito del usuario:</p>
                         
                         <ul>
                           <li><strong>Información Básica</strong>: Nombre, correo electrónico, teléfono</li>
@@ -930,7 +930,7 @@ export default function Documentation() {
                         </ul>
                         
                         <h3>Integraciones con CRM</h3>
-                        <p>Para optimizar su flujo de trabajo, AIPI permite:</p>
+                        <p>Para optimizar su flujo de trabajo, AIPPS permite:</p>
                         
                         <ul>
                           <li>Sincronización automática con sistemas CRM populares</li>
@@ -940,7 +940,7 @@ export default function Documentation() {
                         </ul>
                         
                         <h3>Protección de Datos</h3>
-                        <p>AIPI cumple con las normativas de protección de datos:</p>
+                        <p>AIPPS cumple con las normativas de protección de datos:</p>
                         
                         <ul>
                           <li>Obtención de consentimiento explícito antes de capturar datos</li>
