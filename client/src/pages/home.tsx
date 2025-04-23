@@ -35,7 +35,7 @@ export default function Home() {
   
   // Función para copiar el código de integración
   const copyIntegrationCode = () => {
-    const code = `<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/aipi-web-widget.js?key=aipi_web_internal"></script>`;
+    const code = `<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/aipps-web-widget.js?key=aipps_web_internal"></script>`;
     navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -147,7 +147,7 @@ export default function Home() {
               Ready to transform your website?
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
-              Join thousands of businesses using AIPI to enhance user experience and boost engagement.
+              Join thousands of businesses using AIPPS to enhance user experience and boost engagement.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" variant="secondary" asChild>

@@ -58,7 +58,7 @@ export default function Header() {
         <div className="flex justify-between h-16">
           <div className="flex-shrink-0 flex items-center">
             <Link href="/">
-              <span className="text-primary-600 dark:text-primary-400 text-xl font-bold cursor-pointer">AIPI</span>
+              <span className="text-primary-600 dark:text-primary-400 text-xl font-bold cursor-pointer">AIPPS</span>
             </Link>
           </div>
           
