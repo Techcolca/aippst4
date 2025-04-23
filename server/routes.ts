@@ -151,14 +151,14 @@ async function createInternalWebsiteIntegration() {
     
     // Crear la integración interna
     await storage.createIntegration({
-      name: "AIPI Web Integration",
+      name: "AIPPS Web Integration",
       url: "localhost",
       userId: 1, // Usuario Pablo
       themeColor: "#6366f1",
       position: "bottom-right",
-      botBehavior: "Eres AIPI, un asistente integrado en el sitio web principal de AIPI. Tu objetivo es ayudar a los usuarios a entender cómo funciona la plataforma, sus características y beneficios. Debes ser informativo, profesional y claro en tus respuestas. Brinda ejemplos concretos de cómo se puede utilizar AIPI en diferentes contextos.",
+      botBehavior: "Eres AIPPS, un asistente integrado en el sitio web principal de AIPPS. Tu objetivo es ayudar a los usuarios a entender cómo funciona la plataforma, sus características y beneficios. Debes ser informativo, profesional y claro en tus respuestas. Brinda ejemplos concretos de cómo se puede utilizar AIPPS en diferentes contextos.",
       widgetType: "floating",
-      apiKey: "aipi_web_internal",
+      apiKey: "aipps_web_internal",
       documentsData: []
     });
     

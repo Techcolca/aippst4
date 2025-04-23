@@ -283,7 +283,7 @@ export class MemStorage implements IStorage {
         triggers: ["pricing", "features", "support"],
         responses: {
           pricing: "Our pricing starts at $29/month. Would you like to see our full pricing details?",
-          features: "AIPI offers conversational AI, task automation, real-time assistance, and seamless website integration.",
+          features: "AIPPS offers conversational AI, task automation, real-time assistance, and seamless website integration.",
           support: "Our support team is available 24/7. You can reach them at support@example.com."
         }
       },
@@ -764,8 +764,8 @@ export class MemStorage implements IStorage {
     const newSettings: Settings = {
       id,
       userId: settings.userId,
-      assistantName: "AIPI Assistant",
-      defaultGreeting: "👋 Hi there! I'm AIPI, your AI assistant. How can I help you today?",
+      assistantName: "AIPPS Assistant",
+      defaultGreeting: "👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?",
       showAvailability: true,
       avatarUrl: null,
       userBubbleColor: "#3B82F6",
