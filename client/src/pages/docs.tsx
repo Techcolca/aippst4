@@ -275,7 +275,7 @@ export default function Documentation() {
                       <div className="prose dark:prose-invert max-w-none">
                         <h3>1. Integración Flexible con Sitios Web</h3>
                         <p>
-                          AIPI ofrece dos modalidades de integración para adaptarse a las necesidades de cada institución:
+                          AIPPS ofrece dos modalidades de integración para adaptarse a las necesidades de cada institución:
                         </p>
                         
                         <h4>Widget Flotante (Burbuja):</h4>
@@ -293,7 +293,7 @@ export default function Documentation() {
                         </ul>
                         
                         <h3>2. Comprensión Contextual del Contenido</h3>
-                        <p>AIPI escanea y analiza automáticamente el contenido de su sitio web para:</p>
+                        <p>AIPPS escanea y analiza automáticamente el contenido de su sitio web para:</p>
                         <ul>
                           <li>Proporcionar respuestas precisas basadas en la información oficial</li>
                           <li>Dirigir a los visitantes a las páginas específicas que contienen la información solicitada</li>
@@ -330,7 +330,7 @@ export default function Documentation() {
                         </ul>
                         
                         <h3>6. Automatización de Tareas (Task Automation)</h3>
-                        <p>El sistema de Task Automation de AIPI permite crear flujos de trabajo automatizados para manejar consultas repetitivas y tareas comunes sin intervención humana.</p>
+                        <p>El sistema de Task Automation de AIPPS permite crear flujos de trabajo automatizados para manejar consultas repetitivas y tareas comunes sin intervención humana.</p>
                         
                         <h4>¿Qué es Task Automation?</h4>
                         <p>Task Automation es una funcionalidad avanzada que permite configurar respuestas automáticas y acciones predefinidas basadas en desencadenantes específicos. Estas automatizaciones permiten que su asistente virtual realice tareas complejas como:</p>
@@ -408,7 +408,7 @@ export default function Documentation() {
                         <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700 my-4">
                           <h5 className="font-bold mb-2">Caso: Universidad que Ofrece Programas de Postgrado</h5>
                           
-                          <p className="mb-3"><strong>Escenario inicial:</strong> La universidad tiene una integración web de AIPI en su sitio web principal, en formato widget flotante. Sin automatizaciones, el asistente responde preguntas generales sobre la universidad.</p>
+                          <p className="mb-3"><strong>Escenario inicial:</strong> La universidad tiene una integración web de AIPPS en su sitio web principal, en formato widget flotante. Sin automatizaciones, el asistente responde preguntas generales sobre la universidad.</p>
                           
                           <p className="font-medium">Implementación de Automatización:</p>
                           <ol className="space-y-2 mb-3">
@@ -468,7 +468,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPI ofrece dos tipos diferentes de widgets para integrarse de manera flexible en tu sitio web, 
+                          AIPPS ofrece dos tipos diferentes de widgets para integrarse de manera flexible en tu sitio web, 
                           permitiéndote elegir la opción que mejor se adapte a las necesidades de tu organización y la 
                           experiencia que deseas ofrecer a tus visitantes.
                         </p>
@@ -516,7 +516,7 @@ export default function Documentation() {
                         <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 my-4">
                           <h4 className="font-semibold text-lg mb-3">Caso de Implementación:</h4>
                           <p className="mb-3">
-                            La Universidad Nacional de Tecnología implementó el widget flotante de AIPI en su sitio web principal
+                            La Universidad Nacional de Tecnología implementó el widget flotante de AIPPS en su sitio web principal
                             y en los sitios específicos de cada facultad con configuraciones adaptadas para cada contexto.
                           </p>
                           
@@ -564,7 +564,7 @@ export default function Documentation() {
                           </div>
                           
                           <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 italic">
-                            "El widget de AIPI revolucionó nuestra forma de comunicarnos con estudiantes potenciales. 
+                            "El widget de AIPPS revolucionó nuestra forma de comunicarnos con estudiantes potenciales. 
                             Ahora podemos ofrecer información específica para cada facultad de manera instantánea, 
                             capturar datos de contacto y hacer seguimiento personalizado."
                             <div className="mt-1 font-medium">— Directora de Admisiones, Universidad Nacional de Tecnología</div>
@@ -595,7 +595,7 @@ export default function Documentation() {
                         
                         <h4 className="font-semibold mt-6 mb-2">Parámetros de Configuración:</h4>
                         <ul className="list-disc pl-5 space-y-1">
-                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">apiKey</code>: Tu clave de API única generada en el panel de control de AIPI</li>
+                          <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">apiKey</code>: Tu clave de API única generada en el panel de control de AIPPS</li>
                           <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">widgetType</code>: El tipo de widget ('bubble' o 'fullscreen')</li>
                           <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">position</code>: Ubicación en la pantalla (para widget tipo burbuja)</li>
                           <li><code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">themeColor</code>: Color principal que se usará en el widget</li>
