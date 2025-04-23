@@ -287,7 +287,7 @@
   "implementation.wordpress_note": "Si vous utilisez WordPress, vous pouvez ajouter le code au thème (footer.php) ou utiliser un plugin qui permet d'insérer du code HTML.",
   
   "implementation.step2_title": "Étape 2 : Personnalisation de l'Assistant",
-  "implementation.step2_desc": "Depuis votre panneau de contrôle AIPI, vous pouvez personnaliser de multiples aspects :",
+  "implementation.step2_desc": "Depuis votre panneau de contrôle AIPPS, vous pouvez personnaliser de multiples aspects :",
   "implementation.customize_colors": "Couleurs et style visuel pour correspondre à votre marque",
   "implementation.customize_position": "Position à l'écran (pour le widget flottant)",
   "implementation.customize_welcome": "Message de bienvenue et comportement initial",
@@ -311,7 +311,7 @@
   "implementation.isolated_stats": "Obtenir des statistiques complètement isolées des autres utilisateurs du système",
   
   "implementation.technical_requirements": "Exigences Techniques",
-  "implementation.compatibility_intro": "AIPI est conçu pour fonctionner avec pratiquement n'importe quel site web moderne :",
+  "implementation.compatibility_intro": "AIPPS est conçu pour fonctionner avec pratiquement n'importe quel site web moderne :",
   "implementation.cms_compatibility": "Compatible avec tous les CMS populaires (WordPress, Drupal, Joomla, etc.)",
   "implementation.html_compatibility": "Fonctionne avec les sites HTML statiques",
   "implementation.js_compatibility": "S'intègre avec les applications JavaScript (React, Angular, Vue, etc.)",
@@ -327,7 +327,7 @@
   "admin": "Administration",
   "profile": "Profil",
   "manage_assistant": "Gérez votre assistant IA et suivez ses performances",
-  "welcome": "Bienvenue dans AIPI",
+  "welcome": "Bienvenue dans AIPPS",
   "tagline": "La plateforme conversationnelle alimentée par l'IA pour une communication intelligente sur votre site web",
   "getStarted": "Commencer",
   "learnMore": "En savoir plus",
