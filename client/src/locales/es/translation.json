@@ -241,7 +241,7 @@
   "forms.technical_considerations": "Consideraciones Técnicas",
   "forms.works_with_cms": "El código funciona en cualquier sitio HTML, incluidos CMS como WordPress, Wix, o Shopify",
   "forms.async_loading": "El formulario se carga de forma asíncrona para no afectar el rendimiento de la página",
-  "forms.secure_data": "Los datos se envían directamente a los servidores de AIPI para mayor seguridad",
+  "forms.secure_data": "Los datos se envían directamente a los servidores de AIPPS para mayor seguridad",
   "forms.spam_protection": "Se incluye automáticamente protección contra spam y ataques CSRF",
   "forms.responsive_design": "Diseño responsivo que se adapta a cualquier dispositivo (móvil, tablet o escritorio)",
   
@@ -260,8 +260,8 @@
   "forms.realtime_notifications": "Notificaciones en Tiempo Real",
   "forms.realtime_notifications_desc": "Recibe alertas inmediatas cuando se completa un formulario",
   
-  "forms.widget_integration": "Integración con el Widget de AIPI",
-  "forms.widget_integration_desc": "Los formularios pueden integrarse con el asistente virtual de AIPI para:",
+  "forms.widget_integration": "Integración con el Widget de AIPPS",
+  "forms.widget_integration_desc": "Los formularios pueden integrarse con el asistente virtual de AIPPS para:",
   "forms.present_forms": "Presentar formularios en momentos clave de la conversación",
   "forms.autocomplete_fields": "Completar automáticamente campos con información ya proporcionada en el chat",
   "forms.continue_conversation": "Seguir la conversación después del envío del formulario",
@@ -278,7 +278,7 @@
   "forms.ecommerce_use_desc": "Feedback de productos, solicitudes de soporte, registro en listas VIP",
   "forms.create_first_button": "Crea tu Primer Formulario",
   
-  "implementation.intro_text": "La implementación de AIPI ha sido diseñada para ser extremadamente sencilla, sin necesidad de conocimientos técnicos avanzados. En pocos pasos, podrás tener funcionando un asistente virtual inteligente en tu sitio web.",
+  "implementation.intro_text": "La implementación de AIPPS ha sido diseñada para ser extremadamente sencilla, sin necesidad de conocimientos técnicos avanzados. En pocos pasos, podrás tener funcionando un asistente virtual inteligente en tu sitio web.",
   "implementation.process_title": "Proceso de Implementación",
   "implementation.step1_title": "Paso 1: Integración con tu Sitio Web",
   "implementation.step1_desc": "Simplemente agrega un fragmento de código HTML a tu sitio web, justo antes de la etiqueta de cierre </body>. Tenemos opciones para:",
@@ -287,7 +287,7 @@
   "implementation.wordpress_note": "Si utilizas WordPress, puedes agregar el código en el tema (footer.php) o utilizar un plugin que permita insertar código HTML.",
   
   "implementation.step2_title": "Paso 2: Personalización del Asistente",
-  "implementation.step2_desc": "Desde tu panel de control de AIPI, podrás personalizar múltiples aspectos:",
+  "implementation.step2_desc": "Desde tu panel de control de AIPPS, podrás personalizar múltiples aspectos:",
   "implementation.customize_colors": "Colores y estilo visual para que coincida con tu marca",
   "implementation.customize_position": "Posición en la pantalla (para el widget flotante)",
   "implementation.customize_welcome": "Mensaje de bienvenida y comportamiento inicial",
@@ -311,7 +311,7 @@
   "implementation.isolated_stats": "Obtener estadísticas completamente aisladas de otros usuarios del sistema",
   
   "implementation.technical_requirements": "Requisitos Técnicos",
-  "implementation.compatibility_intro": "AIPI está diseñado para funcionar con prácticamente cualquier sitio web moderno:",
+  "implementation.compatibility_intro": "AIPPS está diseñado para funcionar con prácticamente cualquier sitio web moderno:",
   "implementation.cms_compatibility": "Compatible con todos los CMS populares (WordPress, Drupal, Joomla, etc.)",
   "implementation.html_compatibility": "Funciona con sitios estáticos HTML",
   "implementation.js_compatibility": "Se integra con aplicaciones JavaScript (React, Angular, Vue, etc.)",
@@ -327,7 +327,7 @@
   "admin": "Administración",
   "profile": "Perfil",
   "manage_assistant": "Gestiona tu asistente de IA y monitoriza su rendimiento",
-  "welcome": "Bienvenido a AIPI",
+  "welcome": "Bienvenido a AIPPS",
   "tagline": "La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
   "getStarted": "Empezar",
   "learnMore": "Saber más",
