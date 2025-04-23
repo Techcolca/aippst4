@@ -1,6 +1,6 @@
 /**
- * AIPI Form Button - Botón flotante para formularios AIPI
- * Este script crea un botón flotante que permite acceder a los formularios AIPI desde cualquier página web.
+ * AIPPS Form Button - Botón flotante para formularios AIPPS
+ * Este script crea un botón flotante que permite acceder a los formularios AIPPS desde cualquier página web.
  */
 (function() {
   // Configuración por defecto
@@ -18,9 +18,9 @@
   };
   
   // Obtener configuración del script tag
-  const scriptTag = document.getElementById('aipi-form-button');
+  const scriptTag = document.getElementById('aipps-form-button');
   if (!scriptTag) {
-    console.error('No se pudo encontrar la etiqueta script con ID "aipi-form-button"');
+    console.error('No se pudo encontrar la etiqueta script con ID "aipps-form-button"');
     return;
   }
   
@@ -62,7 +62,7 @@
   function addStyles() {
     const styleElement = document.createElement('style');
     styleElement.textContent = `
-      /* Estilos para el botón flotante AIPI (optimizado para móviles) */
+      /* Estilos para el botón flotante AIPPS (optimizado para móviles) */
       .aipi-form-button {
         position: fixed;
         z-index: 9999;
@@ -344,7 +344,7 @@
       button.setAttribute('data-mobile-view', 'true');
     }
     
-    button.className = `aipi-form-button ${positionClass} ${config.size}`;
+    button.className = `aipps-form-button ${positionClass} ${config.size}`;
     button.style.backgroundColor = config.color;
     button.style.color = scriptTag.getAttribute('data-text-color') || '#FFFFFF';
     button.style.borderRadius = config.radius;

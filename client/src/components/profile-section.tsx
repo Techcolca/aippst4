@@ -320,11 +320,11 @@ export default function ProfileSection() {
       <div className="bg-white dark:bg-gray-800 shadow-sm rounded-md p-6">
         <h3 className="text-lg font-medium mb-4">Account API Key</h3>
         <p className="text-gray-500 dark:text-gray-400 mb-4">
-          This is your personal API key for accessing the AIPI API. Keep it secure.
+          This is your personal API key for accessing the AIPPS API. Keep it secure.
         </p>
         <div className="flex items-center space-x-2">
           <Input 
-            value="aipi_demo1234567890"
+            value="aipps_demo1234567890"
             readOnly
             className="font-mono"
           />

@@ -111,8 +111,8 @@ Título: ${pageTitle}
 Contenido de la página:
 ${pageContent}
 
-Eres AIPI, un asistente virtual integrado en el sitio web de AIPI.
-Tu objetivo es proporcionar información útil sobre la plataforma AIPI, 
+Eres AIPPS, un asistente virtual integrado en el sitio web de AIPPS.
+Tu objetivo es proporcionar información útil sobre la plataforma AIPPS, 
 sus características y beneficios basándote en el contenido de la página.
 Debes ser informativo, profesional y claro en tus respuestas en español.
 `;
@@ -138,11 +138,11 @@ Debes ser informativo, profesional y claro en tus respuestas en español.
           console.error("Error enviando mensaje a la API:", error);
           // Fallback a respuestas predefinidas si hay error en la API
           const demoResponses: Record<string, string> = {
-            "hello": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
-            "hola": "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
-            "ayuda": "Puedo ayudarte con información sobre nuestra plataforma AIPI, sus características, cómo integrarla en tu sitio web y mucho más.",
-            "features": "AIPI ofrece IA conversacional, automatización de tareas, asistencia en tiempo real y análisis de contenido de tu sitio web.",
-            "precios": "AIPI ofrece planes de precios flexibles que comienzan en $29/mes."
+            "hello": "¡Hola! Soy AIPPS, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+            "hola": "¡Hola! Soy AIPPS, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
+            "ayuda": "Puedo ayudarte con información sobre nuestra plataforma AIPPS, sus características, cómo integrarla en tu sitio web y mucho más.",
+            "features": "AIPPS ofrece IA conversacional, automatización de tareas, asistencia en tiempo real y análisis de contenido de tu sitio web.",
+            "precios": "AIPPS ofrece planes de precios flexibles que comienzan en $29/mes."
           };
           
           const lowerInput = inputValue.toLowerCase().trim();
@@ -153,9 +153,9 @@ Debes ser informativo, profesional y claro en tus respuestas en español.
           } else if (Object.keys(demoResponses).find(key => lowerInput.includes(key))) {
             response = demoResponses[Object.keys(demoResponses).find(key => lowerInput.includes(key)) as string];
           } else if (lowerInput.match(/^(hola|buenos días|buenas tardes|buenas noches)$/)) {
-            response = "¡Hola! Soy AIPI, tu asistente virtual. ¿En qué puedo ayudarte hoy?";
+            response = "¡Hola! Soy AIPPS, tu asistente virtual. ¿En qué puedo ayudarte hoy?";
           } else {
-            response = "Lo siento, estoy teniendo problemas para conectarme al servidor. ¿Puedo ayudarte con información general sobre la plataforma AIPI?";
+            response = "Lo siento, estoy teniendo problemas para conectarme al servidor. ¿Puedo ayudarte con información general sobre la plataforma AIPPS?";
           }
         }
       } else if (conversationId) {
