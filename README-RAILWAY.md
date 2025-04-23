@@ -1,11 +1,11 @@
 # Guía de Despliegue en Railway
 
-Esta guía te ayudará a desplegar tu aplicación AIPI en Railway de manera rápida y sencilla.
+Esta guía te ayudará a desplegar tu aplicación AIPPS en Railway de manera rápida y sencilla.
 
 ## Requisitos Previos
 
 1. Una cuenta en [Railway](https://railway.app/)
-2. Tu proyecto AIPI listo para desplegar desde GitHub
+2. Tu proyecto AIPPS listo para desplegar desde GitHub
 3. Claves de API necesarias (Stripe, etc.)
 
 ## Pasos para el Despliegue
@@ -20,7 +20,7 @@ Esta guía te ayudará a desplegar tu aplicación AIPI en Railway de manera ráp
 - Haz clic en "New Project"
 - Selecciona "Deploy from GitHub repo"
 - Conecta tu cuenta de GitHub si aún no lo has hecho
-- Busca y selecciona tu repositorio AIPI
+- Busca y selecciona tu repositorio AIPPS
 
 ### 3. Configurar la Base de Datos PostgreSQL
 
