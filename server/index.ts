@@ -81,11 +81,7 @@ app.use((req, res, next) => {
   // Usar el puerto proporcionado por Railway o por defecto 5000
   // this serves both the API and the client.
   const port = process.env.PORT || 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  server.listen(port, "0.0.0.0", () => {
+    log(`Server running at http://0.0.0.0:${port}`);
   });
 })();
