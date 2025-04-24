@@ -13,14 +13,30 @@ interface ChatInterfaceProps {
   demoMode?: boolean;
   integrationId?: number;
   context?: string;
+  welcomePageSettings?: {
+    welcomePageChatEnabled?: boolean;
+    welcomePageChatGreeting?: string;
+    welcomePageChatBubbleColor?: string;
+    welcomePageChatTextColor?: string;
+    welcomePageChatBehavior?: string;
+  };
 }
 
-export default function ChatInterface({ demoMode = false, integrationId, context }: ChatInterfaceProps) {
+export default function ChatInterface({ 
+  demoMode = false, 
+  integrationId, 
+  context,
+  welcomePageSettings
+}: ChatInterfaceProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [conversationId, setConversationId] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // Usar configuración personalizada o predeterminada
+  const defaultGreeting = '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?';
+  const greeting = welcomePageSettings?.welcomePageChatGreeting || defaultGreeting;
   
   // Initial greeting
   useEffect(() => {
@@ -28,7 +44,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
       setMessages([
         { 
           role: 'assistant', 
-          content: '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?' 
+          content: greeting
         }
       ]);
       
@@ -37,7 +53,7 @@ export default function ChatInterface({ demoMode = false, integrationId, context
         startConversation();
       }
     }
-  }, [messages, demoMode]);
+  }, [messages, demoMode, greeting]);
   
   // Auto scroll to bottom of chat
   useEffect(() => {
@@ -177,6 +193,9 @@ export default function ChatInterface({ demoMode = false, integrationId, context
           const allMessages = messages.concat(userMessage);
           
           // Crear contexto con el contenido extenso de la página
+          // Usar el comportamiento personalizado si está disponible
+          const customBehavior = welcomePageSettings?.welcomePageChatBehavior;
+          
           const pageContext = `
 INFORMACIÓN DEL SITIO:
 URL: ${pageUrl}
@@ -196,6 +215,9 @@ Tu objetivo es proporcionar información útil, precisa y completa sobre la plat
 sus servicios, características, precios y beneficios basándote en el contenido del sitio.
 Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado.
 Debes ser informativo, profesional y claro en tus respuestas. Contesta siempre en español.
+
+INSTRUCCIONES DE COMPORTAMIENTO ESPECÍFICAS:
+${customBehavior || 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.'}
 `;
           
           const openAIResponse = await fetch('/api/openai/completion', {
@@ -287,17 +309,23 @@ Debes ser informativo, profesional y claro en tus respuestas. Contesta siempre e
     }
   };
   
+  // Estilo personalizado para burbujas de chat
+  const userBubbleStyle = { backgroundColor: '#3B82F6', color: 'white' };
+  const assistantBubbleStyle = welcomePageSettings?.welcomePageChatBubbleColor
+    ? {
+        backgroundColor: welcomePageSettings.welcomePageChatBubbleColor,
+        color: welcomePageSettings.welcomePageChatTextColor || '#FFFFFF'
+      }
+    : { backgroundColor: 'rgb(229, 231, 235)', color: 'rgb(31, 41, 55)' };
+
   return (
     <div className="flex flex-col h-[450px] max-h-[450px]">
       <div className="flex-1 overflow-y-auto p-4 space-y-4" id="chat-messages">
         {messages.map((message, index) => (
           <div key={index} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
             <div 
-              className={`rounded-lg py-2 px-4 max-w-[80%] ${
-                message.role === 'user' 
-                  ? 'bg-primary-500 text-white' 
-                  : 'bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
-              }`}
+              className="rounded-lg py-2 px-4 max-w-[80%]"
+              style={message.role === 'user' ? userBubbleStyle : assistantBubbleStyle}
             >
               {message.content}
             </div>

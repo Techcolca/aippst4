@@ -708,6 +708,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Ruta para obtener configuración del chatbot de la página de bienvenida
+  app.get("/api/welcome-chat-settings", async (req, res) => {
+    try {
+      // Obtener configuración desde una cuenta de administrador
+      // Por defecto usar la configuración del user ID 4 (admin) u obtener el primer usuario admin
+      const adminUserId = 4; // Esta es la cuenta de admin predeterminada
+      
+      // Obtener configuración
+      const settings = await storage.getSettings(adminUserId);
+      
+      // Devolver solo la configuración relacionada con el chatbot de bienvenida
+      res.json({
+        welcomePageChatEnabled: settings?.welcomePageChatEnabled || true,
+        welcomePageChatGreeting: settings?.welcomePageChatGreeting || '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?',
+        welcomePageChatBubbleColor: settings?.welcomePageChatBubbleColor || '#111827',
+        welcomePageChatTextColor: settings?.welcomePageChatTextColor || '#FFFFFF',
+        welcomePageChatBehavior: settings?.welcomePageChatBehavior || 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.'
+      });
+    } catch (error) {
+      console.error("Get welcome chat settings error:", error);
+      // En caso de error, devolver configuración predeterminada
+      res.json({
+        welcomePageChatEnabled: true,
+        welcomePageChatGreeting: '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?',
+        welcomePageChatBubbleColor: '#111827',
+        welcomePageChatTextColor: '#FFFFFF',
+        welcomePageChatBehavior: 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.'
+      });
+    }
+  });
+  
   // ================ Site Content Routes ================
   // Ruta para scraping de sitio web
   app.post("/api/scrape", verifyToken, async (req, res) => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,6 +32,26 @@ export default function Home() {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const { t } = useTranslation();
+  const [welcomeChatSettings, setWelcomeChatSettings] = useState<any>(null);
+  
+  // Cargar configuración del chatbot de la página de bienvenida
+  useEffect(() => {
+    const fetchWelcomeChatSettings = async () => {
+      try {
+        const response = await fetch('/api/welcome-chat-settings');
+        if (response.ok) {
+          const data = await response.json();
+          setWelcomeChatSettings(data);
+        } else {
+          console.error('Error fetching welcome chat settings');
+        }
+      } catch (error) {
+        console.error('Failed to fetch welcome chat settings:', error);
+      }
+    };
+    
+    fetchWelcomeChatSettings();
+  }, []);
   
   // Función para copiar el código de integración
   const copyIntegrationCode = () => {
@@ -69,7 +89,10 @@ export default function Home() {
               </div>
               <div className="lg:w-1/2 lg:pl-12">
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 md:p-6 max-w-md mx-auto">
-                  <ChatInterface demoMode={true} />
+                  <ChatInterface 
+                    demoMode={true} 
+                    welcomePageSettings={welcomeChatSettings}
+                  />
                 </div>
               </div>
             </div>
