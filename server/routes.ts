@@ -919,6 +919,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             title: page.title
           })),
           pricing: scrapedData.extraData?.pricingPlans || [],
+          forms: scrapedData.extraData?.forms || {},
           content: scrapedData.pages.reduce((acc, page) => {
             acc[page.url] = {
               title: page.title,
@@ -930,7 +931,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           timestamp: new Date().toISOString()
         };
         
-        console.log(`Scraping procesado: ${processedData.sitemap.length} páginas, ${processedData.pricing.length} planes de precios`);
+        console.log(`Scraping procesado: ${processedData.sitemap.length} páginas, ${processedData.pricing.length} planes de precios, info de formularios incluida`);
         
         // Guardar datos procesados
         const scrapingDataString = JSON.stringify(processedData);

@@ -222,6 +222,59 @@ Plan Empresarial:
                 scrapedData += "- Para grandes corporaciones o necesidades personalizadas: Plan Empresarial\n\n";
               }
               
+              // Información sobre formularios si está disponible
+              if (parsedData.forms) {
+                scrapedData += "INFORMACIÓN SOBRE CREACIÓN DE FORMULARIOS:\n\n";
+                
+                const formInfo = parsedData.forms;
+                scrapedData += `${formInfo.description}\n\n`;
+                
+                // Pasos para crear un formulario
+                scrapedData += "Pasos para crear un formulario:\n";
+                if (formInfo.pasos_creacion && Array.isArray(formInfo.pasos_creacion)) {
+                  formInfo.pasos_creacion.forEach((paso: string) => {
+                    scrapedData += `${paso}\n`;
+                  });
+                }
+                scrapedData += "\n";
+                
+                // Tipos de formularios
+                scrapedData += "Tipos de formularios disponibles:\n";
+                if (formInfo.tipos_formularios && Array.isArray(formInfo.tipos_formularios)) {
+                  formInfo.tipos_formularios.forEach((tipo: any) => {
+                    scrapedData += `- ${tipo.tipo}: ${tipo.descripcion}\n`;
+                  });
+                }
+                scrapedData += "\n";
+                
+                // Opciones de integración
+                scrapedData += "Opciones de integración de formularios:\n";
+                if (formInfo.opciones_integracion && Array.isArray(formInfo.opciones_integracion)) {
+                  formInfo.opciones_integracion.forEach((opcion: any) => {
+                    scrapedData += `- ${opcion.opcion}: ${opcion.descripcion}\n`;
+                  });
+                }
+                scrapedData += "\n";
+                
+                // Características avanzadas
+                scrapedData += "Características avanzadas de los formularios:\n";
+                if (formInfo.caracteristicas_avanzadas && Array.isArray(formInfo.caracteristicas_avanzadas)) {
+                  formInfo.caracteristicas_avanzadas.forEach((caracteristica: string) => {
+                    scrapedData += `- ${caracteristica}\n`;
+                  });
+                }
+                scrapedData += "\n";
+                
+                // Pasos para integrar código
+                scrapedData += "Cómo integrar un formulario en tu sitio web:\n";
+                if (formInfo.paso_integracion_codigo && Array.isArray(formInfo.paso_integracion_codigo)) {
+                  formInfo.paso_integracion_codigo.forEach((paso: string) => {
+                    scrapedData += `${paso}\n`;
+                  });
+                }
+                scrapedData += "\n";
+              }
+              
               // Contenido extraído
               if (parsedData.content) {
                 scrapedData += "CONTENIDO DEL SITIO:\n";
@@ -278,6 +331,12 @@ INSTRUCCIONES PARA PREGUNTAS SOBRE PRECIOS Y PLANES:
 - Menciona siempre el precio, características principales y para qué tipo de cliente está recomendado cada plan
 - Si preguntan por una recomendación, sugiere el plan más adecuado según sus necesidades
 - Utiliza formato con viñetas para hacer la información más legible
+
+INSTRUCCIONES PARA PREGUNTAS SOBRE FORMULARIOS:
+- Cuando te pregunten sobre cómo crear o integrar formularios, proporciona los pasos detallados
+- Si preguntan sobre tipos de formularios, explica las opciones disponibles y sus casos de uso
+- Si preguntan sobre la integración de formularios en un sitio web, describe las diferentes opciones
+- Incluye información sobre características avanzadas de formularios si es relevante para la consulta
 
 INSTRUCCIONES GENERALES:
 - Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado

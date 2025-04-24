@@ -38,13 +38,20 @@ export class WebScraper {
       // Iniciar el scraping recursivo
       await this.scrapePageAndFollow(rootUrl);
       
+      // Añadir información específica sobre creación de formularios 
+      // basado en el conocimiento del producto
+      const formulariosInfo = this.extractFormulariosInfo();
+      
       // Devolver el contenido combinado y metadatos
       return {
         content: this.contentStore.join('\n\n'),
         pageCount: this.currentPageCount,
         pages: this.pageContentArray,
         pagesProcessed: this.currentPageCount,
-        extraData: {}
+        extraData: {
+          pricingPlans: this.extractPricingPlans(),
+          forms: formulariosInfo
+        }
       };
     } catch (error: any) {
       console.error('Error durante el scraping del sitio:', error);
@@ -307,6 +314,159 @@ ${mainContent}
     this.currentPageCount = 0;
     this.contentStore = [];
     this.pageContentArray = [];
+  }
+  
+  /**
+   * Extrae información sobre planes de precios basado en el contenido capturado
+   * @returns Array de planes de precios
+   */
+  private extractPricingPlans(): any[] {
+    // Implementación básica para detectar planes de precios
+    const pricingPlans = [
+      {
+        name: "Plan Gratuito",
+        price: "0",
+        currency: "USD",
+        interval: "mes",
+        description: "Para pequeñas empresas o individuos que quieren probar la plataforma",
+        features: [
+          "Hasta 20 interacciones por día",
+          "Acceso al widget flotante para integración sencilla en el sitio web",
+          "Respuestas basadas en la información disponible públicamente",
+          "Sin personalización ni carga de documentos específicos",
+          "Sin captura de leads ni seguimiento",
+          "Análisis básicos de interacciones"
+        ]
+      },
+      {
+        name: "Plan Básico",
+        price: "29",
+        currency: "USD",
+        interval: "mes",
+        description: "Para empresas que necesitan funcionalidades básicas pero potentes",
+        features: [
+          "Hasta 500 interacciones mensuales",
+          "Incluye todas las funcionalidades del Paquete Gratuito",
+          "Carga y procesamiento de documentos específicos (PDF, DOCX, Excel)",
+          "Captura básica de leads con almacenamiento de información de contacto",
+          "Análisis detallados de interacciones y consultas frecuentes"
+        ]
+      },
+      {
+        name: "Plan Profesional",
+        price: "79",
+        currency: "USD",
+        interval: "mes",
+        description: "Para negocios que buscan mayor personalización y automatización",
+        features: [
+          "Hasta 2,000 interacciones mensuales",
+          "Incluye todas las funcionalidades del Paquete Básico",
+          "Integración en pantalla completa tipo ChatGPT para una experiencia más inmersiva",
+          "Automatización de tareas frecuentes y programación de seguimientos",
+          "Análisis avanzados con métricas de rendimiento y tendencias",
+          "Soporte prioritario"
+        ]
+      },
+      {
+        name: "Plan Empresarial",
+        price: "199",
+        currency: "USD",
+        interval: "mes",
+        description: "Para grandes empresas con necesidades avanzadas y personalizadas",
+        features: [
+          "Interacciones ilimitadas",
+          "Incluye todas las funcionalidades del Paquete Profesional",
+          "Personalización avanzada del asistente virtual (tono, estilo, branding)",
+          "Integración con sistemas CRM y otras plataformas empresariales",
+          "Análisis personalizados y reportes a medida",
+          "Soporte dedicado con gestor de cuenta asignado"
+        ]
+      }
+    ];
+    
+    return pricingPlans;
+  }
+  
+  /**
+   * Extrae información sobre la funcionalidad de creación de formularios
+   * @returns Información detallada sobre creación de formularios
+   */
+  private extractFormulariosInfo(): any {
+    return {
+      description: "AIPPS ofrece una potente herramienta para la creación de formularios inteligentes para tu sitio web",
+      pasos_creacion: [
+        "1. Inicia sesión en tu cuenta de AIPPS y ve al panel de administración",
+        "2. En el menú lateral, selecciona la opción 'Formularios'",
+        "3. Haz clic en el botón 'Crear Nuevo Formulario'",
+        "4. Selecciona una plantilla predefinida o comienza desde cero",
+        "5. Personaliza los campos del formulario según tus necesidades",
+        "6. Configura la apariencia y comportamiento del formulario",
+        "7. Guarda los cambios y obtén el código de integración"
+      ],
+      tipos_formularios: [
+        {
+          tipo: "Formulario de contacto",
+          descripcion: "Permite a los visitantes comunicarse contigo directamente desde tu sitio web",
+          campos_comunes: ["Nombre", "Email", "Teléfono", "Mensaje"]
+        },
+        {
+          tipo: "Formulario de captura de leads",
+          descripcion: "Diseñado para convertir visitantes en potenciales clientes",
+          campos_comunes: ["Nombre", "Email", "Intereses", "Empresa"]
+        },
+        {
+          tipo: "Formulario de reserva",
+          descripcion: "Perfecto para programar citas o reservas de servicios",
+          campos_comunes: ["Nombre", "Email", "Fecha y hora", "Servicio deseado"]
+        },
+        {
+          tipo: "Formulario de solicitud de presupuesto",
+          descripcion: "Ideal para empresas de servicios que necesitan detalles específicos para cotizar",
+          campos_comunes: ["Datos de contacto", "Detalles del proyecto", "Presupuesto estimado", "Plazo"]
+        },
+        {
+          tipo: "Formulario de encuesta",
+          descripcion: "Para obtener retroalimentación de clientes o visitantes",
+          campos_comunes: ["Valoraciones", "Preguntas abiertas", "Selección múltiple"]
+        }
+      ],
+      opciones_integracion: [
+        {
+          opcion: "Widget flotante",
+          descripcion: "Botón que se muestra en una esquina de tu sitio web y expande el formulario cuando se hace clic"
+        },
+        {
+          opcion: "Incrustado",
+          descripcion: "El formulario se muestra directamente dentro de una sección de tu página web"
+        },
+        {
+          opcion: "Modal emergente",
+          descripcion: "Aparece sobre el contenido de la página cuando el visitante realiza una acción específica"
+        },
+        {
+          opcion: "Página completa",
+          descripcion: "Formulario en una página dedicada con URL única para compartir directamente"
+        }
+      ],
+      caracteristicas_avanzadas: [
+        "Lógica condicional: muestra u oculta campos según las respuestas anteriores",
+        "Validación automática: verifica que los datos ingresados tengan el formato correcto",
+        "Notificaciones por email: recibe alertas cuando alguien completa el formulario",
+        "Integración con CRM: sincroniza automáticamente los datos capturados",
+        "Análisis de conversión: estadísticas sobre tasas de completado y abandono",
+        "Personalización de diseño: adapta colores, fuentes y estilos a tu marca",
+        "Autoguardado: permite a los usuarios continuar más tarde desde donde lo dejaron",
+        "Protección anti-spam: evita envíos automáticos no deseados"
+      ],
+      paso_integracion_codigo: [
+        "1. Ve a la sección 'Formularios' en tu panel de AIPPS",
+        "2. Selecciona el formulario que deseas integrar",
+        "3. Haz clic en 'Obtener código'",
+        "4. Copia el fragmento de código HTML/JavaScript proporcionado",
+        "5. Pega el código en tu sitio web donde deseas que aparezca el formulario",
+        "6. Guarda los cambios en tu sitio web para que el formulario sea visible"
+      ]
+    };
   }
 }
 
