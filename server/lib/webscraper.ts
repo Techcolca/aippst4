@@ -17,10 +17,10 @@ export class WebScraper {
   /**
    * Inicia el proceso de scraping desde una URL raíz
    * @param rootUrl La URL raíz del sitio
-   * @param maxPages Número máximo de páginas a scrapear (por defecto 5)
+   * @param maxPages Número máximo de páginas a scrapear (por defecto 10)
    * @returns Un objeto con el contenido extraído y metadatos
    */
-  async scrapeSite(rootUrl: string, maxPages: number = 5): Promise<{
+  async scrapeSite(rootUrl: string, maxPages: number = 10): Promise<{
     content: string;
     pageCount: number;
     pages: Array<{url: string, content: string, title: string}>;
@@ -71,39 +71,100 @@ export class WebScraper {
       // Usar cheerio para analizar el HTML
       const $ = cheerio.load(data);
       
-      // Eliminar elementos no deseados
-      $('script, style, iframe, nav, footer, header, aside, [role="banner"], [role="navigation"], .sidebar, #sidebar, .footer, .header, .ad, .ads, .advertisement').remove();
+      // Eliminar elementos no deseados pero mantener la navegación para capturar info sobre servicios
+      $('script, style, iframe, [role="banner"], .sidebar, #sidebar, .ad, .ads, .advertisement').remove();
       
       // Extraer contenido principal
       const title = $('title').text() || '';
       const metaDescription = $('meta[name="description"]').attr('content') || '';
       
-      // Intentar obtener el contenido principal primero con selectores comunes
+      // Extraer información de todos los encabezados para capturar mejor la estructura del contenido
+      let headings = '';
+      $('h1, h2, h3, h4, h5, h6').each((i, el) => {
+        const headingText = $(el).text().trim();
+        if (headingText) {
+          headings += `${el.name.toUpperCase()}: ${headingText}\n`;
+        }
+      });
+      
+      // Intentar obtener el contenido principal con selectores ampliados
       let mainContent = '';
-      const mainSelectors = ['main', 'article', '[role="main"]', '.main-content', '#main-content', '.content', '#content'];
+      const mainSelectors = [
+        'main', 'article', '[role="main"]', '.main-content', '#main-content', 
+        '.content', '#content', '.page-content', '.container', '.page', 
+        '.services', '.features', '.pricing', '.about', '.plans', '.product'
+      ];
       
       for (const selector of mainSelectors) {
         const element = $(selector);
         if (element.length > 0) {
-          mainContent = element.text().trim();
-          break;
+          // Extraer texto pero mantener cierta estructura
+          let sectionContent = '';
+          element.find('h1, h2, h3, h4, h5, h6, p, li, .card, .feature, .service').each((i, el) => {
+            const tagName = el.tagName.toLowerCase();
+            const text = $(el).text().trim();
+            if (text) {
+              if (tagName.startsWith('h')) {
+                sectionContent += `\n## ${text} ##\n`;
+              } else {
+                sectionContent += `${text}\n`;
+              }
+            }
+          });
+          
+          if (sectionContent) {
+            mainContent += sectionContent + '\n';
+          }
         }
       }
       
-      // Si no se encontró contenido con selectores comunes, usar el body
+      // Si no se encontró contenido con selectores comunes, usar el body pero con procesamiento mejorado
       if (!mainContent) {
-        mainContent = $('body').text().trim();
+        // Extraer párrafos, listas y elementos comunes para encontrar más información
+        $('body').find('p, li, .card, .feature-item, .service-item, .plan, .pricing-item').each((i, el) => {
+          const text = $(el).text().trim();
+          if (text) {
+            mainContent += text + '\n';
+          }
+        });
+        
+        // Si aún no hay contenido, usar todo el texto del body
+        if (!mainContent) {
+          mainContent = $('body').text().trim();
+        }
       }
+      
+      // Capturar específicamente información de navegación que podría contener enlaces a servicios
+      let navContent = '';
+      $('nav, [role="navigation"], .navigation, .navbar, .menu, .header-menu').each((i, el) => {
+        $(el).find('a').each((j, link) => {
+          const text = $(link).text().trim();
+          const href = $(link).attr('href');
+          if (text && href && !href.startsWith('#')) {
+            navContent += `Enlace: ${text} (${href})\n`;
+          }
+        });
+      });
       
       // Limpiar el texto (eliminar espacios extras, etc.)
       mainContent = this.cleanText(mainContent);
+      headings = this.cleanText(headings);
+      navContent = this.cleanText(navContent);
       
-      // Combinar la información
+      // Combinar la información con mejor estructura
       const formattedContent = `
-        Título: ${title}
-        Descripción: ${metaDescription}
-        Contenido:
-        ${mainContent}
+Página: ${pageUrl}
+Título: ${title}
+Descripción: ${metaDescription}
+
+ESTRUCTURA:
+${headings}
+
+NAVEGACIÓN:
+${navContent}
+
+CONTENIDO PRINCIPAL:
+${mainContent}
       `;
       
       return {
@@ -216,7 +277,8 @@ export class WebScraper {
       }
       
       // Limitar el número de enlaces para no sobrecargar
-      return internalLinks.slice(0, 5);
+      // Aumentamos el límite de 5 a 15 enlaces para capturar más contenido
+      return internalLinks.slice(0, 15);
     } catch (error) {
       console.error(`Error al extraer enlaces internos de ${pageUrl}:`, error);
       return [];

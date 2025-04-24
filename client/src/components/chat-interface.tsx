@@ -93,28 +93,109 @@ export default function ChatInterface({ demoMode = false, integrationId, context
         await new Promise(resolve => setTimeout(resolve, 600)); // Pequeña espera para simular procesamiento
         
         try {
-          // Capturar el contexto de la página actual
-          const pageContent = document.querySelector('main')?.textContent?.trim() || '';
+          // Capturar el contexto de la página actual de forma exhaustiva
+          let pageContent = '';
+          
+          // Extraer contenido de varias secciones principales
+          const mainContentSelectors = [
+            'main', 'article', '.main-content', '#main-content', 
+            '.content', '#content', '.page-content', '.container', 
+            '.page', '.services', '.features', '.pricing', '.about'
+          ];
+          
+          // Intentar extraer contenido de diferentes partes de la página
+          for (const selector of mainContentSelectors) {
+            const element = document.querySelector(selector);
+            if (element && element.textContent) {
+              pageContent += element.textContent.trim() + '\n\n';
+            }
+          }
+          
+          // Si no se encontró contenido con los selectores, usar todo el body
+          if (!pageContent) {
+            // Crear una copia del body para manipular
+            const bodyClone = document.body.cloneNode(true) as HTMLElement;
+            
+            // Eliminar elementos que típicamente no tienen contenido relevante
+            const elementsToRemove = bodyClone.querySelectorAll(
+              'script, style, noscript, iframe, svg'
+            );
+            elementsToRemove.forEach(el => el.remove());
+            
+            pageContent = bodyClone.textContent?.trim() || '';
+          }
+          
+          // Extraer información de navegación (puede contener enlaces a servicios)
+          let navigationContent = '';
+          const navElements = document.querySelectorAll('nav, header, .navigation, .navbar, .menu');
+          navElements.forEach(nav => {
+            // Extraer enlaces y textos
+            const links = nav.querySelectorAll('a');
+            links.forEach(link => {
+              if (link.textContent && link.textContent.trim()) {
+                navigationContent += `${link.textContent.trim()} (${link.getAttribute('href') || '#'})\n`;
+              }
+            });
+          });
+          
+          // Extraer información específica sobre servicios/características
+          let servicesContent = '';
+          const serviceSelectors = [
+            '.services', '.features', '.pricing', '.plans', 
+            '.product', '.cards', '.service-item', '.feature-item'
+          ];
+          
+          for (const selector of serviceSelectors) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => {
+              // Buscar títulos dentro de los elementos de servicio
+              const titles = el.querySelectorAll('h1, h2, h3, h4, h5, h6');
+              titles.forEach(title => {
+                if (title.textContent && title.textContent.trim()) {
+                  servicesContent += `SERVICIO/CARACTERÍSTICA: ${title.textContent.trim()}\n`;
+                  
+                  // Buscar descripciones cerca del título
+                  let nextEl = title.nextElementSibling;
+                  while (nextEl && !nextEl.tagName.startsWith('H')) {
+                    if (nextEl.textContent && nextEl.textContent.trim()) {
+                      servicesContent += `${nextEl.textContent.trim()}\n`;
+                    }
+                    nextEl = nextEl.nextElementSibling;
+                  }
+                  servicesContent += '\n';
+                }
+              });
+            });
+          }
+          
           const pageTitle = document.title;
           const pageUrl = window.location.href;
           
-          console.log("Usando el modelo OpenAI directamente con contexto de la página");
+          console.log("Usando el modelo OpenAI con contexto mejorado de la página");
           
           // En lugar de usar la API del widget, vamos a usar directamente la API de OpenAI
           const allMessages = messages.concat(userMessage);
           
-          // Crear contexto con el contenido de la página
+          // Crear contexto con el contenido extenso de la página
           const pageContext = `
-Información de la página actual:
+INFORMACIÓN DEL SITIO:
 URL: ${pageUrl}
 Título: ${pageTitle}
-Contenido de la página:
+
+NAVEGACIÓN DEL SITIO:
+${navigationContent}
+
+SERVICIOS Y CARACTERÍSTICAS DETECTADOS:
+${servicesContent}
+
+CONTENIDO DE LA PÁGINA:
 ${pageContent}
 
 Eres AIPPS, un asistente virtual integrado en el sitio web de AIPPS.
-Tu objetivo es proporcionar información útil sobre la plataforma AIPPS, 
-sus características y beneficios basándote en el contenido de la página.
-Debes ser informativo, profesional y claro en tus respuestas en español.
+Tu objetivo es proporcionar información útil, precisa y completa sobre la plataforma AIPPS,
+sus servicios, características, precios y beneficios basándote en el contenido del sitio.
+Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado.
+Debes ser informativo, profesional y claro en tus respuestas. Contesta siempre en español.
 `;
           
           const openAIResponse = await fetch('/api/openai/completion', {

@@ -14,19 +14,21 @@ export async function generateChatCompletion(
   try {
     // Add system message with context if provided
     const systemMessage = context 
-      ? { role: "system", content: `Eres AIPI, un asistente de IA integrado en un sitio web. Tu objetivo principal es proporcionar información útil y precisa basada específicamente en el contexto proporcionado.
+      ? { role: "system", content: `Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Tu objetivo principal es proporcionar información útil, precisa y completa basada específicamente en el contexto proporcionado sobre los servicios, características y beneficios de la plataforma AIPPS.
       
 INSTRUCCIONES IMPORTANTES:
-1. Enfoca tus respuestas en la información que encuentres en el contexto a continuación.
-2. Si la pregunta del usuario se puede responder usando el contexto, siempre responde con información del contexto.
-3. Si la información para responder la pregunta está presente en un documento, cita el nombre del documento en tu respuesta.
-4. Si la información no está disponible en el contexto, indica claramente que no tienes información específica sobre eso y proporciona una respuesta general.
-5. Tus respuestas deben ser concisas pero completas.
-6. Nunca inventes información que no esté en el contexto.
-7. Responde siempre en español a menos que te pregunten específicamente en otro idioma.
+1. Enfoca tus respuestas en la información que encuentres en el contexto proporcionado a continuación.
+2. Si la pregunta del usuario se refiere a un servicio, característica o funcionalidad específica de AIPPS, busca exhaustivamente esta información en el contexto y responde con detalles precisos.
+3. Sé especialmente atento a información sobre precios, planes, servicios ofrecidos, integraciones soportadas y características de la plataforma.
+4. Presta especial atención a las secciones "SERVICIOS Y CARACTERÍSTICAS DETECTADOS" y "NAVEGACIÓN DEL SITIO" del contexto, que pueden contener información clave.
+5. Si la información no está disponible en el contexto, indica claramente que no tienes información específica sobre eso, pero sugiere otras características o servicios que sí conozcas.
+6. Tus respuestas deben ser profesionales, informativas y orientadas a destacar el valor de AIPPS.
+7. Nunca inventes características, precios o servicios que no estén explícitamente mencionados en el contexto.
+8. Responde siempre en español a menos que te pregunten específicamente en otro idioma.
 
-CONTEXTO: ${context}` }
-      : { role: "system", content: "Eres AIPI, un asistente de IA útil que proporciona información concisa y precisa a los visitantes del sitio web. Sé amigable, profesional y servicial. Responde siempre en español a menos que te pregunten en otro idioma." };
+CONTEXTO DETALLADO DEL SITIO: 
+${context}` }
+      : { role: "system", content: "Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Proporcionas información concisa y precisa sobre la plataforma AIPPS, sus servicios, características y beneficios. Sé amigable, profesional y servicial. Responde siempre en español a menos que te pregunten en otro idioma." };
     
     // Log system message for debugging
     console.log("System message length:", systemMessage.content.length);
@@ -87,7 +89,8 @@ export async function analyzeSentiment(text: string): Promise<{
       response_format: { type: "json_object" },
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
+    const content = response.choices[0].message.content || '{"rating": 3, "confidence": 0.5}';
+    const result = JSON.parse(content);
 
     return {
       rating: Math.max(1, Math.min(5, Math.round(result.rating))),
@@ -162,7 +165,7 @@ export async function generateAutomatedResponse(
     const response = await openai.chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
-        { role: "system", content: "Eres AIPI, un asistente de IA integrado en un sitio web. Ayudas a los visitantes proporcionando información precisa y útil basada en el contenido del sitio web. Responde siempre en español a menos que te pregunten en otro idioma." },
+        { role: "system", content: "Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Ayudas a los visitantes proporcionando información precisa y útil sobre los servicios, características y beneficios de la plataforma. Responde siempre en español a menos que te pregunten en otro idioma." },
         { role: "user", content: prompt }
       ],
     });
