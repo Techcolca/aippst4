@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import { generateChatCompletion } from "@/lib/openai";
+import { useTranslation } from "react-i18next";
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -37,11 +38,33 @@ export default function ChatInterface({
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { t, i18n } = useTranslation();
+
+  // Función para obtener el mensaje de bienvenida según el idioma
+  const getWelcomeMessage = () => {
+    // Si hay un mensaje personalizado configurado, lo usamos primero
+    if (welcomePageSettings?.welcomePageChatGreeting) {
+      return welcomePageSettings.welcomePageChatGreeting;
+    }
+    
+    // Si no, usamos un mensaje según el idioma actual
+    const currentLanguage = i18n.language;
+    
+    switch (currentLanguage) {
+      case 'fr':
+        return "👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui ?";
+      case 'en':
+        return "👋 Hello! I'm AIPPS, your AI assistant. How can I help you today?";
+      case 'es':
+        return "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?";
+      default:
+        return "👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui ?";
+    }
+  };
 
   // Inicializar el chat con un mensaje de bienvenida
   useEffect(() => {
-    const welcomeMessage = welcomePageSettings?.welcomePageChatGreeting || 
-                        "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?";
+    const welcomeMessage = getWelcomeMessage();
     
     setMessages([{ role: 'assistant', content: welcomeMessage }]);
     
@@ -49,7 +72,7 @@ export default function ChatInterface({
       // Iniciar una conversación real si no estamos en modo demo y tenemos una integración
       startConversation();
     }
-  }, []);
+  }, [i18n.language]); // Re-ejecutar cuando cambie el idioma
 
   // Scroll automático al final de los mensajes
   useEffect(() => {
@@ -502,7 +525,8 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
         // Fallback to the generateChatCompletion function
         response = await generateChatCompletion(
           messages.concat(userMessage),
-          context
+          context,
+          i18n.language // Pasar el idioma actual
         );
       }
       

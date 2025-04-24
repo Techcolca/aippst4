@@ -6,6 +6,7 @@ interface ChatCompletionRequest {
     content: string;
   }>;
   context?: string;
+  language?: string;
 }
 
 interface ChatCompletionResponse {
@@ -17,12 +18,14 @@ interface ChatCompletionResponse {
 
 export const generateChatCompletion = async (
   messages: Array<{ role: string; content: string }>,
-  context?: string
+  context?: string,
+  language?: string
 ): Promise<string> => {
   try {
     const response = await apiRequest("POST", "/api/openai/completion", {
       messages,
-      context
+      context,
+      language
     });
 
     const result: ChatCompletionResponse = await response.json();
