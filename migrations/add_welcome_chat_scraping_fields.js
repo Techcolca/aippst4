@@ -12,9 +12,8 @@ if (!connectionString) {
 }
 
 // Configurar Neon para WebSockets
-const neonConfig = {
-  webSocketConstructor: ws
-};
+import { neonConfig } from '@neondatabase/serverless';
+neonConfig.webSocketConstructor = ws;
 
 // Crear pool de conexiones
 const pool = new Pool({ connectionString });
