@@ -196,11 +196,68 @@ export default function ChatInterface({
           // En lugar de usar la API del widget, vamos a usar directamente la API de OpenAI
           const allMessages = messages.concat(userMessage);
           
-          // Crear contexto con el contenido extenso de la página
           // Usar el comportamiento personalizado si está disponible
           const customBehavior = welcomePageSettings?.welcomePageChatBehavior;
           
-          const pageContext = `
+          // Comprobar si hay datos de scraping disponibles del servidor
+          let scrapedData = '';
+          if (welcomePageSettings?.welcomePageChatScrapingEnabled && welcomePageSettings?.welcomePageChatScrapingData) {
+            try {
+              // Intentar parsear los datos de scraping guardados
+              const parsedData = JSON.parse(welcomePageSettings.welcomePageChatScrapingData);
+              
+              // Crear contenido estructurado a partir de los datos parseados
+              scrapedData = `
+INFORMACIÓN EXTRAÍDA DE LAS PÁGINAS DEL SITIO (${parsedData.pageCount || 0} páginas analizadas):
+`;
+              
+              // Agregar información de cada página
+              if (parsedData.pages && Array.isArray(parsedData.pages)) {
+                parsedData.pages.forEach((page: any, index: number) => {
+                  if (page.url && page.title) {
+                    scrapedData += `
+PÁGINA ${index + 1}: ${page.title}
+URL: ${page.url}
+`;
+                    
+                    // Extraer secciones principales del contenido
+                    if (page.content) {
+                      const content = page.content.toString();
+                      
+                      // Extraer secciones importantes
+                      const estructuraMatch = content.match(/ESTRUCTURA:\n([\s\S]*?)(?=\n\nNAVEGACIÓN:|$)/);
+                      const navegacionMatch = content.match(/NAVEGACIÓN:\n([\s\S]*?)(?=\n\nCONTENIDO PRINCIPAL:|$)/);
+                      const contenidoMatch = content.match(/CONTENIDO PRINCIPAL:\n([\s\S]*?)(?=$)/);
+                      
+                      if (estructuraMatch && estructuraMatch[1]) {
+                        scrapedData += `ESTRUCTURA:\n${estructuraMatch[1].trim()}\n\n`;
+                      }
+                      
+                      if (navegacionMatch && navegacionMatch[1]) {
+                        scrapedData += `NAVEGACIÓN:\n${navegacionMatch[1].trim()}\n\n`;
+                      }
+                      
+                      if (contenidoMatch && contenidoMatch[1]) {
+                        // Extraer solo los primeros 500 caracteres para no sobrecargar el contexto
+                        const resumen = contenidoMatch[1].trim().substring(0, 500) + 
+                          (contenidoMatch[1].length > 500 ? '...' : '');
+                        scrapedData += `CONTENIDO:\n${resumen}\n\n`;
+                      }
+                    }
+                  }
+                });
+              }
+              
+              console.log("Usando datos de scraping del servidor para el chatbot");
+            } catch (error) {
+              console.error("Error al parsear datos de scraping:", error);
+              // En caso de error, usar la información extraída en tiempo real
+              scrapedData = '';
+            }
+          }
+          
+          // Si no hay datos de scraping del servidor o hubo un error, usar los datos extraídos en tiempo real
+          const pageContext = scrapedData || `
 INFORMACIÓN DEL SITIO:
 URL: ${pageUrl}
 Título: ${pageTitle}
@@ -213,6 +270,11 @@ ${servicesContent}
 
 CONTENIDO DE LA PÁGINA:
 ${pageContent}
+`;
+
+          // Añadir instrucciones generales al contexto
+          const contextWithInstructions = `
+${pageContext}
 
 Eres AIPPS, un asistente virtual integrado en el sitio web de AIPPS.
 Tu objetivo es proporcionar información útil, precisa y completa sobre la plataforma AIPPS,
@@ -231,7 +293,7 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
             },
             body: JSON.stringify({
               messages: allMessages,
-              context: pageContext
+              context: contextWithInstructions
             })
           });
           
