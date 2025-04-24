@@ -273,6 +273,31 @@ Plan Empresarial:
                   });
                 }
                 scrapedData += "\n";
+                
+                // Información de documentación
+                if (formInfo.documentacion) {
+                  scrapedData += "DOCUMENTACIÓN DISPONIBLE:\n\n";
+                  scrapedData += `${formInfo.documentacion.general}\n\n`;
+                  
+                  // Secciones de documentación
+                  scrapedData += "Secciones de documentación:\n";
+                  if (formInfo.documentacion.secciones && Array.isArray(formInfo.documentacion.secciones)) {
+                    formInfo.documentacion.secciones.forEach((seccion: any) => {
+                      scrapedData += `- ${seccion.titulo}: ${seccion.descripcion} (${seccion.url})\n`;
+                    });
+                  }
+                  scrapedData += "\n";
+                  
+                  // Preguntas frecuentes
+                  scrapedData += "Preguntas frecuentes (FAQ):\n";
+                  if (formInfo.documentacion.faq && Array.isArray(formInfo.documentacion.faq)) {
+                    formInfo.documentacion.faq.forEach((faq: any, index: number) => {
+                      scrapedData += `Pregunta ${index + 1}: ${faq.pregunta}\n`;
+                      scrapedData += `Respuesta: ${faq.respuesta}\n\n`;
+                    });
+                  }
+                  scrapedData += "\n";
+                }
               }
               
               // Contenido extraído
@@ -337,6 +362,13 @@ INSTRUCCIONES PARA PREGUNTAS SOBRE FORMULARIOS:
 - Si preguntan sobre tipos de formularios, explica las opciones disponibles y sus casos de uso
 - Si preguntan sobre la integración de formularios en un sitio web, describe las diferentes opciones
 - Incluye información sobre características avanzadas de formularios si es relevante para la consulta
+
+INSTRUCCIONES PARA PREGUNTAS SOBRE DOCUMENTACIÓN:
+- Cuando te pregunten sobre dónde encontrar documentación, proporciona las secciones disponibles
+- Si preguntan por un tema específico, identifica la sección de documentación más relevante
+- Si pregunten sobre una funcionalidad técnica, incluye cualquier información disponible en las secciones de la API y documentación
+- Menciona las URLs de documentación específicas cuando estén disponibles
+- Si hay una pregunta frecuente que coincida con la consulta, comparte esa información
 
 INSTRUCCIONES GENERALES:
 - Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado

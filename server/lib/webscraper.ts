@@ -254,6 +254,7 @@ ${mainContent}
       const dom = new JSDOM(data);
       const anchors = Array.from(dom.window.document.querySelectorAll('a'));
       const internalLinks: string[] = [];
+      const docsLinks: string[] = []; // Enlaces específicos de documentación
       
       for (const anchor of anchors) {
         const href = (anchor as Element).getAttribute('href');
@@ -278,16 +279,32 @@ ${mainContent}
           // Comprobar si el enlace es interno (mismo dominio)
           const parsedUrl = new URL(absoluteUrl);
           if (parsedUrl.hostname === this.domain && !this.visitedUrls.has(absoluteUrl)) {
-            internalLinks.push(absoluteUrl);
+            // Priorizar enlaces de documentación
+            const isDocsLink = absoluteUrl.includes('/docs/') || 
+                               absoluteUrl.includes('/documentation/') ||
+                               absoluteUrl.includes('/help/') ||
+                               absoluteUrl.includes('/guide/') ||
+                               absoluteUrl.includes('/tutorial/') ||
+                               absoluteUrl.includes('/manual/') ||
+                               absoluteUrl.toLowerCase().includes('formularios') ||
+                               absoluteUrl.toLowerCase().includes('forms');
+            
+            if (isDocsLink) {
+              docsLinks.push(absoluteUrl);
+            } else {
+              internalLinks.push(absoluteUrl);
+            }
           }
         } catch (error) {
           console.warn(`Error al procesar enlace ${href}:`, error);
         }
       }
       
-      // Limitar el número de enlaces para no sobrecargar
-      // Aumentamos el límite de 5 a 15 enlaces para capturar más contenido
-      return internalLinks.slice(0, 15);
+      // Combinar enlaces, priorizando los de documentación
+      const combinedLinks = [...docsLinks, ...internalLinks];
+      
+      // Limitar el número de enlaces para no sobrecargar, pero capturar más contenido
+      return combinedLinks.slice(0, 20);
     } catch (error) {
       console.error(`Error al extraer enlaces internos de ${pageUrl}:`, error);
       return [];
@@ -465,7 +482,69 @@ ${mainContent}
         "4. Copia el fragmento de código HTML/JavaScript proporcionado",
         "5. Pega el código en tu sitio web donde deseas que aparezca el formulario",
         "6. Guarda los cambios en tu sitio web para que el formulario sea visible"
-      ]
+      ],
+      documentacion: {
+        general: "La documentación completa de AIPPS está disponible en la sección Docs, con guías detalladas para cada funcionalidad",
+        secciones: [
+          {
+            titulo: "Introducción a AIPPS",
+            descripcion: "Visión general de la plataforma, casos de uso y beneficios principales",
+            url: "/docs/introduccion"
+          },
+          {
+            titulo: "Creación de chatbots",
+            descripcion: "Guía paso a paso para configurar un asistente virtual para tu sitio web",
+            url: "/docs/creacion-chatbots"
+          },
+          {
+            titulo: "Formularios inteligentes",
+            descripcion: "Documentación completa sobre creación, personalización e integración de formularios",
+            url: "/docs/formularios"
+          },
+          {
+            titulo: "Integración con sitios web",
+            descripcion: "Instrucciones detalladas para integrar widgets de AIPPS en diferentes plataformas",
+            url: "/docs/integracion-web"
+          },
+          {
+            titulo: "Extracción de datos y analíticas",
+            descripcion: "Cómo utilizar los datos capturados para mejorar tu estrategia",
+            url: "/docs/analiticas"
+          },
+          {
+            titulo: "Personalización avanzada",
+            descripcion: "Opciones para adaptar la apariencia y comportamiento a tus necesidades específicas",
+            url: "/docs/personalizacion"
+          },
+          {
+            titulo: "API y desarrollo",
+            descripcion: "Referencia para desarrolladores sobre la API de AIPPS",
+            url: "/docs/api"
+          }
+        ],
+        faq: [
+          {
+            pregunta: "¿Cómo puedo editar un formulario después de publicarlo?",
+            respuesta: "Accede al panel de administración, ve a la sección Formularios, selecciona el formulario que deseas modificar y haz clic en Editar. Realiza los cambios necesarios y guarda."
+          },
+          {
+            pregunta: "¿Es posible integrar AIPPS con mi CRM?",
+            respuesta: "Sí, AIPPS ofrece integraciones con los principales CRMs del mercado a través de nuestra API y conectores específicos en los planes Profesional y Empresarial."
+          },
+          {
+            pregunta: "¿Cómo puedo obtener datos de los usuarios que interactúan con mis formularios?",
+            respuesta: "Todos los datos capturados se almacenan automáticamente en tu panel de administración, en la sección Respuestas. También puedes configurar notificaciones por email y exportar los datos en varios formatos."
+          },
+          {
+            pregunta: "¿Puedo personalizar el aspecto visual de los formularios?",
+            respuesta: "Sí, AIPPS permite personalizar colores, fuentes, bordes, tamaños y otros elementos visuales para adaptar los formularios a la estética de tu marca."
+          },
+          {
+            pregunta: "¿Los formularios son responsivos para dispositivos móviles?",
+            respuesta: "Sí, todos los formularios creados con AIPPS son totalmente responsivos y se adaptan automáticamente a cualquier tamaño de pantalla, incluyendo smartphones y tablets."
+          }
+        ]
+      }
     };
   }
 }
