@@ -49,29 +49,26 @@ export default function ChatInterface({
     
     // Si no, usamos un mensaje según el idioma actual
     const currentLanguage = i18n.language;
+    console.log("Obteniendo mensaje de bienvenida para idioma:", currentLanguage);
     
-    switch (currentLanguage) {
-      case 'fr':
-        return "👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui ?";
-      case 'en':
-        return "👋 Hello! I'm AIPPS, your AI assistant. How can I help you today?";
-      case 'es':
-        return "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?";
-      default:
-        return "👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui ?";
-    }
+    // Usar i18n para obtener traducciones
+    return t('assistant.welcome_message', '👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd\'hui ?');
   };
 
   // Inicializar el chat con un mensaje de bienvenida
   useEffect(() => {
     const welcomeMessage = getWelcomeMessage();
     
+    // Actualizar los mensajes con el nuevo mensaje de bienvenida cuando cambie el idioma
     setMessages([{ role: 'assistant', content: welcomeMessage }]);
     
     if (integrationId && !demoMode) {
       // Iniciar una conversación real si no estamos en modo demo y tenemos una integración
       startConversation();
     }
+    
+    console.log("Idioma cambiado a:", i18n.language);
+    console.log("Mensaje de bienvenida actualizado:", welcomeMessage);
   }, [i18n.language]); // Re-ejecutar cuando cambie el idioma
 
   // Scroll automático al final de los mensajes
@@ -119,6 +116,9 @@ export default function ChatInterface({
     setMessages(prev => [...prev, userMessage]);
     setInputValue("");
     setIsTyping(true);
+    
+    // Registrar el idioma actual que se usará para la respuesta
+    console.log("Idioma actual para la respuesta:", i18n.language);
     
     let response = "";
     
@@ -465,7 +465,8 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
             },
             body: JSON.stringify({
               messages: messages.concat(userMessage),
-              context: contextWithInstructions
+              context: contextWithInstructions,
+              language: i18n.language // Enviar el idioma actual al backend
             })
           });
           
