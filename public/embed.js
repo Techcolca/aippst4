@@ -1225,6 +1225,7 @@ Contenido: [Error al extraer contenido detallado]
           conversationId: config.conversationId,
           content: message,
           role: 'user',
+          language: navigator.language.split('-')[0], // Enviar código de idioma (fr, en, es, etc.)
           pageContext: {
             title: pageTitle || document.title,
             url: window.location.href,
@@ -1237,11 +1238,29 @@ Contenido: [Error al extraer contenido detallado]
       showTypingIndicator(false);
       
       if (!response.ok) {
-        // Show friendly error message in chat
+        // Show friendly error message in chat based on browser language
+        const userLang = navigator.language.split('-')[0];
+        
         if (response.status === 500) {
-          addMessage("Lo siento, hay un problema temporal con el servicio. Por favor, intenta de nuevo más tarde o contacta con soporte si el problema persiste.", 'assistant');
+          // Error messages based on language
+          if (userLang === 'fr') {
+            addMessage("Désolé, il y a un problème temporaire avec le service. Veuillez réessayer plus tard ou contacter le support si le problème persiste.", 'assistant');
+          } else if (userLang === 'en') {
+            addMessage("Sorry, there is a temporary problem with the service. Please try again later or contact support if the problem persists.", 'assistant');
+          } else {
+            // Default to Spanish
+            addMessage("Lo siento, hay un problema temporal con el servicio. Por favor, intenta de nuevo más tarde o contacta con soporte si el problema persiste.", 'assistant');
+          }
         } else {
-          addMessage("Lo siento, no pude procesar tu mensaje. Por favor, intenta de nuevo.", 'assistant');
+          // General error messages
+          if (userLang === 'fr') {
+            addMessage("Désolé, je n'ai pas pu traiter votre message. Veuillez réessayer.", 'assistant');
+          } else if (userLang === 'en') {
+            addMessage("Sorry, I couldn't process your message. Please try again.", 'assistant');
+          } else {
+            // Default to Spanish
+            addMessage("Lo siento, no pude procesar tu mensaje. Por favor, intenta de nuevo.", 'assistant');
+          }
         }
         throw new Error(`Failed to send message: ${response.status}`);
       }
@@ -1252,7 +1271,17 @@ Contenido: [Error al extraer contenido detallado]
       if (data.aiMessage) {
         addMessage(data.aiMessage.content, 'assistant');
       } else {
-        addMessage("Recibí tu mensaje, pero no pude generar una respuesta en este momento.", 'assistant');
+        // Show message based on user language
+        const userLang = navigator.language.split('-')[0];
+        
+        if (userLang === 'fr') {
+          addMessage("J'ai reçu votre message, mais je n'ai pas pu générer une réponse pour le moment.", 'assistant');
+        } else if (userLang === 'en') {
+          addMessage("I received your message, but I couldn't generate a response at this time.", 'assistant');
+        } else {
+          // Default to Spanish
+          addMessage("Recibí tu mensaje, pero no pude generar una respuesta en este momento.", 'assistant');
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
@@ -1262,7 +1291,17 @@ Contenido: [Error al extraer contenido detallado]
       
       // Only add error message if one hasn't been added already
       if (!document.querySelector('.aipi-assistant-message:last-child')) {
-        addMessage("Lo siento, hay un problema de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.", 'assistant');
+        // Add connection error message based on language
+        const userLang = navigator.language.split('-')[0];
+        
+        if (userLang === 'fr') {
+          addMessage("Désolé, il y a un problème de connexion. Veuillez vérifier votre connexion Internet et réessayer.", 'assistant');
+        } else if (userLang === 'en') {
+          addMessage("Sorry, there is a connection problem. Please check your internet connection and try again.", 'assistant');
+        } else {
+          // Default to Spanish
+          addMessage("Lo siento, hay un problema de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.", 'assistant');
+        }
       }
     }
   }
