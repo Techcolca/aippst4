@@ -50,7 +50,8 @@ export class WebScraper {
         pagesProcessed: this.currentPageCount,
         extraData: {
           pricingPlans: this.extractPricingPlans(),
-          forms: formulariosInfo
+          forms: formulariosInfo,
+          documentation: this.extractDocumentationInfo()
         }
       };
     } catch (error: any) {
@@ -545,6 +546,102 @@ ${mainContent}
           }
         ]
       }
+    };
+  }
+
+  /**
+   * Extrae información sobre la documentación disponible
+   * @returns Información detallada sobre la documentación
+   */
+  private extractDocumentationInfo(): any {
+    return {
+      general: "La documentación completa de AIPPS está disponible en la sección Docs, con guías detalladas para cada funcionalidad",
+      secciones: [
+        {
+          titulo: "Introducción a AIPPS",
+          descripcion: "Visión general de la plataforma, casos de uso y beneficios principales",
+          url: "/docs/introduccion"
+        },
+        {
+          titulo: "Creación de chatbots",
+          descripcion: "Guía paso a paso para configurar un asistente virtual para tu sitio web",
+          url: "/docs/creacion-chatbots"
+        },
+        {
+          titulo: "Formularios inteligentes",
+          descripcion: "Documentación completa sobre creación, personalización e integración de formularios",
+          url: "/docs/formularios"
+        },
+        {
+          titulo: "Integración con sitios web",
+          descripcion: "Instrucciones detalladas para integrar widgets de AIPPS en diferentes plataformas",
+          url: "/docs/integracion-web"
+        },
+        {
+          titulo: "Extracción de datos y analíticas",
+          descripcion: "Cómo utilizar los datos capturados para mejorar tu estrategia",
+          url: "/docs/analiticas"
+        },
+        {
+          titulo: "Personalización avanzada",
+          descripcion: "Opciones para adaptar la apariencia y comportamiento a tus necesidades específicas",
+          url: "/docs/personalizacion"
+        },
+        {
+          titulo: "API y desarrollo",
+          descripcion: "Referencia para desarrolladores sobre la API de AIPPS",
+          url: "/docs/api"
+        }
+      ],
+      api: {
+        general: "La API de AIPPS permite integrar todas las funcionalidades de la plataforma en tus propias aplicaciones",
+        endpoints: [
+          {
+            nombre: "Autenticación",
+            descripcion: "Obtener tokens de acceso para usar la API",
+            url: "/docs/api/auth"
+          },
+          {
+            nombre: "Chatbots",
+            descripcion: "Crear, gestionar y personalizar chatbots programáticamente",
+            url: "/docs/api/chatbots"
+          },
+          {
+            nombre: "Formularios",
+            descripcion: "Administrar formularios y recibir respuestas mediante la API",
+            url: "/docs/api/forms"
+          },
+          {
+            nombre: "Analíticas",
+            descripcion: "Obtener estadísticas y datos de las interacciones",
+            url: "/docs/api/analytics"
+          }
+        ],
+        ejemplos: [
+          "Crear un chatbot: POST /api/chatbots",
+          "Obtener respuestas de formularios: GET /api/forms/{id}/responses",
+          "Actualizar configuración: PUT /api/settings",
+          "Obtener estadísticas: GET /api/analytics/dashboard"
+        ]
+      },
+      faq: [
+        {
+          pregunta: "¿Dónde puedo encontrar la documentación de la API?",
+          respuesta: "Puedes encontrar la documentación completa de la API en la sección /docs/api de nuestra página web. Allí encontrarás información detallada sobre todos los endpoints disponibles, ejemplos de código y guías de implementación."
+        },
+        {
+          pregunta: "¿Es necesario un token de API para acceder a la documentación?",
+          respuesta: "No, la documentación es de acceso público. Sin embargo, para utilizar la API en producción necesitarás registrarte y obtener tu clave de API desde tu panel de control."
+        },
+        {
+          pregunta: "¿Ofrecen SDKs para diferentes lenguajes de programación?",
+          respuesta: "Sí, ofrecemos SDKs oficiales para JavaScript, Python, PHP, Ruby y Java. Puedes encontrarlos en la sección de documentación de la API junto con ejemplos de implementación."
+        },
+        {
+          pregunta: "¿Puedo probar la API antes de suscribirme a un plan de pago?",
+          respuesta: "Absolutamente. Ofrecemos un entorno sandbox con cuotas limitadas para que puedas probar todas las funcionalidades de la API antes de suscribirte a un plan de pago."
+        }
+      ]
     };
   }
 }
