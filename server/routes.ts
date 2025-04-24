@@ -6,6 +6,7 @@ import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from
 import { getInteractionLimitByTier } from "./middleware/subscription";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
+import { webscraper } from "./lib/webscraper";
 import stripe, { 
   PRODUCTS,
   ProductInfo,

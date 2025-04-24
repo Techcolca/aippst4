@@ -43,9 +43,16 @@ export default function SettingsEdit() {
     welcomePageChatGreeting: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
     welcomePageChatBubbleColor: "#111827",
     welcomePageChatTextColor: "#FFFFFF",
-    welcomePageChatBehavior: "Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características."
+    welcomePageChatBehavior: "Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.",
+    welcomePageChatAutomaticScraping: true,
+    welcomePageChatScrapingDepth: 3
   });
   const [calendarTokens, setCalendarTokens] = useState<CalendarToken[]>([]);
+  const [isScrapingLoading, setIsScrapingLoading] = useState(false);
+  const [scrapingResults, setScrapingResults] = useState<{urls: string[], content: Record<string, string>}>({
+    urls: [],
+    content: {}
+  });
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -116,6 +123,36 @@ export default function SettingsEdit() {
 
   const handleColorChange = (id: string, color: string) => {
     setSettings(prev => ({ ...prev, [id]: color }));
+  };
+  
+  const handleScrapeSite = async () => {
+    setIsScrapingLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/scrape-site", {
+        depth: settings.welcomePageChatScrapingDepth || 3
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al hacer scraping del sitio");
+      }
+      
+      const data = await response.json();
+      setScrapingResults(data);
+      
+      toast({
+        title: "Éxito",
+        description: `Scraping completado: Se han encontrado ${data.urls.length} páginas`,
+      });
+    } catch (error) {
+      console.error("Error durante el scraping:", error);
+      toast({
+        title: "Error",
+        description: "Error al realizar el scraping del sitio",
+        variant: "destructive",
+      });
+    } finally {
+      setIsScrapingLoading(false);
+    }
   };
 
   const connectGoogleCalendar = async () => {
@@ -419,6 +456,77 @@ export default function SettingsEdit() {
                     </div>
                   </div>
                 </div>
+              </div>
+              
+              <Separator className="my-4" />
+              
+              <h3 className="text-lg font-medium mb-4">Scraping de información del sitio</h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="welcomePageChatAutomaticScraping"
+                    checked={settings.welcomePageChatAutomaticScraping}
+                    onCheckedChange={(checked) => handleSwitchChange("welcomePageChatAutomaticScraping", checked)}
+                  />
+                  <Label htmlFor="welcomePageChatAutomaticScraping">Realizar scraping automático</Label>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="welcomePageChatScrapingDepth">Profundidad de scraping</Label>
+                  <Select
+                    value={settings.welcomePageChatScrapingDepth.toString()}
+                    onValueChange={(value) => handleSelectChange("welcomePageChatScrapingDepth", value)}
+                  >
+                    <SelectTrigger id="welcomePageChatScrapingDepth">
+                      <SelectValue placeholder="Selecciona la profundidad" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 - Solo página principal</SelectItem>
+                      <SelectItem value="2">2 - Página principal y enlaces directos</SelectItem>
+                      <SelectItem value="3">3 - Profundidad media</SelectItem>
+                      <SelectItem value="4">4 - Profundidad alta</SelectItem>
+                      <SelectItem value="5">5 - Máxima profundidad (puede ser lento)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-gray-500">Define cuántos niveles de enlaces debe seguir el scraper.</p>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <p className="text-sm text-gray-500">
+                    El scraping permite al chatbot obtener información actualizada sobre la plataforma para responder preguntas de manera precisa.
+                  </p>
+                  <Button 
+                    onClick={handleScrapeSite}
+                    disabled={isScrapingLoading}
+                  >
+                    {isScrapingLoading ? (
+                      <>
+                        <div className="animate-spin w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full mr-2"></div>
+                        Analizando...
+                      </>
+                    ) : "Iniciar scraping"}
+                  </Button>
+                </div>
+                
+                {scrapingResults.urls.length > 0 && (
+                  <div className="mt-4 border rounded-lg p-4">
+                    <h4 className="font-medium mb-2">Resultados del scraping</h4>
+                    <p className="text-sm mb-2">
+                      Se han encontrado {scrapingResults.urls.length} páginas con información relevante.
+                    </p>
+                    
+                    <div className="max-h-60 overflow-y-auto border rounded p-2 bg-gray-50 dark:bg-gray-800">
+                      <ul className="text-sm space-y-1">
+                        {scrapingResults.urls.map((url, index) => (
+                          <li key={index} className="truncate">
+                            {url}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
