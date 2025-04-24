@@ -191,10 +191,26 @@ export async function extractKeyInformation(text: string, query: string): Promis
 export async function generateAutomatedResponse(
   userQuery: string, 
   websiteContext: string,
-  conversationStyle: string = "professional"
+  conversationStyle: string = "professional",
+  language?: string
 ): Promise<string> {
   try {
     const stylePrompt = getStylePrompt(conversationStyle);
+    const responseLanguage = language || "es"; // Default a español si no se proporciona idioma
+    
+    // Log para debug
+    console.log("Generating automated response in language:", responseLanguage);
+    
+    // Adaptar el mensaje del sistema según el idioma
+    let systemContent = "";
+    
+    if (responseLanguage === "fr") {
+      systemContent = "Vous êtes AIPPS, un assistant IA intégré au site web d'AIPPS. Vous aidez les visiteurs en fournissant des informations précises et utiles sur les services, les caractéristiques et les avantages de la plateforme. Répondez toujours en français.";
+    } else if (responseLanguage === "en") {
+      systemContent = "You are AIPPS, an AI assistant integrated into the AIPPS website. You help visitors by providing accurate and useful information about the platform's services, features, and benefits. Always respond in English.";
+    } else {
+      systemContent = "Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Ayudas a los visitantes proporcionando información precisa y útil sobre los servicios, características y beneficios de la plataforma. Responde siempre en español.";
+    }
     
     const prompt = `
       ${stylePrompt}
@@ -213,7 +229,7 @@ export async function generateAutomatedResponse(
     const response = await openai.chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
-        { role: "system", content: "Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Ayudas a los visitantes proporcionando información precisa y útil sobre los servicios, características y beneficios de la plataforma. Responde siempre en español a menos que te pregunten en otro idioma." },
+        { role: "system", content: systemContent },
         { role: "user", content: prompt }
       ],
     });

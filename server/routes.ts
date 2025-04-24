@@ -1971,7 +1971,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/widget/:apiKey/message", async (req, res) => {
     try {
       const { apiKey } = req.params;
-      const { conversationId, content, role, pageContext } = req.body;
+      const { conversationId, content, role, pageContext, language } = req.body;
       
       // Validate input
       if (!conversationId || !content || !role) {

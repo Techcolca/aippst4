@@ -421,6 +421,9 @@
   "top_right": "Top right",
   "top_left": "Top left",
   "welcome_message": "Welcome message",
+  "assistant": {
+    "welcome_message": "👋 Hello! I'm AIPPS, your AI assistant. How can I help you today?"
+  },
   "placeholder_text": "Placeholder text",
   "bot_name": "Bot name",
   "chat_header": "Chat header",

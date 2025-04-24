@@ -421,6 +421,9 @@
   "top_right": "Arriba a la derecha",
   "top_left": "Arriba a la izquierda",
   "welcome_message": "Mensaje de bienvenida",
+  "assistant": {
+    "welcome_message": "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?"
+  },
   "placeholder_text": "Texto de marcador",
   "bot_name": "Nombre del bot",
   "chat_header": "Encabezado del chat",
