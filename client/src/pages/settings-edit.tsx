@@ -128,8 +128,9 @@ export default function SettingsEdit() {
   const handleScrapeSite = async () => {
     setIsScrapingLoading(true);
     try {
-      const response = await apiRequest("POST", "/api/scrape-site", {
-        depth: settings.welcomePageChatScrapingDepth || 3
+      const response = await apiRequest("POST", "/api/welcome-chat/scrape", {
+        url: window.location.origin,
+        maxPages: settings.welcomePageChatScrapingDepth || 3
       });
       
       if (!response.ok) {
@@ -137,11 +138,24 @@ export default function SettingsEdit() {
       }
       
       const data = await response.json();
-      setScrapingResults(data);
+      
+      // Procesar datos para que sean compatibles con la UI
+      const scrapedData = data.scrapedData;
+      const processedResults = {
+        urls: scrapedData.pages.map(page => page.url),
+        content: {}
+      };
+      
+      // Crear objeto de contenido
+      scrapedData.pages.forEach(page => {
+        processedResults.content[page.url] = page.content;
+      });
+      
+      setScrapingResults(processedResults);
       
       toast({
         title: "Éxito",
-        description: `Scraping completado: Se han encontrado ${data.urls.length} páginas`,
+        description: `Scraping completado: Se han encontrado ${processedResults.urls.length} páginas`,
       });
     } catch (error) {
       console.error("Error durante el scraping:", error);
