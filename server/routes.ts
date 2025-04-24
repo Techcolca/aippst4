@@ -2103,10 +2103,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Generando respuesta con ${context ? 'contexto del sitio web y documentos' : 'sin contexto'}`);
         
-        // Generate AI response
+        // Generate AI response with language support
+        console.log(`Generating response in language: ${language || 'default (es)'}`);
         const completion = await generateChatCompletion(
           messages.map(msg => ({ role: msg.role, content: msg.content })),
-          context
+          context,
+          language
         );
         
         // Save AI response

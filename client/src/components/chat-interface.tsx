@@ -118,7 +118,8 @@ export default function ChatInterface({
     setIsTyping(true);
     
     // Registrar el idioma actual que se usará para la respuesta
-    console.log("Idioma actual para la respuesta:", i18n.language);
+    const currentLanguage = i18n.language;
+    console.log("Idioma actual para la respuesta:", currentLanguage);
     
     let response = "";
     
