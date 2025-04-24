@@ -37,7 +37,13 @@ export default function SettingsEdit() {
     showAvailability: false,
     font: "system-ui",
     userBubbleColor: "#f3f4f6",
-    assistantBubbleColor: "#e5e7eb"
+    assistantBubbleColor: "#e5e7eb",
+    // Nuevos campos para personalización del chatbot de bienvenida
+    welcomePageChatEnabled: true,
+    welcomePageChatGreeting: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
+    welcomePageChatBubbleColor: "#111827",
+    welcomePageChatTextColor: "#FFFFFF",
+    welcomePageChatBehavior: "Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características."
   });
   const [calendarTokens, setCalendarTokens] = useState<CalendarToken[]>([]);
 
@@ -213,12 +219,15 @@ export default function SettingsEdit() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
           <TabsTrigger value="general">
             {t("general")}
           </TabsTrigger>
           <TabsTrigger value="appearance">
             {t("appearance")}
+          </TabsTrigger>
+          <TabsTrigger value="welcome-chat">
+            Chat de Bienvenida
           </TabsTrigger>
           <TabsTrigger value="calendar">
             {t("calendar_integrations")}
@@ -327,6 +336,89 @@ export default function SettingsEdit() {
                   color={settings.assistantBubbleColor}
                   onChange={(color) => handleColorChange("assistantBubbleColor", color)}
                 />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="welcome-chat" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Configuración del Chat de Bienvenida</CardTitle>
+              <CardDescription>
+                Personaliza el chatbot que aparece en la página de bienvenida para tus visitantes
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="welcomePageChatEnabled"
+                  checked={settings.welcomePageChatEnabled}
+                  onCheckedChange={(checked) => handleSwitchChange("welcomePageChatEnabled", checked)}
+                />
+                <Label htmlFor="welcomePageChatEnabled">Mostrar chat en página de bienvenida</Label>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="welcomePageChatGreeting">Mensaje de bienvenida</Label>
+                <Textarea
+                  id="welcomePageChatGreeting"
+                  value={settings.welcomePageChatGreeting}
+                  onChange={handleInputChange}
+                  placeholder="👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?"
+                  rows={3}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="welcomePageChatBehavior">Comportamiento del asistente</Label>
+                <Textarea
+                  id="welcomePageChatBehavior"
+                  value={settings.welcomePageChatBehavior}
+                  onChange={handleInputChange}
+                  placeholder="Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características."
+                  rows={4}
+                />
+                <p className="text-sm text-gray-500">Define cómo debe comportarse el asistente. Estas instrucciones se agregarán al sistema de IA.</p>
+              </div>
+              
+              <Separator className="my-4" />
+              
+              <h3 className="text-lg font-medium mb-4">Apariencia del chat de bienvenida</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="welcomePageChatBubbleColor">Color de burbuja del asistente</Label>
+                <ColorPicker
+                  color={settings.welcomePageChatBubbleColor}
+                  onChange={(color) => handleColorChange("welcomePageChatBubbleColor", color)}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="welcomePageChatTextColor">Color de texto del asistente</Label>
+                <ColorPicker
+                  color={settings.welcomePageChatTextColor}
+                  onChange={(color) => handleColorChange("welcomePageChatTextColor", color)}
+                />
+              </div>
+              
+              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg mt-4">
+                <div className="flex items-start space-x-3">
+                  <div className="p-1 bg-blue-100 rounded-full">
+                    <Check className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Vista previa</h4>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Los cambios que hagas aquí afectarán al chat que se muestra en la página principal de tu sitio web.
+                    </p>
+                    <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: settings.welcomePageChatBubbleColor }}>
+                      <p className="text-sm" style={{ color: settings.welcomePageChatTextColor }}>
+                        {settings.welcomePageChatGreeting}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

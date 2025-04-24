@@ -146,6 +146,44 @@ export default function DashboardTabs() {
                 </div>
               </div>
               
+              <div>
+                <h3 className="text-lg font-medium mb-2">Chat de Bienvenida</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Estado</p>
+                    <p className="text-sm text-gray-500">
+                      {settings.welcomePageChatEnabled ? 'Activado' : 'Desactivado'}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Mensaje de Bienvenida</p>
+                    <p className="text-sm text-gray-500">
+                      {settings.welcomePageChatGreeting || '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?'}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Color de Burbuja</p>
+                    <div className="flex items-center">
+                      <div 
+                        className="w-5 h-5 rounded-full mr-2" 
+                        style={{ backgroundColor: settings.welcomePageChatBubbleColor || '#111827' }}
+                      ></div>
+                      <p className="text-sm text-gray-500">{settings.welcomePageChatBubbleColor || '#111827'}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Color de Texto</p>
+                    <div className="flex items-center">
+                      <div 
+                        className="w-5 h-5 rounded-full mr-2 border border-gray-300" 
+                        style={{ backgroundColor: settings.welcomePageChatTextColor || '#FFFFFF' }}
+                      ></div>
+                      <p className="text-sm text-gray-500">{settings.welcomePageChatTextColor || '#FFFFFF'}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex justify-end">
                 <Button onClick={() => navigate("/settings/edit")}>
                   Edit Settings
