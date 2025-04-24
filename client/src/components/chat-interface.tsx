@@ -196,23 +196,30 @@ Plan Empresarial:
               
               // Información de precios si está disponible en el formato nuevo
               if (parsedData.pricing && Array.isArray(parsedData.pricing) && parsedData.pricing.length > 0) {
-                scrapedData += "INFORMACIÓN DE PRECIOS:\n";
+                scrapedData += "INFORMACIÓN DE PRECIOS Y PLANES DISPONIBLES:\n\n";
                 parsedData.pricing.forEach((plan: any) => {
-                  scrapedData += `- ${plan.name}: ${plan.price} ${plan.currency || 'USD'}/${plan.interval || 'mes'}\n`;
+                  scrapedData += `### ${plan.name} ###\n`;
+                  scrapedData += `- Precio: ${plan.price} ${plan.currency || 'USD'}/${plan.interval || 'mes'}\n`;
                   
                   if (plan.description) {
-                    scrapedData += `  Descripción: ${plan.description}\n`;
+                    scrapedData += `- Descripción: ${plan.description}\n`;
                   }
                   
                   if (plan.features && Array.isArray(plan.features)) {
-                    scrapedData += `  Características:\n`;
+                    scrapedData += `- Características principales:\n`;
                     plan.features.forEach((feature: string) => {
-                      scrapedData += `  - ${feature}\n`;
+                      scrapedData += `  * ${feature}\n`;
                     });
                   }
                   
                   scrapedData += '\n';
                 });
+                
+                // Añadir recomendación específica para ayudar con preguntas sobre planes
+                scrapedData += "\nGUÍA DE RECOMENDACIÓN DE PLANES:\n";
+                scrapedData += "- Para usuarios individuales o pequeñas empresas con necesidades básicas: Plan Gratuito o Plan Básico\n";
+                scrapedData += "- Para empresas medianas con necesidad de automatización: Plan Profesional\n";
+                scrapedData += "- Para grandes corporaciones o necesidades personalizadas: Plan Empresarial\n\n";
               }
               
               // Contenido extraído
@@ -265,8 +272,18 @@ ${pricingInfo}
 Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS.
 Tu objetivo es proporcionar información útil, precisa y completa sobre la plataforma AIPPS,
 sus servicios, características, precios y beneficios basándote en el contenido del sitio.
-Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado.
-Debes ser informativo, profesional y claro en tus respuestas. Contesta siempre en español.
+
+INSTRUCCIONES PARA PREGUNTAS SOBRE PRECIOS Y PLANES:
+- Cuando te pregunten sobre precios o planes, proporciona detalles completos y estructurados
+- Menciona siempre el precio, características principales y para qué tipo de cliente está recomendado cada plan
+- Si preguntan por una recomendación, sugiere el plan más adecuado según sus necesidades
+- Utiliza formato con viñetas para hacer la información más legible
+
+INSTRUCCIONES GENERALES:
+- Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado
+- Sé informativo, profesional y claro en tus respuestas
+- Contesta siempre en español
+- Prioriza la información extraída del sitio web sobre cualquier conocimiento general
 
 INSTRUCCIONES DE COMPORTAMIENTO ESPECÍFICAS:
 ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.'}
