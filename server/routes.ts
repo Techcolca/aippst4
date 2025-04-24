@@ -848,37 +848,117 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Datos del scraping
       const { url, maxPages } = req.body;
-      const siteUrl = url || `https://${req.headers.host}`;
+      
+      // Asegurarnos de que tenemos una URL válida
+      let siteUrl = url;
+      if (!siteUrl) {
+        // Usar la URL del host como fallback
+        if (req.headers.host) {
+          const protocol = req.headers['x-forwarded-proto'] || 'http';
+          siteUrl = `${protocol}://${req.headers.host}`;
+        } else {
+          // URL de respaldo para Replit
+          siteUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
+        }
+      }
       
       console.log(`Iniciando scraping para chatbot de bienvenida: ${siteUrl}`);
       
-      // Realizar el scraping
-      const scrapedData = await webscraper.scrapeSite(siteUrl, maxPages || 5);
+      // Scraper las páginas más importantes primero
+      const pagesLimit = maxPages || 5;
       
-      // Actualizar configuración del administrador con los datos extraídos
-      const adminUserId = adminUser?.id || 4; // Usamos la cuenta admin (ID 4 como fallback)
-      const currentSettings = await storage.getSettings(adminUserId);
+      try {
+        // Realizar el scraping
+        const scrapedData = await webscraper.scrapeSite(siteUrl, pagesLimit);
+        console.log(`Scraping completado: ${scrapedData.pagesProcessed} páginas procesadas`);
+        
+        // Obtener los datos de precios actuales
+        const pricingPlans = await storage.getAvailablePricingPlans();
+        
+        // Crear una estructura de datos con información de precios
+        const pricingData = pricingPlans.map(plan => ({
+          name: plan.name,
+          tier: plan.tier,
+          price: plan.price,
+          currency: plan.currency || 'USD',
+          interval: plan.interval || 'month',
+          description: plan.description,
+          features: plan.features || getFeaturesByTier(plan.tier),
+          interactionsLimit: plan.interactionsLimit
+        }));
+        
+        // Añadir datos de precios al resultado del scraping
+        scrapedData.extraData = {
+          pricingPlans: pricingData
+        };
+        
+        // Actualizar configuración del administrador con los datos extraídos
+        const adminUserId = adminUser?.id || 4; // Usamos la cuenta admin (ID 4 como fallback)
+        const currentSettings = await storage.getSettings(adminUserId);
+        
+        if (!currentSettings) {
+          return res.status(404).json({ message: "Admin settings not found" });
+        }
       
-      if (!currentSettings) {
-        return res.status(404).json({ message: "Admin settings not found" });
+        // Verificar los datos obtenidos
+        if (!scrapedData || !scrapedData.pages || scrapedData.pages.length === 0) {
+          console.warn("No se encontró contenido durante el scraping");
+          
+          // Crear un dato mínimo para que el chatbot tenga algo de contexto
+          scrapedData.pages = [{
+            url: siteUrl,
+            title: "AIPPS - Plataforma de IA Conversacional",
+            content: "AIPPS es una plataforma de IA conversacional que permite a las empresas integrar asistentes virtuales en sus sitios web. Ofrecemos diversos planes adaptados a diferentes necesidades empresariales."
+          }];
+        }
+        
+        // Transformar los datos a un formato más útil para el chatbot
+        const processedData = {
+          sitemap: scrapedData.pages.map(page => ({
+            url: page.url,
+            title: page.title
+          })),
+          pricing: scrapedData.extraData?.pricingPlans || [],
+          content: scrapedData.pages.reduce((acc, page) => {
+            acc[page.url] = {
+              title: page.title,
+              content: page.content
+            };
+            return acc;
+          }, {}),
+          pagesProcessed: scrapedData.pagesProcessed,
+          timestamp: new Date().toISOString()
+        };
+        
+        console.log(`Scraping procesado: ${processedData.sitemap.length} páginas, ${processedData.pricing.length} planes de precios`);
+        
+        // Guardar datos procesados
+        const scrapingDataString = JSON.stringify(processedData);
+        console.log(`Tamaño de los datos de scraping: ${scrapingDataString.length} caracteres`);
+        
+        // Actualizar settings con la información de scraping
+        await storage.updateSettings(adminUserId, {
+          welcomePageChatScrapingEnabled: true,
+          welcomePageChatScrapingData: scrapingDataString,
+          welcomePageChatScrapingDepth: maxPages || 5
+        });
+        
+        // Devolver los datos de scraping
+        res.json({
+          success: true,
+          scrapedData: processedData
+        });
+      } catch (scrapeError) {
+        console.error("Error durante el scraping:", scrapeError);
+        res.status(500).json({ 
+          message: "Error durante el proceso de scraping", 
+          error: scrapeError.message 
+        });
       }
-      
-      // Actualizar settings con la información de scraping
-      await storage.updateSettings(adminUserId, {
-        welcomePageChatScrapingEnabled: true,
-        welcomePageChatScrapingData: JSON.stringify(scrapedData),
-        welcomePageChatScrapingDepth: maxPages || 5
-      });
-      
-      // Devolver los datos de scraping
-      res.json({
-        success: true,
-        scrapedData
-      });
     } catch (error) {
-      console.error("Welcome chat scraping error:", error);
+      console.error("Error en la autenticación para scraping:", error);
       res.status(500).json({ 
-        message: "Error during scraping process", 
+        message: "Error durante el proceso de autenticación para scraping", 
         error: error.message 
       });
     }

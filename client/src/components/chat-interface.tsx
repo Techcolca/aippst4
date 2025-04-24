@@ -28,57 +28,50 @@ interface ChatInterfaceProps {
 
 export default function ChatInterface({ 
   demoMode = false, 
-  integrationId, 
-  context,
+  integrationId,
+  context = "",
   welcomePageSettings
 }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
   const [conversationId, setConversationId] = useState<number | null>(null);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  // Usar configuración personalizada o predeterminada
-  const defaultGreeting = '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?';
-  const greeting = welcomePageSettings?.welcomePageChatGreeting || defaultGreeting;
-  
-  // Initial greeting
+
+  // Inicializar el chat con un mensaje de bienvenida
   useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        { 
-          role: 'assistant', 
-          content: greeting
-        }
-      ]);
-      
-      // If not in demo mode, start conversation with the API
-      if (!demoMode) {
-        startConversation();
-      }
+    const welcomeMessage = welcomePageSettings?.welcomePageChatGreeting || 
+                        "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?";
+    
+    setMessages([{ role: 'assistant', content: welcomeMessage }]);
+    
+    if (integrationId && !demoMode) {
+      // Iniciar una conversación real si no estamos en modo demo y tenemos una integración
+      startConversation();
     }
-  }, [messages, demoMode, greeting]);
-  
-  // Auto scroll to bottom of chat
+  }, []);
+
+  // Scroll automático al final de los mensajes
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-  
-  // Start a new conversation with the API
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isTyping]);
+
+  // Iniciar una conversación con la API
   const startConversation = async () => {
+    if (!integrationId) return;
+    
     try {
-      // Using a default API key for testing within the app itself
       const apiKey = 'aipps_mrPg94zRtTKr31hOY0m8PaPk305PJNVD';
-      
-      // Create a visitor ID (could be more sophisticated in a real app)
-      const visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
-      
       const response = await fetch(`/api/widget/${apiKey}/conversation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ visitorId })
+        body: JSON.stringify({
+          integrationId
+        })
       });
       
       if (!response.ok) {
@@ -87,273 +80,159 @@ export default function ChatInterface({
       
       const data = await response.json();
       setConversationId(data.id);
-      console.log('Conversation started:', data.id);
     } catch (error) {
-      console.error('Failed to start conversation:', error);
+      console.error("Error starting conversation:", error);
     }
   };
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
-  
+
   const handleSendMessage = async () => {
-    if (inputValue.trim() === '') return;
+    if (inputValue.trim() === "" || isTyping) return;
     
-    const userMessage = { role: 'user' as const, content: inputValue };
+    const userMessage: ChatMessage = { role: 'user', content: inputValue };
     setMessages(prev => [...prev, userMessage]);
     setInputValue("");
     setIsTyping(true);
     
+    let response = "";
+    
     try {
-      let response: string;
-      
-      // En modo demo, usamos la API de OpenAI directamente en lugar de la API del widget
       if (demoMode) {
-        await new Promise(resolve => setTimeout(resolve, 600)); // Pequeña espera para simular procesamiento
-        
+        // Demo mode: use OpenAI directly with environment context
         try {
-          // Capturar el contexto de la página actual de forma exhaustiva
-          let pageContent = '';
-          
-          // Extraer contenido de varias secciones principales
-          const mainContentSelectors = [
-            'main', 'article', '.main-content', '#main-content', 
-            '.content', '#content', '.page-content', '.container', 
-            '.page', '.services', '.features', '.pricing', '.about'
-          ];
-          
-          // Intentar extraer contenido de diferentes partes de la página
-          for (const selector of mainContentSelectors) {
-            const element = document.querySelector(selector);
-            if (element && element.textContent) {
-              pageContent += element.textContent.trim() + '\n\n';
-            }
-          }
-          
-          // Si no se encontró contenido con los selectores, usar todo el body
-          if (!pageContent) {
-            // Crear una copia del body para manipular
-            const bodyClone = document.body.cloneNode(true) as HTMLElement;
-            
-            // Eliminar elementos que típicamente no tienen contenido relevante
-            const elementsToRemove = bodyClone.querySelectorAll(
-              'script, style, noscript, iframe, svg'
-            );
-            elementsToRemove.forEach(el => el.remove());
-            
-            pageContent = bodyClone.textContent?.trim() || '';
-          }
-          
-          // Extraer información de navegación (puede contener enlaces a servicios)
-          let navigationContent = '';
-          const navElements = document.querySelectorAll('nav, header, .navigation, .navbar, .menu');
-          navElements.forEach(nav => {
-            // Extraer enlaces y textos
-            const links = nav.querySelectorAll('a');
-            links.forEach(link => {
-              if (link.textContent && link.textContent.trim()) {
-                navigationContent += `${link.textContent.trim()} (${link.getAttribute('href') || '#'})\n`;
-              }
-            });
-          });
-          
-          // Extraer información específica sobre servicios/características
-          let servicesContent = '';
-          const serviceSelectors = [
-            '.services', '.features', '.pricing', '.plans', 
-            '.product', '.cards', '.service-item', '.feature-item'
-          ];
-          
-          for (const selector of serviceSelectors) {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(el => {
-              // Buscar títulos dentro de los elementos de servicio
-              const titles = el.querySelectorAll('h1, h2, h3, h4, h5, h6');
-              titles.forEach(title => {
-                if (title.textContent && title.textContent.trim()) {
-                  servicesContent += `SERVICIO/CARACTERÍSTICA: ${title.textContent.trim()}\n`;
-                  
-                  // Buscar descripciones cerca del título
-                  let nextEl = title.nextElementSibling;
-                  while (nextEl && !nextEl.tagName.startsWith('H')) {
-                    if (nextEl.textContent && nextEl.textContent.trim()) {
-                      servicesContent += `${nextEl.textContent.trim()}\n`;
-                    }
-                    nextEl = nextEl.nextElementSibling;
-                  }
-                  servicesContent += '\n';
-                }
-              });
-            });
-          }
-          
-          const pageTitle = document.title;
+          // Intentar detectar elementos de la página para proporcionar contexto
           const pageUrl = window.location.href;
+          const pageTitle = document.title;
           
-          console.log("Usando el modelo OpenAI con contexto mejorado de la página");
+          // Extraer enlaces de navegación
+          const navLinks = Array.from(document.querySelectorAll('nav a, header a, .navigation a, .menu a'))
+            .map((link: Element) => ({
+              text: link.textContent?.trim(),
+              href: (link as HTMLAnchorElement).href
+            }))
+            .filter(link => link.text && link.text.length > 1); // Filtrar enlaces vacíos
           
-          // En lugar de usar la API del widget, vamos a usar directamente la API de OpenAI
-          const allMessages = messages.concat(userMessage);
+          const navigationContent = navLinks.length > 0 
+            ? navLinks.map(link => `- ${link.text} (${link.href})`).join('\n')
+            : "No se detectaron enlaces de navegación";
+          
+          // Extraer posible contenido sobre servicios o características
+          const servicesContent = Array.from(document.querySelectorAll('.features, .services, .pricing, [class*="feature"], [class*="service"], [class*="price"]'))
+            .map(el => el.textContent?.trim())
+            .filter(Boolean)
+            .join('\n\n') || "No se detectó información específica sobre servicios o características";
+          
+          // Extraer contenido principal de la página
+          const pageContent = document.body.innerText.substring(0, 3000) + "...";
           
           // Usar el comportamiento personalizado si está disponible
           const customBehavior = welcomePageSettings?.welcomePageChatBehavior;
           
           // Comprobar si hay datos de scraping disponibles del servidor
           let scrapedData = '';
+          
+          // Recopilar información estructurada sobre precios de los planes
+          const pricingInfo = `
+PRECIOS Y PLANES DE AIPPS:
+
+Plan Gratuito:
+- Hasta 20 interacciones por día
+- Acceso al widget flotante para integración sencilla en el sitio web
+- Respuestas basadas en la información disponible públicamente
+- Sin personalización ni carga de documentos específicos
+- Sin captura de leads ni seguimiento
+- Análisis básicos de interacciones
+
+Plan Básico:
+- Precio: $29/mes
+- Hasta 500 interacciones mensuales
+- Incluye todas las funcionalidades del Paquete Gratuito
+- Carga y procesamiento de documentos específicos (PDF, DOCX, Excel)
+- Captura básica de leads con almacenamiento de información de contacto
+- Análisis detallados de interacciones y consultas frecuentes
+
+Plan Profesional:
+- Precio: $79/mes
+- Hasta 2,000 interacciones mensuales
+- Incluye todas las funcionalidades del Paquete Básico
+- Integración en pantalla completa tipo ChatGPT para una experiencia más inmersiva
+- Automatización de tareas frecuentes y programación de seguimientos
+- Análisis avanzados con métricas de rendimiento y tendencias
+- Soporte prioritario
+
+Plan Empresarial:
+- Precio personalizado (desde $199/mes)
+- Interacciones ilimitadas
+- Incluye todas las funcionalidades del Paquete Profesional
+- Personalización avanzada del asistente virtual (tono, estilo, branding)
+- Integración con sistemas CRM y otras plataformas empresariales
+- Análisis personalizados y reportes a medida
+- Soporte dedicado con gestor de cuenta asignado
+`;
+          
           if (welcomePageSettings?.welcomePageChatScrapingEnabled && welcomePageSettings?.welcomePageChatScrapingData) {
             try {
+              console.log("Usando el modelo OpenAI con contexto mejorado de la página");
+              console.log("Usando datos de scraping del servidor para el chatbot");
+              
               // Intentar parsear los datos de scraping guardados
               const parsedData = JSON.parse(welcomePageSettings.welcomePageChatScrapingData);
+              console.log("Tamaño de los datos de scraping:", welcomePageSettings.welcomePageChatScrapingData.length);
               
-              // Crear contenido estructurado a partir de los datos parseados
-              scrapedData = `
-INFORMACIÓN EXTRAÍDA DE LAS PÁGINAS DEL SITIO (${parsedData.pageCount || 0} páginas analizadas):
-`;
+              // Crear contexto estructurado para los datos
+              scrapedData = "INFORMACIÓN EXTRAÍDA DEL SITIO:\n\n";
               
-              // PRIMER NIVEL: Recopilamos todos los títulos y URLs para crear un mapa
-              let pagesOverview = "MAPA DEL SITIO:\n";
-              if (parsedData.pages && Array.isArray(parsedData.pages)) {
-                parsedData.pages.forEach((page: any, index: number) => {
-                  if (page.url && page.title) {
-                    pagesOverview += `- ${page.title} (${page.url})\n`;
-                  }
+              // Mapeo del sitio
+              if (parsedData.sitemap && Array.isArray(parsedData.sitemap)) {
+                scrapedData += "MAPA DEL SITIO:\n";
+                parsedData.sitemap.forEach((page: any) => {
+                  scrapedData += `- ${page.title} (${page.url})\n`;
                 });
-              }
-              scrapedData += pagesOverview + "\n\n";
-              
-              // SEGUNDO NIVEL: Procesar los encabezados y secciones importantes
-              let headings = "SECCIONES DEL SITIO:\n";
-              let servicesContent = "SERVICIOS Y PLANES:\n";
-              let navigationLinks = "ENLACES IMPORTANTES:\n";
-              let pricingContent = "INFORMACIÓN DE PRECIOS:\n";
-              let hasFoundPricing = false;
-              
-              // Agregar información de cada página
-              if (parsedData.pages && Array.isArray(parsedData.pages)) {
-                parsedData.pages.forEach((page: any, index: number) => {
-                  if (page.content) {
-                    const content = page.content.toString();
-                    
-                    // Extraer enlaces y navegación
-                    const navigationMatches = content.match(/NAVEGACIÓN:[\s\S]*?Enlace: ([^\n]+)/g);
-                    if (navigationMatches) {
-                      navigationMatches.forEach(match => {
-                        navigationLinks += `- ${match.replace('NAVEGACIÓN:', '').trim()}\n`;
-                      });
-                    }
-                    
-                    // Extraer secciones importantes
-                    const estructuraMatch = content.match(/ESTRUCTURA:[\s\S]*?(?=\n\nNAVEGACIÓN:|$)/);
-                    if (estructuraMatch && estructuraMatch[0]) {
-                      const estructuraContent = estructuraMatch[0].replace('ESTRUCTURA:', '').trim();
-                      headings += estructuraContent + '\n';
-                    }
-                    
-                    // Buscar explícitamente menciones a precios o planes
-                    if (
-                      page.title.toLowerCase().includes('precio') ||
-                      page.title.toLowerCase().includes('plan') ||
-                      page.title.toLowerCase().includes('tarifa') ||
-                      page.url.toLowerCase().includes('precio') ||
-                      page.url.toLowerCase().includes('plan') ||
-                      page.url.toLowerCase().includes('tarifa') ||
-                      content.toLowerCase().includes('precio') ||
-                      content.toLowerCase().includes('plan') ||
-                      content.toLowerCase().includes('tarifa') ||
-                      content.toLowerCase().includes('€') ||
-                      content.toLowerCase().includes('$')
-                    ) {
-                      pricingContent += `\nDE LA PÁGINA "${page.title}":\n`;
-                      
-                      // Extraer el contenido principal
-                      const mainContentMatch = content.match(/CONTENIDO PRINCIPAL:([\s\S]*?)$/);
-                      if (mainContentMatch && mainContentMatch[1]) {
-                        // Extraer párrafos completos que contengan información de precios
-                        const paragraphs = mainContentMatch[1].split('\n\n');
-                        paragraphs.forEach(paragraph => {
-                          if (
-                            paragraph.toLowerCase().includes('precio') ||
-                            paragraph.toLowerCase().includes('plan') ||
-                            paragraph.toLowerCase().includes('tarifa') ||
-                            paragraph.toLowerCase().includes('€') ||
-                            paragraph.toLowerCase().includes('$') ||
-                            paragraph.toLowerCase().includes('mes') ||
-                            paragraph.toLowerCase().includes('anual') ||
-                            paragraph.toLowerCase().includes('pago') ||
-                            paragraph.toLowerCase().includes('suscripción')
-                          ) {
-                            pricingContent += paragraph.trim() + '\n\n';
-                            hasFoundPricing = true;
-                          }
-                        });
-                      }
-                    }
-                    
-                    // Buscar información sobre servicios
-                    if (
-                      page.title.toLowerCase().includes('servicio') ||
-                      page.title.toLowerCase().includes('función') ||
-                      page.title.toLowerCase().includes('característica') ||
-                      page.title.toLowerCase().includes('feature') ||
-                      page.url.toLowerCase().includes('servicio') ||
-                      page.url.toLowerCase().includes('función') ||
-                      page.url.toLowerCase().includes('feature')
-                    ) {
-                      servicesContent += `\nDE LA PÁGINA "${page.title}":\n`;
-                      
-                      // Extraer el contenido principal
-                      const mainContentMatch = content.match(/CONTENIDO PRINCIPAL:([\s\S]*?)$/);
-                      if (mainContentMatch && mainContentMatch[1]) {
-                        // Extraer 1000 caracteres para servicios
-                        const serviceSummary = mainContentMatch[1].trim().substring(0, 1000) + 
-                          (mainContentMatch[1].length > 1000 ? '...' : '');
-                        servicesContent += serviceSummary + '\n\n';
-                      }
-                    }
-                  }
-                });
+                scrapedData += "\n\n";
               }
               
-              // Agregar secciones al contenido general
-              scrapedData += navigationLinks + "\n\n";
-              scrapedData += headings + "\n\n";
-              
-              // Solo incluir la sección de precios si se encontró contenido relevante
-              if (hasFoundPricing) {
-                scrapedData += pricingContent + "\n\n";
-              }
-              
-              scrapedData += servicesContent + "\n\n";
-              
-              // TERCER NIVEL: Agregar contenido completo de páginas importantes
-              // Buscar páginas específicas de precios, documentación, etc.
-              if (parsedData.pages && Array.isArray(parsedData.pages)) {
-                for (const page of parsedData.pages) {
-                  const isKeyPage = page.title.toLowerCase().includes('precio') || 
-                                    page.url.toLowerCase().includes('precio') || 
-                                    page.title.toLowerCase().includes('documentación') || 
-                                    page.url.toLowerCase().includes('documentación') ||
-                                    page.title.toLowerCase().includes('plan') ||
-                                    page.url.toLowerCase().includes('plan');
+              // Información de precios si está disponible en el formato nuevo
+              if (parsedData.pricing && Array.isArray(parsedData.pricing) && parsedData.pricing.length > 0) {
+                scrapedData += "INFORMACIÓN DE PRECIOS:\n";
+                parsedData.pricing.forEach((plan: any) => {
+                  scrapedData += `- ${plan.name}: ${plan.price} ${plan.currency || 'USD'}/${plan.interval || 'mes'}\n`;
                   
-                  if (isKeyPage && page.content) {
-                    // Para páginas importantes, incluir todo el contenido
-                    scrapedData += `\nCONTENIDO COMPLETO DE LA PÁGINA "${page.title}":\n`;
-                    
-                    // Extraer el contenido principal
-                    const mainContentMatch = page.content.toString().match(/CONTENIDO PRINCIPAL:([\s\S]*?)$/);
-                    if (mainContentMatch && mainContentMatch[1]) {
-                      // Incluir todo el contenido para páginas clave
-                      scrapedData += mainContentMatch[1].trim() + '\n\n';
-                    }
+                  if (plan.description) {
+                    scrapedData += `  Descripción: ${plan.description}\n`;
                   }
-                }
+                  
+                  if (plan.features && Array.isArray(plan.features)) {
+                    scrapedData += `  Características:\n`;
+                    plan.features.forEach((feature: string) => {
+                      scrapedData += `  - ${feature}\n`;
+                    });
+                  }
+                  
+                  scrapedData += '\n';
+                });
               }
               
-              // Habilitar los logs para facilitar la depuración
-              console.log("Usando datos de scraping del servidor para el chatbot");
-              console.log("Tamaño de los datos de scraping:", scrapedData.length);
+              // Contenido extraído
+              if (parsedData.content) {
+                scrapedData += "CONTENIDO DEL SITIO:\n";
+                
+                Object.entries(parsedData.content).forEach(([url, pageData]: [string, any]) => {
+                  if (pageData.title) {
+                    scrapedData += `\n${pageData.title} (${url}):\n`;
+                    if (pageData.content) {
+                      const contentPreview = typeof pageData.content === 'string' 
+                        ? pageData.content.substring(0, 500) 
+                        : JSON.stringify(pageData.content).substring(0, 500);
+                      scrapedData += `${contentPreview}...\n`;
+                    }
+                  }
+                });
+              }
+              
+              // Usar el nuevo formato si está disponible, de lo contrario usar el antiguo
             } catch (error) {
               console.error("Error al parsear datos de scraping:", error);
               // En caso de error, usar la información extraída en tiempo real
@@ -381,7 +260,9 @@ ${pageContent}
           const contextWithInstructions = `
 ${pageContext}
 
-Eres AIPPS, un asistente virtual integrado en el sitio web de AIPPS.
+${pricingInfo}
+
+Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS.
 Tu objetivo es proporcionar información útil, precisa y completa sobre la plataforma AIPPS,
 sus servicios, características, precios y beneficios basándote en el contenido del sitio.
 Si te preguntan por un servicio o característica específica, busca la información en el contenido proporcionado.
@@ -397,7 +278,7 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              messages: allMessages,
+              messages: messages.concat(userMessage),
               context: contextWithInstructions
             })
           });
@@ -416,7 +297,7 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
             "hola": "¡Hola! Soy AIPPS, tu asistente virtual. ¿En qué puedo ayudarte hoy?",
             "ayuda": "Puedo ayudarte con información sobre nuestra plataforma AIPPS, sus características, cómo integrarla en tu sitio web y mucho más.",
             "features": "AIPPS ofrece IA conversacional, automatización de tareas, asistencia en tiempo real y análisis de contenido de tu sitio web.",
-            "precios": "AIPPS ofrece planes de precios flexibles que comienzan en $29/mes."
+            "precios": "AIPPS ofrece varios planes adaptados a diferentes necesidades. Desde el plan Gratuito con hasta 20 interacciones diarias, pasando por el Básico ($29/mes), el Profesional ($79/mes) hasta el Empresarial (personalizado desde $199/mes)."
           };
           
           const lowerInput = inputValue.toLowerCase().trim();

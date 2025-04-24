@@ -25,6 +25,7 @@ export class WebScraper {
     pageCount: number;
     pages: Array<{url: string, content: string, title: string}>;
     pagesProcessed: number;
+    extraData?: any;
   }> {
     this.reset();
     this.maxPages = maxPages;
@@ -42,7 +43,8 @@ export class WebScraper {
         content: this.contentStore.join('\n\n'),
         pageCount: this.currentPageCount,
         pages: this.pageContentArray,
-        pagesProcessed: this.currentPageCount
+        pagesProcessed: this.currentPageCount,
+        extraData: {}
       };
     } catch (error: any) {
       console.error('Error durante el scraping del sitio:', error);
