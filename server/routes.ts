@@ -1112,13 +1112,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ================ OpenAI Routes ================
   app.post("/api/openai/completion", async (req, res) => {
     try {
-      const { messages, context } = req.body;
+      const { messages, context, language } = req.body;
       
       if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({ message: "Invalid messages format" });
       }
       
-      const completion = await generateChatCompletion(messages, context);
+      // Corregido para manejar el nuevo parámetro de idioma
+      const completion = await generateChatCompletion(messages, context, language as string | undefined);
       res.json(completion);
     } catch (error) {
       console.error("OpenAI completion error:", error);
