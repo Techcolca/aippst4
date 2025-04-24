@@ -19,6 +19,10 @@ interface ChatInterfaceProps {
     welcomePageChatBubbleColor?: string;
     welcomePageChatTextColor?: string;
     welcomePageChatBehavior?: string;
+    // Nuevos campos para la configuración de scraping
+    welcomePageChatScrapingEnabled?: boolean;
+    welcomePageChatScrapingDepth?: number;
+    welcomePageChatScrapingData?: string;
   };
 }
 
