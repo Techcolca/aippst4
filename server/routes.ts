@@ -814,21 +814,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Ruta para ejecutar scraping para el chatbot de bienvenida
-  app.post("/api/welcome-chat/scrape", verifyToken, isAdmin, async (req, res) => {
+  app.post("/api/welcome-chat/scrape", async (req, res) => {
     try {
-      const { url, maxPages } = req.body;
+      // Obtener información de autenticación
+      const token = req.cookies?.auth_token || 
+                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                     ? req.headers.authorization.slice(7) : null);
       
-      if (!url) {
-        return res.status(400).json({ message: "URL is required" });
+      let adminUser = null;
+      
+      if (token) {
+        try {
+          // Verificar el token
+          console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
+          const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+          console.log("Token verificado correctamente. ID de usuario:", decoded.userId);
+          
+          // Obtener los datos completos del usuario
+          adminUser = await storage.getUser(decoded.userId);
+          console.log("Usuario para scraping:", adminUser?.username);
+          
+          if (adminUser?.username !== 'admin') {
+            return res.status(403).json({ message: "Forbidden: Admin access required" });
+          }
+        } catch (error) {
+          console.error('Error al verificar token para scraping:', error);
+          return res.status(401).json({ message: 'Invalid token' });
+        }
+      } else {
+        console.log("No se encontró token para scraping");
+        return res.status(401).json({ message: 'Authentication required' });
       }
       
-      console.log(`Iniciando scraping para chatbot de bienvenida: ${url}`);
+      // Datos del scraping
+      const { url, maxPages } = req.body;
+      const siteUrl = url || `https://${req.headers.host}`;
+      
+      console.log(`Iniciando scraping para chatbot de bienvenida: ${siteUrl}`);
       
       // Realizar el scraping
-      const scrapedData = await webscraper.scrapeSite(url, maxPages || 5);
+      const scrapedData = await webscraper.scrapeSite(siteUrl, maxPages || 5);
       
       // Actualizar configuración del administrador con los datos extraídos
-      const adminUserId = 4; // Usamos la cuenta admin predeterminada
+      const adminUserId = adminUser?.id || 4; // Usamos la cuenta admin (ID 4 como fallback)
       const currentSettings = await storage.getSettings(adminUserId);
       
       if (!currentSettings) {

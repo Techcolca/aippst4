@@ -19,7 +19,7 @@ declare global {
  * Middleware to verify JWT token from cookies
  * Adds userId to the request object if verification is successful
  */
-export function verifyToken(req: Request, res: Response, next: NextFunction) {
+export async function verifyToken(req: Request, res: Response, next: NextFunction) {
   // Primero comprobar si hay un token válido
   const token = req.cookies?.auth_token || 
                 (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
@@ -31,6 +31,22 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
       req.userId = decoded.userId;
       console.log("Token verificado correctamente. ID de usuario:", req.userId);
+      
+      // Cargar el objeto de usuario completo desde la base de datos
+      try {
+        const user = await storage.getUser(req.userId);
+        if (user) {
+          req.user = user;
+          console.log("Usuario autenticado encontrado:", user.username);
+        } else {
+          console.log("Usuario no encontrado en la base de datos con ID:", req.userId);
+        }
+      } catch (userError) {
+        console.error("Error al obtener el usuario:", userError);
+        // No bloquear la autenticación si no se puede cargar el usuario completo
+        // Solo se usa el userId para autenticación básica
+      }
+      
       return next();
     } catch (error) {
       console.error('Token verification error:', error);
