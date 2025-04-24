@@ -724,7 +724,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         welcomePageChatGreeting: settings?.welcomePageChatGreeting || '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?',
         welcomePageChatBubbleColor: settings?.welcomePageChatBubbleColor || '#111827',
         welcomePageChatTextColor: settings?.welcomePageChatTextColor || '#FFFFFF',
-        welcomePageChatBehavior: settings?.welcomePageChatBehavior || 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.'
+        welcomePageChatBehavior: settings?.welcomePageChatBehavior || 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.',
+        welcomePageChatScrapingEnabled: settings?.welcomePageChatScrapingEnabled || false,
+        welcomePageChatScrapingDepth: settings?.welcomePageChatScrapingDepth || 5,
+        welcomePageChatScrapingData: settings?.welcomePageChatScrapingData || null
       });
     } catch (error) {
       console.error("Get welcome chat settings error:", error);
@@ -734,7 +737,121 @@ export async function registerRoutes(app: Express): Promise<Server> {
         welcomePageChatGreeting: '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?',
         welcomePageChatBubbleColor: '#111827',
         welcomePageChatTextColor: '#FFFFFF',
-        welcomePageChatBehavior: 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.'
+        welcomePageChatBehavior: 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.',
+        welcomePageChatScrapingEnabled: false,
+        welcomePageChatScrapingDepth: 5,
+        welcomePageChatScrapingData: null
+      });
+    }
+  });
+  
+  // Ruta para actualizar configuración del chatbot de bienvenida
+  app.post("/api/welcome-chat-settings", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const {
+        welcomePageChatEnabled,
+        welcomePageChatGreeting,
+        welcomePageChatBubbleColor,
+        welcomePageChatTextColor,
+        welcomePageChatBehavior,
+        welcomePageChatScrapingEnabled,
+        welcomePageChatScrapingDepth
+      } = req.body;
+      
+      // Actualizar configuración del administrador
+      const adminUserId = 4; // Usamos la cuenta admin predeterminada
+      const currentSettings = await storage.getSettings(adminUserId);
+      
+      if (!currentSettings) {
+        return res.status(404).json({ message: "Admin settings not found" });
+      }
+      
+      // Preparar objeto con los campos a actualizar
+      const updateData: any = {};
+      
+      if (typeof welcomePageChatEnabled === 'boolean') {
+        updateData.welcomePageChatEnabled = welcomePageChatEnabled;
+      }
+      
+      if (welcomePageChatGreeting !== undefined) {
+        updateData.welcomePageChatGreeting = welcomePageChatGreeting;
+      }
+      
+      if (welcomePageChatBubbleColor) {
+        updateData.welcomePageChatBubbleColor = welcomePageChatBubbleColor;
+      }
+      
+      if (welcomePageChatTextColor) {
+        updateData.welcomePageChatTextColor = welcomePageChatTextColor;
+      }
+      
+      if (welcomePageChatBehavior) {
+        updateData.welcomePageChatBehavior = welcomePageChatBehavior;
+      }
+      
+      if (typeof welcomePageChatScrapingEnabled === 'boolean') {
+        updateData.welcomePageChatScrapingEnabled = welcomePageChatScrapingEnabled;
+      }
+      
+      if (welcomePageChatScrapingDepth) {
+        updateData.welcomePageChatScrapingDepth = welcomePageChatScrapingDepth;
+      }
+      
+      // Actualizar settings
+      const updatedSettings = await storage.updateSettings(adminUserId, updateData);
+      
+      res.json({
+        success: true,
+        settings: updatedSettings
+      });
+    } catch (error) {
+      console.error("Update welcome chat settings error:", error);
+      res.status(500).json({ 
+        message: "Error updating welcome chat settings", 
+        error: error.message 
+      });
+    }
+  });
+  
+  // Ruta para ejecutar scraping para el chatbot de bienvenida
+  app.post("/api/welcome-chat/scrape", verifyToken, isAdmin, async (req, res) => {
+    try {
+      const { url, maxPages } = req.body;
+      
+      if (!url) {
+        return res.status(400).json({ message: "URL is required" });
+      }
+      
+      console.log(`Iniciando scraping para chatbot de bienvenida: ${url}`);
+      
+      // Realizar el scraping
+      const scrapedData = await webscraper.scrapeSite(url, maxPages || 5);
+      
+      // Actualizar configuración del administrador con los datos extraídos
+      const adminUserId = 4; // Usamos la cuenta admin predeterminada
+      const currentSettings = await storage.getSettings(adminUserId);
+      
+      if (!currentSettings) {
+        return res.status(404).json({ message: "Admin settings not found" });
+      }
+      
+      // Actualizar settings con la información de scraping
+      await storage.updateSettings(adminUserId, {
+        welcomePageChatScrapingEnabled: true,
+        welcomePageChatScrapingData: JSON.stringify(scrapedData),
+        welcomePageChatScrapingDepth: maxPages || 5
+      });
+      
+      // Devolver los datos de scraping
+      res.json({
+        success: true,
+        scrapedData
+      });
+    } catch (error) {
+      console.error("Welcome chat scraping error:", error);
+      res.status(500).json({ 
+        message: "Error during scraping process", 
+        error: error.message 
       });
     }
   });

@@ -125,6 +125,9 @@ export const settings = pgTable("settings", {
   welcomePageChatBubbleColor: text("welcome_page_chat_bubble_color").default("#111827"),
   welcomePageChatTextColor: text("welcome_page_chat_text_color").default("#FFFFFF"),
   welcomePageChatBehavior: text("welcome_page_chat_behavior").default("Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características."),
+  welcomePageChatScrapingEnabled: boolean("welcome_page_chat_scraping_enabled").default(false),
+  welcomePageChatScrapingDepth: integer("welcome_page_chat_scraping_depth").default(5),
+  welcomePageChatScrapingData: text("welcome_page_chat_scraping_data"),
 });
 
 export const insertSettingsSchema = createInsertSchema(settings).pick({
