@@ -69,7 +69,7 @@ export default function ChatInterface({
     
     console.log("Idioma cambiado a:", i18n.language);
     console.log("Mensaje de bienvenida actualizado:", welcomeMessage);
-  }, [i18n.language]); // Re-ejecutar cuando cambie el idioma
+  }, [i18n.language, welcomePageSettings?.welcomePageChatGreeting]); // Re-ejecutar cuando cambie el idioma o el mensaje de bienvenida
 
   // Scroll automático al final de los mensajes
   useEffect(() => {
@@ -127,6 +127,10 @@ export default function ChatInterface({
       if (demoMode) {
         // Demo mode: use OpenAI directly with environment context
         try {
+          // Guardar el idioma actual para asegurarnos de que se usa en la respuesta
+          const currentLanguage = i18n.language;
+          console.log("Enviando mensaje con idioma:", currentLanguage);
+          
           // Intentar detectar elementos de la página para proporcionar contexto
           const pageUrl = window.location.href;
           const pageTitle = document.title;

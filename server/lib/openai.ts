@@ -14,7 +14,10 @@ export async function generateChatCompletion(
 ) {
   try {
     // Determinar en qué idioma responder
-    const responseLanguage = language || "es"; // Default a español si no se proporciona idioma
+    const responseLanguage = language || "fr"; // Default a francés (como ha pedido el usuario)
+    
+    // Log para debug
+    console.log("Respondiendo en idioma:", responseLanguage);
     
     // Adaptar el mensaje del sistema según el idioma
     let systemContent = "";
@@ -196,7 +199,7 @@ export async function generateAutomatedResponse(
 ): Promise<string> {
   try {
     const stylePrompt = getStylePrompt(conversationStyle);
-    const responseLanguage = language || "es"; // Default a español si no se proporciona idioma
+    const responseLanguage = language || "fr"; // Default a francés (como ha pedido el usuario)
     
     // Log para debug
     console.log("Generating automated response in language:", responseLanguage);
