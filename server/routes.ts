@@ -20,7 +20,6 @@ import stripe, {
   handleWebhookEvent
 } from "./lib/stripe";
 import { createOrUpdateStripeProduct, syncPlansWithStripe } from "./lib/stripe-utils";
-import { webscraper } from "./lib/webscraper";
 import { documentProcessor } from "./lib/document-processor";
 import { 
   createGoogleCalendarEvent, 
