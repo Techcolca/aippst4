@@ -211,44 +211,149 @@ export default function ChatInterface({
 INFORMACIÓN EXTRAÍDA DE LAS PÁGINAS DEL SITIO (${parsedData.pageCount || 0} páginas analizadas):
 `;
               
-              // Agregar información de cada página
+              // PRIMER NIVEL: Recopilamos todos los títulos y URLs para crear un mapa
+              let pagesOverview = "MAPA DEL SITIO:\n";
               if (parsedData.pages && Array.isArray(parsedData.pages)) {
                 parsedData.pages.forEach((page: any, index: number) => {
                   if (page.url && page.title) {
-                    scrapedData += `
-PÁGINA ${index + 1}: ${page.title}
-URL: ${page.url}
-`;
+                    pagesOverview += `- ${page.title} (${page.url})\n`;
+                  }
+                });
+              }
+              scrapedData += pagesOverview + "\n\n";
+              
+              // SEGUNDO NIVEL: Procesar los encabezados y secciones importantes
+              let headings = "SECCIONES DEL SITIO:\n";
+              let servicesContent = "SERVICIOS Y PLANES:\n";
+              let navigationLinks = "ENLACES IMPORTANTES:\n";
+              let pricingContent = "INFORMACIÓN DE PRECIOS:\n";
+              let hasFoundPricing = false;
+              
+              // Agregar información de cada página
+              if (parsedData.pages && Array.isArray(parsedData.pages)) {
+                parsedData.pages.forEach((page: any, index: number) => {
+                  if (page.content) {
+                    const content = page.content.toString();
                     
-                    // Extraer secciones principales del contenido
-                    if (page.content) {
-                      const content = page.content.toString();
+                    // Extraer enlaces y navegación
+                    const navigationMatches = content.match(/NAVEGACIÓN:[\s\S]*?Enlace: ([^\n]+)/g);
+                    if (navigationMatches) {
+                      navigationMatches.forEach(match => {
+                        navigationLinks += `- ${match.replace('NAVEGACIÓN:', '').trim()}\n`;
+                      });
+                    }
+                    
+                    // Extraer secciones importantes
+                    const estructuraMatch = content.match(/ESTRUCTURA:[\s\S]*?(?=\n\nNAVEGACIÓN:|$)/);
+                    if (estructuraMatch && estructuraMatch[0]) {
+                      const estructuraContent = estructuraMatch[0].replace('ESTRUCTURA:', '').trim();
+                      headings += estructuraContent + '\n';
+                    }
+                    
+                    // Buscar explícitamente menciones a precios o planes
+                    if (
+                      page.title.toLowerCase().includes('precio') ||
+                      page.title.toLowerCase().includes('plan') ||
+                      page.title.toLowerCase().includes('tarifa') ||
+                      page.url.toLowerCase().includes('precio') ||
+                      page.url.toLowerCase().includes('plan') ||
+                      page.url.toLowerCase().includes('tarifa') ||
+                      content.toLowerCase().includes('precio') ||
+                      content.toLowerCase().includes('plan') ||
+                      content.toLowerCase().includes('tarifa') ||
+                      content.toLowerCase().includes('€') ||
+                      content.toLowerCase().includes('$')
+                    ) {
+                      pricingContent += `\nDE LA PÁGINA "${page.title}":\n`;
                       
-                      // Extraer secciones importantes
-                      const estructuraMatch = content.match(/ESTRUCTURA:\n([\s\S]*?)(?=\n\nNAVEGACIÓN:|$)/);
-                      const navegacionMatch = content.match(/NAVEGACIÓN:\n([\s\S]*?)(?=\n\nCONTENIDO PRINCIPAL:|$)/);
-                      const contenidoMatch = content.match(/CONTENIDO PRINCIPAL:\n([\s\S]*?)(?=$)/);
-                      
-                      if (estructuraMatch && estructuraMatch[1]) {
-                        scrapedData += `ESTRUCTURA:\n${estructuraMatch[1].trim()}\n\n`;
+                      // Extraer el contenido principal
+                      const mainContentMatch = content.match(/CONTENIDO PRINCIPAL:([\s\S]*?)$/);
+                      if (mainContentMatch && mainContentMatch[1]) {
+                        // Extraer párrafos completos que contengan información de precios
+                        const paragraphs = mainContentMatch[1].split('\n\n');
+                        paragraphs.forEach(paragraph => {
+                          if (
+                            paragraph.toLowerCase().includes('precio') ||
+                            paragraph.toLowerCase().includes('plan') ||
+                            paragraph.toLowerCase().includes('tarifa') ||
+                            paragraph.toLowerCase().includes('€') ||
+                            paragraph.toLowerCase().includes('$') ||
+                            paragraph.toLowerCase().includes('mes') ||
+                            paragraph.toLowerCase().includes('anual') ||
+                            paragraph.toLowerCase().includes('pago') ||
+                            paragraph.toLowerCase().includes('suscripción')
+                          ) {
+                            pricingContent += paragraph.trim() + '\n\n';
+                            hasFoundPricing = true;
+                          }
+                        });
                       }
+                    }
+                    
+                    // Buscar información sobre servicios
+                    if (
+                      page.title.toLowerCase().includes('servicio') ||
+                      page.title.toLowerCase().includes('función') ||
+                      page.title.toLowerCase().includes('característica') ||
+                      page.title.toLowerCase().includes('feature') ||
+                      page.url.toLowerCase().includes('servicio') ||
+                      page.url.toLowerCase().includes('función') ||
+                      page.url.toLowerCase().includes('feature')
+                    ) {
+                      servicesContent += `\nDE LA PÁGINA "${page.title}":\n`;
                       
-                      if (navegacionMatch && navegacionMatch[1]) {
-                        scrapedData += `NAVEGACIÓN:\n${navegacionMatch[1].trim()}\n\n`;
-                      }
-                      
-                      if (contenidoMatch && contenidoMatch[1]) {
-                        // Extraer solo los primeros 500 caracteres para no sobrecargar el contexto
-                        const resumen = contenidoMatch[1].trim().substring(0, 500) + 
-                          (contenidoMatch[1].length > 500 ? '...' : '');
-                        scrapedData += `CONTENIDO:\n${resumen}\n\n`;
+                      // Extraer el contenido principal
+                      const mainContentMatch = content.match(/CONTENIDO PRINCIPAL:([\s\S]*?)$/);
+                      if (mainContentMatch && mainContentMatch[1]) {
+                        // Extraer 1000 caracteres para servicios
+                        const serviceSummary = mainContentMatch[1].trim().substring(0, 1000) + 
+                          (mainContentMatch[1].length > 1000 ? '...' : '');
+                        servicesContent += serviceSummary + '\n\n';
                       }
                     }
                   }
                 });
               }
               
+              // Agregar secciones al contenido general
+              scrapedData += navigationLinks + "\n\n";
+              scrapedData += headings + "\n\n";
+              
+              // Solo incluir la sección de precios si se encontró contenido relevante
+              if (hasFoundPricing) {
+                scrapedData += pricingContent + "\n\n";
+              }
+              
+              scrapedData += servicesContent + "\n\n";
+              
+              // TERCER NIVEL: Agregar contenido completo de páginas importantes
+              // Buscar páginas específicas de precios, documentación, etc.
+              if (parsedData.pages && Array.isArray(parsedData.pages)) {
+                for (const page of parsedData.pages) {
+                  const isKeyPage = page.title.toLowerCase().includes('precio') || 
+                                    page.url.toLowerCase().includes('precio') || 
+                                    page.title.toLowerCase().includes('documentación') || 
+                                    page.url.toLowerCase().includes('documentación') ||
+                                    page.title.toLowerCase().includes('plan') ||
+                                    page.url.toLowerCase().includes('plan');
+                  
+                  if (isKeyPage && page.content) {
+                    // Para páginas importantes, incluir todo el contenido
+                    scrapedData += `\nCONTENIDO COMPLETO DE LA PÁGINA "${page.title}":\n`;
+                    
+                    // Extraer el contenido principal
+                    const mainContentMatch = page.content.toString().match(/CONTENIDO PRINCIPAL:([\s\S]*?)$/);
+                    if (mainContentMatch && mainContentMatch[1]) {
+                      // Incluir todo el contenido para páginas clave
+                      scrapedData += mainContentMatch[1].trim() + '\n\n';
+                    }
+                  }
+                }
+              }
+              
+              // Habilitar los logs para facilitar la depuración
               console.log("Usando datos de scraping del servidor para el chatbot");
+              console.log("Tamaño de los datos de scraping:", scrapedData.length);
             } catch (error) {
               console.error("Error al parsear datos de scraping:", error);
               // En caso de error, usar la información extraída en tiempo real
