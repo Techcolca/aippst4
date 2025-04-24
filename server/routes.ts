@@ -2,6 +2,7 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import jwt from "jsonwebtoken";
 import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier } from "./middleware/subscription";
 import { generateApiKey } from "./lib/utils";
@@ -42,7 +43,6 @@ import {
   sendAppointmentCancellationNotification
 } from "./lib/aws-email";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema } from "@shared/schema";
 import fs from "fs";
