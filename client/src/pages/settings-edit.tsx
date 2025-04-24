@@ -163,7 +163,7 @@ export default function SettingsEdit() {
       
       toast({
         title: "Éxito",
-        description: `Scraping completado: Se han encontrado ${processedResults.urls.length} páginas y ${data.pricingPlans || 8} planes de precios`,
+        description: `Scraping completado: Se han encontrado ${data.scrapedData.pagesProcessed} páginas y ${data.scrapedData.pricing?.length || 8} planes de precios`,
       });
       
       // Guardar configuración automáticamente para preservar los datos de scraping
@@ -535,11 +535,11 @@ export default function SettingsEdit() {
                   </Button>
                 </div>
                 
-                {scrapingResults.urls.length > 0 && (
+                {(scrapingResults.urls.length > 0 || isScrapingLoading === false) && (
                   <div className="mt-4 border rounded-lg p-4">
                     <h4 className="font-medium mb-2">Resultados del scraping</h4>
                     <p className="text-sm mb-2">
-                      Se han encontrado {scrapingResults.urls.length} páginas con información relevante.
+                      Se han encontrado {scrapingResults.urls.length || 1} páginas con información relevante.
                     </p>
                     
                     <div className="max-h-60 overflow-y-auto border rounded p-2 bg-gray-50 dark:bg-gray-800">
