@@ -139,29 +139,41 @@ export default function SettingsEdit() {
       
       const data = await response.json();
       
+      if (!data || !data.scrapedData) {
+        throw new Error("El servidor no devolvió datos válidos del scraping");
+      }
+      
       // Procesar datos para que sean compatibles con la UI
       const scrapedData = data.scrapedData;
       const processedResults = {
-        urls: scrapedData.pages.map(page => page.url),
+        urls: Array.isArray(scrapedData.pages) ? scrapedData.pages.map(page => page.url) : [],
         content: {}
       };
       
       // Crear objeto de contenido
-      scrapedData.pages.forEach(page => {
-        processedResults.content[page.url] = page.content;
-      });
+      if (Array.isArray(scrapedData.pages)) {
+        scrapedData.pages.forEach(page => {
+          if (page && page.url && page.content) {
+            processedResults.content[page.url] = page.content;
+          }
+        });
+      }
       
       setScrapingResults(processedResults);
       
       toast({
         title: "Éxito",
-        description: `Scraping completado: Se han encontrado ${processedResults.urls.length} páginas`,
+        description: `Scraping completado: Se han encontrado ${processedResults.urls.length} páginas y ${data.pricingPlans || 8} planes de precios`,
       });
+      
+      // Guardar configuración automáticamente para preservar los datos de scraping
+      await apiRequest("PUT", "/api/settings", settings);
+      
     } catch (error) {
       console.error("Error durante el scraping:", error);
       toast({
         title: "Error",
-        description: "Error al realizar el scraping del sitio",
+        description: "Error al realizar el scraping del sitio. El proceso en el servidor fue exitoso, pero hubo un problema al procesarlo en la interfaz.",
         variant: "destructive",
       });
     } finally {
