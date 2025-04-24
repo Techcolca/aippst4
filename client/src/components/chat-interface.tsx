@@ -300,6 +300,61 @@ Plan Empresarial:
                 }
               }
               
+              // Información sobre documentación
+              if (parsedData.extraData && parsedData.extraData.documentation) {
+                scrapedData += "DOCUMENTACIÓN Y RECURSOS DISPONIBLES:\n\n";
+                const docData = parsedData.extraData.documentation;
+                
+                if (docData.general) {
+                  scrapedData += `${docData.general}\n\n`;
+                }
+                
+                if (docData.secciones && Array.isArray(docData.secciones)) {
+                  scrapedData += "Secciones de documentación disponibles:\n";
+                  docData.secciones.forEach((seccion: any) => {
+                    scrapedData += `- ${seccion.titulo}: ${seccion.descripcion}\n`;
+                    if (seccion.url) {
+                      scrapedData += `  URL: ${seccion.url}\n`;
+                    }
+                  });
+                  scrapedData += "\n";
+                }
+                
+                if (docData.api) {
+                  scrapedData += "DOCUMENTACIÓN DE LA API:\n";
+                  if (docData.api.general) {
+                    scrapedData += `${docData.api.general}\n\n`;
+                  }
+                  
+                  if (docData.api.endpoints && Array.isArray(docData.api.endpoints)) {
+                    scrapedData += "Endpoints disponibles:\n";
+                    docData.api.endpoints.forEach((endpoint: any) => {
+                      scrapedData += `- ${endpoint.nombre}: ${endpoint.descripcion}\n`;
+                      if (endpoint.url) {
+                        scrapedData += `  URL: ${endpoint.url}\n`;
+                      }
+                    });
+                    scrapedData += "\n";
+                  }
+                  
+                  if (docData.api.ejemplos && Array.isArray(docData.api.ejemplos)) {
+                    scrapedData += "Ejemplos de uso de la API:\n";
+                    docData.api.ejemplos.forEach((ejemplo: string) => {
+                      scrapedData += `- ${ejemplo}\n`;
+                    });
+                    scrapedData += "\n";
+                  }
+                }
+                
+                if (docData.faq && Array.isArray(docData.faq)) {
+                  scrapedData += "Preguntas frecuentes sobre la documentación y API:\n";
+                  docData.faq.forEach((item: any) => {
+                    scrapedData += `P: ${item.pregunta}\n`;
+                    scrapedData += `R: ${item.respuesta}\n\n`;
+                  });
+                }
+              }
+              
               // Contenido extraído
               if (parsedData.content) {
                 scrapedData += "CONTENIDO DEL SITIO:\n";
