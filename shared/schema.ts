@@ -108,8 +108,8 @@ export const insertAutomationSchema = createInsertSchema(automations).pick({
 export const settings = pgTable("settings", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
-  assistantName: text("assistant_name").default("AIPI Assistant"),
-  defaultGreeting: text("default_greeting").default("👋 Hi there! I'm AIPI, your AI assistant. How can I help you today?"),
+  assistantName: text("assistant_name").default("AIPPS Assistant"),
+  defaultGreeting: text("default_greeting").default("👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?"),
   showAvailability: boolean("show_availability").default(true),
   avatarUrl: text("avatar_url"),
   userBubbleColor: text("user_bubble_color").default("#3B82F6"),
@@ -119,6 +119,12 @@ export const settings = pgTable("settings", {
   knowledgeBase: text("knowledge_base").default("default"),
   enableLearning: boolean("enable_learning").default(true),
   emailNotificationAddress: text("email_notification_address"),
+  // Configuración para el chatbot de la página de bienvenida
+  welcomePageChatEnabled: boolean("welcome_page_chat_enabled").default(true),
+  welcomePageChatGreeting: text("welcome_page_chat_greeting").default("👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?"),
+  welcomePageChatBubbleColor: text("welcome_page_chat_bubble_color").default("#111827"),
+  welcomePageChatTextColor: text("welcome_page_chat_text_color").default("#FFFFFF"),
+  welcomePageChatBehavior: text("welcome_page_chat_behavior").default("Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características."),
 });
 
 export const insertSettingsSchema = createInsertSchema(settings).pick({
