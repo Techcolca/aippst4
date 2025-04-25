@@ -105,6 +105,30 @@ export default function ChatInterface({
     setInputValue(e.target.value);
   };
 
+  // Función básica para detectar el idioma del texto
+  const detectLanguage = (text: string): string => {
+    // Patrones comunes de cada idioma (muy simplificado)
+    const patterns = {
+      en: /\b(hello|hi|good|morning|afternoon|evening|thanks|please|would|could|how|what|when|who|why|where|is|are|have|had|been|was|were|will|should|can|may|the|this|that|these|those|it|its|i|my|we|our|you|your|he|she|his|her)\b/i,
+      es: /\b(hola|buenos|días|tardes|noches|gracias|por favor|quisiera|podría|cómo|qué|cuándo|quién|por qué|dónde|es|son|ha|han|sido|era|eran|será|debería|puede|el|la|los|las|esto|eso|estos|esos|esas|yo|mi|mis|nosotros|nuestro|tú|tu|usted|su|él|ella)\b/i,
+      fr: /\b(bonjour|salut|bonsoir|merci|s'il vous plaît|voudrais|pourrait|comment|quoi|quand|qui|pourquoi|où|est|sont|a|ont|été|était|étaient|sera|devrait|peut|le|la|les|ce|cette|ces|ceux|celles|ça|je|mon|ma|mes|nous|notre|vous|votre|il|elle|son|sa)\b/i
+    };
+    
+    // Chequear coincidencias para cada idioma
+    let matchedLang = '';
+    let maxMatches = 0;
+    
+    Object.entries(patterns).forEach(([lang, pattern]) => {
+      const matches = (text.match(pattern) || []).length;
+      if (matches > maxMatches) {
+        maxMatches = matches;
+        matchedLang = lang;
+      }
+    });
+    
+    return matchedLang;
+  };
+
   const handleSendMessage = async () => {
     if (inputValue.trim() === "" || isTyping) return;
     
@@ -116,6 +140,31 @@ export default function ChatInterface({
     // Registrar el idioma actual que se usará para la respuesta
     const currentLanguage = i18n.language;
     console.log("Idioma actual para la respuesta:", currentLanguage);
+    
+    // Detectar el idioma del mensaje del usuario
+    const detectedLanguage = detectLanguage(userMessage.content);
+    console.log("Idioma detectado en el mensaje:", detectedLanguage);
+    
+    // Si el idioma detectado no coincide con el idioma actual y se pudo detectar
+    if (detectedLanguage && detectedLanguage !== currentLanguage) {
+      // Mostrar sugerencia según el idioma detectado
+      let languageSuggestion = "";
+      
+      if (detectedLanguage === 'en') {
+        languageSuggestion = "I noticed you're writing in English. Would you like to switch the interface language to English? You can change it in the top-right menu.";
+      } else if (detectedLanguage === 'es') {
+        languageSuggestion = "He notado que estás escribiendo en español. ¿Te gustaría cambiar el idioma de la interfaz a español? Puedes cambiarlo en el menú superior derecho.";
+      } else if (detectedLanguage === 'fr') {
+        languageSuggestion = "J'ai remarqué que vous écrivez en français. Souhaitez-vous passer la langue de l'interface en français ? Vous pouvez la modifier dans le menu en haut à droite.";
+      }
+      
+      // Agregar la sugerencia como mensaje del asistente
+      if (languageSuggestion) {
+        setTimeout(() => {
+          setMessages(prev => [...prev, { role: 'assistant', content: languageSuggestion }]);
+        }, 1000);
+      }
+    }
     
     let response = "";
     
