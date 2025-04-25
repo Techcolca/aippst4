@@ -42,17 +42,13 @@ export default function ChatInterface({
 
   // Función para obtener el mensaje de bienvenida según el idioma
   const getWelcomeMessage = () => {
-    // Si hay un mensaje personalizado configurado, lo usamos primero
-    if (welcomePageSettings?.welcomePageChatGreeting) {
-      return welcomePageSettings.welcomePageChatGreeting;
-    }
-    
-    // Si no, usamos un mensaje según el idioma actual
+    // Siempre usar el idioma seleccionado por el usuario, independientemente de la configuración del servidor
+    // Esto asegura que el mensaje se muestre en el idioma correcto
     const currentLanguage = i18n.language;
     console.log("Obteniendo mensaje de bienvenida para idioma:", currentLanguage);
     
-    // Usar i18n para obtener traducciones
-    return t('assistant.welcome_message', '👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd\'hui ?');
+    // Usar i18n para obtener traducciones (prioridad para mantener coherencia en la UI)
+    return t('assistant.welcome_message');
   };
 
   // Inicializar el chat con un mensaje de bienvenida

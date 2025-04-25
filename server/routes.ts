@@ -719,9 +719,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const settings = await storage.getSettings(adminUserId);
       
       // Devolver solo la configuración relacionada con el chatbot de bienvenida
+      // Nota: Ya no incluimos un mensaje de bienvenida predeterminado en español para permitir que el cliente use i18n
       res.json({
         welcomePageChatEnabled: settings?.welcomePageChatEnabled || true,
-        welcomePageChatGreeting: settings?.welcomePageChatGreeting || '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?',
+        welcomePageChatGreeting: settings?.welcomePageChatGreeting || null, // Permitir que el cliente use su i18n para elegir el mensaje
         welcomePageChatBubbleColor: settings?.welcomePageChatBubbleColor || '#111827',
         welcomePageChatTextColor: settings?.welcomePageChatTextColor || '#FFFFFF',
         welcomePageChatBehavior: settings?.welcomePageChatBehavior || 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.',
@@ -732,9 +733,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get welcome chat settings error:", error);
       // En caso de error, devolver configuración predeterminada
+      // Permitimos que el cliente elija el mensaje de bienvenida según el idioma
       res.json({
         welcomePageChatEnabled: true,
-        welcomePageChatGreeting: '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?',
+        welcomePageChatGreeting: null, // Permitir que el cliente use i18n
         welcomePageChatBubbleColor: '#111827',
         welcomePageChatTextColor: '#FFFFFF',
         welcomePageChatBehavior: 'Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.',
