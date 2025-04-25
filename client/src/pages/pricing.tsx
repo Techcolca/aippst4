@@ -11,6 +11,7 @@ import Footer from '@/components/footer';
 import { loadStripe } from '@stripe/stripe-js';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { useTranslation } from 'react-i18next';
 
 // Inicializar Stripe con la clave pública
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
@@ -40,6 +41,7 @@ const formatCurrency = (amount: number, currency: string) => {
 export default function PricingPage() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [checkoutInProgress, setCheckoutInProgress] = useState<string | null>(null);
   const [billingType, setBillingType] = useState<'monthly' | 'annual'>('monthly');
 
@@ -127,20 +129,19 @@ export default function PricingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
-                <Badge className="px-3 py-1 text-sm" variant="outline">Planes</Badge>
+                <Badge className="px-3 py-1 text-sm" variant="outline">{t('pricing.plans')}</Badge>
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Potencia tu sitio web con IA
+                  {t('pricing.title')}
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed dark:text-gray-400">
-                  Elige el plan que mejor se adapte a las necesidades de tu negocio.
-                  Todos los planes incluyen actualizaciones gratuitas y soporte técnico.
+                  {t('pricing.subtitle')}
                 </p>
               </div>
 
               {/* Selector de tipo de facturación */}
               <div className="flex items-center justify-center space-x-4 mt-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-full">
                 <span className={`text-sm font-medium ${billingType === 'monthly' ? 'text-primary' : 'text-gray-500'}`}>
-                  Facturación mensual
+                  {t('pricing.monthly_billing')}
                 </span>
                 <div className="flex items-center space-x-2">
                   <Switch
@@ -149,15 +150,15 @@ export default function PricingPage() {
                     onCheckedChange={(checked) => setBillingType(checked ? 'annual' : 'monthly')}
                   />
                   <Label htmlFor="billing-toggle" className="sr-only">
-                    Alternar entre facturación mensual y anual
+                    {t('pricing.toggle_billing')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className={`text-sm font-medium ${billingType === 'annual' ? 'text-primary' : 'text-gray-500'}`}>
-                    Facturación anual
+                    {t('pricing.annual_billing')}
                   </span>
                   <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 border-green-200 dark:border-green-800">
-                    Ahorra 10-15%
+                    {t('pricing.save_percentage')}
                   </Badge>
                 </div>
               </div>
@@ -173,18 +174,18 @@ export default function PricingPage() {
                   <Card key={plan.id} className={`flex flex-col justify-between h-full ${plan.id === recommendedPlanId ? 'border-primary shadow-lg shadow-primary/20 dark:shadow-primary/10 relative' : ''}`}>
                     {plan.id === recommendedPlanId && (
                       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white py-1 px-4 rounded-full text-sm font-medium">
-                        Recomendado
+                        {t('pricing.recommended')}
                       </div>
                     )}
                     <CardHeader>
-                      <CardTitle className="text-xl">{plan.name}</CardTitle>
-                      <CardDescription>{plan.description}</CardDescription>
+                      <CardTitle className="text-xl">{t(`pricing.plan_${plan.id}.name`, plan.name)}</CardTitle>
+                      <CardDescription>{t(`pricing.plan_${plan.id}.description`, plan.description)}</CardDescription>
                       <div className="mt-4">
                         <span className="text-3xl font-bold">
-                          {plan.price === 0 ? 'Gratis' : formatCurrency(plan.price, plan.currency)}
+                          {plan.price === 0 ? t('pricing.free') : formatCurrency(plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (
-                          <span className="text-gray-500 dark:text-gray-400 ml-2">/{plan.interval}</span>
+                          <span className="text-gray-500 dark:text-gray-400 ml-2">/{t(`pricing.${plan.interval}`)}</span>
                         )}
                       </div>
                     </CardHeader>
@@ -193,7 +194,9 @@ export default function PricingPage() {
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start">
                             <Check className="h-5 w-5 text-green-500 mr-2 shrink-0" />
-                            <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
+                            <span className="text-sm text-gray-700 dark:text-gray-300">
+                              {t(`pricing.plan_${plan.id}.feature_${index}`, feature)}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -208,11 +211,11 @@ export default function PricingPage() {
                         {checkoutInProgress === plan.id ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Procesando...
+                            {t('pricing.processing')}
                           </>
                         ) : (
                           <>
-                            {plan.price === 0 ? 'Comenzar Gratis' : 'Suscribirse'}
+                            {plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')}
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
                         )}
@@ -225,9 +228,7 @@ export default function PricingPage() {
 
             <div className="mt-12 text-center">
               <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-                Todos los precios están en dólares canadienses (CAD). 
-                Las suscripciones se renuevan automáticamente al final del período. 
-                Puedes cancelar en cualquier momento desde tu panel de control.
+                {t('pricing.pricing_note')}
               </p>
             </div>
           </div>
@@ -237,30 +238,30 @@ export default function PricingPage() {
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col items-start space-y-2">
-                <h3 className="text-lg font-bold">Preguntas frecuentes</h3>
+                <h3 className="text-lg font-bold">{t('pricing.faq.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  ¿Puedo cambiar de plan más adelante?
+                  {t('pricing.faq.q1')}
                 </p>
                 <p>
-                  Sí, puedes actualizar o degradar tu plan en cualquier momento. Los cambios se aplicarán al siguiente período de facturación.
+                  {t('pricing.faq.a1')}
                 </p>
               </div>
               <div className="flex flex-col items-start space-y-2">
-                <h3 className="text-lg font-bold">Soporte técnico</h3>
+                <h3 className="text-lg font-bold">{t('pricing.support.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  ¿Qué tipo de soporte ofrecen?
+                  {t('pricing.support.q1')}
                 </p>
                 <p>
-                  Todos los planes incluyen soporte por email. Los planes Profesional y Empresarial incluyen soporte prioritario.
+                  {t('pricing.support.a1')}
                 </p>
               </div>
               <div className="flex flex-col items-start space-y-2">
-                <h3 className="text-lg font-bold">Reembolsos</h3>
+                <h3 className="text-lg font-bold">{t('pricing.refund.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  ¿Cuál es la política de reembolsos?
+                  {t('pricing.refund.q1')}
                 </p>
                 <p>
-                  Ofrecemos un reembolso completo dentro de los primeros 14 días si no estás satisfecho con nuestro servicio.
+                  {t('pricing.refund.a1')}
                 </p>
               </div>
             </div>
