@@ -67,10 +67,15 @@ export default function ChatInterface({
     console.log("Mensaje de bienvenida actualizado:", welcomeMessage);
   }, [i18n.language, welcomePageSettings?.welcomePageChatGreeting]); // Re-ejecutar cuando cambie el idioma o el mensaje de bienvenida
 
-  // Scroll automático al final de los mensajes
+  // Scroll automático al final de los mensajes solo dentro del contenedor del chat
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      // Buscar el contenedor padre (que tiene el overflow-y-auto)
+      const chatContainer = document.getElementById('chat-messages');
+      if (chatContainer) {
+        // Hacer scroll solo dentro del contenedor, no en toda la página
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
     }
   }, [messages, isTyping]);
 
