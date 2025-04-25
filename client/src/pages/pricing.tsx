@@ -64,8 +64,8 @@ export default function PricingPage() {
       if (!user) {
         // Si el usuario no está autenticado, redirigir a la página de inicio de sesión
         toast({
-          title: "Inicia sesión primero",
-          description: "Necesitas iniciar sesión para suscribirte a un plan.",
+          title: t('pricing.login_required'),
+          description: t('pricing.login_description'),
           variant: "default",
         });
         
@@ -93,8 +93,8 @@ export default function PricingPage() {
         const result = await response.json();
         
         toast({
-          title: result.success ? "Éxito" : "Error",
-          description: result.message || "Plan gratuito activado con éxito",
+          title: result.success ? t('pricing.success') : t('pricing.error'),
+          description: result.message || t('pricing.free_plan_activated'),
           variant: result.success ? "default" : "destructive",
         });
         
@@ -109,8 +109,8 @@ export default function PricingPage() {
     } catch (error) {
       console.error('Error al iniciar el checkout:', error);
       toast({
-        title: "Error",
-        description: "Ocurrió un error al procesar tu solicitud. Inténtalo de nuevo más tarde.",
+        title: t('pricing.error'),
+        description: t('pricing.process_error'),
         variant: "destructive",
       });
     } finally {
