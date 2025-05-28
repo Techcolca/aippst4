@@ -1267,14 +1267,7 @@ Contenido: [Error al extraer contenido detallado]
     }
     
     // Para widgets tipo bubble (comportamiento original)
-    // Update toggle button icon and text
-    toggleButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-      <span class="aipi-button-text">Cerrar</span>
-    `;
+    // Mantener el botón con el diseño original sin cambiar a "Cerrar"
     
     // Detener rotación de textos cuando está abierto
     if (textRotationInterval) {
@@ -1323,19 +1316,7 @@ Contenido: [Error al extraer contenido detallado]
     }
     
     // Para widgets tipo bubble (comportamiento original)
-    // Update toggle button icon and restart text rotation
-    toggleButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>
-      <span class="aipi-button-text">${dynamicTexts[currentTextIndex]}</span>
-      <div class="aipi-notification-dot"></div>
-    `;
-    
-    // Reiniciar rotación de textos cuando se cierra
-    setTimeout(() => {
-      startTextRotation();
-    }, 1000);
+    // Mantener el botón con su diseño original sin cambiar
     
     chatPanel.style.display = 'none';
     minimizedContainer.style.display = 'none';
