@@ -786,9 +786,13 @@ Contenido: [Error al extraer contenido detallado]
       }
       
       #aipi-toggle-button {
-        min-width: 56px;
-        height: 56px;
-        border-radius: 28px;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+        min-height: 48px;
+        max-width: 48px;
+        max-height: 48px;
+        border-radius: 24px;
         background-color: ${config.themeColor};
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         display: flex;
