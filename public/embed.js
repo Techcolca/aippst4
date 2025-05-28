@@ -786,15 +786,12 @@ Contenido: [Error al extraer contenido detallado]
       }
       
       #aipi-toggle-button {
-        width: 48px;
-        height: 48px;
-        min-width: 48px;
-        min-height: 48px;
-        max-width: 48px;
-        max-height: 48px;
-        border-radius: 24px;
+        width: auto;
+        height: 44px;
+        min-height: 44px;
+        border-radius: 22px;
         background-color: ${config.themeColor};
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -804,13 +801,13 @@ Contenido: [Error al extraer contenido detallado]
         color: white;
         z-index: 999999;
         position: relative;
-        padding: 0 16px;
+        padding: 10px 16px;
         font-family: ${getFontFamily()};
         font-size: 14px;
         font-weight: 600;
         white-space: nowrap;
-        overflow: hidden;
-        animation: aipi-pulse 2s infinite;
+        overflow: visible;
+        animation: none;
       }
       
       #aipi-toggle-button:hover {
@@ -840,15 +837,11 @@ Contenido: [Error al extraer contenido detallado]
       
       .aipi-button-text {
         margin-left: 8px;
-        opacity: 0;
-        max-width: 0;
-        transition: all 0.3s ease;
-        overflow: hidden;
-      }
-      
-      #aipi-toggle-button:hover .aipi-button-text {
         opacity: 1;
-        max-width: 150px;
+        max-width: none;
+        transition: all 0.3s ease;
+        overflow: visible;
+        font-weight: 600;
       }
       
       .aipi-notification-dot {
