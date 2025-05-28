@@ -31,6 +31,8 @@
   let siteContentScanned = false;
   let currentPageContent = "";
   let pageTitle = "";
+  let currentTextIndex = 0;
+  let textRotationInterval = null;
   
   // Initialize widget
   function init() {
@@ -784,25 +786,77 @@ Contenido: [Error al extraer contenido detallado]
       }
       
       #aipi-toggle-button {
-        width: 56px;
+        min-width: 56px;
         height: 56px;
-        border-radius: 50%;
+        border-radius: 28px;
         background-color: ${config.themeColor};
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.3s, background-color 0.3s;
+        transition: all 0.3s ease;
         border: none;
         color: white;
         z-index: 999999;
         position: relative;
+        padding: 0 16px;
+        font-family: ${getFontFamily()};
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        animation: aipi-pulse 2s infinite;
       }
       
       #aipi-toggle-button:hover {
-        transform: scale(1.05);
+        transform: translateY(-3px) scale(1.05);
         background-color: ${adjustColor(config.themeColor, -20)};
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        animation: none;
+      }
+      
+      @keyframes aipi-pulse {
+        0%, 100% {
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        50% {
+          box-shadow: 0 4px 20px ${config.themeColor}40, 0 0 0 8px ${config.themeColor}20;
+        }
+      }
+      
+      @keyframes aipi-bounce {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      
+      .aipi-button-text {
+        margin-left: 8px;
+        opacity: 0;
+        max-width: 0;
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+      
+      #aipi-toggle-button:hover .aipi-button-text {
+        opacity: 1;
+        max-width: 150px;
+      }
+      
+      .aipi-notification-dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 12px;
+        height: 12px;
+        background-color: #ef4444;
+        border-radius: 50%;
+        border: 2px solid white;
+        animation: aipi-bounce 1s infinite;
       }
       
       /* Estilos para el botón de acceso en modo pantalla completa */
@@ -931,9 +985,10 @@ Contenido: [Error al extraer contenido detallado]
       
       <button id="aipi-toggle-button">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
+        <span class="aipi-button-text">¡Hablemos!</span>
+        <div class="aipi-notification-dot"></div>
       </button>
     `;
     
@@ -1004,6 +1059,36 @@ Contenido: [Error al extraer contenido detallado]
     });
   }
   
+  // Textos dinámicos para el botón
+  const dynamicTexts = [
+    "¡Hablemos!",
+    "¿Necesitas ayuda?",
+    "¡Pregúntame!",
+    "Estoy aquí 👋",
+    "¡Chatea conmigo!",
+    "¿Alguna duda?",
+    "¡Te ayudo!"
+  ];
+  
+  // Función para rotar textos del botón
+  function startTextRotation() {
+    const buttonText = document.querySelector('.aipi-button-text');
+    if (!buttonText) return;
+    
+    textRotationInterval = setInterval(() => {
+      if (!isOpen) { // Solo rotar si el widget está cerrado
+        currentTextIndex = (currentTextIndex + 1) % dynamicTexts.length;
+        buttonText.textContent = dynamicTexts[currentTextIndex];
+        
+        // Agregar una pequeña animación al cambiar el texto
+        buttonText.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          buttonText.style.transform = 'scale(1)';
+        }, 150);
+      }
+    }, 3000); // Cambiar texto cada 3 segundos
+  }
+  
   // Attach event listeners
   function attachEventListeners() {
     const toggleButton = document.getElementById('aipi-toggle-button');
@@ -1053,6 +1138,11 @@ Contenido: [Error al extraer contenido detallado]
       toggleButton.style.cursor = 'pointer';
       
       console.log('AIPPS Widget: Eventos configurados - listo para usar');
+      
+      // Iniciar rotación de textos después de un breve delay
+      setTimeout(() => {
+        startTextRotation();
+      }, 2000);
     } else {
       console.error('AIPPS Widget: No se encontró el botón principal');
     }
@@ -1146,13 +1236,19 @@ Contenido: [Error al extraer contenido detallado]
     }
     
     // Para widgets tipo bubble (comportamiento original)
-    // Update toggle button icon
+    // Update toggle button icon and text
     toggleButton.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
+      <span class="aipi-button-text">Cerrar</span>
     `;
+    
+    // Detener rotación de textos cuando está abierto
+    if (textRotationInterval) {
+      clearInterval(textRotationInterval);
+    }
     
     if (isMinimized) {
       maximizeWidget();
@@ -1196,13 +1292,19 @@ Contenido: [Error al extraer contenido detallado]
     }
     
     // Para widgets tipo bubble (comportamiento original)
-    // Update toggle button icon
+    // Update toggle button icon and restart text rotation
     toggleButton.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
       </svg>
+      <span class="aipi-button-text">${dynamicTexts[currentTextIndex]}</span>
+      <div class="aipi-notification-dot"></div>
     `;
+    
+    // Reiniciar rotación de textos cuando se cierra
+    setTimeout(() => {
+      startTextRotation();
+    }, 1000);
     
     chatPanel.style.display = 'none';
     minimizedContainer.style.display = 'none';

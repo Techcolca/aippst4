@@ -82,8 +82,22 @@
       }
       
       .aipi-form-button:hover {
-        transform: translateY(-2px);
+        transform: translateY(-2px) scale(1.02);
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        animation: none;
+      }
+      
+      @keyframes aipi-form-pulse {
+        0%, 100% {
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        }
+        50% {
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25), 0 0 0 6px rgba(74, 144, 226, 0.2);
+        }
+      }
+      
+      .aipi-form-button {
+        animation: aipi-form-pulse 3s infinite;
       }
       
       .aipi-form-button svg {
