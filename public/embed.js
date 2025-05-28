@@ -1034,11 +1034,8 @@ Contenido: [Error al extraer contenido detallado]
       toggleButton.style.pointerEvents = 'auto';
       toggleButton.style.position = 'relative';
       
-      // Probar clic programático para verificar que funciona
-      setTimeout(() => {
-        console.log('AIPPS Widget: Probando clic programático...');
-        toggleButton.click();
-      }, 2000);
+      // Eliminar la prueba automática de clic ya que funciona
+      console.log('AIPPS Widget: Widget configurado y listo para usar');
     } else {
       console.error('AIPPS Widget: No se encontró el botón principal');
     }

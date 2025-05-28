@@ -1,0 +1,17 @@
+JQMIGRATE: Migrate is installed, version 3.4.1
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:94 AIPPS Widget Debug: Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:94 AIPPS Widget Debug: Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:358 AIPI: Contenido de la página escaneado con éxito
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:987 AIPPS Widget: Adjuntando eventos... Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1028 AIPPS Widget: Evento de clic adjuntado al botón principal
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1029 AIPPS Widget: Elemento del botón: <button id=​"aipi-toggle-button" style=​"z-index:​ 999999;​ pointer-events:​ auto;​ position:​ relative;​">​…​</button>​flex
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1030 AIPPS Widget: Estilo del botón: CSSStyleDeclaration
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:358 AIPI: Contenido de la página escaneado con éxito
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:987 AIPPS Widget: Adjuntando eventos... Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1028 AIPPS Widget: Evento de clic adjuntado al botón principal
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1029 AIPPS Widget: Elemento del botón: <button id=​"aipi-toggle-button" style=​"z-index:​ 999999;​ pointer-events:​ auto;​ position:​ relative;​">​…​</button>​flex
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1030 AIPPS Widget: Estilo del botón: CSSStyleDeclaration
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1039 AIPPS Widget: Probando clic programático...
+2embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1001 AIPPS Widget: Clic en botón principal detectado
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1039 AIPPS Widget: Probando clic programático...
+2embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1001 AIPPS Widget: Clic en botón principal detectado
