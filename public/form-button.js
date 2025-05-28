@@ -110,7 +110,7 @@
       /* Posiciones */
       .aipi-form-button.bottom-right {
         bottom: 20px;
-        right: 20px;
+        right: 16px;
       }
       
       .aipi-form-button.bottom-left {

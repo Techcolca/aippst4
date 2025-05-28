@@ -850,7 +850,7 @@ Contenido: [Error al extraer contenido detallado]
       #aipi-fullscreen-button {
         position: fixed;
         bottom: 24px;
-        right: 24px;
+        right: 16px;
         background-color: ${config.themeColor};
         color: white;
         display: flex;
@@ -861,6 +861,8 @@ Contenido: [Error al extraer contenido detallado]
         cursor: pointer;
         z-index: 999999;
         transition: all 0.3s ease;
+        max-width: calc(100vw - 32px);
+        overflow: visible;
       }
       
       #aipi-fullscreen-button:hover {
@@ -982,6 +984,8 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.top = 'auto';
         // Asegurar que no se salga de la pantalla
         widgetInstance.style.maxWidth = 'calc(100vw - 40px)';
+        // Asegurar que el botón sea visible
+        widgetInstance.style.transform = 'translateX(-10px)';
         break;
     }
     

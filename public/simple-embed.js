@@ -501,6 +501,8 @@
         padding: 12px 20px;
         border: none;
         outline: none;
+        max-width: calc(100vw - 32px);
+        overflow: visible;
       }
       
       #aipi-chat-button:hover {
@@ -659,7 +661,7 @@
     switch (position) {
       case 'bottom-right':
         style.bottom = '20px';
-        style.right = '20px';
+        style.right = '16px';
         break;
       case 'bottom-left':
         style.bottom = '20px';
