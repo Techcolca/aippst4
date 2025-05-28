@@ -125,7 +125,26 @@ export default function EditIntegration() {
       const widgetType = integration.widgetType || "bubble";
       const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
       
-      setScriptExample(`<script src="https://api.aipi.example.com/${scriptFile}?key=${integration.apiKey}"></script>`);
+      setScriptExample(`<!-- Código de integración AIPPS - Opciones de posición disponibles -->
+<!-- Para cambiar la posición, agrega data-position="posicion:distancia" -->
+<!-- Posiciones: bottom-right, bottom-left, top-right, top-left -->
+<!-- Ejemplo: data-position="bottom-left:20px" -->
+<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" 
+  data-position="bottom-right:15px">
+</script>
+
+<!-- OPCIONES DE POSICIÓN: Copia una de estas líneas en lugar de la anterior -->
+<!-- Esquina inferior derecha (por defecto): -->
+<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="bottom-right:15px"></script> -->
+
+<!-- Esquina inferior izquierda: -->
+<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="bottom-left:15px"></script> -->
+
+<!-- Esquina superior derecha: -->
+<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="top-right:15px"></script> -->
+
+<!-- Esquina superior izquierda: -->
+<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="top-left:15px"></script> -->`)
       
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
@@ -475,6 +494,7 @@ export default function EditIntegration() {
                 <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Instrucciones de integración</h3>
                 <ol className="list-decimal list-inside text-sm text-blue-700 dark:text-blue-300 space-y-2">
                   <li>Copia el código de integración mostrado arriba.</li>
+                  <li>Para cambiar la posición del widget, selecciona una de las opciones comentadas en el código.</li>
                   <li>En tu sitio web, abre el archivo HTML donde deseas que aparezca el chat (por ejemplo, index.html).</li>
                   <li>Localiza la etiqueta de cierre <code>&lt;/body&gt;</code> cerca del final del archivo.</li>
                   <li>Pega el código justo antes de esta etiqueta.</li>
@@ -488,6 +508,22 @@ export default function EditIntegration() {
                   <li>Guarda los cambios y actualiza tu sitio web.</li>
                   <li>El widget de chat aparecerá automáticamente en la posición seleccionada.</li>
                 </ol>
+                
+                <div className="mt-4 p-3 bg-green-50 dark:bg-green-900 rounded border border-green-200 dark:border-green-800">
+                  <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Control de Posición del Widget</h4>
+                  <p className="text-sm text-green-800 dark:text-green-200 mb-2">
+                    El código incluye opciones para posicionar el widget exactamente donde lo necesites:
+                  </p>
+                  <ul className="text-sm text-green-700 dark:text-green-300 list-disc list-inside space-y-1">
+                    <li><strong>data-position="bottom-right:15px"</strong> - Esquina inferior derecha</li>
+                    <li><strong>data-position="bottom-left:15px"</strong> - Esquina inferior izquierda</li>
+                    <li><strong>data-position="top-right:15px"</strong> - Esquina superior derecha</li>
+                    <li><strong>data-position="top-left:15px"</strong> - Esquina superior izquierda</li>
+                  </ul>
+                  <p className="text-sm text-green-800 dark:text-green-200 mt-2">
+                    Puedes ajustar la distancia cambiando "15px" por otro valor (ej: "20px", "30px").
+                  </p>
+                </div>
                 
                 <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 rounded border border-yellow-200 dark:border-yellow-800">
                   <p className="text-sm text-yellow-800 dark:text-yellow-200">
