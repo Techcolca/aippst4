@@ -39,9 +39,24 @@
     const currentScript = scriptTags[scriptTags.length - 1];
     const scriptSrc = currentScript.src;
     
-    // Extract API key from script src
-    const urlParams = new URLSearchParams(scriptSrc.split('?')[1]);
-    config.apiKey = urlParams.get('key');
+    // Extract API key from script src with better error handling
+    try {
+      const urlParts = scriptSrc.split('?');
+      if (urlParts.length > 1) {
+        const urlParams = new URLSearchParams(urlParts[1]);
+        config.apiKey = urlParams.get('key');
+      }
+      
+      // Additional fallback: try to extract key from the URL directly
+      if (!config.apiKey) {
+        const keyMatch = scriptSrc.match(/[?&]key=([^&]+)/);
+        if (keyMatch) {
+          config.apiKey = keyMatch[1];
+        }
+      }
+    } catch (error) {
+      console.warn("Error extracting API key:", error);
+    }
     
     // Extract server URL from script src safely
     try {
