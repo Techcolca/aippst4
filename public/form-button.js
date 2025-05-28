@@ -16,14 +16,14 @@
     modalWidth: '600px',
     modalHeight: '800px',
   };
-
+  
   // Obtener configuración del script tag
   const scriptTag = document.getElementById('aipps-form-button');
   if (!scriptTag) {
     console.error('No se pudo encontrar la etiqueta script con ID "aipps-form-button"');
     return;
   }
-
+  
   // Mezclar la configuración predeterminada con los atributos data- del script
   const config = {
     ...DEFAULT_CONFIG,
@@ -38,16 +38,16 @@
     modalWidth: scriptTag.getAttribute('data-modal-width') || DEFAULT_CONFIG.modalWidth,
     modalHeight: scriptTag.getAttribute('data-modal-height') || DEFAULT_CONFIG.modalHeight,
   };
-
+  
   // Si no se proporcionó un ID de formulario, mostrar un error
   if (!config.formId) {
     console.error('Se requiere un ID de formulario (data-form-id)');
     return;
   }
-
+  
   // Inicializar cuando el DOM esté listo
   document.addEventListener('DOMContentLoaded', initialize);
-
+  
   /**
    * Inicializar el botón flotante
    */
@@ -55,7 +55,7 @@
     addStyles();
     createFloatingButton();
   }
-
+  
   /**
    * Agrega los estilos CSS necesarios para el botón flotante
    */
@@ -80,13 +80,13 @@
         white-space: nowrap;
         text-overflow: ellipsis;
       }
-
+      
       .aipi-form-button:hover {
         transform: translateY(-2px) scale(1.02);
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
         animation: none;
       }
-
+      
       @keyframes aipi-form-pulse {
         0%, 100% {
           box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
@@ -95,59 +95,59 @@
           box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25), 0 0 0 6px rgba(74, 144, 226, 0.2);
         }
       }
-
+      
       .aipi-form-button {
         animation: aipi-form-pulse 3s infinite;
       }
-
+      
       .aipi-form-button svg {
         margin-right: 8px;
         min-width: 16px; /* Evita que el svg se comprima */
       }
-
+      
       /* Tamaños */
       .aipi-form-button.small {
         padding: 6px 12px;
         font-size: 14px;
       }
-
+      
       .aipi-form-button.medium {
         padding: 8px 16px;
         font-size: 16px;
       }
-
+      
       .aipi-form-button.large {
         padding: 12px 24px;
         font-size: 18px;
       }
-
+      
       /* Posiciones */
       .aipi-form-button.bottom-right {
         bottom: 20px;
         right: 16px;
       }
-
+      
       .aipi-form-button.bottom-left {
         bottom: 20px;
         left: 20px;
       }
-
+      
       .aipi-form-button.bottom-center {
         bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
       }
-
+      
       .aipi-form-button.top-right {
         top: 20px;
         right: 20px;
       }
-
+      
       .aipi-form-button.top-left {
         top: 20px;
         left: 20px;
       }
-
+      
       /* Nuevas posiciones centradas */
       .aipi-form-button.bottom-center,
       .aipi-form-button.bottom-center-mobile {
@@ -158,7 +158,7 @@
         margin-right: 0 !important;
         text-align: center !important;
       }
-
+      
       .aipi-form-button.top-center,
       .aipi-form-button.top-center-mobile {
         top: 20px;
@@ -168,7 +168,7 @@
         margin-right: 0 !important;
         text-align: center !important;
       }
-
+      
       /* Forzar centrado completo en posicionamiento absoluto */
       [data-mobile-view="true"] {
         width: auto !important;
@@ -178,7 +178,7 @@
         transform: translateX(-50%) !important;
         text-align: center !important;
       }
-
+      
       /* Modal */
       .aipi-form-modal {
         display: none;
@@ -192,7 +192,7 @@
         align-items: center;
         justify-content: center;
       }
-
+      
       .aipi-form-modal-content {
         background-color: white;
         border-radius: 8px;
@@ -207,7 +207,7 @@
         display: flex;
         flex-direction: column;
       }
-
+      
       /* Panel deslizante completamente optimizado para móviles */
       .aipi-form-slidein {
         display: none;
@@ -223,11 +223,11 @@
         transition: transform 0.3s ease;
         background-color: white;
       }
-
+      
       .aipi-form-slidein.active {
         transform: translateX(0);
       }
-
+      
       .aipi-form-slidein-content {
         background-color: white;
         width: 100%;
@@ -237,7 +237,7 @@
         display: flex;
         flex-direction: column;
       }
-
+      
       .aipi-form-slidein-close {
         position: fixed;
         top: 10px;
@@ -253,11 +253,11 @@
         z-index: 10001;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       }
-
+      
       .aipi-form-slidein-close:hover {
         background: rgba(0, 0, 0, 0.25);
       }
-
+      
       .aipi-form-slidein-header {
         position: sticky;
         top: 0;
@@ -271,13 +271,13 @@
         align-items: center;
         z-index: 1;
       }
-
+      
       .aipi-form-slidein-title {
         font-weight: bold;
         font-size: 16px;
         margin: 0;
       }
-
+      
       /* Iframe mejorado para móviles */
       .aipi-form-iframe {
         width: 100%;
@@ -287,7 +287,7 @@
         border: none;
         display: block;
       }
-
+      
       /* Media queries específicas para diferentes dispositivos */
       @media (max-width: 480px) {
         .aipi-form-button {
@@ -295,18 +295,18 @@
           padding: 8px 14px;
           max-width: calc(100vw - 20px); /* Más espacio en pantallas muy pequeñas */
         }
-
+        
         .aipi-form-slidein {
           width: 100%;
           max-width: 100%; /* En móviles ocupa toda la pantalla */
         }
-
+        
         .aipi-form-modal-content {
           max-width: 98%;
           margin: 0 4px;
           border-radius: 4px; /* Bordes menos pronunciados */
         }
-
+        
         /* Ajuste para TODOS los botones en móviles - SIEMPRE centrados */
         .aipi-form-button {
           min-width: 60% !important;
@@ -320,17 +320,17 @@
           text-align: center !important;
         }
       }
-
+      
       @media (min-width: 481px) and (max-width: 992px) {
         .aipi-form-slidein {
           max-width: 90%; /* En tablets ocupa casi toda la pantalla */
         }
-
+        
         .aipi-form-modal-content {
           width: 550px;
           max-width: 95%;
         }
-
+        
         /* Ajuste para TODOS los botones en tablets - SIEMPRE centrados */
         .aipi-form-button {
           min-width: auto !important;
@@ -345,44 +345,44 @@
     `;
     document.head.appendChild(styleElement);
   }
-
+  
   /**
    * Crea y agrega el botón flotante al DOM
    */
   function createFloatingButton() {
     const button = document.createElement('button');
-
+    
     // Detectar si estamos en móvil o tablet para forzar posición centrada
     const isMobileOrTablet = window.innerWidth <= 992; // Umbral más alto para asegurar compatibilidad
-
+    
     // SIEMPRE aplicar clase para la posición centrada en dispositivos móviles/tablets
     let positionClass = config.position;
-
+    
     if (isMobileOrTablet) {
       // Forzar posición centrada en móviles/tablets, independientemente de la configuración
       positionClass = config.position.includes('top') ? 'top-center-mobile' : 'bottom-center-mobile';
       button.setAttribute('data-mobile-view', 'true');
     }
-
+    
     button.className = `aipps-form-button ${positionClass} ${config.size}`;
     button.style.backgroundColor = config.color;
     button.style.color = scriptTag.getAttribute('data-text-color') || '#FFFFFF';
     button.style.borderRadius = config.radius;
-
+    
     // Agregar ícono si se especificó
     if (config.icon && config.icon !== 'none') {
       button.innerHTML = getIconSvg(config.icon) + config.text;
     } else {
       button.textContent = config.text;
     }
-
+    
     // Para dispositivos móviles, aplicar posicionamiento directamente con estilos en línea para asegurar que funcione
     if (isMobileOrTablet) {
       button.style.position = 'fixed';
       button.style.left = '50%';
       button.style.transform = 'translateX(-50%)';
       button.style.zIndex = '9999';
-
+      
       if (positionClass.includes('top')) {
         button.style.top = '20px';
       } else {
@@ -393,16 +393,16 @@
       button.style.minWidth = '200px';
       button.style.textAlign = 'center';
     }
-
+    
     // Agregar evento de clic
     button.addEventListener('click', showForm);
-
+    
     // Agregar al DOM
     document.body.appendChild(button);
-
+    
     // Agregar listener para redimensionamiento de ventana
     window.addEventListener('resize', handleResize);
-
+    
     function handleResize() {
       const newIsMobileOrTablet = window.innerWidth <= 992;
       if (newIsMobileOrTablet !== isMobileOrTablet) {
@@ -411,7 +411,7 @@
       }
     }
   }
-
+  
   /**
    * Obtiene el SVG para el ícono especificado
    */
@@ -422,10 +422,10 @@
       order: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>',
       survey: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polygon points="10 9 9 9 8 9 9 9"></polygon></svg>',
     };
-
+    
     return icons[icon] || '';
   }
-
+  
   /**
    * Muestra el formulario según el tipo de visualización configurado
    */
@@ -442,7 +442,7 @@
         if (window.confirm('Se abrirá el formulario en una nueva ventana. ¿Continuar?')) {
           // Intentar abrir en nueva pestaña primero (puede ser bloqueado por el navegador)
           const newWindow = window.open(getFormUrl(), '_blank');
-
+          
           // Si fue bloqueado o falló, redirigir en la misma ventana
           if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
             window.location.href = getFormUrl();
@@ -453,7 +453,7 @@
         showModalForm();
     }
   }
-
+  
   /**
    * Obtiene la URL del formulario
    */
@@ -463,7 +463,7 @@
     const origin = new URL(scriptSrc).origin;
     return `${origin}/forms/${config.formId}/view`;
   }
-
+  
   /**
    * Muestra el formulario en una ventana modal
    */
@@ -474,10 +474,10 @@
     if (existingModal) {
       existingModal.remove();
     }
-
+    
     // Detectar si estamos en móvil o tablet para optimizar la visualización
     const isMobileOrTablet = window.innerWidth <= 768;
-
+    
     // Crear nuevo modal desde cero
     const modal = document.createElement('div');
     modal.className = 'aipi-form-modal';
@@ -491,12 +491,12 @@
     modal.style.display = 'flex';
     modal.style.alignItems = 'center';
     modal.style.justifyContent = 'center';
-
+    
     // Contenedor del contenido del modal (totalmente responsive)
     const modalContent = document.createElement('div');
     modalContent.style.backgroundColor = 'white';
     modalContent.style.borderRadius = isMobileOrTablet ? '6px' : '8px';
-
+    
     // En dispositivos móviles y tablets, ignoramos el ancho configurado y usamos un valor óptimo
     if (isMobileOrTablet) {
       modalContent.style.width = '98%';
@@ -506,7 +506,7 @@
       modalContent.style.width = config.modalWidth || '600px';
       modalContent.style.maxWidth = '94%';
     }
-
+    
     modalContent.style.height = 'auto';
     modalContent.style.maxHeight = isMobileOrTablet ? '98vh' : '90vh'; // Mayor espacio en móviles
     modalContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
@@ -514,7 +514,7 @@
     modalContent.style.flexDirection = 'column';
     modalContent.style.overflow = 'hidden'; // Evitamos scroll en el contenedor principal
     modalContent.style.margin = isMobileOrTablet ? '4px' : '10px'; // Margen reducido para dispositivos pequeños
-
+    
     // Encabezado del modal con título y botón de cierre
     const modalHeader = document.createElement('div');
     modalHeader.style.padding = '15px';
@@ -525,13 +525,13 @@
     modalHeader.style.backgroundColor = '#f8f9fa';
     modalHeader.style.borderTopLeftRadius = '8px';
     modalHeader.style.borderTopRightRadius = '8px';
-
+    
     const modalTitle = document.createElement('h3');
     modalTitle.style.margin = '0';
     modalTitle.style.fontSize = '16px';
     modalTitle.style.fontWeight = 'bold';
     modalTitle.textContent = config.text || 'Formulario';
-
+    
     const closeButton = document.createElement('button');
     closeButton.style.background = 'none';
     closeButton.style.border = 'none';
@@ -539,16 +539,16 @@
     closeButton.style.padding = '5px';
     closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
     closeButton.addEventListener('click', closeModal);
-
+    
     modalHeader.appendChild(modalTitle);
     modalHeader.appendChild(closeButton);
-
+    
     // Contenedor del iframe con scroll propio
     const iframeContainer = document.createElement('div');
     iframeContainer.style.flex = '1';
     iframeContainer.style.overflow = 'auto'; // Permitir scroll dentro del contenedor
     iframeContainer.style.minHeight = '200px'; // Altura mínima para que se vea algo
-
+    
     // Crear iframe para cargar el formulario (con mejorada responsividad)
     const iframe = document.createElement('iframe');
     iframe.src = getFormUrl();
@@ -561,29 +561,29 @@
     iframe.setAttribute('allowtransparency', 'true');
     iframe.setAttribute('scrolling', 'yes'); // Permitir scroll
     iframe.style.overflow = 'auto'; // Asegurar que tiene scroll
-
+    
     // Asignar un ID único para fácil acceso
     const iframeId = 'aipi-form-iframe-' + Date.now();
     iframe.id = iframeId;
-
+    
     iframeContainer.appendChild(iframe);
-
+    
     // Añadir los elementos al DOM
     modalContent.appendChild(modalHeader);
     modalContent.appendChild(iframeContainer);
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
-
+    
     // Prevenir scroll del body cuando el modal está abierto
     document.body.style.overflow = 'hidden';
-
+    
     // Permitir cerrar el modal al hacer clic fuera
     modal.addEventListener('click', function(e) {
       if (e.target === modal) {
         closeModal();
       }
     });
-
+    
     // Función para cerrar el modal
     function closeModal() {
       modal.style.display = 'none';
@@ -592,11 +592,11 @@
         modal.remove(); // Eliminamos completamente el modal del DOM
       }, 100);
     }
-
+    
     // Exponer la función de cierre globalmente para permitir cerrar desde el iframe
     window.closeAipiFormModal = closeModal;
   }
-
+  
   /**
    * Muestra el formulario en un panel deslizante (completamente reescrito para mejor responsividad)
    */
@@ -606,10 +606,10 @@
     if (existingSlideIn) {
       existingSlideIn.remove();
     }
-
+    
     // Detectar si estamos en móvil o tablet para optimizar la visualización
     const isMobileOrTablet = window.innerWidth <= 768;
-
+    
     // Crear nuevo panel deslizante desde cero
     const slideIn = document.createElement('div');
     slideIn.className = 'aipi-form-slidein';
@@ -618,7 +618,7 @@
     slideIn.style.right = '0';
     slideIn.style.bottom = '0';
     slideIn.style.width = '100%';
-
+    
     // En móviles, ocupamos toda la pantalla; en tablets y desktop respetamos un ancho máximo
     if (isMobileOrTablet) {
       slideIn.style.maxWidth = window.innerWidth < 480 ? '100%' : '90%';
@@ -626,7 +626,7 @@
     } else {
       slideIn.style.maxWidth = '450px'; // Ancho máximo para PC
     }
-
+    
     slideIn.style.backgroundColor = 'white';
     slideIn.style.boxShadow = '-2px 0 10px rgba(0,0,0,0.2)';
     slideIn.style.transform = 'translateX(100%)';
@@ -635,7 +635,7 @@
     slideIn.style.display = 'flex';
     slideIn.style.flexDirection = 'column';
     slideIn.style.height = '100%';
-
+    
     // Encabezado del panel deslizante
     const slideInHeader = document.createElement('div');
     slideInHeader.style.padding = '15px';
@@ -647,13 +647,13 @@
     slideInHeader.style.position = 'sticky';
     slideInHeader.style.top = '0';
     slideInHeader.style.zIndex = '1';
-
+    
     const slideInTitle = document.createElement('h3');
     slideInTitle.style.margin = '0';
     slideInTitle.style.fontSize = '16px';
     slideInTitle.style.fontWeight = 'bold';
     slideInTitle.textContent = config.text || 'Formulario';
-
+    
     const closeButton = document.createElement('button');
     closeButton.style.background = 'none';
     closeButton.style.border = 'none';
@@ -661,16 +661,16 @@
     closeButton.style.padding = '5px';
     closeButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
     closeButton.addEventListener('click', closeSlideIn);
-
+    
     slideInHeader.appendChild(slideInTitle);
     slideInHeader.appendChild(closeButton);
-
+    
     // Contenedor del contenido (iframe)
     const contentContainer = document.createElement('div');
     contentContainer.style.flex = '1';
     contentContainer.style.overflow = 'auto';
     contentContainer.style.position = 'relative';
-
+    
     // Iframe para el contenido
     const iframe = document.createElement('iframe');
     iframe.src = getFormUrl();
@@ -681,13 +681,13 @@
     iframe.setAttribute('frameborder', '0');
     iframe.setAttribute('allowtransparency', 'true');
     iframe.setAttribute('scrolling', 'yes');
-
+    
     // Ensamblar todo
     contentContainer.appendChild(iframe);
     slideIn.appendChild(slideInHeader);
     slideIn.appendChild(contentContainer);
     document.body.appendChild(slideIn);
-
+    
     // Crear overlay para cerrar al hacer clic fuera en dispositivos móviles
     const overlay = document.createElement('div');
     overlay.style.position = 'fixed';
@@ -702,7 +702,7 @@
     overlay.style.display = 'none';
     overlay.addEventListener('click', closeSlideIn);
     document.body.appendChild(overlay);
-
+    
     // Mostrar el panel deslizante
     setTimeout(() => {
       overlay.style.display = 'block';
@@ -711,16 +711,16 @@
       }, 10);
       slideIn.style.transform = 'translateX(0)';
     }, 10);
-
+    
     // Restringir el scroll en el body
     document.body.style.overflow = 'hidden';
-
+    
     // Función para cerrar
     function closeSlideIn() {
       slideIn.style.transform = 'translateX(100%)';
       overlay.style.opacity = '0';
       document.body.style.overflow = '';
-
+      
       setTimeout(() => {
         overlay.style.display = 'none';
         // Opcional: eliminar completamente los elementos del DOM
@@ -730,7 +730,7 @@
         }, 300);
       }, 300);
     }
-
+    
     // Exponer globalmente para que se pueda cerrar desde el iframe si es necesario
     window.closeAipiFormSlideIn = closeSlideIn;
   }

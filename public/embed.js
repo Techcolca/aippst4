@@ -807,8 +807,6 @@ Contenido: [Error al extraer contenido detallado]
         white-space: nowrap;
         overflow: hidden;
         animation: aipi-pulse 2s infinite;
-        max-width: calc(100vw - 32px);
-        word-break: break-word;
       }
       
       #aipi-toggle-button:hover {
@@ -1040,16 +1038,16 @@ Contenido: [Error al extraer contenido detallado]
         break;
       case 'bottom-right':
       default:
-        // Ajuste mejorado para asegurar visibilidad completa
-        const rightOffset = window.innerWidth < 768 ? '10px' : '16px';
+        // Usar max-width para responsividad
+        const rightOffset = window.innerWidth < 768 ? '15px' : '20px';
         widgetInstance.style.bottom = '20px';
         widgetInstance.style.right = rightOffset;
         widgetInstance.style.left = 'auto';
         widgetInstance.style.top = 'auto';
-        // Asegurar que no se salga de la pantalla con más margen
-        widgetInstance.style.maxWidth = 'calc(100vw - 32px)';
-        // Eliminar transform que podría causar problemas
-        widgetInstance.style.transform = 'none';
+        // Asegurar que no se salga de la pantalla
+        widgetInstance.style.maxWidth = 'calc(100vw - 40px)';
+        // Asegurar que el botón sea visible
+        widgetInstance.style.transform = 'translateX(-10px)';
         break;
     }
     
