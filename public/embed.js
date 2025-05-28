@@ -787,10 +787,10 @@ Contenido: [Error al extraer contenido detallado]
       
       #aipi-toggle-button {
         width: auto;
-        height: 44px;
-        min-height: 44px;
-        border-radius: 22px;
-        background-color: ${config.themeColor};
+        height: 36px;
+        min-height: 36px;
+        border-radius: 18px;
+        background-color: #ff7b2a;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
@@ -801,9 +801,9 @@ Contenido: [Error al extraer contenido detallado]
         color: white;
         z-index: 999999;
         position: relative;
-        padding: 10px 16px;
+        padding: 8px 14px;
         font-family: ${getFontFamily()};
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         white-space: nowrap;
         overflow: visible;
@@ -811,10 +811,9 @@ Contenido: [Error al extraer contenido detallado]
       }
       
       #aipi-toggle-button:hover {
-        transform: translateY(-3px) scale(1.05);
-        background-color: ${adjustColor(config.themeColor, -20)};
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-        animation: none;
+        transform: translateY(-2px);
+        background-color: #e66b1f;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
       
       @keyframes aipi-pulse {
@@ -836,12 +835,13 @@ Contenido: [Error al extraer contenido detallado]
       }
       
       .aipi-button-text {
-        margin-left: 8px;
+        margin-left: 6px;
         opacity: 1;
         max-width: none;
         transition: all 0.3s ease;
         overflow: visible;
         font-weight: 600;
+        font-size: 13px;
       }
       
       .aipi-notification-dot {
@@ -981,11 +981,10 @@ Contenido: [Error al extraer contenido detallado]
       </div>
       
       <button id="aipi-toggle-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
           <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
         </svg>
         <span class="aipi-button-text">AIPI Assistant</span>
-        <div class="aipi-notification-dot"></div>
       </button>
     `;
     
