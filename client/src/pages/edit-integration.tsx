@@ -187,6 +187,22 @@ export default function EditIntegration() {
       ...prev,
       position: value
     }));
+    
+    // Actualizar el código de integración inmediatamente
+    if (integration?.apiKey) {
+      const widgetType = formData.widgetType || "bubble";
+      const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
+      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${value}:15px"></script>`);
+      
+      if (widgetType === "fullscreen") {
+        setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->
+<script src="${window.location.origin}/static/chatgpt-embed.js?key=${integration.apiKey}" 
+  data-theme-color="${formData.themeColor || '#4f46e5'}"
+  data-position="${value}:15px"
+  data-title="AIPPS Asistente"
+></script>`);
+      }
+    }
   };
   
   const handleWidgetTypeChange = (value: string) => {
@@ -194,6 +210,22 @@ export default function EditIntegration() {
       ...prev,
       widgetType: value
     }));
+    
+    // Actualizar el código de integración inmediatamente
+    if (integration?.apiKey) {
+      const position = formData.position || "bottom-right";
+      const scriptFile = value === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
+      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${position}:15px"></script>`);
+      
+      if (value === "fullscreen") {
+        setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->
+<script src="${window.location.origin}/static/chatgpt-embed.js?key=${integration.apiKey}" 
+  data-theme-color="${formData.themeColor || '#4f46e5'}"
+  data-position="${position}:15px"
+  data-title="AIPPS Asistente"
+></script>`);
+      }
+    }
   };
   
   const handleActiveChange = (checked: boolean) => {
@@ -492,18 +524,17 @@ export default function EditIntegration() {
                 </ol>
                 
                 <div className="mt-4 p-3 bg-green-50 dark:bg-green-900 rounded border border-green-200 dark:border-green-800">
-                  <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">🎯 Control de Posición del Widget</h4>
+                  <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">✨ Código Inteligente y Dinámico</h4>
                   <p className="text-sm text-green-800 dark:text-green-200 mb-2">
-                    El código incluye opciones para posicionar el widget exactamente donde lo necesites:
+                    <strong>¡El código se actualiza automáticamente!</strong> Cuando cambies la posición del widget usando el selector de arriba, el código de integración se actualiza instantáneamente para reflejar tu selección.
                   </p>
                   <ul className="text-sm text-green-700 dark:text-green-300 list-disc list-inside space-y-1">
-                    <li><strong>data-position="bottom-right:15px"</strong> - Esquina inferior derecha</li>
-                    <li><strong>data-position="bottom-left:15px"</strong> - Esquina inferior izquierda</li>
-                    <li><strong>data-position="top-right:15px"</strong> - Esquina superior derecha</li>
-                    <li><strong>data-position="top-left:15px"</strong> - Esquina superior izquierda</li>
+                    <li><strong>Posición actual:</strong> {formData.position || "bottom-right"}</li>
+                    <li><strong>Tipo de widget:</strong> {formData.widgetType === "fullscreen" ? "Pantalla completa" : "Flotante"}</li>
+                    <li><strong>Distancia del borde:</strong> 15px (puedes cambiar este valor en el código)</li>
                   </ul>
                   <p className="text-sm text-green-800 dark:text-green-200 mt-2">
-                    Puedes ajustar la distancia cambiando "15px" por otro valor (ej: "20px", "30px").
+                    💡 <strong>Tip:</strong> Solo copia y pega el código mostrado arriba - ya está optimizado para la configuración que seleccionaste.
                   </p>
                 </div>
                 
