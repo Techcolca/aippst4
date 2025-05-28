@@ -1028,6 +1028,17 @@ Contenido: [Error al extraer contenido detallado]
       console.log('AIPPS Widget: Evento de clic adjuntado al botón principal');
       console.log('AIPPS Widget: Elemento del botón:', toggleButton);
       console.log('AIPPS Widget: Estilo del botón:', window.getComputedStyle(toggleButton));
+      
+      // Forzar z-index y pointer-events directamente en el elemento
+      toggleButton.style.zIndex = '999999';
+      toggleButton.style.pointerEvents = 'auto';
+      toggleButton.style.position = 'relative';
+      
+      // Probar clic programático para verificar que funciona
+      setTimeout(() => {
+        console.log('AIPPS Widget: Probando clic programático...');
+        toggleButton.click();
+      }, 2000);
     } else {
       console.error('AIPPS Widget: No se encontró el botón principal');
     }
