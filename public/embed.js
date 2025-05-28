@@ -34,6 +34,13 @@
   
   // Initialize widget
   function init() {
+    // Verificar si el widget ya existe para evitar duplicados
+    if (document.getElementById('aipi-widget-container') || window.AIPPS_WIDGET_INITIALIZED) {
+      console.log('AIPPS Widget: Ya inicializado, evitando duplicación');
+      return;
+    }
+    window.AIPPS_WIDGET_INITIALIZED = true;
+    
     // Extract the API key from script tag using a more reliable method
     let scriptSrc = '';
     let foundApiKey = '';
