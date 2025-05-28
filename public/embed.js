@@ -994,7 +994,10 @@ Contenido: [Error al extraer contenido detallado]
     
     // Toggle widget open/close
     if (toggleButton) {
-      toggleButton.addEventListener('click', () => {
+      // Agregar múltiples eventos para asegurar que funcione
+      toggleButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         console.log('AIPPS Widget: Clic en botón principal detectado');
         if (isOpen) {
           closeWidget();
@@ -1002,7 +1005,29 @@ Contenido: [Error al extraer contenido detallado]
           openWidget();
         }
       });
+      
+      // También agregar evento de mousedown como respaldo
+      toggleButton.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('AIPPS Widget: Mousedown en botón principal detectado');
+      });
+      
+      // Agregar evento de touch para dispositivos móviles
+      toggleButton.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('AIPPS Widget: Touch en botón principal detectado');
+        if (isOpen) {
+          closeWidget();
+        } else {
+          openWidget();
+        }
+      });
+      
       console.log('AIPPS Widget: Evento de clic adjuntado al botón principal');
+      console.log('AIPPS Widget: Elemento del botón:', toggleButton);
+      console.log('AIPPS Widget: Estilo del botón:', window.getComputedStyle(toggleButton));
     } else {
       console.error('AIPPS Widget: No se encontró el botón principal');
     }
