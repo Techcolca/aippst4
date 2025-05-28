@@ -974,12 +974,23 @@ Contenido: [Error al extraer contenido detallado]
         break;
       case 'bottom-right':
       default:
+        // Usar max-width para responsividad
+        const rightOffset = window.innerWidth < 768 ? '15px' : '20px';
         widgetInstance.style.bottom = '20px';
-        widgetInstance.style.right = '20px';
+        widgetInstance.style.right = rightOffset;
         widgetInstance.style.left = 'auto';
         widgetInstance.style.top = 'auto';
+        // Asegurar que no se salga de la pantalla
+        widgetInstance.style.maxWidth = 'calc(100vw - 40px)';
         break;
     }
+    
+    // Agregar listener para cambios de tamaño de ventana
+    window.addEventListener('resize', () => {
+      if (widgetInstance) {
+        setWidgetPosition();
+      }
+    });
   }
   
   // Attach event listeners
