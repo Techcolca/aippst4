@@ -994,52 +994,36 @@ Contenido: [Error al extraer contenido detallado]
     
     // Toggle widget open/close
     if (toggleButton) {
-      // Agregar múltiples eventos para asegurar que funcione
-      toggleButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('AIPPS Widget: Clic en botón principal detectado');
-        console.log('AIPPS Widget: Estado actual isOpen:', isOpen);
-        console.log('AIPPS Widget: Ejecutando función openWidget...');
-        if (isOpen) {
-          console.log('AIPPS Widget: Cerrando widget...');
-          closeWidget();
-        } else {
-          console.log('AIPPS Widget: Abriendo widget...');
-          openWidget();
+      // Función para manejar el toggle
+      function handleToggle(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
         }
-      });
-      
-      // También agregar evento de mousedown como respaldo
-      toggleButton.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('AIPPS Widget: Mousedown en botón principal detectado');
-      });
-      
-      // Agregar evento de touch para dispositivos móviles
-      toggleButton.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('AIPPS Widget: Touch en botón principal detectado');
+        console.log('AIPPS Widget: Toggle ejecutado');
         if (isOpen) {
           closeWidget();
         } else {
           openWidget();
         }
-      });
+      }
       
-      console.log('AIPPS Widget: Evento de clic adjuntado al botón principal');
-      console.log('AIPPS Widget: Elemento del botón:', toggleButton);
-      console.log('AIPPS Widget: Estilo del botón:', window.getComputedStyle(toggleButton));
+      // Usar onclick directo para evitar conflictos
+      toggleButton.onclick = handleToggle;
+      
+      // También agregar eventos múltiples
+      toggleButton.addEventListener('click', handleToggle, true);
+      toggleButton.addEventListener('mousedown', handleToggle, true);
+      toggleButton.addEventListener('touchstart', handleToggle, true);
       
       // Forzar z-index y pointer-events directamente en el elemento
       toggleButton.style.zIndex = '999999';
       toggleButton.style.pointerEvents = 'auto';
-      toggleButton.style.position = 'relative';
+      toggleButton.style.position = 'fixed';
+      toggleButton.style.cursor = 'pointer';
       
-      // Eliminar la prueba automática de clic ya que funciona
-      console.log('AIPPS Widget: Widget configurado y listo para usar');
+      console.log('AIPPS Widget: Eventos configurados - listo para usar');
     } else {
       console.error('AIPPS Widget: No se encontró el botón principal');
     }
