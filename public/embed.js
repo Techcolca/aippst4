@@ -999,9 +999,13 @@ Contenido: [Error al extraer contenido detallado]
         e.preventDefault();
         e.stopPropagation();
         console.log('AIPPS Widget: Clic en botón principal detectado');
+        console.log('AIPPS Widget: Estado actual isOpen:', isOpen);
+        console.log('AIPPS Widget: Ejecutando función openWidget...');
         if (isOpen) {
+          console.log('AIPPS Widget: Cerrando widget...');
           closeWidget();
         } else {
+          console.log('AIPPS Widget: Abriendo widget...');
           openWidget();
         }
       });

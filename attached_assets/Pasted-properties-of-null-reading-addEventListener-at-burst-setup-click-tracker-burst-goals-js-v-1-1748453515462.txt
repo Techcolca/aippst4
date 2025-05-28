@@ -1,0 +1,19 @@
+properties of null (reading 'addEventListener')
+    at burst_setup_click_tracker (burst-goals.js?v=1.6.1:135:17)
+    at burst_goals_setup (burst-goals.js?v=1.6.1:26:9)
+    at Module.default (burst-goals.js?v=1.6.1:172:3)
+    at burst_import_goals (burst.min.js?ver=1.6.1:1:415)Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:94 AIPPS Widget Debug: Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:94 AIPPS Widget Debug: Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:358 AIPI: Contenido de la página escaneado con éxito
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:987 AIPPS Widget: Adjuntando eventos... Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1028 AIPPS Widget: Evento de clic adjuntado al botón principal
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1029 AIPPS Widget: Elemento del botón: <button id=​"aipi-toggle-button" style=​"z-index:​ 999999;​ pointer-events:​ auto;​ position:​ relative;​">​…​</button>​flex
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1030 AIPPS Widget: Estilo del botón: CSSStyleDeclaration
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1038 AIPPS Widget: Widget configurado y listo para usar
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:358 AIPI: Contenido de la página escaneado con éxito
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:987 AIPPS Widget: Adjuntando eventos... Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1028 AIPPS Widget: Evento de clic adjuntado al botón principal
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1029 AIPPS Widget: Elemento del botón: <button id=​"aipi-toggle-button" style=​"z-index:​ 999999;​ pointer-events:​ auto;​ position:​ relative;​">​…​</button>​flex
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1030 AIPPS Widget: Estilo del botón: CSSStyleDeclaration
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1038 AIPPS Widget: Widget configurado y listo para usar
