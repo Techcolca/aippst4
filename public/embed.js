@@ -1042,19 +1042,51 @@ Contenido: [Error al extraer contenido detallado]
         break;
       case 'bottom-right':
       default:
-        // Posición más conservadora para asegurar visibilidad completa
-        widgetInstance.style.bottom = '15px';
-        widgetInstance.style.right = '15px';
-        widgetInstance.style.left = 'auto';
-        widgetInstance.style.top = 'auto';
-        // Forzar tamaño más pequeño del botón
-        const toggleButton = document.getElementById('aipi-toggle-button');
-        if (toggleButton) {
-          toggleButton.style.width = '56px';
-          toggleButton.style.height = '56px';
-          toggleButton.style.minWidth = '56px';
-          toggleButton.style.minHeight = '56px';
+        // Obtener posición desde el script tag si está disponible
+        const scriptTag = document.querySelector(`script[src*="embed.js?key=${apiKey}"]`) || 
+                          document.querySelector('script[src*="embed.js"]');
+        const customPosition = scriptTag?.getAttribute('data-position');
+        
+        if (customPosition) {
+          // Usar posición personalizada del script
+          const [side, offset] = customPosition.split(':');
+          const offsetValue = offset || '15px';
+          
+          switch(side) {
+            case 'bottom-left':
+              widgetInstance.style.bottom = offsetValue;
+              widgetInstance.style.left = offsetValue;
+              widgetInstance.style.right = 'auto';
+              widgetInstance.style.top = 'auto';
+              break;
+            case 'top-right':
+              widgetInstance.style.top = offsetValue;
+              widgetInstance.style.right = offsetValue;
+              widgetInstance.style.left = 'auto';
+              widgetInstance.style.bottom = 'auto';
+              break;
+            case 'top-left':
+              widgetInstance.style.top = offsetValue;
+              widgetInstance.style.left = offsetValue;
+              widgetInstance.style.right = 'auto';
+              widgetInstance.style.bottom = 'auto';
+              break;
+            default: // bottom-right
+              widgetInstance.style.bottom = offsetValue;
+              widgetInstance.style.right = offsetValue;
+              widgetInstance.style.left = 'auto';
+              widgetInstance.style.top = 'auto';
+          }
+        } else {
+          // Posición por defecto más conservadora
+          widgetInstance.style.bottom = '10px';
+          widgetInstance.style.right = '10px';
+          widgetInstance.style.left = 'auto';
+          widgetInstance.style.top = 'auto';
         }
+        
+        // Asegurar que el widget esté completamente visible
+        widgetInstance.style.transform = 'translateX(-5px) translateY(-5px)';
         break;
     }
     
