@@ -142,7 +142,7 @@ function getFeaturesByTier(tier: string): string[] {
 async function createInternalWebsiteIntegration() {
   try {
     // Verificar si ya existe la integración interna
-    const existingIntegration = await storage.getIntegrationByApiKey("aipi_web_internal");
+    const existingIntegration = await storage.getIntegrationByApiKey("aipps_web_internal");
     
     if (existingIntegration) {
       console.log("La integración interna para el sitio web principal ya existe");
