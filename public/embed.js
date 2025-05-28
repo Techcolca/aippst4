@@ -1038,16 +1038,19 @@ Contenido: [Error al extraer contenido detallado]
         break;
       case 'bottom-right':
       default:
-        // Usar max-width para responsividad
-        const rightOffset = window.innerWidth < 768 ? '15px' : '20px';
-        widgetInstance.style.bottom = '20px';
-        widgetInstance.style.right = rightOffset;
+        // Posición más conservadora para asegurar visibilidad completa
+        widgetInstance.style.bottom = '15px';
+        widgetInstance.style.right = '15px';
         widgetInstance.style.left = 'auto';
         widgetInstance.style.top = 'auto';
-        // Asegurar que no se salga de la pantalla
-        widgetInstance.style.maxWidth = 'calc(100vw - 40px)';
-        // Asegurar que el botón sea visible
-        widgetInstance.style.transform = 'translateX(-10px)';
+        // Forzar tamaño más pequeño del botón
+        const toggleButton = document.getElementById('aipi-toggle-button');
+        if (toggleButton) {
+          toggleButton.style.width = '56px';
+          toggleButton.style.height = '56px';
+          toggleButton.style.minWidth = '56px';
+          toggleButton.style.minHeight = '56px';
+        }
         break;
     }
     
