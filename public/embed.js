@@ -974,8 +974,8 @@ Contenido: [Error al extraer contenido detallado]
         break;
       case 'bottom-right':
       default:
-        widgetInstance.style.bottom = '24px';
-        widgetInstance.style.right = '24px';
+        widgetInstance.style.bottom = '20px';
+        widgetInstance.style.right = '20px';
         widgetInstance.style.left = 'auto';
         widgetInstance.style.top = 'auto';
         break;
