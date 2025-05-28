@@ -789,6 +789,8 @@ Contenido: [Error al extraer contenido detallado]
         transition: transform 0.3s, background-color 0.3s;
         border: none;
         color: white;
+        z-index: 999999;
+        position: relative;
       }
       
       #aipi-toggle-button:hover {
