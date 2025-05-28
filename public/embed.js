@@ -982,14 +982,28 @@ Contenido: [Error al extraer contenido detallado]
     const sendButton = document.getElementById('aipi-send-button');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
     
-    // Toggle widget open/close
-    toggleButton.addEventListener('click', () => {
-      if (isOpen) {
-        closeWidget();
-      } else {
-        openWidget();
-      }
+    console.log('AIPPS Widget: Adjuntando eventos...', {
+      toggleButton: !!toggleButton,
+      minimizeButton: !!minimizeButton,
+      closeButton: !!closeButton,
+      chatInput: !!chatInput,
+      sendButton: !!sendButton
     });
+    
+    // Toggle widget open/close
+    if (toggleButton) {
+      toggleButton.addEventListener('click', () => {
+        console.log('AIPPS Widget: Clic en botón principal detectado');
+        if (isOpen) {
+          closeWidget();
+        } else {
+          openWidget();
+        }
+      });
+      console.log('AIPPS Widget: Evento de clic adjuntado al botón principal');
+    } else {
+      console.error('AIPPS Widget: No se encontró el botón principal');
+    }
     
     // Close widget
     closeButton.addEventListener('click', closeWidget);
