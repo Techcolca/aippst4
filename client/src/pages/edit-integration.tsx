@@ -125,26 +125,8 @@ export default function EditIntegration() {
       const widgetType = integration.widgetType || "bubble";
       const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
       
-      setScriptExample(`<!-- Código de integración AIPPS - Opciones de posición disponibles -->
-<!-- Para cambiar la posición, agrega data-position="posicion:distancia" -->
-<!-- Posiciones: bottom-right, bottom-left, top-right, top-left -->
-<!-- Ejemplo: data-position="bottom-left:20px" -->
-<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" 
-  data-position="bottom-right:15px">
-</script>
-
-<!-- OPCIONES DE POSICIÓN: Copia una de estas líneas en lugar de la anterior -->
-<!-- Esquina inferior derecha (por defecto): -->
-<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="bottom-right:15px"></script> -->
-
-<!-- Esquina inferior izquierda: -->
-<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="bottom-left:15px"></script> -->
-
-<!-- Esquina superior derecha: -->
-<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="top-right:15px"></script> -->
-
-<!-- Esquina superior izquierda: -->
-<!-- <script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="top-left:15px"></script> -->`)
+      const position = integration.position || "bottom-right";
+      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${position}:15px"></script>`)
       
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
