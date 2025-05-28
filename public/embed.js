@@ -34,29 +34,39 @@
   
   // Initialize widget
   function init() {
-    // Extract the API key from script tag
-    const scriptTags = document.getElementsByTagName('script');
-    const currentScript = scriptTags[scriptTags.length - 1];
-    const scriptSrc = currentScript.src;
+    // Extract the API key from script tag using a more reliable method
+    let scriptSrc = '';
+    let foundApiKey = '';
     
-    // Extract API key from script src with better error handling
-    try {
-      const urlParts = scriptSrc.split('?');
-      if (urlParts.length > 1) {
-        const urlParams = new URLSearchParams(urlParts[1]);
-        config.apiKey = urlParams.get('key');
+    // Find the embed.js script specifically
+    const scripts = document.querySelectorAll('script');
+    for (let script of scripts) {
+      if (script.src && script.src.includes('embed.js')) {
+        scriptSrc = script.src;
+        break;
       }
-      
-      // Additional fallback: try to extract key from the URL directly
-      if (!config.apiKey) {
-        const keyMatch = scriptSrc.match(/[?&]key=([^&]+)/);
-        if (keyMatch) {
-          config.apiKey = keyMatch[1];
+    }
+    
+    // If not found by embed.js, try to find by key parameter
+    if (!scriptSrc) {
+      for (let script of scripts) {
+        if (script.src && script.src.includes('key=')) {
+          scriptSrc = script.src;
+          break;
         }
       }
-    } catch (error) {
-      console.warn("Error extracting API key:", error);
     }
+    
+    // Extract API key from the found script
+    if (scriptSrc) {
+      // Try multiple methods to extract the key
+      const keyMatch = scriptSrc.match(/[?&]key=([^&]+)/);
+      if (keyMatch && keyMatch[1]) {
+        foundApiKey = keyMatch[1];
+      }
+    }
+    
+    config.apiKey = foundApiKey;
     
     // Extract server URL from script src safely
     try {
@@ -80,6 +90,13 @@
     }
     config.visitorId = localStorage.getItem('aipi_visitor_id');
     
+    // Debug: Log what we found
+    console.log('AIPPS Widget Debug:', {
+      scriptSrc: scriptSrc,
+      apiKey: config.apiKey,
+      serverUrl: config.serverUrl
+    });
+
     // Load widget configuration from server
     loadWidgetConfig().then(() => {
       // Load fonts
