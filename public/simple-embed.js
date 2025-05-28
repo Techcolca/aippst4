@@ -667,6 +667,11 @@
         style.bottom = '20px';
         style.left = '20px';
         break;
+      case 'bottom-center':
+        style.bottom = '20px';
+        style.left = '50%';
+        style.transform = 'translateX(-50%)';
+        break;
       case 'top-right':
         style.top = '20px';
         style.right = '20px';

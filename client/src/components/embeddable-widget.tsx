@@ -5,7 +5,7 @@ import ChatInterface from "./chat-interface";
 
 interface EmbeddableWidgetProps {
   apiKey: string;
-  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  position?: 'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'top-left';
   themeColor?: string;
   assistantName?: string;
 }
@@ -24,6 +24,8 @@ export default function EmbeddableWidget({
     switch (position) {
       case 'bottom-left':
         return { bottom: '1.5rem', left: '1.5rem' };
+      case 'bottom-center':
+        return { bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)' };
       case 'top-right':
         return { top: '1.5rem', right: '1.5rem' };
       case 'top-left':

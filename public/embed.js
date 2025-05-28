@@ -962,6 +962,13 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.right = 'auto';
         widgetInstance.style.top = 'auto';
         break;
+      case 'bottom-center':
+        widgetInstance.style.bottom = '24px';
+        widgetInstance.style.left = '50%';
+        widgetInstance.style.transform = 'translateX(-50%)';
+        widgetInstance.style.right = 'auto';
+        widgetInstance.style.top = 'auto';
+        break;
       case 'top-right':
         widgetInstance.style.top = '24px';
         widgetInstance.style.right = '24px';

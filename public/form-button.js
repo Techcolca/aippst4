@@ -118,6 +118,12 @@
         left: 20px;
       }
       
+      .aipi-form-button.bottom-center {
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
       .aipi-form-button.top-right {
         top: 20px;
         right: 20px;
