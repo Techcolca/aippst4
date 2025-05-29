@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -11,7 +14,40 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw, Upload, File } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw, Upload, File, ArrowLeft } from "lucide-react";
+
+// Esquema de validación para el formulario (igual que en create-integration.tsx)
+const formSchema = z.object({
+  name: z.string().min(2, { message: "El nombre debe tener al menos 2 caracteres" }),
+  url: z.string().url({ message: "Debe ser una URL válida" }),
+  themeColor: z.string().default("#3B82F6"),
+  position: z.enum(["bottom-right", "bottom-left", "top-right", "top-left"], {
+    required_error: "Debes seleccionar una posición"
+  }).default("bottom-right"),
+  active: z.boolean().default(true),
+  botBehavior: z.string().optional(),
+  widgetType: z.enum(["bubble", "fullscreen"], {
+    required_error: "Debes seleccionar un tipo de widget"
+  }).default("bubble"),
+  ignoredSections: z.array(z.string()).default([]),
+  ignoredSectionsText: z.string().optional(),
+  description: z.string().optional(),
+  // Campos de personalización del chatbot
+  customization: z.object({
+    assistantName: z.string().optional(),
+    defaultGreeting: z.string().optional(),
+    showAvailability: z.boolean().optional(),
+    userBubbleColor: z.string().optional(),
+    assistantBubbleColor: z.string().optional(),
+    font: z.string().optional(),
+    conversationStyle: z.string().optional(),
+  }).optional(),
+});
+
+// Tipo derivado del esquema Zod
+type FormValues = z.infer<typeof formSchema>;
 
 // Definición de interfaces
 interface Integration {
@@ -29,6 +65,17 @@ interface Integration {
   documentsData?: any[];
   widgetType?: string;
   ignoredSections?: string[];
+  description?: string;
+  ignoredSectionsText?: string;
+  customization?: {
+    assistantName?: string;
+    defaultGreeting?: string;
+    showAvailability?: boolean;
+    userBubbleColor?: string;
+    assistantBubbleColor?: string;
+    font?: string;
+    conversationStyle?: string;
+  };
 }
 
 interface SiteContent {
@@ -44,21 +91,37 @@ export default function EditIntegration() {
   const { id } = useParams();
   const [, navigate] = useLocation();
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: "",
-    url: "",
-    themeColor: "#3B82F6",
-    position: "bottom-right",
-    active: true,
-    botBehavior: "",
-    widgetType: "bubble",
-    ignoredSections: [] as string[]
-  });
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [scriptExample, setScriptExample] = useState('');
   const [scriptExampleFullscreen, setScriptExampleFullscreen] = useState('');
   const [isScrapingLoading, setIsScrapingLoading] = useState(false);
   const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
+
+  // Inicializar el formulario con react-hook-form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      url: "",
+      themeColor: "#3B82F6",
+      position: "bottom-right",
+      active: true,
+      botBehavior: "",
+      widgetType: "bubble",
+      ignoredSections: [],
+      ignoredSectionsText: "",
+      description: "",
+      customization: {
+        assistantName: "AIPI Assistant",
+        defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
+        showAvailability: true,
+        userBubbleColor: "#1e88e5",
+        assistantBubbleColor: "#f5f5f5", 
+        font: "Inter",
+        conversationStyle: "modern",
+      },
+    },
+  });
   
   // Obtener datos de la integración
   const { data: integration, isLoading, error } = useQuery<Integration>({
@@ -109,15 +172,26 @@ export default function EditIntegration() {
   // Cargar datos en el formulario cuando estén disponibles
   useEffect(() => {
     if (integration) {
-      setFormData({
+      form.reset({
         name: integration.name || "",
         url: integration.url || "",
         themeColor: integration.themeColor || "#3B82F6",
-        position: integration.position || "bottom-right",
+        position: integration.position as any || "bottom-right",
         active: integration.active,
-        botBehavior: integration.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
-        widgetType: integration.widgetType || "bubble",
-        ignoredSections: integration.ignoredSections || []
+        botBehavior: integration.botBehavior || "",
+        widgetType: integration.widgetType as any || "bubble",
+        ignoredSections: integration.ignoredSections || [],
+        ignoredSectionsText: integration.ignoredSectionsText || "",
+        description: integration.description || "",
+        customization: integration.customization || {
+          assistantName: "AIPI Assistant",
+          defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
+          showAvailability: true,
+          userBubbleColor: "#1e88e5",
+          assistantBubbleColor: "#f5f5f5", 
+          font: "Inter",
+          conversationStyle: "modern",
+        },
       });
       
       // Actualizar el script de ejemplo con la API Key
@@ -235,21 +309,9 @@ export default function EditIntegration() {
     }));
   };
   
-  // Manejar envío del formulario
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validar que se hayan ingresado los campos requeridos
-    if (!formData.name || !formData.url) {
-      toast({
-        title: "Error",
-        description: "Por favor, completa todos los campos requeridos",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    updateIntegrationMutation.mutate(formData);
+  // Manejar envío del formulario usando react-hook-form
+  const onSubmit = (data: FormValues) => {
+    updateIntegrationMutation.mutate(data);
   };
   
   const handleCancel = () => {
