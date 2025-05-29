@@ -673,38 +673,42 @@
 
   // Calcular posición del botón según la configuración
   function getPositionStyle(position) {
+    const isMobile = window.innerWidth < 768;
+    const offset = isMobile ? '16px' : '20px';
+    
     const style = {
       bottom: 'auto',
       right: 'auto',
       top: 'auto',
-      left: 'auto'
+      left: 'auto',
+      transform: 'none'
     };
 
     switch (position) {
       case 'bottom-right':
-        style.bottom = '20px';
-        style.right = '16px';
+        style.bottom = offset;
+        style.right = offset;
         break;
       case 'bottom-left':
-        style.bottom = '20px';
-        style.left = '20px';
+        style.bottom = offset;
+        style.left = offset;
         break;
       case 'bottom-center':
-        style.bottom = '20px';
+        style.bottom = offset;
         style.left = '50%';
         style.transform = 'translateX(-50%)';
         break;
       case 'top-right':
-        style.top = '20px';
-        style.right = '20px';
+        style.top = offset;
+        style.right = offset;
         break;
       case 'top-left':
-        style.top = '20px';
-        style.left = '20px';
+        style.top = offset;
+        style.left = offset;
         break;
       default:
-        style.bottom = '20px';
-        style.right = '20px';
+        style.bottom = offset;
+        style.right = offset;
     }
 
     return style;

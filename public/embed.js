@@ -19,7 +19,7 @@
     serverUrl: "https://api.aipi.example.com", // Will be overridden by script URL source
     fontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
   };
-  
+
   // State variables
   let widgetInstance = null;
   let isOpen = false;
@@ -33,7 +33,7 @@
   let pageTitle = "";
   let currentTextIndex = 0;
   let textRotationInterval = null;
-  
+
   // Initialize widget
   function init() {
     // Verificar si el widget ya existe para evitar duplicados
@@ -42,11 +42,11 @@
       return;
     }
     window.AIPPS_WIDGET_INITIALIZED = true;
-    
+
     // Extract the API key from script tag using a more reliable method
     let scriptSrc = '';
     let foundApiKey = '';
-    
+
     // Find the embed.js script specifically
     const scripts = document.querySelectorAll('script');
     for (let script of scripts) {
@@ -55,7 +55,7 @@
         break;
       }
     }
-    
+
     // If not found by embed.js, try to find by key parameter
     if (!scriptSrc) {
       for (let script of scripts) {
@@ -65,7 +65,7 @@
         }
       }
     }
-    
+
     // Extract API key from the found script
     if (scriptSrc) {
       // Try multiple methods to extract the key
@@ -74,9 +74,9 @@
         foundApiKey = keyMatch[1];
       }
     }
-    
+
     config.apiKey = foundApiKey;
-    
+
     // Extract server URL from script src safely
     try {
       const scriptUrl = new URL(scriptSrc);
@@ -92,13 +92,13 @@
         config.serverUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
       }
     }
-    
+
     // Generate visitor ID if not exists
     if (!localStorage.getItem('aipi_visitor_id')) {
       localStorage.setItem('aipi_visitor_id', 'visitor_' + Math.random().toString(36).substring(2, 15));
     }
     config.visitorId = localStorage.getItem('aipi_visitor_id');
-    
+
     // Debug: Log what we found
     console.log('AIPPS Widget Debug:', {
       scriptSrc: scriptSrc,
@@ -110,13 +110,13 @@
     loadWidgetConfig().then(() => {
       // Load fonts
       loadFont();
-      
+
       // Create widget DOM elements
       createWidgetDOM();
-      
+
       // Attach event listeners
       attachEventListeners();
-      
+
       // Auto-open widget if configured
       if (config.autoOpen) {
         setTimeout(() => {
@@ -127,21 +127,21 @@
       console.error('AIPI Widget Error:', error);
     });
   }
-  
+
   // Load widget configuration from server
   async function loadWidgetConfig() {
     if (!config.apiKey) {
       throw new Error('AIPI API key is required. Add it to your script tag: ?key=YOUR_API_KEY');
     }
-    
+
     try {
       const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}`);
       if (!response.ok) {
         throw new Error('Failed to load widget configuration');
       }
-      
+
       const data = await response.json();
-      
+
       // Update config with server settings
       if (data.integration) {
         config.position = data.integration.position || config.position;
@@ -149,7 +149,7 @@
         config.widgetType = data.integration.widgetType || config.widgetType;
         config.ignoredSections = data.integration.ignoredSections || [];
       }
-      
+
       if (data.settings) {
         config.assistantName = data.settings.assistantName || config.assistantName;
         config.greetingMessage = data.settings.defaultGreeting || config.greetingMessage;
@@ -158,29 +158,29 @@
         config.assistantBubbleColor = data.settings.assistantBubbleColor || config.assistantBubbleColor;
         config.font = data.settings.font || config.font;
       }
-      
+
       // Extraer el contenido de la página actual para mejorar las respuestas
       scanCurrentPageContent();
-      
+
     } catch (error) {
       console.error('Error loading AIPI widget configuration:', error);
       // Continue with default settings
     }
   }
-  
+
   // Función para extraer el contenido del sitio
   function scanCurrentPageContent() {
     try {
       // Extraer título de la página
       pageTitle = document.title || '';
-      
+
       // Extraer metadescription si existe
       let metaDescription = '';
       const metaDescriptionTag = document.querySelector('meta[name="description"]');
       if (metaDescriptionTag) {
         metaDescription = metaDescriptionTag.getAttribute('content') || '';
       }
-      
+
       // Extraer encabezados H1 y H2 para entender la estructura
       const headings = [];
       document.querySelectorAll('h1, h2').forEach(heading => {
@@ -190,16 +190,16 @@
           const shouldIgnore = config.ignoredSections && config.ignoredSections.some(section => 
             text.toLowerCase().includes(section.toLowerCase())
           );
-          
+
           if (!shouldIgnore) {
             headings.push(`${heading.tagName}: ${text}`);
           }
         }
       });
-      
+
       // Extraer contenido principal
       let mainContent = '';
-      
+
       // Lista de selectores para contenido principal, ordenados por especificidad
       const mainSelectors = [
         // Selectores comunes de contenido principal
@@ -209,7 +209,7 @@
         // Selectores más generales
         '.content', '#content'
       ];
-      
+
       // Intentar obtener el contenido principal con selectores comunes
       for (const selector of mainSelectors) {
         const elements = document.querySelectorAll(selector);
@@ -219,11 +219,11 @@
           elements.forEach(el => {
             // Hacer una copia para no modificar el DOM real
             const clone = el.cloneNode(true);
-            
+
             // Eliminar elementos no deseados dentro del contenido principal
             const unwanted = clone.querySelectorAll('script, style, iframe, nav, aside, .comment, .comments, .sidebar, .widget, .ad, .ads, .advertisement');
             unwanted.forEach(unwantedEl => unwantedEl.remove());
-            
+
             // Eliminar secciones ignoradas
             if (config.ignoredSections && config.ignoredSections.length > 0) {
               config.ignoredSections.forEach(section => {
@@ -234,25 +234,25 @@
                       // Encontrar el contenedor de la sección (hermanos hasta el siguiente encabezado del mismo nivel o superior)
                       let currentElement = heading;
                       const headingLevel = parseInt(heading.tagName.substring(1));
-                      
+
                       // Eliminar el encabezado mismo
                       heading.parentNode?.removeChild(heading);
-                      
+
                       // Eliminar elementos hasta el siguiente encabezado del mismo nivel o superior
                       while (currentElement.nextElementSibling) {
                         const nextElement = currentElement.nextElementSibling;
                         const tagName = nextElement.tagName.toLowerCase();
-                        
+
                         // Si encontramos un encabezado del mismo nivel o superior, detenemos la eliminación
                         if (tagName.startsWith('h') && parseInt(tagName.substring(1)) <= headingLevel) {
                           break;
                         }
-                        
+
                         nextElement.parentNode?.removeChild(nextElement);
                       }
                     }
                   });
-                  
+
                   // También buscar por contenedores que pueden tener un ID o clase que coincida con la sección
                   clone.querySelectorAll(`[id*="${section}"], [class*="${section}"], section, div, article`).forEach(element => {
                     // Verificar si el elemento o alguno de sus padres contiene el texto de la sección
@@ -264,21 +264,21 @@
                 }
               });
             }
-            
+
             contents.push(clone.textContent.trim());
           });
-          
+
           // Unir contenidos y eliminar duplicados
           mainContent = Array.from(new Set(contents)).join('\n\n');
           break;
         }
       }
-      
+
       // Si no se encontró contenido con selectores comunes, extraer del body de forma selectiva
       if (!mainContent) {
         // Crear una copia del body para manipular
         const bodyClone = document.body.cloneNode(true);
-        
+
         // Eliminar todos los elementos no deseados
         const elementsToRemove = bodyClone.querySelectorAll(
           'script, style, link, meta, noscript, iframe, ' + 
@@ -291,9 +291,9 @@
           '.ad, .ads, .advertisement, [class*="cookie"], [id*="cookie"], ' +
           '.social, .share, .newsletter'
         );
-        
+
         elementsToRemove.forEach(el => el.remove());
-        
+
         // Eliminar secciones ignoradas del body
         if (config.ignoredSections && config.ignoredSections.length > 0) {
           config.ignoredSections.forEach(section => {
@@ -304,7 +304,7 @@
                   heading.parentNode?.removeChild(heading);
                 }
               });
-              
+
               // Buscar contenedores que puedan contener la sección
               bodyClone.querySelectorAll(`[id*="${section}"], [class*="${section}"], section, div, article`).forEach(element => {
                 const elementText = element.textContent.toLowerCase();
@@ -315,23 +315,23 @@
             }
           });
         }
-        
+
         // Obtener párrafos significativos (con suficiente texto)
         const paragraphs = [];
         bodyClone.querySelectorAll('p').forEach(p => {
           const text = p.textContent.trim();
-          
+
           // Verificar que este párrafo no pertenezca a una sección ignorada
           const shouldIgnore = config.ignoredSections && config.ignoredSections.some(section => 
             text.toLowerCase().includes(section.toLowerCase())
           );
-          
+
           // Solo incluir párrafos con al menos 100 caracteres y que no estén en secciones ignoradas
           if (text.length > 100 && !shouldIgnore) {
             paragraphs.push(text);
           }
         });
-        
+
         if (paragraphs.length > 0) {
           // Si hay párrafos significativos, usarlos como contenido
           mainContent = paragraphs.join('\n\n');
@@ -340,19 +340,19 @@
           mainContent = bodyClone.textContent.trim();
         }
       }
-      
+
       // Limpiar el texto (eliminar espacios extras, líneas vacías, etc.)
       mainContent = mainContent
         .replace(/\s+/g, ' ')
         .replace(/\n\s*\n/g, '\n\n')
         .trim();
-      
+
       // Limitar el tamaño para evitar problemas con peticiones demasiado grandes
       // (limitar a ~8000 caracteres)
       if (mainContent.length > 8000) {
         mainContent = mainContent.substring(0, 8000) + '... [contenido truncado]';
       }
-      
+
       // Guardar el contenido estructurado
       currentPageContent = `
 Título: ${pageTitle}
@@ -362,14 +362,14 @@ ${headings.length > 0 ? `Estructura de la página:\n${headings.join('\n')}\n\n` 
 Contenido principal:
 ${mainContent}
       `.trim();
-      
+
       siteContentScanned = true;
       console.log('AIPI: Contenido de la página escaneado con éxito');
       // Para depuración, descomentar la siguiente línea:
       // console.log('Contenido escaneado:', currentPageContent);
     } catch (error) {
       console.error('Error escaneando contenido de la página:', error);
-      
+
       // En caso de error, intentar una versión simplificada
       try {
         pageTitle = document.title || '';
@@ -385,14 +385,14 @@ Contenido: [Error al extraer contenido detallado]
       }
     }
   }
-  
+
   // Load custom font
   function loadFont() {
     if (document.getElementById('aipi-font')) {
       fontLoaded = true;
       return;
     }
-    
+
     const fontLink = document.createElement('link');
     fontLink.id = 'aipi-font';
     fontLink.rel = 'stylesheet';
@@ -400,10 +400,10 @@ Contenido: [Error al extraer contenido detallado]
     fontLink.onload = () => {
       fontLoaded = true;
     };
-    
+
     document.head.appendChild(fontLink);
   }
-  
+
   // Create widget DOM structure
   function createWidgetDOM() {
     // Main container with position based on config
@@ -412,11 +412,11 @@ Contenido: [Error al extraer contenido detallado]
     widgetInstance.style.position = 'fixed';
     widgetInstance.style.zIndex = '999999';
     widgetInstance.style.fontFamily = getFontFamily();
-    
+
     // Agregar clase según el tipo de widget
     if (config.widgetType === 'fullscreen') {
       widgetInstance.classList.add('aipi-fullscreen-widget');
-      
+
       // Crear botón de acceso flotante para modo pantalla completa y añadirlo directamente al body
       const fullscreenButton = document.createElement('div');
       fullscreenButton.id = 'aipi-fullscreen-button';
@@ -430,35 +430,35 @@ Contenido: [Error al extraer contenido detallado]
         </div>
         <div class="aipi-fullscreen-button-text">AIPI Assistant</div>
       `;
-      
+
       // No añadir el botón dentro del widget, sino directamente al body para que sea independiente
       document.body.appendChild(fullscreenButton);
-      
+
       // Usar onclick en lugar de addEventListener
       fullscreenButton.onclick = function() {
         try {
           console.log('AIPI Debug: Botón fullscreen clickeado');
-          
+
           // Obtener el panel de chat directamente
           const chatPanel = document.getElementById('aipi-chat-panel');
           console.log('AIPI Debug: Panel de chat encontrado?', !!chatPanel);
-          
+
           if (chatPanel) {
             // Ocultar el botón flotante
             this.style.display = 'none';
             console.log('AIPI Debug: Botón flotante ocultado');
-            
+
             // Mostrar el panel de chat
             chatPanel.style.display = 'flex';
             console.log('AIPI Debug: Panel de chat mostrado');
             isOpen = true;
-            
+
             // Iniciar conversación si no se ha iniciado
             if (!conversationStarted) {
               console.log('AIPI Debug: Iniciando conversación');
               startConversation();
             }
-            
+
             // Enfocar el campo de entrada
             setTimeout(() => {
               const input = document.getElementById('aipi-input');
@@ -467,7 +467,7 @@ Contenido: [Error al extraer contenido detallado]
                 input.focus();
               }
             }, 300);
-            
+
             // Desplazar al final de los mensajes
             scrollToBottom();
           } else {
@@ -482,17 +482,22 @@ Contenido: [Error al extraer contenido detallado]
     } else {
       widgetInstance.classList.add('aipi-bubble-widget');
     }
-    
+
     // Set position based on config
     setWidgetPosition();
-    
+
     // Create CSS for widget
     const widgetStyles = document.createElement('style');
     widgetStyles.textContent = `
-      #aipi-widget-container * {
-        box-sizing: border-box;
-      }
-      
+        #aipi-widget-container * {
+          box-sizing: border-box;
+        }
+
+        #aipi-widget-container {
+          max-height: calc(100vh - 40px);
+          max-width: calc(100vw - 40px);
+        }
+
       #aipi-chat-panel {
         width: 350px;
         height: 500px;
@@ -522,7 +527,7 @@ Contenido: [Error al extraer contenido detallado]
       .aipi-fullscreen-widget #aipi-toggle-button {
         display: none;
       }
-      
+
       #aipi-chat-header {
         background-color: ${config.themeColor};
         color: white;
@@ -531,12 +536,12 @@ Contenido: [Error al extraer contenido detallado]
         justify-content: space-between;
         align-items: center;
       }
-      
+
       #aipi-header-info {
         display: flex;
         align-items: center;
       }
-      
+
       #aipi-avatar {
         width: 32px;
         height: 32px;
@@ -547,32 +552,32 @@ Contenido: [Error al extraer contenido detallado]
         justify-content: center;
         margin-right: 12px;
       }
-      
+
       #aipi-avatar svg {
         width: 20px;
         height: 20px;
         color: ${config.themeColor};
       }
-      
+
       #aipi-header-text {
         display: flex;
         flex-direction: column;
       }
-      
+
       #aipi-assistant-name {
         font-weight: 600;
         font-size: 16px;
       }
-      
+
       #aipi-status {
         font-size: 12px;
         opacity: 0.8;
       }
-      
+
       #aipi-header-actions {
         display: flex;
       }
-      
+
       .aipi-header-button {
         background: none;
         border: none;
@@ -586,11 +591,11 @@ Contenido: [Error al extraer contenido detallado]
         opacity: 0.8;
         transition: opacity 0.2s;
       }
-      
+
       .aipi-header-button:hover {
         opacity: 1;
       }
-      
+
       #aipi-messages-container {
         flex: 1;
         overflow-y: auto;
@@ -600,18 +605,18 @@ Contenido: [Error al extraer contenido detallado]
         gap: 12px;
         background-color: #f9fafb;
       }
-      
+
       @media (prefers-color-scheme: dark) {
         #aipi-chat-panel {
           background-color: #1f2937;
           border: 1px solid #374151;
         }
-        
+
         #aipi-messages-container {
           background-color: #111827;
         }
       }
-      
+
       .aipi-message {
         max-width: 80%;
         padding: 10px 14px;
@@ -620,28 +625,28 @@ Contenido: [Error al extraer contenido detallado]
         line-height: 1.5;
         word-wrap: break-word;
       }
-      
+
       .aipi-user-message {
         background-color: ${config.userBubbleColor};
         color: white;
         align-self: flex-end;
         border-bottom-right-radius: 4px;
       }
-      
+
       .aipi-assistant-message {
         background-color: ${config.assistantBubbleColor};
         color: #1f2937;
         align-self: flex-start;
         border-bottom-left-radius: 4px;
       }
-      
+
       @media (prefers-color-scheme: dark) {
         .aipi-assistant-message {
           background-color: #374151;
           color: #e5e7eb;
         }
       }
-      
+
       .aipi-typing-indicator {
         display: flex;
         align-items: center;
@@ -653,13 +658,13 @@ Contenido: [Error al extraer contenido detallado]
         align-self: flex-start;
         max-width: 80px;
       }
-      
+
       @media (prefers-color-scheme: dark) {
         .aipi-typing-indicator {
           background-color: #374151;
         }
       }
-      
+
       .aipi-typing-dot {
         width: 8px;
         height: 8px;
@@ -667,19 +672,19 @@ Contenido: [Error al extraer contenido detallado]
         border-radius: 50%;
         animation: aipi-typing-animation 1.4s infinite ease-in-out;
       }
-      
+
       .aipi-typing-dot:nth-child(1) {
         animation-delay: 0s;
       }
-      
+
       .aipi-typing-dot:nth-child(2) {
         animation-delay: 0.2s;
       }
-      
+
       .aipi-typing-dot:nth-child(3) {
         animation-delay: 0.4s;
       }
-      
+
       @keyframes aipi-typing-animation {
         0%, 100% {
           transform: translateY(0);
@@ -688,21 +693,21 @@ Contenido: [Error al extraer contenido detallado]
           transform: translateY(-5px);
         }
       }
-      
+
       #aipi-input-container {
         display: flex;
         padding: 12px;
         border-top: 1px solid #e5e7eb;
         background-color: #fff;
       }
-      
+
       @media (prefers-color-scheme: dark) {
         #aipi-input-container {
           background-color: #1f2937;
           border-top: 1px solid #374151;
         }
       }
-      
+
       #aipi-input {
         flex: 1;
         border: 1px solid #d1d5db;
@@ -713,7 +718,7 @@ Contenido: [Error al extraer contenido detallado]
         background-color: #fff;
         color: #1f2937;
       }
-      
+
       @media (prefers-color-scheme: dark) {
         #aipi-input {
           background-color: #374151;
@@ -721,12 +726,12 @@ Contenido: [Error al extraer contenido detallado]
           color: #e5e7eb;
         }
       }
-      
+
       #aipi-input:focus {
         border-color: ${config.themeColor};
         box-shadow: 0 0 0 1px ${config.themeColor}20;
       }
-      
+
       #aipi-send-button {
         background-color: ${config.themeColor};
         border: none;
@@ -741,16 +746,16 @@ Contenido: [Error al extraer contenido detallado]
         margin-left: 8px;
         transition: background-color 0.2s;
       }
-      
+
       #aipi-send-button:hover {
         background-color: ${adjustColor(config.themeColor, -20)};
       }
-      
+
       #aipi-send-button:disabled {
         background-color: #9ca3af;
         cursor: not-allowed;
       }
-      
+
       #aipi-minimized-container {
         background-color: ${config.themeColor};
         padding: 12px;
@@ -763,11 +768,11 @@ Contenido: [Error al extraer contenido detallado]
         cursor: pointer;
         transition: transform 0.2s;
       }
-      
+
       #aipi-minimized-container:hover {
         transform: translateY(-2px);
       }
-      
+
       #aipi-minimized-avatar {
         width: 32px;
         height: 32px;
@@ -778,20 +783,19 @@ Contenido: [Error al extraer contenido detallado]
         justify-content: center;
         margin-right: 12px;
       }
-      
+
       #aipi-minimized-avatar svg {
         width: 20px;
         height: 20px;
         color: ${config.themeColor};
       }
-      
+
       #aipi-toggle-button {
-        width: auto;
-        height: 36px;
-        min-height: 36px;
-        border-radius: 18px;
-        background-color: #ff7b2a;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        min-width: 56px;
+        height: 56px;
+        border-radius: 28px;
+        background-color: ${config.themeColor};
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -800,22 +804,24 @@ Contenido: [Error al extraer contenido detallado]
         border: none;
         color: white;
         z-index: 999999;
-        position: relative;
-        padding: 8px 14px;
+        position: fixed;
+        padding: 0 16px;
         font-family: ${getFontFamily()};
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
         white-space: nowrap;
         overflow: visible;
+        animation: aipi-pulse 2s infinite;
+        max-width: calc(100vw - 32px);
+      }
+
+      #aipi-toggle-button:hover {
+        transform: translateY(-3px) scale(1.05);
+        background-color: ${adjustColor(config.themeColor, -20)};
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
         animation: none;
       }
-      
-      #aipi-toggle-button:hover {
-        transform: translateY(-2px);
-        background-color: #e66b1f;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-      
+
       @keyframes aipi-pulse {
         0%, 100% {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -824,7 +830,7 @@ Contenido: [Error al extraer contenido detallado]
           box-shadow: 0 4px 20px ${config.themeColor}40, 0 0 0 8px ${config.themeColor}20;
         }
       }
-      
+
       @keyframes aipi-bounce {
         0%, 100% {
           transform: translateY(0);
@@ -833,17 +839,20 @@ Contenido: [Error al extraer contenido detallado]
           transform: translateY(-5px);
         }
       }
-      
+
       .aipi-button-text {
-        margin-left: 6px;
-        opacity: 1;
-        max-width: none;
+        margin-left: 8px;
+        opacity: 0;
+        max-width: 0;
         transition: all 0.3s ease;
-        overflow: visible;
-        font-weight: 600;
-        font-size: 13px;
+        overflow: hidden;
       }
-      
+
+      #aipi-toggle-button:hover .aipi-button-text {
+        opacity: 1;
+        max-width: 150px;
+      }
+
       .aipi-notification-dot {
         position: absolute;
         top: -2px;
@@ -855,7 +864,7 @@ Contenido: [Error al extraer contenido detallado]
         border: 2px solid white;
         animation: aipi-bounce 1s infinite;
       }
-      
+
       /* Estilos para el botón de acceso en modo pantalla completa */
       #aipi-fullscreen-button {
         display: flex;
@@ -873,30 +882,30 @@ Contenido: [Error al extraer contenido detallado]
         font-family: ${getFontFamily()};
         transition: transform 0.2s, box-shadow 0.2s;
       }
-      
+
       #aipi-fullscreen-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       }
-      
+
       .aipi-fullscreen-button-icon {
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 8px;
       }
-      
+
       .aipi-fullscreen-button-icon svg {
         width: 20px;
         height: 20px;
         color: white;
       }
-      
+
       .aipi-fullscreen-button-text {
         font-weight: 600;
         font-size: 14px;
       }
-      
+
       /* Estilos para el botón flotante del modo pantalla completa */
       #aipi-fullscreen-button {
         position: fixed;
@@ -915,12 +924,12 @@ Contenido: [Error al extraer contenido detallado]
         max-width: calc(100vw - 32px);
         overflow: visible;
       }
-      
+
       #aipi-fullscreen-button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
       }
-      
+
       .aipi-fullscreen-button-icon {
         margin-right: 8px;
         display: flex;
@@ -929,7 +938,7 @@ Contenido: [Error al extraer contenido detallado]
       }
     `;
     document.head.appendChild(widgetStyles);
-    
+
     // Create markup
     widgetInstance.innerHTML = `
       <div id="aipi-chat-panel" style="display: none;">
@@ -970,18 +979,28 @@ Contenido: [Error al extraer contenido detallado]
           </button>
         </div>
       </div>
-      
+
+      <div id="aipi-minimized-container" style="display: none;">
+        <div id="aipi-minimized-avatar">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+        </div>
+        <span>${escapeHTML(config.assistantName)}</span>
+      </div>
+
       <button id="aipi-toggle-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
-        <span class="aipi-button-text">AIPI Assistant</span>
+        <span class="aipi-button-text">¡Hablemos!</span>
+        <div class="aipi-notification-dot"></div>
       </button>
     `;
-    
+
     document.body.appendChild(widgetInstance);
   }
-  
+
   // Set widget position based on config
   function setWidgetPosition() {
     // Para widgets tipo fullscreen, el posicionamiento es diferente
@@ -995,84 +1014,56 @@ Contenido: [Error al extraer contenido detallado]
       widgetInstance.style.maxWidth = 'none';
       return;
     }
-    
+
+    // Ajustes responsivos
+    const isMobile = window.innerWidth < 768;
+    const bottomOffset = isMobile ? '16px' : '20px';
+    const sideOffset = isMobile ? '16px' : '20px';
+
     // Para widgets tipo bubble (tipo original)
     switch (config.position) {
       case 'bottom-left':
-        widgetInstance.style.bottom = '24px';
-        widgetInstance.style.left = '24px';
+        widgetInstance.style.bottom = bottomOffset;
+        widgetInstance.style.left = sideOffset;
         widgetInstance.style.right = 'auto';
         widgetInstance.style.top = 'auto';
+        widgetInstance.style.transform = 'none';
         break;
       case 'bottom-center':
-        widgetInstance.style.bottom = '24px';
+        widgetInstance.style.bottom = bottomOffset;
         widgetInstance.style.left = '50%';
         widgetInstance.style.transform = 'translateX(-50%)';
         widgetInstance.style.right = 'auto';
         widgetInstance.style.top = 'auto';
         break;
       case 'top-right':
-        widgetInstance.style.top = '24px';
-        widgetInstance.style.right = '24px';
+        widgetInstance.style.top = '20px';
+        widgetInstance.style.right = sideOffset;
         widgetInstance.style.left = 'auto';
         widgetInstance.style.bottom = 'auto';
+        widgetInstance.style.transform = 'none';
         break;
       case 'top-left':
-        widgetInstance.style.top = '24px';
-        widgetInstance.style.left = '24px';
+        widgetInstance.style.top = '20px';
+        widgetInstance.style.left = sideOffset;
         widgetInstance.style.right = 'auto';
         widgetInstance.style.bottom = 'auto';
+        widgetInstance.style.transform = 'none';
         break;
       case 'bottom-right':
       default:
-        // Obtener posición desde el script tag si está disponible
-        const scriptTag = document.querySelector(`script[src*="embed.js?key=${apiKey}"]`) || 
-                          document.querySelector('script[src*="embed.js"]');
-        const customPosition = scriptTag?.getAttribute('data-position');
-        
-        if (customPosition) {
-          // Usar posición personalizada del script
-          const [side, offset] = customPosition.split(':');
-          const offsetValue = offset || '15px';
-          
-          switch(side) {
-            case 'bottom-left':
-              widgetInstance.style.bottom = offsetValue;
-              widgetInstance.style.left = offsetValue;
-              widgetInstance.style.right = 'auto';
-              widgetInstance.style.top = 'auto';
-              break;
-            case 'top-right':
-              widgetInstance.style.top = offsetValue;
-              widgetInstance.style.right = offsetValue;
-              widgetInstance.style.left = 'auto';
-              widgetInstance.style.bottom = 'auto';
-              break;
-            case 'top-left':
-              widgetInstance.style.top = offsetValue;
-              widgetInstance.style.left = offsetValue;
-              widgetInstance.style.right = 'auto';
-              widgetInstance.style.bottom = 'auto';
-              break;
-            default: // bottom-right
-              widgetInstance.style.bottom = offsetValue;
-              widgetInstance.style.right = offsetValue;
-              widgetInstance.style.left = 'auto';
-              widgetInstance.style.top = 'auto';
-          }
-        } else {
-          // Posición por defecto más conservadora
-          widgetInstance.style.bottom = '10px';
-          widgetInstance.style.right = '10px';
-          widgetInstance.style.left = 'auto';
-          widgetInstance.style.top = 'auto';
-        }
-        
-        // Asegurar que el widget esté completamente visible
-        widgetInstance.style.transform = 'translateX(-5px) translateY(-5px)';
+        widgetInstance.style.bottom = bottomOffset;
+        widgetInstance.style.right = sideOffset;
+        widgetInstance.style.left = 'auto';
+        widgetInstance.style.top = 'auto';
+        widgetInstance.style.transform = 'none';
         break;
     }
-    
+
+    // Asegurar que el widget siempre sea visible
+    widgetInstance.style.maxWidth = 'calc(100vw - 32px)';
+    widgetInstance.style.maxHeight = 'calc(100vh - 32px)';
+
     // Agregar listener para cambios de tamaño de ventana
     window.addEventListener('resize', () => {
       if (widgetInstance) {
@@ -1080,7 +1071,7 @@ Contenido: [Error al extraer contenido detallado]
       }
     });
   }
-  
+
   // Textos dinámicos para el botón
   const dynamicTexts = [
     "¡Hablemos!",
@@ -1091,17 +1082,17 @@ Contenido: [Error al extraer contenido detallado]
     "¿Alguna duda?",
     "¡Te ayudo!"
   ];
-  
+
   // Función para rotar textos del botón
   function startTextRotation() {
     const buttonText = document.querySelector('.aipi-button-text');
     if (!buttonText) return;
-    
+
     textRotationInterval = setInterval(() => {
       if (!isOpen) { // Solo rotar si el widget está cerrado
         currentTextIndex = (currentTextIndex + 1) % dynamicTexts.length;
         buttonText.textContent = dynamicTexts[currentTextIndex];
-        
+
         // Agregar una pequeña animación al cambiar el texto
         buttonText.style.transform = 'scale(0.9)';
         setTimeout(() => {
@@ -1110,7 +1101,7 @@ Contenido: [Error al extraer contenido detallado]
       }
     }, 3000); // Cambiar texto cada 3 segundos
   }
-  
+
   // Attach event listeners
   function attachEventListeners() {
     const toggleButton = document.getElementById('aipi-toggle-button');
@@ -1119,7 +1110,7 @@ Contenido: [Error al extraer contenido detallado]
     const chatInput = document.getElementById('aipi-input');
     const sendButton = document.getElementById('aipi-send-button');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
-    
+
     console.log('AIPPS Widget: Adjuntando eventos...', {
       toggleButton: !!toggleButton,
       minimizeButton: !!minimizeButton,
@@ -1127,7 +1118,7 @@ Contenido: [Error al extraer contenido detallado]
       chatInput: !!chatInput,
       sendButton: !!sendButton
     });
-    
+
     // Toggle widget open/close
     if (toggleButton) {
       // Función para manejar el toggle
@@ -1144,23 +1135,23 @@ Contenido: [Error al extraer contenido detallado]
           openWidget();
         }
       }
-      
+
       // Usar onclick directo para evitar conflictos
       toggleButton.onclick = handleToggle;
-      
+
       // También agregar eventos múltiples
       toggleButton.addEventListener('click', handleToggle, true);
       toggleButton.addEventListener('mousedown', handleToggle, true);
       toggleButton.addEventListener('touchstart', handleToggle, true);
-      
+
       // Forzar z-index y pointer-events directamente en el elemento
       toggleButton.style.zIndex = '999999';
       toggleButton.style.pointerEvents = 'auto';
       toggleButton.style.position = 'fixed';
       toggleButton.style.cursor = 'pointer';
-      
+
       console.log('AIPPS Widget: Eventos configurados - listo para usar');
-      
+
       // Iniciar rotación de textos después de un breve delay
       setTimeout(() => {
         startTextRotation();
@@ -1168,32 +1159,32 @@ Contenido: [Error al extraer contenido detallado]
     } else {
       console.error('AIPPS Widget: No se encontró el botón principal');
     }
-    
+
     // Close widget
     closeButton.addEventListener('click', closeWidget);
-    
+
     // Minimize widget
     minimizeButton.addEventListener('click', minimizeWidget);
-    
+
     // Maximize from minimized state
     minimizedContainer.addEventListener('click', maximizeWidget);
-    
+
     // Handle input changes
     chatInput.addEventListener('input', () => {
       sendButton.disabled = !chatInput.value.trim();
     });
-    
+
     // Send message on Enter key
     chatInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && chatInput.value.trim()) {
         sendMessage();
       }
     });
-    
+
     // Send message on button click
     sendButton.addEventListener('click', sendMessage);
   }
-  
+
   // Start or continue conversation with AIPI
   async function startConversation() {
     if (!conversationStarted) {
@@ -1208,15 +1199,15 @@ Contenido: [Error al extraer contenido detallado]
             visitorId: config.visitorId
           }),
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to create conversation');
         }
-        
+
         const data = await response.json();
         config.conversationId = data.id;
         conversationStarted = true;
-        
+
         // Add initial greeting
         addMessage(config.greetingMessage, 'assistant');
       } catch (error) {
@@ -1225,98 +1216,120 @@ Contenido: [Error al extraer contenido detallado]
       }
     }
   }
-  
+
   // Open the widget
   function openWidget() {
     const chatPanel = document.getElementById('aipi-chat-panel');
     const toggleButton = document.getElementById('aipi-toggle-button');
     const fullscreenButton = document.getElementById('aipi-fullscreen-button');
-    
+
     // Para widgets tipo fullscreen, abrir siempre directamente
     if (config.widgetType === 'fullscreen') {
       // Ocultar botón flotante cuando el chat está abierto
       if (fullscreenButton) {
         fullscreenButton.style.display = 'none';
       }
-      
+
       chatPanel.style.display = 'flex';
       isOpen = true;
-      
+
       // Start conversation if not already started
       if (!conversationStarted) {
         startConversation();
       }
-      
+
       // Focus input
       setTimeout(() => {
         document.getElementById('aipi-input').focus();
       }, 300);
-      
+
       // Scroll to bottom of messages
       scrollToBottom();
       return;
     }
-    
+
     // Para widgets tipo bubble (comportamiento original)
-    // Mantener el botón con el diseño original sin cambiar a "Cerrar"
-    
+    // Update toggle button icon and text
+    toggleButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+      <span class="aipi-button-text">Cerrar</span>
+    `;
+
     // Detener rotación de textos cuando está abierto
     if (textRotationInterval) {
       clearInterval(textRotationInterval);
     }
-    
+
     if (isMinimized) {
       maximizeWidget();
       return;
     }
-    
+
     chatPanel.style.display = 'flex';
     isOpen = true;
-    
+
     // Focus input
     setTimeout(() => {
       document.getElementById('aipi-input').focus();
     }, 300);
-    
+
     // Start conversation if not already started
     if (!conversationStarted) {
       startConversation();
     }
-    
+
     // Scroll to bottom of messages
     scrollToBottom();
   }
-  
+
   // Close the widget
   function closeWidget() {
     const chatPanel = document.getElementById('aipi-chat-panel');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
     const toggleButton = document.getElementById('aipi-toggle-button');
     const fullscreenButton = document.getElementById('aipi-fullscreen-button');
-    
+
     // Para widgets tipo fullscreen, no permitir cerrar completamente
     if (config.widgetType === 'fullscreen') {
       // Mostrar el botón flotante nuevamente
       if (fullscreenButton) {
         fullscreenButton.style.display = 'flex';
       }
-      
+
       chatPanel.style.display = 'none';
       isOpen = false;
       return;
     }
-    
+
     // Para widgets tipo bubble (comportamiento original)
-    // Mantener el botón con su diseño original sin cambiar
-    
+    // Update toggle button icon and restart text rotation
+    toggleButton.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span class="aipi-button-text">${dynamicTexts[currentTextIndex]}</span>
+      <div class="aipi-notification-dot"></div>
+    `;
+
+    // Reiniciar rotación de textos cuando se cierra
+    setTimeout(() => {
+      startTextRotation();
+    }, 1000);
+
     chatPanel.style.display = 'none';
+    minimizedContainer.style.display = 'none';
     isOpen = false;
+    isMinimized = false;
   }
-  
+
   // Minimize the widget
   function minimizeWidget() {
     const chatPanel = document.getElementById('aipi-chat-panel');
-    
+    const minimizedContainer = document.getElementById('aipi-minimized-container');
+
     // Para el widget tipo fullscreen, minimizar significa hacerlo más pequeño pero no ocultarlo
     if (config.widgetType === 'fullscreen') {
       // Si es fullscreen, cambiamos el estilo a bubble temporalmente
@@ -1331,17 +1344,18 @@ Contenido: [Error al extraer contenido detallado]
       isMinimized = true;
       return;
     }
-    
+
     // Para widgets tipo bubble (comportamiento original)
     chatPanel.style.display = 'none';
+    minimizedContainer.style.display = 'flex';
     isMinimized = true;
   }
-  
+
   // Maximize the widget from minimized state
   function maximizeWidget() {
     const chatPanel = document.getElementById('aipi-chat-panel');
     const minimizedContainer = document.getElementById('aipi-minimized-container');
-    
+
     // Para el widget tipo fullscreen, maximizar significa restaurar su tamaño completo
     if (config.widgetType === 'fullscreen') {
       // Restaurar el estilo fullscreen
@@ -1354,58 +1368,58 @@ Contenido: [Error al extraer contenido detallado]
       chatPanel.style.bottom = '0';
       chatPanel.style.borderRadius = '0';
       isMinimized = false;
-      
+
       // Focus input
       setTimeout(() => {
         document.getElementById('aipi-input').focus();
       }, 300);
-      
+
       // Scroll to bottom of messages
       scrollToBottom();
       return;
     }
-    
+
     // Para widgets tipo bubble (comportamiento original)
     minimizedContainer.style.display = 'none';
     chatPanel.style.display = 'flex';
     isMinimized = false;
-    
+
     // Focus input
     setTimeout(() => {
       document.getElementById('aipi-input').focus();
     }, 300);
-    
+
     // Scroll to bottom of messages
     scrollToBottom();
   }
-  
+
   // Send a message
   async function sendMessage() {
     const chatInput = document.getElementById('aipi-input');
     const message = chatInput.value.trim();
-    
+
     if (!message) return;
-    
+
     // Clear input
     chatInput.value = '';
     document.getElementById('aipi-send-button').disabled = true;
-    
+
     // Start conversation if not already started
     if (!conversationStarted) {
       await startConversation();
     }
-    
+
     // Add user message to UI
     addMessage(message, 'user');
-    
+
     // Show typing indicator
     showTypingIndicator(true);
-    
+
     // Asegurarnos de que tenemos el contenido de la página si no lo hemos escaneado aún
     if (!siteContentScanned) {
       scanCurrentPageContent();
     }
-    
+
     try {
       // Mensaje de debug para verificar el envío de información contextual
       console.log("Enviando mensaje con contexto de página:", {
@@ -1413,7 +1427,7 @@ Contenido: [Error al extraer contenido detallado]
         title: pageTitle,
         contentLength: currentPageContent ? currentPageContent.length : 0
       });
-      
+
       // Send message to server
       const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/message`, {
         method: 'POST',
@@ -1432,14 +1446,14 @@ Contenido: [Error al extraer contenido detallado]
           }
         }),
       });
-      
+
       // Hide typing indicator
       showTypingIndicator(false);
-      
+
       if (!response.ok) {
         // Show friendly error message in chat based on browser language
         const userLang = navigator.language.split('-')[0];
-        
+
         if (response.status === 500) {
           // Error messages based on language
           if (userLang === 'fr') {
@@ -1463,16 +1477,16 @@ Contenido: [Error al extraer contenido detallado]
         }
         throw new Error(`Failed to send message: ${response.status}`);
       }
-      
+
       const data = await response.json();
-      
+
       // Add AI response to UI
       if (data.aiMessage) {
         addMessage(data.aiMessage.content, 'assistant');
       } else {
         // Show message based on user language
         const userLang = navigator.language.split('-')[0];
-        
+
         if (userLang === 'fr') {
           addMessage("J'ai reçu votre message, mais je n'ai pas pu générer une réponse pour le moment.", 'assistant');
         } else if (userLang === 'en') {
@@ -1484,15 +1498,15 @@ Contenido: [Error al extraer contenido detallado]
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      
+
       // Hide typing indicator if still showing
       showTypingIndicator(false);
-      
+
       // Only add error message if one hasn't been added already
       if (!document.querySelector('.aipi-assistant-message:last-child')) {
         // Add connection error message based on language
         const userLang = navigator.language.split('-')[0];
-        
+
         if (userLang === 'fr') {
           addMessage("Désolé, il y a un problème de connexion. Veuillez vérifier votre connexion Internet et réessayer.", 'assistant');
         } else if (userLang === 'en') {
@@ -1504,34 +1518,34 @@ Contenido: [Error al extraer contenido detallado]
       }
     }
   }
-  
+
   // Add message to UI
   function addMessage(content, role) {
     const messagesContainer = document.getElementById('aipi-messages-container');
     const messageElement = document.createElement('div');
-    
+
     messageElement.className = `aipi-message ${role === 'user' ? 'aipi-user-message' : 'aipi-assistant-message'}`;
     messageElement.textContent = content;
-    
+
     messagesContainer.appendChild(messageElement);
-    
+
     // Store message
     messages.push({ role, content });
-    
+
     // Scroll to bottom
     scrollToBottom();
   }
-  
+
   // Show or hide typing indicator
   function showTypingIndicator(show) {
     const messagesContainer = document.getElementById('aipi-messages-container');
     const existingIndicator = document.querySelector('.aipi-typing-indicator');
-    
+
     // Remove existing indicator if any
     if (existingIndicator) {
       messagesContainer.removeChild(existingIndicator);
     }
-    
+
     if (show) {
       const typingIndicator = document.createElement('div');
       typingIndicator.className = 'aipi-typing-indicator';
@@ -1540,18 +1554,18 @@ Contenido: [Error al extraer contenido detallado]
         <div class="aipi-typing-dot"></div>
         <div class="aipi-typing-dot"></div>
       `;
-      
+
       messagesContainer.appendChild(typingIndicator);
       scrollToBottom();
     }
   }
-  
+
   // Scroll to bottom of messages container
   function scrollToBottom() {
     const messagesContainer = document.getElementById('aipi-messages-container');
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
-  
+
   // Helper function to get font family based on config
   function getFontFamily() {
     switch (config.font) {
@@ -1568,23 +1582,23 @@ Contenido: [Error al extraer contenido detallado]
         return "'Inter', sans-serif";
     }
   }
-  
+
   // Helper function to adjust color brightness
   function adjustColor(color, amount) {
     // Convert hex to RGB
     let r = parseInt(color.substring(1, 3), 16);
     let g = parseInt(color.substring(3, 5), 16);
     let b = parseInt(color.substring(5, 7), 16);
-    
+
     // Adjust brightness
     r = Math.max(0, Math.min(255, r + amount));
     g = Math.max(0, Math.min(255, g + amount));
     b = Math.max(0, Math.min(255, b + amount));
-    
+
     // Convert back to hex
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   }
-  
+
   // Helper function to escape HTML
   function escapeHTML(text) {
     return text
@@ -1594,7 +1608,7 @@ Contenido: [Error al extraer contenido detallado]
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
   }
-  
+
   // Initialize the widget when the DOM is fully loaded
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
