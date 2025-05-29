@@ -406,12 +406,45 @@ Contenido: [Error al extraer contenido detallado]
 
   // Create widget DOM structure
   function createWidgetDOM() {
+    // Create an isolated root container that bypasses all CSS inheritance
+    const isolatedRoot = document.createElement('div');
+    isolatedRoot.style.cssText = `
+      all: initial !important;
+      position: fixed !important;
+      z-index: 2147483647 !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      background: none !important;
+      overflow: visible !important;
+      clip: auto !important;
+      clip-path: none !important;
+      contain: none !important;
+      isolation: isolate !important;
+    `;
+    
     // Main container with position based on config
     widgetInstance = document.createElement('div');
     widgetInstance.id = 'aipi-widget-container';
-    widgetInstance.style.position = 'fixed';
-    widgetInstance.style.zIndex = '2147483647';
-    widgetInstance.style.fontFamily = getFontFamily();
+    widgetInstance.style.cssText = `
+      all: initial !important;
+      position: fixed !important;
+      z-index: 2147483647 !important;
+      font-family: ${getFontFamily()} !important;
+      pointer-events: none !important;
+      overflow: visible !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      background: none !important;
+      clip: auto !important;
+      clip-path: none !important;
+    `;
 
     // Agregar clase según el tipo de widget
     if (config.widgetType === 'fullscreen') {
@@ -791,34 +824,44 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-toggle-button {
-        min-width: 56px;
-        height: 56px;
-        border-radius: 28px;
-        background-color: ${config.themeColor};
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        all: initial !important;
+        min-width: 160px !important;
+        width: auto !important;
+        height: 36px !important;
+        border-radius: 18px !important;
+        background-color: #ff7b2a !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
         display: flex !important;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
         border: none !important;
+        outline: none !important;
         color: white !important;
         z-index: 2147483647 !important;
         position: fixed !important;
-        padding: 0 16px;
-        font-family: ${getFontFamily()};
-        font-size: 14px;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: visible;
-        animation: aipi-pulse 2s infinite;
-        max-width: calc(100vw - 32px);
+        padding: 0 16px !important;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
         margin: 0 !important;
-        transform: none !important;
         opacity: 1 !important;
         visibility: visible !important;
         pointer-events: auto !important;
         box-sizing: border-box !important;
+        isolation: isolate !important;
+        contain: none !important;
+        clip: auto !important;
+        clip-path: none !important;
+        transform: none !important;
+        right: 20px !important;
+        bottom: 20px !important;
+        left: auto !important;
+        top: auto !important;
+        max-width: calc(100vw - 40px) !important;
       }
 
       #aipi-toggle-button:hover {
@@ -847,16 +890,15 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       .aipi-button-text {
-        margin-left: 8px;
-        opacity: 0;
-        max-width: 0;
-        transition: all 0.3s ease;
-        overflow: hidden;
-      }
-
-      #aipi-toggle-button:hover .aipi-button-text {
-        opacity: 1;
-        max-width: 150px;
+        margin-left: 8px !important;
+        opacity: 1 !important;
+        max-width: none !important;
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        display: inline !important;
+        overflow: visible !important;
+        white-space: nowrap !important;
       }
 
       .aipi-notification-dot {
@@ -877,6 +919,19 @@ Contenido: [Error al extraer contenido detallado]
         z-index: 2147483647 !important;
         pointer-events: none !important;
         font-family: ${getFontFamily()} !important;
+        overflow: visible !important;
+        width: auto !important;
+        height: auto !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        background: none !important;
+        clip: auto !important;
+        clip-path: none !important;
       }
       
       #aipi-widget-container * {
@@ -891,19 +946,42 @@ Contenido: [Error al extraer contenido detallado]
         -webkit-backface-visibility: hidden !important;
         transform-style: preserve-3d !important;
         -webkit-transform-style: preserve-3d !important;
+        contain: layout style !important;
+        clip: auto !important;
+        clip-path: none !important;
+        overflow: visible !important;
       }
       
-      /* Ensure the button is never clipped */
-      body {
-        position: relative !important;
+      /* Force all parent elements to not clip the widget */
+      html, body {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
       }
       
-      /* Additional positioning safeguards */
+      /* Ensure no parent containers clip the button */
+      #aipi-widget-container,
+      #aipi-widget-container *,
+      body *:has(#aipi-widget-container),
+      body *:has(#aipi-toggle-button) {
+        overflow: visible !important;
+        clip: auto !important;
+        clip-path: none !important;
+      }
+      
+      /* Additional positioning safeguards with more spacing */
       @media screen and (max-width: 768px) {
         #aipi-toggle-button {
-          max-width: calc(100vw - 20px) !important;
-          right: 10px !important;
-          bottom: 10px !important;
+          max-width: calc(100vw - 40px) !important;
+          right: 20px !important;
+          bottom: 20px !important;
+        }
+      }
+      
+      @media screen and (min-width: 769px) {
+        #aipi-toggle-button {
+          max-width: calc(100vw - 60px) !important;
+          right: 30px !important;
+          bottom: 30px !important;
         }
       }
 
@@ -1032,15 +1110,16 @@ Contenido: [Error al extraer contenido detallado]
       </div>
 
       <button id="aipi-toggle-button">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
         </svg>
-        <span class="aipi-button-text">¡Hablemos!</span>
-        <div class="aipi-notification-dot"></div>
+        <span class="aipi-button-text">AIPI Assistant</span>
       </button>
     `;
 
-    document.body.appendChild(widgetInstance);
+    // Add widget to isolated root, then isolated root to body
+    isolatedRoot.appendChild(widgetInstance);
+    document.body.appendChild(isolatedRoot);
   }
 
   // Set widget position based on config
