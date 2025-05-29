@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { z } from "zod";
@@ -90,6 +90,10 @@ export default function EditIntegration() {
   const [scriptExample, setScriptExample] = useState('');
   const [isScrapingLoading, setIsScrapingLoading] = useState(false);
   const [siteContent, setSiteContent] = useState<SiteContent[]>([]);
+  const [isUploadingFiles, setIsUploadingFiles] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractedContent, setExtractedContent] = useState<Array<{url: string, title: string}>>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Inicializar el formulario con react-hook-form
   const form = useForm<FormValues>({
@@ -123,6 +127,176 @@ export default function EditIntegration() {
     enabled: !!id,
     staleTime: 1000 * 60,
   });
+
+  // Función para manejar la selección de archivos
+  const handleFileSelection = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  // Función para manejar el cambio de archivos
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFiles(e.target.files);
+    }
+  };
+
+  // Función para subir documentos
+  const uploadFiles = async () => {
+    if (!selectedFiles || selectedFiles.length === 0 || !integration) {
+      return [];
+    }
+
+    setIsUploadingFiles(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append("integrationId", integration.id.toString());
+      
+      for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append("documents", selectedFiles[i]);
+      }
+      
+      const response = await fetch("/api/documents/upload", {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al subir los documentos");
+      }
+      
+      const data = await response.json();
+      
+      toast({
+        title: "Documentos subidos",
+        description: `Se han subido ${data.uploadedFiles.length} documentos correctamente`,
+      });
+      
+      // Refrescar la integración para mostrar los nuevos documentos
+      queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+      setSelectedFiles(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      
+      return data.uploadedFiles;
+    } catch (error) {
+      console.error("Error al subir documentos:", error);
+      toast({
+        title: "Error",
+        description: "No se pudieron subir los documentos. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+      return [];
+    } finally {
+      setIsUploadingFiles(false);
+    }
+  };
+
+  // Función para extraer contenido del sitio
+  const extractSiteContent = async () => {
+    const url = form.getValues("url");
+    
+    if (!url || !integration) {
+      toast({
+        title: "Error",
+        description: "Debes introducir una URL válida",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    setIsExtracting(true);
+    
+    try {
+      const response = await fetch("/api/site-content/extract", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          integrationId: integration.id,
+          url,
+          maxPages: 5,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al extraer el contenido");
+      }
+      
+      const data = await response.json();
+      
+      setExtractedContent(data.savedContent.map((content: any) => ({
+        url: content.url,
+        title: content.title,
+      })));
+      
+      toast({
+        title: "Extracción completada",
+        description: `Se procesaron ${data.pagesProcessed} páginas y se guardó el contenido.`,
+      });
+      
+      // Refrescar el contenido del sitio
+      queryClient.invalidateQueries({ queryKey: [`/api/site-content/${id}`] });
+      
+      return true;
+    } catch (error) {
+      console.error("Error en extracción:", error);
+      toast({
+        title: "Error en extracción",
+        description: "Ocurrió un error al procesar el sitio",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setIsExtracting(false);
+    }
+  };
+
+  // Función para eliminar un documento
+  const deleteDocument = async (documentIndex: number) => {
+    if (!integration || !integration.documentsData) return;
+    
+    try {
+      const response = await fetch(`/api/documents/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+        body: JSON.stringify({
+          integrationId: integration.id,
+          documentIndex,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Error al eliminar el documento");
+      }
+      
+      toast({
+        title: "Documento eliminado",
+        description: "El documento se ha eliminado correctamente",
+      });
+      
+      // Refrescar la integración
+      queryClient.invalidateQueries({ queryKey: [`/api/integrations/${id}`] });
+    } catch (error) {
+      console.error("Error al eliminar documento:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el documento",
+        variant: "destructive",
+      });
+    }
+  };
 
   // Cargar datos en el formulario cuando estén disponibles
   useEffect(() => {
@@ -603,6 +777,175 @@ export default function EditIntegration() {
                     </FormItem>
                   )}
                 />
+              </div>
+            </div>
+            
+            {/* Sección de gestión de documentos */}
+            <div className="space-y-6 border-t pt-6">
+              <h3 className="text-lg font-medium">Gestión de Documentos</h3>
+              
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                className="hidden" 
+                multiple 
+                accept=".pdf,.docx,.xlsx,.xls,.csv,.doc" 
+                onChange={handleFileChange}
+              />
+              
+              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md">
+                <h4 className="font-medium mb-4">Subir documentos adicionales</h4>
+                <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  Sube documentos (PDF, DOCX, Excel) para entrenar al chatbot con información adicional.
+                </div>
+                
+                <div 
+                  className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-md p-6 text-center cursor-pointer"
+                  onClick={handleFileSelection}
+                >
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="mb-3">
+                      <Upload className="h-10 w-10 text-gray-400" />
+                    </div>
+                    <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Selecciona archivos para subir
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Arrastra archivos aquí o haz clic para seleccionarlos
+                    </p>
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="mt-4"
+                    onClick={handleFileSelection}
+                  >
+                    {selectedFiles && selectedFiles.length > 0 ? (
+                      <span className="flex items-center gap-2">
+                        <File className="h-4 w-4" />
+                        {selectedFiles.length} {selectedFiles.length === 1 ? 'archivo seleccionado' : 'archivos seleccionados'}
+                      </span>
+                    ) : 'Seleccionar archivos'}
+                  </Button>
+                </div>
+
+                {selectedFiles && selectedFiles.length > 0 && (
+                  <div className="mt-4 bg-slate-100 dark:bg-slate-800 p-3 rounded-md">
+                    <h4 className="font-medium mb-2">Archivos seleccionados:</h4>
+                    <ul className="space-y-1">
+                      {Array.from(selectedFiles).map((file, index) => (
+                        <li key={index} className="flex items-center text-sm">
+                          <File className="h-4 w-4 mr-2 text-blue-500" />
+                          <span className="truncate">{file.name}</span>
+                          <span className="ml-2 text-gray-500 dark:text-gray-400 text-xs">
+                            ({(file.size / 1024).toFixed(0)} KB)
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button 
+                      type="button" 
+                      onClick={uploadFiles}
+                      disabled={isUploadingFiles}
+                      className="mt-3"
+                      size="sm"
+                    >
+                      {isUploadingFiles ? (
+                        <>
+                          <Loader className="w-4 h-4 mr-2 animate-spin" />
+                          Subiendo...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-4 h-4 mr-2" />
+                          Subir archivos
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {integration?.documentsData && integration.documentsData.length > 0 && (
+                  <div className="mt-4 border rounded-md p-3">
+                    <h4 className="font-medium mb-2">Documentos subidos:</h4>
+                    <ul className="space-y-2">
+                      {integration.documentsData.map((doc: any, index: number) => (
+                        <li key={index} className="flex items-center justify-between text-sm p-2 bg-white dark:bg-gray-800 rounded-md">
+                          <div className="flex items-center">
+                            <File className="h-4 w-4 mr-2 text-blue-500" />
+                            <span className="truncate">{doc.originalName}</span>
+                            <span className="ml-2 text-gray-500 dark:text-gray-400 text-xs">
+                              ({doc.mimetype})
+                            </span>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => deleteDocument(index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sección de scraping */}
+            <div className="space-y-6 border-t pt-6">
+              <h3 className="text-lg font-medium">Entrenamiento con contenido del sitio</h3>
+              
+              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md">
+                <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  Extrae contenido actualizado de tu sitio web para entrenar el chatbot
+                </div>
+                
+                <div className="flex gap-2 mb-4">
+                  <Button 
+                    type="button"
+                    onClick={extractSiteContent}
+                    disabled={isExtracting}
+                    variant="outline"
+                  >
+                    {isExtracting ? (
+                      <>
+                        <Loader className="w-4 h-4 mr-2 animate-spin" />
+                        Extrayendo...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Re-extraer contenido
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {extractedContent.length > 0 && (
+                  <div className="mt-4 border rounded-md p-3 max-h-48 overflow-y-auto">
+                    <h4 className="font-medium mb-2 text-sm">Contenido extraído:</h4>
+                    <ul className="space-y-1">
+                      {extractedContent.map((content, index) => (
+                        <li key={index} className="flex items-start text-sm p-2 bg-white dark:bg-gray-800 rounded-md">
+                          <span className="flex-grow overflow-hidden">
+                            <p className="font-medium truncate">{content.title || "Sin título"}</p>
+                            <a 
+                              href={content.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-xs text-blue-500 hover:underline truncate block"
+                            >
+                              {content.url}
+                            </a>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             </div>
             
