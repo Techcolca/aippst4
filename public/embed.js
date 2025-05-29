@@ -410,7 +410,7 @@ Contenido: [Error al extraer contenido detallado]
     widgetInstance = document.createElement('div');
     widgetInstance.id = 'aipi-widget-container';
     widgetInstance.style.position = 'fixed';
-    widgetInstance.style.zIndex = '999999';
+    widgetInstance.style.zIndex = '2147483647';
     widgetInstance.style.fontFamily = getFontFamily();
 
     // Agregar clase según el tipo de widget
@@ -796,15 +796,15 @@ Contenido: [Error al extraer contenido detallado]
         border-radius: 28px;
         background-color: ${config.themeColor};
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        display: flex;
+        display: flex !important;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         transition: all 0.3s ease;
-        border: none;
-        color: white;
-        z-index: 999999;
-        position: fixed;
+        border: none !important;
+        color: white !important;
+        z-index: 2147483647 !important;
+        position: fixed !important;
         padding: 0 16px;
         font-family: ${getFontFamily()};
         font-size: 14px;
@@ -813,13 +813,19 @@ Contenido: [Error al extraer contenido detallado]
         overflow: visible;
         animation: aipi-pulse 2s infinite;
         max-width: calc(100vw - 32px);
+        margin: 0 !important;
+        transform: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        box-sizing: border-box !important;
       }
 
       #aipi-toggle-button:hover {
-        transform: translateY(-3px) scale(1.05);
-        background-color: ${adjustColor(config.themeColor, -20)};
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-        animation: none;
+        transform: translateY(-3px) scale(1.05) !important;
+        background-color: ${adjustColor(config.themeColor, -20)} !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
+        animation: none !important;
       }
 
       @keyframes aipi-pulse {
@@ -863,6 +869,42 @@ Contenido: [Error al extraer contenido detallado]
         border-radius: 50%;
         border: 2px solid white;
         animation: aipi-bounce 1s infinite;
+      }
+
+      /* Additional overrides for WordPress and other CMS compatibility */
+      #aipi-widget-container {
+        position: fixed !important;
+        z-index: 2147483647 !important;
+        pointer-events: none !important;
+        font-family: ${getFontFamily()} !important;
+      }
+      
+      #aipi-widget-container * {
+        pointer-events: auto !important;
+        box-sizing: border-box !important;
+      }
+      
+      #aipi-toggle-button {
+        isolation: isolate !important;
+        will-change: transform !important;
+        backface-visibility: hidden !important;
+        -webkit-backface-visibility: hidden !important;
+        transform-style: preserve-3d !important;
+        -webkit-transform-style: preserve-3d !important;
+      }
+      
+      /* Ensure the button is never clipped */
+      body {
+        position: relative !important;
+      }
+      
+      /* Additional positioning safeguards */
+      @media screen and (max-width: 768px) {
+        #aipi-toggle-button {
+          max-width: calc(100vw - 20px) !important;
+          right: 10px !important;
+          bottom: 10px !important;
+        }
       }
 
       /* Estilos para el botón de acceso en modo pantalla completa */
