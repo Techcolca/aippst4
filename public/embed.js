@@ -1277,21 +1277,39 @@ Contenido: [Error al extraer contenido detallado]
         // Limpiar cualquier event listener previo
         toggleButton.onclick = null;
         
-        // Usar onclick directo para evitar conflictos
-        toggleButton.onclick = handleToggle;
+        // Remover todos los event listeners existentes clonando el elemento
+        const newToggleButton = toggleButton.cloneNode(true);
+        toggleButton.parentNode.replaceChild(newToggleButton, toggleButton);
+        
+        // Referenciar el nuevo botón
+        const cleanButton = document.getElementById('aipi-toggle-button');
+        
+        // Usar solo onclick para evitar conflictos
+        cleanButton.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          
+          console.log('AIPPS Widget: Click detectado, estado actual isOpen:', isOpen);
+          
+          if (isOpen) {
+            console.log('AIPPS Widget: Cerrando widget');
+            closeWidget();
+          } else {
+            console.log('AIPPS Widget: Abriendo widget');
+            openWidget();
+          }
+          
+          return false;
+        };
 
-        // También agregar eventos múltiples para máxima compatibilidad
-        toggleButton.addEventListener('click', handleToggle, { capture: true, passive: false });
-        toggleButton.addEventListener('mousedown', handleToggle, { capture: true, passive: false });
-        toggleButton.addEventListener('touchstart', handleToggle, { capture: true, passive: false });
-
-        // Forzar propiedades críticas directamente en el elemento
-        toggleButton.style.zIndex = '2147483647';
-        toggleButton.style.pointerEvents = 'auto';
-        toggleButton.style.position = 'fixed';
-        toggleButton.style.cursor = 'pointer';
-        toggleButton.style.userSelect = 'none';
-        toggleButton.style.webkitUserSelect = 'none';
+        // Forzar propiedades críticas directamente en el elemento limpio
+        cleanButton.style.zIndex = '2147483647';
+        cleanButton.style.pointerEvents = 'auto';
+        cleanButton.style.position = 'fixed';
+        cleanButton.style.cursor = 'pointer';
+        cleanButton.style.userSelect = 'none';
+        cleanButton.style.webkitUserSelect = 'none';
 
         console.log('AIPPS Widget: Eventos configurados correctamente para el botón');
 
@@ -1471,6 +1489,33 @@ Contenido: [Error al extraer contenido detallado]
     isOpen = true;
     
     console.log('AIPPS Widget: Panel de chat configurado como visible');
+    
+    // Proteger el panel para que no se cierre inesperadamente
+    setTimeout(() => {
+      if (chatPanel && isOpen) {
+        // Forzar que se mantenga visible
+        chatPanel.style.display = 'flex';
+        chatPanel.style.visibility = 'visible';
+        chatPanel.style.opacity = '1';
+        console.log('AIPPS Widget: Protección de visibilidad aplicada');
+      }
+    }, 50);
+    
+    // Verificar cada 100ms durante 2 segundos que el panel siga visible
+    let protectionCount = 0;
+    const protectionInterval = setInterval(() => {
+      if (chatPanel && isOpen && protectionCount < 20) {
+        if (chatPanel.style.display === 'none' || chatPanel.style.visibility === 'hidden') {
+          console.log('AIPPS Widget: Panel cerrado inesperadamente, restaurando...');
+          chatPanel.style.display = 'flex';
+          chatPanel.style.visibility = 'visible';
+          chatPanel.style.opacity = '1';
+        }
+        protectionCount++;
+      } else {
+        clearInterval(protectionInterval);
+      }
+    }, 100);
 
     // Focus input
     setTimeout(() => {
