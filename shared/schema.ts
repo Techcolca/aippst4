@@ -38,6 +38,9 @@ export const integrations = pgTable("integrations", {
   documentsData: json("documents_data").default([]), // Almacenará metadatos de los documentos subidos
   widgetType: text("widget_type").default("bubble"), // Tipo de widget: "bubble" (original) o "fullscreen" (estilo ChatGPT)
   ignoredSections: json("ignored_sections").default([]), // Lista de nombres de secciones a ignorar (ej: "Our Services", "Contact", etc.)
+  description: text("description"), // Descripción de la integración
+  ignoredSectionsText: text("ignored_sections_text"), // Texto de secciones ignoradas para scraping
+  customization: json("customization"), // Personalización del chatbot (colores, fuentes, mensajes, etc.)
 });
 
 export const insertIntegrationSchema = createInsertSchema(integrations).pick({

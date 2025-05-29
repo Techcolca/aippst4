@@ -738,10 +738,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         url: req.body.url,
         themeColor: req.body.themeColor,
         ignoredSections: req.body.ignoredSections || [],
+        ignoredSectionsText: req.body.ignoredSectionsText,
         position: req.body.position,
         active: req.body.active,
         widgetType: req.body.widgetType,
-        botBehavior: req.body.botBehavior
+        botBehavior: req.body.botBehavior,
+        description: req.body.description,
+        customization: req.body.customization
       });
       
       res.json(updatedIntegration);
