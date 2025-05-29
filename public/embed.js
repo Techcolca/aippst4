@@ -1378,18 +1378,47 @@ Contenido: [Error al extraer contenido detallado]
 
   // Open the widget
   function openWidget() {
+    console.log('AIPPS Widget: Intentando abrir widget...');
+    
     const chatPanel = document.getElementById('aipi-chat-panel');
     const toggleButton = document.getElementById('aipi-toggle-button');
     const fullscreenButton = document.getElementById('aipi-fullscreen-button');
 
+    console.log('AIPPS Widget: Elementos encontrados:', {
+      chatPanel: !!chatPanel,
+      toggleButton: !!toggleButton,
+      fullscreenButton: !!fullscreenButton,
+      widgetType: config.widgetType
+    });
+
+    if (!chatPanel) {
+      console.error('AIPPS Widget: No se encontró el panel de chat');
+      return;
+    }
+
     // Para widgets tipo fullscreen, abrir siempre directamente
     if (config.widgetType === 'fullscreen') {
+      console.log('AIPPS Widget: Abriendo widget fullscreen');
+      
       // Ocultar botón flotante cuando el chat está abierto
       if (fullscreenButton) {
         fullscreenButton.style.display = 'none';
       }
 
-      chatPanel.style.display = 'flex';
+      // Forzar propiedades de visualización
+      chatPanel.style.cssText = `
+        display: flex !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 2147483647 !important;
+        background: white !important;
+        flex-direction: column !important;
+      `;
       isOpen = true;
 
       // Start conversation if not already started
@@ -1408,14 +1437,7 @@ Contenido: [Error al extraer contenido detallado]
     }
 
     // Para widgets tipo bubble (comportamiento original)
-    // Update toggle button icon and text
-    toggleButton.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18"></line>
-        <line x1="6" y1="6" x2="18" y2="18"></line>
-      </svg>
-      <span class="aipi-button-text">Cerrar</span>
-    `;
+    console.log('AIPPS Widget: Abriendo widget bubble');
 
     // Detener rotación de textos cuando está abierto
     if (textRotationInterval) {
@@ -1427,8 +1449,28 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
 
-    chatPanel.style.display = 'flex';
+    // Forzar propiedades de visualización para bubble
+    chatPanel.style.cssText = `
+      display: flex !important;
+      position: fixed !important;
+      bottom: 80px !important;
+      right: 20px !important;
+      width: 350px !important;
+      height: 500px !important;
+      max-height: 80vh !important;
+      z-index: 2147483647 !important;
+      background: white !important;
+      border-radius: 10px !important;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+    `;
     isOpen = true;
+    
+    console.log('AIPPS Widget: Panel de chat configurado como visible');
 
     // Focus input
     setTimeout(() => {
