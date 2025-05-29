@@ -1684,7 +1684,7 @@ Contenido: [Error al extraer contenido detallado]
           conversationId: config.conversationId,
           content: message,
           role: 'user',
-          language: navigator.language.split('-')[0], // Enviar código de idioma (fr, en, es, etc.)
+          // NO enviar language - dejar que el servidor detecte automáticamente
           pageContext: {
             title: pageTitle || document.title,
             url: window.location.href,

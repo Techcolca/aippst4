@@ -99,7 +99,11 @@ const upload = multer({
 // Función para obtener las características de cada plan según su nivel
 // Función para detectar el idioma del mensaje del usuario
 function detectLanguage(message: string): string {
+  console.log(`=== DETECCIÓN DE IDIOMA ===`);
+  console.log(`Mensaje original: "${message}"`);
+  
   const text = message.toLowerCase().trim();
+  console.log(`Texto procesado: "${text}"`);
   
   // Palabras comunes en español
   const spanishWords = [
@@ -107,64 +111,91 @@ function detectLanguage(message: string): string {
     'quién', 'por qué', 'ayuda', 'información', 'precio', 'servicio', 'empresa', 'contacto',
     'productos', 'disponible', 'horario', 'ubicación', 'teléfono', 'correo', 'página',
     'necesito', 'quiero', 'busco', 'me interesa', 'puedo', 'tienes', 'tienen', 'ofrecen',
-    'buenos días', 'buenas tardes', 'buenas noches', 'muchas gracias', 'de nada'
+    'buenos días', 'buenas tardes', 'buenas noches', 'muchas gracias', 'de nada', 'está',
+    'son', 'estoy', 'tengo', 'puede', 'hacer', 'muy', 'bien', 'malo', 'bueno'
   ];
   
   // Palabras comunes en francés
   const frenchWords = [
-    'bonjour', 'merci', 's\'il vous plaît', 'au revoir', 'oui', 'non', 'comment', 'quoi', 'où', 'quand',
+    'bonjour', 'merci', 'au revoir', 'oui', 'non', 'comment', 'quoi', 'où', 'quand',
     'qui', 'pourquoi', 'aide', 'information', 'prix', 'service', 'entreprise', 'contact',
     'produits', 'disponible', 'horaire', 'emplacement', 'téléphone', 'email', 'page',
-    'j\'ai besoin', 'je veux', 'je cherche', 'ça m\'intéresse', 'puis-je', 'avez-vous', 'offrez-vous',
-    'bonne journée', 'bonne soirée', 'bonne nuit', 'merci beaucoup', 'de rien', 'salut'
+    'besoin', 'veux', 'cherche', 'intéresse', 'puis', 'avez', 'offrez', 'vous',
+    'journée', 'soirée', 'nuit', 'beaucoup', 'rien', 'salut', 'est', 'sont', 'suis',
+    'avoir', 'être', 'faire', 'très', 'bien', 'mal', 'bon', 'bonne'
   ];
   
   // Palabras comunes en inglés
   const englishWords = [
-    'hello', 'thank you', 'please', 'goodbye', 'yes', 'no', 'how', 'what', 'where', 'when',
+    'hello', 'thank', 'please', 'goodbye', 'yes', 'no', 'how', 'what', 'where', 'when',
     'who', 'why', 'help', 'information', 'price', 'service', 'company', 'contact',
     'products', 'available', 'schedule', 'location', 'phone', 'email', 'page',
-    'i need', 'i want', 'i\'m looking', 'i\'m interested', 'can i', 'do you have', 'do you offer',
-    'good morning', 'good afternoon', 'good evening', 'good night', 'thank you very much', 'you\'re welcome', 'hi'
+    'need', 'want', 'looking', 'interested', 'can', 'have', 'offer', 'you',
+    'morning', 'afternoon', 'evening', 'night', 'much', 'welcome', 'hi', 'are',
+    'is', 'am', 'do', 'make', 'very', 'good', 'bad', 'well'
   ];
   
   let spanishScore = 0;
   let frenchScore = 0;
   let englishScore = 0;
   
+  let spanishMatches = [];
+  let frenchMatches = [];
+  let englishMatches = [];
+  
   // Contar coincidencias para cada idioma
   spanishWords.forEach(word => {
-    if (text.includes(word)) spanishScore++;
+    if (text.includes(word)) {
+      spanishScore++;
+      spanishMatches.push(word);
+    }
   });
   
   frenchWords.forEach(word => {
-    if (text.includes(word)) frenchScore++;
+    if (text.includes(word)) {
+      frenchScore++;
+      frenchMatches.push(word);
+    }
   });
   
   englishWords.forEach(word => {
-    if (text.includes(word)) englishScore++;
+    if (text.includes(word)) {
+      englishScore++;
+      englishMatches.push(word);
+    }
   });
   
-  // Detectar patrones específicos
+  // Detectar patrones específicos de caracteres
   if (text.includes('ñ') || text.includes('¿') || text.includes('¡')) {
     spanishScore += 2;
+    console.log('Caracteres específicos del español detectados (+2 puntos)');
   }
   
   if (text.includes('ç') || text.includes('à') || text.includes('è') || text.includes('é') || text.includes('ê') || text.includes('ë') || text.includes('î') || text.includes('ï') || text.includes('ô') || text.includes('ù') || text.includes('û') || text.includes('ü') || text.includes('ÿ')) {
     frenchScore += 2;
+    console.log('Caracteres específicos del francés detectados (+2 puntos)');
   }
+  
+  console.log(`Puntuaciones:
+  - Español: ${spanishScore} (palabras: ${spanishMatches.join(', ')})
+  - Francés: ${frenchScore} (palabras: ${frenchMatches.join(', ')})
+  - Inglés: ${englishScore} (palabras: ${englishMatches.join(', ')})`);
   
   // Devolver el idioma con mayor puntuación
+  let detectedLanguage = 'es'; // Default español
+  
   if (spanishScore > frenchScore && spanishScore > englishScore) {
-    return 'es';
+    detectedLanguage = 'es';
   } else if (frenchScore > spanishScore && frenchScore > englishScore) {
-    return 'fr';
+    detectedLanguage = 'fr';
   } else if (englishScore > spanishScore && englishScore > frenchScore) {
-    return 'en';
+    detectedLanguage = 'en';
   }
   
-  // Si no hay clara distinción, usar español como predeterminado
-  return 'es';
+  console.log(`Idioma detectado: ${detectedLanguage}`);
+  console.log(`=== FIN DETECCIÓN ===`);
+  
+  return detectedLanguage;
 }
 
 function getFeaturesByTier(tier: string): string[] {
@@ -2175,12 +2206,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Generando respuesta con ${context ? 'contexto del sitio web y documentos' : 'sin contexto'}`);
         
-        // Detect language from user message
+        // Detect language from user message - ALWAYS use detection, ignore external language parameter
         const detectedLanguage = detectLanguage(content);
         console.log(`Idioma detectado del mensaje "${content}": ${detectedLanguage}`);
+        console.log(`Parámetro de idioma recibido (ignorado): ${language}`);
         
-        // Use detected language or fallback to provided language parameter
-        const responseLanguage = detectedLanguage || language || 'es';
+        // ALWAYS use detected language, ignore any external language parameter
+        const responseLanguage = detectedLanguage;
         
         // Generate AI response with detected language support
         console.log(`Generating response in language: ${responseLanguage}`);

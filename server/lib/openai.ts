@@ -14,7 +14,7 @@ export async function generateChatCompletion(
 ) {
   try {
     // Determinar en qué idioma responder
-    const responseLanguage = language || "fr"; // Default a francés (como ha pedido el usuario)
+    const responseLanguage = language || "es"; // Default a español si no se especifica idioma
     
     // Log para debug
     console.log("Respondiendo en idioma:", responseLanguage);
