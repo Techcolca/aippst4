@@ -1120,6 +1120,21 @@ Contenido: [Error al extraer contenido detallado]
     // Add widget to isolated root, then isolated root to body
     isolatedRoot.appendChild(widgetInstance);
     document.body.appendChild(isolatedRoot);
+    
+    // Ensure the button is properly configured after DOM insertion
+    setTimeout(() => {
+      const toggleButton = document.getElementById('aipi-toggle-button');
+      if (toggleButton) {
+        console.log('AIPPS Widget: Botón encontrado después de inserción DOM');
+        // Force pointer events and positioning
+        toggleButton.style.pointerEvents = 'auto';
+        toggleButton.style.cursor = 'pointer';
+        toggleButton.style.zIndex = '2147483647';
+        toggleButton.style.position = 'fixed';
+      } else {
+        console.error('AIPPS Widget: Botón NO encontrado después de inserción DOM');
+      }
+    }, 100);
   }
 
   // Set widget position based on config
@@ -1225,85 +1240,108 @@ Contenido: [Error al extraer contenido detallado]
 
   // Attach event listeners
   function attachEventListeners() {
-    const toggleButton = document.getElementById('aipi-toggle-button');
-    const minimizeButton = document.getElementById('aipi-minimize-button');
-    const closeButton = document.getElementById('aipi-close-button');
-    const chatInput = document.getElementById('aipi-input');
-    const sendButton = document.getElementById('aipi-send-button');
-    const minimizedContainer = document.getElementById('aipi-minimized-container');
+    // Wait for DOM to be ready, then find elements
+    setTimeout(() => {
+      const toggleButton = document.getElementById('aipi-toggle-button');
+      const minimizeButton = document.getElementById('aipi-minimize-button');
+      const closeButton = document.getElementById('aipi-close-button');
+      const chatInput = document.getElementById('aipi-input');
+      const sendButton = document.getElementById('aipi-send-button');
+      const minimizedContainer = document.getElementById('aipi-minimized-container');
 
-    console.log('AIPPS Widget: Adjuntando eventos...', {
-      toggleButton: !!toggleButton,
-      minimizeButton: !!minimizeButton,
-      closeButton: !!closeButton,
-      chatInput: !!chatInput,
-      sendButton: !!sendButton
-    });
+      console.log('AIPPS Widget: Adjuntando eventos...', {
+        toggleButton: !!toggleButton,
+        minimizeButton: !!minimizeButton,
+        closeButton: !!closeButton,
+        chatInput: !!chatInput,
+        sendButton: !!sendButton
+      });
 
-    // Toggle widget open/close
-    if (toggleButton) {
-      // Función para manejar el toggle
-      function handleToggle(e) {
-        if (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
+      // Toggle widget open/close
+      if (toggleButton) {
+        // Función para manejar el toggle
+        function handleToggle(e) {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+          }
+          console.log('AIPPS Widget: Toggle ejecutado');
+          if (isOpen) {
+            closeWidget();
+          } else {
+            openWidget();
+          }
         }
-        console.log('AIPPS Widget: Toggle ejecutado');
-        if (isOpen) {
-          closeWidget();
-        } else {
-          openWidget();
-        }
+
+        // Limpiar cualquier event listener previo
+        toggleButton.onclick = null;
+        
+        // Usar onclick directo para evitar conflictos
+        toggleButton.onclick = handleToggle;
+
+        // También agregar eventos múltiples para máxima compatibilidad
+        toggleButton.addEventListener('click', handleToggle, { capture: true, passive: false });
+        toggleButton.addEventListener('mousedown', handleToggle, { capture: true, passive: false });
+        toggleButton.addEventListener('touchstart', handleToggle, { capture: true, passive: false });
+
+        // Forzar propiedades críticas directamente en el elemento
+        toggleButton.style.zIndex = '2147483647';
+        toggleButton.style.pointerEvents = 'auto';
+        toggleButton.style.position = 'fixed';
+        toggleButton.style.cursor = 'pointer';
+        toggleButton.style.userSelect = 'none';
+        toggleButton.style.webkitUserSelect = 'none';
+
+        console.log('AIPPS Widget: Eventos configurados correctamente para el botón');
+
+        // Iniciar rotación de textos después de un breve delay (solo para modo no compacto)
+        setTimeout(() => {
+          // No iniciar rotación porque ahora usamos texto fijo "AIPI Assistant"
+          console.log('AIPPS Widget: Widget listo para usar');
+        }, 1000);
+      } else {
+        console.error('AIPPS Widget: No se encontró el botón principal - reintentando...');
+        // Reintentar una vez más después de un delay
+        setTimeout(() => {
+          attachEventListeners();
+        }, 500);
+        return;
       }
 
-      // Usar onclick directo para evitar conflictos
-      toggleButton.onclick = handleToggle;
-
-      // También agregar eventos múltiples
-      toggleButton.addEventListener('click', handleToggle, true);
-      toggleButton.addEventListener('mousedown', handleToggle, true);
-      toggleButton.addEventListener('touchstart', handleToggle, true);
-
-      // Forzar z-index y pointer-events directamente en el elemento
-      toggleButton.style.zIndex = '999999';
-      toggleButton.style.pointerEvents = 'auto';
-      toggleButton.style.position = 'fixed';
-      toggleButton.style.cursor = 'pointer';
-
-      console.log('AIPPS Widget: Eventos configurados - listo para usar');
-
-      // Iniciar rotación de textos después de un breve delay
-      setTimeout(() => {
-        startTextRotation();
-      }, 2000);
-    } else {
-      console.error('AIPPS Widget: No se encontró el botón principal');
-    }
-
-    // Close widget
-    closeButton.addEventListener('click', closeWidget);
-
-    // Minimize widget
-    minimizeButton.addEventListener('click', minimizeWidget);
-
-    // Maximize from minimized state
-    minimizedContainer.addEventListener('click', maximizeWidget);
-
-    // Handle input changes
-    chatInput.addEventListener('input', () => {
-      sendButton.disabled = !chatInput.value.trim();
-    });
-
-    // Send message on Enter key
-    chatInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && chatInput.value.trim()) {
-        sendMessage();
+      // Close widget
+      if (closeButton) {
+        closeButton.addEventListener('click', closeWidget);
       }
-    });
 
-    // Send message on button click
-    sendButton.addEventListener('click', sendMessage);
+      // Minimize widget
+      if (minimizeButton) {
+        minimizeButton.addEventListener('click', minimizeWidget);
+      }
+
+      // Maximize from minimized state
+      if (minimizedContainer) {
+        minimizedContainer.addEventListener('click', maximizeWidget);
+      }
+
+      // Handle input changes
+      if (chatInput && sendButton) {
+        chatInput.addEventListener('input', () => {
+          sendButton.disabled = !chatInput.value.trim();
+        });
+
+        // Send message on Enter key
+        chatInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && chatInput.value.trim()) {
+            sendMessage();
+          }
+        });
+
+        // Send message on button click
+        sendButton.addEventListener('click', sendMessage);
+      }
+      
+    }, 100); // Wait 100ms for DOM to be ready
   }
 
   // Start or continue conversation with AIPI
