@@ -13,11 +13,12 @@ export async function generateChatCompletion(
   language?: string
 ) {
   try {
-    // Determinar en qué idioma responder
+    // Determinar en qué idioma responder - USAR EL IDIOMA DETECTADO AUTOMÁTICAMENTE
     const responseLanguage = language || "es"; // Default a español si no se especifica idioma
     
     // Log para debug
-    console.log("Respondiendo en idioma:", responseLanguage);
+    console.log("OpenAI: Idioma recibido del servidor:", language);
+    console.log("OpenAI: Respondiendo en idioma:", responseLanguage);
     
     // Adaptar el mensaje del sistema según el idioma
     let systemContent = "";
