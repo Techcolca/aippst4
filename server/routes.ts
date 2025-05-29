@@ -97,6 +97,76 @@ const upload = multer({
 });
 
 // Función para obtener las características de cada plan según su nivel
+// Función para detectar el idioma del mensaje del usuario
+function detectLanguage(message: string): string {
+  const text = message.toLowerCase().trim();
+  
+  // Palabras comunes en español
+  const spanishWords = [
+    'hola', 'gracias', 'por favor', 'adiós', 'sí', 'no', 'cómo', 'qué', 'dónde', 'cuándo',
+    'quién', 'por qué', 'ayuda', 'información', 'precio', 'servicio', 'empresa', 'contacto',
+    'productos', 'disponible', 'horario', 'ubicación', 'teléfono', 'correo', 'página',
+    'necesito', 'quiero', 'busco', 'me interesa', 'puedo', 'tienes', 'tienen', 'ofrecen',
+    'buenos días', 'buenas tardes', 'buenas noches', 'muchas gracias', 'de nada'
+  ];
+  
+  // Palabras comunes en francés
+  const frenchWords = [
+    'bonjour', 'merci', 's\'il vous plaît', 'au revoir', 'oui', 'non', 'comment', 'quoi', 'où', 'quand',
+    'qui', 'pourquoi', 'aide', 'information', 'prix', 'service', 'entreprise', 'contact',
+    'produits', 'disponible', 'horaire', 'emplacement', 'téléphone', 'email', 'page',
+    'j\'ai besoin', 'je veux', 'je cherche', 'ça m\'intéresse', 'puis-je', 'avez-vous', 'offrez-vous',
+    'bonne journée', 'bonne soirée', 'bonne nuit', 'merci beaucoup', 'de rien', 'salut'
+  ];
+  
+  // Palabras comunes en inglés
+  const englishWords = [
+    'hello', 'thank you', 'please', 'goodbye', 'yes', 'no', 'how', 'what', 'where', 'when',
+    'who', 'why', 'help', 'information', 'price', 'service', 'company', 'contact',
+    'products', 'available', 'schedule', 'location', 'phone', 'email', 'page',
+    'i need', 'i want', 'i\'m looking', 'i\'m interested', 'can i', 'do you have', 'do you offer',
+    'good morning', 'good afternoon', 'good evening', 'good night', 'thank you very much', 'you\'re welcome', 'hi'
+  ];
+  
+  let spanishScore = 0;
+  let frenchScore = 0;
+  let englishScore = 0;
+  
+  // Contar coincidencias para cada idioma
+  spanishWords.forEach(word => {
+    if (text.includes(word)) spanishScore++;
+  });
+  
+  frenchWords.forEach(word => {
+    if (text.includes(word)) frenchScore++;
+  });
+  
+  englishWords.forEach(word => {
+    if (text.includes(word)) englishScore++;
+  });
+  
+  // Detectar patrones específicos
+  if (text.includes('ñ') || text.includes('¿') || text.includes('¡')) {
+    spanishScore += 2;
+  }
+  
+  if (text.includes('ç') || text.includes('à') || text.includes('è') || text.includes('é') || text.includes('ê') || text.includes('ë') || text.includes('î') || text.includes('ï') || text.includes('ô') || text.includes('ù') || text.includes('û') || text.includes('ü') || text.includes('ÿ')) {
+    frenchScore += 2;
+  }
+  
+  // Devolver el idioma con mayor puntuación
+  if (spanishScore > frenchScore && spanishScore > englishScore) {
+    return 'es';
+  } else if (frenchScore > spanishScore && frenchScore > englishScore) {
+    return 'fr';
+  } else if (englishScore > spanishScore && englishScore > frenchScore) {
+    return 'en';
+  }
+  
+  // Si no hay clara distinción, usar español como predeterminado
+  return 'es';
+}
+
 function getFeaturesByTier(tier: string): string[] {
   switch (tier) {
     case 'basic':
@@ -2105,12 +2175,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         console.log(`Generando respuesta con ${context ? 'contexto del sitio web y documentos' : 'sin contexto'}`);
         
-        // Generate AI response with language support
-        console.log(`Generating response in language: ${language || 'default (es)'}`);
+        // Detect language from user message
+        const detectedLanguage = detectLanguage(content);
+        console.log(`Idioma detectado del mensaje "${content}": ${detectedLanguage}`);
+        
+        // Use detected language or fallback to provided language parameter
+        const responseLanguage = detectedLanguage || language || 'es';
+        
+        // Generate AI response with detected language support
+        console.log(`Generating response in language: ${responseLanguage}`);
         const completion = await generateChatCompletion(
-          messages.map(msg => ({ role: msg.role, content: msg.content })),
+          messages.map(msg => ({ role: msg.role, content: msg.content || '' })),
           context,
-          language
+          responseLanguage
         );
         
         // Save AI response
