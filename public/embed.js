@@ -541,7 +541,8 @@ Contenido: [Error al extraer contenido detallado]
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        position: relative;
+        display: flex;
+        flex-direction: column;
         overflow: hidden;
         margin-bottom: 16px;
         transition: all 0.3s ease;
@@ -633,11 +634,8 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        position: absolute;
-        top: 60px;
-        bottom: 60px;
-        left: 0;
-        right: 0;
+        flex: 1;
+        height: 380px;
         overflow-y: scroll;
         overflow-x: hidden;
         padding: 16px;
