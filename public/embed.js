@@ -638,12 +638,24 @@ Contenido: [Error al extraer contenido detallado]
         overflow-y: auto;
         overflow-x: hidden;
         padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
         background-color: #f9fafb;
-        min-height: 0;
-        max-height: 100%;
+        height: calc(100% - 120px);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e0 #f7fafc;
+      }
+      
+      #aipi-messages-container::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      #aipi-messages-container::-webkit-scrollbar-track {
+        background: #f7fafc;
+      }
+      
+      #aipi-messages-container::-webkit-scrollbar-thumb {
+        background: #cbd5e0;
+        border-radius: 3px;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -664,6 +676,8 @@ Contenido: [Error al extraer contenido detallado]
         font-size: 14px;
         line-height: 1.5;
         word-wrap: break-word;
+        margin-bottom: 12px;
+        display: block;
       }
 
       .aipi-user-message {
@@ -1785,8 +1799,10 @@ Contenido: [Error al extraer contenido detallado]
     // Store message
     messages.push({ role, content });
 
-    // Scroll to bottom
-    scrollToBottom();
+    // Force scroll to bottom with delay
+    setTimeout(() => {
+      scrollToBottom();
+    }, 200);
   }
 
   // Show or hide typing indicator
