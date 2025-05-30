@@ -634,28 +634,34 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        height: 380px;
+        height: 250px;
         overflow-y: scroll !important;
         overflow-x: hidden;
         padding: 16px;
         background-color: #f9fafb;
         -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-        scrollbar-color: #cbd5e0 #f7fafc;
+        scrollbar-width: auto;
+        scrollbar-color: #666 #f0f0f0;
         box-sizing: border-box;
+        border: 1px solid #e5e7eb;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
-        width: 6px;
+        width: 8px;
       }
       
       #aipi-messages-container::-webkit-scrollbar-track {
-        background: #f7fafc;
+        background: #f0f0f0;
+        border-radius: 4px;
       }
       
       #aipi-messages-container::-webkit-scrollbar-thumb {
-        background: #cbd5e0;
-        border-radius: 3px;
+        background: #888;
+        border-radius: 4px;
+      }
+      
+      #aipi-messages-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
       }
 
       @media (prefers-color-scheme: dark) {
