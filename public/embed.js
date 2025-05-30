@@ -634,15 +634,15 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        flex: 1;
         height: 380px;
-        overflow-y: scroll;
+        overflow-y: scroll !important;
         overflow-x: hidden;
         padding: 16px;
         background-color: #f9fafb;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: thin;
         scrollbar-color: #cbd5e0 #f7fafc;
+        box-sizing: border-box;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
@@ -1834,10 +1834,11 @@ Contenido: [Error al extraer contenido detallado]
     const messagesContainer = document.getElementById('aipi-messages-container');
     if (messagesContainer) {
       setTimeout(() => {
-        messagesContainer.scrollTo({
-          top: messagesContainer.scrollHeight,
-          behavior: 'smooth'
-        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Forzar scroll adicional en caso de problemas de timing
+        setTimeout(() => {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 100);
       }, 150);
     }
   }
