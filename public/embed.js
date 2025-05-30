@@ -541,8 +541,7 @@ Contenido: [Error al extraer contenido detallado]
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        display: flex;
-        flex-direction: column;
+        position: relative;
         overflow: hidden;
         margin-bottom: 16px;
         transition: all 0.3s ease;
@@ -634,12 +633,15 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        flex: 1;
-        overflow-y: auto;
+        position: absolute;
+        top: 60px;
+        bottom: 60px;
+        left: 0;
+        right: 0;
+        overflow-y: scroll;
         overflow-x: hidden;
         padding: 16px;
         background-color: #f9fafb;
-        height: calc(100% - 120px);
         -webkit-overflow-scrolling: touch;
         scrollbar-width: thin;
         scrollbar-color: #cbd5e0 #f7fafc;
@@ -1834,8 +1836,11 @@ Contenido: [Error al extraer contenido detallado]
     const messagesContainer = document.getElementById('aipi-messages-container');
     if (messagesContainer) {
       setTimeout(() => {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }, 100);
+        messagesContainer.scrollTo({
+          top: messagesContainer.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 150);
     }
   }
 
