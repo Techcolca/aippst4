@@ -2020,6 +2020,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update visitor count
       await storage.incrementVisitorCount(integration.id);
       
+      // Use integration-specific customization if available, fallback to global settings
+      const customization = integration.customization || {};
+      
       // Return widget configuration
       res.json({
         integration: {
@@ -2031,17 +2034,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           active: integration.active,
           visitorCount: integration.visitorCount,
           botBehavior: integration.botBehavior,
-          widgetType: integration.widgetType || 'bubble', // Incluir tipo de widget, con valor por defecto
+          widgetType: integration.widgetType || 'bubble',
+          description: integration.description,
+          ignoredSectionsText: integration.ignoredSectionsText,
           // No enviamos datos sensibles como userId o apiKey al cliente
         },
         settings: {
-          assistantName: settings.assistantName,
-          defaultGreeting: settings.defaultGreeting,
-          showAvailability: settings.showAvailability,
-          userBubbleColor: settings.userBubbleColor,
-          assistantBubbleColor: settings.assistantBubbleColor,
-          font: settings.font,
-          conversationStyle: settings.conversationStyle,
+          assistantName: customization.assistantName || settings.assistantName,
+          defaultGreeting: customization.defaultGreeting || settings.defaultGreeting,
+          showAvailability: customization.showAvailability !== undefined ? customization.showAvailability : settings.showAvailability,
+          userBubbleColor: customization.userBubbleColor || settings.userBubbleColor,
+          assistantBubbleColor: customization.assistantBubbleColor || settings.assistantBubbleColor,
+          font: customization.font || settings.font,
+          conversationStyle: customization.conversationStyle || settings.conversationStyle,
         },
       });
     } catch (error) {
