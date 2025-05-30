@@ -1859,6 +1859,23 @@ Contenido: [Error al extraer contenido detallado]
       .replace(/'/g, '&#039;');
   }
 
+  // Update button text with integration name
+  function updateButtonText() {
+    const buttonName = config.integrationName || config.assistantName;
+    
+    // Update bubble widget button text
+    const buttonTextElement = document.querySelector('.aipi-button-text');
+    if (buttonTextElement) {
+      buttonTextElement.textContent = buttonName;
+    }
+    
+    // Update fullscreen widget button text
+    const fullscreenButtonText = document.querySelector('.aipi-fullscreen-button-text');
+    if (fullscreenButtonText) {
+      fullscreenButtonText.textContent = buttonName;
+    }
+  }
+
   // Initialize the widget when the DOM is fully loaded
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
