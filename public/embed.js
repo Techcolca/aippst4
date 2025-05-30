@@ -636,11 +636,14 @@ Contenido: [Error al extraer contenido detallado]
       #aipi-messages-container {
         flex: 1;
         overflow-y: auto;
+        overflow-x: hidden;
         padding: 16px;
         display: flex;
         flex-direction: column;
         gap: 12px;
         background-color: #f9fafb;
+        min-height: 0;
+        max-height: 100%;
       }
 
       @media (prefers-color-scheme: dark) {
@@ -1813,7 +1816,11 @@ Contenido: [Error al extraer contenido detallado]
   // Scroll to bottom of messages container
   function scrollToBottom() {
     const messagesContainer = document.getElementById('aipi-messages-container');
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    if (messagesContainer) {
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 100);
+    }
   }
 
   // Helper function to get font family based on config
