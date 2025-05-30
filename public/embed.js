@@ -634,16 +634,13 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        height: 250px;
-        overflow-y: scroll !important;
+        flex: 1;
+        overflow-y: auto;
         overflow-x: hidden;
         padding: 16px;
         background-color: #f9fafb;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: auto;
-        scrollbar-color: #666 #f0f0f0;
-        box-sizing: border-box;
-        border: 1px solid #e5e7eb;
+        min-height: 0;
+        display: block;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
