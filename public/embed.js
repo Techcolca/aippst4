@@ -1227,6 +1227,13 @@ Contenido: [Error al extraer contenido detallado]
 
   // Set widget position based on config
   function setWidgetPosition() {
+    console.log('AIPPS Widget: Setting position to', config.position, 'for widget:', widgetInstance);
+    
+    if (!widgetInstance) {
+      console.error('AIPPS Widget: Widget instance not found when trying to set position');
+      return;
+    }
+    
     // Para widgets tipo fullscreen, el posicionamiento es diferente
     if (config.widgetType === 'fullscreen') {
       widgetInstance.style.left = '0';
@@ -1236,6 +1243,7 @@ Contenido: [Error al extraer contenido detallado]
       widgetInstance.style.width = '100%';
       widgetInstance.style.height = '100%';
       widgetInstance.style.maxWidth = 'none';
+      console.log('AIPPS Widget: Applied fullscreen positioning');
       return;
     }
 
@@ -1252,6 +1260,7 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.right = 'auto';
         widgetInstance.style.top = 'auto';
         widgetInstance.style.transform = 'none';
+        console.log('AIPPS Widget: Applied bottom-left positioning');
         break;
       case 'bottom-center':
         widgetInstance.style.bottom = bottomOffset;
@@ -1259,6 +1268,7 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.transform = 'translateX(-50%)';
         widgetInstance.style.right = 'auto';
         widgetInstance.style.top = 'auto';
+        console.log('AIPPS Widget: Applied bottom-center positioning');
         break;
       case 'top-right':
         widgetInstance.style.top = '20px';
@@ -1266,6 +1276,7 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.left = 'auto';
         widgetInstance.style.bottom = 'auto';
         widgetInstance.style.transform = 'none';
+        console.log('AIPPS Widget: Applied top-right positioning');
         break;
       case 'top-left':
         widgetInstance.style.top = '20px';
@@ -1273,6 +1284,7 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.right = 'auto';
         widgetInstance.style.bottom = 'auto';
         widgetInstance.style.transform = 'none';
+        console.log('AIPPS Widget: Applied top-left positioning');
         break;
       case 'bottom-right':
       default:
@@ -1281,6 +1293,7 @@ Contenido: [Error al extraer contenido detallado]
         widgetInstance.style.left = 'auto';
         widgetInstance.style.top = 'auto';
         widgetInstance.style.transform = 'none';
+        console.log('AIPPS Widget: Applied bottom-right positioning');
         break;
     }
 
