@@ -1797,29 +1797,32 @@ Contenido: [Error al extraer contenido detallado]
   function addMessage(content, role) {
     // Buscar específicamente dentro del widget
     const chatPanel = document.getElementById('aipi-chat-panel');
-    const messagesContainer = chatPanel ? chatPanel.querySelector('#aipi-messages-container') : null;
+    let messagesContainer = chatPanel ? chatPanel.querySelector('#aipi-messages-container') : null;
     
-    console.log('AIPPS Debug: chatPanel encontrado:', !!chatPanel);
-    console.log('AIPPS Debug: messagesContainer encontrado:', !!messagesContainer);
-    
-    if (messagesContainer) {
-      console.log('AIPPS Debug: messagesContainer tiene borde rojo:', 
-        messagesContainer.style.border.includes('red') || 
-        getComputedStyle(messagesContainer).border.includes('red'));
-    }
-    
-    if (!messagesContainer) {
-      console.error('AIPPS Debug: No se encontró messagesContainer dentro del chatPanel');
+    if (!messagesContainer || !chatPanel) {
+      console.error('AIPPS Debug: No se encontró messagesContainer o chatPanel');
       return;
     }
+
+    // Forzar que este contenedor tenga los estilos correctos
+    messagesContainer.style.cssText = `
+      height: 150px !important;
+      overflow-y: scroll !important;
+      overflow-x: hidden !important;
+      padding: 16px;
+      background-color: #f9fafb;
+      border: 2px solid red;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    `;
 
     const messageElement = document.createElement('div');
     messageElement.className = `aipi-message ${role === 'user' ? 'aipi-user-message' : 'aipi-assistant-message'}`;
     messageElement.textContent = content;
-    messageElement.style.backgroundColor = '#e0f2fe'; // Color temporal para identificar
 
     messagesContainer.appendChild(messageElement);
-    console.log('AIPPS Debug: Mensaje agregado. Total mensajes en contenedor:', messagesContainer.children.length);
+    console.log('AIPPS Debug: Mensaje agregado con estilos forzados');
 
     // Store message
     messages.push({ role, content });

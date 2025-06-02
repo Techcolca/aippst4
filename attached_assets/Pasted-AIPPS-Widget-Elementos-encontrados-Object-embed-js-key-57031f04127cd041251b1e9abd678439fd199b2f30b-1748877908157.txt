@@ -1,0 +1,26 @@
+AIPPS Widget: Elementos encontrados: Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1486 AIPPS Widget: Abriendo widget bubble
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1519 AIPPS Widget: Panel de chat configurado como visible
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1528 AIPPS Widget: Protección de visibilidad aplicada
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1802 AIPPS Debug: chatPanel encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1803 AIPPS Debug: messagesContainer encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1806 AIPPS Debug: messagesContainer tiene borde rojo: false
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1822 AIPPS Debug: Mensaje agregado. Total mensajes en contenedor: 1
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1802 AIPPS Debug: chatPanel encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1803 AIPPS Debug: messagesContainer encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1806 AIPPS Debug: messagesContainer tiene borde rojo: false
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1822 AIPPS Debug: Mensaje agregado. Total mensajes en contenedor: 2
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1699 Enviando mensaje con contexto de página: ObjectcontentLength: 2031title: "DIOS ES FIEL | Quebec, 🇨🇦"url: "https://diosfiel.com/"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1802 AIPPS Debug: chatPanel encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1803 AIPPS Debug: messagesContainer encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1806 AIPPS Debug: messagesContainer tiene borde rojo: false
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1822 AIPPS Debug: Mensaje agregado. Total mensajes en contenedor: 3
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1802 AIPPS Debug: chatPanel encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1803 AIPPS Debug: messagesContainer encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1806 AIPPS Debug: messagesContainer tiene borde rojo: false
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1822 AIPPS Debug: Mensaje agregado. Total mensajes en contenedor: 4
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1699 Enviando mensaje con contexto de página: ObjectcontentLength: 2031title: "DIOS ES FIEL | Quebec, 🇨🇦"url: "https://diosfiel.com/"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1802 AIPPS Debug: chatPanel encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1803 AIPPS Debug: messagesContainer encontrado: true
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1806 AIPPS Debug: messagesContainer tiene borde rojo: false
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1822 AIPPS Debug: Mensaje agregado. Total mensajes en contenedor: 5
