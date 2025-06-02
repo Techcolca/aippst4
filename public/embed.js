@@ -1795,19 +1795,31 @@ Contenido: [Error al extraer contenido detallado]
 
   // Add message to UI
   function addMessage(content, role) {
-    const messagesContainer = document.getElementById('aipi-messages-container');
-    console.log('AIPPS Debug: Agregando mensaje al contenedor', !!messagesContainer);
+    // Buscar específicamente dentro del widget
+    const chatPanel = document.getElementById('aipi-chat-panel');
+    const messagesContainer = chatPanel ? chatPanel.querySelector('#aipi-messages-container') : null;
+    
+    console.log('AIPPS Debug: chatPanel encontrado:', !!chatPanel);
+    console.log('AIPPS Debug: messagesContainer encontrado:', !!messagesContainer);
+    
+    if (messagesContainer) {
+      console.log('AIPPS Debug: messagesContainer tiene borde rojo:', 
+        messagesContainer.style.border.includes('red') || 
+        getComputedStyle(messagesContainer).border.includes('red'));
+    }
     
     if (!messagesContainer) {
-      console.error('AIPPS Debug: No se encontró messagesContainer');
+      console.error('AIPPS Debug: No se encontró messagesContainer dentro del chatPanel');
       return;
     }
 
     const messageElement = document.createElement('div');
     messageElement.className = `aipi-message ${role === 'user' ? 'aipi-user-message' : 'aipi-assistant-message'}`;
     messageElement.textContent = content;
+    messageElement.style.backgroundColor = '#e0f2fe'; // Color temporal para identificar
 
     messagesContainer.appendChild(messageElement);
+    console.log('AIPPS Debug: Mensaje agregado. Total mensajes en contenedor:', messagesContainer.children.length);
 
     // Store message
     messages.push({ role, content });
