@@ -585,10 +585,10 @@ export class PgStorage implements IStorage {
     return Array.from(topicMentions.entries())
       .map(([topic, data]) => ({
         topic,
-        count: data.count,
+        frequency: data.count,
         sentiment: Math.round(data.sentimentSum / data.sentimentCount)
       }))
-      .sort((a, b) => b.count - a.count)
+      .sort((a, b) => b.frequency - a.frequency)
       .slice(0, 5); // Top 5 temas
   }
   
