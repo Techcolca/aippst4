@@ -467,6 +467,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generar tendencia real de conversaciones basada en fechas de creación
       const conversationTrend = conversations.length > 0 ? pgStorage.getConversationTrend(conversations) : [];
       
+      // Extraer palabras clave de los mensajes de usuarios
+      const keywordFrequency = userMessages.length > 0 ? pgStorage.extractKeywords(userMessages) : [];
+      
       res.json({
         integrationId,
         integrationName: integration.name,
@@ -478,7 +481,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assistantMessageCount: allMessages.filter(msg => msg.role === 'assistant').length,
         topTopics,
         topProducts,
-        conversationTrend
+        conversationTrend,
+        keywordFrequency
       });
     } catch (error) {
       console.error("Error getting integration analytics:", error);

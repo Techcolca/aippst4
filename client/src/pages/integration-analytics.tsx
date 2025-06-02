@@ -44,6 +44,7 @@ import {
 import { jsPDF } from "jspdf";
 import html2canvas from 'html2canvas';
 import autoTable from 'jspdf-autotable';
+import KeywordCloud from "@/components/analytics/keyword-cloud";
 
 // Colores para los gráficos
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
@@ -579,6 +580,27 @@ export default function IntegrationAnalytics() {
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Keywords Cloud Section */}
+            <div className="grid grid-cols-1 gap-6 mb-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center">
+                  <div className="grid gap-2">
+                    <CardTitle>{t('keyword_cloud')}</CardTitle>
+                    <CardDescription>
+                      {t('frequently_mentioned_keywords')}
+                    </CardDescription>
+                  </div>
+                  <Tag className="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <KeywordCloud 
+                    data={stats?.keywordFrequency || []} 
+                    loading={isLoadingStats}
+                  />
                 </CardContent>
               </Card>
             </div>
