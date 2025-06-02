@@ -1300,6 +1300,18 @@ Contenido: [Error al extraer contenido detallado]
     // Asegurar que el widget siempre sea visible
     widgetInstance.style.maxWidth = 'calc(100vw - 32px)';
     widgetInstance.style.maxHeight = 'calc(100vh - 32px)';
+    
+    // Force repaint to ensure position change is visible
+    widgetInstance.style.transition = 'all 0.3s ease';
+    widgetInstance.offsetHeight; // Trigger reflow
+    
+    console.log('AIPPS Widget: Final position styles applied:', {
+      top: widgetInstance.style.top,
+      bottom: widgetInstance.style.bottom,
+      left: widgetInstance.style.left,
+      right: widgetInstance.style.right,
+      position: widgetInstance.style.position
+    });
 
     // Agregar listener para cambios de tamaño de ventana
     window.addEventListener('resize', () => {
