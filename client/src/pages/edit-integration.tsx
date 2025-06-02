@@ -466,7 +466,15 @@ export default function EditIntegration() {
                   <FormItem>
                     <FormLabel>Posición del widget</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        // Auto-save position changes
+                        const currentValues = form.getValues();
+                        updateIntegrationMutation.mutate({
+                          ...currentValues,
+                          position: value
+                        });
+                      }}
                       value={field.value}
                     >
                       <FormControl>
@@ -482,7 +490,7 @@ export default function EditIntegration() {
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Dónde aparecerá el widget en la página
+                      Dónde aparecerá el widget en la página (se guarda automáticamente)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
