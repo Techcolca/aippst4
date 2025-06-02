@@ -455,17 +455,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Filtrar mensajes de usuarios para análisis
       const userMessages = allMessages.filter(msg => msg.role === 'user');
       
-      // Usar las funciones privadas de PgStorage para analizar datos reales
-      const pgStorage = storage as any; // Cast temporal para acceder a métodos privados
+      // Usar las funciones públicas de PgStorage para analizar datos reales
+      const pgStorage = storage as any;
       
-      // Extraer temas reales de los mensajes
-      const topTopics = pgStorage.extractTopTopics ? pgStorage.extractTopTopics(userMessages) : [];
+      // Extraer temas reales de los mensajes de usuarios
+      const topTopics = userMessages.length > 0 ? pgStorage.extractTopTopics(userMessages) : [];
       
-      // Extraer productos reales mencionados en los mensajes
-      const topProducts = pgStorage.extractTopProducts ? pgStorage.extractTopProducts(userMessages) : [];
+      // Extraer productos/servicios reales mencionados en los mensajes
+      const topProducts = userMessages.length > 0 ? pgStorage.extractTopProducts(userMessages) : [];
       
       // Generar tendencia real de conversaciones basada en fechas de creación
-      const conversationTrend = pgStorage.getConversationTrend ? pgStorage.getConversationTrend(conversations) : [];
+      const conversationTrend = conversations.length > 0 ? pgStorage.getConversationTrend(conversations) : [];
       
       res.json({
         integrationId,
