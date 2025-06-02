@@ -1795,13 +1795,49 @@ Contenido: [Error al extraer contenido detallado]
 
   // Add message to UI
   function addMessage(content, role) {
-    const messagesContainer = document.getElementById('aipi-messages-container');
-    const messageElement = document.createElement('div');
+    console.log('AIPPS Debug: addMessage llamado', { content, role });
+    
+    let messagesContainer = document.getElementById('aipi-messages-container');
+    console.log('AIPPS Debug: messagesContainer encontrado:', !!messagesContainer);
+    
+    // Si no existe, crearlo
+    if (!messagesContainer) {
+      console.log('AIPPS Debug: messagesContainer no existe, creando...');
+      const chatPanel = document.getElementById('aipi-chat-panel');
+      if (chatPanel) {
+        messagesContainer = document.createElement('div');
+        messagesContainer.id = 'aipi-messages-container';
+        messagesContainer.style.cssText = `
+          height: 300px !important;
+          overflow-y: scroll !important;
+          overflow-x: hidden !important;
+          padding: 16px;
+          background-color: #f9fafb;
+          flex: 1;
+        `;
+        
+        // Insertar antes del input
+        const inputContainer = chatPanel.querySelector('.aipi-input-container');
+        if (inputContainer) {
+          chatPanel.insertBefore(messagesContainer, inputContainer);
+        } else {
+          chatPanel.appendChild(messagesContainer);
+        }
+        console.log('AIPPS Debug: messagesContainer creado y agregado');
+      }
+    }
+    
+    if (!messagesContainer) {
+      console.error('AIPPS Debug: No se pudo crear o encontrar messagesContainer');
+      return;
+    }
 
+    const messageElement = document.createElement('div');
     messageElement.className = `aipi-message ${role === 'user' ? 'aipi-user-message' : 'aipi-assistant-message'}`;
     messageElement.textContent = content;
 
     messagesContainer.appendChild(messageElement);
+    console.log('AIPPS Debug: Mensaje agregado al contenedor');
 
     // Store message
     messages.push({ role, content });
