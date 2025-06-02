@@ -548,7 +548,7 @@ Contenido: [Error al extraer contenido detallado]
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         display: flex;
         flex-direction: column;
-        overflow: visible;
+        overflow: hidden;
         margin-bottom: 16px;
         transition: all 0.3s ease;
         font-family: ${getFontFamily()};
@@ -639,13 +639,11 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        flex: 1;
+        height: 350px;
         overflow-y: scroll;
         overflow-x: hidden;
         padding: 16px;
         background-color: #f9fafb;
-        max-height: 300px;
-        min-height: 200px;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
