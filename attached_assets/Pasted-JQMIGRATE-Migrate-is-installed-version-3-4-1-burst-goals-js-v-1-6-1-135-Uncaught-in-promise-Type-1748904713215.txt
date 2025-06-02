@@ -1,0 +1,20 @@
+JQMIGRATE: Migrate is installed, version 3.4.1
+burst-goals.js?v=1.6.1:135 Uncaught (in promise) TypeError: Cannot read properties of null (reading 'addEventListener')
+    at burst_setup_click_tracker (burst-goals.js?v=1.6.1:135:17)
+    at burst_goals_setup (burst-goals.js?v=1.6.1:26:9)
+    at Module.default (burst-goals.js?v=1.6.1:172:3)
+    at burst_import_goals (burst.min.js?ver=1.6.1:1:415)
+burst_setup_click_tracker @ burst-goals.js?v=1.6.1:135
+burst_goals_setup @ burst-goals.js?v=1.6.1:26
+default @ burst-goals.js?v=1.6.1:172
+burst_import_goals @ burst.min.js?ver=1.6.1:1
+await in burst_import_goals
+(anonymous) @ burst.min.js?ver=1.6.1:1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:103 AIPPS Widget Debug: {scriptSrc: 'https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a…=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f', apiKey: '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f', serverUrl: 'https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev'}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:425 AIPI: Contenido de la página escaneado con éxito
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1212 AIPPS Widget: Botón encontrado después de inserción DOM
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1336 AIPPS Widget: Adjuntando eventos... {toggleButton: true, minimizeButton: true, closeButton: true, chatInput: true, sendButton: true}chatInput: truecloseButton: trueminimizeButton: truesendButton: truetoggleButton: true[[Prototype]]: Object
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1398 AIPPS Widget: Eventos configurados correctamente para el botón
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1403 AIPPS Widget: Widget listo para usar
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:191 AIPPS Widget: Position changed from bottom-left to top-left
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:197 AIPPS Widget: Position updated to top-left
