@@ -199,8 +199,7 @@ export default function EditIntegration() {
       const widgetType = integration.widgetType || "bubble";
       const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
       
-      const position = integration.position || "bottom-right";
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${position}:15px"></script>`)
+      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}"></script>`)
       
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
@@ -287,9 +286,8 @@ export default function EditIntegration() {
     
     // Actualizar el código de integración inmediatamente
     if (integration?.apiKey) {
-      const position = formData.position || "bottom-right";
       const scriptFile = value === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${position}:15px"></script>`);
+      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}"></script>`);
       
       if (value === "fullscreen") {
         setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->

@@ -326,8 +326,7 @@ export default function EditIntegration() {
       // Actualizar script de ejemplo
       const widgetType = integration.widgetType || "bubble";
       const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
-      const position = integration.position || "bottom-right";
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${position}:15px"></script>`);
+      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}"></script>`);
     }
   }, [integration, form]);
 
