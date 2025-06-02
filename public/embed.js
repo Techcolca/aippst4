@@ -1821,7 +1821,13 @@ Contenido: [Error al extraer contenido detallado]
 
     const messageElement = document.createElement('div');
     messageElement.className = `aipi-message ${role === 'user' ? 'aipi-user-message' : 'aipi-assistant-message'}`;
-    messageElement.textContent = content;
+    
+    if (role === 'assistant') {
+      // Formatear respuestas del asistente para mejor legibilidad
+      messageElement.innerHTML = formatAssistantMessage(content);
+    } else {
+      messageElement.textContent = content;
+    }
 
     messagesContainer.appendChild(messageElement);
     console.log('AIPPS Debug: Mensaje agregado con estilos forzados');
@@ -1857,6 +1863,59 @@ Contenido: [Error al extraer contenido detallado]
       messagesContainer.appendChild(typingIndicator);
       scrollToBottom();
     }
+  }
+
+  // Format assistant messages for better readability
+  function formatAssistantMessage(content) {
+    // Escapar HTML para seguridad
+    const escapeHtml = (text) => {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    let formatted = escapeHtml(content);
+
+    // Convertir saltos de línea dobles en párrafos
+    formatted = formatted.split('\n\n').map(paragraph => {
+      if (paragraph.trim()) {
+        return `<p style="margin: 0 0 12px 0; line-height: 1.5;">${paragraph.trim()}</p>`;
+      }
+      return '';
+    }).join('');
+
+    // Convertir saltos de línea simples en <br>
+    formatted = formatted.replace(/\n/g, '<br>');
+
+    // Formatear versículos bíblicos (formato: "texto" — Libro capítulo:versículo)
+    formatted = formatted.replace(/"([^"]+)"\s*—\s*([^.]+\d+:\d+)/g, 
+      '<div style="background: #f0f9ff; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #0ea5e9; border-radius: 4px;"><em>"$1"</em><br><strong style="color: #0284c7;">— $2</strong></div>');
+
+    // Formatear listas con viñetas (líneas que empiezan con -, •, o *)
+    formatted = formatted.replace(/(?:^|\n)[-•*]\s*([^\n]+)/g, 
+      '<li style="margin: 4px 0; line-height: 1.4;">$1</li>');
+    
+    // Envolver listas en <ul>
+    if (formatted.includes('<li')) {
+      formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<li[^>]*>.*?<\/li>)*)/gs, 
+        '<ul style="margin: 8px 0; padding-left: 20px;">$1</ul>');
+    }
+
+    // Formatear números de lista (1., 2., etc.)
+    formatted = formatted.replace(/(?:^|\n)(\d+)\.\s*([^\n]+)/g, 
+      '<li style="margin: 4px 0; line-height: 1.4;">$2</li>');
+    
+    // Envolver listas numeradas en <ol>
+    if (formatted.includes('<li') && /\d+\.\s/.test(content)) {
+      formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<li[^>]*>.*?<\/li>)*)/gs, 
+        '<ol style="margin: 8px 0; padding-left: 20px;">$1</ol>');
+    }
+
+    // Formatear texto en negritas (**texto**)
+    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, 
+      '<strong style="color: #1f2937;">$1</strong>');
+
+    return formatted;
   }
 
   // Scroll to bottom of messages container
