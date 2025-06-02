@@ -187,13 +187,20 @@
           const newPosition = data.integration?.position || 'bottom-right';
           const newThemeColor = data.integration?.themeColor || config.themeColor;
           
-          if (newPosition !== config.position || newThemeColor !== config.themeColor) {
-            // Update config
+          if (newPosition !== config.position) {
+            console.log('AIPPS Widget: Position changed from', config.position, 'to', newPosition);
             config.position = newPosition;
-            config.themeColor = newThemeColor;
             
-            // Update widget position and styling
-            setWidgetPosition();
+            // Update widget position
+            if (widgetInstance) {
+              setWidgetPosition();
+              console.log('AIPPS Widget: Position updated to', newPosition);
+            }
+          }
+          
+          if (newThemeColor !== config.themeColor) {
+            console.log('AIPPS Widget: Theme color changed from', config.themeColor, 'to', newThemeColor);
+            config.themeColor = newThemeColor;
             
             // Update theme color if changed
             if (widgetInstance) {
@@ -216,7 +223,7 @@
       } catch (error) {
         console.debug('Config refresh failed:', error);
       }
-    }, 3000); // Check every 3 seconds
+    }, 5000); // Check every 5 seconds (reduced frequency)
   }
 
   // Función para extraer el contenido del sitio
