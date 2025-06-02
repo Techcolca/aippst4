@@ -1509,7 +1509,7 @@ Contenido: [Error al extraer contenido detallado]
       border-radius: 10px !important;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
       flex-direction: column !important;
-      overflow: hidden !important;
+      overflow: visible !important;
       opacity: 1 !important;
       visibility: visible !important;
       pointer-events: auto !important;
