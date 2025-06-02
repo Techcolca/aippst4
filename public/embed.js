@@ -187,6 +187,8 @@
           const newPosition = data.integration?.position || 'bottom-right';
           const newThemeColor = data.integration?.themeColor || config.themeColor;
           
+          console.log('AIPPS Widget: Checking position - Current:', config.position, 'New:', newPosition);
+          
           if (newPosition !== config.position) {
             console.log('AIPPS Widget: Position changed from', config.position, 'to', newPosition);
             config.position = newPosition;
@@ -196,6 +198,8 @@
               setWidgetPosition();
               console.log('AIPPS Widget: Position updated to', newPosition);
             }
+          } else {
+            console.log('AIPPS Widget: No position change detected');
           }
           
           if (newThemeColor !== config.themeColor) {
