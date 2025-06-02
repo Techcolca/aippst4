@@ -635,12 +635,12 @@ Contenido: [Error al extraer contenido detallado]
 
       #aipi-messages-container {
         flex: 1;
-        overflow-y: auto;
+        overflow-y: scroll;
         overflow-x: hidden;
         padding: 16px;
         background-color: #f9fafb;
-        min-height: 0;
-        display: block;
+        max-height: 300px;
+        min-height: 200px;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
