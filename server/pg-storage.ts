@@ -408,7 +408,7 @@ export class PgStorage implements IStorage {
   
   // Funciones auxiliares para el análisis de datos
   
-  private getConversationTrend(convs: Conversation[]): { date: string, count: number }[] {
+  public getConversationTrend(convs: Conversation[]): { date: string, count: number }[] {
     // Crear un mapa para contar conversaciones por día
     const dateCountMap = new Map<string, number>();
     
@@ -437,7 +437,7 @@ export class PgStorage implements IStorage {
       .sort((a, b) => a.date.localeCompare(b.date));
   }
   
-  private extractKeywords(messages: Message[]): { keyword: string, frequency: number }[] {
+  public extractKeywords(messages: Message[]): { keyword: string, frequency: number }[] {
     // Extraer texto de todos los mensajes
     const allText = messages.map(msg => msg.content).join(' ').toLowerCase();
     
@@ -482,58 +482,114 @@ export class PgStorage implements IStorage {
       .slice(0, 20);
   }
   
-  private extractTopProducts(messages: Message[]): TopProduct[] {
-    // En una implementación real, utilizaríamos NLP para extraer entidades de producto/servicio
-    // Para esta simulación, utilizaremos algunos productos/servicios comunes
-    const commonProducts = [
-      "Asistencia Técnica", 
-      "Plan Premium", 
-      "Facturación", 
-      "Configuración Inicial", 
-      "Sugerencias"
-    ];
+  public extractTopProducts(messages: Message[]): TopProduct[] {
+    // Extraer productos/servicios mencionados en los mensajes reales
+    const productMentions = new Map<string, number>();
     
-    // Generar conteos simulados basados en la cantidad de mensajes
-    const messageCount = messages.length;
-    const totalCount = messageCount > 0 ? messageCount * 1.5 : 10;
+    // Lista de productos/servicios que podrían mencionarse
+    const productKeywords = {
+      "Asistencia Técnica": ["ayuda", "soporte", "problema", "error", "asistencia", "técnica"],
+      "Plan Premium": ["premium", "plan", "suscripción", "upgrade", "mejorar"],
+      "Facturación": ["factura", "pago", "cobro", "precio", "costo", "billing"],
+      "Configuración": ["configurar", "setup", "instalar", "configuración"],
+      "Integración": ["integrar", "conectar", "api", "webhook", "embed"],
+      "Documentación": ["documentación", "guía", "manual", "tutorial", "ayuda"],
+      "Personalización": ["personalizar", "customizar", "diseño", "color", "tema"]
+    };
     
-    // Distribuir el total entre los productos (simulado)
-    const counts = this.distributeRandomly(totalCount, commonProducts.length);
+    // Analizar cada mensaje
+    messages.forEach(message => {
+      const content = message.content.toLowerCase();
+      
+      Object.entries(productKeywords).forEach(([product, keywords]) => {
+        const mentions = keywords.filter(keyword => content.includes(keyword)).length;
+        if (mentions > 0) {
+          productMentions.set(product, (productMentions.get(product) || 0) + mentions);
+        }
+      });
+    });
     
-    // Calcular porcentajes
-    const totalSum = counts.reduce((sum, count) => sum + count, 0);
+    // Si no hay menciones, retornar array vacío
+    if (productMentions.size === 0) {
+      return [];
+    }
     
-    // Generar resultados
-    return commonProducts.map((name, index) => ({
-      name,
-      count: counts[index],
-      percentage: Math.round((counts[index] / totalSum) * 100)
-    })).sort((a, b) => b.count - a.count);
+    // Convertir a array y calcular porcentajes
+    const totalMentions = Array.from(productMentions.values()).reduce((sum, count) => sum + count, 0);
+    
+    return Array.from(productMentions.entries())
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: Math.round((count / totalMentions) * 100)
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5); // Top 5 productos
   }
   
   private extractTopTopics(messages: Message[]): TopTopic[] {
-    // Temas comunes en conversaciones de soporte
-    const commonTopics = [
-      "Problemas de conexión",
-      "Rendimiento del sistema",
-      "Funcionalidades nuevas",
-      "Precios y facturación",
-      "Atención al cliente"
-    ];
+    // Extraer temas reales de los mensajes
+    const topicMentions = new Map<string, { count: number, sentimentSum: number, sentimentCount: number }>();
     
-    // Generar conteos basados en la cantidad de mensajes
-    const messageCount = messages.length;
-    const counts = this.distributeRandomly(messageCount > 0 ? messageCount * 1.2 : 10, commonTopics.length);
+    // Palabras clave para diferentes temas
+    const topicKeywords = {
+      "Estudios Bíblicos": ["biblia", "estudio", "estudiar", "versículo", "palabra", "escritura", "libro"],
+      "Oraciones y Peticiones": ["oración", "orar", "petición", "bendición", "intercesión", "ruego"],
+      "Consultas Espirituales": ["espiritual", "fe", "dios", "jesús", "cristo", "señor", "espíritu"],
+      "Enseñanzas": ["enseñanza", "predicación", "sermón", "mensaje", "doctrina", "verdad"],
+      "Consejos Pastorales": ["consejo", "pastoral", "ayuda", "guía", "dirección", "sabiduría"],
+      "Preguntas Generales": ["pregunta", "duda", "consulta", "información", "explicar", "entender"]
+    };
     
-    // Generar sentimientos aleatorios pero coherentes
-    const sentiments = [35, 62, 85, 48, 75];
+    // Palabras que indican sentimiento positivo/negativo
+    const positiveWords = ["bien", "bueno", "excelente", "gracias", "bendición", "alegría", "paz", "amor"];
+    const negativeWords = ["problema", "dificultad", "triste", "preocupado", "dolor", "conflicto", "crisis"];
     
-    // Generar resultados
-    return commonTopics.map((topic, index) => ({
-      topic,
-      count: counts[index],
-      sentiment: sentiments[index]
-    })).sort((a, b) => b.count - a.count);
+    // Analizar cada mensaje
+    messages.forEach(message => {
+      const content = message.content.toLowerCase();
+      
+      // Calcular sentimiento básico del mensaje
+      const positiveCount = positiveWords.filter(word => content.includes(word)).length;
+      const negativeCount = negativeWords.filter(word => content.includes(word)).length;
+      let sentiment = 50; // Neutral
+      
+      if (positiveCount > negativeCount) {
+        sentiment = 70 + (positiveCount * 5);
+      } else if (negativeCount > positiveCount) {
+        sentiment = 30 - (negativeCount * 5);
+      }
+      
+      sentiment = Math.max(0, Math.min(100, sentiment)); // Clamp entre 0-100
+      
+      // Buscar temas en el mensaje
+      Object.entries(topicKeywords).forEach(([topic, keywords]) => {
+        const mentions = keywords.filter(keyword => content.includes(keyword)).length;
+        if (mentions > 0) {
+          const current = topicMentions.get(topic) || { count: 0, sentimentSum: 0, sentimentCount: 0 };
+          topicMentions.set(topic, {
+            count: current.count + mentions,
+            sentimentSum: current.sentimentSum + sentiment,
+            sentimentCount: current.sentimentCount + 1
+          });
+        }
+      });
+    });
+    
+    // Si no hay menciones, retornar array vacío
+    if (topicMentions.size === 0) {
+      return [];
+    }
+    
+    // Convertir a array y calcular sentimiento promedio
+    return Array.from(topicMentions.entries())
+      .map(([topic, data]) => ({
+        topic,
+        count: data.count,
+        sentiment: Math.round(data.sentimentSum / data.sentimentCount)
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5); // Top 5 temas
   }
   
   private distributeRandomly(total: number, parts: number): number[] {

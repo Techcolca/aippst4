@@ -452,49 +452,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         allMessages.push(...messages);
       }
       
-      // Extraer temas populares, productos, etc.
-      // Generamos datos simples para temas populares (normalmente esto vendría de un análisis NLP)
-      const topTopics = [
-        { topic: "Soporte técnico", frequency: Math.floor(Math.random() * 50) + 10 },
-        { topic: "Precios y planes", frequency: Math.floor(Math.random() * 40) + 5 },
-        { topic: "Funcionalidades", frequency: Math.floor(Math.random() * 30) + 10 },
-        { topic: "Integración", frequency: Math.floor(Math.random() * 25) + 5 },
-        { topic: "Problemas de acceso", frequency: Math.floor(Math.random() * 20) + 5 }
-      ];
+      // Filtrar mensajes de usuarios para análisis
+      const userMessages = allMessages.filter(msg => msg.role === 'user');
       
-      // Generamos datos simples para productos mencionados
-      const topProducts = [
-        { name: "Plan Básico", frequency: Math.floor(Math.random() * 30) + 5 },
-        { name: "Plan Profesional", frequency: Math.floor(Math.random() * 40) + 10 },
-        { name: "Plan Enterprise", frequency: Math.floor(Math.random() * 20) + 5 },
-        { name: "Widget de Chat", frequency: Math.floor(Math.random() * 35) + 15 },
-        { name: "Automatización", frequency: Math.floor(Math.random() * 25) + 5 }
-      ];
+      // Usar las funciones privadas de PgStorage para analizar datos reales
+      const pgStorage = storage as any; // Cast temporal para acceder a métodos privados
       
-      // Generamos datos de tendencia de conversaciones para los últimos 7 días
-      const conversationsByDate = [];
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toISOString().split('T')[0];
-        
-        // Distribuir las conversaciones entre estos días
-        let count = 0;
-        if (conversations.length > 0) {
-          // Asignar un número aleatorio de conversaciones a cada día, pero que sumen el total
-          if (i === 0) { // El último día (hoy) toma las conversaciones restantes
-            count = Math.max(0, conversations.length - conversationsByDate.reduce((acc, item) => acc + item.count, 0));
-          } else {
-            // Para los otros días, distribuir aleatoriamente pero dejar suficientes para los días restantes
-            const remainingDays = i;
-            const remainingConvs = conversations.length - conversationsByDate.reduce((acc, item) => acc + item.count, 0);
-            const maxForThisDay = Math.floor(remainingConvs / (remainingDays + 1)) * 2;
-            count = Math.min(Math.floor(Math.random() * maxForThisDay), remainingConvs);
-          }
-        }
-        
-        conversationsByDate.push({ date: dateStr, count });
-      }
+      // Extraer temas reales de los mensajes
+      const topTopics = pgStorage.extractTopTopics ? pgStorage.extractTopTopics(userMessages) : [];
+      
+      // Extraer productos reales mencionados en los mensajes
+      const topProducts = pgStorage.extractTopProducts ? pgStorage.extractTopProducts(userMessages) : [];
+      
+      // Generar tendencia real de conversaciones basada en fechas de creación
+      const conversationTrend = pgStorage.getConversationTrend ? pgStorage.getConversationTrend(conversations) : [];
       
       res.json({
         integrationId,
@@ -507,7 +478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         assistantMessageCount: allMessages.filter(msg => msg.role === 'assistant').length,
         topTopics,
         topProducts,
-        conversationTrend: conversationsByDate
+        conversationTrend
       });
     } catch (error) {
       console.error("Error getting integration analytics:", error);
