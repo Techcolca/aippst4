@@ -639,12 +639,14 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        height: 150px !important;
+        height: 300px !important;
         overflow-y: scroll !important;
         overflow-x: hidden !important;
         padding: 16px;
         background-color: #f9fafb;
-        border: 2px solid red;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
@@ -1806,12 +1808,12 @@ Contenido: [Error al extraer contenido detallado]
 
     // Forzar que este contenedor tenga los estilos correctos
     messagesContainer.style.cssText = `
-      height: 150px !important;
+      height: 300px !important;
       overflow-y: scroll !important;
       overflow-x: hidden !important;
       padding: 16px;
       background-color: #f9fafb;
-      border: 2px solid red;
+      border: none;
       flex: 1;
       display: flex;
       flex-direction: column;
