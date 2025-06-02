@@ -527,7 +527,7 @@ export class PgStorage implements IStorage {
       .slice(0, 5); // Top 5 productos
   }
   
-  private extractTopTopics(messages: Message[]): TopTopic[] {
+  public extractTopTopics(messages: Message[]): TopTopic[] {
     // Extraer temas reales de los mensajes
     const topicMentions = new Map<string, { count: number, sentimentSum: number, sentimentCount: number }>();
     
