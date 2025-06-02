@@ -26,7 +26,7 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
         <div className="bg-white dark:bg-gray-900 p-3 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg">
           <p className="font-medium">{item.topic}</p>
           <p className="text-sm text-gray-500">
-            <span className="font-semibold text-primary">{item.count}</span> menciones
+            <span className="font-semibold text-primary">{item.frequency}</span> menciones
           </p>
           <p className="text-sm">
             Sentimiento: 
@@ -87,7 +87,7 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
                 tickFormatter={(value) => value.length > 15 ? `${value.substring(0, 15)}...` : value}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+              <Bar dataKey="frequency" radius={[0, 4, 4, 0]}>
                 {data.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}`} 
