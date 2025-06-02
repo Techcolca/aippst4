@@ -126,6 +126,9 @@
           openWidget();
         }, config.autoOpenDelay);
       }
+
+      // Start periodic config refresh to detect changes
+      startConfigRefresh();
     }).catch(error => {
       console.error('AIPI Widget Error:', error);
     });
@@ -170,6 +173,50 @@
       console.error('Error loading AIPI widget configuration:', error);
       // Continue with default settings
     }
+  }
+
+  // Function to periodically check for config updates
+  function startConfigRefresh() {
+    setInterval(async () => {
+      try {
+        const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}`);
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Check if position has changed
+          const newPosition = data.integration?.position || 'bottom-right';
+          const newThemeColor = data.integration?.themeColor || config.themeColor;
+          
+          if (newPosition !== config.position || newThemeColor !== config.themeColor) {
+            // Update config
+            config.position = newPosition;
+            config.themeColor = newThemeColor;
+            
+            // Update widget position and styling
+            setWidgetPosition();
+            
+            // Update theme color if changed
+            if (widgetInstance) {
+              const toggleButton = widgetInstance.querySelector('#aipi-toggle-button');
+              if (toggleButton) {
+                toggleButton.style.backgroundColor = config.themeColor;
+              }
+              
+              // Update other elements with theme color
+              const chatContainer = widgetInstance.querySelector('#aipi-chat-container');
+              if (chatContainer) {
+                const header = chatContainer.querySelector('#aipi-header');
+                if (header) {
+                  header.style.backgroundColor = config.themeColor;
+                }
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.debug('Config refresh failed:', error);
+      }
+    }, 3000); // Check every 3 seconds
   }
 
   // Función para extraer el contenido del sitio
