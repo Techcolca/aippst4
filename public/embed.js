@@ -535,6 +535,11 @@ Contenido: [Error al extraer contenido detallado]
           max-width: calc(100vw - 40px);
         }
 
+      /* Ensure parent containers allow scroll */
+      html, body {
+        overflow: auto !important;
+      }
+
       #aipi-chat-panel {
         width: 350px;
         height: 500px;
@@ -543,7 +548,7 @@ Contenido: [Error al extraer contenido detallado]
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        overflow: visible;
         margin-bottom: 16px;
         transition: all 0.3s ease;
         font-family: ${getFontFamily()};
