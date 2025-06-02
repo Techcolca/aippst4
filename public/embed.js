@@ -639,11 +639,12 @@ Contenido: [Error al extraer contenido detallado]
       }
 
       #aipi-messages-container {
-        height: 350px;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        height: 150px !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
         padding: 16px;
         background-color: #f9fafb;
+        border: 2px solid red;
       }
       
       #aipi-messages-container::-webkit-scrollbar {
