@@ -2947,17 +2947,36 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
-  function displayMessages(conversationMessages) {
+  async function displayMessages(conversationId) {
     const messagesContainer = document.getElementById('aipi-messages-container');
     if (!messagesContainer) return;
 
     messagesContainer.innerHTML = '';
     
-    conversationMessages.forEach(msg => {
-      addMessage(msg.content, msg.role);
-    });
-    
-    scrollToBottom();
+    try {
+      // Get messages using bubble system endpoint
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${conversationId}/messages`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      
+      if (response.ok) {
+        const messages = await response.json();
+        console.log('AIPPS Debug: Mensajes cargados para conversación:', conversationId, messages.length);
+        
+        // Add conversation messages to the display
+        messages.forEach(msg => {
+          addMessage(msg.content, msg.role);
+        });
+        
+        scrollToBottom();
+      } else {
+        console.error('Error loading conversation messages:', response.status);
+      }
+    } catch (error) {
+      console.error('Error in displayMessages:', error);
+    }
   }
 
   function updateConversationsList() {
