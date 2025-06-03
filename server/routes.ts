@@ -2192,6 +2192,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // New endpoint for getting visitor conversations (supports fullscreen mode)
+  app.get("/api/widget/:apiKey/conversations/:visitorId", async (req, res) => {
+    try {
+      const { apiKey, visitorId } = req.params;
+      
+      // Validate API key and get integration
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Get conversations for this visitor
+      const conversations = await storage.getConversations(integration.id);
+      const visitorConversations = conversations.filter(conv => 
+        conv.visitorId === visitorId
+      );
+      
+      res.json(visitorConversations);
+    } catch (error) {
+      console.error("Get visitor conversations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // New endpoint for getting messages from a specific conversation (supports fullscreen mode)
+  app.get("/api/widget/:apiKey/conversation/:conversationId/messages", async (req, res) => {
+    try {
+      const { apiKey, conversationId } = req.params;
+      
+      // Validate API key and get integration
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Get conversation and verify it belongs to this integration
+      const conversation = await storage.getConversation(parseInt(conversationId));
+      if (!conversation || conversation.integrationId !== integration.id) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Get messages for this conversation
+      const messages = await storage.getConversationMessages(parseInt(conversationId));
+      
+      res.json(messages);
+    } catch (error) {
+      console.error("Get conversation messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post("/api/widget/:apiKey/conversation", async (req, res) => {
     try {
       const { apiKey } = req.params;

@@ -2558,26 +2558,42 @@ Contenido: [Error al extraer contenido detallado]
 
   async function loadUserConversationsFromDashboard() {
     try {
-      const token = getAuthToken();
-      console.log('AIPPS Debug: Usando token para conversaciones:', token ? 'Encontrado' : 'No encontrado');
+      console.log('AIPPS Debug: Cargando conversaciones usando sistema bubble exitoso...');
       
-      // Use the correct base URL for API calls
-      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? `${window.location.protocol}//${window.location.host}` 
-        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+      // Use bubble system: no auth needed, just apiKey + visitorId
+      const visitorId = localStorage.getItem('aipi_visitor_id') || 
+        localStorage.getItem('aipi_auth_user_id') || 
+        `visitor_${Math.random().toString(36).substring(2, 15)}`;
       
-      const response = await fetch(`${baseUrl}/api/conversations`, {
+      if (!localStorage.getItem('aipi_visitor_id')) {
+        localStorage.setItem('aipi_visitor_id', visitorId);
+      }
+      
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
       });
 
-      console.log('AIPPS Debug: Response status:', response.status);
+      console.log('AIPPS Debug: Widget response status:', response.status);
       
       if (response.ok) {
-        userConversations = await response.json();
-        console.log('AIPPS Debug: Conversaciones cargadas desde dashboard:', userConversations.length);
+        const widgetData = await response.json();
+        
+        // Now get conversations for this visitor using new endpoint
+        const conversationsResponse = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversations/${visitorId}`, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+        
+        if (conversationsResponse.ok) {
+          userConversations = await conversationsResponse.json();
+        } else {
+          userConversations = [];
+        }
+        
+        console.log('AIPPS Debug: Conversaciones cargadas con sistema bubble:', userConversations.length);
       } else {
         console.error('Error loading conversations from dashboard:', response.status);
         const errorText = await response.text();
@@ -3103,50 +3119,43 @@ Contenido: [Error al extraer contenido detallado]
     }
   };
 
-  // Helper function to send fullscreen messages
+  // Helper function to send fullscreen messages using bubble system
   async function sendFullscreenMessage(message) {
     showTypingIndicator(true);
     
     try {
-      const token = getAuthToken();
-      console.log('AIPPS Debug: Enviando mensaje con token:', token ? 'Encontrado' : 'No encontrado');
+      console.log('AIPPS Debug: Enviando mensaje con sistema bubble exitoso...');
       console.log('AIPPS Debug: Mensaje:', message);
-      console.log('AIPPS Debug: ConversationId:', currentConversationId);
       
-      // If no conversation exists, create one first
-      if (!currentConversationId) {
-        const newConv = await createNewConversationForDashboard();
-        if (!newConv) {
-          addMessage('Error al crear conversación. Inténtalo de nuevo.', 'assistant');
-          return;
-        }
+      // Use same system as working bubble widget
+      const visitorId = localStorage.getItem('aipi_visitor_id') || 
+        `visitor_${Math.random().toString(36).substring(2, 15)}`;
+      
+      if (!localStorage.getItem('aipi_visitor_id')) {
+        localStorage.setItem('aipi_visitor_id', visitorId);
       }
       
-      // Use the correct base URL for API calls
-      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? `${window.location.protocol}//${window.location.host}` 
-        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
-      
-      const response = await fetch(`${baseUrl}/api/conversations/send`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/message`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           message: message,
-          conversationId: currentConversationId,
-          integrationId: config.integrationId
+          visitorId: visitorId,
+          currentUrl: window.location.href,
+          pageTitle: document.title
         })
       });
 
-      console.log('AIPPS Debug: Response status:', response.status);
+      console.log('AIPPS Debug: Bubble system response status:', response.status);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('AIPPS Debug: Response data:', data);
+        console.log('AIPPS Debug: Bubble response data:', data);
         
-        if (data.conversationId && !currentConversationId) {
+        // Update conversation ID from response
+        if (data.conversationId) {
           currentConversationId = data.conversationId;
         }
         
