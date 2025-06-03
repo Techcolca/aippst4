@@ -1234,15 +1234,23 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
     
+    // Force position to be fixed and reset all positioning properties first
+    widgetInstance.style.setProperty('position', 'fixed', 'important');
+    widgetInstance.style.setProperty('top', 'auto', 'important');
+    widgetInstance.style.setProperty('bottom', 'auto', 'important');
+    widgetInstance.style.setProperty('left', 'auto', 'important');
+    widgetInstance.style.setProperty('right', 'auto', 'important');
+    widgetInstance.style.setProperty('transform', 'none', 'important');
+    
     // Para widgets tipo fullscreen, el posicionamiento es diferente
     if (config.widgetType === 'fullscreen') {
-      widgetInstance.style.left = '0';
-      widgetInstance.style.top = '0';
-      widgetInstance.style.right = '0';
-      widgetInstance.style.bottom = '0';
-      widgetInstance.style.width = '100%';
-      widgetInstance.style.height = '100%';
-      widgetInstance.style.maxWidth = 'none';
+      widgetInstance.style.setProperty('left', '0', 'important');
+      widgetInstance.style.setProperty('top', '0', 'important');
+      widgetInstance.style.setProperty('right', '0', 'important');
+      widgetInstance.style.setProperty('bottom', '0', 'important');
+      widgetInstance.style.setProperty('width', '100%', 'important');
+      widgetInstance.style.setProperty('height', '100%', 'important');
+      widgetInstance.style.setProperty('maxWidth', 'none', 'important');
       console.log('AIPPS Widget: Applied fullscreen positioning');
       return;
     }
@@ -1302,15 +1310,30 @@ Contenido: [Error al extraer contenido detallado]
     widgetInstance.style.maxHeight = 'calc(100vh - 32px)';
     
     // Force repaint to ensure position change is visible
-    widgetInstance.style.transition = 'all 0.3s ease';
-    widgetInstance.offsetHeight; // Trigger reflow
+    widgetInstance.style.setProperty('transition', 'all 0.3s ease', 'important');
+    
+    // Force reflow and repaint
+    widgetInstance.offsetHeight;
+    void(widgetInstance.offsetHeight);
+    
+    // Add visual debugging - temporarily flash the widget
+    const originalOpacity = widgetInstance.style.opacity;
+    widgetInstance.style.setProperty('opacity', '0.5', 'important');
+    setTimeout(() => {
+      widgetInstance.style.setProperty('opacity', originalOpacity || '1', 'important');
+    }, 200);
     
     console.log('AIPPS Widget: Final position styles applied:', {
+      position: config.position,
       top: widgetInstance.style.top,
       bottom: widgetInstance.style.bottom,
       left: widgetInstance.style.left,
       right: widgetInstance.style.right,
-      position: widgetInstance.style.position
+      computedPosition: window.getComputedStyle(widgetInstance).position,
+      computedTop: window.getComputedStyle(widgetInstance).top,
+      computedBottom: window.getComputedStyle(widgetInstance).bottom,
+      computedLeft: window.getComputedStyle(widgetInstance).left,
+      computedRight: window.getComputedStyle(widgetInstance).right
     });
 
     // Agregar listener para cambios de tamaño de ventana
