@@ -1456,19 +1456,41 @@ Contenido: [Error al extraer contenido detallado]
 
       // Close widget - Enhanced for fullscreen mode
       if (closeButton) {
-        closeButton.addEventListener('click', () => {
-          if (config.widgetType === 'fullscreen') {
-            // For fullscreen, hide chat and show the floating button again
-            const chatPanel = document.getElementById('aipi-chat-panel');
-            const fullscreenButton = document.getElementById('aipi-fullscreen-button');
+        // Remove any existing listeners
+        const newCloseButton = closeButton.cloneNode(true);
+        closeButton.parentNode.replaceChild(newCloseButton, closeButton);
+        
+        // Attach click handler to the new button
+        const cleanCloseButton = document.getElementById('aipi-close-button');
+        if (cleanCloseButton) {
+          cleanCloseButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('AIPPS Debug: Close button clicked');
             
-            if (chatPanel) chatPanel.style.display = 'none';
-            if (fullscreenButton) fullscreenButton.style.display = 'flex';
-            isOpen = false;
-          } else {
-            closeWidget();
-          }
-        });
+            if (config.widgetType === 'fullscreen' || isAuthenticated) {
+              // For fullscreen/authenticated mode, hide chat and show the floating button again
+              const chatPanel = document.getElementById('aipi-chat-panel');
+              const fullscreenButton = document.getElementById('aipi-fullscreen-button');
+              
+              if (chatPanel) {
+                chatPanel.style.display = 'none';
+                console.log('AIPPS Debug: Chat panel hidden');
+              }
+              if (fullscreenButton) {
+                fullscreenButton.style.display = 'flex';
+                console.log('AIPPS Debug: Fullscreen button shown');
+              }
+              isOpen = false;
+              isAuthenticated = false;
+              currentUser = null;
+              currentConversationId = null;
+            } else {
+              closeWidget();
+            }
+            return false;
+          };
+        }
       }
 
       // Minimize widget - Only for bubble mode
@@ -1485,21 +1507,50 @@ Contenido: [Error al extraer contenido detallado]
         minimizedContainer.addEventListener('click', maximizeWidget);
       }
 
-      // Handle input changes
+      // Handle input changes and send button
       if (chatInput && sendButton) {
-        chatInput.addEventListener('input', () => {
-          sendButton.disabled = !chatInput.value.trim();
-        });
+        // Remove existing listeners by cloning elements
+        const newChatInput = chatInput.cloneNode(true);
+        const newSendButton = sendButton.cloneNode(true);
+        
+        chatInput.parentNode.replaceChild(newChatInput, chatInput);
+        sendButton.parentNode.replaceChild(newSendButton, sendButton);
+        
+        // Get references to the new clean elements
+        const cleanInput = document.getElementById('aipi-input');
+        const cleanSendButton = document.getElementById('aipi-send-button');
+        
+        if (cleanInput && cleanSendButton) {
+          // Handle input changes
+          cleanInput.oninput = function() {
+            cleanSendButton.disabled = !cleanInput.value.trim();
+          };
 
-        // Send message on Enter key
-        chatInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && chatInput.value.trim()) {
-            sendMessage();
-          }
-        });
+          // Send message on Enter key
+          cleanInput.onkeydown = function(e) {
+            if (e.key === 'Enter' && cleanInput.value.trim()) {
+              e.preventDefault();
+              console.log('AIPPS Debug: Enter key pressed, sending message');
+              sendMessage();
+            }
+          };
 
-        // Send message on button click
-        sendButton.addEventListener('click', sendMessage);
+          // Send message on button click
+          cleanSendButton.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('AIPPS Debug: Send button clicked');
+            if (cleanInput.value.trim()) {
+              sendMessage();
+            }
+            return false;
+          };
+          
+          // Enable send button based on current input value
+          cleanSendButton.disabled = !cleanInput.value.trim();
+          
+          console.log('AIPPS Debug: Input and send button events configured');
+        }
       }
       
     }, 100); // Wait 100ms for DOM to be ready
@@ -2576,13 +2627,28 @@ Contenido: [Error al extraer contenido detallado]
     chatPanel.style.display = 'flex';
     isOpen = true;
 
+    // Wait for DOM to be updated before attaching event listeners
+    setTimeout(() => {
+      console.log('AIPPS Debug: Adjuntando event listeners para fullscreen chat');
+      attachEventListeners();
+      
+      // Verify that critical elements exist
+      const closeButton = document.getElementById('aipi-close-button');
+      const sendButton = document.getElementById('aipi-send-button');
+      const inputField = document.getElementById('aipi-input');
+      
+      console.log('AIPPS Debug: Elementos encontrados:', {
+        closeButton: !!closeButton,
+        sendButton: !!sendButton,
+        inputField: !!inputField
+      });
+    }, 100);
+
     if (userConversations.length > 0) {
       loadConversation(userConversations[0].id);
     } else {
       createNewConversation();
     }
-
-    attachEventListeners();
   }
 
   function renderConversationsList() {
