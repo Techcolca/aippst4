@@ -2762,19 +2762,36 @@ Contenido: [Error al extraer contenido detallado]
   }
 
   window.loadConversation = async function(conversationId) {
-    currentConversationId = conversationId;
-    
     try {
-      const response = await fetch(`${config.serverUrl}/api/conversations/${conversationId}/messages`, {
+      currentConversationId = conversationId;
+      
+      // Clear current messages
+      const messagesContainer = document.getElementById('aipi-messages-container');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '';
+      }
+      
+      // Load messages for this conversation
+      const token = localStorage.getItem('aipi_auth_token');
+      const response = await fetch(`/api/conversations/${conversationId}/messages`, {
         headers: {
-          'Authorization': `Bearer ${currentUser.token}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
         const messages = await response.json();
-        displayMessages(messages);
+        console.log('AIPPS Debug: Mensajes cargados:', messages.length);
+        
+        // Display messages
+        messages.forEach(message => {
+          addMessage(message.content, message.role === 'user' ? 'user' : 'assistant');
+        });
+        
+        // Update active conversation in sidebar
         updateConversationsList();
+      } else {
+        console.error('Error loading messages:', response.status);
       }
     } catch (error) {
       console.error('Error loading conversation:', error);
