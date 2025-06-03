@@ -1234,70 +1234,94 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
     
-    // STEP 1: Completely remove ALL existing positioning styles
-    const stylesToRemove = ['position', 'top', 'bottom', 'left', 'right', 'transform', 'translate', 'translateX', 'translateY'];
-    stylesToRemove.forEach(prop => {
-      widgetInstance.style.removeProperty(prop);
-    });
+    // CRITICAL FIX: Find the toggle button specifically and move it
+    const toggleButton = widgetInstance.querySelector('#aipi-toggle-button');
+    if (!toggleButton) {
+      console.error('AIPPS Widget: Toggle button not found in widget instance');
+      return;
+    }
     
-    // STEP 2: Clear the entire style attribute and rebuild it
-    const currentClass = widgetInstance.className;
-    const currentId = widgetInstance.id;
+    console.log('AIPPS Widget: Found toggle button, applying position changes');
     
-    // Ajustes responsivos
+    // STEP 1: Clear ALL positioning styles from toggle button
+    toggleButton.removeAttribute('style');
+    
+    // STEP 2: Calculate responsive offsets
     const isMobile = window.innerWidth < 768;
     const bottomOffset = isMobile ? '16px' : '20px';
     const sideOffset = isMobile ? '16px' : '20px';
     
-    let newStyles = 'position: fixed !important; z-index: 2147483647 !important; visibility: visible !important; display: block !important; opacity: 1 !important;';
+    // STEP 3: Build complete new style attribute
+    let newStyles = `
+      all: initial !important;
+      min-width: 160px !important;
+      width: auto !important;
+      height: 36px !important;
+      border-radius: 18px !important;
+      background-color: ${config.themeColor} !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      border: none !important;
+      outline: none !important;
+      color: white !important;
+      z-index: 2147483647 !important;
+      position: fixed !important;
+      padding: 0 16px !important;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      white-space: nowrap !important;
+      overflow: visible !important;
+      margin: 0 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      pointer-events: auto !important;
+      box-sizing: border-box !important;
+      isolation: isolate !important;
+    `;
     
-    // Para widgets tipo fullscreen
-    if (config.widgetType === 'fullscreen') {
-      newStyles += ' top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100% !important; height: 100% !important; max-width: none !important;';
-      console.log('AIPPS Widget: Applied fullscreen positioning');
-    } else {
-      // Para widgets tipo bubble - build complete style string
-      switch (config.position) {
-        case 'bottom-left':
-          newStyles += ` bottom: ${bottomOffset} !important; left: ${sideOffset} !important; right: auto !important; top: auto !important; transform: none !important;`;
-          console.log('AIPPS Widget: Applied bottom-left positioning');
-          break;
-        case 'bottom-center':
-          newStyles += ` bottom: ${bottomOffset} !important; left: 50% !important; right: auto !important; top: auto !important; transform: translateX(-50%) !important;`;
-          console.log('AIPPS Widget: Applied bottom-center positioning');
-          break;
-        case 'top-right':
-          newStyles += ` top: 20px !important; right: ${sideOffset} !important; left: auto !important; bottom: auto !important; transform: none !important;`;
-          console.log('AIPPS Widget: Applied top-right positioning');
-          break;
-        case 'top-left':
-          newStyles += ` top: 20px !important; left: ${sideOffset} !important; right: auto !important; bottom: auto !important; transform: none !important;`;
-          console.log('AIPPS Widget: Applied top-left positioning');
-          break;
-        case 'bottom-right':
-        default:
-          newStyles += ` bottom: ${bottomOffset} !important; right: ${sideOffset} !important; left: auto !important; top: auto !important; transform: none !important;`;
-          console.log('AIPPS Widget: Applied bottom-right positioning');
-          break;
-      }
+    // STEP 4: Add position-specific styles
+    switch (config.position) {
+      case 'bottom-left':
+        newStyles += ` bottom: ${bottomOffset} !important; left: ${sideOffset} !important; right: auto !important; top: auto !important;`;
+        console.log('AIPPS Widget: Applied bottom-left positioning to toggle button');
+        break;
+      case 'bottom-center':
+        newStyles += ` bottom: ${bottomOffset} !important; left: 50% !important; right: auto !important; top: auto !important; transform: translateX(-50%) !important;`;
+        console.log('AIPPS Widget: Applied bottom-center positioning to toggle button');
+        break;
+      case 'top-right':
+        newStyles += ` top: 20px !important; right: ${sideOffset} !important; left: auto !important; bottom: auto !important;`;
+        console.log('AIPPS Widget: Applied top-right positioning to toggle button');
+        break;
+      case 'top-left':
+        newStyles += ` top: 20px !important; left: ${sideOffset} !important; right: auto !important; bottom: auto !important;`;
+        console.log('AIPPS Widget: Applied top-left positioning to toggle button');
+        break;
+      case 'bottom-right':
+      default:
+        newStyles += ` bottom: ${bottomOffset} !important; right: ${sideOffset} !important; left: auto !important; top: auto !important;`;
+        console.log('AIPPS Widget: Applied bottom-right positioning to toggle button');
+        break;
     }
     
-    // STEP 3: Completely replace the style attribute
-    widgetInstance.setAttribute('style', newStyles);
+    // STEP 5: Apply the complete new styles
+    toggleButton.setAttribute('style', newStyles);
     
-    // STEP 4: Force complete browser repaint
-    widgetInstance.style.display = 'none';
-    widgetInstance.offsetHeight; // Force reflow
-    widgetInstance.style.display = 'block';
+    // STEP 6: Force repaint
+    toggleButton.offsetHeight;
     
-    console.log('AIPPS Widget: Position applied with complete style replacement. Final computed styles:', {
+    console.log('AIPPS Widget: Toggle button repositioned successfully. Final styles:', {
       position: config.position,
-      computedTop: window.getComputedStyle(widgetInstance).top,
-      computedBottom: window.getComputedStyle(widgetInstance).bottom,
-      computedLeft: window.getComputedStyle(widgetInstance).left,
-      computedRight: window.getComputedStyle(widgetInstance).right,
-      computedTransform: window.getComputedStyle(widgetInstance).transform,
-      styleAttribute: widgetInstance.getAttribute('style')
+      computedTop: window.getComputedStyle(toggleButton).top,
+      computedBottom: window.getComputedStyle(toggleButton).bottom,
+      computedLeft: window.getComputedStyle(toggleButton).left,
+      computedRight: window.getComputedStyle(toggleButton).right,
+      buttonElement: toggleButton
     });
 
     // Agregar listener para cambios de tamaño de ventana
