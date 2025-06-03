@@ -2476,20 +2476,24 @@ Contenido: [Error al extraer contenido detallado]
   }
 
   async function loadUserConversations() {
-    if (!currentUser) return;
-
     try {
-      const response = await fetch(`${config.serverUrl}/api/conversations`, {
+      const token = localStorage.getItem('aipi_auth_token');
+      const response = await fetch('/api/conversations', {
         headers: {
-          'Authorization': `Bearer ${currentUser.token}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
         userConversations = await response.json();
+        console.log('AIPPS Debug: Conversaciones cargadas:', userConversations.length);
+      } else {
+        console.error('Error loading conversations:', response.status);
+        userConversations = [];
       }
     } catch (error) {
       console.error('Error loading conversations:', error);
+      userConversations = [];
     }
   }
 
@@ -2632,6 +2636,58 @@ Contenido: [Error al extraer contenido detallado]
         display: flex;
         flex-direction: column;
       }
+      
+      #aipi-input-container {
+        padding: 20px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        background: white;
+      }
+      
+      #aipi-fullscreen-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 24px;
+        font-size: 14px;
+        outline: none;
+        font-family: ${getFontFamily()};
+        width: 100%;
+      }
+      
+      #aipi-fullscreen-input:focus {
+        border-color: ${config.themeColor};
+        box-shadow: 0 0 0 2px ${config.themeColor}20;
+      }
+      
+      #aipi-input-container button {
+        padding: 12px;
+        background: ${config.themeColor};
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        width: 44px;
+        height: 44px;
+      }
+      
+      #aipi-input-container button:hover {
+        background: ${adjustColor(config.themeColor, -20)};
+        transform: scale(1.05);
+      }
+      
+      #aipi-messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: #f8f9fa;
+      }
     `;
     
     document.head.appendChild(fullscreenStyles);
@@ -2639,28 +2695,25 @@ Contenido: [Error al extraer contenido detallado]
     chatPanel.style.display = 'flex';
     isOpen = true;
 
-    // Wait for DOM to be updated before attaching event listeners
-    setTimeout(() => {
-      console.log('AIPPS Debug: Adjuntando event listeners para fullscreen chat');
-      attachEventListeners();
+    // Initialize fullscreen chat with welcome message and conversations
+    setTimeout(async () => {
+      console.log('AIPPS Debug: Inicializando chat fullscreen');
       
-      // Verify that critical elements exist
-      const closeButton = document.getElementById('aipi-close-button');
-      const sendButton = document.getElementById('aipi-send-button');
-      const inputField = document.getElementById('aipi-input');
+      // Load user conversations first
+      await loadUserConversations();
+      updateConversationsList();
       
-      console.log('AIPPS Debug: Elementos encontrados:', {
-        closeButton: !!closeButton,
-        sendButton: !!sendButton,
-        inputField: !!inputField
-      });
+      // Load existing conversation or create new one
+      if (userConversations.length > 0) {
+        loadConversation(userConversations[0].id);
+      } else {
+        await createNewConversation();
+        // Add welcome message to new conversation
+        if (config.welcomeMessage) {
+          addMessage(config.welcomeMessage, 'assistant');
+        }
+      }
     }, 100);
-
-    if (userConversations.length > 0) {
-      loadConversation(userConversations[0].id);
-    } else {
-      createNewConversation();
-    }
   }
 
   function renderConversationsList() {
@@ -2679,13 +2732,15 @@ Contenido: [Error al extraer contenido detallado]
 
   window.createNewConversation = async function() {
     try {
-      const response = await fetch(`${config.serverUrl}/api/conversations`, {
+      const token = localStorage.getItem('aipi_auth_token');
+      const response = await fetch('/api/conversations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
+          integrationId: config.integrationId,
           title: 'Nueva conversación'
         }),
       });
@@ -2693,10 +2748,13 @@ Contenido: [Error al extraer contenido detallado]
       if (response.ok) {
         const newConversation = await response.json();
         userConversations.unshift(newConversation);
+        currentConversationId = newConversation.id;
         loadConversation(newConversation.id);
         updateConversationsList();
+        return newConversation;
       } else {
         console.error('Error creating conversation:', response.status);
+        return null;
       }
     } catch (error) {
       console.error('Error creating conversation:', error);
@@ -2781,17 +2839,17 @@ Contenido: [Error al extraer contenido detallado]
     showTypingIndicator(true);
     
     try {
-      const response = await fetch(`/api/widget/${config.apiKey}/chat`, {
+      const token = localStorage.getItem('aipi_auth_token');
+      const response = await fetch('/api/conversations/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('aipi_auth_token')}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           message: message,
           conversationId: currentConversationId,
-          visitorId: null, // For authenticated users
-          language: detectLanguage(message)
+          integrationId: config.integrationId
         })
       });
 
@@ -2804,12 +2862,11 @@ Contenido: [Error al extraer contenido detallado]
         
         addMessage(data.response, 'assistant');
         
-        // Update conversations list if needed
-        if (isAuthenticated) {
-          await loadUserConversations();
-          updateConversationsList();
-        }
+        // Update conversations list
+        await loadUserConversations();
+        updateConversationsList();
       } else {
+        console.error('Error response:', data);
         addMessage('Lo siento, no pude procesar tu mensaje. Inténtalo de nuevo.', 'assistant');
       }
     } catch (error) {
