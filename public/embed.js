@@ -2497,6 +2497,35 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  async function loadUserConversationsFromDashboard() {
+    try {
+      const token = getCookie('auth_token');
+      console.log('AIPPS Debug: Usando token del dashboard:', token ? 'Encontrado' : 'No encontrado');
+      
+      const response = await fetch('/api/conversations', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      console.log('AIPPS Debug: Response status:', response.status);
+      
+      if (response.ok) {
+        userConversations = await response.json();
+        console.log('AIPPS Debug: Conversaciones cargadas desde dashboard:', userConversations.length);
+      } else {
+        console.error('Error loading conversations from dashboard:', response.status);
+        const errorText = await response.text();
+        console.error('Error details:', errorText);
+        userConversations = [];
+      }
+    } catch (error) {
+      console.error('Error loading conversations from dashboard:', error);
+      userConversations = [];
+    }
+  }
+
   function showFullscreenChat() {
     const chatPanel = document.getElementById('aipi-chat-panel');
     if (!chatPanel) return;
@@ -2695,20 +2724,29 @@ Contenido: [Error al extraer contenido detallado]
     chatPanel.style.display = 'flex';
     isOpen = true;
 
-    // Initialize fullscreen chat with welcome message and conversations
+    // Initialize fullscreen chat with dashboard authentication
     setTimeout(async () => {
       console.log('AIPPS Debug: Inicializando chat fullscreen');
       
-      // Load user conversations first
-      await loadUserConversations();
+      // Get authentication token from cookies (same as dashboard)
+      const authToken = getCookie('auth_token');
+      if (authToken) {
+        localStorage.setItem('aipi_auth_token', authToken);
+        console.log('AIPPS Debug: Token sincronizado desde dashboard');
+      }
+      
+      // Set integration ID from config
+      config.integrationId = config.integrationId || 9; // Default to existing integration
+      
+      // Load user conversations using dashboard endpoints
+      await loadUserConversationsFromDashboard();
       updateConversationsList();
       
-      // Load existing conversation or create new one
+      // Load existing conversation or show welcome message
       if (userConversations.length > 0) {
         loadConversation(userConversations[0].id);
       } else {
-        await createNewConversation();
-        // Add welcome message to new conversation
+        // Show welcome message directly
         if (config.welcomeMessage) {
           addMessage(config.welcomeMessage, 'assistant');
         }
@@ -2731,8 +2769,14 @@ Contenido: [Error al extraer contenido detallado]
   }
 
   window.createNewConversation = async function() {
+    return await createNewConversationForDashboard();
+  }
+
+  async function createNewConversationForDashboard() {
     try {
-      const token = localStorage.getItem('aipi_auth_token');
+      const token = getCookie('auth_token');
+      console.log('AIPPS Debug: Creando nueva conversación con token del dashboard');
+      
       const response = await fetch('/api/conversations', {
         method: 'POST',
         headers: {
@@ -2745,25 +2789,30 @@ Contenido: [Error al extraer contenido detallado]
         }),
       });
 
+      console.log('AIPPS Debug: Create conversation response status:', response.status);
+
       if (response.ok) {
         const newConversation = await response.json();
+        console.log('AIPPS Debug: Nueva conversación creada:', newConversation.id);
         userConversations.unshift(newConversation);
         currentConversationId = newConversation.id;
-        loadConversation(newConversation.id);
         updateConversationsList();
         return newConversation;
       } else {
-        console.error('Error creating conversation:', response.status);
+        const errorText = await response.text();
+        console.error('Error creating conversation:', response.status, errorText);
         return null;
       }
     } catch (error) {
       console.error('Error creating conversation:', error);
+      return null;
     }
   }
 
   window.loadConversation = async function(conversationId) {
     try {
       currentConversationId = conversationId;
+      console.log('AIPPS Debug: Cargando conversación:', conversationId);
       
       // Clear current messages
       const messagesContainer = document.getElementById('aipi-messages-container');
@@ -2771,13 +2820,15 @@ Contenido: [Error al extraer contenido detallado]
         messagesContainer.innerHTML = '';
       }
       
-      // Load messages for this conversation
-      const token = localStorage.getItem('aipi_auth_token');
+      // Load messages for this conversation using dashboard token
+      const token = getCookie('auth_token');
       const response = await fetch(`/api/conversations/${conversationId}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
+
+      console.log('AIPPS Debug: Load messages response status:', response.status);
 
       if (response.ok) {
         const messages = await response.json();
@@ -2791,7 +2842,8 @@ Contenido: [Error al extraer contenido detallado]
         // Update active conversation in sidebar
         updateConversationsList();
       } else {
-        console.error('Error loading messages:', response.status);
+        const errorText = await response.text();
+        console.error('Error loading messages:', response.status, errorText);
       }
     } catch (error) {
       console.error('Error loading conversation:', error);
@@ -2816,6 +2868,14 @@ Contenido: [Error al extraer contenido detallado]
     if (listContainer) {
       listContainer.innerHTML = renderConversationsList();
     }
+  }
+
+  // Helper function to get cookies
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
   }
 
   // Global event handlers for fullscreen mode
@@ -2856,7 +2916,20 @@ Contenido: [Error al extraer contenido detallado]
     showTypingIndicator(true);
     
     try {
-      const token = localStorage.getItem('aipi_auth_token');
+      const token = getCookie('auth_token');
+      console.log('AIPPS Debug: Enviando mensaje con token del dashboard:', token ? 'Encontrado' : 'No encontrado');
+      console.log('AIPPS Debug: Mensaje:', message);
+      console.log('AIPPS Debug: ConversationId:', currentConversationId);
+      
+      // If no conversation exists, create one first
+      if (!currentConversationId) {
+        const newConv = await createNewConversationForDashboard();
+        if (!newConv) {
+          addMessage('Error al crear conversación. Inténtalo de nuevo.', 'assistant');
+          return;
+        }
+      }
+      
       const response = await fetch('/api/conversations/send', {
         method: 'POST',
         headers: {
@@ -2870,20 +2943,24 @@ Contenido: [Error al extraer contenido detallado]
         })
       });
 
-      const data = await response.json();
+      console.log('AIPPS Debug: Response status:', response.status);
       
       if (response.ok) {
+        const data = await response.json();
+        console.log('AIPPS Debug: Response data:', data);
+        
         if (data.conversationId && !currentConversationId) {
           currentConversationId = data.conversationId;
         }
         
-        addMessage(data.response, 'assistant');
+        addMessage(data.response || data.message || 'Respuesta recibida', 'assistant');
         
         // Update conversations list
-        await loadUserConversations();
+        await loadUserConversationsFromDashboard();
         updateConversationsList();
       } else {
-        console.error('Error response:', data);
+        const errorData = await response.text();
+        console.error('Error response:', response.status, errorData);
         addMessage('Lo siento, no pude procesar tu mensaje. Inténtalo de nuevo.', 'assistant');
       }
     } catch (error) {
