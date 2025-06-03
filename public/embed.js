@@ -33,6 +33,12 @@
   let pageTitle = "";
   let currentTextIndex = 0;
   let textRotationInterval = null;
+  
+  // Fullscreen auth variables
+  let isAuthenticated = false;
+  let currentUser = null;
+  let userConversations = [];
+  let currentConversationId = null;
 
   // Initialize widget
   function init() {
@@ -529,6 +535,12 @@ Contenido: [Error al extraer contenido detallado]
       fullscreenButton.onclick = function() {
         try {
           console.log('AIPI Debug: Botón fullscreen clickeado');
+          
+          // Check authentication for fullscreen mode
+          if (!isAuthenticated) {
+            showAuthForm();
+            return;
+          }
 
           // Obtener el panel de chat directamente
           const chatPanel = document.getElementById('aipi-chat-panel');
@@ -539,28 +551,10 @@ Contenido: [Error al extraer contenido detallado]
             this.style.display = 'none';
             console.log('AIPI Debug: Botón flotante ocultado');
 
-            // Mostrar el panel de chat
-            chatPanel.style.display = 'flex';
-            console.log('AIPI Debug: Panel de chat mostrado');
-            isOpen = true;
-
-            // Iniciar conversación si no se ha iniciado
-            if (!conversationStarted) {
-              console.log('AIPI Debug: Iniciando conversación');
-              startConversation();
-            }
-
-            // Enfocar el campo de entrada
-            setTimeout(() => {
-              const input = document.getElementById('aipi-input');
-              console.log('AIPI Debug: Input encontrado?', !!input);
-              if (input) {
-                input.focus();
-              }
-            }, 300);
-
-            // Desplazar al final de los mensajes
-            scrollToBottom();
+            // Load user conversations and show chat
+            loadUserConversations().then(() => {
+              showFullscreenChat();
+            });
           } else {
             console.error('Error AIPI: No se encontró el panel de chat. ID widget:', widgetInstance?.id);
             alert('Error al abrir el chat: No se encontró el panel en el DOM');
@@ -1460,14 +1454,30 @@ Contenido: [Error al extraer contenido detallado]
         return;
       }
 
-      // Close widget
+      // Close widget - Enhanced for fullscreen mode
       if (closeButton) {
-        closeButton.addEventListener('click', closeWidget);
+        closeButton.addEventListener('click', () => {
+          if (config.widgetType === 'fullscreen') {
+            // For fullscreen, hide chat and show the floating button again
+            const chatPanel = document.getElementById('aipi-chat-panel');
+            const fullscreenButton = document.getElementById('aipi-fullscreen-button');
+            
+            if (chatPanel) chatPanel.style.display = 'none';
+            if (fullscreenButton) fullscreenButton.style.display = 'flex';
+            isOpen = false;
+          } else {
+            closeWidget();
+          }
+        });
       }
 
-      // Minimize widget
+      // Minimize widget - Only for bubble mode
       if (minimizeButton) {
-        minimizeButton.addEventListener('click', minimizeWidget);
+        minimizeButton.addEventListener('click', () => {
+          if (config.widgetType !== 'fullscreen') {
+            minimizeWidget();
+          }
+        });
       }
 
       // Maximize from minimized state
@@ -2122,6 +2132,503 @@ Contenido: [Error al extraer contenido detallado]
     const fullscreenButtonText = document.querySelector('.aipi-fullscreen-button-text');
     if (fullscreenButtonText) {
       fullscreenButtonText.textContent = buttonName;
+    }
+  }
+
+  // Authentication functions for fullscreen mode
+  function showAuthForm() {
+    const authContainer = document.createElement('div');
+    authContainer.id = 'aipi-auth-container';
+    authContainer.innerHTML = `
+      <div class="aipi-auth-overlay">
+        <div class="aipi-auth-modal">
+          <div class="aipi-auth-header">
+            <h2>Iniciar Sesión</h2>
+            <button class="aipi-auth-close" onclick="closeAuthForm()">×</button>
+          </div>
+          <div class="aipi-auth-content">
+            <div class="aipi-auth-tabs">
+              <button class="aipi-auth-tab active" onclick="showLoginTab()">Iniciar Sesión</button>
+              <button class="aipi-auth-tab" onclick="showRegisterTab()">Registrarse</button>
+            </div>
+            
+            <div id="aipi-login-form" class="aipi-auth-form">
+              <input type="email" id="login-email" placeholder="Correo electrónico" required>
+              <input type="password" id="login-password" placeholder="Contraseña" required>
+              <button onclick="handleLogin()" class="aipi-auth-submit">Iniciar Sesión</button>
+            </div>
+            
+            <div id="aipi-register-form" class="aipi-auth-form" style="display: none;">
+              <input type="text" id="register-name" placeholder="Nombre completo" required>
+              <input type="email" id="register-email" placeholder="Correo electrónico" required>
+              <input type="password" id="register-password" placeholder="Contraseña" required>
+              <button onclick="handleRegister()" class="aipi-auth-submit">Registrarse</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add auth styles
+    const authStyles = document.createElement('style');
+    authStyles.textContent = `
+      .aipi-auth-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2147483647;
+      }
+      
+      .aipi-auth-modal {
+        background: white;
+        border-radius: 12px;
+        padding: 0;
+        width: 400px;
+        max-width: 90vw;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      
+      .aipi-auth-header {
+        background: ${config.themeColor};
+        color: white;
+        padding: 20px;
+        border-radius: 12px 12px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .aipi-auth-header h2 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+      }
+      
+      .aipi-auth-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .aipi-auth-content {
+        padding: 20px;
+      }
+      
+      .aipi-auth-tabs {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      
+      .aipi-auth-tab {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-weight: 500;
+        color: #6b7280;
+        border-bottom: 2px solid transparent;
+      }
+      
+      .aipi-auth-tab.active {
+        color: ${config.themeColor};
+        border-bottom-color: ${config.themeColor};
+      }
+      
+      .aipi-auth-form input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      
+      .aipi-auth-form input:focus {
+        outline: none;
+        border-color: ${config.themeColor};
+        box-shadow: 0 0 0 3px ${config.themeColor}20;
+      }
+      
+      .aipi-auth-submit {
+        width: 100%;
+        padding: 12px;
+        background: ${config.themeColor};
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      
+      .aipi-auth-submit:hover {
+        background: ${adjustColor(config.themeColor, -20)};
+      }
+    `;
+    
+    document.head.appendChild(authStyles);
+    document.body.appendChild(authContainer);
+  }
+
+  window.showLoginTab = function() {
+    document.getElementById('aipi-login-form').style.display = 'block';
+    document.getElementById('aipi-register-form').style.display = 'none';
+    document.querySelectorAll('.aipi-auth-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.aipi-auth-tab')[0].classList.add('active');
+  }
+
+  window.showRegisterTab = function() {
+    document.getElementById('aipi-login-form').style.display = 'none';
+    document.getElementById('aipi-register-form').style.display = 'block';
+    document.querySelectorAll('.aipi-auth-tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.aipi-auth-tab')[1].classList.add('active');
+  }
+
+  window.closeAuthForm = function() {
+    const authContainer = document.getElementById('aipi-auth-container');
+    if (authContainer) {
+      authContainer.remove();
+    }
+  }
+
+  window.handleLogin = async function() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    if (!email || !password) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${config.serverUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        currentUser = userData.user;
+        isAuthenticated = true;
+        closeAuthForm();
+        
+        await loadUserConversations();
+        showFullscreenChat();
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Error al iniciar sesión');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Error de conexión. Inténtalo de nuevo.');
+    }
+  }
+
+  window.handleRegister = async function() {
+    const name = document.getElementById('register-name').value;
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    
+    if (!name || !email || !password) {
+      alert('Por favor, completa todos los campos');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${config.serverUrl}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: name, email, password }),
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        currentUser = userData.user;
+        isAuthenticated = true;
+        closeAuthForm();
+        
+        await loadUserConversations();
+        showFullscreenChat();
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Error al registrarse');
+      }
+    } catch (error) {
+      console.error('Register error:', error);
+      alert('Error de conexión. Inténtalo de nuevo.');
+    }
+  }
+
+  async function loadUserConversations() {
+    if (!currentUser) return;
+
+    try {
+      const response = await fetch(`${config.serverUrl}/api/conversations`, {
+        headers: {
+          'Authorization': `Bearer ${currentUser.token}`,
+        },
+      });
+
+      if (response.ok) {
+        userConversations = await response.json();
+      }
+    } catch (error) {
+      console.error('Error loading conversations:', error);
+    }
+  }
+
+  function showFullscreenChat() {
+    const chatPanel = document.getElementById('aipi-chat-panel');
+    if (!chatPanel) return;
+
+    chatPanel.innerHTML = `
+      <div class="aipi-fullscreen-layout">
+        <div class="aipi-conversations-sidebar">
+          <div class="aipi-sidebar-header">
+            <h3>Conversaciones</h3>
+            <button onclick="createNewConversation()" class="aipi-new-chat-btn">+ Nueva</button>
+          </div>
+          <div class="aipi-conversations-list" id="aipi-conversations-list">
+            ${renderConversationsList()}
+          </div>
+        </div>
+        
+        <div class="aipi-chat-main">
+          <div id="aipi-chat-header">
+            <div id="aipi-header-info">
+              <div id="aipi-avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+              </div>
+              <div id="aipi-header-text">
+                <span id="aipi-assistant-name">${escapeHTML(config.integrationName || config.assistantName)}</span>
+                <span id="aipi-status">Online</span>
+              </div>
+            </div>
+            <div id="aipi-header-actions">
+              <button class="aipi-header-button" id="aipi-close-button" aria-label="Close">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div id="aipi-messages-container"></div>
+          <div id="aipi-input-container">
+            <input type="text" id="aipi-input" placeholder="Escribe tu mensaje...">
+            <button id="aipi-send-button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const fullscreenStyles = document.createElement('style');
+    fullscreenStyles.textContent = `
+      .aipi-fullscreen-layout {
+        display: flex;
+        height: 100vh;
+        font-family: ${getFontFamily()};
+      }
+      
+      .aipi-conversations-sidebar {
+        width: 300px;
+        background: #f8f9fa;
+        border-right: 1px solid #e5e7eb;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .aipi-sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .aipi-sidebar-header h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+      
+      .aipi-new-chat-btn {
+        background: ${config.themeColor};
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      
+      .aipi-conversations-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+      }
+      
+      .aipi-conversation-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid #e5e7eb;
+        transition: all 0.2s;
+      }
+      
+      .aipi-conversation-item:hover {
+        background: #f3f4f6;
+      }
+      
+      .aipi-conversation-item.active {
+        background: ${config.themeColor}10;
+        border-color: ${config.themeColor};
+      }
+      
+      .aipi-conversation-title {
+        font-weight: 500;
+        font-size: 14px;
+        color: #1f2937;
+        margin-bottom: 4px;
+      }
+      
+      .aipi-conversation-preview {
+        font-size: 12px;
+        color: #6b7280;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .aipi-chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+    `;
+    
+    document.head.appendChild(fullscreenStyles);
+    
+    chatPanel.style.display = 'flex';
+    isOpen = true;
+
+    if (userConversations.length > 0) {
+      loadConversation(userConversations[0].id);
+    } else {
+      createNewConversation();
+    }
+
+    attachEventListeners();
+  }
+
+  function renderConversationsList() {
+    if (userConversations.length === 0) {
+      return '<div style="text-align: center; color: #6b7280; padding: 20px;">No hay conversaciones</div>';
+    }
+
+    return userConversations.map(conv => `
+      <div class="aipi-conversation-item ${conv.id === currentConversationId ? 'active' : ''}" 
+           onclick="loadConversation(${conv.id})">
+        <div class="aipi-conversation-title">${conv.title || 'Nueva conversación'}</div>
+        <div class="aipi-conversation-preview">${conv.preview || 'Iniciada hace poco'}</div>
+      </div>
+    `).join('');
+  }
+
+  window.createNewConversation = async function() {
+    try {
+      const response = await fetch(`${config.serverUrl}/api/conversations`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentUser.token}`,
+        },
+        body: JSON.stringify({
+          title: 'Nueva conversación'
+        }),
+      });
+
+      if (response.ok) {
+        const newConversation = await response.json();
+        userConversations.unshift(newConversation);
+        loadConversation(newConversation.id);
+        updateConversationsList();
+      }
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+    }
+  }
+
+  window.loadConversation = async function(conversationId) {
+    currentConversationId = conversationId;
+    
+    try {
+      const response = await fetch(`${config.serverUrl}/api/conversations/${conversationId}/messages`, {
+        headers: {
+          'Authorization': `Bearer ${currentUser.token}`,
+        },
+      });
+
+      if (response.ok) {
+        const messages = await response.json();
+        displayMessages(messages);
+        updateConversationsList();
+      }
+    } catch (error) {
+      console.error('Error loading conversation:', error);
+    }
+  }
+
+  function displayMessages(conversationMessages) {
+    const messagesContainer = document.getElementById('aipi-messages-container');
+    if (!messagesContainer) return;
+
+    messagesContainer.innerHTML = '';
+    
+    conversationMessages.forEach(msg => {
+      addMessage(msg.content, msg.role);
+    });
+    
+    scrollToBottom();
+  }
+
+  function updateConversationsList() {
+    const listContainer = document.getElementById('aipi-conversations-list');
+    if (listContainer) {
+      listContainer.innerHTML = renderConversationsList();
     }
   }
 
