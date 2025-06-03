@@ -1844,27 +1844,46 @@ Contenido: [Error al extraer contenido detallado]
       console.log("Enviando mensaje con contexto de página:", {
         url: window.location.href,
         title: pageTitle,
-        contentLength: currentPageContent ? currentPageContent.length : 0
+        contentLength: currentPageContent ? currentPageContent.length : 0,
+        authenticated: isAuthenticated,
+        conversationId: currentConversationId || config.conversationId
       });
 
-      // Send message to server
-      const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/message`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          conversationId: config.conversationId,
-          content: message,
-          role: 'user',
-          // NO enviar language - dejar que el servidor detecte automáticamente
-          pageContext: {
-            title: pageTitle || document.title,
-            url: window.location.href,
-            content: currentPageContent
-          }
-        }),
-      });
+      let response;
+      
+      // Use different endpoints based on authentication status
+      if (isAuthenticated && currentConversationId) {
+        // Authenticated fullscreen mode
+        response = await fetch(`${config.serverUrl}/api/conversations/${currentConversationId}/messages`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentUser.token}`,
+          },
+          body: JSON.stringify({
+            content: message,
+            role: 'user'
+          }),
+        });
+      } else {
+        // Anonymous bubble mode
+        response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/message`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            conversationId: config.conversationId,
+            content: message,
+            role: 'user',
+            pageContext: {
+              title: pageTitle || document.title,
+              url: window.location.href,
+              content: currentPageContent
+            }
+          }),
+        });
+      }
 
       // Hide typing indicator
       showTypingIndicator(false);
@@ -1899,20 +1918,32 @@ Contenido: [Error al extraer contenido detallado]
 
       const data = await response.json();
 
-      // Add AI response to UI
-      if (data.aiMessage) {
-        addMessage(data.aiMessage.content, 'assistant');
-      } else {
-        // Show message based on user language
-        const userLang = navigator.language.split('-')[0];
-
-        if (userLang === 'fr') {
-          addMessage("J'ai reçu votre message, mais je n'ai pas pu générer une réponse pour le moment.", 'assistant');
-        } else if (userLang === 'en') {
-          addMessage("I received your message, but I couldn't generate a response at this time.", 'assistant');
+      // Handle response based on authentication mode
+      if (isAuthenticated && currentConversationId) {
+        // Authenticated fullscreen mode response
+        if (data.aiResponse && data.aiResponse.content) {
+          addMessage(data.aiResponse.content, 'assistant');
+        } else if (data.error) {
+          addMessage("Lo siento, hubo un error procesando tu mensaje.", 'assistant');
         } else {
-          // Default to Spanish
           addMessage("Recibí tu mensaje, pero no pude generar una respuesta en este momento.", 'assistant');
+        }
+      } else {
+        // Anonymous bubble mode response
+        if (data.aiMessage) {
+          addMessage(data.aiMessage.content, 'assistant');
+        } else {
+          // Show message based on user language
+          const userLang = navigator.language.split('-')[0];
+
+          if (userLang === 'fr') {
+            addMessage("J'ai reçu votre message, mais je n'ai pas pu générer une réponse pour le moment.", 'assistant');
+          } else if (userLang === 'en') {
+            addMessage("I received your message, but I couldn't generate a response at this time.", 'assistant');
+          } else {
+            // Default to Spanish
+            addMessage("Recibí tu mensaje, pero no pude generar una respuesta en este momento.", 'assistant');
+          }
         }
       }
     } catch (error) {
