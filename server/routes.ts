@@ -409,6 +409,168 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // ================ Authenticated Conversations Routes ================
+  // Get user conversations for fullscreen widget
+  app.get("/api/conversations", authenticateJWT, async (req, res) => {
+    try {
+      // Get user's integrations
+      const integrations = await storage.getIntegrations(req.userId);
+      
+      if (integrations.length === 0) {
+        return res.json([]);
+      }
+      
+      // Get conversations from all user integrations
+      let allConversations = [];
+      for (const integration of integrations) {
+        const conversations = await storage.getConversations(integration.id);
+        allConversations = allConversations.concat(conversations);
+      }
+      
+      // Sort by creation date (newest first)
+      allConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      
+      res.json(allConversations);
+    } catch (error) {
+      console.error("Get conversations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create new conversation for authenticated user
+  app.post("/api/conversations", authenticateJWT, async (req, res) => {
+    try {
+      const { title } = req.body;
+      
+      // Get user's first integration (for simplicity, use the first one)
+      const integrations = await storage.getIntegrations(req.userId);
+      
+      if (integrations.length === 0) {
+        return res.status(400).json({ message: "No integrations found for user" });
+      }
+      
+      const conversation = await storage.createConversation({
+        integrationId: integrations[0].id,
+        visitorId: `user_${req.userId}`,
+        title: title || 'Nueva conversación'
+      });
+      
+      res.status(201).json(conversation);
+    } catch (error) {
+      console.error("Create conversation error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Get messages for a specific conversation
+  app.get("/api/conversations/:conversationId/messages", authenticateJWT, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.conversationId);
+      
+      // Verify conversation exists and user has access
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Verify user owns the integration associated with this conversation
+      const integration = await storage.getIntegration(conversation.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      const messages = await storage.getConversationMessages(conversationId);
+      res.json(messages);
+    } catch (error) {
+      console.error("Get conversation messages error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Send message to conversation
+  app.post("/api/conversations/:conversationId/messages", authenticateJWT, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.conversationId);
+      const { content, role } = req.body;
+      
+      if (!content || !role) {
+        return res.status(400).json({ message: "Content and role are required" });
+      }
+      
+      // Verify conversation exists and user has access
+      const conversation = await storage.getConversation(conversationId);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      const integration = await storage.getIntegration(conversation.integrationId);
+      if (!integration || integration.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      // Create user message
+      const message = await storage.createMessage({
+        conversationId,
+        content,
+        role,
+      });
+      
+      // If user message, generate AI response
+      if (role === "user") {
+        try {
+          // Get conversation messages for context
+          const messages = await storage.getConversationMessages(conversationId);
+          
+          // Get site content for context
+          const siteContent = await storage.getSiteContent(integration.id);
+          let context = "";
+          
+          if (siteContent && siteContent.length > 0) {
+            context = siteContent.map(content => `${content.title || 'Sin título'}: ${content.content}`).join('\n\n');
+            console.log(`Contexto del sitio obtenido: ${context.length} caracteres`);
+          }
+          
+          // Prepare conversation history
+          const conversationHistory = messages.map(msg => ({
+            role: msg.role,
+            content: msg.content
+          }));
+          
+          // Generate AI response
+          const aiResponse = await generateChatCompletion(
+            conversationHistory,
+            context,
+            integration.botBehavior || "Eres un asistente virtual útil y amigable.",
+            'es' // Default to Spanish
+          );
+          
+          // Save AI response
+          await storage.createMessage({
+            conversationId,
+            content: aiResponse,
+            role: "assistant",
+          });
+          
+          res.json({ 
+            userMessage: message,
+            aiResponse: { content: aiResponse, role: "assistant" }
+          });
+        } catch (aiError) {
+          console.error("Error generating AI response:", aiError);
+          res.json({ 
+            userMessage: message,
+            error: "Error generating AI response"
+          });
+        }
+      } else {
+        res.json({ message });
+      }
+    } catch (error) {
+      console.error("Create message error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // ================ Dashboard Routes ================
   app.get("/api/dashboard/stats", verifyToken, async (req, res) => {
     try {

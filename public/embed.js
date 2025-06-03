@@ -2153,13 +2153,13 @@ Contenido: [Error al extraer contenido detallado]
             </div>
             
             <div id="aipi-login-form" class="aipi-auth-form">
-              <input type="email" id="login-email" placeholder="Correo electrónico" required>
+              <input type="text" id="login-username" placeholder="Nombre de usuario" required>
               <input type="password" id="login-password" placeholder="Contraseña" required>
               <button onclick="handleLogin()" class="aipi-auth-submit">Iniciar Sesión</button>
             </div>
             
             <div id="aipi-register-form" class="aipi-auth-form" style="display: none;">
-              <input type="text" id="register-name" placeholder="Nombre completo" required>
+              <input type="text" id="register-username" placeholder="Nombre de usuario" required>
               <input type="email" id="register-email" placeholder="Correo electrónico" required>
               <input type="password" id="register-password" placeholder="Contraseña" required>
               <button onclick="handleRegister()" class="aipi-auth-submit">Registrarse</button>
@@ -2309,10 +2309,10 @@ Contenido: [Error al extraer contenido detallado]
   }
 
   window.handleLogin = async function() {
-    const email = document.getElementById('login-email').value;
+    const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
     
-    if (!email || !password) {
+    if (!username || !password) {
       alert('Por favor, completa todos los campos');
       return;
     }
@@ -2323,12 +2323,12 @@ Contenido: [Error al extraer contenido detallado]
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
         const userData = await response.json();
-        currentUser = userData.user;
+        currentUser = userData;
         isAuthenticated = true;
         closeAuthForm();
         
@@ -2345,11 +2345,11 @@ Contenido: [Error al extraer contenido detallado]
   }
 
   window.handleRegister = async function() {
-    const name = document.getElementById('register-name').value;
+    const username = document.getElementById('register-username').value;
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
     
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
       alert('Por favor, completa todos los campos');
       return;
     }
@@ -2360,12 +2360,12 @@ Contenido: [Error al extraer contenido detallado]
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: name, email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       if (response.ok) {
         const userData = await response.json();
-        currentUser = userData.user;
+        currentUser = userData;
         isAuthenticated = true;
         closeAuthForm();
         
@@ -2586,6 +2586,8 @@ Contenido: [Error al extraer contenido detallado]
         userConversations.unshift(newConversation);
         loadConversation(newConversation.id);
         updateConversationsList();
+      } else {
+        console.error('Error creating conversation:', response.status);
       }
     } catch (error) {
       console.error('Error creating conversation:', error);
