@@ -138,6 +138,26 @@
       }
     }
 
+    // FORCE dashboard API URL override
+    if (window.location.href.includes('replit.dev') || window.location.hostname.includes('replit.dev')) {
+      config.serverUrl = window.location.origin;
+      dashboardConfig.isDashboard = true;
+      dashboardConfig.apiBaseUrl = window.location.origin;
+      
+      // Force get auth token from dashboard context immediately
+      try {
+        const dashboardToken = localStorage.getItem('auth_token');
+        if (dashboardToken) {
+          dashboardConfig.authToken = dashboardToken;
+          console.log('AIPPS Debug: TOKEN FORZADO desde localStorage dashboard');
+        }
+      } catch (e) {
+        console.log('AIPPS Debug: Error accediendo localStorage:', e);
+      }
+      
+      console.log('AIPPS Debug: FORZANDO URL de dashboard:', config.serverUrl);
+    }
+
     // Generate visitor ID if not exists
     if (!localStorage.getItem('aipi_visitor_id')) {
       localStorage.setItem('aipi_visitor_id', 'visitor_' + Math.random().toString(36).substring(2, 15));
@@ -2971,6 +2991,13 @@ Contenido: [Error al extraer contenido detallado]
 
   // Helper function to get the correct API base URL
   function getApiBaseUrl() {
+    // HARD OVERRIDE: If current URL contains replit.dev, ALWAYS use current origin
+    if (window.location.href.includes('replit.dev')) {
+      const forceUrl = window.location.origin;
+      console.log('AIPPS Debug: SOBRESCRIBIENDO URL para Replit:', forceUrl);
+      return forceUrl;
+    }
+    
     // If we're in dashboard context, use dashboard API URL
     if (dashboardConfig.isDashboard && dashboardConfig.apiBaseUrl) {
       console.log('AIPPS Debug: Usando URL de dashboard:', dashboardConfig.apiBaseUrl);
