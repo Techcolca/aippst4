@@ -1468,25 +1468,29 @@ Contenido: [Error al extraer contenido detallado]
             e.stopPropagation();
             console.log('AIPPS Debug: Close button clicked');
             
-            if (config.widgetType === 'fullscreen' || isAuthenticated) {
-              // For fullscreen/authenticated mode, hide chat and show the floating button again
-              const chatPanel = document.getElementById('aipi-chat-panel');
-              const fullscreenButton = document.getElementById('aipi-fullscreen-button');
-              
-              if (chatPanel) {
-                chatPanel.style.display = 'none';
-                console.log('AIPPS Debug: Chat panel hidden');
+            try {
+              if (config.widgetType === 'fullscreen' || isAuthenticated) {
+                // For fullscreen/authenticated mode, hide chat and show the floating button again
+                const chatPanel = document.getElementById('aipi-chat-panel');
+                const fullscreenButton = document.getElementById('aipi-fullscreen-button');
+                
+                if (chatPanel) {
+                  chatPanel.style.display = 'none';
+                  console.log('AIPPS Debug: Chat panel hidden');
+                }
+                if (fullscreenButton) {
+                  fullscreenButton.style.display = 'flex';
+                  console.log('AIPPS Debug: Fullscreen button shown');
+                }
+                isOpen = false;
+                isAuthenticated = false;
+                currentUser = null;
+                currentConversationId = null;
+              } else {
+                window.aipiCloseWidget();
               }
-              if (fullscreenButton) {
-                fullscreenButton.style.display = 'flex';
-                console.log('AIPPS Debug: Fullscreen button shown');
-              }
-              isOpen = false;
-              isAuthenticated = false;
-              currentUser = null;
-              currentConversationId = null;
-            } else {
-              closeWidget();
+            } catch (error) {
+              console.error('AIPPS Debug: Error in close button handler:', error);
             }
             return false;
           };
@@ -1531,7 +1535,11 @@ Contenido: [Error al extraer contenido detallado]
             if (e.key === 'Enter' && cleanInput.value.trim()) {
               e.preventDefault();
               console.log('AIPPS Debug: Enter key pressed, sending message');
-              sendMessage();
+              try {
+                window.aipiSendMessage();
+              } catch (error) {
+                console.error('AIPPS Debug: Error in Enter key handler:', error);
+              }
             }
           };
 
@@ -1540,8 +1548,12 @@ Contenido: [Error al extraer contenido detallado]
             e.preventDefault();
             e.stopPropagation();
             console.log('AIPPS Debug: Send button clicked');
-            if (cleanInput.value.trim()) {
-              sendMessage();
+            try {
+              if (cleanInput.value.trim()) {
+                window.aipiSendMessage();
+              }
+            } catch (error) {
+              console.error('AIPPS Debug: Error in send button handler:', error);
             }
             return false;
           };
@@ -2730,6 +2742,13 @@ Contenido: [Error al extraer contenido detallado]
       listContainer.innerHTML = renderConversationsList();
     }
   }
+
+  // Expose functions to global scope for event handlers
+  window.aipiSendMessage = sendMessage;
+  window.aipiCloseWidget = closeWidget;
+  window.aipiOpenWidget = openWidget;
+  window.aipiMinimizeWidget = minimizeWidget;
+  window.aipiMaximizeWidget = maximizeWidget;
 
   // Initialize the widget when the DOM is fully loaded
   if (document.readyState === 'loading') {
