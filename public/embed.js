@@ -2502,7 +2502,12 @@ Contenido: [Error al extraer contenido detallado]
       const token = getAuthToken();
       console.log('AIPPS Debug: Usando token para conversaciones:', token ? 'Encontrado' : 'No encontrado');
       
-      const response = await fetch('/api/conversations', {
+      // Use the correct base URL for API calls
+      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? `${window.location.protocol}//${window.location.host}` 
+        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+      
+      const response = await fetch(`${baseUrl}/api/conversations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -2779,7 +2784,12 @@ Contenido: [Error al extraer contenido detallado]
       const token = getAuthToken();
       console.log('AIPPS Debug: Creando nueva conversación con token:', token ? 'Encontrado' : 'No encontrado');
       
-      const response = await fetch('/api/conversations', {
+      // Use the correct base URL for API calls
+      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? `${window.location.protocol}//${window.location.host}` 
+        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+      
+      const response = await fetch(`${baseUrl}/api/conversations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2824,7 +2834,13 @@ Contenido: [Error al extraer contenido detallado]
       
       // Load messages for this conversation using dashboard token
       const token = getAuthToken();
-      const response = await fetch(`/api/conversations/${conversationId}/messages`, {
+      
+      // Use the correct base URL for API calls
+      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? `${window.location.protocol}//${window.location.host}` 
+        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+      
+      const response = await fetch(`${baseUrl}/api/conversations/${conversationId}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -2870,6 +2886,21 @@ Contenido: [Error al extraer contenido detallado]
     if (listContainer) {
       listContainer.innerHTML = renderConversationsList();
     }
+  }
+
+  // Helper function to get the correct API base URL
+  function getApiBaseUrl() {
+    // For local development, use the current host
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      console.log('AIPPS Debug: Usando URL local:', baseUrl);
+      return baseUrl;
+    }
+    
+    // For production, check if we have a baseUrl in config, otherwise use current host
+    const baseUrl = config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+    console.log('AIPPS Debug: Usando URL base:', baseUrl);
+    return baseUrl;
   }
 
   // Helper function to get authentication token
@@ -2970,7 +3001,12 @@ Contenido: [Error al extraer contenido detallado]
         }
       }
       
-      const response = await fetch('/api/conversations/send', {
+      // Use the correct base URL for API calls
+      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? `${window.location.protocol}//${window.location.host}` 
+        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+      
+      const response = await fetch(`${baseUrl}/api/conversations/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
