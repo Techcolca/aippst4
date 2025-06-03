@@ -3013,10 +3013,10 @@ Contenido: [Error al extraer contenido detallado]
 
   // Helper function to get the correct API base URL
   function getApiBaseUrl() {
-    // HARD FIX: ALWAYS use current browser URL for API calls in fullscreen mode
-    const currentUrl = window.location.origin;
-    console.log('AIPPS Debug: HARD FIX - Usando URL actual del navegador:', currentUrl);
-    return currentUrl;
+    // ULTIMATE FIX: Hard-code the Replit server URL
+    const replitServerUrl = 'https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev';
+    console.log('AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit:', replitServerUrl);
+    return replitServerUrl;
   }
 
   // Helper function to get authentication token
