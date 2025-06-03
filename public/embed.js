@@ -512,18 +512,14 @@ Contenido: [Error al extraer contenido detallado]
     if (config.widgetType === 'fullscreen') {
       widgetInstance.classList.add('aipi-fullscreen-widget');
 
-      // Crear botón de acceso flotante para modo pantalla completa y añadirlo directamente al body
-      const fullscreenButton = document.createElement('div');
+      // Crear botón de acceso flotante para modo pantalla completa - MISMA estructura que bubble
+      const fullscreenButton = document.createElement('button');
       fullscreenButton.id = 'aipi-fullscreen-button';
       fullscreenButton.innerHTML = `
-        <div class="aipi-fullscreen-button-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 16v-4"></path>
-            <path d="M12 8h.01"></path>
-          </svg>
-        </div>
-        <div class="aipi-fullscreen-button-text">AIPI Assistant</div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+        </svg>
+        <span class="aipi-button-text">${escapeHTML(config.integrationName || config.assistantName || 'AIPI Assistant')}</span>
       `;
 
       // No añadir el botón dentro del widget, sino directamente al body para que sea independiente
@@ -1241,17 +1237,23 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
     
-    // CRITICAL FIX: Find the toggle button specifically and move it
-    const toggleButton = widgetInstance.querySelector('#aipi-toggle-button');
-    if (!toggleButton) {
-      console.error('AIPPS Widget: Toggle button not found in widget instance');
+    // CRITICAL FIX: Find the appropriate button based on widget type
+    let targetButton;
+    if (config.widgetType === 'fullscreen') {
+      targetButton = document.getElementById('aipi-fullscreen-button');
+    } else {
+      targetButton = widgetInstance.querySelector('#aipi-toggle-button');
+    }
+    
+    if (!targetButton) {
+      console.error('AIPPS Widget: Target button not found for widget type:', config.widgetType);
       return;
     }
     
-    console.log('AIPPS Widget: Found toggle button, applying position changes');
+    console.log('AIPPS Widget: Found target button, applying position changes');
     
-    // STEP 1: Clear ALL positioning styles from toggle button
-    toggleButton.removeAttribute('style');
+    // STEP 1: Clear ALL positioning styles from target button
+    targetButton.removeAttribute('style');
     
     // STEP 2: Calculate responsive offsets
     const isMobile = window.innerWidth < 768;
@@ -1317,18 +1319,18 @@ Contenido: [Error al extraer contenido detallado]
     }
     
     // STEP 5: Apply the complete new styles
-    toggleButton.setAttribute('style', newStyles);
+    targetButton.setAttribute('style', newStyles);
     
     // STEP 6: Force repaint
-    toggleButton.offsetHeight;
+    targetButton.offsetHeight;
     
-    console.log('AIPPS Widget: Toggle button repositioned successfully. Final styles:', {
+    console.log('AIPPS Widget: Target button repositioned successfully. Final styles:', {
       position: config.position,
-      computedTop: window.getComputedStyle(toggleButton).top,
-      computedBottom: window.getComputedStyle(toggleButton).bottom,
-      computedLeft: window.getComputedStyle(toggleButton).left,
-      computedRight: window.getComputedStyle(toggleButton).right,
-      buttonElement: toggleButton
+      computedTop: window.getComputedStyle(targetButton).top,
+      computedBottom: window.getComputedStyle(targetButton).bottom,
+      computedLeft: window.getComputedStyle(targetButton).left,
+      computedRight: window.getComputedStyle(targetButton).right,
+      buttonElement: targetButton
     });
 
     // Agregar listener para cambios de tamaño de ventana
