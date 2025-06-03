@@ -1234,107 +1234,22 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
     
-    // Force position to be fixed and reset all positioning properties first
-    widgetInstance.style.setProperty('position', 'fixed', 'important');
-    widgetInstance.style.setProperty('top', 'auto', 'important');
-    widgetInstance.style.setProperty('bottom', 'auto', 'important');
-    widgetInstance.style.setProperty('left', 'auto', 'important');
-    widgetInstance.style.setProperty('right', 'auto', 'important');
-    widgetInstance.style.setProperty('transform', 'none', 'important');
+    // Remove and recreate widget to force position change
+    const wasOpen = widgetInstance.classList.contains('open');
+    const parentElement = widgetInstance.parentNode;
     
-    // Para widgets tipo fullscreen, el posicionamiento es diferente
-    if (config.widgetType === 'fullscreen') {
-      widgetInstance.style.setProperty('left', '0', 'important');
-      widgetInstance.style.setProperty('top', '0', 'important');
-      widgetInstance.style.setProperty('right', '0', 'important');
-      widgetInstance.style.setProperty('bottom', '0', 'important');
-      widgetInstance.style.setProperty('width', '100%', 'important');
-      widgetInstance.style.setProperty('height', '100%', 'important');
-      widgetInstance.style.setProperty('maxWidth', 'none', 'important');
-      console.log('AIPPS Widget: Applied fullscreen positioning');
-      return;
+    // Remove existing widget
+    widgetInstance.remove();
+    
+    // Recreate widget with new position
+    createWidgetDOM();
+    
+    // Restore open state if it was open
+    if (wasOpen) {
+      widgetInstance.classList.add('open');
     }
-
-    // Ajustes responsivos
-    const isMobile = window.innerWidth < 768;
-    const bottomOffset = isMobile ? '16px' : '20px';
-    const sideOffset = isMobile ? '16px' : '20px';
-
-    // Para widgets tipo bubble (tipo original)
-    switch (config.position) {
-      case 'bottom-left':
-        widgetInstance.style.setProperty('bottom', bottomOffset, 'important');
-        widgetInstance.style.setProperty('left', sideOffset, 'important');
-        widgetInstance.style.setProperty('right', 'auto', 'important');
-        widgetInstance.style.setProperty('top', 'auto', 'important');
-        widgetInstance.style.setProperty('transform', 'none', 'important');
-        console.log('AIPPS Widget: Applied bottom-left positioning');
-        break;
-      case 'bottom-center':
-        widgetInstance.style.setProperty('bottom', bottomOffset, 'important');
-        widgetInstance.style.setProperty('left', '50%', 'important');
-        widgetInstance.style.setProperty('transform', 'translateX(-50%)', 'important');
-        widgetInstance.style.setProperty('right', 'auto', 'important');
-        widgetInstance.style.setProperty('top', 'auto', 'important');
-        console.log('AIPPS Widget: Applied bottom-center positioning');
-        break;
-      case 'top-right':
-        widgetInstance.style.setProperty('top', '20px', 'important');
-        widgetInstance.style.setProperty('right', sideOffset, 'important');
-        widgetInstance.style.setProperty('left', 'auto', 'important');
-        widgetInstance.style.setProperty('bottom', 'auto', 'important');
-        widgetInstance.style.setProperty('transform', 'none', 'important');
-        console.log('AIPPS Widget: Applied top-right positioning');
-        break;
-      case 'top-left':
-        widgetInstance.style.setProperty('top', '20px', 'important');
-        widgetInstance.style.setProperty('left', sideOffset, 'important');
-        widgetInstance.style.setProperty('right', 'auto', 'important');
-        widgetInstance.style.setProperty('bottom', 'auto', 'important');
-        widgetInstance.style.setProperty('transform', 'none', 'important');
-        console.log('AIPPS Widget: Applied top-left positioning');
-        break;
-      case 'bottom-right':
-      default:
-        widgetInstance.style.setProperty('bottom', bottomOffset, 'important');
-        widgetInstance.style.setProperty('right', sideOffset, 'important');
-        widgetInstance.style.setProperty('left', 'auto', 'important');
-        widgetInstance.style.setProperty('top', 'auto', 'important');
-        widgetInstance.style.setProperty('transform', 'none', 'important');
-        console.log('AIPPS Widget: Applied bottom-right positioning');
-        break;
-    }
-
-    // Asegurar que el widget siempre sea visible
-    widgetInstance.style.maxWidth = 'calc(100vw - 32px)';
-    widgetInstance.style.maxHeight = 'calc(100vh - 32px)';
     
-    // Force repaint to ensure position change is visible
-    widgetInstance.style.setProperty('transition', 'all 0.3s ease', 'important');
-    
-    // Force reflow and repaint
-    widgetInstance.offsetHeight;
-    void(widgetInstance.offsetHeight);
-    
-    // Add visual debugging - temporarily flash the widget
-    const originalOpacity = widgetInstance.style.opacity;
-    widgetInstance.style.setProperty('opacity', '0.5', 'important');
-    setTimeout(() => {
-      widgetInstance.style.setProperty('opacity', originalOpacity || '1', 'important');
-    }, 200);
-    
-    console.log('AIPPS Widget: Final position styles applied:', {
-      position: config.position,
-      top: widgetInstance.style.top,
-      bottom: widgetInstance.style.bottom,
-      left: widgetInstance.style.left,
-      right: widgetInstance.style.right,
-      computedPosition: window.getComputedStyle(widgetInstance).position,
-      computedTop: window.getComputedStyle(widgetInstance).top,
-      computedBottom: window.getComputedStyle(widgetInstance).bottom,
-      computedLeft: window.getComputedStyle(widgetInstance).left,
-      computedRight: window.getComputedStyle(widgetInstance).right
-    });
+    console.log('AIPPS Widget: Widget recreated with new position:', config.position);
 
     // Agregar listener para cambios de tamaño de ventana
     window.addEventListener('resize', () => {
