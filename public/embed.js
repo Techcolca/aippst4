@@ -2523,7 +2523,7 @@ Contenido: [Error al extraer contenido detallado]
               </div>
             </div>
             <div id="aipi-header-actions">
-              <button class="aipi-header-button" id="aipi-close-button" aria-label="Close">
+              <button class="aipi-header-button" onclick="window.aipiCloseFullscreen()" aria-label="Close">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -2533,8 +2533,8 @@ Contenido: [Error al extraer contenido detallado]
           </div>
           <div id="aipi-messages-container"></div>
           <div id="aipi-input-container">
-            <input type="text" id="aipi-input" placeholder="Escribe tu mensaje...">
-            <button id="aipi-send-button">
+            <input type="text" id="aipi-fullscreen-input" placeholder="Escribe tu mensaje..." onkeydown="if(event.key==='Enter') window.aipiSendFullscreenMessage()">
+            <button onclick="window.aipiSendFullscreenMessage()">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -2743,7 +2743,84 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
-  // Expose functions to global scope for event handlers
+  // Global event handlers for fullscreen mode
+  window.aipiCloseFullscreen = function() {
+    console.log('AIPPS Debug: Close fullscreen triggered');
+    const chatPanel = document.getElementById('aipi-chat-panel');
+    const fullscreenButton = document.getElementById('aipi-fullscreen-button');
+    
+    if (chatPanel) {
+      chatPanel.style.display = 'none';
+    }
+    if (fullscreenButton) {
+      fullscreenButton.style.display = 'flex';
+    }
+    isOpen = false;
+    isAuthenticated = false;
+    currentUser = null;
+    currentConversationId = null;
+  };
+
+  window.aipiSendFullscreenMessage = function() {
+    console.log('AIPPS Debug: Send fullscreen message triggered');
+    const input = document.getElementById('aipi-fullscreen-input');
+    if (input && input.value.trim()) {
+      const message = input.value.trim();
+      input.value = '';
+      
+      // Add user message to chat
+      addMessage(message, 'user');
+      
+      // Send message using the existing sendMessage function
+      sendFullscreenMessage(message);
+    }
+  };
+
+  // Helper function to send fullscreen messages
+  async function sendFullscreenMessage(message) {
+    showTypingIndicator(true);
+    
+    try {
+      const response = await fetch(`/api/widget/${config.apiKey}/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('aipi_auth_token')}`
+        },
+        body: JSON.stringify({
+          message: message,
+          conversationId: currentConversationId,
+          visitorId: null, // For authenticated users
+          language: detectLanguage(message)
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        if (data.conversationId && !currentConversationId) {
+          currentConversationId = data.conversationId;
+        }
+        
+        addMessage(data.response, 'assistant');
+        
+        // Update conversations list if needed
+        if (isAuthenticated) {
+          await loadUserConversations();
+          updateConversationsList();
+        }
+      } else {
+        addMessage('Lo siento, no pude procesar tu mensaje. Inténtalo de nuevo.', 'assistant');
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      addMessage('Error de conexión. Por favor, verifica tu conexión a internet.', 'assistant');
+    } finally {
+      showTypingIndicator(false);
+    }
+  }
+
+  // Expose other functions to global scope
   window.aipiSendMessage = sendMessage;
   window.aipiCloseWidget = closeWidget;
   window.aipiOpenWidget = openWidget;
