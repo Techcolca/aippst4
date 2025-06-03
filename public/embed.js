@@ -2804,27 +2804,14 @@ Contenido: [Error al extraer contenido detallado]
     chatPanel.style.display = 'flex';
     isOpen = true;
 
-    // Initialize fullscreen chat with dashboard authentication
+    // Initialize fullscreen chat with bubble system (no authentication needed)
     setTimeout(async () => {
-      console.log('AIPPS Debug: Inicializando chat fullscreen');
+      console.log('AIPPS Debug: Inicializando chat fullscreen con sistema bubble');
       
-      // Wait a bit for dashboard communication to complete
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // NO TOKEN NEEDED - using bubble system directly
+      console.log('AIPPS Debug: Sistema bubble sin autenticación iniciado');
       
-      // Get authentication token from multiple sources
-      const authToken = getAuthToken();
-      if (authToken) {
-        localStorage.setItem('aipi_auth_token', authToken);
-        console.log('AIPPS Debug: Token sincronizado correctamente desde:', 
-          dashboardConfig.authToken ? 'dashboard' : 'other sources');
-      } else {
-        console.error('AIPPS Debug: No se pudo obtener token de autenticación');
-      }
-      
-      // Set integration ID from config
-      config.integrationId = config.integrationId || 9; // Default to existing integration
-      
-      // Load user conversations using dashboard endpoints
+      // Load user conversations using bubble system endpoints
       await loadUserConversationsFromDashboard();
       updateConversationsList();
       
@@ -3026,30 +3013,10 @@ Contenido: [Error al extraer contenido detallado]
 
   // Helper function to get the correct API base URL
   function getApiBaseUrl() {
-    // HARD OVERRIDE: If current URL contains replit.dev, ALWAYS use current origin
-    if (window.location.href.includes('replit.dev')) {
-      const forceUrl = window.location.origin;
-      console.log('AIPPS Debug: SOBRESCRIBIENDO URL para Replit:', forceUrl);
-      return forceUrl;
-    }
-    
-    // If we're in dashboard context, use dashboard API URL
-    if (dashboardConfig.isDashboard && dashboardConfig.apiBaseUrl) {
-      console.log('AIPPS Debug: Usando URL de dashboard:', dashboardConfig.apiBaseUrl);
-      return dashboardConfig.apiBaseUrl;
-    }
-    
-    // For local development, use the current host
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      const baseUrl = `${window.location.protocol}//${window.location.host}`;
-      console.log('AIPPS Debug: Usando URL local:', baseUrl);
-      return baseUrl;
-    }
-    
-    // For production, check if we have a baseUrl in config, otherwise use current host
-    const baseUrl = config.baseUrl || `${window.location.protocol}//${window.location.host}`;
-    console.log('AIPPS Debug: Usando URL base:', baseUrl);
-    return baseUrl;
+    // HARD FIX: ALWAYS use current browser URL for API calls in fullscreen mode
+    const currentUrl = window.location.origin;
+    console.log('AIPPS Debug: HARD FIX - Usando URL actual del navegador:', currentUrl);
+    return currentUrl;
   }
 
   // Helper function to get authentication token
