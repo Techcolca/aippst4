@@ -298,6 +298,38 @@ export default function EditIntegration() {
     }
   };
 
+  // Setup widget communication
+  useEffect(() => {
+    // Listen for widget configuration requests
+    const handleWidgetMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'AIPPS_REQUEST_CONFIG') {
+        console.log('Dashboard: Recibida solicitud de configuración del widget');
+        
+        const authToken = localStorage.getItem('auth_token');
+        const apiBaseUrl = window.location.origin;
+        
+        // Send configuration to widget
+        event.source?.postMessage({
+          type: 'AIPPS_DASHBOARD_CONFIG',
+          authToken: authToken,
+          apiBaseUrl: apiBaseUrl,
+          isDashboard: true
+        }, '*');
+        
+        console.log('Dashboard: Configuración enviada al widget', {
+          authToken: authToken ? 'Presente' : 'Ausente',
+          apiBaseUrl
+        });
+      }
+    };
+
+    window.addEventListener('message', handleWidgetMessage);
+    
+    return () => {
+      window.removeEventListener('message', handleWidgetMessage);
+    };
+  }, []);
+
   // Cargar datos en el formulario cuando estén disponibles
   useEffect(() => {
     if (integration) {

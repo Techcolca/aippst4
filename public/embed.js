@@ -40,6 +40,39 @@
   let userConversations = [];
   let currentConversationId = null;
 
+  // Setup postMessage communication for dashboard
+  function setupDashboardCommunication() {
+    // Listen for messages from dashboard
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'AIPPS_DASHBOARD_CONFIG') {
+        console.log('AIPPS Debug: Recibido configuración de dashboard:', event.data);
+        
+        if (event.data.authToken) {
+          dashboardConfig.authToken = event.data.authToken;
+          localStorage.setItem('aipi_auth_token', event.data.authToken);
+          console.log('AIPPS Debug: Token sincronizado desde dashboard');
+        }
+        
+        if (event.data.apiBaseUrl) {
+          dashboardConfig.apiBaseUrl = event.data.apiBaseUrl;
+          dashboardConfig.isDashboard = true;
+          console.log('AIPPS Debug: URL base configurada desde dashboard');
+        }
+      }
+    });
+    
+    // Request configuration from dashboard if we're in iframe
+    if (window.parent && window.parent !== window) {
+      setTimeout(() => {
+        window.parent.postMessage({
+          type: 'AIPPS_REQUEST_CONFIG',
+          source: 'widget'
+        }, '*');
+        console.log('AIPPS Debug: Solicitando configuración al dashboard');
+      }, 100);
+    }
+  }
+
   // Initialize widget
   function init() {
     // Verificar si el widget ya existe para evitar duplicados
@@ -48,6 +81,12 @@
       return;
     }
     window.AIPPS_WIDGET_INITIALIZED = true;
+    
+    // Setup dashboard communication first
+    setupDashboardCommunication();
+    
+    // Detect dashboard context
+    detectDashboardContext();
 
     // Extract the API key from script tag using a more reliable method
     let scriptSrc = '';
@@ -2733,11 +2772,15 @@ Contenido: [Error al extraer contenido detallado]
     setTimeout(async () => {
       console.log('AIPPS Debug: Inicializando chat fullscreen');
       
+      // Wait a bit for dashboard communication to complete
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
       // Get authentication token from multiple sources
       const authToken = getAuthToken();
       if (authToken) {
         localStorage.setItem('aipi_auth_token', authToken);
-        console.log('AIPPS Debug: Token sincronizado correctamente');
+        console.log('AIPPS Debug: Token sincronizado correctamente desde:', 
+          dashboardConfig.authToken ? 'dashboard' : 'other sources');
       } else {
         console.error('AIPPS Debug: No se pudo obtener token de autenticación');
       }
@@ -2888,8 +2931,52 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  // Dashboard context detection and configuration
+  let dashboardConfig = {
+    isDashboard: false,
+    apiBaseUrl: null,
+    authToken: null
+  };
+
+  // Detect if running in dashboard context
+  function detectDashboardContext() {
+    try {
+      // Check if we're in an iframe and parent is dashboard
+      if (window.parent && window.parent !== window) {
+        const parentUrl = window.parent.location.href;
+        if (parentUrl.includes('replit.dev') && parentUrl.includes('/dashboard')) {
+          dashboardConfig.isDashboard = true;
+          dashboardConfig.apiBaseUrl = `${window.parent.location.protocol}//${window.parent.location.host}`;
+          console.log('AIPPS Debug: Detectado contexto de dashboard Replit');
+          return true;
+        }
+      }
+    } catch (e) {
+      // Cross-origin access blocked, try other methods
+    }
+    
+    // Check for dashboard indicator in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('dashboard') === 'true' || window.location.href.includes('replit.dev')) {
+      dashboardConfig.isDashboard = true;
+      dashboardConfig.apiBaseUrl = window.location.href.includes('replit.dev') 
+        ? `${window.location.protocol}//${window.location.host}`
+        : null;
+      console.log('AIPPS Debug: Detectado contexto de dashboard por URL');
+      return true;
+    }
+    
+    return false;
+  }
+
   // Helper function to get the correct API base URL
   function getApiBaseUrl() {
+    // If we're in dashboard context, use dashboard API URL
+    if (dashboardConfig.isDashboard && dashboardConfig.apiBaseUrl) {
+      console.log('AIPPS Debug: Usando URL de dashboard:', dashboardConfig.apiBaseUrl);
+      return dashboardConfig.apiBaseUrl;
+    }
+    
     // For local development, use the current host
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       const baseUrl = `${window.location.protocol}//${window.location.host}`;
@@ -2905,16 +2992,36 @@ Contenido: [Error al extraer contenido detallado]
 
   // Helper function to get authentication token
   function getAuthToken() {
-    // Try multiple sources for the auth token
+    // 1. If we have a dashboard token, use it first
+    if (dashboardConfig.authToken) {
+      console.log('AIPPS Debug: Token encontrado en configuración de dashboard');
+      return dashboardConfig.authToken;
+    }
     
-    // 1. Try localStorage first
+    // 2. Try to get token from parent window (dashboard context)
+    if (dashboardConfig.isDashboard) {
+      try {
+        if (window.parent && window.parent !== window) {
+          const parentToken = window.parent.localStorage.getItem('auth_token');
+          if (parentToken) {
+            console.log('AIPPS Debug: Token encontrado en parent window dashboard');
+            dashboardConfig.authToken = parentToken; // Cache it
+            return parentToken;
+          }
+        }
+      } catch (e) {
+        console.log('AIPPS Debug: No se pudo acceder al parent window, intentando postMessage');
+      }
+    }
+    
+    // 3. Try localStorage
     let token = localStorage.getItem('auth_token');
     if (token) {
       console.log('AIPPS Debug: Token encontrado en localStorage');
       return token;
     }
     
-    // 2. Try getting from cookies
+    // 4. Try getting from cookies
     const value = `; ${document.cookie}`;
     const parts = value.split(`; auth_token=`);
     if (parts.length === 2) {
@@ -2925,20 +3032,7 @@ Contenido: [Error al extraer contenido detallado]
       }
     }
     
-    // 3. Try to extract from current page context if in iframe
-    try {
-      if (window.parent && window.parent !== window) {
-        const parentToken = window.parent.localStorage.getItem('auth_token');
-        if (parentToken) {
-          console.log('AIPPS Debug: Token encontrado en parent window');
-          return parentToken;
-        }
-      }
-    } catch (e) {
-      // Cross-origin access blocked, continue
-    }
-    
-    // 4. Try sessionStorage
+    // 5. Try sessionStorage
     token = sessionStorage.getItem('auth_token');
     if (token) {
       console.log('AIPPS Debug: Token encontrado en sessionStorage');
