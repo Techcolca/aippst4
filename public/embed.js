@@ -1591,15 +1591,43 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
 
-    // Forzar propiedades de visualización para bubble
+    // Calculate responsive offsets and position for chat panel
+    const isMobile = window.innerWidth < 768;
+    const bottomOffset = isMobile ? '16px' : '20px';
+    const sideOffset = isMobile ? '16px' : '20px';
+    const panelHeight = isMobile ? '400px' : '500px';
+    const panelWidth = isMobile ? '300px' : '350px';
+    
+    // Calculate chat panel position based on button position
+    let panelPositionStyles = '';
+    switch (config.position) {
+      case 'bottom-left':
+        panelPositionStyles = `bottom: calc(${bottomOffset} + 50px) !important; left: ${sideOffset} !important; right: auto !important; top: auto !important;`;
+        break;
+      case 'bottom-center':
+        panelPositionStyles = `bottom: calc(${bottomOffset} + 50px) !important; left: 50% !important; right: auto !important; top: auto !important; transform: translateX(-50%) !important;`;
+        break;
+      case 'top-right':
+        panelPositionStyles = `top: calc(20px + 50px) !important; right: ${sideOffset} !important; left: auto !important; bottom: auto !important;`;
+        break;
+      case 'top-left':
+        panelPositionStyles = `top: calc(20px + 50px) !important; left: ${sideOffset} !important; right: auto !important; bottom: auto !important;`;
+        break;
+      case 'bottom-right':
+      default:
+        panelPositionStyles = `bottom: calc(${bottomOffset} + 50px) !important; right: ${sideOffset} !important; left: auto !important; top: auto !important;`;
+        break;
+    }
+    
+    // Apply complete styles to chat panel with calculated position
     chatPanel.style.cssText = `
       display: flex !important;
       position: fixed !important;
-      bottom: 80px !important;
-      right: 20px !important;
-      width: 350px !important;
-      height: 500px !important;
+      ${panelPositionStyles}
+      width: ${panelWidth} !important;
+      height: ${panelHeight} !important;
       max-height: 80vh !important;
+      max-width: calc(100vw - 40px) !important;
       z-index: 2147483647 !important;
       background: white !important;
       border-radius: 10px !important;
@@ -1610,6 +1638,8 @@ Contenido: [Error al extraer contenido detallado]
       visibility: visible !important;
       pointer-events: auto !important;
     `;
+    
+    console.log('AIPPS Widget: Chat panel positioned for', config.position, 'with styles:', panelPositionStyles);
     isOpen = true;
     
     console.log('AIPPS Widget: Panel de chat configurado como visible');
