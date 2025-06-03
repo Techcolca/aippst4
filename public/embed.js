@@ -1255,44 +1255,44 @@ Contenido: [Error al extraer contenido detallado]
     // Para widgets tipo bubble (tipo original)
     switch (config.position) {
       case 'bottom-left':
-        widgetInstance.style.bottom = bottomOffset;
-        widgetInstance.style.left = sideOffset;
-        widgetInstance.style.right = 'auto';
-        widgetInstance.style.top = 'auto';
-        widgetInstance.style.transform = 'none';
+        widgetInstance.style.setProperty('bottom', bottomOffset, 'important');
+        widgetInstance.style.setProperty('left', sideOffset, 'important');
+        widgetInstance.style.setProperty('right', 'auto', 'important');
+        widgetInstance.style.setProperty('top', 'auto', 'important');
+        widgetInstance.style.setProperty('transform', 'none', 'important');
         console.log('AIPPS Widget: Applied bottom-left positioning');
         break;
       case 'bottom-center':
-        widgetInstance.style.bottom = bottomOffset;
-        widgetInstance.style.left = '50%';
-        widgetInstance.style.transform = 'translateX(-50%)';
-        widgetInstance.style.right = 'auto';
-        widgetInstance.style.top = 'auto';
+        widgetInstance.style.setProperty('bottom', bottomOffset, 'important');
+        widgetInstance.style.setProperty('left', '50%', 'important');
+        widgetInstance.style.setProperty('transform', 'translateX(-50%)', 'important');
+        widgetInstance.style.setProperty('right', 'auto', 'important');
+        widgetInstance.style.setProperty('top', 'auto', 'important');
         console.log('AIPPS Widget: Applied bottom-center positioning');
         break;
       case 'top-right':
-        widgetInstance.style.top = '20px';
-        widgetInstance.style.right = sideOffset;
-        widgetInstance.style.left = 'auto';
-        widgetInstance.style.bottom = 'auto';
-        widgetInstance.style.transform = 'none';
+        widgetInstance.style.setProperty('top', '20px', 'important');
+        widgetInstance.style.setProperty('right', sideOffset, 'important');
+        widgetInstance.style.setProperty('left', 'auto', 'important');
+        widgetInstance.style.setProperty('bottom', 'auto', 'important');
+        widgetInstance.style.setProperty('transform', 'none', 'important');
         console.log('AIPPS Widget: Applied top-right positioning');
         break;
       case 'top-left':
-        widgetInstance.style.top = '20px';
-        widgetInstance.style.left = sideOffset;
-        widgetInstance.style.right = 'auto';
-        widgetInstance.style.bottom = 'auto';
-        widgetInstance.style.transform = 'none';
+        widgetInstance.style.setProperty('top', '20px', 'important');
+        widgetInstance.style.setProperty('left', sideOffset, 'important');
+        widgetInstance.style.setProperty('right', 'auto', 'important');
+        widgetInstance.style.setProperty('bottom', 'auto', 'important');
+        widgetInstance.style.setProperty('transform', 'none', 'important');
         console.log('AIPPS Widget: Applied top-left positioning');
         break;
       case 'bottom-right':
       default:
-        widgetInstance.style.bottom = bottomOffset;
-        widgetInstance.style.right = sideOffset;
-        widgetInstance.style.left = 'auto';
-        widgetInstance.style.top = 'auto';
-        widgetInstance.style.transform = 'none';
+        widgetInstance.style.setProperty('bottom', bottomOffset, 'important');
+        widgetInstance.style.setProperty('right', sideOffset, 'important');
+        widgetInstance.style.setProperty('left', 'auto', 'important');
+        widgetInstance.style.setProperty('top', 'auto', 'important');
+        widgetInstance.style.setProperty('transform', 'none', 'important');
         console.log('AIPPS Widget: Applied bottom-right positioning');
         break;
     }
