@@ -2499,8 +2499,8 @@ Contenido: [Error al extraer contenido detallado]
 
   async function loadUserConversationsFromDashboard() {
     try {
-      const token = getCookie('auth_token');
-      console.log('AIPPS Debug: Usando token del dashboard:', token ? 'Encontrado' : 'No encontrado');
+      const token = getAuthToken();
+      console.log('AIPPS Debug: Usando token para conversaciones:', token ? 'Encontrado' : 'No encontrado');
       
       const response = await fetch('/api/conversations', {
         headers: {
@@ -2728,11 +2728,13 @@ Contenido: [Error al extraer contenido detallado]
     setTimeout(async () => {
       console.log('AIPPS Debug: Inicializando chat fullscreen');
       
-      // Get authentication token from cookies (same as dashboard)
-      const authToken = getCookie('auth_token');
+      // Get authentication token from multiple sources
+      const authToken = getAuthToken();
       if (authToken) {
         localStorage.setItem('aipi_auth_token', authToken);
-        console.log('AIPPS Debug: Token sincronizado desde dashboard');
+        console.log('AIPPS Debug: Token sincronizado correctamente');
+      } else {
+        console.error('AIPPS Debug: No se pudo obtener token de autenticación');
       }
       
       // Set integration ID from config
@@ -2774,8 +2776,8 @@ Contenido: [Error al extraer contenido detallado]
 
   async function createNewConversationForDashboard() {
     try {
-      const token = getCookie('auth_token');
-      console.log('AIPPS Debug: Creando nueva conversación con token del dashboard');
+      const token = getAuthToken();
+      console.log('AIPPS Debug: Creando nueva conversación con token:', token ? 'Encontrado' : 'No encontrado');
       
       const response = await fetch('/api/conversations', {
         method: 'POST',
@@ -2821,7 +2823,7 @@ Contenido: [Error al extraer contenido detallado]
       }
       
       // Load messages for this conversation using dashboard token
-      const token = getCookie('auth_token');
+      const token = getAuthToken();
       const response = await fetch(`/api/conversations/${conversationId}/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -2870,11 +2872,49 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
-  // Helper function to get cookies
-  function getCookie(name) {
+  // Helper function to get authentication token
+  function getAuthToken() {
+    // Try multiple sources for the auth token
+    
+    // 1. Try localStorage first
+    let token = localStorage.getItem('auth_token');
+    if (token) {
+      console.log('AIPPS Debug: Token encontrado en localStorage');
+      return token;
+    }
+    
+    // 2. Try getting from cookies
     const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    const parts = value.split(`; auth_token=`);
+    if (parts.length === 2) {
+      token = parts.pop().split(';').shift();
+      if (token) {
+        console.log('AIPPS Debug: Token encontrado en cookies');
+        return token;
+      }
+    }
+    
+    // 3. Try to extract from current page context if in iframe
+    try {
+      if (window.parent && window.parent !== window) {
+        const parentToken = window.parent.localStorage.getItem('auth_token');
+        if (parentToken) {
+          console.log('AIPPS Debug: Token encontrado en parent window');
+          return parentToken;
+        }
+      }
+    } catch (e) {
+      // Cross-origin access blocked, continue
+    }
+    
+    // 4. Try sessionStorage
+    token = sessionStorage.getItem('auth_token');
+    if (token) {
+      console.log('AIPPS Debug: Token encontrado en sessionStorage');
+      return token;
+    }
+    
+    console.log('AIPPS Debug: No se encontró token en ninguna fuente');
     return null;
   }
 
@@ -2916,8 +2956,8 @@ Contenido: [Error al extraer contenido detallado]
     showTypingIndicator(true);
     
     try {
-      const token = getCookie('auth_token');
-      console.log('AIPPS Debug: Enviando mensaje con token del dashboard:', token ? 'Encontrado' : 'No encontrado');
+      const token = getAuthToken();
+      console.log('AIPPS Debug: Enviando mensaje con token:', token ? 'Encontrado' : 'No encontrado');
       console.log('AIPPS Debug: Mensaje:', message);
       console.log('AIPPS Debug: ConversationId:', currentConversationId);
       
