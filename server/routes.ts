@@ -2361,7 +2361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log(`AIPPS Debug: Title generation check - conversationId: ${conversation.id}, currentTitle: "${conversation.title}", userMessages: ${userMessages.length}`);
       
-      if ((!conversation.title || conversation.title === null) && userMessages.length >= 1 && userMessages.length <= 2) {
+      if ((!conversation.title || conversation.title === null || conversation.title === "null") && userMessages.length >= 1) {
         try {
           const { generateConversationTitle } = await import('./lib/openai');
           const firstMessage = userMessages[0].content;
