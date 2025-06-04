@@ -452,8 +452,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
         
-        // Verify user owns this integration OR it's a shared integration (userId: null)
-        if (integration.userId !== null && integration.userId !== decoded.userId) {
+        // Verify user owns this integration OR it's the demo integration for AIPPS website
+        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+        if (!isDemoIntegration && integration.userId !== decoded.userId) {
           return res.status(403).json({ message: "Unauthorized access to this integration" });
         }
         
@@ -534,8 +535,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
         
-        // Verify user owns this integration OR it's a shared integration (userId: null)
-        if (integration.userId !== null && integration.userId !== decoded.userId) {
+        // Verify user owns this integration OR it's the demo integration for AIPPS website
+        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+        if (!isDemoIntegration && integration.userId !== decoded.userId) {
           return res.status(403).json({ message: "Unauthorized access to this integration" });
         }
         
@@ -2567,8 +2569,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Additional security check for authenticated users
       if (isAuthenticated) {
-        // Verify user owns this integration OR it's a shared integration (userId: null)
-        if (integration.userId !== null && integration.userId !== authenticatedUserId) {
+        // Verify user owns this integration OR it's the demo integration for AIPPS website
+        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+        if (!isDemoIntegration && integration.userId !== authenticatedUserId) {
           return res.status(403).json({ message: "Unauthorized access to this integration" });
         }
         
