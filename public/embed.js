@@ -2838,9 +2838,11 @@ Contenido: [Error al extraer contenido detallado]
       <div class="aipi-fullscreen-layout">
         <div class="aipi-conversations-sidebar">
           <div class="aipi-sidebar-header">
-            <h3>Conversaciones</h3>
-            <div class="aipi-user-info" id="aipi-user-info" style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">
-              <!-- User info will be loaded here -->
+            <div class="aipi-header-title">
+              <h3>Conversaciones</h3>
+              <div class="aipi-user-info" id="aipi-user-info" style="font-size: 12px; color: #6b7280; display: block; margin-top: 2px;">
+                <!-- User info will be loaded here -->
+              </div>
             </div>
             <button onclick="createNewConversation()" class="aipi-new-chat-btn">+ Nueva</button>
           </div>
