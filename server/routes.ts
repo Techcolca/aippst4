@@ -2267,6 +2267,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // New endpoint for bubble widget system
+  app.post("/api/widget/:apiKey/send", async (req, res) => {
+    try {
+      const { apiKey } = req.params;
+      const { message, visitorId, currentUrl, pageTitle } = req.body;
+      
+      // Validate input
+      if (!message || !visitorId) {
+        return res.status(400).json({ message: "message and visitorId are required" });
+      }
+      
+      // Validate API key and get integration
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Find or create conversation for this visitor
+      const conversations = await storage.getConversations(integration.id);
+      let conversation = conversations.find(conv => conv.visitorId === visitorId);
+      
+      if (!conversation) {
+        // Create new conversation
+        conversation = await storage.createConversation({
+          integrationId: integration.id,
+          visitorId,
+          title: message.substring(0, 50) + "..."
+        });
+      }
+      
+      // Create user message
+      await storage.createMessage({
+        conversationId: conversation.id,
+        content: message,
+        role: "user",
+      });
+      
+      // Get all messages for context
+      const messages = await storage.getConversationMessages(conversation.id);
+      
+      // Get site content for context (same logic as working endpoint)
+      let context = "";
+      const siteContent = await storage.getSiteContent(integration.id);
+      if (siteContent.length > 0) {
+        context = siteContent.map(content => 
+          `URL: ${content.url}\nTitle: ${content.title || 'N/A'}\nContent: ${content.content.substring(0, 500)}...`
+        ).join('\n\n');
+      }
+      
+      // Detect language and generate AI response
+      const detectedLanguage = detectLanguage(message);
+      const completion = await generateChatCompletion(
+        messages.map(m => ({ role: m.role, content: m.content })),
+        context,
+        detectedLanguage
+      );
+      
+      // Create assistant message
+      await storage.createMessage({
+        conversationId: conversation.id,
+        content: completion.content,
+        role: "assistant",
+      });
+      
+      res.status(201).json({
+        response: completion.content,
+        conversationId: conversation.id,
+        success: true
+      });
+    } catch (error) {
+      console.error("Widget send message error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post("/api/widget/:apiKey/message", async (req, res) => {
     try {
       const { apiKey } = req.params;

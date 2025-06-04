@@ -3121,7 +3121,7 @@ Contenido: [Error al extraer contenido detallado]
         localStorage.setItem('aipi_visitor_id', visitorId);
       }
       
-      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/message`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

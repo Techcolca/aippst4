@@ -1,0 +1,219 @@
+estilos forzados
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3113 AIPPS Debug: Enviando mensaje con sistema bubble exitoso...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3114 AIPPS Debug: Mensaje: hi
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3018 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3124 
+            
+            
+           POST https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/widget/57031f04127cd041251b1e9abd678439fd199b2f30b75a1f/message 400 (Bad Request)
+sendFullscreenMessage @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3124
+window.aipiSendFullscreenMessage @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3104
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3137 AIPPS Debug: Bubble system response status: 400
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3155 Error response: 400 {"message":"conversationId, content, and role are required"}
+sendFullscreenMessage @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3155
+await in sendFullscreenMessage
+window.aipiSendFullscreenMessage @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3104
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2129 AIPPS Debug: Mensaje agregado con estilos forzados
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: false, closeButton: false, chatInput: false, sendButton: false}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1508 AIPPS Widget: No se encontró el botón principal - reintentando...
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1508
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: false, closeButton: false, chatInput: false, sendButton: false}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1508 AIPPS Widget: No se encontró el botón principal - reintentando...
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1508
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: false, closeButton: false, chatInput: false, sendButton: false}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1508 AIPPS Widget: No se encontró el botón principal - reintentando...
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1508
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1510
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1511Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: false, closeButton: false, chatInput: false, sendButton: false}
