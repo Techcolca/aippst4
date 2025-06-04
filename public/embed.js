@@ -2755,50 +2755,45 @@ Contenido: [Error al extraer contenido detallado]
 
   async function loadUserConversationsFromDashboard() {
     try {
-      console.log('AIPPS Debug: Cargando conversaciones usando sistema bubble exitoso...');
+      console.log('AIPPS Debug: Cargando conversaciones usando sistema autenticado...');
       
-      // Use bubble system: no auth needed, just apiKey + visitorId
-      const visitorId = localStorage.getItem('aipi_visitor_id') || 
-        localStorage.getItem('aipi_auth_user_id') || 
-        `visitor_${Math.random().toString(36).substring(2, 15)}`;
+      // Use authenticated system for fullscreen widget: JWT token + apiKey
+      const token = getAuthToken();
       
-      if (!localStorage.getItem('aipi_visitor_id')) {
-        localStorage.setItem('aipi_visitor_id', visitorId);
+      if (!token) {
+        console.log('AIPPS Debug: No auth token found, user needs to login');
+        userConversations = [];
+        return;
       }
       
-      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversations/user`, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
       });
 
-      console.log('AIPPS Debug: Widget response status:', response.status);
+      console.log('AIPPS Debug: Authenticated conversations response status:', response.status);
       
       if (response.ok) {
-        const widgetData = await response.json();
-        
-        // Now get conversations for this visitor using new endpoint
-        const conversationsResponse = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversations/${visitorId}`, {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        });
-        
-        if (conversationsResponse.ok) {
-          userConversations = await conversationsResponse.json();
-        } else {
-          userConversations = [];
+        userConversations = await response.json();
+        console.log('AIPPS Debug: Conversaciones autenticadas cargadas:', userConversations.length);
+      } else if (response.status === 401) {
+        console.log('AIPPS Debug: Token expired or invalid, user needs to login again');
+        // Clear invalid token
+        localStorage.removeItem('aipi_auth_token');
+        if (typeof document !== 'undefined' && document.cookie) {
+          document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         }
-        
-        console.log('AIPPS Debug: Conversaciones cargadas con sistema bubble:', userConversations.length);
+        userConversations = [];
       } else {
-        console.error('Error loading conversations from dashboard:', response.status);
+        console.error('Error loading authenticated conversations:', response.status);
         const errorText = await response.text();
         console.error('Error details:', errorText);
         userConversations = [];
       }
     } catch (error) {
-      console.error('Error loading conversations from dashboard:', error);
+      console.error('Error loading authenticated conversations:', error);
       userConversations = [];
     }
   }
@@ -3095,39 +3090,48 @@ Contenido: [Error al extraer contenido detallado]
   async function createNewConversationForDashboard() {
     try {
       const token = getAuthToken();
-      console.log('AIPPS Debug: Creando nueva conversación con token:', token ? 'Encontrado' : 'No encontrado');
+      console.log('AIPPS Debug: Creando nueva conversación autenticada con token:', token ? 'Encontrado' : 'No encontrado');
       
-      // Use the correct base URL for API calls
-      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? `${window.location.protocol}//${window.location.host}` 
-        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
+      if (!token) {
+        console.log('AIPPS Debug: No auth token found, user needs to login');
+        return null;
+      }
       
-      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversations/user`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          visitorId: localStorage.getItem('aipi_visitor_id') || `visitor_${Date.now()}`
+          title: 'Nueva conversación'
         }),
       });
 
-      console.log('AIPPS Debug: Create conversation response status:', response.status);
+      console.log('AIPPS Debug: Create authenticated conversation response status:', response.status);
 
       if (response.ok) {
         const newConversation = await response.json();
-        console.log('AIPPS Debug: Nueva conversación creada:', newConversation.id);
+        console.log('AIPPS Debug: Nueva conversación autenticada creada:', newConversation.id);
         userConversations.unshift(newConversation);
         currentConversationId = newConversation.id;
         updateConversationsList();
         return newConversation;
+      } else if (response.status === 401) {
+        console.log('AIPPS Debug: Token expired or invalid during conversation creation');
+        // Clear invalid token
+        localStorage.removeItem('aipi_auth_token');
+        if (typeof document !== 'undefined' && document.cookie) {
+          document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+        return null;
       } else {
         const errorText = await response.text();
-        console.error('Error creating conversation:', response.status, errorText);
+        console.error('Error creating authenticated conversation:', response.status, errorText);
         return null;
       }
     } catch (error) {
-      console.error('Error creating conversation:', error);
+      console.error('Error creating authenticated conversation:', error);
       return null;
     }
   }
@@ -3473,65 +3477,74 @@ Contenido: [Error al extraer contenido detallado]
     showTypingIndicator(true);
     
     try {
-      console.log('AIPPS Debug: Enviando mensaje fullscreen...');
+      console.log('AIPPS Debug: Enviando mensaje fullscreen autenticado...');
       console.log('AIPPS Debug: Mensaje:', message);
       console.log('AIPPS Debug: Current conversation ID:', currentConversationId);
       
-      // Get visitor ID
-      const visitorId = localStorage.getItem('aipi_visitor_id') || 
-        `visitor_${Math.random().toString(36).substring(2, 15)}`;
+      const token = getAuthToken();
       
-      if (!localStorage.getItem('aipi_visitor_id')) {
-        localStorage.setItem('aipi_visitor_id', visitorId);
+      if (!token) {
+        console.log('AIPPS Debug: No auth token found, user needs to login');
+        addMessage('Sesión expirada. Por favor, inicia sesión nuevamente.', 'assistant');
+        showTypingIndicator(false);
+        return;
       }
       
       // If no current conversation, create a new one first
       if (!currentConversationId) {
-        console.log('AIPPS Debug: No hay conversación actual, creando nueva...');
+        console.log('AIPPS Debug: No hay conversación actual, creando nueva autenticada...');
         const newConversation = await createNewConversationForDashboard();
         if (newConversation) {
           currentConversationId = newConversation.id;
-          console.log('AIPPS Debug: Nueva conversación creada con ID:', currentConversationId);
+          console.log('AIPPS Debug: Nueva conversación autenticada creada con ID:', currentConversationId);
         } else {
-          console.error('AIPPS Debug: Error al crear nueva conversación');
-          addMessage('Error al crear nueva conversación. Inténtalo de nuevo.', 'assistant');
+          console.error('AIPPS Debug: Error al crear nueva conversación autenticada');
+          addMessage('Error al crear nueva conversación. Por favor, inicia sesión nuevamente.', 'assistant');
           showTypingIndicator(false);
           return;
         }
       }
       
-      // Send message to existing conversation
+      // Send message to existing conversation using authenticated endpoint
       const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${currentConversationId}/send`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           message: message,
-          visitorId: visitorId,
           currentUrl: window.location.href,
           pageTitle: document.title
         })
       });
 
-      console.log('AIPPS Debug: Send message response status:', response.status);
+      console.log('AIPPS Debug: Send authenticated message response status:', response.status);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('AIPPS Debug: Message response data:', data);
+        console.log('AIPPS Debug: Authenticated message response data:', data);
         
         addMessage(data.response || data.message || 'Respuesta recibida', 'assistant');
         
         // Update conversations list to reflect changes
         await loadUserConversationsFromDashboard();
         updateConversationsList();
+      } else if (response.status === 401) {
+        console.log('AIPPS Debug: Token expired during message sending');
+        // Clear invalid token
+        localStorage.removeItem('aipi_auth_token');
+        if (typeof document !== 'undefined' && document.cookie) {
+          document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+        addMessage('Sesión expirada. Por favor, inicia sesión nuevamente.', 'assistant');
       } else {
         const errorData = await response.text();
         console.error('Error response:', response.status, errorData);
         addMessage('Lo siento, no pude procesar tu mensaje. Inténtalo de nuevo.', 'assistant');
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Error sending authenticated message:', error);
       addMessage('Error de conexión. Por favor, verifica tu conexión a internet.', 'assistant');
     } finally {
       showTypingIndicator(false);

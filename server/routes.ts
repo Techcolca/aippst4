@@ -410,6 +410,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // ================ Authenticated Conversations Routes ================
+  
+  // Get user conversations specifically for fullscreen widget with apiKey verification
+  app.get("/api/widget/:apiKey/conversations/user", async (req, res) => {
+    try {
+      const { apiKey } = req.params;
+      
+      // Validate API key first
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Check if user is authenticated via token
+      const token = req.cookies?.auth_token || 
+                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                     ? req.headers.authorization.slice(7) : null);
+      
+      if (!token) {
+        return res.status(401).json({ message: "Authentication required for fullscreen widget" });
+      }
+      
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+        
+        // Verify user owns this integration
+        if (integration.userId !== decoded.userId) {
+          return res.status(403).json({ message: "Unauthorized access to this integration" });
+        }
+        
+        // Get conversations for this specific integration and user
+        const conversations = await storage.getConversations(integration.id);
+        
+        // Filter conversations that belong to this authenticated user
+        // For authenticated users, we use visitorId pattern: `user_${userId}`
+        const userVisitorId = `user_${decoded.userId}`;
+        const userConversations = conversations.filter(conv => 
+          conv.visitorId === userVisitorId
+        );
+        
+        // Sort by creation date (newest first)
+        userConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        
+        console.log(`AIPPS Debug: Fullscreen widget conversations for user ${decoded.userId}:`, userConversations.length);
+        
+        res.json(userConversations);
+      } catch (error) {
+        console.error('JWT verification failed:', error);
+        return res.status(401).json({ message: "Invalid or expired token" });
+      }
+    } catch (error) {
+      console.error("Get fullscreen widget conversations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Get user conversations for fullscreen widget
   app.get("/api/conversations", authenticateJWT, async (req, res) => {
     try {
@@ -433,6 +488,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(allConversations);
     } catch (error) {
       console.error("Get conversations error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create new conversation for fullscreen widget with apiKey verification
+  app.post("/api/widget/:apiKey/conversations/user", async (req, res) => {
+    try {
+      const { apiKey } = req.params;
+      const { title } = req.body;
+      
+      // Validate API key first
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Check if user is authenticated via token
+      const token = req.cookies?.auth_token || 
+                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                     ? req.headers.authorization.slice(7) : null);
+      
+      if (!token) {
+        return res.status(401).json({ message: "Authentication required for fullscreen widget" });
+      }
+      
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+        
+        // Verify user owns this integration
+        if (integration.userId !== decoded.userId) {
+          return res.status(403).json({ message: "Unauthorized access to this integration" });
+        }
+        
+        // Create conversation with authenticated user's visitorId pattern
+        const conversation = await storage.createConversation({
+          integrationId: integration.id,
+          visitorId: `user_${decoded.userId}`,
+          title: title || 'Nueva conversación'
+        });
+        
+        console.log(`AIPPS Debug: Created fullscreen conversation for user ${decoded.userId}:`, conversation.id);
+        
+        res.status(201).json(conversation);
+      } catch (error) {
+        console.error('JWT verification failed:', error);
+        return res.status(401).json({ message: "Invalid or expired token" });
+      }
+    } catch (error) {
+      console.error("Create fullscreen widget conversation error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
