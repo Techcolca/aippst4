@@ -2384,16 +2384,58 @@ Contenido: [Error al extraer contenido detallado]
 
   // Authentication functions for fullscreen mode
   function showAuthForm() {
+    // Generate personalized explanation based on integration
+    const integrationName = config.integrationName || config.assistantName || 'Asistente IA';
+    const integrationDescription = config.description || '';
+    const botBehavior = config.botBehavior || '';
+    
+    // Create a personalized explanation
+    let personalizedExplanation = `Descubre todo lo que ${integrationName} puede hacer por ti.`;
+    
+    if (integrationDescription) {
+      personalizedExplanation = `${integrationDescription.substring(0, 200)}${integrationDescription.length > 200 ? '...' : ''}`;
+    } else if (botBehavior) {
+      personalizedExplanation = `${botBehavior.substring(0, 200)}${botBehavior.length > 200 ? '...' : ''}`;
+    }
+    
     const authContainer = document.createElement('div');
     authContainer.id = 'aipi-auth-container';
     authContainer.innerHTML = `
       <div class="aipi-auth-overlay">
         <div class="aipi-auth-modal">
           <div class="aipi-auth-header">
-            <h2>Iniciar Sesión</h2>
+            <h2>Bienvenido a ${escapeHTML(integrationName)}</h2>
             <button class="aipi-auth-close" onclick="closeAuthForm()">×</button>
           </div>
           <div class="aipi-auth-content">
+            <div class="aipi-auth-explanation">
+              <div class="aipi-explanation-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="${config.themeColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+              </div>
+              <h3>¿Por qué crear una cuenta?</h3>
+              <p class="aipi-explanation-text">${escapeHTML(personalizedExplanation)}</p>
+              <div class="aipi-benefits">
+                <div class="aipi-benefit-item">
+                  <span class="aipi-benefit-icon">💬</span>
+                  <span>Guarda todas tus conversaciones</span>
+                </div>
+                <div class="aipi-benefit-item">
+                  <span class="aipi-benefit-icon">📚</span>
+                  <span>Accede a tu historial cuando quieras</span>
+                </div>
+                <div class="aipi-benefit-item">
+                  <span class="aipi-benefit-icon">🔒</span>
+                  <span>Tus datos están seguros y privados</span>
+                </div>
+                <div class="aipi-benefit-item">
+                  <span class="aipi-benefit-icon">⚡</span>
+                  <span>Experiencia personalizada y continua</span>
+                </div>
+              </div>
+            </div>
+            
             <div class="aipi-auth-tabs">
               <button class="aipi-auth-tab active" onclick="showLoginTab()">Iniciar Sesión</button>
               <button class="aipi-auth-tab" onclick="showRegisterTab()">Registrarse</button>
@@ -2436,8 +2478,10 @@ Contenido: [Error al extraer contenido detallado]
         background: white;
         border-radius: 12px;
         padding: 0;
-        width: 400px;
+        width: 480px;
         max-width: 90vw;
+        max-height: 90vh;
+        overflow-y: auto;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
       }
       
@@ -2473,6 +2517,65 @@ Contenido: [Error al extraer contenido detallado]
       
       .aipi-auth-content {
         padding: 20px;
+      }
+      
+      .aipi-auth-explanation {
+        text-align: center;
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+      }
+      
+      .aipi-explanation-icon {
+        margin-bottom: 15px;
+      }
+      
+      .aipi-auth-explanation h3 {
+        margin: 0 0 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+      
+      .aipi-explanation-text {
+        margin: 0 0 20px 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #4b5563;
+      }
+      
+      .aipi-benefits {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 15px;
+      }
+      
+      .aipi-benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #374151;
+        text-align: left;
+      }
+      
+      .aipi-benefit-icon {
+        font-size: 16px;
+        width: 20px;
+        display: inline-block;
+      }
+      
+      @media (max-width: 480px) {
+        .aipi-benefits {
+          grid-template-columns: 1fr;
+        }
+        
+        .aipi-auth-modal {
+          width: 95vw;
+        }
       }
       
       .aipi-auth-tabs {
