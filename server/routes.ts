@@ -2391,6 +2391,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // New endpoint for sending messages to specific conversations (fullscreen mode)
+  app.post("/api/widget/:apiKey/conversation/:conversationId/send", async (req, res) => {
+    try {
+      const { apiKey, conversationId } = req.params;
+      const { message, visitorId, currentUrl, pageTitle } = req.body;
+      
+      // Validate input
+      if (!message || !visitorId) {
+        return res.status(400).json({ message: "message and visitorId are required" });
+      }
+      
+      const conversationIdNum = parseInt(conversationId);
+      if (isNaN(conversationIdNum)) {
+        return res.status(400).json({ message: "Invalid conversation ID" });
+      }
+      
+      // Validate API key and get integration
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Verify conversation exists and belongs to this integration
+      const conversation = await storage.getConversation(conversationIdNum);
+      if (!conversation || conversation.integrationId !== integration.id) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Create user message
+      await storage.createMessage({
+        conversationId: conversationIdNum,
+        content: message,
+        role: "user",
+      });
+      
+      // Get all messages for context
+      const messages = await storage.getConversationMessages(conversationIdNum);
+      
+      // Get site content for context
+      let context = "";
+      const siteContent = await storage.getSiteContent(integration.id);
+      if (siteContent.length > 0) {
+        context = siteContent.map(content => 
+          `URL: ${content.url}\nTitle: ${content.title || 'N/A'}\nContent: ${content.content.substring(0, 500)}...`
+        ).join('\n\n');
+      }
+      
+      // Get user settings
+      const userSettings = await storage.getSettings(integration.userId);
+      
+      // Prepare bot configuration using integration-specific settings
+      const botConfig = {
+        assistantName: integration.name,
+        defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
+        conversationStyle: integration.botBehavior
+      };
+      
+      console.log('AIPPS Debug: Sending message to specific conversation:', {
+        conversationId: conversationIdNum,
+        integrationName: integration.name,
+        messagePreview: message.substring(0, 50) + '...'
+      });
+      
+      // Detect language and generate AI response
+      const detectedLanguage = detectLanguage(message);
+      const completion = await generateChatCompletion(
+        messages.map(m => ({ role: m.role, content: m.content })),
+        context,
+        detectedLanguage,
+        botConfig
+      );
+      
+      // Validate completion response
+      if (!completion || !completion.message || !completion.message.content) {
+        console.error("AI completion returned null or empty content:", completion);
+        throw new Error("Failed to generate AI response");
+      }
+      
+      // Create assistant message
+      await storage.createMessage({
+        conversationId: conversationIdNum,
+        content: completion.message.content,
+        role: "assistant",
+      });
+
+      // Generate conversation title if needed (after 1st or 2nd user message)
+      const allMessages = await storage.getConversationMessages(conversationIdNum);
+      const userMessages = allMessages.filter(m => m.role === 'user');
+      
+      console.log(`AIPPS Debug: Title generation check - conversationId: ${conversationIdNum}, currentTitle: "${conversation.title}", userMessages: ${userMessages.length}`);
+      
+      if ((!conversation.title || conversation.title === null || conversation.title === "null") && userMessages.length >= 1) {
+        try {
+          const { generateConversationTitle } = await import('./lib/openai');
+          const firstMessage = userMessages[0].content;
+          const secondMessage = userMessages[1]?.content;
+          
+          const title = await generateConversationTitle(
+            firstMessage,
+            secondMessage,
+            detectedLanguage
+          );
+          
+          await storage.updateConversation(conversationIdNum, { title });
+          console.log(`AIPPS Debug: Generated title for conversation ${conversationIdNum}: "${title}"`);
+        } catch (error) {
+          console.error("Error generating conversation title:", error);
+        }
+      }
+      
+      res.status(201).json({
+        response: completion.message.content,
+        conversationId: conversationIdNum,
+        success: true
+      });
+    } catch (error) {
+      console.error("Widget specific conversation send error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.post("/api/widget/:apiKey/message", async (req, res) => {
     try {
       const { apiKey } = req.params;
