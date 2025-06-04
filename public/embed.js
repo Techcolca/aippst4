@@ -2839,6 +2839,9 @@ Contenido: [Error al extraer contenido detallado]
         <div class="aipi-conversations-sidebar">
           <div class="aipi-sidebar-header">
             <h3>Conversaciones</h3>
+            <div class="aipi-user-info" id="aipi-user-info" style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">
+              <!-- User info will be loaded here -->
+            </div>
             <button onclick="createNewConversation()" class="aipi-new-chat-btn">+ Nueva</button>
           </div>
           <div class="aipi-conversations-list" id="aipi-conversations-list">
@@ -3039,6 +3042,9 @@ Contenido: [Error al extraer contenido detallado]
       await loadUserConversationsFromDashboard();
       updateConversationsList();
       
+      // Load and display user info
+      await loadAndDisplayUserInfo();
+      
       // Always show welcome message when opening fullscreen
       if (config.greetingMessage) {
         console.log('AIPPS Debug: Mostrando mensaje de bienvenida:', config.greetingMessage);
@@ -3073,7 +3079,7 @@ Contenido: [Error al extraer contenido detallado]
            onclick="loadConversation(${conv.id})">
         <div class="aipi-conversation-content">
           <div class="aipi-conversation-title">${conv.title || 'Nueva conversación'}</div>
-          <div class="aipi-conversation-preview">${conv.preview || 'Iniciada hace poco'}</div>
+          <div class="aipi-conversation-preview">${conv.createdAt ? getRelativeTime(conv.createdAt) : 'Iniciada hace poco'}</div>
         </div>
         <button class="aipi-delete-conversation-btn" 
                 onclick="event.stopPropagation(); showDeleteConfirmation(${conv.id})"
@@ -3254,6 +3260,35 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  async function loadAndDisplayUserInfo() {
+    const userInfoContainer = document.getElementById('aipi-user-info');
+    if (!userInfoContainer) return;
+
+    const token = getAuthToken();
+    if (!token) {
+      userInfoContainer.innerHTML = '';
+      return;
+    }
+
+    try {
+      const response = await fetch(`${getApiBaseUrl()}/api/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        userInfoContainer.innerHTML = `Conectado como: ${escapeHTML(user.username || user.fullName || user.email || 'Usuario')}`;
+      } else {
+        userInfoContainer.innerHTML = '';
+      }
+    } catch (error) {
+      console.error('Error loading user info:', error);
+      userInfoContainer.innerHTML = '';
+    }
+  }
+
   // Delete conversation functions
   function showDeleteConfirmation(conversationId) {
     const conversation = userConversations.find(conv => conv.id === conversationId);
@@ -3287,8 +3322,14 @@ Contenido: [Error al extraer contenido detallado]
         // Remover de la lista local
         userConversations = userConversations.filter(conv => conv.id !== conversationId);
         
-        // Actualizar la interfaz
+        // Actualizar la interfaz inmediatamente
         updateConversationsList();
+        
+        // Recargar conversaciones desde el servidor para asegurar sincronización
+        setTimeout(async () => {
+          await loadUserConversationsFromDashboard();
+          updateConversationsList();
+        }, 500);
         
         // Si eliminamos la conversación actual, cargar otra o crear nueva
         if (currentConversationId === conversationId) {
