@@ -3021,20 +3021,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Unauthorized" });
       }
       
-      // Para modo fullscreen, verificar autenticación de usuario solo si el token es válido
+      // Para modo fullscreen, verificar autenticación de usuario
       if (req.headers.authorization) {
         const token = req.headers.authorization.replace('Bearer ', '');
         try {
           const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
           
-          // Verificar que la integración pertenece al usuario autenticado
-          if (integration.userId !== decoded.userId) {
-            return res.status(403).json({ message: "Unauthorized" });
+          // Verify user owns this integration OR it's the demo integration for AIPPS website
+          const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+          if (!isDemoIntegration && integration.userId !== decoded.userId) {
+            return res.status(403).json({ message: "Unauthorized access to this integration" });
+          }
+          
+          // Verify conversation belongs to this authenticated user
+          const expectedVisitorId = `user_${decoded.userId}`;
+          if (conversation.visitorId !== expectedVisitorId) {
+            return res.status(403).json({ message: "Unauthorized access to this conversation" });
           }
         } catch (jwtError) {
-          // Si el token es inválido, permitir la operación basada solo en apiKey
-          // para widgets embebidos que no pueden acceder al token
-          console.log('AIPPS Debug: Token inválido, procediendo con validación por apiKey');
+          return res.status(401).json({ message: "Invalid authentication token" });
         }
       }
       

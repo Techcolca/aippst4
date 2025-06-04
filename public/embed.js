@@ -3487,6 +3487,31 @@ Contenido: [Error al extraer contenido detallado]
     return null;
   }
 
+  function getRelativeTime(dateString) {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInSeconds = Math.floor((now - past) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return 'hace unos segundos';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `hace ${minutes} minuto${minutes !== 1 ? 's' : ''}`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `hace ${hours} hora${hours !== 1 ? 's' : ''}`;
+    } else if (diffInSeconds < 604800) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `hace ${days} día${days !== 1 ? 's' : ''}`;
+    } else if (diffInSeconds < 2592000) {
+      const weeks = Math.floor(diffInSeconds / 604800);
+      return `hace ${weeks} semana${weeks !== 1 ? 's' : ''}`;
+    } else {
+      const months = Math.floor(diffInSeconds / 2592000);
+      return `hace ${months} mes${months !== 1 ? 'es' : ''}`;
+    }
+  }
+
   // Global event handlers for fullscreen mode
   window.aipiCloseFullscreen = function() {
     console.log('AIPPS Debug: Close fullscreen triggered');
