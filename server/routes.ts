@@ -2735,7 +2735,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Unauthorized" });
       }
       
-      // Para modo fullscreen, verificar autenticación de usuario
+      // Para modo fullscreen, verificar autenticación de usuario solo si el token es válido
       if (req.headers.authorization) {
         const token = req.headers.authorization.replace('Bearer ', '');
         try {
@@ -2746,7 +2746,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             return res.status(403).json({ message: "Unauthorized" });
           }
         } catch (jwtError) {
-          return res.status(401).json({ message: "Invalid token" });
+          // Si el token es inválido, permitir la operación basada solo en apiKey
+          // para widgets embebidos que no pueden acceder al token
+          console.log('AIPPS Debug: Token inválido, procediendo con validación por apiKey');
         }
       }
       
