@@ -2316,20 +2316,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ).join('\n\n');
       }
       
-      // Get user settings for bot configuration
+      // Get user settings only for greeting (if needed)
       const userSettings = await storage.getSettings(integration.userId);
       
-      // Prepare bot configuration for AI system
-      const botConfig = userSettings ? {
-        assistantName: userSettings.assistantName,
-        defaultGreeting: userSettings.defaultGreeting,
-        conversationStyle: userSettings.conversationStyle
-      } : undefined;
+      // Prepare bot configuration using INTEGRATION-SPECIFIC settings
+      const botConfig = {
+        assistantName: integration.name, // Use integration name
+        defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
+        conversationStyle: integration.botBehavior // Use integration's specific bot behavior
+      };
       
-      console.log('AIPPS Debug: Bot configuration prepared for AI:', {
-        assistantName: botConfig?.assistantName,
-        conversationStyle: botConfig?.conversationStyle,
-        hasConfig: !!botConfig
+      console.log('AIPPS Debug: Integration-specific bot configuration prepared for AI:', {
+        integrationName: integration.name,
+        assistantName: botConfig.assistantName,
+        conversationStyle: botConfig.conversationStyle?.substring(0, 100) + '...',
+        hasIntegrationBehavior: !!integration.botBehavior
       });
       
       // Detect language and generate AI response with bot configuration
