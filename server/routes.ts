@@ -2319,29 +2319,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get user settings for bot configuration
       const userSettings = await storage.getSettings(integration.userId);
       
-      // Apply bot configuration to context
-      if (userSettings) {
-        const botConfig = `
-IMPORTANT BOT CONFIGURATION:
-- You are ${userSettings.assistantName || 'AIPI Assistant'}
-- Your greeting style is: ${userSettings.defaultGreeting || 'Hello! How can I help you today?'}
-- Your conversation style must be: ${userSettings.conversationStyle || 'friendly and helpful'}
-- Always maintain this personality and style in all responses
-`;
-        context = botConfig + '\n\n' + context;
-        console.log('AIPPS Debug: Bot configuration applied:', {
-          assistantName: userSettings.assistantName,
-          conversationStyle: userSettings.conversationStyle,
-          contextLength: context.length
-        });
-      }
+      // Prepare bot configuration for AI system
+      const botConfig = userSettings ? {
+        assistantName: userSettings.assistantName,
+        defaultGreeting: userSettings.defaultGreeting,
+        conversationStyle: userSettings.conversationStyle
+      } : undefined;
       
-      // Detect language and generate AI response
+      console.log('AIPPS Debug: Bot configuration prepared for AI:', {
+        assistantName: botConfig?.assistantName,
+        conversationStyle: botConfig?.conversationStyle,
+        hasConfig: !!botConfig
+      });
+      
+      // Detect language and generate AI response with bot configuration
       const detectedLanguage = detectLanguage(message);
       const completion = await generateChatCompletion(
         messages.map(m => ({ role: m.role, content: m.content })),
         context,
-        detectedLanguage
+        detectedLanguage,
+        botConfig
       );
       
       // Validate completion response

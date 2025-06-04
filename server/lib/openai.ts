@@ -6,11 +6,19 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "sk-yourkeyhere";
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
+// Bot configuration interface
+interface BotConfig {
+  assistantName?: string;
+  defaultGreeting?: string;
+  conversationStyle?: string;
+}
+
 // Main chat completion function for conversations
 export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,
   context?: string,
-  language?: string
+  language?: string,
+  botConfig?: BotConfig
 ) {
   try {
     // Determinar en qué idioma responder - USAR EL IDIOMA DETECTADO AUTOMÁTICAMENTE
@@ -20,13 +28,47 @@ export async function generateChatCompletion(
     console.log("OpenAI: Idioma recibido del servidor:", language);
     console.log("OpenAI: Respondiendo en idioma:", responseLanguage);
     
+    // Crear configuración personalizada del bot
+    const getBotPersonality = (config?: BotConfig) => {
+      if (!config) return "";
+      
+      const name = config.assistantName || "AIPPS";
+      const style = config.conversationStyle || "helpful";
+      
+      if (responseLanguage === "fr") {
+        return `CONFIGURATION DU BOT PERSONNALISÉ:
+- Vous êtes ${name}
+- Votre style de conversation doit être: ${style}
+- Maintenez toujours cette personnalité dans toutes vos réponses
+- Adaptez votre ton et votre approche selon ce style configuré
+
+`;
+      } else if (responseLanguage === "en") {
+        return `CUSTOM BOT CONFIGURATION:
+- You are ${name}
+- Your conversation style must be: ${style}
+- Always maintain this personality in all your responses
+- Adapt your tone and approach according to this configured style
+
+`;
+      } else {
+        return `CONFIGURACIÓN PERSONALIZADA DEL BOT:
+- Eres ${name}
+- Tu estilo de conversación debe ser: ${style}
+- Mantén siempre esta personalidad en todas tus respuestas
+- Adapta tu tono y enfoque según este estilo configurado
+
+`;
+      }
+    };
+
     // Adaptar el mensaje del sistema según el idioma
-    let systemContent = "";
+    let systemContent = getBotPersonality(botConfig);
     
     if (responseLanguage === "fr") {
       // Versión francesa del mensaje del sistema
-      systemContent = context 
-        ? `Vous êtes AIPPS, un assistant IA intégré au site web d'AIPPS. Votre objectif principal est de fournir des informations utiles, précises et complètes basées spécifiquement sur le contexte fourni concernant les services, caractéristiques et avantages de la plateforme AIPPS.
+      systemContent += context 
+        ? `Vous êtes un assistant IA intégré au site web d'AIPPS. Votre objectif principal est de fournir des informations utiles, précises et complètes basées spécifiquement sur le contexte fourni concernant les services, caractéristiques et avantages de la plateforme AIPPS.
       
 INSTRUCTIONS IMPORTANTES:
 1. Concentrez vos réponses sur les informations que vous trouvez dans le contexte fourni ci-dessous.
@@ -43,8 +85,8 @@ ${context}`
         : "Vous êtes AIPPS, un assistant IA intégré au site web d'AIPPS. Vous fournissez des informations concises et précises sur la plateforme AIPPS, ses services, caractéristiques et avantages. Soyez amical, professionnel et serviable. Répondez toujours en français.";
     } else if (responseLanguage === "en") {
       // Versión inglesa del mensaje del sistema
-      systemContent = context 
-        ? `You are AIPPS, an AI assistant integrated into the AIPPS website. Your main goal is to provide useful, accurate, and complete information specifically based on the context provided about the services, features, and benefits of the AIPPS platform.
+      systemContent += context 
+        ? `You are an AI assistant integrated into the AIPPS website. Your main goal is to provide useful, accurate, and complete information specifically based on the context provided about the services, features, and benefits of the AIPPS platform.
       
 IMPORTANT INSTRUCTIONS:
 1. Focus your answers on the information you find in the context provided below.
@@ -61,8 +103,8 @@ ${context}`
         : "You are AIPPS, an AI assistant integrated into the AIPPS website. You provide concise and accurate information about the AIPPS platform, its services, features, and benefits. Be friendly, professional, and helpful. Always respond in English.";
     } else {
       // Versión española (por defecto) del mensaje del sistema
-      systemContent = context 
-        ? `Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Tu objetivo principal es proporcionar información útil, precisa y completa basada específicamente en el contexto proporcionado sobre los servicios, características y beneficios de la plataforma AIPPS.
+      systemContent += context 
+        ? `Eres un asistente de IA integrado en el sitio web de AIPPS. Tu objetivo principal es proporcionar información útil, precisa y completa basada específicamente en el contexto proporcionado sobre los servicios, características y beneficios de la plataforma AIPPS.
       
 INSTRUCCIONES IMPORTANTES:
 1. Enfoca tus respuestas en la información que encuentres en el contexto proporcionado a continuación.
@@ -85,6 +127,15 @@ ${context}`
     // Log system message for debugging
     console.log("System message length:", systemMessage.content.length);
     console.log("System message preview:", systemMessage.content.substring(0, 200) + "...");
+    
+    // Log bot configuration details
+    if (botConfig) {
+      console.log("AIPPS Debug: Bot personality applied to system message:", {
+        name: botConfig.assistantName,
+        style: botConfig.conversationStyle,
+        systemMessageIncludesBotConfig: systemMessage.content.includes("CONFIGURACIÓN PERSONALIZADA DEL BOT")
+      });
+    }
     
     // Prepare the messages array with the system message first
     const formattedMessages = [
