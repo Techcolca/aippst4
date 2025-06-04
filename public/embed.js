@@ -1199,6 +1199,84 @@ Contenido: [Error al extraer contenido detallado]
         align-items: center;
         justify-content: center;
       }
+
+      /* Estilos para las conversaciones con botones de eliminación */
+      .aipi-conversation-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .aipi-conversation-item:hover {
+        background: #e9ecef;
+        border-color: #dee2e6;
+      }
+
+      .aipi-conversation-item.active {
+        background: ${config.themeColor}20;
+        border-color: ${config.themeColor};
+      }
+
+      .aipi-conversation-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .aipi-conversation-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1f2937;
+        margin-bottom: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .aipi-conversation-preview {
+        font-size: 12px;
+        color: #6b7280;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .aipi-delete-conversation-btn {
+        background: none;
+        border: none;
+        padding: 8px;
+        border-radius: 6px;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        opacity: 0;
+        visibility: hidden;
+        flex-shrink: 0;
+        margin-left: 8px;
+      }
+
+      .aipi-conversation-item:hover .aipi-delete-conversation-btn {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .aipi-delete-conversation-btn:hover {
+        background: #fee2e2;
+        color: #dc2626;
+        transform: scale(1.1);
+      }
+
+      .aipi-delete-conversation-btn svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2;
+      }
     `;
     document.head.appendChild(widgetStyles);
 
