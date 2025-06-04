@@ -2322,11 +2322,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Apply bot configuration to context
       if (userSettings) {
         const botConfig = `
-Assistant Name: ${userSettings.assistantName || 'AIPI Assistant'}
-Greeting: ${userSettings.defaultGreeting || 'Hello! How can I help you today?'}
-Conversation Style: ${userSettings.conversationStyle || 'friendly and helpful'}
+IMPORTANT BOT CONFIGURATION:
+- You are ${userSettings.assistantName || 'AIPI Assistant'}
+- Your greeting style is: ${userSettings.defaultGreeting || 'Hello! How can I help you today?'}
+- Your conversation style must be: ${userSettings.conversationStyle || 'friendly and helpful'}
+- Always maintain this personality and style in all responses
 `;
         context = botConfig + '\n\n' + context;
+        console.log('AIPPS Debug: Bot configuration applied:', {
+          assistantName: userSettings.assistantName,
+          conversationStyle: userSettings.conversationStyle,
+          contextLength: context.length
+        });
       }
       
       // Detect language and generate AI response
