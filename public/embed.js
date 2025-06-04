@@ -1505,12 +1505,22 @@ Contenido: [Error al extraer contenido detallado]
           console.log('AIPPS Widget: Widget listo para usar');
         }, 1000);
       } else {
-        console.error('AIPPS Widget: No se encontró el botón principal - reintentando...');
-        // Reintentar una vez más después de un delay
-        setTimeout(() => {
-          attachEventListeners();
-        }, 500);
-        return;
+        // Incrementar contador de reintentos
+        if (typeof window.aippsRetryCount === 'undefined') {
+          window.aippsRetryCount = 0;
+        }
+        
+        if (window.aippsRetryCount < 3) {
+          window.aippsRetryCount++;
+          console.log(`AIPPS Widget: No se encontró el botón principal - reintento ${window.aippsRetryCount}/3`);
+          setTimeout(() => {
+            attachEventListeners();
+          }, 500);
+          return;
+        } else {
+          console.error('AIPPS Widget: Máximo de reintentos alcanzado. Widget no completamente inicializado.');
+          return;
+        }
       }
 
       // Close widget - Enhanced for fullscreen mode
