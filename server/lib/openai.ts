@@ -13,6 +13,41 @@ interface BotConfig {
   conversationStyle?: string;
 }
 
+// Function to generate conversation title based on first messages
+export async function generateConversationTitle(
+  firstMessage: string,
+  secondMessage?: string,
+  language: string = "es"
+): Promise<string> {
+  try {
+    const messages = secondMessage 
+      ? `Primera pregunta: "${firstMessage}"\nSegunda pregunta: "${secondMessage}"`
+      : `Pregunta inicial: "${firstMessage}"`;
+
+    const systemPrompt = language === "es" 
+      ? "Genera un título breve y descriptivo (máximo 5 palabras) para esta conversación basándote en las preguntas del usuario. El título debe ser claro y específico sobre el tema principal."
+      : language === "en"
+      ? "Generate a brief and descriptive title (maximum 5 words) for this conversation based on the user's questions. The title should be clear and specific about the main topic."
+      : "Générez un titre bref et descriptif (maximum 5 mots) pour cette conversation basé sur les questions de l'utilisateur. Le titre doit être clair et spécifique sur le sujet principal.";
+
+    const completion = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: messages }
+      ],
+      max_tokens: 50,
+      temperature: 0.3
+    });
+
+    const title = completion.choices[0]?.message?.content?.trim();
+    return title || (language === "es" ? "Nueva conversación" : language === "en" ? "New conversation" : "Nouvelle conversation");
+  } catch (error) {
+    console.error("Error generating conversation title:", error);
+    return language === "es" ? "Nueva conversación" : language === "en" ? "New conversation" : "Nouvelle conversation";
+  }
+}
+
 // Main chat completion function for conversations
 export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,

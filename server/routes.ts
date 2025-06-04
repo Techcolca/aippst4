@@ -2354,6 +2354,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content: completion.message.content,
         role: "assistant",
       });
+
+      // Generate conversation title if needed (after 1st or 2nd user message)
+      const allMessages = await storage.getConversationMessages(conversation.id);
+      const userMessages = allMessages.filter(m => m.role === 'user');
+      
+      if (!conversation.title && userMessages.length >= 1 && userMessages.length <= 2) {
+        try {
+          const { generateConversationTitle } = await import('./lib/openai');
+          const firstMessage = userMessages[0].content;
+          const secondMessage = userMessages[1]?.content;
+          
+          const title = await generateConversationTitle(
+            firstMessage,
+            secondMessage,
+            detectedLanguage
+          );
+          
+          await storage.updateConversation(conversation.id, { title });
+          console.log(`AIPPS Debug: Generated title for conversation ${conversation.id}: "${title}"`);
+        } catch (error) {
+          console.error("Error generating conversation title:", error);
+        }
+      }
       
       res.status(201).json({
         response: completion.message.content,
