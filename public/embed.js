@@ -2825,14 +2825,14 @@ Contenido: [Error al extraer contenido detallado]
       await loadUserConversationsFromDashboard();
       updateConversationsList();
       
-      // Load existing conversation or show welcome message
+      // Always show welcome message first
+      if (config.greetingMessage) {
+        addMessage(config.greetingMessage, 'assistant');
+      }
+      
+      // Load existing conversation if any
       if (userConversations.length > 0) {
         loadConversation(userConversations[0].id);
-      } else {
-        // Show welcome message directly
-        if (config.welcomeMessage) {
-          addMessage(config.welcomeMessage, 'assistant');
-        }
       }
     }, 100);
   }
