@@ -2495,15 +2495,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // New endpoint for sending messages to specific conversations (fullscreen mode)
+  // New endpoint for sending messages to specific conversations (supports both bubble and authenticated modes)
   app.post("/api/widget/:apiKey/conversation/:conversationId/send", async (req, res) => {
     try {
       const { apiKey, conversationId } = req.params;
       const { message, visitorId, currentUrl, pageTitle } = req.body;
       
-      // Validate input
-      if (!message || !visitorId) {
-        return res.status(400).json({ message: "message and visitorId are required" });
+      // Check if this is an authenticated request (fullscreen widget)
+      const token = req.cookies?.auth_token || 
+                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                     ? req.headers.authorization.slice(7) : null);
+      
+      let isAuthenticated = false;
+      let authenticatedUserId = null;
+      
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+          isAuthenticated = true;
+          authenticatedUserId = decoded.userId;
+          console.log(`AIPPS Debug: Authenticated request from user ${authenticatedUserId}`);
+        } catch (error) {
+          console.error('JWT verification failed:', error);
+          return res.status(401).json({ message: "Invalid or expired token" });
+        }
+      }
+      
+      // Validate input based on authentication mode
+      if (!message) {
+        return res.status(400).json({ message: "message is required" });
+      }
+      
+      if (!isAuthenticated && !visitorId) {
+        return res.status(400).json({ message: "visitorId is required for anonymous access" });
       }
       
       const conversationIdNum = parseInt(conversationId);
@@ -2521,6 +2545,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const conversation = await storage.getConversation(conversationIdNum);
       if (!conversation || conversation.integrationId !== integration.id) {
         return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      // Additional security check for authenticated users
+      if (isAuthenticated) {
+        // Verify user owns this integration
+        if (integration.userId !== authenticatedUserId) {
+          return res.status(403).json({ message: "Unauthorized access to this integration" });
+        }
+        
+        // Verify conversation belongs to this authenticated user
+        const expectedVisitorId = `user_${authenticatedUserId}`;
+        if (conversation.visitorId !== expectedVisitorId) {
+          return res.status(403).json({ message: "Unauthorized access to this conversation" });
+        }
+        
+        console.log(`AIPPS Debug: Security check passed for authenticated user ${authenticatedUserId}`);
       }
       
       // Create user message
