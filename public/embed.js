@@ -3099,6 +3099,10 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  // Expose functions globally for HTML onclick handlers
+  window.showDeleteConfirmation = showDeleteConfirmation;
+  window.loadConversation = loadConversation;
+
   async function deleteConversation(conversationId) {
     try {
       console.log(`AIPPS Debug: Eliminando conversación ${conversationId}`);
