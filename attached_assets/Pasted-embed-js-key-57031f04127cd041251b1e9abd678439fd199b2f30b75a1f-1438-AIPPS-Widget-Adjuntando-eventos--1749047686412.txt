@@ -1,0 +1,124 @@
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: true, closeButton: true, chatInput: true, sendButton: true}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1515 AIPPS Widget: No se encontró el botón principal - reintento 1/3
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: true, closeButton: true, chatInput: true, sendButton: true}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1515 AIPPS Widget: No se encontró el botón principal - reintento 2/3
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: true, closeButton: true, chatInput: true, sendButton: true}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1515 AIPPS Widget: No se encontró el botón principal - reintento 3/3
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1438 AIPPS Widget: Adjuntando eventos... {toggleButton: false, minimizeButton: true, closeButton: true, chatInput: true, sendButton: true}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1521 AIPPS Widget: Máximo de reintentos alcanzado. Widget no completamente inicializado.
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1521
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1517
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1516
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1517
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1516
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1517
+setTimeout
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1516
+setTimeout
+attachEventListeners @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:1430
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:186
+Promise.then
+init @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:175Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:596 AIPI Debug: Botón fullscreen clickeado
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2550 
+            
+            
+           GET https://diosfiel.com/api/conversations 404 (Not Found)
+loadUserConversations @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2550
+window.handleLogin @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2498
+await in window.handleLogin
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2560 Error loading conversations: 404
+loadUserConversations @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2560
+await in loadUserConversations
+window.handleLogin @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2498
+await in window.handleLogin
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2819 AIPPS Debug: Inicializando chat fullscreen con sistema bubble
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2822 AIPPS Debug: Sistema bubble sin autenticación iniciado
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2571 AIPPS Debug: Cargando conversaciones usando sistema bubble exitoso...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3028 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2588 AIPPS Debug: Widget response status: 200
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3028 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2606 AIPPS Debug: Conversaciones cargadas con sistema bubble: 1
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2903 AIPPS Debug: Cargando conversación: 155
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3081 AIPPS Debug: No se encontró token en ninguna fuente
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2919 
+            
+            
+           GET https://diosfiel.com/api/conversations/155/messages 404 (Not Found)
+window.loadConversation @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2919
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2830
+setTimeout
+showFullscreenChat @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2818
+window.handleLogin @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2499
+await in window.handleLogin
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2925 AIPPS Debug: Load messages response status: 404
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2940 Error loading messages: 404 <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	 <link rel="profile" href="https://gmpg.org/xfn/11"> 
+	 <meta name='robots' content='noindex, follow' />
+	<style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>
+	
+	<!-- This site is optimized with the Yoast SEO plugin v22.8 - https://yoast.com/wordpress/plugins/seo/ -->
+	<title>Page not found - DIOS ES FIEL</title>
+	<meta property="og:locale" content="es_ES" />
+	<meta property="og:title" content="Page not found - DIOS ES FIEL" />
+	<meta property="og:site_name" content="DIOS ES FIEL" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://diosfiel.com/#website","url":"https://diosfiel.com/","name":"DIOS ES FIEL","description":"Comunidad Internacional De emprendimientos con Dios","publisher":{"@id":"https://diosfiel.com/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://diosfiel.com/?s={search_term_string}"},"query-input":"required name=search_term_string"}],"inLanguage":"es"},{"@type":"Organization","@id":"https://diosfiel.com/#organization","name":"DIOS ES FIEL","url":"https://diosfiel.com/","logo":{"@type":"ImageObject","inLanguage":"es","@id":"https://diosfiel.com/#/schema/logo/image/","url":"https://diosfiel.com/wp-content/uploads/2021/05/logo-regular-free-img.png","contentUrl":"https://diosfiel.com/wp-content/uploads/2021/05/logo-regular-free-img.png","width":156,"height":40,"caption":"DIOS ES FIEL"},"image":{"@id":"https://diosfiel.com/#/schema/logo/image/"}}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="DIOS ES FIEL &raquo; Feed" href="https://diosfiel.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="DIOS ES FIEL &raquo; Feed de los comentarios" href="https://diosfiel.com/comments/feed/" />
+<script>
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.1.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.1.0\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/diosfiel.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=f976d20f0604bbf962eabc7258409c94"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\ud83d\udd25","\ud83d\udc26\u200b\ud83d\udd25")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.eve
+window.loadConversation @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2940
+await in window.loadConversation
+(anonymous) @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2830
+setTimeout
+showFullscreenChat @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2818
+window.handleLogin @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2499
+await in window.handleLogin
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:255 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:267 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3104 AIPPS Debug: Send fullscreen message triggered
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2139 AIPPS Debug: Mensaje agregado con estilos forzados
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3123 AIPPS Debug: Enviando mensaje con sistema bubble exitoso...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3124 AIPPS Debug: Mensaje: Hola
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3028 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3134 
+            
+            
+           POST https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/widget/57031f04127cd041251b1e9abd678439fd199b2f30b75a1f/send 500 (Internal Server Error)
+sendFullscreenMessage @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3134
+window.aipiSendFullscreenMessage @ embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3114
+onclick @ (index):1Understand this error
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3147 AIPPS Debug: Bubble system response status: 500
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3165 Error response: 500 {"message":"Internal server error"}

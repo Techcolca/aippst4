@@ -2547,7 +2547,7 @@ Contenido: [Error al extraer contenido detallado]
   async function loadUserConversations() {
     try {
       const token = localStorage.getItem('aipi_auth_token');
-      const response = await fetch('/api/conversations', {
+      const response = await fetch(`${getApiBaseUrl()}/api/conversations`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -2916,9 +2916,9 @@ Contenido: [Error al extraer contenido detallado]
         ? `${window.location.protocol}//${window.location.host}` 
         : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
       
-      const response = await fetch(`${baseUrl}/api/conversations/${conversationId}/messages`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${conversationId}/messages`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
       });
 

@@ -2324,6 +2324,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         detectedLanguage
       );
       
+      // Validate completion response
+      if (!completion || !completion.content) {
+        console.error("AI completion returned null or empty content:", completion);
+        throw new Error("Failed to generate AI response");
+      }
+      
       // Create assistant message
       await storage.createMessage({
         conversationId: conversation.id,
