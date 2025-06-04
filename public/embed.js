@@ -2959,8 +2959,34 @@ Contenido: [Error al extraer contenido detallado]
     `).join('');
   }
 
-  window.createNewConversation = async function() {
-    return await createNewConversationForDashboard();
+  // Function to create new conversation (called from fullscreen button)
+  async function createNewConversation() {
+    console.log('AIPPS Debug: Creando nueva conversación desde botón');
+    
+    // Clear current conversation
+    currentConversationId = null;
+    
+    // Clear messages container
+    const messagesContainer = document.getElementById('aipi-messages-container');
+    if (messagesContainer) {
+      messagesContainer.innerHTML = '';
+    }
+    
+    // Show welcome message
+    if (config.greetingMessage) {
+      addMessage(config.greetingMessage, 'assistant');
+    }
+    
+    // Update conversations list to remove active state
+    updateConversationsList();
+    
+    // Focus on input
+    const input = document.getElementById('aipi-fullscreen-input');
+    if (input) {
+      input.focus();
+    }
+    
+    console.log('AIPPS Debug: Nueva conversación preparada. Se creará al enviar el primer mensaje.');
   }
 
   async function createNewConversationForDashboard() {
@@ -3102,6 +3128,7 @@ Contenido: [Error al extraer contenido detallado]
   // Expose functions globally for HTML onclick handlers
   window.showDeleteConfirmation = showDeleteConfirmation;
   window.loadConversation = loadConversation;
+  window.createNewConversation = createNewConversation;
 
   async function deleteConversation(conversationId) {
     try {
@@ -3343,10 +3370,11 @@ Contenido: [Error al extraer contenido detallado]
     showTypingIndicator(true);
     
     try {
-      console.log('AIPPS Debug: Enviando mensaje con sistema bubble exitoso...');
+      console.log('AIPPS Debug: Enviando mensaje fullscreen...');
       console.log('AIPPS Debug: Mensaje:', message);
+      console.log('AIPPS Debug: Current conversation ID:', currentConversationId);
       
-      // Use same system as working bubble widget
+      // Get visitor ID
       const visitorId = localStorage.getItem('aipi_visitor_id') || 
         `visitor_${Math.random().toString(36).substring(2, 15)}`;
       
@@ -3354,7 +3382,23 @@ Contenido: [Error al extraer contenido detallado]
         localStorage.setItem('aipi_visitor_id', visitorId);
       }
       
-      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/send`, {
+      // If no current conversation, create a new one first
+      if (!currentConversationId) {
+        console.log('AIPPS Debug: No hay conversación actual, creando nueva...');
+        const newConversation = await createNewConversationForDashboard();
+        if (newConversation) {
+          currentConversationId = newConversation.id;
+          console.log('AIPPS Debug: Nueva conversación creada con ID:', currentConversationId);
+        } else {
+          console.error('AIPPS Debug: Error al crear nueva conversación');
+          addMessage('Error al crear nueva conversación. Inténtalo de nuevo.', 'assistant');
+          showTypingIndicator(false);
+          return;
+        }
+      }
+      
+      // Send message to existing conversation
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${currentConversationId}/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -3367,20 +3411,15 @@ Contenido: [Error al extraer contenido detallado]
         })
       });
 
-      console.log('AIPPS Debug: Bubble system response status:', response.status);
+      console.log('AIPPS Debug: Send message response status:', response.status);
       
       if (response.ok) {
         const data = await response.json();
-        console.log('AIPPS Debug: Bubble response data:', data);
-        
-        // Update conversation ID from response
-        if (data.conversationId) {
-          currentConversationId = data.conversationId;
-        }
+        console.log('AIPPS Debug: Message response data:', data);
         
         addMessage(data.response || data.message || 'Respuesta recibida', 'assistant');
         
-        // Update conversations list
+        // Update conversations list to reflect changes
         await loadUserConversationsFromDashboard();
         updateConversationsList();
       } else {
