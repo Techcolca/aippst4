@@ -128,6 +128,16 @@ export class PgStorage implements IStorage {
     return result[0];
   }
 
+  async deleteConversation(id: number): Promise<void> {
+    // Eliminar primero todos los mensajes de la conversación
+    await db.delete(messages)
+      .where(eq(messages.conversationId, id));
+    
+    // Luego eliminar la conversación
+    await db.delete(conversations)
+      .where(eq(conversations.id, id));
+  }
+
   // Message methods
   async getMessages(conversationId: number): Promise<Message[]> {
     return await db.select().from(messages).where(eq(messages.conversationId, conversationId));

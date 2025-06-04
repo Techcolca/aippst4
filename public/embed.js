@@ -2863,8 +2863,20 @@ Contenido: [Error al extraer contenido detallado]
     return userConversations.map(conv => `
       <div class="aipi-conversation-item ${conv.id === currentConversationId ? 'active' : ''}" 
            onclick="loadConversation(${conv.id})">
-        <div class="aipi-conversation-title">${conv.title || 'Nueva conversación'}</div>
-        <div class="aipi-conversation-preview">${conv.preview || 'Iniciada hace poco'}</div>
+        <div class="aipi-conversation-content">
+          <div class="aipi-conversation-title">${conv.title || 'Nueva conversación'}</div>
+          <div class="aipi-conversation-preview">${conv.preview || 'Iniciada hace poco'}</div>
+        </div>
+        <button class="aipi-delete-conversation-btn" 
+                onclick="event.stopPropagation(); showDeleteConfirmation(${conv.id})"
+                title="Eliminar conversación">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3,6 5,6 21,6"></polyline>
+            <path d="M19,6V20a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6M8,6V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
       </div>
     `).join('');
   }
@@ -2997,6 +3009,119 @@ Contenido: [Error al extraer contenido detallado]
     if (listContainer) {
       listContainer.innerHTML = renderConversationsList();
     }
+  }
+
+  // Delete conversation functions
+  function showDeleteConfirmation(conversationId) {
+    const conversation = userConversations.find(conv => conv.id === conversationId);
+    const title = conversation ? (conversation.title || 'Nueva conversación') : 'esta conversación';
+    
+    if (confirm(`¿Estás seguro de eliminar "${title}"? Esta acción no se puede deshacer.`)) {
+      deleteConversation(conversationId);
+    }
+  }
+
+  async function deleteConversation(conversationId) {
+    try {
+      console.log(`AIPPS Debug: Eliminando conversación ${conversationId}`);
+      
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${conversationId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAuthToken()}`
+        }
+      });
+
+      if (response.ok) {
+        console.log(`AIPPS Debug: Conversación ${conversationId} eliminada exitosamente`);
+        
+        // Remover de la lista local
+        userConversations = userConversations.filter(conv => conv.id !== conversationId);
+        
+        // Actualizar la interfaz
+        updateConversationsList();
+        
+        // Si eliminamos la conversación actual, cargar otra o crear nueva
+        if (currentConversationId === conversationId) {
+          if (userConversations.length > 0) {
+            // Cargar la conversación más reciente
+            await loadConversation(userConversations[0].id);
+          } else {
+            // No hay más conversaciones, crear una nueva
+            await createNewConversationForDashboard();
+          }
+        }
+        
+        // Mostrar mensaje de éxito
+        showSuccessMessage('Conversación eliminada exitosamente');
+        
+      } else {
+        console.error('Error eliminando conversación:', response.status);
+        showErrorMessage('Error al eliminar la conversación. Inténtalo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error in deleteConversation:', error);
+      showErrorMessage('Error al eliminar la conversación. Inténtalo de nuevo.');
+    }
+  }
+
+  function showSuccessMessage(message) {
+    // Crear o mostrar mensaje de éxito temporal
+    let messageDiv = document.getElementById('aipi-success-message');
+    if (!messageDiv) {
+      messageDiv = document.createElement('div');
+      messageDiv.id = 'aipi-success-message';
+      messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #10b981;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      `;
+      document.body.appendChild(messageDiv);
+    }
+    
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+    
+    setTimeout(() => {
+      messageDiv.style.display = 'none';
+    }, 3000);
+  }
+
+  function showErrorMessage(message) {
+    // Crear o mostrar mensaje de error temporal
+    let messageDiv = document.getElementById('aipi-error-message');
+    if (!messageDiv) {
+      messageDiv = document.createElement('div');
+      messageDiv.id = 'aipi-error-message';
+      messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ef4444;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      `;
+      document.body.appendChild(messageDiv);
+    }
+    
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+    
+    setTimeout(() => {
+      messageDiv.style.display = 'none';
+    }, 3000);
   }
 
   // Dashboard context detection and configuration

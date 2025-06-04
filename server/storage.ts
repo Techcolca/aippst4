@@ -31,6 +31,7 @@ export interface IStorage {
   getConversation(id: number): Promise<Conversation | undefined>;
   createConversation(conversation: InsertConversation): Promise<Conversation>;
   updateConversation(id: number, data: Partial<Conversation>): Promise<Conversation>;
+  deleteConversation(id: number): Promise<void>;
 
   // Message methods
   getMessages(conversationId: number): Promise<Message[]>;

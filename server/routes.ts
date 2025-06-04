@@ -2707,6 +2707,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+
+  // Delete conversation endpoint
+  app.delete("/api/widget/:apiKey/conversation/:conversationId", async (req, res) => {
+    try {
+      const { apiKey, conversationId } = req.params;
+      const conversationIdNum = parseInt(conversationId);
+      
+      // Validar que conversationId es un número válido
+      if (isNaN(conversationIdNum)) {
+        return res.status(400).json({ message: "Invalid conversation ID" });
+      }
+      
+      // Obtener la integración por API key
+      const integration = await storage.getIntegrationByApiKey(apiKey);
+      if (!integration) {
+        return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // Verificar que la conversación existe y pertenece a esta integración
+      const conversation = await storage.getConversation(conversationIdNum);
+      if (!conversation) {
+        return res.status(404).json({ message: "Conversation not found" });
+      }
+      
+      if (conversation.integrationId !== integration.id) {
+        return res.status(403).json({ message: "Unauthorized" });
+      }
+      
+      // Para modo fullscreen, verificar autenticación de usuario
+      if (req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        try {
+          const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+          
+          // Verificar que la integración pertenece al usuario autenticado
+          if (integration.userId !== decoded.userId) {
+            return res.status(403).json({ message: "Unauthorized" });
+          }
+        } catch (jwtError) {
+          return res.status(401).json({ message: "Invalid token" });
+        }
+      }
+      
+      // Eliminar la conversación
+      await storage.deleteConversation(conversationIdNum);
+      
+      console.log(`AIPPS Debug: Conversation ${conversationIdNum} deleted successfully`);
+      res.json({ success: true, message: "Conversation deleted successfully" });
+      
+    } catch (error) {
+      console.error("Delete conversation error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
   
   // Serve the embed script
   app.get("/embed.js", (req, res) => {
