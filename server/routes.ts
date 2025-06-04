@@ -250,11 +250,11 @@ async function createInternalWebsiteIntegration() {
       return;
     }
     
-    // Crear la integración interna
+    // Crear la integración interna como integración compartida (userId: null indica que es compartida)
     await storage.createIntegration({
       name: "AIPPS Web Integration",
       url: "localhost",
-      userId: 1, // Usuario Pablo
+      userId: null, // null indica que es una integración compartida para todos los usuarios
       themeColor: "#6366f1",
       position: "bottom-right",
       botBehavior: "Eres AIPPS, un asistente integrado en el sitio web principal de AIPPS. Tu objetivo es ayudar a los usuarios a entender cómo funciona la plataforma, sus características y beneficios. Debes ser informativo, profesional y claro en tus respuestas. Brinda ejemplos concretos de cómo se puede utilizar AIPPS en diferentes contextos.",
@@ -452,8 +452,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
         
-        // Verify user owns this integration
-        if (integration.userId !== decoded.userId) {
+        // Verify user owns this integration OR it's a shared integration (userId: null)
+        if (integration.userId !== null && integration.userId !== decoded.userId) {
           return res.status(403).json({ message: "Unauthorized access to this integration" });
         }
         
@@ -534,8 +534,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
         
-        // Verify user owns this integration
-        if (integration.userId !== decoded.userId) {
+        // Verify user owns this integration OR it's a shared integration (userId: null)
+        if (integration.userId !== null && integration.userId !== decoded.userId) {
           return res.status(403).json({ message: "Unauthorized access to this integration" });
         }
         
@@ -2567,8 +2567,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Additional security check for authenticated users
       if (isAuthenticated) {
-        // Verify user owns this integration
-        if (integration.userId !== authenticatedUserId) {
+        // Verify user owns this integration OR it's a shared integration (userId: null)
+        if (integration.userId !== null && integration.userId !== authenticatedUserId) {
           return res.status(403).json({ message: "Unauthorized access to this integration" });
         }
         
