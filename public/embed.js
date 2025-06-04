@@ -2865,15 +2865,13 @@ Contenido: [Error al extraer contenido detallado]
         ? `${window.location.protocol}//${window.location.host}` 
         : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
       
-      const response = await fetch(`${baseUrl}/api/conversations`, {
+      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          integrationId: config.integrationId,
-          title: 'Nueva conversación'
+          visitorId: localStorage.getItem('aipi_visitor_id') || `visitor_${Date.now()}`
         }),
       });
 

@@ -2325,7 +2325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
       
       // Validate completion response
-      if (!completion || !completion.content) {
+      if (!completion || !completion.message || !completion.message.content) {
         console.error("AI completion returned null or empty content:", completion);
         throw new Error("Failed to generate AI response");
       }
@@ -2333,12 +2333,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create assistant message
       await storage.createMessage({
         conversationId: conversation.id,
-        content: completion.content,
+        content: completion.message.content,
         role: "assistant",
       });
       
       res.status(201).json({
-        response: completion.content,
+        response: completion.message.content,
         conversationId: conversation.id,
         success: true
       });
