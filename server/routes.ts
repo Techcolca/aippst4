@@ -313,9 +313,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create default settings for the user
       await storage.createSettings({ userId: user.id });
       
-      // Return user without password
+      // Create token for immediate login after registration
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+      
+      // Set cookie
+      res.cookie("auth_token", token, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        sameSite: "none",
+        path: "/",
+      });
+      
+      console.log("Registration successful for user:", user.username);
+      console.log("Token created:", token.substring(0, 20) + "...");
+      
+      // Return user without password and include token
       const { password, ...userWithoutPassword } = user;
-      res.status(201).json(userWithoutPassword);
+      res.status(201).json({
+        ...userWithoutPassword,
+        token: token
+      });
     } catch (error) {
       console.error("Registration error:", error);
       res.status(400).json({ message: "Invalid registration data" });

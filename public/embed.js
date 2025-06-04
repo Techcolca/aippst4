@@ -2678,11 +2678,27 @@ Contenido: [Error al extraer contenido detallado]
 
       if (response.ok) {
         const userData = await response.json();
-        currentUser = userData;
+        console.log('AIPPS Debug: Login response:', userData);
+        
+        // Guardar el token en múltiples ubicaciones
+        if (userData.token) {
+          localStorage.setItem('auth_token', userData.token);
+          localStorage.setItem('aipi_auth_token', userData.token);
+          sessionStorage.setItem('auth_token', userData.token);
+          
+          // También guardar en cookies
+          document.cookie = `auth_token=${userData.token}; path=/; max-age=86400`;
+          
+          console.log('AIPPS Debug: Token guardado correctamente en login:', userData.token.substring(0, 20) + '...');
+        } else {
+          console.log('AIPPS Debug: No se recibió token en la respuesta de login');
+        }
+        
+        currentUser = userData.user || userData;
         isAuthenticated = true;
         closeAuthForm();
         
-        await loadUserConversations();
+        await loadUserConversationsFromDashboard();
         showFullscreenChat();
       } else {
         const error = await response.json();
@@ -2715,11 +2731,27 @@ Contenido: [Error al extraer contenido detallado]
 
       if (response.ok) {
         const userData = await response.json();
-        currentUser = userData;
+        console.log('AIPPS Debug: Register response:', userData);
+        
+        // Guardar el token en múltiples ubicaciones
+        if (userData.token) {
+          localStorage.setItem('auth_token', userData.token);
+          localStorage.setItem('aipi_auth_token', userData.token);
+          sessionStorage.setItem('auth_token', userData.token);
+          
+          // También guardar en cookies
+          document.cookie = `auth_token=${userData.token}; path=/; max-age=86400`;
+          
+          console.log('AIPPS Debug: Token guardado correctamente en registro:', userData.token.substring(0, 20) + '...');
+        } else {
+          console.log('AIPPS Debug: No se recibió token en la respuesta de registro');
+        }
+        
+        currentUser = userData.user || userData;
         isAuthenticated = true;
         closeAuthForm();
         
-        await loadUserConversations();
+        await loadUserConversationsFromDashboard();
         showFullscreenChat();
       } else {
         const error = await response.json();
@@ -3388,9 +3420,11 @@ Contenido: [Error al extraer contenido detallado]
 
   // Helper function to get authentication token
   function getAuthToken() {
+    console.log('AIPPS Debug: Iniciando búsqueda de token de autenticación...');
+    
     // 1. If we have a dashboard token, use it first
     if (dashboardConfig.authToken) {
-      console.log('AIPPS Debug: Token encontrado en configuración de dashboard');
+      console.log('AIPPS Debug: Token encontrado en configuración de dashboard:', dashboardConfig.authToken.substring(0, 20) + '...');
       return dashboardConfig.authToken;
     }
     
@@ -3400,7 +3434,7 @@ Contenido: [Error al extraer contenido detallado]
         if (window.parent && window.parent !== window) {
           const parentToken = window.parent.localStorage.getItem('auth_token');
           if (parentToken) {
-            console.log('AIPPS Debug: Token encontrado en parent window dashboard');
+            console.log('AIPPS Debug: Token encontrado en parent window dashboard:', parentToken.substring(0, 20) + '...');
             dashboardConfig.authToken = parentToken; // Cache it
             return parentToken;
           }
@@ -3410,10 +3444,17 @@ Contenido: [Error al extraer contenido detallado]
       }
     }
     
-    // 3. Try localStorage
+    // 3. Try localStorage auth_token
     let token = localStorage.getItem('auth_token');
     if (token) {
-      console.log('AIPPS Debug: Token encontrado en localStorage');
+      console.log('AIPPS Debug: Token encontrado en localStorage (auth_token):', token.substring(0, 20) + '...');
+      return token;
+    }
+    
+    // 3b. Try localStorage aipi_auth_token
+    token = localStorage.getItem('aipi_auth_token');
+    if (token) {
+      console.log('AIPPS Debug: Token encontrado en localStorage (aipi_auth_token):', token.substring(0, 20) + '...');
       return token;
     }
     
@@ -3423,7 +3464,7 @@ Contenido: [Error al extraer contenido detallado]
     if (parts.length === 2) {
       token = parts.pop().split(';').shift();
       if (token) {
-        console.log('AIPPS Debug: Token encontrado en cookies');
+        console.log('AIPPS Debug: Token encontrado en cookies:', token.substring(0, 20) + '...');
         return token;
       }
     }
@@ -3431,10 +3472,17 @@ Contenido: [Error al extraer contenido detallado]
     // 5. Try sessionStorage
     token = sessionStorage.getItem('auth_token');
     if (token) {
-      console.log('AIPPS Debug: Token encontrado en sessionStorage');
+      console.log('AIPPS Debug: Token encontrado en sessionStorage:', token.substring(0, 20) + '...');
       return token;
     }
     
+    // Debug: Show what we have in storage
+    console.log('AIPPS Debug: Contenido de localStorage:', {
+      auth_token: localStorage.getItem('auth_token'),
+      aipi_auth_token: localStorage.getItem('aipi_auth_token'),
+      aipi_visitor_id: localStorage.getItem('aipi_visitor_id')
+    });
+    console.log('AIPPS Debug: Contenido de cookies:', document.cookie);
     console.log('AIPPS Debug: No se encontró token en ninguna fuente');
     return null;
   }
