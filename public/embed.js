@@ -3279,7 +3279,7 @@ Contenido: [Error al extraer contenido detallado]
 
       if (response.ok) {
         const user = await response.json();
-        userInfoContainer.innerHTML = `Conectado como: ${escapeHTML(user.username || user.fullName || user.email || 'Usuario')}`;
+        userInfoContainer.innerHTML = `de ${escapeHTML(user.username || user.fullName || user.email || 'Usuario')}`;
       } else {
         userInfoContainer.innerHTML = '';
       }
