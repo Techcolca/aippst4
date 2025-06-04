@@ -229,6 +229,12 @@
         config.userBubbleColor = data.settings.userBubbleColor || config.userBubbleColor;
         config.assistantBubbleColor = data.settings.assistantBubbleColor || config.assistantBubbleColor;
         config.font = data.settings.font || config.font;
+        
+        console.log('AIPPS Debug: Configuración cargada:', {
+          assistantName: config.assistantName,
+          greetingMessage: config.greetingMessage,
+          conversationStyle: data.settings.conversationStyle
+        });
       }
 
       // Extraer el contenido de la página actual para mejorar las respuestas
@@ -2825,14 +2831,26 @@ Contenido: [Error al extraer contenido detallado]
       await loadUserConversationsFromDashboard();
       updateConversationsList();
       
-      // Always show welcome message first
+      // Always show welcome message when opening fullscreen
       if (config.greetingMessage) {
+        console.log('AIPPS Debug: Mostrando mensaje de bienvenida:', config.greetingMessage);
         addMessage(config.greetingMessage, 'assistant');
+        
+        // Add some spacing after welcome message
+        setTimeout(() => {
+          const messagesContainer = document.getElementById('aipi-messages-container');
+          if (messagesContainer) {
+            messagesContainer.innerHTML += '<div style="height: 10px;"></div>';
+          }
+        }, 100);
       }
       
-      // Load existing conversation if any
+      // Then load existing conversation if any (but don't overwrite welcome message)
       if (userConversations.length > 0) {
-        loadConversation(userConversations[0].id);
+        console.log('AIPPS Debug: Cargando conversación existente después del mensaje de bienvenida');
+        // Don't call loadConversation as it clears the messages
+        // Instead, just set the current conversation ID
+        currentConversationId = userConversations[0].id;
       }
     }, 100);
   }

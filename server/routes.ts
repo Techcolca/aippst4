@@ -2316,6 +2316,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ).join('\n\n');
       }
       
+      // Get user settings for bot configuration
+      const userSettings = await storage.getSettings(integration.userId);
+      
+      // Apply bot configuration to context
+      if (userSettings) {
+        const botConfig = `
+Assistant Name: ${userSettings.assistantName || 'AIPI Assistant'}
+Greeting: ${userSettings.defaultGreeting || 'Hello! How can I help you today?'}
+Conversation Style: ${userSettings.conversationStyle || 'friendly and helpful'}
+`;
+        context = botConfig + '\n\n' + context;
+      }
+      
       // Detect language and generate AI response
       const detectedLanguage = detectLanguage(message);
       const completion = await generateChatCompletion(
