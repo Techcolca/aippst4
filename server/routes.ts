@@ -5703,9 +5703,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // API para mensajes de bienvenida rotativos
+  // API para mensajes de bienvenida rotativos con soporte multiidioma
   app.get("/api/welcome-messages", async (req, res) => {
     try {
+      // Obtener idioma del query parameter, por defecto español
+      const language = req.query.lang || 'es';
+      
       // Usar la misma conexión que otras rutas
       const result = await db.select().from(welcomeMessages)
         .where(and(
@@ -5715,27 +5718,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .orderBy(welcomeMessages.orderIndex);
 
       if (result.length === 0) {
-        // Si no hay mensajes válidos, devolver mensajes por defecto
-        const defaultMessages = [
-          {
-            message_text: "Bienvenido a AIPPS - La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
-            message_type: "welcome",
-            order_index: 1
-          },
-          {
-            message_text: "Automatiza tu atención al cliente con IA avanzada - Respuestas inteligentes 24/7 sin intervención manual",
-            message_type: "automation",
-            order_index: 2
+        // Si no hay mensajes válidos, devolver mensajes por defecto según idioma
+        const getDefaultMessages = (lang: string) => {
+          switch (lang) {
+            case 'fr':
+              return [
+                {
+                  message_text: "Bienvenue dans AIPPS - La plateforme conversationnelle alimentée par l'IA pour une communication intelligente sur votre site web",
+                  message_type: "welcome",
+                  order_index: 1
+                },
+                {
+                  message_text: "Automatisez votre service client avec une IA avancée - Réponses intelligentes 24/7 sans intervention manuelle",
+                  message_type: "automation",
+                  order_index: 2
+                }
+              ];
+            case 'en':
+              return [
+                {
+                  message_text: "Welcome to AIPPS - The AI-powered conversational platform for intelligent communication on your website",
+                  message_type: "welcome",
+                  order_index: 1
+                },
+                {
+                  message_text: "Automate your customer service with advanced AI - Intelligent 24/7 responses without manual intervention",
+                  message_type: "automation",
+                  order_index: 2
+                }
+              ];
+            default: // español
+              return [
+                {
+                  message_text: "Bienvenido a AIPPS - La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
+                  message_type: "welcome",
+                  order_index: 1
+                },
+                {
+                  message_text: "Automatiza tu atención al cliente con IA avanzada - Respuestas inteligentes 24/7 sin intervención manual",
+                  message_type: "automation",
+                  order_index: 2
+                }
+              ];
           }
-        ];
-        return res.json(defaultMessages);
+        };
+        
+        return res.json(getDefaultMessages(language as string));
       }
 
-      res.json(result.map(msg => ({
-        message_text: msg.messageText,
-        message_type: msg.messageType,
-        order_index: msg.orderIndex
-      })));
+      // Mapear mensajes según el idioma solicitado
+      const messages = result.map(msg => {
+        let messageText = msg.messageText; // Por defecto español
+        
+        if (language === 'fr' && msg.messageTextFr) {
+          messageText = msg.messageTextFr;
+        } else if (language === 'en' && msg.messageTextEn) {
+          messageText = msg.messageTextEn;
+        }
+
+        return {
+          message_text: messageText,
+          message_type: msg.messageType,
+          order_index: msg.orderIndex
+        };
+      });
+
+      res.json(messages);
     } catch (error) {
       console.error("Error al obtener mensajes de bienvenida:", error);
       res.status(500).json({ message: "Error al obtener mensajes de bienvenida" });
