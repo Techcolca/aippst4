@@ -704,6 +704,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+
+  // Endpoint para obtener análisis de conversaciones globales del usuario
+  app.get("/api/analytics/conversation", verifyToken, async (req, res) => {
+    try {
+      const conversationAnalytics = await storage.getConversationAnalytics(req.userId);
+      res.json(conversationAnalytics);
+    } catch (error) {
+      console.error("Get conversation analytics error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Endpoint para obtener rendimiento de integraciones
+  app.get("/api/analytics/integration-performance", verifyToken, async (req, res) => {
+    try {
+      const integrationPerformance = await storage.getIntegrationPerformance(req.userId);
+      res.json(integrationPerformance);
+    } catch (error) {
+      console.error("Get integration performance error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
   
   // API para obtener los análisis de conversaciones (con datos reales)
   // Obtener analíticas para una integración específica
