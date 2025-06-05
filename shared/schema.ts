@@ -465,6 +465,8 @@ export type InsertCalendarToken = z.infer<typeof insertCalendarTokenSchema>;
 export const welcomeMessages = pgTable("welcome_messages", {
   id: serial("id").primaryKey(),
   messageText: text("message_text").notNull(),
+  messageTextFr: text("message_text_fr"), // Traducción al francés
+  messageTextEn: text("message_text_en"), // Traducción al inglés
   messageType: text("message_type").notNull(), // "welcome", "automation", "commercial"
   isActive: boolean("is_active").default(true),
   createdAt: timestamp("created_at").defaultNow(),
@@ -474,6 +476,8 @@ export const welcomeMessages = pgTable("welcome_messages", {
 
 export const insertWelcomeMessageSchema = createInsertSchema(welcomeMessages).pick({
   messageText: true,
+  messageTextFr: true,
+  messageTextEn: true,
   messageType: true,
   isActive: true,
   expiresAt: true,
