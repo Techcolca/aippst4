@@ -2678,7 +2678,7 @@ Contenido: [Error al extraer contenido detallado]
 
       if (response.ok) {
         const userData = await response.json();
-        console.log('AIPPS Debug: Login response:', userData);
+        console.log('AIPPS Debug: Login exitoso');
         
         // Guardar el token en múltiples ubicaciones
         if (userData.token) {
@@ -2689,7 +2689,7 @@ Contenido: [Error al extraer contenido detallado]
           // También guardar en cookies
           document.cookie = `auth_token=${userData.token}; path=/; max-age=86400`;
           
-          console.log('AIPPS Debug: Token guardado correctamente en login:', userData.token.substring(0, 20) + '...');
+          console.log('AIPPS Debug: Token guardado correctamente en login');
         } else {
           console.log('AIPPS Debug: No se recibió token en la respuesta de login');
         }
@@ -2731,7 +2731,7 @@ Contenido: [Error al extraer contenido detallado]
 
       if (response.ok) {
         const userData = await response.json();
-        console.log('AIPPS Debug: Register response:', userData);
+        console.log('AIPPS Debug: Registro exitoso');
         
         // Guardar el token en múltiples ubicaciones
         if (userData.token) {
@@ -2742,7 +2742,7 @@ Contenido: [Error al extraer contenido detallado]
           // También guardar en cookies
           document.cookie = `auth_token=${userData.token}; path=/; max-age=86400`;
           
-          console.log('AIPPS Debug: Token guardado correctamente en registro:', userData.token.substring(0, 20) + '...');
+          console.log('AIPPS Debug: Token guardado correctamente en registro');
         } else {
           console.log('AIPPS Debug: No se recibió token en la respuesta de registro');
         }
@@ -3130,7 +3130,7 @@ Contenido: [Error al extraer contenido detallado]
   async function createNewConversationForDashboard() {
     try {
       const token = getAuthToken();
-      console.log('AIPPS Debug: Creando nueva conversación autenticada con token:', token ? 'Encontrado' : 'No encontrado');
+      console.log('AIPPS Debug: Creando nueva conversación autenticada');
       
       if (!token) {
         console.log('AIPPS Debug: No auth token found, user needs to login');
@@ -3490,14 +3490,14 @@ Contenido: [Error al extraer contenido detallado]
     // 3. Try localStorage auth_token
     let token = localStorage.getItem('auth_token');
     if (token) {
-      console.log('AIPPS Debug: Token encontrado en localStorage (auth_token):', token.substring(0, 20) + '...');
+      console.log('AIPPS Debug: Token encontrado en localStorage (auth_token)');
       return token;
     }
     
     // 3b. Try localStorage aipi_auth_token
     token = localStorage.getItem('aipi_auth_token');
     if (token) {
-      console.log('AIPPS Debug: Token encontrado en localStorage (aipi_auth_token):', token.substring(0, 20) + '...');
+      console.log('AIPPS Debug: Token encontrado en localStorage (aipi_auth_token)');
       return token;
     }
     

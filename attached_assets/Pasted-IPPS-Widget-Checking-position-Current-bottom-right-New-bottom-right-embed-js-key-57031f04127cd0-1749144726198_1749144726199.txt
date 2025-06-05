@@ -1,0 +1,38 @@
+IPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2681 AIPPS Debug: Login response: {id: 1, username: 'Pablo', email: 'techcolca@gmail.com', fullName: 'Pablo Emilio Rueda Criales', apiKey: 'd204415da71970ea19d70badd63195719dc05afef6ffe38e', …}
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2692 AIPPS Debug: Token guardado correctamente en login: eyJhbGciOiJIUzI1NiIs...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2790 AIPPS Debug: Cargando conversaciones usando sistema autenticado...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3466 AIPPS Debug: Iniciando búsqueda de token de autenticación...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3493 AIPPS Debug: Token encontrado en localStorage (auth_token): eyJhbGciOiJIUzI1NiIs...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3460 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:261 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2808 AIPPS Debug: Authenticated conversations response status: 200
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2812 AIPPS Debug: Conversaciones autenticadas cargadas: 2
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3038 AIPPS Debug: Inicializando chat fullscreen con sistema bubble
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3041 AIPPS Debug: Sistema bubble sin autenticación iniciado
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2790 AIPPS Debug: Cargando conversaciones usando sistema autenticado...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3466 AIPPS Debug: Iniciando búsqueda de token de autenticación...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3493 AIPPS Debug: Token encontrado en localStorage (auth_token): eyJhbGciOiJIUzI1NiIs...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3460 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2808 AIPPS Debug: Authenticated conversations response status: 200
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2812 AIPPS Debug: Conversaciones autenticadas cargadas: 2
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3466 AIPPS Debug: Iniciando búsqueda de token de autenticación...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3493 AIPPS Debug: Token encontrado en localStorage (auth_token): eyJhbGciOiJIUzI1NiIs...
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3460 AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3052 AIPPS Debug: Mostrando mensaje de bienvenida: ¡Bienvenido! Estoy aquí para darte guía basada en la Biblia y las enseñanzas de Jesús.  Si tienes una pregunta, necesitas entender un versículo o deseas aplicar principios bíblicos a tu situación, estaré encantado de ayudarte.
+
+"Lámpara es a mis pies tu palabra, y lumbrera a mi camino." — Salmo 119:105
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:2223 AIPPS Debug: Mensaje agregado con estilos forzados
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:3066 AIPPS Debug: Cargando conversación existente después del mensaje de bienvenida
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:261 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:261 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:261 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:261 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:261 AIPPS Widget: Checking position - Current: bottom-right New: bottom-right
+embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f:273 AIPPS Widget: No position change detected
