@@ -546,7 +546,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           title: title || 'Nueva conversación'
         });
         
-        console.log(`AIPPS Debug: Created fullscreen conversation for user ${decoded.userId}:`, conversation.id);
+        console.log(`AIPPS Debug: Created fullscreen conversation:`, conversation.id);
         
         res.status(201).json(conversation);
       } catch (error) {
@@ -1193,11 +1193,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Verificar el token
           console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
           const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-          console.log("Token verificado correctamente. ID de usuario:", decoded.userId);
+          console.log("Token verificado correctamente");
           
           // Obtener los datos completos del usuario
           adminUser = await storage.getUser(decoded.userId);
-          console.log("Usuario para scraping:", adminUser?.username);
+          console.log("Usuario para scraping autenticado");
           
           if (adminUser?.username !== 'admin') {
             return res.status(403).json({ message: "Forbidden: Admin access required" });
@@ -2613,7 +2613,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
           isAuthenticated = true;
           authenticatedUserId = decoded.userId;
-          console.log(`AIPPS Debug: Authenticated request from user ${authenticatedUserId}`);
+          console.log(`AIPPS Debug: Authenticated request`);
         } catch (error) {
           console.error('JWT verification failed:', error);
           return res.status(401).json({ message: "Invalid or expired token" });
@@ -2660,7 +2660,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return res.status(403).json({ message: "Unauthorized access to this conversation" });
         }
         
-        console.log(`AIPPS Debug: Security check passed for authenticated user ${authenticatedUserId}`);
+        console.log(`AIPPS Debug: Security check passed for authenticated user`);
       }
       
       // Create user message

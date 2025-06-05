@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       if (response.ok) {
         const userData = await response.json();
-        console.log("Usuario autenticado encontrado:", userData);
+        console.log("Usuario autenticado correctamente");
         setUser(userData);
         setLastRefreshed(now);
         return true;
