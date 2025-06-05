@@ -2389,13 +2389,13 @@ Contenido: [Error al extraer contenido detallado]
     const integrationDescription = config.description || '';
     const botBehavior = config.botBehavior || '';
     
-    // Create a personalized explanation
-    let personalizedExplanation = `Descubre todo lo que ${integrationName} puede hacer por ti.`;
+    // Create a personalized explanation with focus on biblical counseling
+    let personalizedExplanation = `Soy una inteligencia artificial diseñada como consejero espiritual para ayudarte a crecer en tu fe. Todas mis respuestas están basadas en la Biblia y las enseñanzas de Jesucristo. Te ofrezco guía práctica, versículos relevantes y sabiduría bíblica para cualquier situación que enfrentes en tu vida cristiana.`;
     
-    if (integrationDescription) {
-      personalizedExplanation = `${integrationDescription.substring(0, 200)}${integrationDescription.length > 200 ? '...' : ''}`;
-    } else if (botBehavior) {
-      personalizedExplanation = `${botBehavior.substring(0, 200)}${botBehavior.length > 200 ? '...' : ''}`;
+    if (integrationDescription && integrationDescription.toLowerCase().includes('espiritual')) {
+      personalizedExplanation = `${integrationDescription.substring(0, 300)}${integrationDescription.length > 300 ? '...' : ''}`;
+    } else if (botBehavior && botBehavior.toLowerCase().includes('bíblic')) {
+      personalizedExplanation = `${botBehavior.substring(0, 300)}${botBehavior.length > 300 ? '...' : ''}`;
     }
     
     const authContainer = document.createElement('div');
