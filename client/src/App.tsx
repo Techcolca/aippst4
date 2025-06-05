@@ -15,6 +15,11 @@ import GetStarted from "@/pages/get-started";
 import Documentation from "@/pages/docs";
 import FormsGuide from "@/pages/forms-guide";
 import Pricing from "@/pages/pricing";
+import About from "@/pages/about";
+import Contact from "@/pages/contact";
+import Privacy from "@/pages/privacy";
+import Terms from "@/pages/terms";
+import Help from "@/pages/help";
 import Checkout from "@/pages/checkout";
 import SubscriptionSuccess from "@/pages/subscription-success";
 import SubscriptionCancel from "@/pages/subscription-cancel";
@@ -49,6 +54,11 @@ function Router() {
       <Route path="/forms-guide" component={FormsGuide} />
       <Route path="/docs" component={Documentation} />
       <Route path="/pricing" component={Pricing} />
+      <Route path="/about" component={About} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/help" component={Help} />
       <Route path="/checkout/:planId" component={Checkout} />
       <Route path="/dashboard/subscription/success" component={SubscriptionSuccess} />
       <Route path="/dashboard/subscription/cancel" component={SubscriptionCancel} />
