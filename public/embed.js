@@ -2534,15 +2534,15 @@ Contenido: [Error al extraer contenido detallado]
       
       .aipi-auth-explanation h3 {
         margin: 0 0 15px 0;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: 600;
         color: #1f2937;
       }
       
       .aipi-explanation-text {
         margin: 0 0 20px 0;
-        font-size: 14px;
-        line-height: 1.5;
+        font-size: 16px;
+        line-height: 1.6;
         color: #4b5563;
       }
       
@@ -2557,7 +2557,7 @@ Contenido: [Error al extraer contenido detallado]
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 13px;
+        font-size: 15px;
         color: #374151;
         text-align: left;
       }
