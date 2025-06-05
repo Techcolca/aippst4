@@ -460,3 +460,25 @@ export const insertCalendarTokenSchema = createInsertSchema(calendarTokens).pick
 
 export type CalendarToken = typeof calendarTokens.$inferSelect;
 export type InsertCalendarToken = z.infer<typeof insertCalendarTokenSchema>;
+
+// Tabla para mensajes de bienvenida rotativos
+export const welcomeMessages = pgTable("welcome_messages", {
+  id: serial("id").primaryKey(),
+  messageText: text("message_text").notNull(),
+  messageType: text("message_type").notNull(), // "welcome", "automation", "commercial"
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at").notNull(),
+  orderIndex: integer("order_index").notNull(), // Para ordenar los mensajes 1-7
+});
+
+export const insertWelcomeMessageSchema = createInsertSchema(welcomeMessages).pick({
+  messageText: true,
+  messageType: true,
+  isActive: true,
+  expiresAt: true,
+  orderIndex: true,
+});
+
+export type WelcomeMessage = typeof welcomeMessages.$inferSelect;
+export type InsertWelcomeMessage = z.infer<typeof insertWelcomeMessageSchema>;
