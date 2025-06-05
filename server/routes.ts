@@ -2527,7 +2527,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const botConfig = {
         assistantName: integration.name, // Use integration name
         defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-        conversationStyle: integration.botBehavior // Use integration's specific bot behavior
+        conversationStyle: integration.botBehavior, // Use integration's specific bot behavior
+        description: integration.description,
+        isWidget: true // Marca este bot como widget para aplicar restricciones
       };
       
       console.log('AIPPS Debug: Integration-specific bot configuration prepared for AI:', {
