@@ -325,7 +325,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         path: "/",
       });
       
-      console.log("Registration successful for user:", user.username);
+      console.log("Registration successful");
       console.log("Token created:", token.substring(0, 20) + "...");
       
       // Return user without password and include token
@@ -373,8 +373,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         path: "/",
       });
       
-      console.log("Login successful for user:", user.username);
-      console.log("Token created:", token);
+      console.log("Login successful");
+      console.log("Token created successfully");
       
       // Return user without password and también incluir el token en la respuesta
       const { password: _, ...userWithoutPassword } = user;
@@ -415,8 +415,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      
-      console.log("Usuario autenticado encontrado:", user.username);
       
       // Return user without password
       const { password, ...userWithoutPassword } = user;
@@ -471,7 +469,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Sort by creation date (newest first)
         userConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         
-        console.log(`AIPPS Debug: Fullscreen widget conversations for user ${decoded.userId}:`, userConversations.length);
+        console.log(`AIPPS Debug: Fullscreen widget conversations loaded:`, userConversations.length);
         
         res.json(userConversations);
       } catch (error) {
@@ -851,7 +849,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/integrations", verifyToken, upload.array('documents'), async (req, res) => {
     try {
       console.log("Create integration request body:", req.body);
-      console.log("User ID from token:", req.userId);
+      // User authenticated successfully
       
       // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
       const isPablo = req.userId === 1; // ID del usuario Pablo
