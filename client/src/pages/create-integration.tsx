@@ -180,11 +180,31 @@ export default function CreateIntegration() {
         }),
       });
       
+      // Verificar content-type para asegurar que es JSON
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        // Si no es JSON, leer como texto para debug
+        const textResponse = await response.text();
+        console.error("Respuesta no-JSON recibida:", textResponse.substring(0, 200));
+        throw new Error("El servidor devolvió una respuesta inválida. Verifica la configuración.");
+      }
+      
       if (!response.ok) {
-        throw new Error("Error al extraer el contenido");
+        let errorMessage = "Error al extraer el contenido";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          // Si no se puede parsear el error como JSON, usar mensaje genérico
+        }
+        throw new Error(errorMessage);
       }
       
       const data = await response.json();
+      
+      if (!data.success) {
+        throw new Error(data.message || "Error en la extracción del contenido");
+      }
       
       setExtractedContent(data.savedContent.map((content: any) => ({
         url: content.url,
@@ -199,9 +219,10 @@ export default function CreateIntegration() {
       return true;
     } catch (error) {
       console.error("Error en extracción:", error);
+      const errorMessage = error instanceof Error ? error.message : "Ocurrió un error al procesar el sitio";
       toast({
         title: "Error en extracción",
-        description: "Ocurrió un error al procesar el sitio",
+        description: errorMessage,
         variant: "destructive",
       });
       return false;

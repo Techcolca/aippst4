@@ -1350,6 +1350,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // ================ Site Content Routes ================
+  // Ruta para extracción de contenido del sitio (alias de scrape)
+  app.post("/api/site-content/extract", verifyToken, async (req, res) => {
+    try {
+      const { url, integrationId, maxPages } = req.body;
+      
+      if (!url || !integrationId) {
+        return res.status(400).json({ 
+          success: false,
+          message: "URL and integrationId are required" 
+        });
+      }
+      
+      // Verificar que la integración existe y pertenece al usuario
+      const integration = await storage.getIntegration(parseInt(integrationId));
+      if (!integration) {
+        return res.status(404).json({ 
+          success: false,
+          message: "Integration not found" 
+        });
+      }
+      
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ 
+          success: false,
+          message: "Unauthorized" 
+        });
+      }
+      
+      console.log(`Iniciando extracción de contenido: ${url} para integrationId: ${integrationId}`);
+      
+      // Realizar el scraping
+      const scrapedData = await webscraper.scrapeSite(url, maxPages || 5);
+      
+      // Guardar el contenido extraído en la base de datos
+      const savedContent = [];
+      
+      for (const pageContent of scrapedData.pages) {
+        // Verificar si ya existe contenido para esta URL
+        const existingContent = await storage.getSiteContentByUrl(integration.id, pageContent.url);
+        
+        if (existingContent) {
+          // Actualizar contenido existente
+          const updatedContent = await storage.updateSiteContent(existingContent.id, {
+            content: pageContent.content,
+            title: pageContent.title,
+            lastUpdated: new Date()
+          });
+          savedContent.push(updatedContent);
+        } else {
+          // Crear nuevo contenido
+          const newContent = await storage.createSiteContent({
+            url: pageContent.url,
+            content: pageContent.content,
+            title: pageContent.title,
+            integrationId: integration.id
+          });
+          savedContent.push(newContent);
+        }
+      }
+      
+      // Asegurar que reportamos al menos 1 página si tenemos contenido
+      const reportedPageCount = scrapedData.pagesProcessed > 0 ? 
+                               scrapedData.pagesProcessed : 
+                               (savedContent.length > 0 ? savedContent.length : 1);
+                               
+      res.json({
+        success: true,
+        message: "Extracción completada con éxito",
+        pagesProcessed: reportedPageCount,
+        savedContent
+      });
+    } catch (error) {
+      console.error("Error en extracción de contenido:", error);
+      res.status(500).json({ 
+        success: false,
+        message: "Error durante la extracción del contenido del sitio", 
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
   // Ruta para scraping de sitio web
   app.post("/api/scrape", verifyToken, async (req, res) => {
     try {
