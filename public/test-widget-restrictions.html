@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Widget Restrictions - AIPPS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .question-example {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Test de Restricciones del Widget AIPPS</h1>
+        <p>Esta página permite probar las nuevas restricciones implementadas en los widgets de AIPPS.</p>
+        
+        <h3>Preguntas que DEBE responder (sobre el bot específico):</h3>
+        <div class="question-example">• "¿Cuál es tu descripción?"</div>
+        <div class="question-example">• "¿Cuál es tu mensaje de bienvenida?"</div>
+        <div class="question-example">• "¿Cómo es tu comportamiento configurado?"</div>
+        <div class="question-example">• "¿Qué tipo de asistente eres?"</div>
+        
+        <h3>Preguntas que NO DEBE responder (temas generales):</h3>
+        <div class="question-example">• "¿Qué es la inteligencia artificial?"</div>
+        <div class="question-example">• "¿Cómo está el clima hoy?"</div>
+        <div class="question-example">• "¿Qué es mejor, Python o JavaScript?"</div>
+        <div class="question-example">• "¿Puedes ayudarme con matemáticas?"</div>
+        
+        <div style="margin: 20px 0;">
+            <button class="test-button" onclick="testValidQuestion()">Probar Pregunta Válida</button>
+            <button class="test-button" onclick="testInvalidQuestion()">Probar Pregunta Inválida</button>
+            <button class="test-button" onclick="activateWidget()">Activar Widget</button>
+        </div>
+        
+        <div id="testResults" class="test-results" style="display: none;">
+            <h4>Resultados del Test:</h4>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Simular activación del widget con la API key de prueba
+        function activateWidget() {
+            // Insertar el script del widget embed
+            const script = document.createElement('script');
+            script.src = './embed.js';
+            script.setAttribute('data-api-key', '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f');
+            script.setAttribute('data-position', 'bottom-right');
+            script.setAttribute('data-theme-color', '#007bff');
+            document.head.appendChild(script);
+            
+            showResult('Widget activado. Debería aparecer en la esquina inferior derecha.');
+        }
+        
+        function testValidQuestion() {
+            showResult('Pregunta de prueba: "¿Cuál es tu descripción?" - El widget DEBE responder con información específica del bot.');
+        }
+        
+        function testInvalidQuestion() {
+            showResult('Pregunta de prueba: "¿Qué es la inteligencia artificial?" - El widget DEBE rechazar esta pregunta y sugerir contactar al propietario del sitio.');
+        }
+        
+        function showResult(message) {
+            const resultsDiv = document.getElementById('testResults');
+            const contentDiv = document.getElementById('resultContent');
+            contentDiv.innerHTML = message;
+            resultsDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

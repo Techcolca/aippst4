@@ -2692,7 +2692,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const botConfig = {
         assistantName: integration.name,
         defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-        conversationStyle: integration.botBehavior
+        conversationStyle: integration.botBehavior,
+        description: integration.description,
+        isWidget: true // Marca este bot como widget para aplicar restricciones
       };
       
       console.log('AIPPS Debug: Sending message to specific conversation:', {
@@ -2902,12 +2904,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // ALWAYS use detected language, ignore any external language parameter
         const responseLanguage = detectedLanguage;
         
-        // Generate AI response with detected language support
+        // Prepare bot configuration for widget with restrictions
+        const userSettings = await storage.getSettings(integration.userId);
+        const botConfig = {
+          assistantName: integration.name,
+          defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
+          conversationStyle: integration.botBehavior,
+          description: integration.description,
+          isWidget: true // Marca este bot como widget para aplicar restricciones
+        };
+        
+        // Generate AI response with detected language support and widget restrictions
         console.log(`Generating response in language: ${responseLanguage}`);
         const completion = await generateChatCompletion(
           messages.map(msg => ({ role: msg.role, content: msg.content || '' })),
           context,
-          responseLanguage
+          responseLanguage,
+          botConfig
         );
         
         // Save AI response

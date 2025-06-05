@@ -10,8 +10,8 @@ const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 interface BotConfig {
   assistantName?: string;
   defaultGreeting?: string;
-  conversationStyle?: string;
-  description?: string;
+  conversationStyle?: string | null;
+  description?: string | null;
   isWidget?: boolean;
 }
 
