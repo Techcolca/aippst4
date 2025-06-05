@@ -33,6 +33,9 @@
   let pageTitle = "";
   let currentTextIndex = 0;
   let textRotationInterval = null;
+  let welcomeMessages = [];
+  let welcomeMessageIndex = 0;
+  let welcomeMessageInterval = null;
   
   // Fullscreen auth variables
   let isAuthenticated = false;
@@ -172,15 +175,21 @@
     });
 
     // Load widget configuration from server
-    loadWidgetConfig().then(() => {
+    loadWidgetConfig().then(async () => {
       // Load fonts
       loadFont();
+
+      // Load welcome messages for rotation
+      await loadWelcomeMessages();
 
       // Create widget DOM elements AFTER loading config
       createWidgetDOM();
 
       // Update button text with integration name
       updateButtonText();
+
+      // Start welcome message rotation
+      startWelcomeMessageRotation();
 
       // Attach event listeners
       attachEventListeners();
@@ -535,6 +544,84 @@ Contenido: [Error al extraer contenido detallado]
     };
 
     document.head.appendChild(fontLink);
+  }
+
+  // Load welcome messages from server API
+  async function loadWelcomeMessages() {
+    try {
+      const response = await fetch(`${config.serverUrl}/api/welcome-messages`);
+      if (response.ok) {
+        welcomeMessages = await response.json();
+        console.log('AIPPS Debug: Mensajes de bienvenida cargados:', welcomeMessages.length);
+      } else {
+        // Use default messages if API fails
+        welcomeMessages = [
+          {
+            message_text: "Bienvenido a AIPPS - La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
+            message_type: "welcome",
+            order_index: 1
+          },
+          {
+            message_text: "Automatiza tu atención al cliente con IA avanzada - Respuestas inteligentes 24/7 sin intervención manual",
+            message_type: "automation",
+            order_index: 2
+          }
+        ];
+      }
+    } catch (error) {
+      console.error('Error loading welcome messages:', error);
+      // Use default messages on error
+      welcomeMessages = [
+        {
+          message_text: "Bienvenido a AIPPS - La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
+          message_type: "welcome",
+          order_index: 1
+        },
+        {
+          message_text: "Automatiza tu atención al cliente con IA avanzada - Respuestas inteligentes 24/7 sin intervención manual",
+          message_type: "automation",
+          order_index: 2
+        }
+      ];
+    }
+  }
+
+  // Start welcome message rotation
+  function startWelcomeMessageRotation() {
+    if (welcomeMessages.length === 0) return;
+
+    // Clear any existing interval
+    if (welcomeMessageInterval) {
+      clearInterval(welcomeMessageInterval);
+    }
+
+    // Set initial message
+    updateWelcomeMessage();
+
+    // Start rotation every 7 seconds
+    welcomeMessageInterval = setInterval(() => {
+      welcomeMessageIndex = (welcomeMessageIndex + 1) % welcomeMessages.length;
+      updateWelcomeMessage();
+    }, 7000);
+
+    console.log('AIPPS Debug: Rotación de mensajes de bienvenida iniciada - cada 7 segundos');
+  }
+
+  // Update welcome message in the button
+  function updateWelcomeMessage() {
+    if (welcomeMessages.length === 0) return;
+
+    const currentMessage = welcomeMessages[welcomeMessageIndex];
+    if (!currentMessage) return;
+
+    const toggleButton = document.getElementById('aipi-toggle-button');
+    if (toggleButton) {
+      const messageElement = toggleButton.querySelector('.aipi-message-text');
+      if (messageElement) {
+        messageElement.textContent = currentMessage.message_text;
+        console.log('AIPPS Debug: Mensaje actualizado:', currentMessage.message_text.substring(0, 50) + '...');
+      }
+    }
   }
 
   // Create widget DOM structure

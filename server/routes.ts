@@ -5702,5 +5702,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // API para mensajes de bienvenida rotativos
+  app.get("/api/welcome-messages", async (req, res) => {
+    try {
+      const { Pool } = await import("pg");
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+      });
+
+      // Obtener mensajes activos y no expirados
+      const result = await pool.query(`
+        SELECT message_text, message_type, order_index 
+        FROM welcome_messages 
+        WHERE is_active = true AND expires_at > NOW()
+        ORDER BY order_index ASC
+      `);
+
+      await pool.end();
+
+      if (result.rows.length === 0) {
+        // Si no hay mensajes válidos, devolver mensajes por defecto
+        const defaultMessages = [
+          {
+            message_text: "Bienvenido a AIPPS - La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
+            message_type: "welcome",
+            order_index: 1
+          },
+          {
+            message_text: "Automatiza tu atención al cliente con IA avanzada - Respuestas inteligentes 24/7 sin intervención manual",
+            message_type: "automation",
+            order_index: 2
+          }
+        ];
+        return res.json(defaultMessages);
+      }
+
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Error al obtener mensajes de bienvenida:", error);
+      res.status(500).json({ message: "Error al obtener mensajes de bienvenida" });
+    }
+  });
+
   return httpServer;
 }
