@@ -549,11 +549,15 @@ Contenido: [Error al extraer contenido detallado]
   // Load welcome messages from server API
   async function loadWelcomeMessages() {
     try {
+      console.log('AIPPS Debug: Cargando mensajes desde:', `${config.serverUrl}/api/welcome-messages`);
       const response = await fetch(`${config.serverUrl}/api/welcome-messages`);
+      console.log('AIPPS Debug: Respuesta recibida:', response.status);
+      
       if (response.ok) {
         welcomeMessages = await response.json();
-        console.log('AIPPS Debug: Mensajes de bienvenida cargados:', welcomeMessages.length);
+        console.log('AIPPS Debug: Mensajes de bienvenida cargados:', welcomeMessages.length, welcomeMessages);
       } else {
+        console.log('AIPPS Debug: Error en respuesta, usando mensajes por defecto');
         // Use default messages if API fails
         welcomeMessages = [
           {
@@ -569,7 +573,7 @@ Contenido: [Error al extraer contenido detallado]
         ];
       }
     } catch (error) {
-      console.error('Error loading welcome messages:', error);
+      console.error('AIPPS Debug: Error loading welcome messages:', error);
       // Use default messages on error
       welcomeMessages = [
         {
@@ -588,19 +592,27 @@ Contenido: [Error al extraer contenido detallado]
 
   // Start welcome message rotation
   function startWelcomeMessageRotation() {
-    if (welcomeMessages.length === 0) return;
+    console.log('AIPPS Debug: Intentando iniciar rotación, mensajes disponibles:', welcomeMessages.length);
+    
+    if (welcomeMessages.length === 0) {
+      console.log('AIPPS Debug: No hay mensajes disponibles para rotar');
+      return;
+    }
 
     // Clear any existing interval
     if (welcomeMessageInterval) {
+      console.log('AIPPS Debug: Limpiando intervalo anterior');
       clearInterval(welcomeMessageInterval);
     }
 
     // Set initial message
+    console.log('AIPPS Debug: Configurando mensaje inicial');
     updateWelcomeMessage();
 
     // Start rotation every 7 seconds
     welcomeMessageInterval = setInterval(() => {
       welcomeMessageIndex = (welcomeMessageIndex + 1) % welcomeMessages.length;
+      console.log('AIPPS Debug: Rotando a mensaje índice:', welcomeMessageIndex);
       updateWelcomeMessage();
     }, 7000);
 
