@@ -582,28 +582,28 @@ export default function Analytics() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Promedio de mensajes</h3>
-                      <p className="text-2xl font-bold mt-1">5.3</p>
-                      <p className="text-xs text-gray-500 mt-1">mensajes por conversación</p>
+                    <div className="p-4 backdrop-blur-sm bg-white/70 dark:bg-gray-900/70 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Promedio de mensajes</h3>
+                      <p className="text-2xl font-bold mt-1 card-text-enhance">5.3</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">mensajes por conversación</p>
                     </div>
                     
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Duración promedio</h3>
-                      <p className="text-2xl font-bold mt-1">4m 12s</p>
-                      <p className="text-xs text-gray-500 mt-1">tiempo por conversación</p>
+                    <div className="p-4 backdrop-blur-sm bg-white/70 dark:bg-gray-900/70 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Duración promedio</h3>
+                      <p className="text-2xl font-bold mt-1 card-text-enhance">4m 12s</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">tiempo por conversación</p>
                     </div>
                     
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Horario pico</h3>
-                      <p className="text-2xl font-bold mt-1">14:00 - 16:00</p>
-                      <p className="text-xs text-gray-500 mt-1">mayor actividad</p>
+                    <div className="p-4 backdrop-blur-sm bg-white/70 dark:bg-gray-900/70 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Horario pico</h3>
+                      <p className="text-2xl font-bold mt-1 card-text-enhance">14:00 - 16:00</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">mayor actividad</p>
                     </div>
                     
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Dispositivos</h3>
-                      <p className="text-2xl font-bold mt-1">68% / 32%</p>
-                      <p className="text-xs text-gray-500 mt-1">móvil / escritorio</p>
+                    <div className="p-4 backdrop-blur-sm bg-white/70 dark:bg-gray-900/70 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Dispositivos</h3>
+                      <p className="text-2xl font-bold mt-1 card-text-enhance">68% / 32%</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">móvil / escritorio</p>
                     </div>
                   </div>
                 </CardContent>

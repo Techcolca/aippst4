@@ -80,4 +80,13 @@
     z-index: 1;
     background: transparent;
   }
+
+  /* Mejorar legibilidad del texto en tarjetas transparentes */
+  .card-text-enhance {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .card-text-enhance {
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+  }
 }
