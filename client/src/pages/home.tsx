@@ -78,7 +78,7 @@ export default function Home() {
                   {t("tagline")}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="bg-primary-600 hover:bg-primary-700" asChild>
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-primary-600 dark:hover:bg-primary-700 border-0" asChild>
                     <Link href="/get-started">{t("getStarted")}</Link>
                   </Button>
                   
