@@ -1,6 +1,8 @@
 import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+  const { t } = useTranslation();
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 mt-auto">
       <div className="container mx-auto px-4">
@@ -8,68 +10,68 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AIPPS</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Plataforma de inteligencia artificial para integrar capacidades de conversación avanzadas en tu sitio web.
+              {t('footer.company_description')}
             </p>
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Producto</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('footer.product')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/#features" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Características
+                  {t('footer.features')}
                 </Link>
               </li>
               <li>
                 <Link href="/pricing" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Precios
+                  {t('footer.pricing')}
                 </Link>
               </li>
               <li>
                 <Link href="/docs" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Documentación
+                  {t('footer.documentation')}
                 </Link>
               </li>
               <li>
                 <Link href="/get-started" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Comenzar
+                  {t('footer.get_started')}
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Empresa</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('footer.company')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/about" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Sobre nosotros
+                  {t('footer.about_us')}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Contacto
+                  {t('footer.contact')}
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Política de privacidad
+                  {t('footer.privacy_policy')}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Términos de servicio
+                  {t('footer.terms_of_service')}
                 </Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Soporte</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('footer.support')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/help" className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 text-sm">
-                  Centro de ayuda
+                  {t('footer.help_center')}
                 </Link>
               </li>
               <li>
@@ -83,7 +85,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-600 dark:text-gray-300 text-sm">
-            &copy; {new Date().getFullYear()} AIPPS. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} AIPPS. {t('footer.all_rights_reserved')}
           </p>
           
           <div className="flex space-x-4 mt-4 md:mt-0">

@@ -530,5 +530,19 @@
   "conversation_analysis": "Análisis de Conversaciones",
   "integration_performance": "Rendimiento de Integraciones",
   "advanced_analysis": "Análisis Avanzado",
-  "advanced_metrics": "Métricas adicionales para comprender mejor el comportamiento de tus integraciones"
+  "advanced_metrics": "Métricas adicionales para comprender mejor el comportamiento de tus integraciones",
+  "footer.company_description": "Plataforma de inteligencia artificial para integrar capacidades de conversación avanzadas en tu sitio web.",
+  "footer.product": "Producto",
+  "footer.features": "Características",
+  "footer.pricing": "Precios",
+  "footer.documentation": "Documentación",
+  "footer.get_started": "Comenzar",
+  "footer.company": "Empresa",
+  "footer.about_us": "Sobre nosotros",
+  "footer.contact": "Contacto",
+  "footer.privacy_policy": "Política de privacidad",
+  "footer.terms_of_service": "Términos de servicio",
+  "footer.support": "Soporte",
+  "footer.help_center": "Centro de ayuda",
+  "footer.all_rights_reserved": "Todos los derechos reservados."
 }
