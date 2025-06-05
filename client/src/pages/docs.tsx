@@ -146,6 +146,17 @@ export default function Documentation() {
                         <span>{t("documentation.form_creation")}</span>
                       </div>
                     </a>
+                    
+                    <a 
+                      href="#forms" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("forms"); }}
+                      className={`block px-3 py-2 rounded-md ${activeTab === "forms" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <FileText className="w-5 h-5 mr-2" />
+                        <span>Formularios</span>
+                      </div>
+                    </a>
                     <a 
                       href="#education" 
                       onClick={(e) => { e.preventDefault(); setActiveTab("education"); }}
@@ -499,12 +510,16 @@ export default function Documentation() {
                             </div>
                             <p className="mb-3">
                               Una experiencia inmersiva similar a ChatGPT que ocupa toda la pantalla, ideal para interacciones
-                              más profundas y extensas. Perfecto para sitios que ofrecen el chat como servicio principal.
+                              más profundas y extensas. Incluye sistema completo de autenticación para usuarios registrados.
                             </p>
                             <h4 className="font-semibold mt-4 mb-2">Características:</h4>
                             <ul className="list-disc pl-5 space-y-1">
-                              <li>Historial de conversaciones persistente para los usuarios</li>
-                              <li>Presentación de sugerencias y temas frecuentes</li>
+                              <li>Sistema de registro y login completo para usuarios</li>
+                              <li>Historial personal de conversaciones con timestamps</li>
+                              <li>Generación automática de títulos descriptivos</li>
+                              <li>Gestión completa de conversaciones (crear, eliminar)</li>
+                              <li>Información de usuario personalizada</li>
+                              <li>Interfaz estilo ChatGPT con sidebar de conversaciones</li>
                               <li>Soporte para cargas y descargas de archivos</li>
                               <li>Personalización completa de la interfaz con tu imagen de marca</li>
                             </ul>
@@ -1578,6 +1593,103 @@ export default function Documentation() {
                         <div className="mt-8">
                           <Button size="lg" asChild>
                             <Link href="/get-started">{t("implementation.start_button")}</Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {activeTab === "forms" && (
+                  <div id="forms" className="space-y-8">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Formularios Integrados</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p>
+                          AIPPS ofrece un sistema completo de formularios que se integra perfectamente con tu chatbot,
+                          permitiendo capturar información específica de usuarios y leads de manera inteligente y contextual.
+                        </p>
+                        
+                        <h3>Tipos de Formularios Disponibles</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                          <div className="border border-primary-200 dark:border-primary-800 rounded-lg p-5 bg-primary-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <Users className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-2" />
+                              <h4 className="text-lg font-bold text-primary-700 dark:text-primary-400">Formularios de Leads</h4>
+                            </div>
+                            <p className="mb-3">
+                              Captura información de contacto de visitantes interesados en tus servicios o programas educativos.
+                            </p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm">
+                              <li>Información de contacto básica</li>
+                              <li>Intereses específicos del usuario</li>
+                              <li>Seguimiento automático por email</li>
+                              <li>Integración con CRM</li>
+                            </ul>
+                          </div>
+                          
+                          <div className="border border-primary-200 dark:border-primary-800 rounded-lg p-5 bg-primary-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <FileText className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-2" />
+                              <h4 className="text-lg font-bold text-primary-700 dark:text-primary-400">Formularios de Registro</h4>
+                            </div>
+                            <p className="mb-3">
+                              Permite a los usuarios registrarse directamente desde el chat para acceder a funcionalidades avanzadas.
+                            </p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm">
+                              <li>Registro de usuarios con validación</li>
+                              <li>Autenticación segura</li>
+                              <li>Perfiles personalizados</li>
+                              <li>Historial de conversaciones</li>
+                            </ul>
+                          </div>
+                        </div>
+                        
+                        <h3>Integración con Widget de Pantalla Completa</h3>
+                        <p>
+                          Los formularios se integran especialmente bien con el widget de pantalla completa, que incluye
+                          un sistema completo de autenticación de usuarios:
+                        </p>
+                        
+                        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 my-4">
+                          <h4 className="font-semibold text-lg mb-3">Funcionalidades de Autenticación:</h4>
+                          <ul className="list-disc pl-5 space-y-2">
+                            <li><strong>Sistema de Registro:</strong> Los usuarios pueden crear cuentas personalizadas directamente desde el chat</li>
+                            <li><strong>Login Seguro:</strong> Autenticación con tokens JWT para sesiones seguras</li>
+                            <li><strong>Historial Personal:</strong> Cada usuario tiene acceso a su historial completo de conversaciones</li>
+                            <li><strong>Gestión de Conversaciones:</strong> Crear, eliminar y organizar conversaciones con títulos automáticos</li>
+                            <li><strong>Información Personalizada:</strong> Perfil de usuario con timestamps y datos relevantes</li>
+                          </ul>
+                        </div>
+                        
+                        <h3>Configuración y Personalización</h3>
+                        <p>
+                          Los formularios pueden ser completamente personalizados para adaptarse a las necesidades específicas
+                          de tu organización:
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
+                          <div className="bg-white dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                            <h5 className="font-semibold mb-2">Campos Personalizados</h5>
+                            <p className="text-sm">Agrega campos específicos según tus necesidades de negocio</p>
+                          </div>
+                          
+                          <div className="bg-white dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                            <h5 className="font-semibold mb-2">Validación Avanzada</h5>
+                            <p className="text-sm">Reglas de validación personalizadas para garantizar calidad de datos</p>
+                          </div>
+                          
+                          <div className="bg-white dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                            <h5 className="font-semibold mb-2">Integración API</h5>
+                            <p className="text-sm">Conecta con sistemas externos y CRMs automáticamente</p>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-8">
+                          <Button size="lg" asChild>
+                            <Link href="/get-started">Configurar Formularios</Link>
                           </Button>
                         </div>
                       </div>
