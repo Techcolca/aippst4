@@ -1,6 +1,8 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import path from "path";
+import { fileURLToPath } from 'url';
 
 const app = express();
 app.use(express.json());
@@ -53,6 +55,15 @@ app.use((req, res, next) => {
   });
 
   next();
+});
+
+// Obtener el equivalente a __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Servir archivo de prueba del widget
+app.get('/test-widget.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/test-widget.html'));
 });
 
 (async () => {
