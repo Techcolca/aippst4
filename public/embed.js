@@ -3490,14 +3490,14 @@ Contenido: [Error al extraer contenido detallado]
     // 3. Try localStorage auth_token
     let token = localStorage.getItem('auth_token');
     if (token) {
-      console.log('AIPPS Debug: Token encontrado en localStorage (auth_token)');
+      console.log('AIPPS Debug: Autenticación encontrada');
       return token;
     }
     
     // 3b. Try localStorage aipi_auth_token
     token = localStorage.getItem('aipi_auth_token');
     if (token) {
-      console.log('AIPPS Debug: Token encontrado en localStorage (aipi_auth_token)');
+      console.log('AIPPS Debug: Autenticación alternativa encontrada');
       return token;
     }
     
