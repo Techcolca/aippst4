@@ -703,5 +703,24 @@
   "help.contact_support.title": "Can't find what you're looking for?",
   "help.contact_support.description": "Our support team is here to help you.",
   "help.contact_support.contact_button": "Contact Support",
-  "help.contact_support.email_button": "Send Email"
+  "help.contact_support.email_button": "Send Email",
+  
+  "documentation.download_pdf": "Download PDF",
+  "documentation.generated_on": "Generated on",
+  "documentation.language": "Language",
+  "documentation.table_of_contents": "Table of Contents",
+  "documentation.page": "Page",
+  "documentation.of": "of",
+  "documentation.overview_content": "AIPPS is an advanced AI-powered platform that enables websites to integrate intelligent conversational experiences. Our system provides contextual understanding, document training capabilities, and comprehensive analytics to enhance user engagement and support.",
+  "documentation.features_content": "Our platform offers a comprehensive suite of features including widget integration, contextual understanding, document training, lead capture, analytics and reporting, task automation, and form creation capabilities.",
+  "documentation.widget_integration_content": "Easily integrate our AI widget into any website using a simple JavaScript snippet. The widget supports both bubble and fullscreen modes, with customizable positioning and styling options.",
+  "documentation.contextual_understanding_content": "Our AI system understands the context of conversations and provides relevant responses based on your website content and uploaded training materials.",
+  "documentation.document_training_content": "Train your AI assistant by uploading PDFs, DOCX files, and other documents. The system will process and learn from this content to provide accurate, relevant responses.",
+  "documentation.lead_capture_content": "Automatically capture visitor information during conversations and integrate with your CRM systems for effective lead management and follow-up.",
+  "documentation.analytics_content": "Access detailed analytics and reports including conversation metrics, user engagement data, resolution rates, and performance insights.",
+  "documentation.task_automation_content": "Set up automated workflows and tasks that trigger based on conversation events and user interactions.",
+  "documentation.form_creation_content": "Create custom forms for lead capture, surveys, and data collection with our intuitive form builder.",
+  "documentation.implementation_content": "Implementation is straightforward: copy the provided script tag, paste it into your website's HTML, and the widget will automatically appear and function.",
+  "documentation.api_reference_content": "Access our comprehensive API documentation for advanced integrations, webhooks, and custom implementations.",
+  "documentation.support_content": "Our support team is available to help with implementation, configuration, and troubleshooting. Contact us through the dashboard or email."
 }

@@ -5,15 +5,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Database, Code, Building2, School, Headset, Rocket, BookOpen, 
   MessageSquare, BarChart, Users, Bot, File, FileText, Monitor, Smartphone, 
-  ExternalLink, CheckCircle2, BarChart3, LineChart
+  ExternalLink, CheckCircle2, BarChart3, LineChart, Download
 } from "lucide-react";
+import jsPDF from 'jspdf';
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useTranslation } from "react-i18next";
 
 export default function Documentation() {
   const [activeTab, setActiveTab] = useState("overview");
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   
   // Nuevas secciones para funcionalidades específicas
   const functionalityTabs = [
@@ -26,6 +27,250 @@ export default function Documentation() {
     "form-creation"
   ];
 
+  // Función para generar y descargar la documentación completa en PDF
+  const downloadFullDocumentationPDF = () => {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    let yPosition = 20;
+    const currentLanguage = i18n.language;
+
+    // Función auxiliar para agregar texto con ajuste de línea
+    const addTextWithWrap = (text: string, x: number, y: number, maxWidth: number, fontSize: number = 12) => {
+      doc.setFontSize(fontSize);
+      const lines = doc.splitTextToSize(text, maxWidth);
+      doc.text(lines, x, y);
+      return y + (lines.length * (fontSize * 0.4));
+    };
+
+    // Función auxiliar para verificar si necesita nueva página
+    const checkNewPage = (requiredSpace: number) => {
+      if (yPosition + requiredSpace > 270) {
+        doc.addPage();
+        yPosition = 20;
+        return true;
+      }
+      return false;
+    };
+
+    // Título principal
+    doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t("documentation.title"), pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 20;
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.subtitle"), margin, yPosition, pageWidth - 2 * margin, 14);
+    
+    yPosition += 10;
+    doc.setFontSize(10);
+    doc.text(`${t('documentation.generated_on') || 'Generado el'}: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
+    doc.text(`${t('documentation.language') || 'Idioma'}: ${currentLanguage.toUpperCase()}`, pageWidth / 2, yPosition + 5, { align: 'center' });
+    
+    // Línea separadora
+    yPosition += 15;
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    yPosition += 15;
+
+    // Índice
+    checkNewPage(50);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(t('documentation.table_of_contents') || 'Índice de Contenidos', margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    const tocItems = [
+      `1. ${t("documentation.overview")}`,
+      `2. ${t("documentation.features")}`,
+      `3. ${t("documentation.widget_integration")}`,
+      `4. ${t("documentation.contextual_understanding")}`,
+      `5. ${t("documentation.document_training")}`,
+      `6. ${t("documentation.lead_capture")}`,
+      `7. ${t("documentation.analytics")}`,
+      `8. ${t("documentation.task_automation")}`,
+      `9. ${t("documentation.form_creation")}`,
+      `10. ${t("documentation.implementation")}`,
+      `11. ${t("documentation.api_reference")}`,
+      `12. ${t("documentation.support")}`
+    ];
+
+    tocItems.forEach(item => {
+      if (checkNewPage(8)) return;
+      doc.text(item, margin, yPosition);
+      yPosition += 8;
+    });
+
+    yPosition += 15;
+
+    // 1. Overview
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`1. ${t("documentation.overview")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.overview_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 2. Features
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`2. ${t("documentation.features")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.features_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 3. Widget Integration
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`3. ${t("documentation.widget_integration")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.widget_integration_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 10;
+
+    // Código de ejemplo
+    doc.setFontSize(10);
+    doc.setFont('courier', 'normal');
+    const exampleCode = `<script src="https://your-domain.com/embed.js?key=YOUR_API_KEY" data-widget-type="bubble"></script>`;
+    yPosition = addTextWithWrap(exampleCode, margin, yPosition, pageWidth - 2 * margin, 10);
+    yPosition += 15;
+
+    // 4. Contextual Understanding
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`4. ${t("documentation.contextual_understanding")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.contextual_understanding_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 5. Document Training
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`5. ${t("documentation.document_training")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.document_training_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 6. Lead Capture
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`6. ${t("documentation.lead_capture")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.lead_capture_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 7. Analytics
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`7. ${t("documentation.analytics")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.analytics_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 8. Task Automation
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`8. ${t("documentation.task_automation")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.task_automation_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 9. Form Creation
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`9. ${t("documentation.form_creation")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.form_creation_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 10. Implementation
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`10. ${t("documentation.implementation")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.implementation_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 11. API Reference
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`11. ${t("documentation.api_reference")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.api_reference_content"), margin, yPosition, pageWidth - 2 * margin);
+    yPosition += 15;
+
+    // 12. Support
+    checkNewPage(40);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`12. ${t("documentation.support")}`, margin, yPosition);
+    yPosition += 15;
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addTextWithWrap(t("documentation.support_content"), margin, yPosition, pageWidth - 2 * margin);
+
+    // Pie de página en todas las páginas
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`${t('documentation.page') || 'Página'} ${i} ${t('documentation.of') || 'de'} ${totalPages}`, pageWidth - margin, 285, { align: 'right' });
+      doc.text(`AIPPS - ${t("documentation.title")}`, margin, 285);
+    }
+
+    // Descargar el PDF
+    const fileName = `aipps-documentacion-${currentLanguage}.pdf`;
+    doc.save(fileName);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -33,9 +278,24 @@ export default function Documentation() {
       <main className="flex-grow">
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              {t("documentation.title")}
-            </h1>
+            <div className="flex justify-center items-center mb-6">
+              <div className="flex-1"></div>
+              <div className="flex-1">
+                <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
+                  {t("documentation.title")}
+                </h1>
+              </div>
+              <div className="flex-1 flex justify-end">
+                <Button 
+                  onClick={downloadFullDocumentationPDF}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  {t('documentation.download_pdf') || 'Descargar PDF'}
+                </Button>
+              </div>
+            </div>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               {t("documentation.subtitle")}
             </p>
