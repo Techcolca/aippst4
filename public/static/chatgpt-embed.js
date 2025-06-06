@@ -109,13 +109,22 @@
       const greeting = scriptElement.getAttribute('data-greeting');
       if (greeting) config.greetingMessage = greeting;
       
-      // Cargar datos de integración desde el servidor
-      const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}`);
+      // Cargar datos de integración desde el servidor (sin cache)
+      const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}?t=${Date.now()}`, {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       if (!response.ok) {
         throw new Error(`Error al cargar datos de integración: ${response.status}`);
       }
       
       const data = await response.json();
+      
+      // DEBUG: Log para verificar qué integración se recibe
+      console.log(`CHATGPT-EMBED DEBUG: Clave solicitada: ${config.apiKey}, Integración recibida: ${data.integration?.name} (ID: ${data.integration?.id})`);
       
       // Sobrescribir configuración con datos del servidor
       if (data.integration) {
@@ -127,11 +136,15 @@
           config.position = data.integration.position;
         }
         
+        // Almacenar nombre de la integración para verificación
+        config.integrationName = data.integration.name;
+        config.integrationId = data.integration.id;
+        
         // El botBehavior no debe usarse como mensaje de bienvenida
         // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
       
-      console.log('AIPI Widget: Configuración cargada correctamente');
+      console.log(`AIPI Widget: Configuración final aplicada - Integración: ${config.integrationName} (ID: ${config.integrationId}), Color: ${config.mainColor}, URL: ${window.location.href}`);
     } catch (error) {
       console.error('AIPI Widget Error:', error);
       throw new Error('Error al cargar la configuración: ' + error.message);
