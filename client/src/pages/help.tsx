@@ -95,7 +95,7 @@ export default function Help() {
       <Header />
       
       <main className="flex-grow">
-        <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 py-16">
+        <section className="py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
               {t('help.title')}
@@ -120,7 +120,7 @@ export default function Help() {
           </div>
         </section>
 
-        <section className="py-16 bg-white dark:bg-gray-900">
+        <section className="py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Popular Articles */}
             <div className="mb-16">

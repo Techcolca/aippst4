@@ -112,7 +112,7 @@ export default function GetStarted() {
       <Header />
       
       <main className="flex-grow">
-        <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 py-12">
+        <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
               Comienza con AIPI
@@ -123,7 +123,7 @@ export default function GetStarted() {
           </div>
         </section>
         
-        <section className="py-12 bg-white dark:bg-gray-900">
+        <section className="py-12">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Tabs defaultValue="bubble" className="w-full">
               <TabsList className="flex w-full justify-between mb-8">
