@@ -376,10 +376,9 @@ export default function EditIntegration() {
         },
       });
 
-      // Actualizar script de ejemplo
+      // Actualizar script de ejemplo - USANDO EMBED.JS PARA TODOS LOS TIPOS
       const widgetType = integration.widgetType || "bubble";
-      const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}"></script>`);
+      setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}"></script>`);
     }
   }, [integration, form]);
 
@@ -599,7 +598,13 @@ export default function EditIntegration() {
                 <FormItem>
                   <FormLabel>Tipo de integración</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      // Update script example when widget type changes
+                      if (integration?.apiKey) {
+                        setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${value}"></script>`);
+                      }
+                    }}
                     value={field.value}
                   >
                     <FormControl>
