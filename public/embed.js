@@ -214,15 +214,6 @@
 
       const data = await response.json();
 
-      // DEBUG: Log completo de los datos recibidos del servidor
-      console.log(`🔍 EMBED DEBUG: Datos recibidos para clave ${config.apiKey}:`, {
-        integrationId: data.integration?.id,
-        integrationName: data.integration?.name,
-        integrationApiKey: data.integration?.apiKey,
-        requestedApiKey: config.apiKey,
-        url: window.location.href
-      });
-
       // Update config with server settings
       if (data.integration) {
         config.position = data.integration.position || config.position;
@@ -230,9 +221,6 @@
         config.widgetType = data.integration.widgetType || config.widgetType;
         config.ignoredSections = data.integration.ignoredSections || [];
         config.integrationName = data.integration.name || config.assistantName; // Nombre específico de la integración
-        
-        // DEBUG: Confirmar que la configuración se aplicó correctamente
-        console.log(`✅ EMBED DEBUG: Configuración aplicada - Nombre: ${config.integrationName}, Tema: ${config.themeColor}`);
       }
 
       if (data.settings) {
