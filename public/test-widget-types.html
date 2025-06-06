@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Widget Types - AIPPS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .code-block {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a87;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test de Tipos de Widget AIPPS</h1>
+    
+    <div class="section">
+        <h2>Información</h2>
+        <p>Esta página está diseñada para probar que el archivo <code>embed.js</code> funciona correctamente con ambos tipos de widget:</p>
+        <ul>
+            <li><strong>Bubble Widget:</strong> Botón flotante tradicional</li>
+            <li><strong>Fullscreen Widget:</strong> Chat de pantalla completa estilo ChatGPT</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Test 1: Widget Flotante (Bubble)</h2>
+        <p>Este script debería crear un botón flotante en la esquina inferior derecha:</p>
+        <div class="code-block">
+            &lt;script src="/embed.js?key=aipi_web_internal" data-widget-type="bubble"&gt;&lt;/script&gt;
+        </div>
+        <button onclick="loadBubbleWidget()">Cargar Widget Flotante</button>
+        <button onclick="removeBubbleWidget()">Remover Widget Flotante</button>
+    </div>
+
+    <div class="section">
+        <h2>Test 2: Widget Pantalla Completa (Fullscreen)</h2>
+        <p>Este script debería crear un botón que abre un chat de pantalla completa:</p>
+        <div class="code-block">
+            &lt;script src="/embed.js?key=aipi_web_internal" data-widget-type="fullscreen"&gt;&lt;/script&gt;
+        </div>
+        <button onclick="loadFullscreenWidget()">Cargar Widget Pantalla Completa</button>
+        <button onclick="removeFullscreenWidget()">Remover Widget Pantalla Completa</button>
+    </div>
+
+    <div class="section">
+        <h2>Test 3: Widget con Configuración Personalizada</h2>
+        <p>Este script incluye configuración personalizada de color y posición:</p>
+        <div class="code-block">
+            &lt;script src="/embed.js?key=aipi_web_internal" 
+                    data-widget-type="bubble"
+                    data-theme-color="#ff5722"
+                    data-position="bottom-left"
+                    data-title="Asistente Personalizado"&gt;&lt;/script&gt;
+        </div>
+        <button onclick="loadCustomWidget()">Cargar Widget Personalizado</button>
+        <button onclick="removeCustomWidget()">Remover Widget Personalizado</button>
+    </div>
+
+    <div class="section">
+        <h2>Logs de Consola</h2>
+        <p>Abre las herramientas de desarrollador (F12) para ver los logs de la consola y verificar que:</p>
+        <ul>
+            <li>El tipo de widget se detecta correctamente</li>
+            <li>Los parámetros de configuración se aplican</li>
+            <li>No hay errores de JavaScript</li>
+        </ul>
+    </div>
+
+    <script>
+        function loadBubbleWidget() {
+            removeAllWidgets();
+            const script = document.createElement('script');
+            script.src = '/embed.js?key=aipi_web_internal';
+            script.setAttribute('data-widget-type', 'bubble');
+            script.id = 'bubble-widget-script';
+            document.head.appendChild(script);
+            console.log('Bubble widget script loaded');
+        }
+
+        function loadFullscreenWidget() {
+            removeAllWidgets();
+            const script = document.createElement('script');
+            script.src = '/embed.js?key=aipi_web_internal';
+            script.setAttribute('data-widget-type', 'fullscreen');
+            script.id = 'fullscreen-widget-script';
+            document.head.appendChild(script);
+            console.log('Fullscreen widget script loaded');
+        }
+
+        function loadCustomWidget() {
+            removeAllWidgets();
+            const script = document.createElement('script');
+            script.src = '/embed.js?key=aipi_web_internal';
+            script.setAttribute('data-widget-type', 'bubble');
+            script.setAttribute('data-theme-color', '#ff5722');
+            script.setAttribute('data-position', 'bottom-left');
+            script.setAttribute('data-title', 'Asistente Personalizado');
+            script.id = 'custom-widget-script';
+            document.head.appendChild(script);
+            console.log('Custom widget script loaded');
+        }
+
+        function removeBubbleWidget() {
+            const script = document.getElementById('bubble-widget-script');
+            if (script) script.remove();
+            removeWidgetDOM();
+        }
+
+        function removeFullscreenWidget() {
+            const script = document.getElementById('fullscreen-widget-script');
+            if (script) script.remove();
+            removeWidgetDOM();
+        }
+
+        function removeCustomWidget() {
+            const script = document.getElementById('custom-widget-script');
+            if (script) script.remove();
+            removeWidgetDOM();
+        }
+
+        function removeAllWidgets() {
+            // Reset initialization flag
+            window.AIPPS_WIDGET_INITIALIZED = false;
+            
+            // Remove all widget scripts
+            const scripts = document.querySelectorAll('script[id$="-widget-script"]');
+            scripts.forEach(script => script.remove());
+            
+            // Remove widget DOM elements
+            removeWidgetDOM();
+        }
+
+        function removeWidgetDOM() {
+            // Remove main widget container
+            const container = document.getElementById('aipi-widget-container');
+            if (container) container.remove();
+            
+            // Remove fullscreen button
+            const fullscreenBtn = document.getElementById('aipi-fullscreen-button');
+            if (fullscreenBtn) fullscreenBtn.remove();
+            
+            // Remove chat panel
+            const chatPanel = document.getElementById('aipi-chat-panel');
+            if (chatPanel) chatPanel.remove();
+            
+            // Remove any other widget elements
+            const allWidgetElements = document.querySelectorAll('[id^="aipi-"]');
+            allWidgetElements.forEach(el => el.remove());
+            
+            console.log('Widget DOM elements removed');
+        }
+
+        // Show instructions on page load
+        console.log('=== AIPPS Widget Test Page ===');
+        console.log('Use the buttons above to test different widget configurations.');
+        console.log('Check the console logs to verify widget behavior.');
+    </script>
+</body>
+</html>
