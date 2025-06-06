@@ -1,0 +1,19 @@
+JQMIGRATE: Migrate is installed, version 3.4.1
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:30 AIPI Widget: Inicializando...
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:78 AIPI Widget: Clave API cargada - 90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:90 AIPI Widget: URL del servidor desde script - https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:262 AIPI Widget: Elementos creados correctamente
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:276 AIPI Widget: Evento de clic adjuntado al botón de chat
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:347 AIPI Widget: Todos los eventos adjuntados correctamente
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:42 AIPI Widget: Inicializado correctamente
+techcolca.ca/:1 Access to fetch at 'https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/widget/90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853?t=1749220338840' from origin 'https://techcolca.ca' has been blocked by CORS policy: Request header field cache-control is not allowed by Access-Control-Allow-Headers in preflight response.Understand this error
+a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/widget/90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853?t=1749220338840:1 
+            
+            
+           Failed to load resource: net::ERR_FAILEDUnderstand this error
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:149 AIPI Widget Error: TypeError: Failed to fetch
+    at loadConfig (chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:113:30)
+    at HTMLDocument.initialize (chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:34:7)
+loadConfig @ chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:149Understand this error
+chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:150 Uncaught (in promise) Error: Error al cargar la configuración: Failed to fetch
+    at loadConfig (chatgpt-embed.js?key=90fc03af3966bf67f6d9013c106198ec6ddf1ae5ae7b2853:150:13)Understand this error

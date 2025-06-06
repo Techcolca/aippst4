@@ -109,14 +109,8 @@
       const greeting = scriptElement.getAttribute('data-greeting');
       if (greeting) config.greetingMessage = greeting;
       
-      // Cargar datos de integración desde el servidor (sin cache)
-      const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}?t=${Date.now()}`, {
-        cache: 'no-cache',
-        headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        }
-      });
+      // Cargar datos de integración desde el servidor
+      const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}`);
       if (!response.ok) {
         throw new Error(`Error al cargar datos de integración: ${response.status}`);
       }
