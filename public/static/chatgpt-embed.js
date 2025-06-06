@@ -306,6 +306,11 @@
       document.body.appendChild(chatPanel);
       
       console.log('AIPI Widget: Elementos creados correctamente');
+      
+      // Generar sugerencias específicas para esta integración después de crear el DOM
+      setTimeout(() => {
+        generateSuggestedTopics();
+      }, 100);
     } catch (error) {
       console.error('AIPI Widget Error:', error);
       throw new Error('Error al crear los elementos del widget: ' + error.message);
