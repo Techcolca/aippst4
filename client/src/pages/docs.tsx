@@ -1081,7 +1081,7 @@ export default function Documentation() {
 
                 {activeTab === "task-automation" && (
                   <div id="task-automation" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Automatización de Tareas</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -1191,7 +1191,7 @@ export default function Documentation() {
                 
                 {activeTab === "education" && (
                   <div id="education" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <div className="flex items-center mb-4">
                         <School className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.education")}</h2>
@@ -1258,7 +1258,7 @@ export default function Documentation() {
                 
                 {activeTab === "business" && (
                   <div id="business" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <div className="flex items-center mb-4">
                         <Building2 className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.business")}</h2>
@@ -1325,7 +1325,7 @@ export default function Documentation() {
                 
                 {activeTab === "professional" && (
                   <div id="professional" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <div className="flex items-center mb-4">
                         <Headset className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.professional")}</h2>
@@ -1393,7 +1393,7 @@ export default function Documentation() {
 
                 {activeTab === "form-creation" && (
                   <div id="form-creation" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.form_creation")}</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -1516,7 +1516,7 @@ export default function Documentation() {
                 
                 {activeTab === "implementation" && (
                   <div id="implementation" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <div className="flex items-center mb-4">
                         <Code className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.implementation")}</h2>
