@@ -197,14 +197,14 @@ export default function EditIntegration() {
       // Actualizar el script de ejemplo con la API Key
       // El widget puede ser el estándar (embed.js) o el de pantalla completa estilo ChatGPT (chatgpt-embed.js)
       const widgetType = integration.widgetType || "bubble";
-      const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
-      
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}"></script>`)
+      // USANDO EMBED.JS PARA AMBOS TIPOS DE WIDGET
+      setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}"></script>`)
       
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
-        setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->
-<script src="https://api.aipi.example.com/static/chatgpt-embed.js?key=${integration.apiKey}" 
+        setScriptExampleFullscreen(`<!-- Widget pantalla completa usando embed.js -->
+<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" 
+  data-widget-type="fullscreen"
   data-theme-color="${integration.themeColor || '#4f46e5'}"
   data-position="${integration.position || 'bottom-right'}"
   data-title="AIPI Asistente"
@@ -263,14 +263,14 @@ export default function EditIntegration() {
     
     // Actualizar el código de integración inmediatamente
     if (integration?.apiKey) {
-      const widgetType = formData.widgetType || "bubble";
-      const scriptFile = widgetType === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}" data-position="${value}:15px"></script>`);
+      const widgetType = form.getValues('widgetType') || "bubble";
+      setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}" data-position="${value}:15px"></script>`);
       
       if (widgetType === "fullscreen") {
-        setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->
-<script src="${window.location.origin}/static/chatgpt-embed.js?key=${integration.apiKey}" 
-  data-theme-color="${formData.themeColor || '#4f46e5'}"
+        setScriptExampleFullscreen(`<!-- Widget pantalla completa usando embed.js -->
+<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" 
+  data-widget-type="fullscreen"
+  data-theme-color="${form.getValues('themeColor') || '#4f46e5'}"
   data-position="${value}:15px"
   data-title="AIPPS Asistente"
 ></script>`);
@@ -286,14 +286,14 @@ export default function EditIntegration() {
     
     // Actualizar el código de integración inmediatamente
     if (integration?.apiKey) {
-      const scriptFile = value === "fullscreen" ? "static/chatgpt-embed.js" : "embed.js";
-      setScriptExample(`<script src="${window.location.origin}/${scriptFile}?key=${integration.apiKey}"></script>`);
+      setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${value}"></script>`);
       
       if (value === "fullscreen") {
-        setScriptExampleFullscreen(`<!-- Widget pantalla completa estilo ChatGPT -->
-<script src="${window.location.origin}/static/chatgpt-embed.js?key=${integration.apiKey}" 
-  data-theme-color="${formData.themeColor || '#4f46e5'}"
-  data-position="${position}:15px"
+        setScriptExampleFullscreen(`<!-- Widget pantalla completa usando embed.js -->
+<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" 
+  data-widget-type="fullscreen"
+  data-theme-color="${form.getValues('themeColor') || '#4f46e5'}"
+  data-position="${form.getValues('position')}:15px"
   data-title="AIPPS Asistente"
 ></script>`);
       }

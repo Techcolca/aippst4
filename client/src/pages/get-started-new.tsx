@@ -17,10 +17,10 @@ export default function GetStarted() {
   // Estado para las pestañas personalizadas
   const [tabValue, setTabValue] = useState("bubble");
   
-  // URLs para los scripts de integración
+  // URLs para los scripts de integración - USANDO EMBED.JS PARA AMBOS TIPOS
   const baseUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
-  const bubbleWidgetCode = `<script src="${baseUrl}/static/aipi-web-widget.js?key=aipi_web_internal"></script>`;
-  const fullscreenWidgetCode = `<script src="${baseUrl}/static/fullscreen-embed.js?key=aipi_web_internal"></script>`;
+  const bubbleWidgetCode = `<script src="${baseUrl}/embed.js?key=aipi_web_internal" data-widget-type="bubble"></script>`;
+  const fullscreenWidgetCode = `<script src="${baseUrl}/embed.js?key=aipi_web_internal" data-widget-type="fullscreen"></script>`;
   
   // Función para copiar código al portapapeles
   const copyToClipboard = (code: string, type: 'bubble' | 'fullscreen') => {

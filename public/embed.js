@@ -93,12 +93,39 @@
     let scriptSrc = '';
     let foundApiKey = '';
 
-    // Find the embed.js script specifically
+    // Find the embed.js script specifically and extract widget type
     const scripts = document.querySelectorAll('script');
+    let scriptElement = null;
     for (let script of scripts) {
       if (script.src && script.src.includes('embed.js')) {
         scriptSrc = script.src;
+        scriptElement = script;
         break;
+      }
+    }
+    
+    // Extract widget type from data attribute
+    if (scriptElement) {
+      const widgetType = scriptElement.getAttribute('data-widget-type');
+      if (widgetType) {
+        config.widgetType = widgetType;
+        console.log('AIPPS Widget: Tipo de widget detectado:', widgetType);
+      }
+      
+      // Extract other data attributes
+      const themeColor = scriptElement.getAttribute('data-theme-color');
+      if (themeColor) {
+        config.themeColor = themeColor;
+      }
+      
+      const position = scriptElement.getAttribute('data-position');
+      if (position) {
+        config.position = position;
+      }
+      
+      const title = scriptElement.getAttribute('data-title');
+      if (title) {
+        config.assistantName = title;
       }
     }
 
