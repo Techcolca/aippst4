@@ -14,7 +14,8 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw, Upload, File, ArrowLeft } from "lucide-react";
+import { Loader, CheckCircle, AlertCircle, Trash2, RefreshCw, Upload, File, ArrowLeft, Download } from "lucide-react";
+import jsPDF from 'jspdf';
 
 // Esquema de validación para el formulario
 const formSchema = z.object({
@@ -410,6 +411,198 @@ export default function EditIntegration() {
 
   const handleCancel = () => {
     navigate("/dashboard");
+  };
+
+  // Función para generar y descargar la documentación en PDF
+  const downloadDocumentationPDF = () => {
+    if (!integration) return;
+
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    let yPosition = 20;
+
+    // Título principal
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Documentación de Integración', pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 15;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Integración: ${integration.name}`, pageWidth / 2, yPosition, { align: 'center' });
+    
+    yPosition += 10;
+    doc.text(`Generado: ${new Date().toLocaleDateString()}`, pageWidth / 2, yPosition, { align: 'center' });
+    
+    // Línea separadora
+    yPosition += 10;
+    doc.setLineWidth(0.5);
+    doc.line(margin, yPosition, pageWidth - margin, yPosition);
+    
+    yPosition += 20;
+
+    // Información básica
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('1. Información de la Integración', margin, yPosition);
+    
+    yPosition += 15;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    
+    const basicInfo = [
+      `Nombre: ${integration.name}`,
+      `URL del sitio: ${integration.url || 'No especificada'}`,
+      `Tipo de widget: ${integration.widgetType === 'bubble' ? 'Widget flotante (burbuja)' : 'Pantalla completa (estilo ChatGPT)'}`,
+      `Posición: ${integration.position || 'bottom-right'}`,
+      `Estado: ${integration.active ? 'Activa' : 'Inactiva'}`,
+      `Color del tema: ${integration.themeColor || '#3B82F6'}`,
+    ];
+
+    basicInfo.forEach(info => {
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.text(info, margin, yPosition);
+      yPosition += 8;
+    });
+
+    yPosition += 15;
+
+    // Código de integración
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('2. Código de Integración', margin, yPosition);
+    
+    yPosition += 15;
+    doc.setFontSize(10);
+    doc.setFont('courier', 'normal');
+    
+    if (yPosition > 230) {
+      doc.addPage();
+      yPosition = 20;
+    }
+    
+    // Código HTML
+    doc.text('Copie y pegue este código en su sitio web:', margin, yPosition);
+    yPosition += 10;
+    
+    const codeLines = scriptExample ? scriptExample.split('\n') : [];
+    codeLines.forEach(line => {
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.text(line, margin, yPosition);
+      yPosition += 6;
+    });
+
+    yPosition += 15;
+
+    // Instrucciones de implementación
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('3. Instrucciones de Implementación', margin, yPosition);
+    
+    yPosition += 15;
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+
+    const instructions = [
+      '1. Copie el código de integración mostrado arriba',
+      '2. Pegue el código en el <head> o antes del cierre </body> de su sitio web',
+      '3. Guarde y publique los cambios en su sitio web',
+      '4. El widget aparecerá automáticamente en su sitio',
+      '5. Verifique que el widget funciona correctamente visitando su sitio'
+    ];
+
+    instructions.forEach(instruction => {
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.text(instruction, margin, yPosition);
+      yPosition += 8;
+    });
+
+    yPosition += 15;
+
+    // Personalización
+    if (integration.customization) {
+      if (yPosition > 200) {
+        doc.addPage();
+        yPosition = 20;
+      }
+
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('4. Configuración de Personalización', margin, yPosition);
+      
+      yPosition += 15;
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+
+      const customization = integration.customization;
+      const customInfo = [
+        `Nombre del asistente: ${customization.assistantName || 'AIPI Assistant'}`,
+        `Saludo predeterminado: ${customization.defaultGreeting || '¡Hola! ¿En qué puedo ayudarte hoy?'}`,
+        `Mostrar disponibilidad: ${customization.showAvailability ? 'Sí' : 'No'}`,
+        `Color de burbuja del usuario: ${customization.userBubbleColor || '#1e88e5'}`,
+        `Color de burbuja del asistente: ${customization.assistantBubbleColor || '#f5f5f5'}`,
+        `Fuente: ${customization.font || 'Inter'}`,
+        `Estilo de conversación: ${customization.conversationStyle || 'modern'}`,
+      ];
+
+      customInfo.forEach(info => {
+        if (yPosition > 250) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        doc.text(info, margin, yPosition);
+        yPosition += 8;
+      });
+    }
+
+    // Documentos adjuntos
+    if (integration.documentsData && integration.documentsData.length > 0) {
+      yPosition += 15;
+      
+      if (yPosition > 200) {
+        doc.addPage();
+        yPosition = 20;
+      }
+
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('5. Documentos de Entrenamiento', margin, yPosition);
+      
+      yPosition += 15;
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+
+      integration.documentsData.forEach((doc: any, index: number) => {
+        if (yPosition > 250) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        doc.text(`${index + 1}. ${doc.originalName} (${doc.mimetype})`, margin, yPosition);
+        yPosition += 8;
+      });
+    }
+
+    // Pie de página
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Página ${i} de ${totalPages}`, pageWidth - margin, 285, { align: 'right' });
+    }
+
+    // Descargar el PDF
+    doc.save(`documentacion-${integration.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`);
   };
 
   if (isLoading) {
@@ -1039,9 +1232,29 @@ export default function EditIntegration() {
       {/* Sección del código de integración */}
       {scriptExample && (
         <Card className="mt-8 p-6">
-          <h3 className="text-lg font-semibold mb-4">Código de integración</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Código de integración</h3>
+            <Button 
+              onClick={downloadDocumentationPDF}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Descargar documentación PDF
+            </Button>
+          </div>
           <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md">
             <code className="text-sm">{scriptExample}</code>
+          </div>
+          <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">
+            <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Instrucciones de implementación:</h4>
+            <ol className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+              <li>1. Copie el código de integración mostrado arriba</li>
+              <li>2. Pegue el código en el &lt;head&gt; o antes del cierre &lt;/body&gt; de su sitio web</li>
+              <li>3. Guarde y publique los cambios en su sitio web</li>
+              <li>4. El widget aparecerá automáticamente en su sitio</li>
+              <li>5. Use el botón "Descargar documentación PDF" para obtener una guía completa</li>
+            </ol>
           </div>
         </Card>
       )}
