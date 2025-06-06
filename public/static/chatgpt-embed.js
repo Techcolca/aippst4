@@ -25,6 +25,78 @@
   // Inicializar widget
   document.addEventListener('DOMContentLoaded', initialize);
   
+  // Generar sugerencias específicas para cada integración
+  function generateSuggestedTopics() {
+    const topicsContainer = document.getElementById('aipi-suggested-topics');
+    if (!topicsContainer) return;
+    
+    let topics = [];
+    
+    // Sugerencias específicas según la integración
+    if (config.integrationName === 'Dios Fiel') {
+      topics = [
+        { query: "¿Cuáles son los principios bíblicos fundamentales?", text: "Principios bíblicos" },
+        { query: "¿Cómo puedo fortalecer mi fe cristiana?", text: "Fortalecer la fe" },
+        { query: "¿Qué dice la Biblia sobre la oración?", text: "Sobre la oración" },
+        { query: "¿Cómo encontrar propósito en Dios?", text: "Encontrar propósito" },
+        { query: "¿Qué enseña la Biblia sobre el perdón?", text: "Sobre el perdón" }
+      ];
+    } else if (config.integrationName === 'Techcolca') {
+      topics = [
+        { query: "¿Qué servicios de tecnología ofrecen?", text: "Servicios tecnológicos" },
+        { query: "¿Cómo pueden ayudar con mi proyecto web?", text: "Proyectos web" },
+        { query: "¿Ofrecen soporte técnico especializado?", text: "Soporte técnico" },
+        { query: "¿Cuáles son sus precios y planes?", text: "Precios y planes" },
+        { query: "¿Tienen experiencia en desarrollo de aplicaciones?", text: "Desarrollo de apps" }
+      ];
+    } else {
+      // Sugerencias genéricas para otras integraciones
+      topics = [
+        { query: "¿Qué servicios ofrecen?", text: "Nuestros servicios" },
+        { query: "¿Cómo pueden ayudarme?", text: "¿Cómo ayudamos?" },
+        { query: "¿Cuáles son sus horarios de atención?", text: "Horarios de atención" },
+        { query: "¿Tienen experiencia en mi sector?", text: "Experiencia sectorial" },
+        { query: "¿Cuáles son sus precios?", text: "Información de precios" }
+      ];
+    }
+    
+    // Limpiar contenedor
+    topicsContainer.innerHTML = '';
+    
+    // Generar elementos HTML para cada sugerencia
+    topics.forEach(topic => {
+      const topicElement = document.createElement('div');
+      topicElement.className = 'aipi-topic';
+      topicElement.setAttribute('data-query', topic.query);
+      topicElement.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>${topic.text}</span>
+      `;
+      // Agregar evento de click
+      topicElement.addEventListener('click', function() {
+        const query = this.getAttribute('data-query');
+        if (query) {
+          const inputField = document.getElementById('aipi-chat-input');
+          if (inputField) {
+            inputField.value = query;
+            // Disparar el evento input para activar el botón
+            const event = new Event('input', { bubbles: true });
+            inputField.dispatchEvent(event);
+            // Enfocar el campo
+            inputField.focus();
+          }
+        }
+      });
+      
+      topicsContainer.appendChild(topicElement);
+    });
+    
+    console.log(`AIPI Widget: Sugerencias generadas para ${config.integrationName}`);
+  }
+  
   // Función principal de inicialización
   function initialize() {
     console.log('AIPI Widget: Inicializando...');
@@ -203,27 +275,7 @@
               <h3>Conversaciones sugeridas</h3>
             </div>
             <div id="aipi-suggested-topics">
-              <!-- Estas sugerencias se generarán dinámicamente -->
-              <div class="aipi-topic" data-query="¿Qué servicios ofrece AIPI?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>¿Qué servicios ofrece AIPI?</span>
-              </div>
-              <div class="aipi-topic" data-query="¿Cómo puedo integrar el chatbot en mi sitio web?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>¿Cómo puedo integrar el chatbot?</span>
-              </div>
-              <div class="aipi-topic" data-query="Explica cómo funciona el análisis de contenido">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>Análisis de contenido</span>
-              </div>
-              <div class="aipi-topic" data-query="¿Cuáles son las ventajas de usar inteligencia artificial?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>Ventajas de la IA</span>
-              </div>
-              <div class="aipi-topic" data-query="¿Qué tipos de documentos puedo subir para entrenar al chatbot?">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>Documentos compatibles</span>
-              </div>
+              <!-- Las sugerencias se generarán dinámicamente según la integración -->
             </div>
             <div id="aipi-new-chat">
               <button id="aipi-new-chat-button">
@@ -303,24 +355,7 @@
         sendButton.onclick = sendMessage;
       }
       
-      // Eventos para los temas sugeridos
-      const topicElements = document.querySelectorAll('.aipi-topic');
-      topicElements.forEach(topic => {
-        topic.addEventListener('click', function() {
-          const query = this.getAttribute('data-query');
-          if (query) {
-            const inputField = document.getElementById('aipi-chat-input');
-            if (inputField) {
-              inputField.value = query;
-              // Disparar el evento input para activar el botón
-              const event = new Event('input', { bubbles: true });
-              inputField.dispatchEvent(event);
-              // Enfocar el campo
-              inputField.focus();
-            }
-          }
-        });
-      });
+      // Los eventos para temas sugeridos se configurarán en generateSuggestedTopics()
       
       // Evento para nueva conversación
       const newChatButton = document.getElementById('aipi-new-chat-button');
