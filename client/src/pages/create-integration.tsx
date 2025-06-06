@@ -134,10 +134,10 @@ export default function CreateIntegration() {
       
       toast({
         title: "Documentos subidos",
-        description: `Se han subido ${data.uploadedFiles.length} documentos correctamente`,
+        description: `Se han subido ${data.documents?.length || 0} documentos correctamente`,
       });
       
-      return data.uploadedFiles;
+      return data.documents || [];
     } catch (error) {
       console.error("Error al subir documentos:", error);
       toast({
