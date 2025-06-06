@@ -31,7 +31,7 @@ export default function Documentation() {
       <Header />
       
       <main className="flex-grow">
-        <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 py-12">
+        <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
               {t("documentation.title")}
@@ -42,11 +42,11 @@ export default function Documentation() {
           </div>
         </section>
         
-        <section className="py-12 bg-white dark:bg-gray-900">
+        <section className="py-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="md:w-1/4">
-                <div className="sticky top-24 bg-white dark:bg-gray-900 border rounded-lg p-4">
+                <div className="sticky top-24 backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg p-4">
                   <nav className="space-y-1">
                     <a 
                       href="#overview" 
