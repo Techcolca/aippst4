@@ -204,7 +204,7 @@ export default function Documentation() {
               <div className="md:w-3/4">
                 {activeTab === "overview" && (
                   <div id="overview" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.overview.title")}</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -280,7 +280,7 @@ export default function Documentation() {
                 
                 {activeTab === "features" && (
                   <div id="features" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.features.title")}</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -474,7 +474,7 @@ export default function Documentation() {
                 {/* Sección de Widget Integration */}
                 {activeTab === "widget-integration" && (
                   <div id="widget-integration" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Integración de Widgets en Sitios Web</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -681,7 +681,7 @@ export default function Documentation() {
                 {/* Sección de Comprensión Contextual */}
                 {activeTab === "contextual-understanding" && (
                   <div id="contextual-understanding" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Comprensión Contextual del Contenido Web</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -842,7 +842,7 @@ export default function Documentation() {
                 
                 {activeTab === "document-training" && (
                   <div id="document-training" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Entrenamiento con Documentos</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -902,7 +902,7 @@ export default function Documentation() {
 
                 {activeTab === "lead-capture" && (
                   <div id="lead-capture" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Captura de Leads</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
@@ -982,7 +982,7 @@ export default function Documentation() {
 
                 {activeTab === "analytics" && (
                   <div id="analytics" className="space-y-8">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
                       <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Análisis y Estadísticas</h2>
                       
                       <div className="prose dark:prose-invert max-w-none">
