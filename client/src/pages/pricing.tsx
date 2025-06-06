@@ -125,7 +125,7 @@ export default function PricingPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        <section className="py-12 md:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <section className="py-12 md:py-24">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
@@ -234,7 +234,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-12 bg-white dark:bg-gray-800">
+        <section className="py-12">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <div className="flex flex-col items-start space-y-2">

@@ -12,7 +12,7 @@ export default function About() {
       <Header />
       
       <main className="flex-grow">
-        <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 py-16">
+        <section className="py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
               {t('about.title')}
@@ -23,7 +23,7 @@ export default function About() {
           </div>
         </section>
 
-        <section className="py-16 bg-white dark:bg-gray-900">
+        <section className="py-16">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <Card className="text-center">
