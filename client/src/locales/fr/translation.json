@@ -646,5 +646,24 @@
   "help.contact_support.title": "Vous ne trouvez pas ce que vous cherchez ?",
   "help.contact_support.description": "Notre équipe de support est là pour vous aider.",
   "help.contact_support.contact_button": "Contacter le Support",
-  "help.contact_support.email_button": "Envoyer un Email"
+  "help.contact_support.email_button": "Envoyer un Email",
+  
+  "documentation.download_pdf": "Télécharger PDF",
+  "documentation.generated_on": "Généré le",
+  "documentation.language": "Langue",
+  "documentation.table_of_contents": "Table des Matières",
+  "documentation.page": "Page",
+  "documentation.of": "de",
+  "documentation.overview_content": "AIPPS est une plateforme avancée alimentée par l'IA qui permet aux sites web d'intégrer des expériences conversationnelles intelligentes. Notre système fournit une compréhension contextuelle, des capacités d'entraînement de documents et des analyses complètes pour améliorer l'engagement des utilisateurs et le support.",
+  "documentation.features_content": "Notre plateforme offre une suite complète de fonctionnalités incluant l'intégration de widgets, la compréhension contextuelle, l'entraînement de documents, la capture de leads, les analyses et rapports, l'automatisation des tâches et les capacités de création de formulaires.",
+  "documentation.widget_integration_content": "Intégrez facilement notre widget IA dans n'importe quel site web en utilisant un simple extrait JavaScript. Le widget prend en charge les modes bulle et plein écran, avec des options de positionnement et de style personnalisables.",
+  "documentation.contextual_understanding_content": "Notre système IA comprend le contexte des conversations et fournit des réponses pertinentes basées sur le contenu de votre site web et les matériaux d'entraînement téléchargés.",
+  "documentation.document_training_content": "Entraînez votre assistant IA en téléchargeant des PDFs, fichiers DOCX et autres documents. Le système traitera et apprendra de ce contenu pour fournir des réponses précises et pertinentes.",
+  "documentation.lead_capture_content": "Capturez automatiquement les informations des visiteurs pendant les conversations et intégrez avec vos systèmes CRM pour une gestion efficace des leads et un suivi.",
+  "documentation.analytics_content": "Accédez à des analyses détaillées et des rapports incluant les métriques de conversation, les données d'engagement des utilisateurs, les taux de résolution et les insights de performance.",
+  "documentation.task_automation_content": "Configurez des flux de travail et des tâches automatisées qui se déclenchent basés sur les événements de conversation et les interactions des utilisateurs.",
+  "documentation.form_creation_content": "Créez des formulaires personnalisés pour la capture de leads, les enquêtes et la collecte de données avec notre constructeur de formulaires intuitif.",
+  "documentation.implementation_content": "L'implémentation est simple : copiez la balise script fournie, collez-la dans le HTML de votre site web, et le widget apparaîtra et fonctionnera automatiquement.",
+  "documentation.api_reference_content": "Accédez à notre documentation API complète pour les intégrações avancées, webhooks et implémentations personnalisées.",
+  "documentation.support_content": "Notre équipe de support est disponible pour aider avec l'implémentation, la configuration et le dépannage. Contactez-nous via le tableau de bord ou par email."
 }
