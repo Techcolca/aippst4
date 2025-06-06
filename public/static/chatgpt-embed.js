@@ -117,8 +117,8 @@
       
       const data = await response.json();
       
-      // DEBUG: Log para verificar qué integración se recibe
-      console.log(`CHATGPT-EMBED DEBUG: Clave solicitada: ${config.apiKey}, Integración recibida: ${data.integration?.name} (ID: ${data.integration?.id})`);
+      // Verificación de integración cargada
+      console.log(`AIPI Widget: Integración "${data.integration?.name}" cargada correctamente`);
       
       // Sobrescribir configuración con datos del servidor
       if (data.integration) {
@@ -138,7 +138,7 @@
         // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
       
-      console.log(`AIPI Widget: Configuración final aplicada - Integración: ${config.integrationName} (ID: ${config.integrationId}), Color: ${config.mainColor}, URL: ${window.location.href}`);
+      console.log('AIPI Widget: Configuración cargada correctamente');
     } catch (error) {
       console.error('AIPI Widget Error:', error);
       throw new Error('Error al cargar la configuración: ' + error.message);
