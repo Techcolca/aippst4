@@ -48,7 +48,9 @@ export class PgStorage implements IStorage {
   }
 
   async getIntegrationByApiKey(apiKey: string): Promise<Integration | undefined> {
+    console.log(`🔍 PG-STORAGE DEBUG: Buscando integración con clave: ${apiKey}`);
     const result = await db.select().from(integrations).where(eq(integrations.apiKey, apiKey)).limit(1);
+    console.log(`📊 PG-STORAGE DEBUG: Resultado de consulta:`, result.length > 0 ? `Encontrada: ID ${result[0]?.id}, Nombre: ${result[0]?.name}` : 'No encontrada');
     return result[0];
   }
 

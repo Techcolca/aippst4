@@ -2361,10 +2361,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { apiKey } = req.params;
       
+      // DEBUG: Log de la clave API solicitada
+      console.log(`🔍 WIDGET DEBUG: Clave API solicitada: ${apiKey}`);
+      
       // Validate API key and get integration
       const integration = await storage.getIntegrationByApiKey(apiKey);
       if (!integration) {
+        console.log(`❌ WIDGET DEBUG: No se encontró integración para la clave: ${apiKey}`);
         return res.status(404).json({ message: "Integration not found" });
+      }
+      
+      // DEBUG: Log de la integración encontrada
+      console.log(`✅ WIDGET DEBUG: Integración encontrada - ID: ${integration.id}, Nombre: ${integration.name}, Clave: ${integration.apiKey}`);
+      
+      // Verificar que la clave coincide exactamente
+      if (integration.apiKey !== apiKey) {
+        console.log(`⚠️ WIDGET DEBUG: PROBLEMA - Clave solicitada (${apiKey}) NO coincide con la encontrada (${integration.apiKey})`);
       }
       
       // Verificar si es la integración del sitio principal y restringir acceso
