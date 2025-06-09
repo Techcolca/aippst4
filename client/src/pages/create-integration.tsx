@@ -35,7 +35,7 @@ const formSchema = z.object({
   }).default("bubble"),
   ignoredSections: z.array(z.string()).default([]),
   ignoredSectionsText: z.string().optional(),
-  description: z.string().optional(),
+  description: z.string().min(10, { message: "La descripción debe tener al menos 10 caracteres" }),
   // Mantenemos customization para compatibilidad
   customization: z.object({
     assistantName: z.string().optional(),
@@ -75,7 +75,7 @@ export default function CreateIntegration() {
       widgetType: "bubble",
       ignoredSections: [],
       ignoredSectionsText: "",
-      description: "",
+      description: "Soy un asistente inteligente especializado en ayudar a los usuarios de este sitio web. Estoy aquí para responder preguntas, brindar información y ofrecer soporte personalizado.",
       customization: {
         assistantName: "AIPI Assistant",
         defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
@@ -410,14 +410,17 @@ export default function CreateIntegration() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descripción (opcional)</FormLabel>
+                  <FormLabel>Descripción del asistente</FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder="Describe el propósito de esta integración..." 
-                      className="resize-none" 
+                      placeholder="Ejemplo: Soy un asistente especializado en productos de tecnología. Ayudo a los clientes con información sobre nuestros servicios, precios y soporte técnico." 
+                      className="resize-none h-24" 
                       {...field} 
                     />
                   </FormControl>
+                  <FormDescription>
+                    Esta descripción se mostrará como mensaje de bienvenida en widgets de pantalla completa. Describe específicamente en qué ayuda tu asistente.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
