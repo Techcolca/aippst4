@@ -45,6 +45,7 @@ import {
 import bcrypt from "bcrypt";
 import { z } from "zod";
 import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema, welcomeMessages } from "@shared/schema";
+import cookieParser from "cookie-parser";
 import { and, eq, gt } from "drizzle-orm";
 import fs from "fs";
 import path from "path";
@@ -275,6 +276,9 @@ async function createInternalWebsiteIntegration() {
 const isAdmin = authIsAdmin;
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Configure cookie parser middleware
+  app.use(cookieParser());
+  
   // Crear integración interna para el sitio principal
   await createInternalWebsiteIntegration();
   
