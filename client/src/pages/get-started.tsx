@@ -97,12 +97,12 @@ export default function GetStarted() {
   // Función para previsualizar widget de pantalla completa
   const previewFullscreenWidget = () => {
     if (!fullscreenUrl) {
-      alert("Por favor, ingresa la URL de tu sitio web");
+      alert(t("getStarted.widget.preview.url_required"));
       return;
     }
     
     if (!isValidUrl(fullscreenUrl)) {
-      alert("Por favor, ingresa una URL válida (incluyendo http:// o https://)");
+      alert(t("getStarted.widget.preview.url_invalid"));
       return;
     }
     
@@ -122,10 +122,10 @@ export default function GetStarted() {
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              Comienza con AIPI
+              {t("getStarted.title")}
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              Integra el asistente de AIPI en tu sitio web en minutos con estas sencillas instrucciones.
+              {t("getStarted.subtitle")}
             </p>
           </div>
         </section>
@@ -134,19 +134,19 @@ export default function GetStarted() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Tabs defaultValue="bubble" className="w-full">
               <TabsList className="flex w-full justify-between mb-8">
-                <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">Widget</TabsTrigger>
-                <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">Pantalla</TabsTrigger>
-                <TabsTrigger value="form" className="flex-1 text-lg py-3 px-2">Formulario</TabsTrigger>
+                <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">{t("getStarted.tabs.widget")}</TabsTrigger>
+                <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">{t("getStarted.tabs.fullscreen")}</TabsTrigger>
+                <TabsTrigger value="form" className="flex-1 text-lg py-3 px-2">{t("getStarted.tabs.form")}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 1: Agrega este código a tu sitio web</h2>
+                    <h2 className="text-2xl font-bold">{t("getStarted.widget.step1.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Copia el siguiente código y pégalo justo antes de la etiqueta &lt;/body&gt; en tus páginas HTML:
+                      {t("getStarted.widget.step1.description")}
                     </p>
                     <div className="relative">
                       <pre className="bg-gray-900 text-white p-6 rounded-md overflow-x-auto text-sm">
@@ -169,25 +169,36 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 2: Personaliza el widget</h2>
+                    <h2 className="text-2xl font-bold">{t("getStarted.widget.step2.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Personaliza la apariencia y comportamiento del widget desde tu panel de control de AIPI:
+                      {t("getStarted.widget.step2.description")}
                     </p>
-                    <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Colores y estilo visual del widget</li>
-                      <li>Posición en la pantalla (esquina inferior derecha, izquierda, etc.)</li>
-                      <li>Mensaje de bienvenida y comportamiento inicial</li>
-                      <li>Idiomas soportados</li>
-                    </ul>
+                    <div className="mb-6">
+                      <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStarted.widget.step2.customization_title")}</p>
+                      <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                        <li>{t("getStarted.widget.step2.position")}</li>
+                        <li>{t("getStarted.widget.step2.theme_color")}</li>
+                        <li>{t("getStarted.widget.step2.assistant_name")}</li>
+                        <li>{t("getStarted.widget.step2.welcome_message")}</li>
+                      </ul>
+                    </div>
+                    <div className="mb-6">
+                      <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStarted.widget.step2.configure_dashboard")}</p>
+                      <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300">
+                        {(t("getStarted.widget.step2.dashboard_steps", { returnObjects: true }) as string[]).map((step, index) => (
+                          <li key={index}>{step}</li>
+                        ))}
+                      </ol>
+                    </div>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
-                        Ir al Panel de Control
+                        {t("getStarted.buttons.go_to_integrations")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/login")}>
-                        Iniciar Sesión
+                        {t("getStarted.buttons.login_to_manage")}
                       </Button>
                     )}
                   </div>
