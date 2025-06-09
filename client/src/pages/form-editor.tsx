@@ -751,24 +751,24 @@ const FormEditor = () => {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="field-type">Tipo de campo</Label>
+                      <Label htmlFor="field-type">{t('formEditor.field_type')}</Label>
                       <Select 
                         value={fieldData.type} 
                         onValueChange={(value) => setFieldData({...fieldData, type: value})}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecciona un tipo" />
+                          <SelectValue placeholder={t('formEditor.select_type')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="text">Texto corto</SelectItem>
-                          <SelectItem value="textarea">Área de texto</SelectItem>
-                          <SelectItem value="email">Correo electrónico</SelectItem>
-                          <SelectItem value="number">Número</SelectItem>
-                          <SelectItem value="tel">Teléfono</SelectItem>
-                          <SelectItem value="select">Selección</SelectItem>
-                          <SelectItem value="checkbox">Casilla de verificación</SelectItem>
-                          <SelectItem value="radio">Opción única</SelectItem>
-                          <SelectItem value="date">Fecha</SelectItem>
+                          <SelectItem value="text">{t('formEditor.field_types.text')}</SelectItem>
+                          <SelectItem value="textarea">{t('formEditor.field_types.textarea')}</SelectItem>
+                          <SelectItem value="email">{t('formEditor.field_types.email')}</SelectItem>
+                          <SelectItem value="number">{t('formEditor.field_types.number')}</SelectItem>
+                          <SelectItem value="tel">{t('formEditor.field_types.tel')}</SelectItem>
+                          <SelectItem value="select">{t('formEditor.field_types.select')}</SelectItem>
+                          <SelectItem value="checkbox">{t('formEditor.field_types.checkbox')}</SelectItem>
+                          <SelectItem value="radio">{t('formEditor.field_types.radio')}</SelectItem>
+                          <SelectItem value="date">{t('formEditor.field_types.date')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -777,19 +777,19 @@ const FormEditor = () => {
                      fieldData.type === 'email' || fieldData.type === 'tel' || 
                      fieldData.type === 'number' || fieldData.type === 'date') && (
                       <div className="space-y-2">
-                        <Label htmlFor="field-placeholder">Texto de marcador</Label>
+                        <Label htmlFor="field-placeholder">{t('formEditor.placeholder_text')}</Label>
                         <Input 
                           id="field-placeholder" 
                           value={fieldData.placeholder} 
                           onChange={(e) => setFieldData({...fieldData, placeholder: e.target.value})}
-                          placeholder="Ej: Escribe tu nombre completo"
+                          placeholder={t('formEditor.placeholder_example')}
                         />
                       </div>
                     )}
                     
                     {(fieldData.type === 'select' || fieldData.type === 'radio') && (
                       <div className="space-y-2">
-                        <Label htmlFor="field-options">Opciones</Label>
+                        <Label htmlFor="field-options">{t('formEditor.options')}</Label>
                         <div className="space-y-2">
                           {fieldData.options.map((option, index) => (
                             <div key={index} className="flex items-center space-x-2">
@@ -804,7 +804,7 @@ const FormEditor = () => {
                                   }
                                   setFieldData({...fieldData, options: newOptions});
                                 }}
-                                placeholder={`Opción ${index + 1}`}
+                                placeholder={`${t('formEditor.option')} ${index + 1}`}
                               />
                               <Button 
                                 variant="destructive" 
@@ -829,7 +829,7 @@ const FormEditor = () => {
                               });
                             }}
                           >
-                            Agregar opción
+                            {t('formEditor.add_option')}
                           </Button>
                         </div>
                       </div>
@@ -842,7 +842,7 @@ const FormEditor = () => {
                         onCheckedChange={(checked) => setFieldData({...fieldData, required: checked})}
                       />
                       <Label htmlFor="field-required">
-                        Campo obligatorio
+                        {t('formEditor.required_field')}
                       </Label>
                     </div>
                   </CardContent>
@@ -851,7 +851,7 @@ const FormEditor = () => {
                       variant="outline"
                       onClick={() => setShowFieldModal(false)}
                     >
-                      Cancelar
+                      {t('common.cancel')}
                     </Button>
                     <Button
                       onClick={() => {
@@ -918,7 +918,7 @@ const FormEditor = () => {
                         }
                       }}
                     >
-                      {currentEditingField === -1 ? 'Agregar' : 'Guardar cambios'}
+                      {currentEditingField === -1 ? t('formEditor.add') : t('formEditor.save_changes')}
                     </Button>
                   </div>
                 </Card>
