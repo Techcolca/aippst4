@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRoute, useLocation } from 'wouter';
 import { useQuery, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
@@ -58,6 +59,7 @@ interface FormData {
   slug: string;
   type: string;
   published: boolean;
+  language: string;
   structure: FormStructure;
   styling: FormStyling;
   settings: FormSettings;
@@ -78,6 +80,7 @@ const FormEditor = () => {
   const [match, params] = useRoute<{ id: string }>('/forms/:id/edit');
   const formId = parseInt(params?.id || '0');
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
   
   const [formData, setFormData] = useState<FormData>({
     title: '',
@@ -85,9 +88,10 @@ const FormEditor = () => {
     slug: '',
     type: 'contact',
     published: true,
+    language: i18n.language || 'es',
     structure: {
       fields: [],
-      submitButtonText: 'Enviar'
+      submitButtonText: t('formEditor.form_types.contact') || 'Enviar'
     },
     styling: {
       theme: 'light',
@@ -100,7 +104,7 @@ const FormEditor = () => {
       redirectUrl: '',
       sendEmailNotification: false,
       emailRecipients: '',
-      successMessage: 'Gracias por tu envío',
+      successMessage: t('formEditor.form_saved') || 'Gracias por tu envío',
       captcha: false,
       storeResponses: true
     }
@@ -160,6 +164,7 @@ const FormEditor = () => {
       slug: apiForm?.slug || '',
       type: apiForm?.type || 'contact',
       published: apiForm?.published || false,
+      language: apiForm?.language || 'es',
       structure: apiForm?.structure || { fields: [], submitButtonText: 'Enviar' },
       styling: {
         theme: (apiForm?.styling?.theme as FormStyling['theme']) || 'light',
@@ -410,7 +415,7 @@ const FormEditor = () => {
                 disabled={updateFormMutation.isPending}
               >
                 <Share2 className="h-4 w-4 mr-2" />
-                Integrar
+                {t('formEditor.integrate')}
               </Button>
             </div>
             
