@@ -335,6 +335,7 @@ export const forms = pgTable("forms", {
   structure: json("structure").notNull(), // Estructura del formulario (campos, configuración, etc.)
   styling: json("styling"), // Estilos personalizados
   settings: json("settings"), // Configuración adicional (notificaciones, redirecciones, etc.)
+  language: text("language").default("es"), // Idioma del formulario: es, en, fr
   responseCount: integer("response_count").default(0),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -350,6 +351,7 @@ export const insertFormSchema = createInsertSchema(forms).pick({
   structure: true,
   styling: true,
   settings: true,
+  language: true,
 });
 
 // Modelo para plantillas de formularios
