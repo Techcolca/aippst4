@@ -427,12 +427,12 @@ const FormEditor = () => {
               {updateFormMutation.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Guardando...
+                  {t('formEditor.saving')}
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4 mr-2" />
-                  Guardar Cambios
+                  {t('formEditor.save_changes')}
                 </>
               )}
             </Button>
@@ -444,15 +444,15 @@ const FormEditor = () => {
           <TabsList className="grid grid-cols-3 w-full max-w-md">
             <TabsTrigger value="content">
               <Layout className="h-4 w-4 mr-2" />
-              Contenido
+              {t('formEditor.content')}
             </TabsTrigger>
             <TabsTrigger value="appearance">
               <Eye className="h-4 w-4 mr-2" />
-              Apariencia
+              {t('formEditor.appearance')}
             </TabsTrigger>
             <TabsTrigger value="settings">
               <Settings className="h-4 w-4 mr-2" />
-              Ajustes
+              {t('formEditor.settings')}
             </TabsTrigger>
           </TabsList>
           
@@ -460,43 +460,64 @@ const FormEditor = () => {
           <TabsContent value="content" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Información básica</CardTitle>
+                <CardTitle>{t('formEditor.basic_info')}</CardTitle>
                 <CardDescription>
-                  Configura los detalles básicos de tu formulario
+                  {t('formEditor.basic_info_desc')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="title">Título del formulario</Label>
+                    <Label htmlFor="title">{t('formEditor.form_title')}</Label>
                     <Input 
                       id="title" 
                       value={formData.title} 
                       onChange={(e) => setFormData({...formData, title: e.target.value})}
-                      placeholder="Ej: Formulario de contacto"
+                      placeholder={t('formEditor.form_title_placeholder')}
                     />
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="slug">Identificador único</Label>
+                    <Label htmlFor="slug">{t('formEditor.unique_id')}</Label>
                     <Input 
                       id="slug" 
                       value={formData.slug}
                       onChange={(e) => setFormData({...formData, slug: e.target.value.replace(/\s+/g, '-').toLowerCase()})}
-                      placeholder="identificador-unico"
+                      placeholder={t('formEditor.unique_id_placeholder')}
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Descripción</Label>
+                  <Label htmlFor="description">{t('formEditor.description')}</Label>
                   <Textarea 
                     id="description" 
                     value={formData.description || ''} 
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    placeholder="Breve descripción de este formulario"
+                    placeholder={t('formEditor.description_placeholder')}
                     rows={3}
                   />
+                </div>
+
+                {/* Language selector */}
+                <div className="space-y-2">
+                  <Label htmlFor="language">{t('formEditor.language')}</Label>
+                  <Select 
+                    value={formData.language} 
+                    onValueChange={(value) => {
+                      setFormData({...formData, language: value});
+                      i18n.changeLanguage(value);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('formEditor.select_language')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="es">{t('common.spanish')}</SelectItem>
+                      <SelectItem value="en">{t('common.english')}</SelectItem>
+                      <SelectItem value="fr">{t('common.french')}</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div className="flex items-center space-x-2">
@@ -506,26 +527,26 @@ const FormEditor = () => {
                     onCheckedChange={(checked) => setFormData({...formData, published: checked})}
                   />
                   <Label htmlFor="published">
-                    {formData.published ? 'Formulario publicado' : 'Formulario en borrador'}
+                    {formData.published ? t('formEditor.form_published') : t('formEditor.form_draft')}
                   </Label>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="type">Tipo de formulario</Label>
+                  <Label htmlFor="type">{t('formEditor.form_type')}</Label>
                   <Select 
                     value={formData.type} 
                     onValueChange={(value) => setFormData({...formData, type: value})}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un tipo" />
+                      <SelectValue placeholder={t('formEditor.select_type')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="contact">Contacto</SelectItem>
-                      <SelectItem value="lead">Captura de Leads</SelectItem>
-                      <SelectItem value="survey">Encuesta</SelectItem>
-                      <SelectItem value="feedback">Feedback</SelectItem>
-                      <SelectItem value="registration">Registro</SelectItem>
-                      <SelectItem value="waitlist">Lista de Espera</SelectItem>
+                      <SelectItem value="contact">{t('formEditor.form_types.contact')}</SelectItem>
+                      <SelectItem value="lead">{t('formEditor.form_types.lead')}</SelectItem>
+                      <SelectItem value="survey">{t('formEditor.form_types.survey')}</SelectItem>
+                      <SelectItem value="feedback">{t('formEditor.form_types.feedback')}</SelectItem>
+                      <SelectItem value="registration">{t('formEditor.form_types.registration')}</SelectItem>
+                      <SelectItem value="waitlist">{t('formEditor.form_types.waitlist')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -534,9 +555,9 @@ const FormEditor = () => {
             
             <Card>
               <CardHeader>
-                <CardTitle>Campos del formulario</CardTitle>
+                <CardTitle>{t('formEditor.form_fields')}</CardTitle>
                 <CardDescription>
-                  Configura los campos que se mostrarán en tu formulario
+                  {t('formEditor.form_fields_desc')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
