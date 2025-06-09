@@ -930,14 +930,14 @@ const FormEditor = () => {
           <TabsContent value="appearance" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Estilo visual</CardTitle>
+                <CardTitle>{t('formEditor.visual_style')}</CardTitle>
                 <CardDescription>
-                  Personaliza la apariencia de tu formulario
+                  {t('formEditor.visual_style_desc')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="theme">Tema</Label>
+                  <Label htmlFor="theme">{t('formEditor.theme')}</Label>
                   <Select 
                     value={formData.styling?.theme || 'light'} 
                     onValueChange={(value: 'light' | 'dark' | 'auto') => setFormData({
@@ -946,18 +946,18 @@ const FormEditor = () => {
                     })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un tema" />
+                      <SelectValue placeholder={t('formEditor.select_theme')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="light">Claro</SelectItem>
-                      <SelectItem value="dark">Oscuro</SelectItem>
-                      <SelectItem value="auto">Auto (según usuario)</SelectItem>
+                      <SelectItem value="light">{t('formEditor.themes.light')}</SelectItem>
+                      <SelectItem value="dark">{t('formEditor.themes.dark')}</SelectItem>
+                      <SelectItem value="auto">{t('formEditor.themes.auto')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="primaryColor">Color principal</Label>
+                  <Label htmlFor="primaryColor">{t('formEditor.primary_color')}</Label>
                   <div className="flex items-center space-x-2">
                     <input 
                       type="color" 
@@ -981,7 +981,7 @@ const FormEditor = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="fontFamily">Tipografía</Label>
+                  <Label htmlFor="fontFamily">{t('formEditor.typography')}</Label>
                   <Select 
                     value={formData.styling?.fontFamily || 'Inter'} 
                     onValueChange={(value) => setFormData({
@@ -1002,7 +1002,7 @@ const FormEditor = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="borderRadius">Radio de bordes</Label>
+                  <Label htmlFor="borderRadius">{t('formEditor.border_radius')}</Label>
                   <Select 
                     value={formData.styling?.borderRadius || 'md'} 
                     onValueChange={(value) => setFormData({
@@ -1011,14 +1011,14 @@ const FormEditor = () => {
                     })}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecciona un radio" />
+                      <SelectValue placeholder={t('formEditor.select_radius')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="none">Ninguno</SelectItem>
-                      <SelectItem value="sm">Pequeño</SelectItem>
-                      <SelectItem value="md">Mediano</SelectItem>
-                      <SelectItem value="lg">Grande</SelectItem>
-                      <SelectItem value="full">Completo</SelectItem>
+                      <SelectItem value="none">{t('formEditor.radius.none')}</SelectItem>
+                      <SelectItem value="sm">{t('formEditor.radius.small')}</SelectItem>
+                      <SelectItem value="md">{t('formEditor.radius.medium')}</SelectItem>
+                      <SelectItem value="lg">{t('formEditor.radius.large')}</SelectItem>
+                      <SelectItem value="full">{t('formEditor.radius.full')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1030,28 +1030,28 @@ const FormEditor = () => {
           <TabsContent value="settings" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Configuración</CardTitle>
+                <CardTitle>{t('formEditor.configuration')}</CardTitle>
                 <CardDescription>
-                  Ajustes avanzados del formulario
+                  {t('formEditor.advanced_settings')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="successMessage">Mensaje de éxito</Label>
+                  <Label htmlFor="successMessage">{t('formEditor.success_message')}</Label>
                   <Textarea 
                     id="successMessage" 
-                    value={formData.settings?.successMessage || 'Gracias por tu envío'} 
+                    value={formData.settings?.successMessage || t('formEditor.default_success_message')} 
                     onChange={(e) => setFormData({
                       ...formData, 
                       settings: {...formData.settings, successMessage: e.target.value}
                     })}
-                    placeholder="Mensaje que se mostrará después de un envío exitoso"
+                    placeholder={t('formEditor.success_message_placeholder')}
                     rows={2}
                   />
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="redirectUrl">URL de redirección (opcional)</Label>
+                  <Label htmlFor="redirectUrl">{t('formEditor.redirect_url')}</Label>
                   <Input 
                     id="redirectUrl" 
                     value={formData.settings?.redirectUrl || ''} 
