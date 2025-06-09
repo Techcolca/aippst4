@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -28,6 +29,7 @@ const iconMap = {
 };
 
 export function FormTemplateSelector() {
+  const { t } = useTranslation();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
@@ -47,20 +49,20 @@ export function FormTemplateSelector() {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/forms'] });
       toast({
-        title: "Formulario creado",
-        description: "Se ha creado un nuevo formulario basado en la plantilla seleccionada.",
+        title: t('formTemplateSelector.formCreated'),
+        description: t('formTemplateSelector.formCreatedDescription'),
       });
       // Redireccionar a dashboard con la pestaña forms activada
       setLocation(`/dashboard?tab=forms`);
       toast({
-        title: "¡Formulario listo para editar!",
-        description: "Puedes encontrar tu nuevo formulario en la lista de formularios",
+        title: t('formTemplateSelector.formReadyToEdit'),
+        description: t('formTemplateSelector.formFoundInList'),
       });
     },
     onError: (error: any) => {
       toast({
-        title: "Error",
-        description: `No se pudo crear el formulario: ${error.message}`,
+        title: t('common.error'),
+        description: `${t('formTemplateSelector.createFormError')}: ${error.message}`,
         variant: "destructive",
       });
     },
@@ -75,26 +77,44 @@ export function FormTemplateSelector() {
       createFormMutation.mutate(selectedTemplate);
     } else {
       toast({
-        title: "Selección requerida",
-        description: "Por favor, selecciona una plantilla para continuar.",
+        title: t('formTemplateSelector.selectionRequired'),
+        description: t('formTemplateSelector.pleaseSelectTemplate'),
         variant: "destructive",
       });
     }
   };
 
-  const handleCreateBlankForm = () => {
-    // También redirigir al dashboard con un mensaje
-    toast({
-      title: "Función en desarrollo",
-      description: "La creación de formularios desde cero estará disponible próximamente",
-    });
-    setLocation('/dashboard?tab=forms');
+  const handleCreateBlankForm = async () => {
+    try {
+      const response = await apiRequest('POST', '/api/forms', { 
+        templateId: null // Indica crear formulario en blanco
+      });
+      
+      queryClient.invalidateQueries({ queryKey: ['/api/forms'] });
+      toast({
+        title: t('formTemplateSelector.blankFormCreated'),
+        description: t('formTemplateSelector.blankFormDescription'),
+      });
+      
+      // Redirigir al editor de formularios con el nuevo ID
+      if (response.id) {
+        setLocation(`/dashboard/form-editor/${response.id}`);
+      } else {
+        setLocation('/dashboard?tab=forms');
+      }
+    } catch (error: any) {
+      toast({
+        title: t('common.error'),
+        description: `${t('formTemplateSelector.createFormError')}: ${error.message}`,
+        variant: "destructive",
+      });
+    }
   };
 
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Selecciona una plantilla</h2>
+        <h2 className="text-2xl font-bold">{t('formTemplateSelector.selectTemplate')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
             <Card key={i} className="cursor-pointer hover:border-primary/50">
