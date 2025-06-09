@@ -53,6 +53,7 @@ export const insertIntegrationSchema = createInsertSchema(integrations).pick({
   widgetType: true,
   documentsData: true,
   ignoredSections: true,
+  description: true,
 });
 
 // Conversation schema
