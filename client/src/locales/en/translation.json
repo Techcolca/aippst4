@@ -722,5 +722,142 @@
   "documentation.form_creation_content": "Create custom forms for lead capture, surveys, and data collection with our intuitive form builder.",
   "documentation.implementation_content": "Implementation is straightforward: copy the provided script tag, paste it into your website's HTML, and the widget will automatically appear and function.",
   "documentation.api_reference_content": "Access our comprehensive API documentation for advanced integrations, webhooks, and custom implementations.",
-  "documentation.support_content": "Our support team is available to help with implementation, configuration, and troubleshooting. Contact us through the dashboard or email."
+  "documentation.support_content": "Our support team is available to help with implementation, configuration, and troubleshooting. Contact us through the dashboard or email.",
+  
+  "getStarted": {
+    "title": "Get Started",
+    "subtitle": "Integrate AIPPS into your website in minutes",
+    "tabs": {
+      "widget": "Widget",
+      "fullscreen": "Fullscreen",
+      "form": "Form"
+    },
+    "widget": {
+      "step1": {
+        "title": "Step 1: Add this code to your website",
+        "description": "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
+        "copied": "✓ Code copied to clipboard"
+      },
+      "step2": {
+        "title": "Step 2: Customize your widget (optional)",
+        "description": "You can customize the widget's behavior and appearance by adding additional parameters:",
+        "customization_title": "Customization options:",
+        "position": "Widget position on the page",
+        "theme_color": "Widget primary color",
+        "assistant_name": "Assistant name",
+        "welcome_message": "Custom welcome message",
+        "example_title": "Custom configuration example:",
+        "configure_dashboard": "Configure these options from the admin panel:",
+        "dashboard_steps": [
+          "Access the \"Integrations\" section of the panel",
+          "Select the integration you want to configure",
+          "Customize colors, position and messages",
+          "Changes will be applied automatically"
+        ]
+      },
+      "step3": {
+        "title": "Step 3: Configure sections to ignore (optional)",
+        "description": "If your website has sections you don't want the assistant to analyze (like menus, footer, ads), you can configure them to be ignored:",
+        "example_title": "Configuration example:",
+        "configure_description": "Configure which sections to ignore from the admin panel:",
+        "dashboard_steps": [
+          "Access the \"Integrations\" section of the panel",
+          "Select the integration you want to configure",
+          "Find the \"Sections to ignore\" section",
+          "Add the names of sections you want to exclude"
+        ]
+      },
+      "preview": {
+        "button": "Widget Preview",
+        "url_placeholder": "https://your-website.com",
+        "url_required": "Please enter your website URL",
+        "url_invalid": "Please enter a valid URL (including http:// or https://)"
+      }
+    },
+    "fullscreen": {
+      "step1": {
+        "title": "Step 1: Add this code to your website",
+        "description": "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
+        "copied": "✓ Code copied to clipboard"
+      },
+      "step2": {
+        "title": "Step 2: Customize the experience",
+        "description": "The fullscreen widget offers a ChatGPT-like experience integrated into your website:",
+        "features": [
+          "Fullscreen chat interface",
+          "Conversation history",
+          "Optional user registration",
+          "Contextual responses based on your content"
+        ],
+        "configure_description": "Customize the experience from the admin panel:",
+        "dashboard_steps": [
+          "Access the \"Integrations\" section of the panel",
+          "Select the integration you want to configure",
+          "Configure bot behavior and messages",
+          "Adjust colors and appearance"
+        ]
+      },
+      "step3": {
+        "title": "Step 3: Configure sections to ignore (optional)",
+        "description": "Optimize assistant responses by configuring which parts of your website it should ignore:",
+        "example_title": "Configuration example:",
+        "configure_description": "Configure which sections to ignore from the admin panel:",
+        "dashboard_steps": [
+          "Access the \"Integrations\" section of the panel",
+          "Select the integration you want to configure",
+          "Find the \"Sections to ignore\" section",
+          "Add the names of sections you want to exclude"
+        ]
+      }
+    },
+    "form": {
+      "step1": {
+        "title": "Step 1: Add this code to your website",
+        "description": "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
+        "copied": "✓ Code copied to clipboard"
+      },
+      "step2": {
+        "title": "Step 2: Form configuration",
+        "description": "The floating form button can be customized with the following attributes:",
+        "basic_attributes": "Basic attributes:",
+        "customization_attributes": "Customization:",
+        "attributes": {
+          "form_id": "ID of the form to display",
+          "display_type": "\"modal\" or \"slide-in\"",
+          "position": "\"bottom-right\", \"bottom-left\", etc.",
+          "button_text": "Button text",
+          "theme_color": "Button color",
+          "icon": "\"form\", \"message\", \"help\"",
+          "button_size": "\"small\", \"medium\", \"large\"",
+          "auto_show": "Show automatically"
+        },
+        "example_title": "Complete example:"
+      },
+      "step3": {
+        "title": "Step 3: Manage your forms",
+        "description": "Create and customize forms from the admin panel:",
+        "dashboard_steps": [
+          "Access the \"Forms\" section in the panel",
+          "Create a new form with custom fields",
+          "Configure email notifications",
+          "Customize design and colors",
+          "Copy the form ID to use in the code"
+        ]
+      }
+    },
+    "buttons": {
+      "copy_code": "Copy Code",
+      "go_to_integrations": "Go to Integrations",
+      "go_to_forms": "Go to Forms",
+      "login_to_manage": "Login to Manage",
+      "login_to_manage_forms": "Login to Manage Forms",
+      "preview_widget": "Preview Widget"
+    },
+    "cta": {
+      "title": "Ready to power up your website?",
+      "description": "Join thousands of websites already using AIPPS to improve their users' experience.",
+      "create_account": "Create Free Account",
+      "learn_more": "Learn More"
+    }
+  }
 }

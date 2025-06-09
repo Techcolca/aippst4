@@ -722,5 +722,142 @@
   "documentation.form_creation_content": "Crea formularios personalizados para captura de leads, encuestas y recolección de datos con nuestro constructor de formularios intuitivo.",
   "documentation.implementation_content": "La implementación es sencilla: copia la etiqueta de script proporcionada, pégala en el HTML de tu sitio web, y el widget aparecerá y funcionará automáticamente.",
   "documentation.api_reference_content": "Accede a nuestra documentación completa de API para integraciones avanzadas, webhooks e implementaciones personalizadas.",
-  "documentation.support_content": "Nuestro equipo de soporte está disponible para ayudar con implementación, configuración y resolución de problemas. Contáctanos a través del dashboard o por email."
+  "documentation.support_content": "Nuestro equipo de soporte está disponible para ayudar con implementación, configuración y resolución de problemas. Contáctanos a través del dashboard o por email.",
+  
+  "getStarted": {
+    "title": "Comienza Ahora",
+    "subtitle": "Integra AIPPS en tu sitio web en minutos",
+    "tabs": {
+      "widget": "Widget",
+      "fullscreen": "Pantalla",
+      "form": "Formulario"
+    },
+    "widget": {
+      "step1": {
+        "title": "Paso 1: Agrega este código a tu sitio web",
+        "description": "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
+        "copied": "✓ Código copiado al portapapeles"
+      },
+      "step2": {
+        "title": "Paso 2: Personaliza tu widget (opcional)",
+        "description": "Puedes personalizar el comportamiento y apariencia del widget agregando parámetros adicionales:",
+        "customization_title": "Opciones de personalización:",
+        "position": "Posición del widget en la página",
+        "theme_color": "Color principal del widget",
+        "assistant_name": "Nombre del asistente",
+        "welcome_message": "Mensaje de bienvenida personalizado",
+        "example_title": "Ejemplo de configuración personalizada:",
+        "configure_dashboard": "Configura estas opciones desde el panel de administración:",
+        "dashboard_steps": [
+          "Accede a la sección \"Integraciones\" del panel",
+          "Selecciona la integración que deseas configurar",
+          "Personaliza colores, posición y mensajes",
+          "Los cambios se aplicarán automáticamente"
+        ]
+      },
+      "step3": {
+        "title": "Paso 3: Configura secciones a ignorar (opcional)",
+        "description": "Si tu sitio web tiene secciones que no quieres que el asistente analice (como menús, footer, publicidad), puedes configurarlas para ser ignoradas:",
+        "example_title": "Ejemplo de configuración:",
+        "configure_description": "Configura qué secciones ignorar desde el panel de administración:",
+        "dashboard_steps": [
+          "Accede a la sección \"Integraciones\" del panel",
+          "Selecciona la integración que deseas configurar",
+          "Busca el apartado \"Secciones a ignorar\"",
+          "Agrega los nombres de las secciones que quieres excluir"
+        ]
+      },
+      "preview": {
+        "button": "Vista Previa del Widget",
+        "url_placeholder": "https://tu-sitio-web.com",
+        "url_required": "Por favor, ingresa la URL de tu sitio web",
+        "url_invalid": "Por favor, ingresa una URL válida (incluyendo http:// o https://)"
+      }
+    },
+    "fullscreen": {
+      "step1": {
+        "title": "Paso 1: Agrega este código a tu sitio web",
+        "description": "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
+        "copied": "✓ Código copiado al portapapeles"
+      },
+      "step2": {
+        "title": "Paso 2: Personaliza la experiencia",
+        "description": "El widget de pantalla completa ofrece una experiencia similar a ChatGPT integrada en tu sitio web:",
+        "features": [
+          "Interfaz de chat de pantalla completa",
+          "Historial de conversaciones",
+          "Registro de usuarios opcional",
+          "Respuestas contextuales basadas en tu contenido"
+        ],
+        "configure_description": "Personaliza la experiencia desde el panel de administración:",
+        "dashboard_steps": [
+          "Accede a la sección \"Integraciones\" del panel",
+          "Selecciona la integración que deseas configurar",
+          "Configura el comportamiento del bot y mensajes",
+          "Ajusta los colores y la apariencia"
+        ]
+      },
+      "step3": {
+        "title": "Paso 3: Configura secciones a ignorar (opcional)",
+        "description": "Optimiza las respuestas del asistente configurando qué partes de tu sitio web debe ignorar:",
+        "example_title": "Ejemplo de configuración:",
+        "configure_description": "Configura qué secciones ignorar desde el panel de administración:",
+        "dashboard_steps": [
+          "Accede a la sección \"Integraciones\" del panel",
+          "Selecciona la integración que deseas configurar",
+          "Busca el apartado \"Secciones a ignorar\"",
+          "Agrega los nombres de las secciones que quieres excluir"
+        ]
+      }
+    },
+    "form": {
+      "step1": {
+        "title": "Paso 1: Agrega este código a tu sitio web",
+        "description": "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
+        "copied": "✓ Código copiado al portapapeles"
+      },
+      "step2": {
+        "title": "Paso 2: Configuración del formulario",
+        "description": "El botón flotante de formulario puede ser personalizado con los siguientes atributos:",
+        "basic_attributes": "Atributos básicos:",
+        "customization_attributes": "Personalización:",
+        "attributes": {
+          "form_id": "ID del formulario a mostrar",
+          "display_type": "\"modal\" o \"slide-in\"",
+          "position": "\"bottom-right\", \"bottom-left\", etc.",
+          "button_text": "Texto del botón",
+          "theme_color": "Color del botón",
+          "icon": "\"form\", \"message\", \"help\"",
+          "button_size": "\"small\", \"medium\", \"large\"",
+          "auto_show": "Mostrar automáticamente"
+        },
+        "example_title": "Ejemplo completo:"
+      },
+      "step3": {
+        "title": "Paso 3: Gestiona tus formularios",
+        "description": "Crea y personaliza formularios desde el panel de administración:",
+        "dashboard_steps": [
+          "Accede a la sección \"Formularios\" en el panel",
+          "Crea un nuevo formulario con campos personalizados",
+          "Configura notificaciones por email",
+          "Personaliza el diseño y los colores",
+          "Copia el ID del formulario para usarlo en el código"
+        ]
+      }
+    },
+    "buttons": {
+      "copy_code": "Copiar Código",
+      "go_to_integrations": "Ir a Integraciones",
+      "go_to_forms": "Ir a Formularios",
+      "login_to_manage": "Iniciar Sesión para Gestionar",
+      "login_to_manage_forms": "Iniciar Sesión para Gestionar Formularios",
+      "preview_widget": "Vista Previa del Widget"
+    },
+    "cta": {
+      "title": "¿Listo para potenciar tu sitio web?",
+      "description": "Únete a miles de sitios web que ya están usando AIPPS para mejorar la experiencia de sus usuarios.",
+      "create_account": "Crear Cuenta Gratuita",
+      "learn_more": "Conocer Más"
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { 
   Tabs, 
@@ -29,6 +30,7 @@ export default function GetStarted() {
   const [location, setLocation] = useLocation();
   const { theme } = useTheme();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [copiedBubble, setCopiedBubble] = useState(false);
   const [copiedFullscreen, setCopiedFullscreen] = useState(false);
   const [copiedForm, setCopiedForm] = useState(false);
@@ -75,12 +77,12 @@ export default function GetStarted() {
   // Función para previsualizar widget flotante
   const previewBubbleWidget = () => {
     if (!bubbleUrl) {
-      alert("Por favor, ingresa la URL de tu sitio web");
+      alert(t("getStarted.widget.preview.url_required"));
       return;
     }
     
     if (!isValidUrl(bubbleUrl)) {
-      alert("Por favor, ingresa una URL válida (incluyendo http:// o https://)");
+      alert(t("getStarted.widget.preview.url_invalid"));
       return;
     }
     
