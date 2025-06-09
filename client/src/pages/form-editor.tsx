@@ -567,34 +567,34 @@ const FormEditor = () => {
                     <div key={index} className="p-4 border rounded-md bg-muted/20">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h4 className="font-medium">{field.label || 'Campo sin etiqueta'}</h4>
+                          <h4 className="font-medium">{field.label || t('formEditor.field_no_label')}</h4>
                           <p className="text-sm text-muted-foreground">
-                            Tipo: {field.type === 'text' ? 'Texto' : 
-                                  field.type === 'email' ? 'Correo electrónico' : 
-                                  field.type === 'number' ? 'Número' : 
-                                  field.type === 'textarea' ? 'Área de texto' : 
-                                  field.type === 'select' ? 'Selección' : 
-                                  field.type === 'checkbox' ? 'Casilla de verificación' : 
-                                  field.type === 'radio' ? 'Opción única' : 
-                                  'Otro'}
+                            {t('formEditor.type')}: {field.type === 'text' ? t('formEditor.field_types.text') : 
+                                  field.type === 'email' ? t('formEditor.field_types.email') : 
+                                  field.type === 'number' ? t('formEditor.field_types.number') : 
+                                  field.type === 'textarea' ? t('formEditor.field_types.textarea') : 
+                                  field.type === 'select' ? t('formEditor.field_types.select') : 
+                                  field.type === 'checkbox' ? t('formEditor.field_types.checkbox') : 
+                                  field.type === 'radio' ? t('formEditor.field_types.radio') : 
+                                  t('formEditor.field_types.other')}
                           </p>
                         </div>
                         <div className="flex space-x-2">
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            title="Mover hacia arriba"
+                            title={t('formEditor.move_up')}
                             onClick={() => handleMoveFieldUp(index)}
-                            disabled={index === 0} // Deshabilitar si es el primer elemento
+                            disabled={index === 0}
                           >
                             <ArrowUp className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            title="Mover hacia abajo"
+                            title={t('formEditor.move_down')}
                             onClick={() => handleMoveFieldDown(index)}
-                            disabled={index === formData.structure.fields.length - 1} // Deshabilitar si es el último elemento
+                            disabled={index === formData.structure.fields.length - 1}
                           >
                             <ArrowDown className="h-4 w-4" />
                           </Button>
@@ -616,7 +616,7 @@ const FormEditor = () => {
                               });
                             }}
                           >
-                            Editar
+                            {t('formEditor.edit')}
                           </Button>
                           <Button 
                             variant="destructive" 
@@ -645,7 +645,7 @@ const FormEditor = () => {
                               }, 100);
                             }}
                           >
-                            Eliminar
+                            {t('formEditor.delete')}
                           </Button>
                         </div>
                       </div>
@@ -653,22 +653,22 @@ const FormEditor = () => {
                       <div className="grid grid-cols-3 gap-2 text-sm">
                         {field.placeholder && (
                           <div>
-                            <span className="text-muted-foreground">Placeholder:</span> {field.placeholder}
+                            <span className="text-muted-foreground">{t('formEditor.placeholder')}:</span> {field.placeholder}
                           </div>
                         )}
                         {field.name && (
                           <div>
-                            <span className="text-muted-foreground">Nombre:</span> {field.name}
+                            <span className="text-muted-foreground">{t('formEditor.name')}:</span> {field.name}
                           </div>
                         )}
                         <div>
-                          <span className="text-muted-foreground">Requerido:</span> {field.required ? 'Sí' : 'No'}
+                          <span className="text-muted-foreground">{t('formEditor.required')}:</span> {field.required ? t('common.yes') : t('common.no')}
                         </div>
                       </div>
                       
                       {field.options && field.options.length > 0 && (
                         <div className="mt-2">
-                          <span className="text-sm text-muted-foreground">Opciones:</span>
+                          <span className="text-sm text-muted-foreground">{t('formEditor.options')}:</span>
                           <div className="grid grid-cols-2 gap-1 mt-1">
                             {field.options.map((option, i) => (
                               <div key={i} className="text-sm bg-muted/30 px-2 py-1 rounded">
@@ -684,7 +684,7 @@ const FormEditor = () => {
                   {formData.structure.fields.length === 0 && (
                     <div className="text-center p-8 border border-dashed rounded-md">
                       <p className="text-muted-foreground mb-4">
-                        No hay campos configurados para este formulario.
+                        {t('formEditor.no_fields_configured')}
                       </p>
                     </div>
                   )}
@@ -708,7 +708,7 @@ const FormEditor = () => {
                     }}
                     className="w-full"
                   >
-                    Agregar campo
+                    {t('formEditor.add_field')}
                   </Button>
                 </div>
               </CardContent>
@@ -720,33 +720,33 @@ const FormEditor = () => {
                 <Card className="w-full max-w-md">
                   <CardHeader>
                     <CardTitle>
-                      {currentEditingField === -1 ? 'Agregar campo' : 'Editar campo'}
+                      {currentEditingField === -1 ? t('formEditor.add_field') : t('formEditor.edit_field')}
                     </CardTitle>
                     <CardDescription>
-                      Configura las propiedades del campo
+                      {t('formEditor.configure_field_properties')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">
-                      <Label htmlFor="field-label">Etiqueta</Label>
+                      <Label htmlFor="field-label">{t('formEditor.label')}</Label>
                       <Input 
                         id="field-label" 
                         value={fieldData.label} 
                         onChange={(e) => setFieldData({...fieldData, label: e.target.value})}
-                        placeholder="Ej: Nombre completo"
+                        placeholder={t('formEditor.label_placeholder')}
                       />
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="field-name">Nombre técnico (ID)</Label>
+                      <Label htmlFor="field-name">{t('formEditor.technical_name')}</Label>
                       <Input 
                         id="field-name" 
                         value={fieldData.name} 
                         onChange={(e) => setFieldData({...fieldData, name: e.target.value.replace(/\s+/g, '_').toLowerCase()})}
-                        placeholder="Ej: nombre_completo"
+                        placeholder={t('formEditor.technical_name_placeholder')}
                       />
                       <p className="text-xs text-muted-foreground">
-                        Identificador único para el campo. Se genera automáticamente.
+                        {t('formEditor.technical_name_desc')}
                       </p>
                     </div>
                     
