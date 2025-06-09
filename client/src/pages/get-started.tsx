@@ -31,6 +31,7 @@ export default function GetStarted() {
   const { user } = useAuth();
   const [copiedBubble, setCopiedBubble] = useState(false);
   const [copiedFullscreen, setCopiedFullscreen] = useState(false);
+  const [copiedForm, setCopiedForm] = useState(false);
   
   // Estado para las previsualizaciones
   const [bubbleUrl, setBubbleUrl] = useState("");
@@ -40,20 +41,24 @@ export default function GetStarted() {
   const [isLoadingBubble, setIsLoadingBubble] = useState(false);
   const [isLoadingFullscreen, setIsLoadingFullscreen] = useState(false);
   
-  // URLs para los scripts de integración - USANDO EMBED.JS PARA AMBOS TIPOS
+  // URLs para los scripts de integración - USANDO EMBED.JS Y FORM-BUTTON.JS
   const baseUrl = window.location.origin;
   const bubbleWidgetCode = `<script src="${baseUrl}/embed.js?key=aipi_web_internal" data-widget-type="bubble"></script>`;
   const fullscreenWidgetCode = `<script src="${baseUrl}/embed.js?key=aipi_web_internal" data-widget-type="fullscreen"></script>`;
+  const formWidgetCode = `<script src="${baseUrl}/form-button.js?key=aipi_web_internal" data-form-id="1" data-display-type="modal"></script>`;
   
   // Función para copiar código al portapapeles
-  const copyToClipboard = (code: string, type: 'bubble' | 'fullscreen') => {
+  const copyToClipboard = (code: string, type: 'bubble' | 'fullscreen' | 'form') => {
     navigator.clipboard.writeText(code);
     if (type === 'bubble') {
       setCopiedBubble(true);
       setTimeout(() => setCopiedBubble(false), 2000);
-    } else {
+    } else if (type === 'fullscreen') {
       setCopiedFullscreen(true);
       setTimeout(() => setCopiedFullscreen(false), 2000);
+    } else if (type === 'form') {
+      setCopiedForm(true);
+      setTimeout(() => setCopiedForm(false), 2000);
     }
   };
   
@@ -129,6 +134,7 @@ export default function GetStarted() {
               <TabsList className="flex w-full justify-between mb-8">
                 <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">Widget</TabsTrigger>
                 <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">Pantalla</TabsTrigger>
+                <TabsTrigger value="form" className="flex-1 text-lg py-3 px-2">Formulario</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
@@ -431,6 +437,114 @@ export default function GetStarted() {
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/register")}>
                         Crear Cuenta para Funciones Avanzadas
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+              </TabsContent>
+
+              <TabsContent value="form" className="space-y-8">
+                <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                  <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-2xl font-bold">Paso 1: Agrega este código a tu sitio web</h2>
+                  </div>
+                  <div className="p-6 bg-white dark:bg-gray-900">
+                    <p className="mb-4 text-gray-700 dark:text-gray-300">
+                      Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre &lt;/body&gt;:
+                    </p>
+                    <div className="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 relative">
+                      <code className="text-sm">{formWidgetCode}</code>
+                      <Button
+                        onClick={() => copyToClipboard(formWidgetCode, 'form')}
+                        className="absolute top-2 right-2 p-2 bg-gray-700 hover:bg-gray-600"
+                        size="sm"
+                      >
+                        {copiedForm ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    {copiedForm && (
+                      <p className="text-green-600 dark:text-green-400 text-sm mb-4">
+                        ✓ Código copiado al portapapeles
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                  <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-2xl font-bold">Paso 2: Configuración del formulario</h2>
+                  </div>
+                  <div className="p-6 bg-white dark:bg-gray-900">
+                    <p className="mb-4 text-gray-700 dark:text-gray-300">
+                      El botón flotante de formulario puede ser personalizado con los siguientes atributos:
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                      <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                        <h3 className="font-semibold mb-2">Atributos básicos:</h3>
+                        <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
+                          <li><code>data-form-id</code>: ID del formulario a mostrar</li>
+                          <li><code>data-display-type</code>: "modal" o "slide-in"</li>
+                          <li><code>data-position</code>: "bottom-right", "bottom-left", etc.</li>
+                          <li><code>data-button-text</code>: Texto del botón</li>
+                        </ul>
+                      </div>
+                      <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                        <h3 className="font-semibold mb-2">Personalización:</h3>
+                        <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
+                          <li><code>data-theme-color</code>: Color del botón</li>
+                          <li><code>data-icon</code>: "form", "message", "help"</li>
+                          <li><code>data-button-size</code>: "small", "medium", "large"</li>
+                          <li><code>data-auto-show</code>: Mostrar automáticamente</li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4 rounded-lg">
+                      <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                        <strong>Ejemplo completo:</strong>
+                      </p>
+                      <pre className="text-xs bg-gray-900 text-gray-100 p-2 rounded overflow-x-auto mt-2">
+{`<script src="${baseUrl}/form-button.js?key=TU_API_KEY" 
+        data-form-id="1" 
+        data-display-type="modal"
+        data-position="bottom-right"
+        data-button-text="Contactar"
+        data-theme-color="#3B82F6"
+        data-icon="form">
+</script>`}
+                      </pre>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                  <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-2xl font-bold">Paso 3: Gestiona tus formularios</h2>
+                  </div>
+                  <div className="p-6 bg-white dark:bg-gray-900">
+                    <p className="mb-4 text-gray-700 dark:text-gray-300">
+                      Crea y personaliza formularios desde el panel de administración:
+                    </p>
+                    <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
+                      <li>Accede a la sección "Formularios" en el panel</li>
+                      <li>Crea un nuevo formulario con campos personalizados</li>
+                      <li>Configura notificaciones por email</li>
+                      <li>Personaliza el diseño y los colores</li>
+                      <li>Copia el ID del formulario para usarlo en el código</li>
+                    </ol>
+                    {user ? (
+                      <Button 
+                        onClick={() => setLocation("/dashboard?tab=forms")}
+                        className="bg-primary-600 hover:bg-primary-700"
+                      >
+                        Ir a Formularios
+                      </Button>
+                    ) : (
+                      <Button 
+                        onClick={() => setLocation("/login")}
+                        className="bg-primary-600 hover:bg-primary-700"
+                      >
+                        Iniciar Sesión para Gestionar Formularios
                       </Button>
                     )}
                   </div>
