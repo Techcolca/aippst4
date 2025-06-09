@@ -136,13 +136,13 @@ export function FormTemplateSelector() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">Selecciona una plantilla</h2>
+          <h2 className="text-2xl font-bold">{t('formTemplateSelector.selectTemplate')}</h2>
           <p className="text-muted-foreground text-sm mt-1">
-            Pasa el cursor sobre la plantilla y haz clic en el ícono del <Eye className="w-3 h-3 inline mx-1" /> para previsualizarla antes de usar.
+            {t('formTemplateSelector.hoverToPreview')} <Eye className="w-3 h-3 inline mx-1" /> {t('formTemplateSelector.beforeUsing')}.
           </p>
         </div>
         <Button variant="outline" onClick={handleCreateBlankForm}>
-          Crear desde cero
+          {t('formTemplateSelector.createFromScratch')}
         </Button>
       </div>
       
@@ -173,7 +173,7 @@ export function FormTemplateSelector() {
                     setPreviewTemplate(template);
                     setShowPreview(true);
                   }}
-                  title="Vista previa"
+                  title={t('formTemplateSelector.preview')}
                 >
                   <Eye className="h-4 w-4" />
                 </button>
@@ -402,7 +402,7 @@ export function FormTemplateSelector() {
                   createFormMutation.mutate(template.id);
                 }}
               >
-                <span>{selectedTemplate === template.id ? "Crear con esta plantilla" : "Usar esta plantilla"}</span>
+                <span>{selectedTemplate === template.id ? t('formTemplateSelector.createWithTemplate') : t('formTemplateSelector.useTemplate')}</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </CardFooter>
@@ -415,10 +415,10 @@ export function FormTemplateSelector() {
         <DialogContent className="sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">
-              {previewTemplate?.name || "Vista previa de la plantilla"}
+              {previewTemplate?.name || t('formTemplateSelector.templatePreview')}
             </DialogTitle>
             <DialogDescription>
-              {previewTemplate?.description || "Vista previa detallada de los campos y estructura del formulario."}
+              {previewTemplate?.description || t('formTemplateSelector.previewDescription')}
             </DialogDescription>
           </DialogHeader>
           
@@ -810,7 +810,7 @@ export function FormTemplateSelector() {
           
           <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-between">
             <DialogClose asChild>
-              <Button variant="outline">Cerrar vista previa</Button>
+              <Button variant="outline">{t('formTemplateSelector.closePreview')}</Button>
             </DialogClose>
             
             <Button
@@ -823,7 +823,7 @@ export function FormTemplateSelector() {
                 }
               }}
             >
-              {createFormMutation.isPending ? "Creando..." : "Usar esta plantilla"}
+              {createFormMutation.isPending ? t('formTemplateSelector.creating') : t('formTemplateSelector.useTemplate')}
             </Button>
           </DialogFooter>
         </DialogContent>
