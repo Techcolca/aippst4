@@ -691,12 +691,12 @@
         "welcome_message": "Message de bienvenue personnalisé",
         "example_title": "Exemple de configuration personnalisée:",
         "configure_dashboard": "Configurez ces options depuis le panneau d'administration:",
-        "dashboard_steps": [
-          "Accédez à la section \"Intégrations\" du panneau",
-          "Sélectionnez l'intégration que vous souhaitez configurer",
-          "Personnalisez les couleurs, position et messages",
-          "Les changements seront appliqués automatiquement"
-        ]
+        "dashboard_steps": {
+          "0": "Accédez à la section \"Intégrations\" du panneau",
+          "1": "Sélectionnez l'intégration que vous souhaitez configurer",
+          "2": "Personnalisez les couleurs, position et messages",
+          "3": "Les changements seront appliqués automatiquement"
+        }
       },
       "step3": {
         "title": "Étape 3: Configurez les sections à ignorer (optionnel)",

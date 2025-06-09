@@ -748,12 +748,12 @@
         "welcome_message": "Custom welcome message",
         "example_title": "Custom configuration example:",
         "configure_dashboard": "Configure these options from the admin panel:",
-        "dashboard_steps": [
-          "Access the \"Integrations\" section of the panel",
-          "Select the integration you want to configure",
-          "Customize colors, position and messages",
-          "Changes will be applied automatically"
-        ]
+        "dashboard_steps": {
+          "0": "Access the \"Integrations\" section of the panel",
+          "1": "Select the integration you want to configure",
+          "2": "Customize colors, position and messages",
+          "3": "Changes will be applied automatically"
+        }
       },
       "step3": {
         "title": "Step 3: Configure sections to ignore (optional)",

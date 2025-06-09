@@ -748,12 +748,12 @@
         "welcome_message": "Mensaje de bienvenida personalizado",
         "example_title": "Ejemplo de configuración personalizada:",
         "configure_dashboard": "Configura estas opciones desde el panel de administración:",
-        "dashboard_steps": [
-          "Accede a la sección \"Integraciones\" del panel",
-          "Selecciona la integración que deseas configurar",
-          "Personaliza colores, posición y mensajes",
-          "Los cambios se aplicarán automáticamente"
-        ]
+        "dashboard_steps": {
+          "0": "Accede a la sección \"Integraciones\" del panel",
+          "1": "Selecciona la integración que deseas configurar",
+          "2": "Personaliza colores, posición y mensajes",
+          "3": "Los cambios se aplicarán automáticamente"
+        }
       },
       "step3": {
         "title": "Paso 3: Configura secciones a ignorar (opcional)",

@@ -187,9 +187,10 @@ export default function GetStarted() {
                     <div className="mb-6">
                       <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStarted.widget.step2.configure_dashboard")}</p>
                       <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                        {(t("getStarted.widget.step2.dashboard_steps", { returnObjects: true }) as string[]).map((step, index) => (
-                          <li key={index}>{step}</li>
-                        ))}
+                        <li>{t("getStarted.widget.step2.dashboard_steps.0")}</li>
+                        <li>{t("getStarted.widget.step2.dashboard_steps.1")}</li>
+                        <li>{t("getStarted.widget.step2.dashboard_steps.2")}</li>
+                        <li>{t("getStarted.widget.step2.dashboard_steps.3")}</li>
                       </ol>
                     </div>
                     {user ? (
@@ -206,7 +207,7 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 3: Entrena tu asistente</h2>
+                    <h2 className="text-2xl font-bold">{t("getStarted.widget.step3.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
