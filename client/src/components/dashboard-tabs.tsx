@@ -300,9 +300,13 @@ export default function DashboardTabs() {
         },
       });
       if (!response.ok) {
-        throw new Error('Failed to delete form');
+        if (response.status === 404) {
+          throw new Error(t("form_not_found", "Form not found or already deleted"));
+        }
+        throw new Error(t("error_deleting_form", "Failed to delete form"));
       }
-      return response.json();
+      // El endpoint DELETE devuelve 204 (No Content), no JSON
+      return {};
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/forms"] });

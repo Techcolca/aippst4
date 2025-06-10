@@ -363,6 +363,7 @@
   "no_forms": "Aucun formulaire pour le moment",
   "forms_empty_message": "Créez un nouveau formulaire pour collecter des informations de vos visiteurs",
   "forms_description": "Créez et gérez vos formulaires",
+  "form_not_found": "Formulaire introuvable ou déjà supprimé",
   "dashboard_title": "Tableau de bord",
   "conversations": "Conversations",
   "forms": "Formulaires",

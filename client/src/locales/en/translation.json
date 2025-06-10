@@ -420,6 +420,7 @@
   "no_forms": "No forms yet",
   "forms_empty_message": "Create a new form to collect information from your visitors",
   "forms_description": "Create and manage your forms",
+  "form_not_found": "Form not found or already deleted",
   "dashboard_title": "Dashboard",
   "conversations": "Conversations",
   "forms": "Forms",

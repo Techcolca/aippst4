@@ -420,6 +420,7 @@
   "no_forms": "Sin formularios aún",
   "forms_empty_message": "Crea un nuevo formulario para recopilar información de tus visitantes",
   "forms_description": "Crea y gestiona tus formularios",
+  "form_not_found": "Formulario no encontrado o ya eliminado",
   "dashboard_title": "Panel de control",
   "conversations": "Conversaciones",
   "forms": "Formularios",
