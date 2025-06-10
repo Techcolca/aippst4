@@ -75,12 +75,151 @@ interface FieldData {
   defaultValue: string;
 }
 
+// Función para traducir etiquetas de campos dinámicamente
+const translateFieldLabel = (originalLabel: string, language: string): string => {
+  const translations: Record<string, Record<string, string>> = {
+    es: {
+      'Name': 'Nombre',
+      'First Name': 'Nombre',
+      'Last Name': 'Apellido', 
+      'Email': 'Correo electrónico',
+      'Phone': 'Teléfono',
+      'Company': 'Empresa',
+      'Message': 'Mensaje',
+      'Subject': 'Asunto',
+      'How did you hear about us?': '¿Cómo te enteraste de nosotros?',
+      'Interests': 'Intereses',
+      'Budget': 'Presupuesto',
+      'Project Details': 'Detalles del proyecto',
+      'Rating': 'Calificación',
+      'Feedback': 'Comentarios',
+      'Suggestions': 'Sugerencias',
+      'Event Name': 'Nombre del evento',
+      'Number of Participants': 'Número de participantes',
+      'Event Date': 'Fecha del evento',
+      'Submit': 'Enviar',
+      'Tu nombre': 'Tu nombre',
+      'tu@email.com': 'tu@email.com',
+      'Redes sociales': 'Redes sociales',
+      'Búsqueda en Google': 'Búsqueda en Google',
+      'Recomendación': 'Recomendación',
+      'Otro': 'Otro'
+    },
+    en: {
+      'Nombre': 'Name',
+      'Correo electrónico': 'Email',
+      'Teléfono': 'Phone',
+      'Empresa': 'Company',
+      'Mensaje': 'Message',
+      'Asunto': 'Subject',
+      '¿Cómo te enteraste de nosotros?': 'How did you hear about us?',
+      'Intereses': 'Interests',
+      'Presupuesto': 'Budget',
+      'Detalles del proyecto': 'Project Details',
+      'Calificación': 'Rating',
+      'Comentarios': 'Feedback',
+      'Sugerencias': 'Suggestions',
+      'Nombre del evento': 'Event Name',
+      'Número de participantes': 'Number of Participants',
+      'Fecha del evento': 'Event Date',
+      'Enviar': 'Submit',
+      'Tu nombre': 'Your name',
+      'tu@email.com': 'you@email.com',
+      'Redes sociales': 'Social media',
+      'Búsqueda en Google': 'Google search',
+      'Recomendación': 'Recommendation',
+      'Otro': 'Other'
+    },
+    fr: {
+      'Name': 'Nom',
+      'Nombre': 'Nom',
+      'Email': 'Email',
+      'Correo electrónico': 'Email',
+      'Phone': 'Téléphone',
+      'Teléfono': 'Téléphone',
+      'Company': 'Entreprise',
+      'Empresa': 'Entreprise',
+      'Message': 'Message',
+      'Mensaje': 'Message',
+      'Subject': 'Sujet',
+      'Asunto': 'Sujet',
+      'How did you hear about us?': 'Comment avez-vous entendu parler de nous?',
+      '¿Cómo te enteraste de nosotros?': 'Comment avez-vous entendu parler de nous?',
+      'Interests': 'Intérêts',
+      'Intereses': 'Intérêts',
+      'Budget': 'Budget',
+      'Presupuesto': 'Budget',
+      'Project Details': 'Détails du projet',
+      'Detalles del proyecto': 'Détails du projet',
+      'Rating': 'Évaluation',
+      'Calificación': 'Évaluation',
+      'Feedback': 'Commentaires',
+      'Comentarios': 'Commentaires',
+      'Suggestions': 'Suggestions',
+      'Sugerencias': 'Suggestions',
+      'Event Name': 'Nom de l\'événement',
+      'Nombre del evento': 'Nom de l\'événement',
+      'Number of Participants': 'Nombre de participants',
+      'Número de participantes': 'Nombre de participants',
+      'Event Date': 'Date de l\'événement',
+      'Fecha del evento': 'Date de l\'événement',
+      'Submit': 'Soumettre',
+      'Enviar': 'Soumettre',
+      'Tu nombre': 'Votre nom',
+      'Your name': 'Votre nom',
+      'tu@email.com': 'vous@email.com',
+      'you@email.com': 'vous@email.com',
+      'Redes sociales': 'Réseaux sociaux',
+      'Social media': 'Réseaux sociaux',
+      'Búsqueda en Google': 'Recherche Google',
+      'Google search': 'Recherche Google',
+      'Recomendación': 'Recommandation',
+      'Recommendation': 'Recommandation',
+      'Otro': 'Autre',
+      'Other': 'Autre'
+    }
+  };
+
+  const langTranslations = translations[language] || translations.es;
+  return langTranslations[originalLabel] || originalLabel;
+};
+
+// Función para traducir placeholders
+const translatePlaceholder = (originalPlaceholder: string, language: string): string => {
+  const translations: Record<string, Record<string, string>> = {
+    es: {
+      'Your name': 'Tu nombre',
+      'you@email.com': 'tu@email.com',
+      'Tu nombre': 'Tu nombre',
+      'tu@email.com': 'tu@email.com'
+    },
+    en: {
+      'Tu nombre': 'Your name',
+      'tu@email.com': 'you@email.com',
+      'Your name': 'Your name',
+      'you@email.com': 'you@email.com'
+    },
+    fr: {
+      'Tu nombre': 'Votre nom',
+      'Your name': 'Votre nom',
+      'tu@email.com': 'vous@email.com',
+      'you@email.com': 'vous@email.com'
+    }
+  };
+
+  const langTranslations = translations[language] || translations.es;
+  return langTranslations[originalPlaceholder] || originalPlaceholder;
+};
+
 const FormEditor = () => {
   const [, navigate] = useLocation();
   const [match, params] = useRoute<{ id: string }>('/forms/:id/edit');
   const formId = parseInt(params?.id || '0');
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
+  
+  // Estado para el idioma seleccionado en el editor
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language || 'es');
   
   const [formData, setFormData] = useState<FormData>({
     title: '',
@@ -109,6 +248,35 @@ const FormEditor = () => {
       storeResponses: true
     }
   });
+
+  // Función para aplicar traducciones a todos los campos del formulario
+  const applyTranslationsToForm = (formData: FormData, language: string): FormData => {
+    const translatedFields = formData.structure.fields.map(field => ({
+      ...field,
+      label: translateFieldLabel(field.label, language),
+      placeholder: field.placeholder ? translatePlaceholder(field.placeholder, language) : '',
+      options: field.options ? field.options.map(option => {
+        if (typeof option === 'string') {
+          return translateFieldLabel(option, language);
+        } else {
+          return {
+            ...option,
+            label: translateFieldLabel(option.label, language)
+          };
+        }
+      }) : []
+    }));
+
+    return {
+      ...formData,
+      language: language,
+      structure: {
+        ...formData.structure,
+        fields: translatedFields,
+        submitButtonText: translateFieldLabel(formData.structure.submitButtonText || 'Submit', language)
+      }
+    };
+  };
   
   // Estado para el modal de edición de campos
   const [showFieldModal, setShowFieldModal] = useState(false);
@@ -129,6 +297,21 @@ const FormEditor = () => {
     enabled: !!formId,
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
+
+  // Aplicar traducciones cuando se carga el formulario o cambia el idioma
+  useEffect(() => {
+    if (form) {
+      const translatedForm = applyTranslationsToForm(form, selectedLanguage);
+      setFormData(translatedForm);
+    }
+  }, [form, selectedLanguage]);
+
+  // Manejar cambio de idioma
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+    const translatedForm = applyTranslationsToForm(formData, language);
+    setFormData(translatedForm);
+  };
 
   // Actualizar formulario
   const updateFormMutation = useMutation({
@@ -499,23 +682,20 @@ const FormEditor = () => {
                   />
                 </div>
 
-                {/* Language selector */}
+                {/* Selector de idioma para traducción dinámica */}
                 <div className="space-y-2">
-                  <Label htmlFor="language">{t('formEditor.language')}</Label>
+                  <Label htmlFor="language">{t('form_language', 'Idioma del formulario')}</Label>
                   <Select 
-                    value={formData.language} 
-                    onValueChange={(value) => {
-                      setFormData({...formData, language: value});
-                      i18n.changeLanguage(value);
-                    }}
+                    value={selectedLanguage} 
+                    onValueChange={handleLanguageChange}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder={t('formEditor.select_language')} />
+                      <SelectValue placeholder={t('formEditor.select_language', 'Seleccionar idioma')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="es">{t('common.spanish')}</SelectItem>
-                      <SelectItem value="en">{t('common.english')}</SelectItem>
-                      <SelectItem value="fr">{t('common.french')}</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
