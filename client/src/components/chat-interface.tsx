@@ -48,7 +48,12 @@ export default function ChatInterface({
     console.log("Obteniendo mensaje de bienvenida para idioma:", currentLanguage);
     
     // Usar i18n para obtener traducciones (prioridad para mantener coherencia en la UI)
-    return t('assistant.welcome_message');
+    const messages = {
+      es: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
+      en: "👋 Hello! I'm AIPPS, your AI assistant. How can I help you today?",
+      fr: "👋 Bonjour ! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui ?"
+    };
+    return messages[currentLanguage as keyof typeof messages] || messages.en;
   };
 
   // Inicializar el chat con un mensaje de bienvenida
