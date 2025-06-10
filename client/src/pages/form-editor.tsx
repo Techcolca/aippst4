@@ -298,19 +298,27 @@ const FormEditor = () => {
     staleTime: 1000 * 60 * 5, // 5 minutos
   });
 
-  // Aplicar traducciones cuando se carga el formulario o cambia el idioma
+  // Cargar datos del formulario y configurar idioma inicial
   useEffect(() => {
     if (form) {
-      const translatedForm = applyTranslationsToForm(form, selectedLanguage);
-      setFormData(translatedForm);
+      const parsedData = parseFormData(form);
+      setFormData(parsedData);
+      // Configurar el idioma seleccionado basado en el formulario cargado
+      if (form.language && form.language !== selectedLanguage) {
+        setSelectedLanguage(form.language);
+      }
     }
-  }, [form, selectedLanguage]);
+  }, [form]);
 
   // Manejar cambio de idioma
   const handleLanguageChange = (language: string) => {
+    console.log("Cambiando idioma a:", language);
     setSelectedLanguage(language);
-    const translatedForm = applyTranslationsToForm(formData, language);
-    setFormData(translatedForm);
+    // Aplicar traducciones inmediatamente
+    if (formData.title) {
+      const translatedForm = applyTranslationsToForm(formData, language);
+      setFormData(translatedForm);
+    }
   };
 
   // Actualizar formulario
@@ -367,12 +375,7 @@ const FormEditor = () => {
     };
   };
 
-  // Cargar datos iniciales
-  useEffect(() => {
-    if (form) {
-      setFormData(parseFormData(form));
-    }
-  }, [form]);
+
 
   // Guardar cambios
   const handleSaveForm = () => {
