@@ -812,8 +812,12 @@ export class PgStorage implements IStorage {
 
   async updateForm(id: number, data: Partial<Form>): Promise<Form> {
     const now = new Date();
+    
+    // Filtrar campos de fecha que pueden causar problemas de conversión
+    const { createdAt, updatedAt, ...updateData } = data;
+    
     const result = await db.update(forms)
-      .set({ ...data, updatedAt: now })
+      .set({ ...updateData, updatedAt: now })
       .where(eq(forms.id, id))
       .returning();
     return result[0];
