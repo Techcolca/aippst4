@@ -4336,6 +4336,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       '¿Qué fue lo mejor del evento?': { en: 'What was the best part of the event?', fr: 'Qu\'est-ce qui était le mieux dans l\'événement?', es: '¿Qué fue lo mejor del evento?' },
       'Me gustaría recibir información sobre futuros eventos': { en: 'I would like to receive information about future events', fr: 'J\'aimerais recevoir des informations sur les futurs événements', es: 'Me gustaría recibir información sobre futuros eventos' },
       
+      // CAMPOS ADICIONALES EVALUACIÓN EVENTO
+      'Tu evaluación': { en: 'Your evaluation', fr: 'Votre évaluation', es: 'Tu evaluación' },
+      'Valoración del contenido': { en: 'Content rating', fr: 'Évaluation du contenu', es: 'Valoración del contenido' },
+      'Valoración de ponentes': { en: 'Speakers rating', fr: 'Évaluation des intervenants', es: 'Valoración de ponentes' },
+      'Valoración de la organización': { en: 'Organization rating', fr: 'Évaluation de l\'organisation', es: 'Valoración de la organización' },
+      'Comentarios adicionales': { en: 'Additional comments', fr: 'Commentaires supplémentaires', es: 'Comentarios adicionales' },
+      'Aspectos destacados': { en: 'Highlights', fr: 'Points forts', es: 'Aspectos destacados' },
+      'Área de mejora': { en: 'Improvement areas', fr: 'Domaines d\'amélioration', es: 'Área de mejora' },
+      
       // CAMPOS DE SOLICITUD DE EMPLEO
       'Puesto al que aplicas': { en: 'Position you are applying for', fr: 'Poste auquel vous postulez', es: 'Puesto al que aplicas' },
       'Experiencia relevante': { en: 'Relevant experience', fr: 'Expérience pertinente', es: 'Experiencia relevante' },
@@ -4349,6 +4358,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       'Temas de interés': { en: 'Topics of interest', fr: 'Sujets d\'intérêt', es: 'Temas de interés' },
       'Frecuencia de envío preferida': { en: 'Preferred sending frequency', fr: 'Fréquence d\'envoi préférée', es: 'Frecuencia de envío preferida' },
       'Acepto recibir comunicaciones comerciales': { en: 'I accept to receive commercial communications', fr: 'J\'accepte de recevoir des communications commerciales', es: 'Acepto recibir comunicaciones comerciales' },
+      'Acepto los términos y condiciones': { en: 'I accept the terms and conditions', fr: 'J\'accepte les termes et conditions', es: 'Acepto los términos y condiciones' },
       
       // CAMPOS DE ENCUESTA DE OPINIÓN
       'Producto/Servicio evaluado': { en: 'Product/Service evaluated', fr: 'Produit/Service évalué', es: 'Producto/Servicio evaluado' },
@@ -4356,6 +4366,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       'Aspectos positivos': { en: 'Positive aspects', fr: 'Aspects positifs', es: 'Aspectos positivos' },
       'Aspectos a mejorar': { en: 'Aspects to improve', fr: 'Aspects à améliorer', es: 'Aspectos a mejorar' },
       'Probabilidad de recomendación': { en: 'Likelihood of recommendation', fr: 'Probabilité de recommandation', es: 'Probabilidad de recomendación' },
+      
+      // PLACEHOLDERS Y TEXTOS ESPECÍFICOS
+      'Tu nombre placeholder': { en: 'Your name', fr: 'Votre nom', es: 'Tu nombre' },
+      'Tu nombre completo placeholder': { en: 'Your full name', fr: 'Votre nom complet', es: 'Tu nombre completo' },
+      'email placeholder': { en: 'you@email.com', fr: 'vous@email.com', es: 'tu@email.com' },
+      'Nombre de tu empresa placeholder': { en: 'Your company name', fr: 'Nom de votre entreprise', es: 'Nombre de tu empresa' },
+      'Describe tu proyecto...': { en: 'Describe your project...', fr: 'Décrivez votre projet...', es: 'Describe tu proyecto...' },
+      'Cuéntanos tu experiencia': { en: 'Tell us about your experience', fr: 'Parlez-nous de votre expérience', es: 'Cuéntanos tu experiencia' },
+      'Comparte lo que más te gustó': { en: 'Share what you liked most', fr: 'Partagez ce que vous avez le plus aimé', es: 'Comparte lo que más te gustó' },
+      'Tus sugerencias son importantes': { en: 'Your suggestions are important', fr: 'Vos suggestions sont importantes', es: 'Tus sugerencias son importantes' },
+      
+      // BOTONES DE ENVÍO
+      'Enviar btn': { en: 'Submit', fr: 'Envoyer', es: 'Enviar' },
+      'Enviar solicitud btn': { en: 'Submit request', fr: 'Envoyer la demande', es: 'Enviar solicitud' },
+      'Registrarse btn': { en: 'Register', fr: 'S\'inscrire', es: 'Registrarse' },
+      'Realizar pedido btn': { en: 'Place order', fr: 'Passer commande', es: 'Realizar pedido' },
+      'Enviar evaluación btn': { en: 'Submit evaluation', fr: 'Envoyer l\'évaluation', es: 'Enviar evaluación' },
+      'Postular btn': { en: 'Apply', fr: 'Postuler', es: 'Postular' },
+      'Suscribirse btn': { en: 'Subscribe', fr: 'S\'abonner', es: 'Suscribirse' },
+      'Enviar opinión btn': { en: 'Submit opinion', fr: 'Envoyer l\'avis', es: 'Enviar opinión' },
       
       // OPCIONES MÚLTIPLES COMUNES
       'Redes sociales': { en: 'Social media', fr: 'Réseaux sociaux', es: 'Redes sociales' },
@@ -4450,6 +4480,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       'Taller práctico - Mayo': { en: 'Practical Workshop - May', fr: 'Atelier pratique - Mai', es: 'Taller práctico - Mayo' },
       'Webinar técnico - Junio': { en: 'Technical Webinar - June', fr: 'Webinaire technique - Juin', es: 'Webinar técnico - Junio' },
 
+      // CAMPOS ADICIONALES CRÍTICOS
+      'Unirme a la lista de espera': { en: 'Join waitlist', fr: 'Rejoindre la liste d\'attente', es: 'Unirme a la lista de espera' },
+      'Gracias por tu envío': { en: 'Thank you for your submission', fr: 'Merci pour votre soumission', es: 'Gracias por tu envío' },
+      'Votre nom': { en: 'Your name', fr: 'Votre nom', es: 'Tu nombre' },
+      'vous@email.com': { en: 'you@email.com', fr: 'vous@email.com', es: 'tu@email.com' },
+      'Prénom': { en: 'First name', fr: 'Prénom', es: 'Nombre' },
+      
+      // CAMPOS ESPECÍFICOS DE LISTA DE ESPERA
+      'Liste d\'Attente Webinar Premium': { en: 'Premium Webinar Waitlist', fr: 'Liste d\'Attente Webinar Premium', es: 'Lista de Espera Webinar Premium' },
+      'Votre email': { en: 'Your email', fr: 'Votre email', es: 'Tu email' },
+      'Name': { en: 'Name', fr: 'Nom', es: 'Nombre' },
+      
       // MENSAJES DE ÉXITO
       '¡Gracias por tu feedback!': { en: 'Thank you for your feedback!', fr: 'Merci pour vos commentaires!', es: '¡Gracias por tu feedback!' },
       '¡Hemos recibido tu solicitud! Te contactaremos en breve.': { en: 'We have received your request! We will contact you shortly.', fr: 'Nous avons reçu votre demande! Nous vous contacterons bientôt.', es: '¡Hemos recibido tu solicitud! Te contactaremos en breve.' },
