@@ -19,7 +19,7 @@ import { IntegrationCard } from "./integration-card";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2 } from "lucide-react";
+import { Trash2, Edit3, Trash } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 
 // Definición de tipos
@@ -348,42 +348,62 @@ export default function DashboardTabs() {
                   </div>
                 </div>
                 <div className="flex-grow"></div>
-                <div className="flex justify-between mt-4">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                <div className="mb-4">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     {form.responseCount || 0} {t("responses", "responses")}
                   </div>
-                  <div className="flex space-x-2">
-                    <Link href={`/forms/${form.id}/responses`}>
-                      <Button size="sm" variant="outline">{t("responses", "Responses")}</Button>
-                    </Link>
-                    <Link href={`/forms/${form.id}/edit`}>
-                      <Button size="sm">{t("edit", "Edit")}</Button>
-                    </Link>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button size="sm" variant="destructive">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>{t("confirm_delete", "Confirm Delete")}</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            {t("delete_form_confirmation", "Are you sure you want to delete this form? This action cannot be undone and will also delete all responses.")}
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>{t("cancel", "Cancel")}</AlertDialogCancel>
-                          <AlertDialogAction 
-                            onClick={() => deleteFormMutation.mutate(form.id)}
-                            disabled={deleteFormMutation.isPending}
-                          >
-                            {deleteFormMutation.isPending ? t("deleting", "Deleting...") : t("delete", "Delete")}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
+                </div>
+                
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => navigate(`/forms/${form.id}/edit`)}
+                  >
+                    <Edit3 className="h-4 w-4 mr-1" />
+                    {t("edit", "Edit")}
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => navigate(`/forms/${form.id}/responses`)}
+                  >
+                    {t("responses", "Responses")}
+                  </Button>
+                  
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 text-red-500 hover:text-red-700 hover:border-red-300"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        {t("delete", "Delete")}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t("confirm_delete", "Confirm Delete")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("delete_form_confirmation", "Are you sure you want to delete this form? This action cannot be undone and will also delete all responses.")}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t("cancel", "Cancel")}</AlertDialogCancel>
+                        <AlertDialogAction 
+                          className="bg-red-500 hover:bg-red-600"
+                          onClick={() => deleteFormMutation.mutate(form.id)}
+                          disabled={deleteFormMutation.isPending}
+                        >
+                          {deleteFormMutation.isPending ? t("deleting", "Deleting...") : t("delete", "Delete")}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </Card>
             ))}
