@@ -4393,7 +4393,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           'Encuesta para medir la satisfacción del cliente': { en: 'Survey to measure customer satisfaction', fr: 'Enquête pour mesurer la satisfaction client', es: 'Encuesta para medir la satisfacción del cliente' },
           'Formulario para solicitar presupuestos personalizados para tus clientes': { en: 'Form to request personalized quotes for your clients', fr: 'Formulaire pour demander des devis personnalisés pour vos clients', es: 'Formulario para solicitar presupuestos personalizados para tus clientes' },
           'Formulario optimizado para registrar asistentes a eventos virtuales': { en: 'Optimized form to register attendees for virtual events', fr: 'Formulaire optimisé pour inscrire des participants à des événements virtuels', es: 'Formulario optimizado para registrar asistentes a eventos virtuales' },
-          'Perfecto para tomar pedidos online de manera organizada.': { en: 'Perfect for taking online orders in an organized way.', fr: 'Parfait pour prendre des commandes en ligne de manière organisée.', es: 'Perfecto para tomar pedidos online de manera organizada.' }
+          'Perfecto para tomar pedidos online de manera organizada.': { en: 'Perfect for taking online orders in an organized way.', fr: 'Parfait pour prendre des commandes en ligne de manière organisée.', es: 'Perfecto para tomar pedidos online de manera organizada.' },
+          
+          // Plantillas adicionales
+          'Evaluación de Evento': { en: 'Event Evaluation', fr: 'Évaluation d\'Événement', es: 'Evaluación de Evento' },
+          'Solicitud de Empleo': { en: 'Job Application', fr: 'Demande d\'Emploi', es: 'Solicitud de Empleo' },
+          'Registro a Newsletter': { en: 'Newsletter Registration', fr: 'Inscription à la Newsletter', es: 'Registro a Newsletter' },
+          'Encuesta de Opinión': { en: 'Opinion Survey', fr: 'Enquête d\'Opinion', es: 'Encuesta de Opinión' },
+          
+          // Descripciones adicionales
+          'Recopila feedback detallado sobre tus eventos y conferencias.': { en: 'Collect detailed feedback about your events and conferences.', fr: 'Recueillez des commentaires détaillés sur vos événements et conférences.', es: 'Recopila feedback detallado sobre tus eventos y conferencias.' },
+          'Optimizado para reclutar candidatos y revisar solicitudes de empleo.': { en: 'Optimized to recruit candidates and review job applications.', fr: 'Optimisé pour recruter des candidats et examiner les demandes d\'emploi.', es: 'Optimizado para reclutar candidatos y revisar solicitudes de empleo.' },
+          'Forma sencilla para capturar suscriptores a tu boletín informativo.': { en: 'Simple form to capture subscribers to your newsletter.', fr: 'Formulaire simple pour capturer les abonnés à votre newsletter.', es: 'Forma sencilla para capturar suscriptores a tu boletín informativo.' },
+          'Recopila opiniones y valoraciones sobre productos o servicios.': { en: 'Collect opinions and ratings about products or services.', fr: 'Recueillez des opinions et des évaluations sur les produits ou services.', es: 'Recopila opiniones y valoraciones sobre productos o servicios.' }
         };
 
         const translateTemplateText = (text: string, targetLanguage: string): string => {

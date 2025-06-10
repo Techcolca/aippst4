@@ -103,6 +103,50 @@ export function FormTemplateSelector() {
       en: 'Perfect for taking online orders in an organized way.',
       fr: 'Parfait pour prendre des commandes en ligne de manière organisée.',
       es: 'Perfecto para tomar pedidos online de manera organizada.'
+    },
+    
+    // Plantillas adicionales que aparecen en la imagen
+    'Evaluación de Evento': {
+      en: 'Event Evaluation',
+      fr: 'Évaluation d\'Événement',
+      es: 'Evaluación de Evento'
+    },
+    'Solicitud de Empleo': {
+      en: 'Job Application',
+      fr: 'Demande d\'Emploi',
+      es: 'Solicitud de Empleo'
+    },
+    'Registro a Newsletter': {
+      en: 'Newsletter Registration',
+      fr: 'Inscription à la Newsletter',
+      es: 'Registro a Newsletter'
+    },
+    'Encuesta de Opinión': {
+      en: 'Opinion Survey',
+      fr: 'Enquête d\'Opinion',
+      es: 'Encuesta de Opinión'
+    },
+    
+    // Descripciones adicionales
+    'Recopila feedback detallado sobre tus eventos y conferencias.': {
+      en: 'Collect detailed feedback about your events and conferences.',
+      fr: 'Recueillez des commentaires détaillés sur vos événements et conférences.',
+      es: 'Recopila feedback detallado sobre tus eventos y conferencias.'
+    },
+    'Optimizado para reclutar candidatos y revisar solicitudes de empleo.': {
+      en: 'Optimized to recruit candidates and review job applications.',
+      fr: 'Optimisé pour recruter des candidats et examiner les demandes d\'emploi.',
+      es: 'Optimizado para reclutar candidatos y revisar solicitudes de empleo.'
+    },
+    'Forma sencilla para capturar suscriptores a tu boletín informativo.': {
+      en: 'Simple form to capture subscribers to your newsletter.',
+      fr: 'Formulaire simple pour capturer les abonnés à votre newsletter.',
+      es: 'Forma sencilla para capturar suscriptores a tu boletín informativo.'
+    },
+    'Recopila opiniones y valoraciones sobre productos o servicios.': {
+      en: 'Collect opinions and ratings about products or services.',
+      fr: 'Recueillez des opinions et des évaluations sur les produits ou services.',
+      es: 'Recopila opiniones y valoraciones sobre productos o servicios.'
     }
   };
 
