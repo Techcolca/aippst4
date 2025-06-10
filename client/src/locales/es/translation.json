@@ -423,6 +423,7 @@
   "form_not_found": "Formulario no encontrado o ya eliminado",
   "create_new_form": "Crear nuevo formulario",
   "select_template_description": "Selecciona una plantilla o comienza desde cero para crear tu formulario personalizado",
+  "form_language": "Idioma del formulario",
   "dashboard_title": "Panel de control",
   "conversations": "Conversaciones",
   "forms": "Formularios",

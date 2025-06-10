@@ -4282,10 +4282,119 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Función auxiliar para traducir campos de plantillas
+  const translateTemplateFields = (structure: any, language: string) => {
+    const translations: Record<string, Record<string, string>> = {
+      es: {
+        name: "Nombre",
+        firstName: "Nombre",
+        lastName: "Apellido",
+        email: "Correo electrónico",
+        phone: "Teléfono",
+        company: "Empresa",
+        message: "Mensaje",
+        subject: "Asunto",
+        howDidYouHear: "¿Cómo te enteraste de nosotros?",
+        interests: "Intereses",
+        budget: "Presupuesto",
+        projectDetails: "Detalles del proyecto",
+        rating: "Calificación",
+        feedback: "Comentarios",
+        suggestions: "Sugerencias",
+        eventName: "Nombre del evento",
+        participantCount: "Número de participantes",
+        eventDate: "Fecha del evento",
+        submit: "Enviar"
+      },
+      en: {
+        name: "Name",
+        firstName: "First Name",
+        lastName: "Last Name",
+        email: "Email",
+        phone: "Phone",
+        company: "Company",
+        message: "Message",
+        subject: "Subject",
+        howDidYouHear: "How did you hear about us?",
+        interests: "Interests",
+        budget: "Budget",
+        projectDetails: "Project Details",
+        rating: "Rating",
+        feedback: "Feedback",
+        suggestions: "Suggestions",
+        eventName: "Event Name",
+        participantCount: "Number of Participants",
+        eventDate: "Event Date",
+        submit: "Submit"
+      },
+      fr: {
+        name: "Nom",
+        firstName: "Prénom",
+        lastName: "Nom de famille",
+        email: "Email",
+        phone: "Téléphone",
+        company: "Entreprise",
+        message: "Message",
+        subject: "Sujet",
+        howDidYouHear: "Comment avez-vous entendu parler de nous?",
+        interests: "Intérêts",
+        budget: "Budget",
+        projectDetails: "Détails du projet",
+        rating: "Évaluation",
+        feedback: "Commentaires",
+        suggestions: "Suggestions",
+        eventName: "Nom de l'événement",
+        participantCount: "Nombre de participants",
+        eventDate: "Date de l'événement",
+        submit: "Soumettre"
+      }
+    };
+
+    const langTranslations = translations[language] || translations.es;
+    
+    if (structure && structure.fields) {
+      structure.fields = structure.fields.map((field: any) => {
+        // Mapear etiquetas comunes basadas en el tipo de campo y nombre
+        const fieldKey = field.name || field.label?.toLowerCase().replace(/\s+/g, '');
+        
+        // Intentar encontrar una traducción basada en el nombre del campo
+        let translatedLabel = field.label;
+        
+        if (fieldKey === 'name' || fieldKey === 'nombre') {
+          translatedLabel = langTranslations.name;
+        } else if (fieldKey === 'email' || fieldKey === 'correoelectronico') {
+          translatedLabel = langTranslations.email;
+        } else if (fieldKey === 'phone' || fieldKey === 'telefono') {
+          translatedLabel = langTranslations.phone;
+        } else if (fieldKey === 'company' || fieldKey === 'empresa') {
+          translatedLabel = langTranslations.company;
+        } else if (fieldKey === 'message' || fieldKey === 'mensaje') {
+          translatedLabel = langTranslations.message;
+        } else if (fieldKey === 'subject' || fieldKey === 'asunto') {
+          translatedLabel = langTranslations.subject;
+        } else if (field.type === 'select' && (field.label?.includes('enteraste') || field.label?.includes('hear'))) {
+          translatedLabel = langTranslations.howDidYouHear;
+        }
+        
+        return {
+          ...field,
+          label: translatedLabel
+        };
+      });
+      
+      // Traducir el texto del botón de envío
+      if (structure.submitButtonText) {
+        structure.submitButtonText = langTranslations.submit;
+      }
+    }
+    
+    return structure;
+  };
+
   app.post("/api/forms", authenticateJWT, async (req, res) => {
     try {
       const userId = req.user!.id;
-      const { templateId, ...formData } = req.body;
+      const { templateId, language = 'es', ...formData } = req.body;
       
       // Si se proporciona templateId, crear formulario basado en plantilla
       if (templateId) {
@@ -4314,14 +4423,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ? `${slug}-${Math.floor(Math.random() * 1000)}` 
           : slug;
         
-        // Crear el nuevo formulario con datos de la plantilla
+        // Traducir la estructura de campos según el idioma seleccionado
+        const translatedStructure = translateTemplateFields(JSON.parse(JSON.stringify(template.structure)), language);
+        
+        // Crear el nuevo formulario con datos de la plantilla traducidos
         const newForm = await storage.createForm({
           title,
           slug: finalSlug,
           description: template.description,
           type: template.type,
           published: false,
-          structure: template.structure,
+          language: language, // Guardar el idioma del formulario
+          structure: translatedStructure,
           styling: template.styling,
           settings: template.settings,
           userId
