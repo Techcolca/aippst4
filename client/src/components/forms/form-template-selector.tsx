@@ -39,12 +39,87 @@ export function FormTemplateSelector() {
   const [showPreview, setShowPreview] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language || 'es');
 
-  // Mapeo de traducciones para plantillas basado en el tipo
+  // Sistema de traducción específico para plantillas
+  const templateTranslations: Record<string, Record<string, string>> = {
+    // Títulos de plantillas
+    'Formulario de Contacto': {
+      en: 'Contact Form',
+      fr: 'Formulaire de Contact',
+      es: 'Formulario de Contacto'
+    },
+    'Lista de Espera': {
+      en: 'Waitlist',
+      fr: 'Liste d\'Attente',
+      es: 'Lista de Espera'
+    },
+    'Encuesta de Satisfacción': {
+      en: 'Satisfaction Survey',
+      fr: 'Enquête de Satisfaction',
+      es: 'Encuesta de Satisfacción'
+    },
+    'Solicitud de Presupuesto': {
+      en: 'Quote Request',
+      fr: 'Demande de Devis',
+      es: 'Solicitud de Presupuesto'
+    },
+    'Registro para Webinar': {
+      en: 'Webinar Registration',
+      fr: 'Inscription au Webinaire',
+      es: 'Registro para Webinar'
+    },
+    'Formulario de Pedido': {
+      en: 'Order Form',
+      fr: 'Formulaire de Commande',
+      es: 'Formulario de Pedido'
+    },
+    
+    // Descripciones de plantillas
+    'Plantilla estándar para formularios de contacto': {
+      en: 'Standard template for contact forms',
+      fr: 'Modèle standard pour formulaires de contact',
+      es: 'Plantilla estándar para formularios de contacto'
+    },
+    'Plantilla para capturar usuarios en lista de espera': {
+      en: 'Template to capture users for waitlist',
+      fr: 'Modèle pour capturer des utilisateurs en liste d\'attente',
+      es: 'Plantilla para capturar usuarios en lista de espera'
+    },
+    'Encuesta para medir la satisfacción del cliente': {
+      en: 'Survey to measure customer satisfaction',
+      fr: 'Enquête pour mesurer la satisfaction client',
+      es: 'Encuesta para medir la satisfacción del cliente'
+    },
+    'Formulario para solicitar presupuestos personalizados para tus clientes': {
+      en: 'Form to request personalized quotes for your clients',
+      fr: 'Formulaire pour demander des devis personnalisés pour vos clients',
+      es: 'Formulario para solicitar presupuestos personalizados para tus clientes'
+    },
+    'Formulario optimizado para registrar asistentes a eventos virtuales': {
+      en: 'Optimized form to register attendees for virtual events',
+      fr: 'Formulaire optimisé pour inscrire des participants à des événements virtuels',
+      es: 'Formulario optimizado para registrar asistentes a eventos virtuales'
+    },
+    'Perfecto para tomar pedidos online de manera organizada.': {
+      en: 'Perfect for taking online orders in an organized way.',
+      fr: 'Parfait pour prendre des commandes en ligne de manière organisée.',
+      es: 'Perfecto para tomar pedidos online de manera organizada.'
+    }
+  };
+
+  const translateTemplate = (text: string, targetLanguage: string): string => {
+    const translation = templateTranslations[text];
+    if (translation && translation[targetLanguage]) {
+      console.log(`Traduciendo plantilla "${text}" a ${targetLanguage}: "${translation[targetLanguage]}"`);
+      return translation[targetLanguage];
+    }
+    console.log(`Sin traducción para "${text}" en ${targetLanguage}, usando original`);
+    return text;
+  };
+
   const getTemplateTranslations = (template: FormTemplate) => {
-    const typeKey = template.type.toLowerCase();
     return {
-      name: t(`formTemplates.${typeKey}.name`, template.name),
-      description: t(`formTemplates.${typeKey}.description`, template.description)
+      name: translateTemplate(template.name, selectedLanguage),
+      description: translateTemplate(template.description, selectedLanguage)
     };
   };
 
