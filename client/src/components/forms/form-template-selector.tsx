@@ -8,6 +8,8 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { ArrowRight, FileText, Users, BarChart4, Eye, X, ClipboardList, Star, User, ShoppingCart, MessageSquare, Briefcase, Bell, Mail } from "lucide-react";
 
 type FormTemplate = {
@@ -29,12 +31,13 @@ const iconMap = {
 };
 
 export function FormTemplateSelector() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
   const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language || 'es');
 
   // Mapeo de traducciones para plantillas basado en el tipo
   const getTemplateTranslations = (template: FormTemplate) => {
@@ -45,6 +48,76 @@ export function FormTemplateSelector() {
     };
   };
 
+  // Mapeo de traducciones para campos de formularios
+  const getFieldTranslations = (language: string) => {
+    const translations: Record<string, Record<string, string>> = {
+      es: {
+        name: "Nombre",
+        firstName: "Nombre",
+        lastName: "Apellido",
+        email: "Correo electrónico",
+        phone: "Teléfono",
+        company: "Empresa",
+        message: "Mensaje",
+        subject: "Asunto",
+        howDidYouHear: "¿Cómo te enteraste de nosotros?",
+        interests: "Intereses",
+        budget: "Presupuesto",
+        projectDetails: "Detalles del proyecto",
+        rating: "Calificación",
+        feedback: "Comentarios",
+        suggestions: "Sugerencias",
+        eventName: "Nombre del evento",
+        participantCount: "Número de participantes",
+        eventDate: "Fecha del evento",
+        submit: "Enviar"
+      },
+      en: {
+        name: "Name",
+        firstName: "First Name",
+        lastName: "Last Name",
+        email: "Email",
+        phone: "Phone",
+        company: "Company",
+        message: "Message",
+        subject: "Subject",
+        howDidYouHear: "How did you hear about us?",
+        interests: "Interests",
+        budget: "Budget",
+        projectDetails: "Project Details",
+        rating: "Rating",
+        feedback: "Feedback",
+        suggestions: "Suggestions",
+        eventName: "Event Name",
+        participantCount: "Number of Participants",
+        eventDate: "Event Date",
+        submit: "Submit"
+      },
+      fr: {
+        name: "Nom",
+        firstName: "Prénom",
+        lastName: "Nom de famille",
+        email: "Email",
+        phone: "Téléphone",
+        company: "Entreprise",
+        message: "Message",
+        subject: "Sujet",
+        howDidYouHear: "Comment avez-vous entendu parler de nous?",
+        interests: "Intérêts",
+        budget: "Budget",
+        projectDetails: "Détails du projet",
+        rating: "Évaluation",
+        feedback: "Commentaires",
+        suggestions: "Suggestions",
+        eventName: "Nom de l'événement",
+        participantCount: "Nombre de participants",
+        eventDate: "Date de l'événement",
+        submit: "Soumettre"
+      }
+    };
+    return translations[language] || translations.es;
+  };
+
   // Fetch available templates
   const { data: templates, isLoading } = useQuery<FormTemplate[]>({
     queryKey: ['/api/form-templates'],
@@ -53,7 +126,10 @@ export function FormTemplateSelector() {
   // Create new form based on template
   const createFormMutation = useMutation({
     mutationFn: async (templateId: number) => {
-      return await apiRequest('POST', '/api/forms', { templateId });
+      return await apiRequest('POST', '/api/forms', { 
+        templateId,
+        language: selectedLanguage
+      });
     },
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['/api/forms'] });
@@ -150,9 +226,26 @@ export function FormTemplateSelector() {
             {t('formTemplateSelector.hoverToPreview')} <Eye className="w-3 h-3 inline mx-1" /> {t('formTemplateSelector.beforeUsing')}.
           </p>
         </div>
-        <Button variant="outline" onClick={handleCreateBlankForm}>
-          {t('formTemplateSelector.createFromScratch')}
-        </Button>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="language-selector" className="text-sm font-medium">
+              {t('formTemplateSelector.formLanguage', 'Form Language')}:
+            </Label>
+            <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="es">🇪🇸 Español</SelectItem>
+                <SelectItem value="en">🇺🇸 English</SelectItem>
+                <SelectItem value="fr">🇫🇷 Français</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button variant="outline" onClick={handleCreateBlankForm}>
+            {t('formTemplateSelector.createFromScratch')}
+          </Button>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
