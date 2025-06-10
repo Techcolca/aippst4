@@ -181,7 +181,9 @@ const translateFieldLabel = (originalLabel: string, language: string): string =>
   };
 
   const langTranslations = translations[language] || translations.es;
-  return langTranslations[originalLabel] || originalLabel;
+  const translated = langTranslations[originalLabel] || originalLabel;
+  console.log(`Traduciendo "${originalLabel}" a ${language}: "${translated}"`);
+  return translated;
 };
 
 // Función para traducir placeholders
@@ -251,31 +253,60 @@ const FormEditor = () => {
 
   // Función para aplicar traducciones a todos los campos del formulario
   const applyTranslationsToForm = (formData: FormData, language: string): FormData => {
-    const translatedFields = formData.structure.fields.map(field => ({
-      ...field,
-      label: translateFieldLabel(field.label, language),
-      placeholder: field.placeholder ? translatePlaceholder(field.placeholder, language) : '',
-      options: field.options ? field.options.map(option => {
+    console.log("--- APLICANDO TRADUCCIONES ---");
+    console.log("Idioma objetivo:", language);
+    console.log("Campos originales:", formData.structure.fields);
+
+    const translatedFields = formData.structure.fields.map((field, index) => {
+      const originalLabel = field.label;
+      const originalPlaceholder = field.placeholder;
+      
+      const translatedLabel = translateFieldLabel(field.label, language);
+      const translatedPlaceholder = field.placeholder ? translatePlaceholder(field.placeholder, language) : '';
+      
+      console.log(`Campo ${index}:`, {
+        original: { label: originalLabel, placeholder: originalPlaceholder },
+        translated: { label: translatedLabel, placeholder: translatedPlaceholder }
+      });
+
+      const translatedOptions = field.options ? field.options.map(option => {
         if (typeof option === 'string') {
-          return translateFieldLabel(option, language);
+          const translated = translateFieldLabel(option, language);
+          console.log(`Opción: "${option}" -> "${translated}"`);
+          return translated;
         } else {
-          return {
+          const translated = {
             ...option,
             label: translateFieldLabel(option.label, language)
           };
+          console.log(`Opción objeto: "${option.label}" -> "${translated.label}"`);
+          return translated;
         }
-      }) : []
-    }));
+      }) : [];
 
-    return {
+      return {
+        ...field,
+        label: translatedLabel,
+        placeholder: translatedPlaceholder,
+        options: translatedOptions
+      };
+    });
+
+    const translatedSubmitButton = translateFieldLabel(formData.structure.submitButtonText || 'Submit', language);
+    console.log(`Botón enviar: "${formData.structure.submitButtonText}" -> "${translatedSubmitButton}"`);
+
+    const result = {
       ...formData,
       language: language,
       structure: {
         ...formData.structure,
         fields: translatedFields,
-        submitButtonText: translateFieldLabel(formData.structure.submitButtonText || 'Submit', language)
+        submitButtonText: translatedSubmitButton
       }
     };
+
+    console.log("Resultado final:", result);
+    return result;
   };
   
   // Estado para el modal de edición de campos
@@ -310,14 +341,24 @@ const FormEditor = () => {
     }
   }, [form]);
 
-  // Manejar cambio de idioma
+  // Manejar cambio de idioma del formulario (independiente del idioma de la UI)
   const handleLanguageChange = (language: string) => {
-    console.log("Cambiando idioma a:", language);
+    console.log("=== CAMBIO DE IDIOMA FORMULARIO ===");
+    console.log("Idioma anterior:", selectedLanguage);
+    console.log("Idioma nuevo:", language);
+    console.log("Datos actuales del formulario:", formData);
+    
+    // Actualizar el idioma seleccionado
     setSelectedLanguage(language);
-    // Aplicar traducciones inmediatamente
-    if (formData.title) {
+    
+    // Aplicar traducciones inmediatamente a los datos actuales
+    if (formData.structure && formData.structure.fields) {
+      console.log("Aplicando traducciones...");
       const translatedForm = applyTranslationsToForm(formData, language);
+      console.log("Formulario traducido:", translatedForm);
       setFormData(translatedForm);
+    } else {
+      console.log("No hay campos para traducir");
     }
   };
 
