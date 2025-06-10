@@ -746,7 +746,8 @@
   "documentation.api_reference_content": "Accede a nuestra documentación completa de API para integraciones avanzadas, webhooks e implementaciones personalizadas.",
   "documentation.support_content": "Nuestro equipo de soporte está disponible para ayudar con implementación, configuración y resolución de problemas. Contáctanos a través del dashboard o por email.",
   
-  "getStarted": {
+  "getStarted": "Empezar",
+  "getStartedPage": {
     "title": "Comienza Ahora",
     "subtitle": "Integra AIPPS en tu sitio web en minutos",
     "tabs": {
