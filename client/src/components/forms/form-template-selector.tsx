@@ -36,6 +36,15 @@ export function FormTemplateSelector() {
   const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
 
+  // Mapeo de traducciones para plantillas basado en el tipo
+  const getTemplateTranslations = (template: FormTemplate) => {
+    const typeKey = template.type.toLowerCase();
+    return {
+      name: t(`formTemplates.${typeKey}.name`, template.name),
+      description: t(`formTemplates.${typeKey}.description`, template.description)
+    };
+  };
+
   // Fetch available templates
   const { data: templates, isLoading } = useQuery<FormTemplate[]>({
     queryKey: ['/api/form-templates'],

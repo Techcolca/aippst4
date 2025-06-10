@@ -421,6 +421,8 @@
   "forms_empty_message": "Crea un nuevo formulario para recopilar información de tus visitantes",
   "forms_description": "Crea y gestiona tus formularios",
   "form_not_found": "Formulario no encontrado o ya eliminado",
+  "create_new_form": "Crear nuevo formulario",
+  "select_template_description": "Selecciona una plantilla o comienza desde cero para crear tu formulario personalizado",
   "dashboard_title": "Panel de control",
   "conversations": "Conversaciones",
   "forms": "Formularios",

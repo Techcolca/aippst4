@@ -421,6 +421,8 @@
   "forms_empty_message": "Create a new form to collect information from your visitors",
   "forms_description": "Create and manage your forms",
   "form_not_found": "Form not found or already deleted",
+  "create_new_form": "Create New Form",
+  "select_template_description": "Select a template or start from scratch to create your custom form.",
   "dashboard_title": "Dashboard",
   "conversations": "Conversations",
   "forms": "Forms",

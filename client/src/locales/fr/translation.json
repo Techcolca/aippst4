@@ -364,6 +364,8 @@
   "forms_empty_message": "Créez un nouveau formulaire pour collecter des informations de vos visiteurs",
   "forms_description": "Créez et gérez vos formulaires",
   "form_not_found": "Formulaire introuvable ou déjà supprimé",
+  "create_new_form": "Créer un nouveau formulaire",
+  "select_template_description": "Sélectionnez un modèle ou commencez à partir de zéro pour créer votre formulaire personnalisé.",
   "dashboard_title": "Tableau de bord",
   "conversations": "Conversations",
   "forms": "Formulaires",
