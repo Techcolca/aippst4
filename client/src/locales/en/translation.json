@@ -423,6 +423,7 @@
   "form_not_found": "Form not found or already deleted",
   "create_new_form": "Create New Form",
   "select_template_description": "Select a template or start from scratch to create your custom form.",
+  "form_language": "Form Language",
   "dashboard_title": "Dashboard",
   "conversations": "Conversations",
   "forms": "Forms",
