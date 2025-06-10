@@ -376,8 +376,12 @@ const FormEditor = () => {
 
   // Guardar cambios
   const handleSaveForm = () => {
-    console.log("Guardando formulario con datos:", formData);
-    updateFormMutation.mutate(formData);
+    const dataToSave = {
+      ...formData,
+      language: selectedLanguage // Asegurar que se incluya el idioma seleccionado
+    };
+    console.log("Guardando formulario con datos:", dataToSave);
+    updateFormMutation.mutate(dataToSave);
   };
 
   // Volver a la lista de formularios
