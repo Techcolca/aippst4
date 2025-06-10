@@ -4313,6 +4313,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // CAMPOS DE REGISTRO WEBINAR
       'Cargo': { en: 'Job title', fr: 'Poste', es: 'Cargo' },
       '¿Cómo nos encontraste?': { en: 'How did you find us?', fr: 'Comment nous avez-vous trouvés?', es: '¿Cómo nos encontraste?' },
+      '¿Cómo te enteraste de nosotros?': { en: 'How did you hear about us?', fr: 'Comment avez-vous entendu parler de nous?', es: '¿Cómo te enteraste de nosotros?' },
+      'Comment avez-vous entendu parler de nous?': { en: 'How did you hear about us?', fr: 'Comment avez-vous entendu parler de nous?', es: '¿Cómo te enteraste de nosotros?' },
       'Quiero recibir un recordatorio por email 24h antes del evento': { en: 'I want to receive an email reminder 24h before the event', fr: 'Je veux recevoir un rappel par email 24h avant l\'événement', es: 'Quiero recibir un recordatorio por email 24h antes del evento' },
       'Acepto recibir emails sobre futuros webinars y contenido relacionado': { en: 'I accept to receive emails about future webinars and related content', fr: 'J\'accepte de recevoir des emails sur les futurs webinaires et contenus connexes', es: 'Acepto recibir emails sobre futuros webinars y contenido relacionado' },
       
