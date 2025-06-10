@@ -1,12 +1,26 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { IntegrationCard } from "./integration-card";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
+import { useToast } from "@/hooks/use-toast";
+import { Trash2 } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 // Definición de tipos
 interface Integration {
@@ -26,6 +40,8 @@ export default function DashboardTabs() {
   const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState("integrations");
   const { t } = useTranslation();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   // Consulta para obtener las integraciones
   const { data: integrations, isLoading: isLoadingIntegrations } = useQuery<Integration[]>({
@@ -274,6 +290,36 @@ export default function DashboardTabs() {
     queryKey: ["/api/forms"],
   });
 
+  // Mutación para eliminar formularios
+  const deleteFormMutation = useMutation({
+    mutationFn: async (formId: number) => {
+      const response = await fetch(`/api/forms/${formId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete form');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/forms"] });
+      toast({
+        title: t("success", "Success"),
+        description: t("form_deleted_successfully", "Form deleted successfully"),
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: t("error", "Error"),
+        description: error.message || t("error_deleting_form", "Error deleting form"),
+        variant: "destructive",
+      });
+    },
+  });
+
   // Renderizar contenido de la pestaña de formularios
   const renderFormsTab = () => {
     return (
@@ -313,6 +359,30 @@ export default function DashboardTabs() {
                     <Link href={`/forms/${form.id}/edit`}>
                       <Button size="sm">{t("edit", "Edit")}</Button>
                     </Link>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>{t("confirm_delete", "Confirm Delete")}</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            {t("delete_form_confirmation", "Are you sure you want to delete this form? This action cannot be undone and will also delete all responses.")}
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>{t("cancel", "Cancel")}</AlertDialogCancel>
+                          <AlertDialogAction 
+                            onClick={() => deleteFormMutation.mutate(form.id)}
+                            disabled={deleteFormMutation.isPending}
+                          >
+                            {deleteFormMutation.isPending ? t("deleting", "Deleting...") : t("delete", "Delete")}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               </Card>
