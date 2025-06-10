@@ -106,6 +106,7 @@ const translateFieldLabel = (originalLabel: string, language: string): string =>
       'Otro': 'Otro'
     },
     en: {
+      // Traducciones ES -> EN
       'Nombre': 'Name',
       'Correo electrónico': 'Email',
       'Teléfono': 'Phone',
@@ -128,7 +129,32 @@ const translateFieldLabel = (originalLabel: string, language: string): string =>
       'Redes sociales': 'Social media',
       'Búsqueda en Google': 'Google search',
       'Recomendación': 'Recommendation',
-      'Otro': 'Other'
+      'Otro': 'Other',
+      
+      // Traducciones FR -> EN (CRÍTICAS - estas faltaban)
+      'Nom': 'Name',
+      'Email': 'Email',
+      'Téléphone': 'Phone',
+      'Entreprise': 'Company',
+      'Message': 'Message',
+      'Sujet': 'Subject',
+      'Comment avez-vous entendu parler de nous?': 'How did you hear about us?',
+      'Intérêts': 'Interests',
+      'Budget': 'Budget',
+      'Détails du projet': 'Project Details',
+      'Évaluation': 'Rating',
+      'Commentaires': 'Feedback',
+      'Suggestions': 'Suggestions',
+      'Nom de l\'événement': 'Event Name',
+      'Nombre de participants': 'Number of Participants',
+      'Date de l\'événement': 'Event Date',
+      'Soumettre': 'Submit',
+      'Votre nom': 'Your name',
+      'vous@email.com': 'you@email.com',
+      'Réseaux sociaux': 'Social media',
+      'Recherche Google': 'Google search',
+      'Recommandation': 'Recommendation',
+      'Autre': 'Other'
     },
     fr: {
       'Name': 'Nom',
@@ -199,7 +225,10 @@ const translatePlaceholder = (originalPlaceholder: string, language: string): st
       'Tu nombre': 'Your name',
       'tu@email.com': 'you@email.com',
       'Your name': 'Your name',
-      'you@email.com': 'you@email.com'
+      'you@email.com': 'you@email.com',
+      // FR -> EN (CRÍTICAS - estas faltaban)
+      'Votre nom': 'Your name',
+      'vous@email.com': 'you@email.com'
     },
     fr: {
       'Tu nombre': 'Votre nom',

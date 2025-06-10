@@ -1,0 +1,24 @@
+Traduciendo "Réseaux sociaux" a en: "Réseaux sociaux"
+form-editor.tsx:275 Opción: "Réseaux sociaux" -> "Réseaux sociaux"
+form-editor.tsx:185 Traduciendo "Recherche Google" a en: "Recherche Google"
+form-editor.tsx:275 Opción: "Recherche Google" -> "Recherche Google"
+form-editor.tsx:185 Traduciendo "Recommandation" a en: "Recommandation"
+form-editor.tsx:275 Opción: "Recommandation" -> "Recommandation"
+form-editor.tsx:185 Traduciendo "Autre" a en: "Autre"
+form-editor.tsx:275 Opción: "Autre" -> "Autre"
+form-editor.tsx:185 Traduciendo "Soumettre" a en: "Soumettre"
+form-editor.tsx:296 Botón enviar: "Soumettre" -> "Soumettre"
+form-editor.tsx:308 Resultado final: {title: 'Lista de Espera 10/6/2025', description: 'Plantilla para capturar usuarios en lista de espera 777', slug: 'lista-de-espera-1062025', type: 'waitlist', published: false, …}
+form-editor.tsx:358 Formulario traducido: {title: 'Lista de Espera 10/6/2025', description: 'Plantilla para capturar usuarios en lista de espera 777', slug: 'lista-de-espera-1062025', type: 'waitlist', published: false, …}
+form-editor.tsx:427 Guardando formulario con datos: {title: 'Lista de Espera 10/6/2025', description: 'Plantilla para capturar usuarios en lista de espera 777', slug: 'lista-de-espera-1062025', type: 'waitlist', published: false, …}
+queryClient.ts:56 Ejecutando consulta para: /api/forms/22
+queryClient.ts:70 Respuesta: 200 OK
+language-selector.tsx:25 i18next: languageChanged en
+dashboard.tsx:34 Dashboard: Setting initialTab to forms from URL query parameters
+2language-selector.tsx:25 i18next: languageChanged en
+dashboard.tsx:34 Dashboard: Setting initialTab to forms from URL query parameters
+queryClient.ts:56 Ejecutando consulta para: /api/form-templates
+queryClient.ts:70 Respuesta: 200 OK
+form-template-selector.tsx:232 i18next::translator: missingKey en translation formTemplateSelector.formLanguage Form Language
+form-template-selector.tsx:46 i18next::translator: missingKey en translation formTemplates.order.name Formulario de Pedido
+form-template-selector.tsx:47 i18next::translator: missingKey en translation formTemplates.order.description Perfecto para tomar pedidos online de manera organizada.
