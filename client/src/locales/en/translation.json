@@ -901,6 +901,32 @@
     }
   },
   
+  "formTemplates": {
+    "contact": {
+      "name": "Contact Form",
+      "description": "Standard template for contact forms"
+    },
+    "waitlist": {
+      "name": "Waitlist",
+      "description": "Template to capture users on a waitlist"
+    },
+    "survey": {
+      "name": "Satisfaction Survey",
+      "description": "Survey to measure customer satisfaction"
+    },
+    "lead": {
+      "name": "Quote Request",
+      "description": "Form to request personalized quotes for your clients"
+    },
+    "registration": {
+      "name": "Webinar Registration",
+      "description": "Optimized form to register attendees for virtual events"
+    },
+    "feedback": {
+      "name": "Feedback Form",
+      "description": "Collect comments and suggestions from your users"
+    }
+  },
   "formEditor": {
     "basic_settings": "Basic Settings",
     "form_title": "Form title",

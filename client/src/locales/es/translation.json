@@ -901,6 +901,32 @@
     }
   },
   
+  "formTemplates": {
+    "contact": {
+      "name": "Formulario de Contacto",
+      "description": "Plantilla estándar para formularios de contacto"
+    },
+    "waitlist": {
+      "name": "Lista de Espera",
+      "description": "Plantilla para capturar usuarios en lista de espera"
+    },
+    "survey": {
+      "name": "Encuesta de Satisfacción",
+      "description": "Encuesta para medir la satisfacción del cliente"
+    },
+    "lead": {
+      "name": "Solicitud de Presupuesto",
+      "description": "Formulario para solicitar presupuestos personalizados para tus clientes"
+    },
+    "registration": {
+      "name": "Registro para Webinar",
+      "description": "Formulario optimizado para registrar asistentes a eventos virtuales"
+    },
+    "feedback": {
+      "name": "Formulario de Retroalimentación",
+      "description": "Recopila comentarios y sugerencias de tus usuarios"
+    }
+  },
   "formEditor": {
     "basic_settings": "Configuración Básica",
     "form_title": "Título del formulario",

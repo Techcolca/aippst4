@@ -844,6 +844,32 @@
     }
   },
   
+  "formTemplates": {
+    "contact": {
+      "name": "Formulaire de Contact",
+      "description": "Modèle standard pour les formulaires de contact"
+    },
+    "waitlist": {
+      "name": "Liste d'Attente",
+      "description": "Modèle pour capturer les utilisateurs en liste d'attente"
+    },
+    "survey": {
+      "name": "Enquête de Satisfaction",
+      "description": "Enquête pour mesurer la satisfaction client"
+    },
+    "lead": {
+      "name": "Demande de Devis",
+      "description": "Formulaire pour demander des devis personnalisés pour vos clients"
+    },
+    "registration": {
+      "name": "Inscription Webinaire",
+      "description": "Formulaire optimisé pour inscrire les participants aux événements virtuels"
+    },
+    "feedback": {
+      "name": "Formulaire de Commentaires",
+      "description": "Collectez les commentaires et suggestions de vos utilisateurs"
+    }
+  },
   "formEditor": {
     "basic_settings": "Paramètres de Base",
     "form_title": "Titre du formulaire",

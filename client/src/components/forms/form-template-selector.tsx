@@ -156,22 +156,24 @@ export function FormTemplateSelector() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {templates?.map((template) => (
-          <Card 
-            key={template.id}
-            className={`cursor-pointer transition-all hover:shadow-md ${
-              selectedTemplate === template.id 
-                ? "border-2 border-primary ring-2 ring-primary/20 bg-primary/5 dark:bg-primary/10" 
-                : "hover:border-primary/30"
-            }`}
-            onClick={() => handleTemplateSelect(template.id)}
-          >
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center justify-between">
-                {template.name}
-              </CardTitle>
-              <CardDescription>{template.description}</CardDescription>
-            </CardHeader>
+        {templates?.map((template) => {
+          const translations = getTemplateTranslations(template);
+          return (
+            <Card 
+              key={template.id}
+              className={`cursor-pointer transition-all hover:shadow-md ${
+                selectedTemplate === template.id 
+                  ? "border-2 border-primary ring-2 ring-primary/20 bg-primary/5 dark:bg-primary/10" 
+                  : "hover:border-primary/30"
+              }`}
+              onClick={() => handleTemplateSelect(template.id)}
+            >
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center justify-between">
+                  {translations.name}
+                </CardTitle>
+                <CardDescription>{translations.description}</CardDescription>
+              </CardHeader>
             <CardContent className="flex flex-col items-center justify-center py-4">
               <div className="w-full aspect-video bg-slate-100 dark:bg-gray-800 rounded-md mb-3 overflow-hidden relative group">
                 {/* Botón de vista previa */}
@@ -416,7 +418,8 @@ export function FormTemplateSelector() {
               </Button>
             </CardFooter>
           </Card>
-        ))}
+          )
+        })}
       </div>
 
       {/* Modal de Vista Previa */}
