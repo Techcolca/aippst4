@@ -4286,42 +4286,177 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const translateTemplateFields = (structure: any, language: string) => {
     // Diccionario completo de traducciones
     const fieldTranslations: Record<string, Record<string, string>> = {
-      // ETIQUETAS DE CAMPOS
+      // CAMPOS BÁSICOS
       'Nombre': { en: 'Name', fr: 'Nom', es: 'Nombre' },
+      'Nombre completo': { en: 'Full name', fr: 'Nom complet', es: 'Nombre completo' },
       'Correo electrónico': { en: 'Email', fr: 'Email', es: 'Correo electrónico' },
+      'Tu correo electrónico': { en: 'Your email', fr: 'Votre email', es: 'Tu correo electrónico' },
       'Teléfono': { en: 'Phone', fr: 'Téléphone', es: 'Teléfono' },
       'Empresa': { en: 'Company', fr: 'Entreprise', es: 'Empresa' },
       'Mensaje': { en: 'Message', fr: 'Message', es: 'Mensaje' },
       'Asunto': { en: 'Subject', fr: 'Sujet', es: 'Asunto' },
-      '¿Cómo te enteraste de nosotros?': { en: 'How did you hear about us?', fr: 'Comment avez-vous entendu parler de nous?', es: '¿Cómo te enteraste de nosotros?' },
-      'Intereses': { en: 'Interests', fr: 'Intérêts', es: 'Intereses' },
-      'Presupuesto': { en: 'Budget', fr: 'Budget', es: 'Presupuesto' },
-      'Detalles del proyecto': { en: 'Project Details', fr: 'Détails du projet', es: 'Detalles del proyecto' },
-      'Calificación': { en: 'Rating', fr: 'Évaluation', es: 'Calificación' },
-      'Comentarios': { en: 'Feedback', fr: 'Commentaires', es: 'Comentarios' },
-      'Sugerencias': { en: 'Suggestions', fr: 'Suggestions', es: 'Sugerencias' },
-      '¿Cómo calificarías tu experiencia con nosotros?': { en: 'How would you rate your experience with us?', fr: 'Comment évalueriez-vous votre expérience avec nous?', es: '¿Cómo calificarías tu experiencia con nosotros?' },
-      'Del 1 al 10, ¿qué tan probable es que nos recomiendes?': { en: 'From 1 to 10, how likely are you to recommend us?', fr: 'De 1 à 10, quelle est la probabilité que vous nous recommandiez?', es: 'Del 1 al 10, ¿qué tan probable es que nos recomiendes?' },
-      '¿Cómo podríamos mejorar?': { en: 'How could we improve?', fr: 'Comment pourrions-nous nous améliorer?', es: '¿Cómo podríamos mejorar?' },
       
-      // OPCIONES MÚLTIPLES
+      // CAMPOS DE ENCUESTA DE SATISFACCIÓN
+      '¿Cómo calificarías tu experiencia con nosotros?': { en: 'How would you rate your experience with us?', fr: 'Comment évalueriez-vous votre expérience avec nous?', es: '¿Cómo calificarías tu experiencia con nosotros?' },
+      '¿Qué servicio has utilizado?': { en: 'Which service have you used?', fr: 'Quel service avez-vous utilisé?', es: '¿Qué servicio has utilizado?' },
+      '¿Qué podríamos mejorar?': { en: 'What could we improve?', fr: 'Que pourrions-nous améliorer?', es: '¿Qué podríamos mejorar?' },
+      '¿Podemos contactarte para seguimiento?': { en: 'Can we contact you for follow-up?', fr: 'Pouvons-nous vous contacter pour un suivi?', es: '¿Podemos contactarte para seguimiento?' },
+      
+      // CAMPOS DE SOLICITUD DE PRESUPUESTO
+      'Nombre de la empresa': { en: 'Company name', fr: 'Nom de l\'entreprise', es: 'Nombre de la empresa' },
+      'Nombre de contacto': { en: 'Contact name', fr: 'Nom de contact', es: 'Nombre de contacto' },
+      'Tipo de servicio': { en: 'Service type', fr: 'Type de service', es: 'Tipo de servicio' },
+      'Detalles del proyecto': { en: 'Project details', fr: 'Détails du projet', es: 'Detalles del proyecto' },
+      'Presupuesto estimado (€)': { en: 'Estimated budget (€)', fr: 'Budget estimé (€)', es: 'Presupuesto estimado (€)' },
+      'Fecha límite': { en: 'Deadline', fr: 'Date limite', es: 'Fecha límite' },
+      
+      // CAMPOS DE REGISTRO WEBINAR
+      'Cargo': { en: 'Job title', fr: 'Poste', es: 'Cargo' },
+      '¿Cómo nos encontraste?': { en: 'How did you find us?', fr: 'Comment nous avez-vous trouvés?', es: '¿Cómo nos encontraste?' },
+      'Quiero recibir un recordatorio por email 24h antes del evento': { en: 'I want to receive an email reminder 24h before the event', fr: 'Je veux recevoir un rappel par email 24h avant l\'événement', es: 'Quiero recibir un recordatorio por email 24h antes del evento' },
+      'Acepto recibir emails sobre futuros webinars y contenido relacionado': { en: 'I accept to receive emails about future webinars and related content', fr: 'J\'accepte de recevoir des emails sur les futurs webinaires et contenus connexes', es: 'Acepto recibir emails sobre futuros webinars y contenido relacionado' },
+      
+      // CAMPOS DE FORMULARIO DE PEDIDO
+      'Nombre del cliente': { en: 'Customer name', fr: 'Nom du client', es: 'Nombre del cliente' },
+      'Dirección de envío': { en: 'Shipping address', fr: 'Adresse de livraison', es: 'Dirección de envío' },
+      'Producto': { en: 'Product', fr: 'Produit', es: 'Producto' },
+      'Cantidad': { en: 'Quantity', fr: 'Quantité', es: 'Cantidad' },
+      'Método de pago': { en: 'Payment method', fr: 'Méthode de paiement', es: 'Método de pago' },
+      'Notas adicionales': { en: 'Additional notes', fr: 'Notes supplémentaires', es: 'Notas adicionales' },
+      
+      // CAMPOS DE EVALUACIÓN DE EVENTO
+      'Nombre (opcional)': { en: 'Name (optional)', fr: 'Nom (optionnel)', es: 'Nombre (opcional)' },
+      'Selecciona el evento': { en: 'Select the event', fr: 'Sélectionnez l\'événement', es: 'Selecciona el evento' },
+      'Valoración general del evento': { en: 'Overall event rating', fr: 'Évaluation générale de l\'événement', es: 'Valoración general del evento' },
+      'Calidad del contenido': { en: 'Content quality', fr: 'Qualité du contenu', es: 'Calidad del contenido' },
+      'Ponentes': { en: 'Speakers', fr: 'Intervenants', es: 'Ponentes' },
+      'Organización': { en: 'Organization', fr: 'Organisation', es: 'Organización' },
+      '¿Qué fue lo mejor del evento?': { en: 'What was the best part of the event?', fr: 'Qu\'est-ce qui était le mieux dans l\'événement?', es: '¿Qué fue lo mejor del evento?' },
+      'Me gustaría recibir información sobre futuros eventos': { en: 'I would like to receive information about future events', fr: 'J\'aimerais recevoir des informations sur les futurs événements', es: 'Me gustaría recibir información sobre futuros eventos' },
+      
+      // CAMPOS DE SOLICITUD DE EMPLEO
+      'Puesto al que aplicas': { en: 'Position you are applying for', fr: 'Poste auquel vous postulez', es: 'Puesto al que aplicas' },
+      'Experiencia relevante': { en: 'Relevant experience', fr: 'Expérience pertinente', es: 'Experiencia relevante' },
+      'Adjunta tu CV': { en: 'Attach your CV', fr: 'Joignez votre CV', es: 'Adjunta tu CV' },
+      'Portfolio (opcional)': { en: 'Portfolio (optional)', fr: 'Portfolio (optionnel)', es: 'Portfolio (opcional)' },
+      'Perfil de LinkedIn': { en: 'LinkedIn profile', fr: 'Profil LinkedIn', es: 'Perfil de LinkedIn' },
+      'Disponibilidad': { en: 'Availability', fr: 'Disponibilité', es: 'Disponibilidad' },
+      'Doy mi consentimiento para el tratamiento de mis datos personales según la política de privacidad': { en: 'I give my consent for the processing of my personal data according to the privacy policy', fr: 'Je donne mon consentement pour le traitement de mes données personnelles selon la politique de confidentialité', es: 'Doy mi consentimiento para el tratamiento de mis datos personales según la política de privacidad' },
+      
+      // CAMPOS DE NEWSLETTER
+      'Temas de interés': { en: 'Topics of interest', fr: 'Sujets d\'intérêt', es: 'Temas de interés' },
+      'Frecuencia de envío preferida': { en: 'Preferred sending frequency', fr: 'Fréquence d\'envoi préférée', es: 'Frecuencia de envío preferida' },
+      'Acepto recibir comunicaciones comerciales': { en: 'I accept to receive commercial communications', fr: 'J\'accepte de recevoir des communications commerciales', es: 'Acepto recibir comunicaciones comerciales' },
+      
+      // CAMPOS DE ENCUESTA DE OPINIÓN
+      'Producto/Servicio evaluado': { en: 'Product/Service evaluated', fr: 'Produit/Service évalué', es: 'Producto/Servicio evaluado' },
+      'Valoración general': { en: 'Overall rating', fr: 'Évaluation générale', es: 'Valoración general' },
+      'Aspectos positivos': { en: 'Positive aspects', fr: 'Aspects positifs', es: 'Aspectos positivos' },
+      'Aspectos a mejorar': { en: 'Aspects to improve', fr: 'Aspects à améliorer', es: 'Aspectos a mejorar' },
+      'Probabilidad de recomendación': { en: 'Likelihood of recommendation', fr: 'Probabilité de recommandation', es: 'Probabilidad de recomendación' },
+      
+      // OPCIONES MÚLTIPLES COMUNES
       'Redes sociales': { en: 'Social media', fr: 'Réseaux sociaux', es: 'Redes sociales' },
       'Búsqueda en Google': { en: 'Google search', fr: 'Recherche Google', es: 'Búsqueda en Google' },
       'Recomendación': { en: 'Recommendation', fr: 'Recommandation', es: 'Recomendación' },
+      'Email': { en: 'Email', fr: 'Email', es: 'Email' },
       'Otro': { en: 'Other', fr: 'Autre', es: 'Otro' },
-      'Excelente': { en: 'Excellent', fr: 'Excellent', es: 'Excelente' },
-      'Buena': { en: 'Good', fr: 'Bon', es: 'Buena' },
-      'Regular': { en: 'Average', fr: 'Moyen', es: 'Regular' },
-      'Mala': { en: 'Bad', fr: 'Mauvais', es: 'Mala' },
-      'Muy mala': { en: 'Very bad', fr: 'Très mauvais', es: 'Muy mala' },
+      
+      // OPCIONES DE SERVICIOS
+      'Atención al cliente': { en: 'Customer service', fr: 'Service client', es: 'Atención al cliente' },
+      'Ventas': { en: 'Sales', fr: 'Ventes', es: 'Ventas' },
+      'Soporte técnico': { en: 'Technical support', fr: 'Support technique', es: 'Soporte técnico' },
+      'Otros': { en: 'Others', fr: 'Autres', es: 'Otros' },
+      
+      // OPCIONES DE TIPO DE SERVICIO
+      'Desarrollo web': { en: 'Web development', fr: 'Développement web', es: 'Desarrollo web' },
+      'Diseño gráfico': { en: 'Graphic design', fr: 'Design graphique', es: 'Diseño gráfico' },
+      'Marketing digital': { en: 'Digital marketing', fr: 'Marketing numérique', es: 'Marketing digital' },
+      'Consultoría': { en: 'Consulting', fr: 'Conseil', es: 'Consultoría' },
+      
+      // OPCIONES DE CARGO
+      'Director/a': { en: 'Director', fr: 'Directeur/trice', es: 'Director/a' },
+      'Gerente': { en: 'Manager', fr: 'Responsable', es: 'Gerente' },
+      'Técnico/a': { en: 'Technical', fr: 'Technicien/ne', es: 'Técnico/a' },
+      'Estudiante': { en: 'Student', fr: 'Étudiant/e', es: 'Estudiante' },
+      
+      // OPCIONES DE PRODUCTOS
+      'Producto A - 29.99€': { en: 'Product A - €29.99', fr: 'Produit A - 29,99€', es: 'Producto A - 29.99€' },
+      'Producto B - 49.99€': { en: 'Product B - €49.99', fr: 'Produit B - 49,99€', es: 'Producto B - 49.99€' },
+      'Producto C - 99.99€': { en: 'Product C - €99.99', fr: 'Produit C - 99,99€', es: 'Producto C - 99.99€' },
+      'Pack Completo - 149.99€': { en: 'Complete Pack - €149.99', fr: 'Pack Complet - 149,99€', es: 'Pack Completo - 149.99€' },
+      
+      // OPCIONES DE PAGO
+      'Tarjeta de crédito': { en: 'Credit card', fr: 'Carte de crédit', es: 'Tarjeta de crédito' },
+      'PayPal': { en: 'PayPal', fr: 'PayPal', es: 'PayPal' },
+      'Transferencia bancaria': { en: 'Bank transfer', fr: 'Virement bancaire', es: 'Transferencia bancaria' },
+      
+      // OPCIONES DE PUESTOS DE TRABAJO
+      'Desarrollador/a Frontend': { en: 'Frontend Developer', fr: 'Développeur/se Frontend', es: 'Desarrollador/a Frontend' },
+      'Desarrollador/a Backend': { en: 'Backend Developer', fr: 'Développeur/se Backend', es: 'Desarrollador/a Backend' },
+      'Diseñador/a UX/UI': { en: 'UX/UI Designer', fr: 'Designer UX/UI', es: 'Diseñador/a UX/UI' },
+      'Project Manager': { en: 'Project Manager', fr: 'Chef de projet', es: 'Project Manager' },
+      
+      // OPCIONES DE DISPONIBILIDAD
+      'Inmediata': { en: 'Immediate', fr: 'Immédiate', es: 'Inmediata' },
+      'En 2 semanas': { en: 'In 2 weeks', fr: 'Dans 2 semaines', es: 'En 2 semanas' },
+      'En 1 mes': { en: 'In 1 month', fr: 'Dans 1 mois', es: 'En 1 mes' },
+      'Más de 1 mes': { en: 'More than 1 month', fr: 'Plus d\'1 mois', es: 'Más de 1 mes' },
+      
+      // OPCIONES DE TEMAS DE INTERÉS
+      'Tecnología': { en: 'Technology', fr: 'Technologie', es: 'Tecnología' },
+      'Marketing': { en: 'Marketing', fr: 'Marketing', es: 'Marketing' },
+      'Negocios': { en: 'Business', fr: 'Affaires', es: 'Negocios' },
+      'Diseño': { en: 'Design', fr: 'Design', es: 'Diseño' },
+      
+      // OPCIONES DE FRECUENCIA
+      'Semanal': { en: 'Weekly', fr: 'Hebdomadaire', es: 'Semanal' },
+      'Quincenal': { en: 'Bi-weekly', fr: 'Bimensuel', es: 'Quincenal' },
+      'Mensual': { en: 'Monthly', fr: 'Mensuel', es: 'Mensual' },
       
       // PLACEHOLDERS
       'Tu nombre': { en: 'Your name', fr: 'Votre nom', es: 'Tu nombre' },
+      'Tu nombre completo': { en: 'Your full name', fr: 'Votre nom complet', es: 'Tu nombre completo' },
       'tu@email.com': { en: 'you@email.com', fr: 'vous@email.com', es: 'tu@email.com' },
-      'Tus comentarios nos ayudan a mejorar': { en: 'Your feedback helps us improve', fr: 'Vos commentaires nous aident à nous améliorer', es: 'Tus comentarios nos ayudan a mejorar' },
+      'correo@ejemplo.com': { en: 'email@example.com', fr: 'email@exemple.com', es: 'correo@ejemplo.com' },
+      'Tu empresa': { en: 'Your company', fr: 'Votre entreprise', es: 'Tu empresa' },
+      'Nombre de tu empresa': { en: 'Your company name', fr: 'Nom de votre entreprise', es: 'Nombre de tu empresa' },
+      '+34 600000000': { en: '+1 555000000', fr: '+33 600000000', es: '+34 600000000' },
+      'Tu opinión es muy importante para nosotros': { en: 'Your opinion is very important to us', fr: 'Votre opinion est très importante pour nous', es: 'Tu opinión es muy importante para nosotros' },
+      'Describe tu proyecto y necesidades específicas': { en: 'Describe your project and specific needs', fr: 'Décrivez votre projet et besoins spécifiques', es: 'Describe tu proyecto y necesidades específicas' },
+      'Describe brevemente tu experiencia relacionada con el puesto': { en: 'Briefly describe your experience related to the position', fr: 'Décrivez brièvement votre expérience liée au poste', es: 'Describe brevemente tu experiencia relacionada con el puesto' },
+      'https://linkedin.com/in/tu-perfil': { en: 'https://linkedin.com/in/your-profile', fr: 'https://linkedin.com/in/votre-profil', es: 'https://linkedin.com/in/tu-perfil' },
+      'Dirección completa incluyendo código postal': { en: 'Complete address including postal code', fr: 'Adresse complète y compris le code postal', es: 'Dirección completa incluyendo código postal' },
+      'Instrucciones especiales para el pedido': { en: 'Special instructions for the order', fr: 'Instructions spéciales pour la commande', es: 'Instrucciones especiales para el pedido' },
+      'Comparte lo que más te gustó': { en: 'Share what you liked most', fr: 'Partagez ce que vous avez le plus aimé', es: 'Comparte lo que más te gustó' },
+      'Tus sugerencias son importantes': { en: 'Your suggestions are important', fr: 'Vos suggestions sont importantes', es: 'Tus sugerencias son importantes' },
+      '1000': { en: '1000', fr: '1000', es: '1000' },
       
-      // BOTÓN DE ENVÍO
-      'Enviar': { en: 'Submit', fr: 'Soumettre', es: 'Enviar' }
+      // BOTONES DE ENVÍO
+      'Enviar': { en: 'Submit', fr: 'Soumettre', es: 'Enviar' },
+      'Enviar encuesta': { en: 'Submit survey', fr: 'Envoyer l\'enquête', es: 'Enviar encuesta' },
+      'Solicitar presupuesto': { en: 'Request quote', fr: 'Demander un devis', es: 'Solicitar presupuesto' },
+      'Confirmar registro': { en: 'Confirm registration', fr: 'Confirmer l\'inscription', es: 'Confirmar registro' },
+      'Confirmar Pedido': { en: 'Confirm Order', fr: 'Confirmer la Commande', es: 'Confirmar Pedido' },
+      'Enviar evaluación': { en: 'Submit evaluation', fr: 'Envoyer l\'évaluation', es: 'Enviar evaluación' },
+      'Enviar solicitud': { en: 'Submit application', fr: 'Envoyer la candidature', es: 'Enviar solicitud' },
+      'Suscribirse': { en: 'Subscribe', fr: 'S\'abonner', es: 'Suscribirse' },
+      'Enviar opinión': { en: 'Submit opinion', fr: 'Envoyer l\'avis', es: 'Enviar opinión' },
+      
+      // OPCIONES DE EVENTOS ESPECÍFICOS
+      'Conferencia anual 2025': { en: 'Annual Conference 2025', fr: 'Conférence annuelle 2025', es: 'Conferencia anual 2025' },
+      'Taller práctico - Mayo': { en: 'Practical Workshop - May', fr: 'Atelier pratique - Mai', es: 'Taller práctico - Mayo' },
+      'Webinar técnico - Junio': { en: 'Technical Webinar - June', fr: 'Webinaire technique - Juin', es: 'Webinar técnico - Junio' },
+
+      // MENSAJES DE ÉXITO
+      '¡Gracias por tu feedback!': { en: 'Thank you for your feedback!', fr: 'Merci pour vos commentaires!', es: '¡Gracias por tu feedback!' },
+      '¡Hemos recibido tu solicitud! Te contactaremos en breve.': { en: 'We have received your request! We will contact you shortly.', fr: 'Nous avons reçu votre demande! Nous vous contacterons bientôt.', es: '¡Hemos recibido tu solicitud! Te contactaremos en breve.' },
+      '¡Registro completado! Recibirás un email de confirmación.': { en: 'Registration completed! You will receive a confirmation email.', fr: 'Inscription terminée! Vous recevrez un email de confirmation.', es: '¡Registro completado! Recibirás un email de confirmación.' },
+      '¡Pedido recibido! Recibirás un email de confirmación con los detalles.': { en: 'Order received! You will receive a confirmation email with the details.', fr: 'Commande reçue! Vous recevrez un email de confirmation avec les détails.', es: '¡Pedido recibido! Recibirás un email de confirmación con los detalles.' },
+      '¡Gracias por tu evaluación! Tu feedback nos ayuda a mejorar.': { en: 'Thank you for your evaluation! Your feedback helps us improve.', fr: 'Merci pour votre évaluation! Vos commentaires nous aident à nous améliorer.', es: '¡Gracias por tu evaluación! Tu feedback nos ayuda a mejorar.' },
+      '¡Hemos recibido tu solicitud! Revisaremos tu perfil y te contactaremos en caso de avanzar en el proceso.': { en: 'We have received your application! We will review your profile and contact you if we move forward in the process.', fr: 'Nous avons reçu votre candidature! Nous examinerons votre profil et vous contacterons si nous avançons dans le processus.', es: '¡Hemos recibido tu solicitud! Revisaremos tu perfil y te contactaremos en caso de avanzar en el proceso.' },
+      '¡Bienvenido/a a nuestro newsletter!': { en: 'Welcome to our newsletter!', fr: 'Bienvenue dans notre newsletter!', es: '¡Bienvenido/a a nuestro newsletter!' },
+      '¡Gracias por compartir tu opinión!': { en: 'Thank you for sharing your opinion!', fr: 'Merci de partager votre avis!', es: '¡Gracias por compartir tu opinión!' }
     };
 
     const translateText = (text: string, targetLanguage: string): string => {
