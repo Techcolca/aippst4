@@ -77,12 +77,12 @@ export default function GetStarted() {
   // Función para previsualizar widget flotante
   const previewBubbleWidget = () => {
     if (!bubbleUrl) {
-      alert(t("getStarted.widget.preview.url_required"));
+      alert(t("getStartedPage.widget.preview.url_required"));
       return;
     }
     
     if (!isValidUrl(bubbleUrl)) {
-      alert(t("getStarted.widget.preview.url_invalid"));
+      alert(t("getStartedPage.widget.preview.url_invalid"));
       return;
     }
     
@@ -97,12 +97,12 @@ export default function GetStarted() {
   // Función para previsualizar widget de pantalla completa
   const previewFullscreenWidget = () => {
     if (!fullscreenUrl) {
-      alert(t("getStarted.widget.preview.url_required"));
+      alert(t("getStartedPage.widget.preview.url_required"));
       return;
     }
     
     if (!isValidUrl(fullscreenUrl)) {
-      alert(t("getStarted.widget.preview.url_invalid"));
+      alert(t("getStartedPage.widget.preview.url_invalid"));
       return;
     }
     
@@ -122,10 +122,10 @@ export default function GetStarted() {
         <section className="py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              {t("getStarted.title")}
+              {t("getStartedPage.title")}
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t("getStarted.subtitle")}
+              {t("getStartedPage.subtitle")}
             </p>
           </div>
         </section>
@@ -134,19 +134,19 @@ export default function GetStarted() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Tabs defaultValue="bubble" className="w-full">
               <TabsList className="flex w-full justify-between mb-8">
-                <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">{t("getStarted.tabs.widget")}</TabsTrigger>
-                <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">{t("getStarted.tabs.fullscreen")}</TabsTrigger>
-                <TabsTrigger value="form" className="flex-1 text-lg py-3 px-2">{t("getStarted.tabs.form")}</TabsTrigger>
+                <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">{t("getStartedPage.tabs.widget")}</TabsTrigger>
+                <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">{t("getStartedPage.tabs.fullscreen")}</TabsTrigger>
+                <TabsTrigger value="form" className="flex-1 text-lg py-3 px-2">{t("getStartedPage.tabs.form")}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">{t("getStarted.widget.step1.title")}</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.widget.step1.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      {t("getStarted.widget.step1.description")}
+                      {t("getStartedPage.widget.step1.description")}
                     </p>
                     <div className="relative">
                       <pre className="bg-gray-900 text-white p-6 rounded-md overflow-x-auto text-sm">
@@ -169,37 +169,37 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">{t("getStarted.widget.step2.title")}</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.widget.step2.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      {t("getStarted.widget.step2.description")}
+                      {t("getStartedPage.widget.step2.description")}
                     </p>
                     <div className="mb-6">
-                      <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStarted.widget.step2.customization_title")}</p>
+                      <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStartedPage.widget.step2.customization_title")}</p>
                       <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                        <li>{t("getStarted.widget.step2.position")}</li>
-                        <li>{t("getStarted.widget.step2.theme_color")}</li>
-                        <li>{t("getStarted.widget.step2.assistant_name")}</li>
-                        <li>{t("getStarted.widget.step2.welcome_message")}</li>
+                        <li>{t("getStartedPage.widget.step2.position")}</li>
+                        <li>{t("getStartedPage.widget.step2.theme_color")}</li>
+                        <li>{t("getStartedPage.widget.step2.assistant_name")}</li>
+                        <li>{t("getStartedPage.widget.step2.welcome_message")}</li>
                       </ul>
                     </div>
                     <div className="mb-6">
-                      <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStarted.widget.step2.configure_dashboard")}</p>
+                      <p className="font-medium text-gray-900 dark:text-white mb-3">{t("getStartedPage.widget.step2.configure_dashboard")}</p>
                       <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                        <li>{t("getStarted.widget.step2.dashboard_steps.0")}</li>
-                        <li>{t("getStarted.widget.step2.dashboard_steps.1")}</li>
-                        <li>{t("getStarted.widget.step2.dashboard_steps.2")}</li>
-                        <li>{t("getStarted.widget.step2.dashboard_steps.3")}</li>
+                        <li>{t("getStartedPage.widget.step2.dashboard_steps.0")}</li>
+                        <li>{t("getStartedPage.widget.step2.dashboard_steps.1")}</li>
+                        <li>{t("getStartedPage.widget.step2.dashboard_steps.2")}</li>
+                        <li>{t("getStartedPage.widget.step2.dashboard_steps.3")}</li>
                       </ol>
                     </div>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
-                        {t("getStarted.buttons.go_to_integrations")}
+                        {t("getStartedPage.buttons.go_to_integrations")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/login")}>
-                        {t("getStarted.buttons.login_to_manage")}
+                        {t("getStartedPage.buttons.login_to_manage")}
                       </Button>
                     )}
                   </div>
@@ -207,7 +207,7 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">{t("getStarted.widget.step3.title")}</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.widget.step3.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
