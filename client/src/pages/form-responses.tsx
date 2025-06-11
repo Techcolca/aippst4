@@ -106,8 +106,47 @@ const FormResponses = () => {
       );
     }
     
-    // Obtener columnas de la primera respuesta
-    const columns = Object.keys(responses[0].data || {});
+    // Obtener todas las columnas únicas de todas las respuestas, excluyendo "undefined"
+    const allColumns = new Set<string>();
+    responses.forEach(response => {
+      if (response.data) {
+        Object.keys(response.data).forEach(key => {
+          if (key !== 'undefined') {
+            allColumns.add(key);
+          }
+        });
+      }
+    });
+    
+    const columns = Array.from(allColumns);
+    
+    // Si no hay columnas válidas, mostrar las respuestas como JSON
+    if (columns.length === 0) {
+      return (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Fecha</TableHead>
+              <TableHead>Datos</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {responses.map((response) => (
+              <TableRow key={response.id}>
+                <TableCell className="font-medium">
+                  {new Date(response.submittedAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell>
+                  <pre className="text-xs bg-muted p-2 rounded">
+                    {JSON.stringify(response.data, null, 2)}
+                  </pre>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      );
+    }
     
     return (
       <Table>
@@ -115,7 +154,9 @@ const FormResponses = () => {
           <TableRow>
             <TableHead className="w-[100px]">Fecha</TableHead>
             {columns.map((column) => (
-              <TableHead key={column}>{column}</TableHead>
+              <TableHead key={column} className="capitalize">
+                {column}
+              </TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -127,7 +168,7 @@ const FormResponses = () => {
               </TableCell>
               {columns.map((column) => (
                 <TableCell key={column}>
-                  {String(response.data[column] || '-')}
+                  {String(response.data?.[column] || '-')}
                 </TableCell>
               ))}
             </TableRow>
