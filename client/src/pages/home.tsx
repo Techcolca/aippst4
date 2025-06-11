@@ -117,9 +117,9 @@ export default function Home() {
                   <div className="rounded-full bg-primary-100 dark:bg-primary-900 p-3 w-12 h-12 flex items-center justify-center mb-4">
                     <Bot className="text-primary-600 dark:text-primary-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Conversational AI</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("features.conversationalAI.title")}</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Natural language interactions that understand context and user intent.
+                    {t("features.conversationalAI.description")}
                   </p>
                 </CardContent>
               </Card>
@@ -129,9 +129,9 @@ export default function Home() {
                   <div className="rounded-full bg-primary-100 dark:bg-primary-900 p-3 w-12 h-12 flex items-center justify-center mb-4">
                     <Rocket className="text-primary-600 dark:text-primary-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Task Automation</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("features.taskAutomation.title")}</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Automate repetitive tasks and streamline workflows with AI assistance.
+                    {t("features.taskAutomation.description")}
                   </p>
                 </CardContent>
               </Card>
@@ -141,9 +141,9 @@ export default function Home() {
                   <div className="rounded-full bg-primary-100 dark:bg-primary-900 p-3 w-12 h-12 flex items-center justify-center mb-4">
                     <Code className="text-primary-600 dark:text-primary-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Easy Integration</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("features.easyIntegration.title")}</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Simple website integration with a single line of code. No complex setup required.
+                    {t("features.easyIntegration.description")}
                   </p>
                 </CardContent>
               </Card>
@@ -153,9 +153,9 @@ export default function Home() {
                   <div className="rounded-full bg-primary-100 dark:bg-primary-900 p-3 w-12 h-12 flex items-center justify-center mb-4">
                     <BarChart3 className="text-primary-600 dark:text-primary-400" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">Analytics</h3>
+                  <h3 className="text-xl font-semibold mb-2">{t("features.analytics.title")}</h3>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Powerful insights into conversations, user satisfaction, and engagement metrics.
+                    {t("features.analytics.description")}
                   </p>
                 </CardContent>
               </Card>
@@ -167,17 +167,17 @@ export default function Home() {
         <section className="py-16 bg-primary-600 dark:bg-primary-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to transform your website?
+              {t("cta.title")}
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
-              Join thousands of businesses using AIPPS to enhance user experience and boost engagement.
+              {t("cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/register">Get Started Free</Link>
+                <Link href="/register">{t("cta.getStartedFree")}</Link>
               </Button>
               <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-primary-700">
-                Schedule a Demo
+                {t("cta.scheduleDemo")}
               </Button>
             </div>
           </div>
