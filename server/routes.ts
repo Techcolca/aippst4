@@ -4907,7 +4907,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validar los datos de la respuesta según la estructura del formulario
       const requiredFields = form.structure.fields
         .filter(field => field.required)
-        .map(field => field.name);
+        .map(field => field.id);
       
       for (const field of requiredFields) {
         if (!responseData.data[field]) {

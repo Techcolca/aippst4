@@ -299,7 +299,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(submission)
+        body: JSON.stringify({ data: submission })
       });
       
       // Manejar respuesta
