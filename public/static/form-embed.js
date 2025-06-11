@@ -175,7 +175,7 @@
           html += `<input 
             type="${field.type === 'phone' ? 'tel' : field.type}" 
             id="aipi-field-${field.id}" 
-            name="${field.name || field.id}" 
+            name="${field.id}" 
             class="aipi-form-input" 
             ${field.placeholder ? `placeholder="${escapeHTML(field.placeholder)}"` : ''} 
             ${field.required ? 'required' : ''}
@@ -185,7 +185,7 @@
         case 'textarea':
           html += `<textarea 
             id="aipi-field-${field.id}" 
-            name="${field.name || field.id}" 
+            name="${field.id}" 
             class="aipi-form-textarea" 
             rows="4"
             ${field.placeholder ? `placeholder="${escapeHTML(field.placeholder)}"` : ''} 
@@ -196,7 +196,7 @@
         case 'select':
           html += `<select 
             id="aipi-field-${field.id}" 
-            name="${field.name || field.id}" 
+            name="${field.id}" 
             class="aipi-form-select"
             ${field.required ? 'required' : ''}
           >`;
@@ -219,7 +219,7 @@
             <input 
               type="checkbox" 
               id="aipi-field-${field.id}" 
-              name="${field.name || field.id}" 
+              name="${field.id}" 
               ${field.required ? 'required' : ''}
             >
             <label for="aipi-field-${field.id}">${escapeHTML(field.label)}</label>
@@ -274,10 +274,10 @@
       if (element) {
         switch (field.type) {
           case 'checkbox':
-            submission[field.name || field.id] = element.checked;
+            submission[field.id] = element.checked;
             break;
           default:
-            submission[field.name || field.id] = element.value;
+            submission[field.id] = element.value;
         }
       }
     });
