@@ -4899,9 +4899,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Form not found" });
       }
       
-      // Verificar que el formulario está activo
-      if (form.status !== "active") {
-        return res.status(403).json({ error: "This form is not active" });
+      // Verificar que el formulario está activo (publicado es suficiente)
+      if (!form.published) {
+        return res.status(403).json({ error: "This form is not published" });
       }
       
       // Validar los datos de la respuesta según la estructura del formulario
