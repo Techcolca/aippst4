@@ -406,6 +406,35 @@
   "tagline": "La plataforma conversacional con IA para una comunicación inteligente en tu sitio web",
   "getStarted": "Empezar",
   "learnMore": "Saber más",
+  
+  "features": {
+    "title": "Características Poderosas",
+    "subtitle": "Todo lo que necesitas para mejorar tu sitio web con conversaciones inteligentes",
+    "conversationalAI": {
+      "title": "IA Conversacional",
+      "description": "Interacciones en lenguaje natural que entienden el contexto y la intención del usuario."
+    },
+    "taskAutomation": {
+      "title": "Automatización de Tareas",
+      "description": "Automatiza tareas repetitivas y optimiza flujos de trabajo con asistencia de IA."
+    },
+    "easyIntegration": {
+      "title": "Integración Fácil",
+      "description": "Integración simple en el sitio web con una sola línea de código. No se requiere configuración compleja."
+    },
+    "analytics": {
+      "title": "Analíticas",
+      "description": "Insights poderosos sobre conversaciones, satisfacción del usuario y métricas de engagement."
+    }
+  },
+  
+  "cta": {
+    "title": "¿Listo para transformar tu sitio web?",
+    "subtitle": "Únete a miles de empresas que usan AIPPS para mejorar la experiencia del usuario y aumentar el engagement.",
+    "getStartedFree": "Empezar Gratis",
+    "scheduleDemo": "Programar Demo"
+  },
+  
   "success": "Éxito",
   "error": "Error",
   "cancel": "Cancelar",

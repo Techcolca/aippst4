@@ -104,10 +104,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Powerful Features
+                {t("features.title")}
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-                Everything you need to enhance your website with intelligent conversations
+                {t("features.subtitle")}
               </p>
             </div>
             

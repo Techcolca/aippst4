@@ -406,6 +406,35 @@
   "tagline": "The AI-powered conversational platform for intelligent website communication",
   "getStarted": "Get Started",
   "learnMore": "Learn More",
+  
+  "features": {
+    "title": "Powerful Features",
+    "subtitle": "Everything you need to enhance your website with intelligent conversations",
+    "conversationalAI": {
+      "title": "Conversational AI",
+      "description": "Natural language interactions that understand context and user intent."
+    },
+    "taskAutomation": {
+      "title": "Task Automation",
+      "description": "Automate repetitive tasks and streamline workflows with AI assistance."
+    },
+    "easyIntegration": {
+      "title": "Easy Integration",
+      "description": "Simple website integration with a single line of code. No complex setup required."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Powerful insights into conversations, user satisfaction, and engagement metrics."
+    }
+  },
+  
+  "cta": {
+    "title": "Ready to transform your website?",
+    "subtitle": "Join thousands of businesses using AIPPS to enhance user experience and boost engagement.",
+    "getStartedFree": "Get Started Free",
+    "scheduleDemo": "Schedule a Demo"
+  },
+  
   "success": "Success",
   "error": "Error",
   "cancel": "Cancel",
