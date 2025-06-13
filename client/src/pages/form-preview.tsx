@@ -216,7 +216,96 @@ const FormPreview = () => {
     } as React.CSSProperties;
   };
 
-  // Renderizar campo de formulario según su tipo
+  // Renderizar campo moderno con estilo de línea inferior
+  const renderModernFormField = (field: FormData['structure']['fields'][0], index: number) => {
+    const fieldId = field.id || field.name || `field-${index}`;
+    
+    switch (field.type) {
+      case 'text':
+      case 'email':
+      case 'tel':
+      case 'url':
+        return (
+          <Input
+            type={field.type}
+            id={fieldId}
+            name={field.name}
+            placeholder={`${field.label}${field.required ? ' *' : ''}`}
+            value={formValues[field.name] || ''}
+            onChange={(e) => handleFieldChange(field.name, e.target.value)}
+            required={field.required}
+            className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0"
+          />
+        );
+        
+      case 'textarea':
+        return (
+          <Textarea
+            id={fieldId}
+            name={field.name}
+            placeholder={`${field.label}${field.required ? ' *' : ''}`}
+            value={formValues[field.name] || ''}
+            onChange={(e) => handleFieldChange(field.name, e.target.value)}
+            required={field.required}
+            rows={field.rows || 4}
+            className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0"
+          />
+        );
+        
+      case 'select':
+        return (
+          <Select
+            value={formValues[field.name] || ''}
+            onValueChange={(value) => handleFieldChange(field.name, value)}
+          >
+            <SelectTrigger className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0">
+              <SelectValue placeholder={field.label || 'Seleccionar...'} />
+            </SelectTrigger>
+            <SelectContent>
+              {field.options && field.options.map((option, i: number) => {
+                const optionValue = typeof option === 'string' ? option : option.value || '';
+                const optionLabel = typeof option === 'string' ? option : option.label || '';
+                return (
+                  <SelectItem key={i} value={optionValue}>
+                    {optionLabel}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        );
+        
+      case 'checkbox':
+        return (
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id={fieldId}
+              checked={formValues[field.name] || false}
+              onCheckedChange={(checked) => handleFieldChange(field.name, checked)}
+            />
+            <Label htmlFor={fieldId} className="text-sm">
+              {field.label}
+            </Label>
+          </div>
+        );
+        
+      default:
+        return (
+          <Input
+            type="text"
+            id={fieldId}
+            name={field.name}
+            placeholder={`${field.label}${field.required ? ' *' : ''}`}
+            value={formValues[field.name] || ''}
+            onChange={(e) => handleFieldChange(field.name, e.target.value)}
+            required={field.required}
+            className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0"
+          />
+        );
+    }
+  };
+
+  // Renderizar campo de formulario según su tipo (original para fallback)
   const renderFormField = (field: FormData['structure']['fields'][0], index: number) => {
     switch (field.type) {
       case 'text':
@@ -411,128 +500,184 @@ const FormPreview = () => {
           </div>
         </div>
         
-        {/* Formulario */}
-        <Card className="w-full max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle>{formData.title}</CardTitle>
-            {formData.description && (
-              <CardDescription>{formData.description}</CardDescription>
-            )}
-          </CardHeader>
-          
-          <CardContent>
-            {submitted ? (
-              <div className="text-center py-6 space-y-4">
-                <div className="mx-auto w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+        {/* Formulario con diseño moderno */}
+        <div className="w-full max-w-6xl mx-auto">
+          <div className="bg-gradient-to-br from-cyan-100 to-blue-100 min-h-[600px] rounded-2xl p-6 flex items-center justify-center">
+            <div className="bg-white rounded-2xl shadow-2xl overflow-hidden w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+              
+              {/* Panel izquierdo - Hero */}
+              <div className="bg-gradient-to-br from-blue-900 to-slate-900 p-12 flex flex-col justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/20"></div>
+                <div className="relative z-10">
+                  <h2 className="text-4xl font-bold text-white mb-6 leading-tight">
+                    {formData.title || 'Comencemos con sus datos'}
+                  </h2>
+                  <p className="text-blue-100 text-lg leading-relaxed">
+                    {formData.description || 'Complete este formulario para continuar con el proceso.'}
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-center">¡Enviado con éxito!</h3>
-                <p className="text-muted-foreground">
-                  {form.settings?.successMessage || 'Gracias por tu envío. Hemos recibido tus datos correctamente.'}
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setSubmitted(false);
-                    setFormValues({});
-                  }}
-                  className="mt-4"
-                >
-                  Enviar otra respuesta
-                </Button>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {formData.structure.fields && formData.structure.fields.length > 0 ? (
-                  formData.structure.fields.map((field, index) => renderFormField(field, index))
-                ) : (
-                  // Campos de ejemplo si no hay campos definidos
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="nombre" className="text-sm font-medium">
-                        Nombre <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        type="text"
-                        id="nombre"
-                        name="nombre"
-                        placeholder="Tu nombre completo"
-                        value={formValues.nombre || ''}
-                        onChange={(e) => handleFieldChange('nombre', e.target.value)}
-                        required
-                        className="w-full"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium">
-                        Correo electrónico <span className="text-red-500">*</span>
-                      </Label>
-                      <Input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="tucorreo@ejemplo.com"
-                        value={formValues.email || ''}
-                        onChange={(e) => handleFieldChange('email', e.target.value)}
-                        required
-                        className="w-full"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="mensaje" className="text-sm font-medium">
-                        Mensaje
-                      </Label>
-                      <Textarea
-                        id="mensaje"
-                        name="mensaje"
-                        placeholder="Escribe tu mensaje aquí"
-                        value={formValues.mensaje || ''}
-                        onChange={(e) => handleFieldChange('mensaje', e.target.value)}
-                        rows={4}
-                        className="w-full"
-                      />
-                    </div>
-                    
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="acepto"
-                        checked={formValues.acepto || false}
-                        onCheckedChange={(checked) => handleFieldChange('acepto', checked)}
-                        className="mt-1"
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <Label
-                          htmlFor="acepto"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Acepto los términos y condiciones <span className="text-red-500">*</span>
-                        </Label>
-                      </div>
-                    </div>
-                  </>
-                )}
+              
+              {/* Panel derecho - Formulario */}
+              <div className="p-12 flex flex-col justify-center">
+                <div className="mb-8">
+                  <p className="text-gray-600 text-lg">
+                    Por favor complete la información solicitada para comenzar.
+                  </p>
+                </div>
                 
-                <Button 
-                  type="submit" 
-                  className="w-full"
-                  style={{ backgroundColor: formData.styling.primaryColor }}
-                >
-                  {formData.structure.submitButtonText || 'Enviar'}
-                </Button>
-              </form>
-            )}
-          </CardContent>
-          
-          <CardFooter className="flex justify-between items-center border-t px-6 py-4">
-            <div className="text-xs text-muted-foreground">
-              Powered by AIPI
+                {submitted ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">¡Formulario enviado!</h3>
+                    <p className="text-gray-600 mb-4">
+                      {form.settings?.successMessage || 'Gracias por tu envío'}
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormValues({});
+                      }}
+                    >
+                      Enviar otra respuesta
+                    </Button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {formData.structure.fields && formData.structure.fields.length > 0 ? (
+                      <>
+                        {/* Renderizar campos en grupos inteligentes */}
+                        {(() => {
+                          const fields = formData.structure.fields;
+                          const shouldUseGroupLayout = fields.length >= 4;
+                          let fieldIndex = 0;
+                          const renderedFields = [];
+
+                          while (fieldIndex < fields.length) {
+                            const field = fields[fieldIndex];
+                            const nextField = fields[fieldIndex + 1];
+
+                            if (field.type === 'textarea' || field.type === 'select' || 
+                                !shouldUseGroupLayout || 
+                                (!nextField && fieldIndex % 2 === 0)) {
+                              
+                              renderedFields.push(
+                                <div key={fieldIndex} className="modern-form-field">
+                                  {renderModernFormField(field, fieldIndex)}
+                                </div>
+                              );
+                              fieldIndex++;
+                              
+                            } else if (shouldUseGroupLayout && nextField && 
+                                       field.type !== 'textarea' && field.type !== 'select' &&
+                                       nextField.type !== 'textarea' && nextField.type !== 'select') {
+                              
+                              renderedFields.push(
+                                <div key={fieldIndex} className="grid grid-cols-2 gap-4">
+                                  <div className="modern-form-field">
+                                    {renderModernFormField(field, fieldIndex)}
+                                  </div>
+                                  <div className="modern-form-field">
+                                    {renderModernFormField(nextField, fieldIndex + 1)}
+                                  </div>
+                                </div>
+                              );
+                              fieldIndex += 2;
+                              
+                            } else {
+                              renderedFields.push(
+                                <div key={fieldIndex} className="modern-form-field">
+                                  {renderModernFormField(field, fieldIndex)}
+                                </div>
+                              );
+                              fieldIndex++;
+                            }
+                          }
+
+                          return renderedFields;
+                        })()}
+                        
+                        {/* Checkbox de términos y condiciones */}
+                        <div className="flex items-center space-x-3 pt-4">
+                          <Checkbox
+                            id="terms"
+                            checked={formValues.terms || false}
+                            onCheckedChange={(checked) => handleFieldChange('terms', checked)}
+                            className="accent-blue-500"
+                          />
+                          <Label htmlFor="terms" className="text-sm text-gray-600 leading-5">
+                            Acepto los términos y condiciones
+                          </Label>
+                        </div>
+                      </>
+                    ) : (
+                      // Campos de ejemplo con diseño moderno
+                      <>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="modern-form-field">
+                            <Input
+                              type="text"
+                              placeholder="Nombre *"
+                              value={formValues.nombre || ''}
+                              onChange={(e) => handleFieldChange('nombre', e.target.value)}
+                              className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0"
+                              required
+                            />
+                          </div>
+                          <div className="modern-form-field">
+                            <Input
+                              type="text"
+                              placeholder="Apellido *"
+                              value={formValues.apellido || ''}
+                              onChange={(e) => handleFieldChange('apellido', e.target.value)}
+                              className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0"
+                              required
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="modern-form-field">
+                          <Input
+                            type="email"
+                            placeholder="Correo Electrónico *"
+                            value={formValues.email || ''}
+                            onChange={(e) => handleFieldChange('email', e.target.value)}
+                            className="w-full border-0 border-b-2 border-gray-200 rounded-none px-0 py-4 bg-transparent focus:border-cyan-400 focus:ring-0"
+                            required
+                          />
+                        </div>
+                        
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            id="terms"
+                            checked={formValues.terms || false}
+                            onCheckedChange={(checked) => handleFieldChange('terms', checked)}
+                            className="accent-blue-500"
+                          />
+                          <Label htmlFor="terms" className="text-sm text-gray-600 leading-5">
+                            Acepto los términos y condiciones
+                          </Label>
+                        </div>
+                      </>
+                    )}
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-blue-900 to-slate-900 hover:from-blue-800 hover:to-slate-800 text-white font-semibold py-4 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg text-sm uppercase tracking-wide"
+                    >
+                      {formData.structure.submitButtonText || 'ENVIAR'}
+                    </Button>
+                  </form>
+                )}
+              </div>
             </div>
-          </CardFooter>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
