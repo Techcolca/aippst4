@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa del Formulario Moderno</title>
+</head>
+<body>
+    <div id="aipi-form-container"></div>
+    
+    <script>
+        // Simulación de datos de formulario para prueba
+        const mockFormData = {
+            id: 'test',
+            title: 'Comencemos con sus datos de capacitación',
+            description: 'Por favor regístrese para comenzar con Graphotate.',
+            buttonColor: '#1e3a8a',
+            submitButtonText: 'REGISTRARSE',
+            fields: [
+                {
+                    id: 'firstName',
+                    type: 'text',
+                    label: 'Nombre',
+                    required: true,
+                    placeholder: 'Jason'
+                },
+                {
+                    id: 'lastName',
+                    type: 'text',
+                    label: 'Apellido',
+                    required: true,
+                    placeholder: 'Pars'
+                },
+                {
+                    id: 'email',
+                    type: 'email',
+                    label: 'Correo Electrónico',
+                    required: true,
+                    placeholder: 'Dirección de Email'
+                },
+                {
+                    id: 'profession',
+                    type: 'select',
+                    label: 'Profesión',
+                    required: true,
+                    options: [
+                        { value: 'developer', label: 'Desarrollador' },
+                        { value: 'designer', label: 'Diseñador' },
+                        { value: 'manager', label: 'Gerente' },
+                        { value: 'other', label: 'Otro' }
+                    ]
+                },
+                {
+                    id: 'password',
+                    type: 'text',
+                    label: 'Contraseña',
+                    required: true,
+                    placeholder: 'La contraseña debe tener al menos 8 caracteres'
+                }
+            ]
+        };
+
+        // Insertar el script del formulario embebido
+        const scriptContent = `
+        // Función para escapar HTML
+        function escapeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Renderizar el formulario
+        function renderForm(container, formData) {
+            const styles = \`
+              .aipi-form-container {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+                background: linear-gradient(135deg, #00f5a0 0%, #00d9f5 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                box-sizing: border-box;
+              }
+              .aipi-form-card {
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+                overflow: hidden;
+                max-width: 900px;
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                min-height: 600px;
+              }
+              .aipi-form-hero {
+                background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+                padding: 60px 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                position: relative;
+                overflow: hidden;
+              }
+              .aipi-form-hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%2300f5a0;stop-opacity:0.1" /><stop offset="100%" style="stop-color:%2300d9f5;stop-opacity:0.2" /></linearGradient></defs><polygon fill="url(%23grad)" points="0,0 100,0 80,100 0,100"/></svg>') no-repeat center;
+                background-size: cover;
+                opacity: 0.3;
+              }
+              .aipi-form-hero-content {
+                position: relative;
+                z-index: 1;
+              }
+              .aipi-form-hero h2 {
+                color: white;
+                font-size: 2.5rem;
+                font-weight: 700;
+                line-height: 1.2;
+                margin: 0 0 20px 0;
+              }
+              .aipi-form-hero p {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 1.1rem;
+                line-height: 1.6;
+                margin: 0;
+              }
+              .aipi-form-content {
+                padding: 60px 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              }
+              .aipi-form-header {
+                margin-bottom: 30px;
+              }
+              .aipi-form-subtitle {
+                font-size: 1.1rem;
+                color: #374151;
+                margin: 0;
+                font-weight: 400;
+              }
+              .aipi-form-field {
+                margin-bottom: 24px;
+              }
+              .aipi-form-field-group {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+              }
+              .aipi-form-input,
+              .aipi-form-textarea,
+              .aipi-form-select {
+                width: 100%;
+                padding: 16px 0 8px 0;
+                border: none;
+                border-bottom: 2px solid #e5e7eb;
+                font-size: 16px;
+                background: transparent;
+                color: #111827;
+                outline: none;
+                transition: border-color 0.3s ease;
+                box-sizing: border-box;
+              }
+              .aipi-form-input:focus,
+              .aipi-form-textarea:focus,
+              .aipi-form-select:focus {
+                border-bottom-color: #00d9f5;
+              }
+              .aipi-form-input::placeholder,
+              .aipi-form-textarea::placeholder {
+                color: #9ca3af;
+                font-size: 16px;
+              }
+              .aipi-form-select {
+                cursor: pointer;
+                appearance: none;
+                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%239ca3af"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>');
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                background-size: 16px;
+                padding-right: 32px;
+              }
+              .aipi-form-submit {
+                background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+                color: white;
+                font-size: 16px;
+                font-weight: 600;
+                padding: 16px 32px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 100%;
+                margin-top: 20px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+              .aipi-form-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
+              }
+              .aipi-form-submit:active {
+                transform: translateY(0);
+              }
+              .aipi-form-checkbox-field {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 20px 0;
+              }
+              .aipi-form-checkbox {
+                width: 20px;
+                height: 20px;
+                accent-color: #00d9f5;
+              }
+              .aipi-form-checkbox-label {
+                font-size: 14px;
+                color: #6b7280;
+                line-height: 1.4;
+              }
+              
+              @media (max-width: 768px) {
+                .aipi-form-container {
+                  padding: 10px;
+                  min-height: 100vh;
+                }
+                .aipi-form-card {
+                  grid-template-columns: 1fr;
+                  min-height: auto;
+                }
+                .aipi-form-hero {
+                  padding: 40px 30px;
+                  min-height: 200px;
+                }
+                .aipi-form-hero h2 {
+                  font-size: 2rem;
+                }
+                .aipi-form-content {
+                  padding: 40px 30px;
+                }
+                .aipi-form-field-group {
+                  grid-template-columns: 1fr;
+                }
+              }
+            \`;
+            
+            let html = \`
+              <style>\${styles}</style>
+              <div class="aipi-form-container">
+                <div class="aipi-form-card">
+                  <div class="aipi-form-hero">
+                    <div class="aipi-form-hero-content">
+                      <h2>\${escapeHTML(formData.title)}</h2>
+                      <p>\${formData.description ? escapeHTML(formData.description) : 'Complete este formulario para continuar'}</p>
+                    </div>
+                  </div>
+                  <div class="aipi-form-content">
+                    <div class="aipi-form-header">
+                      <p class="aipi-form-subtitle">Por favor complete la información solicitada para comenzar.</p>
+                    </div>
+                    <form class="aipi-form-inner">
+            \`;
+            
+            // Determinar si usar diseño de dos columnas para los campos
+            const shouldUseGroupLayout = formData.fields.length >= 4;
+            let fieldIndex = 0;
+            
+            while (fieldIndex < formData.fields.length) {
+              const field = formData.fields[fieldIndex];
+              const nextField = formData.fields[fieldIndex + 1];
+              
+              if (field.type === 'textarea' || field.type === 'select' || 
+                  !shouldUseGroupLayout || 
+                  (!nextField && fieldIndex % 2 === 0)) {
+                
+                html += \`<div class="aipi-form-field">\${renderField(field)}</div>\`;
+                fieldIndex++;
+                
+              } else if (shouldUseGroupLayout && nextField && 
+                         field.type !== 'textarea' && field.type !== 'select' &&
+                         nextField.type !== 'textarea' && nextField.type !== 'select') {
+                
+                html += \`<div class="aipi-form-field-group">\`;
+                html += \`<div class="aipi-form-field">\${renderField(field)}</div>\`;
+                html += \`<div class="aipi-form-field">\${renderField(nextField)}</div>\`;
+                html += \`</div>\`;
+                fieldIndex += 2;
+                
+              } else {
+                html += \`<div class="aipi-form-field">\${renderField(field)}</div>\`;
+                fieldIndex++;
+              }
+            }
+            
+            // Agregar términos y condiciones
+            html += \`
+              <div class="aipi-form-checkbox-field">
+                <input type="checkbox" id="terms-checkbox" class="aipi-form-checkbox" required>
+                <label for="terms-checkbox" class="aipi-form-checkbox-label">
+                  Acepto los términos y condiciones
+                </label>
+              </div>
+            \`;
+            
+            html += \`
+                      <button type="submit" class="aipi-form-submit">\${formData.submitButtonText || 'ENVIAR'}</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            \`;
+            
+            container.innerHTML = html;
+        }
+
+        function renderField(field) {
+            let fieldHtml = '';
+            
+            switch (field.type) {
+                case 'text':
+                case 'email':
+                case 'phone':
+                case 'number':
+                    fieldHtml = \`<input 
+                        type="\${field.type === 'phone' ? 'tel' : field.type}" 
+                        name="\${field.id}" 
+                        class="aipi-form-input" 
+                        placeholder="\${escapeHTML(field.label)}\${field.required ? ' *' : ''}"
+                        \${field.required ? 'required' : ''}
+                    >\`;
+                    break;
+                    
+                case 'textarea':
+                    fieldHtml = \`<textarea 
+                        name="\${field.id}" 
+                        class="aipi-form-textarea" 
+                        rows="4"
+                        placeholder="\${escapeHTML(field.label)}\${field.required ? ' *' : ''}"
+                        \${field.required ? 'required' : ''}
+                    ></textarea>\`;
+                    break;
+                    
+                case 'select':
+                    fieldHtml = \`<select 
+                        name="\${field.id}" 
+                        class="aipi-form-select"
+                        \${field.required ? 'required' : ''}
+                    >\`;
+                    
+                    fieldHtml += \`<option value="">\${field.label || 'Seleccionar...'}</option>\`;
+                    
+                    if (field.options && Array.isArray(field.options)) {
+                        field.options.forEach(option => {
+                            fieldHtml += \`<option value="\${escapeHTML(option.value || option)}">\${escapeHTML(option.label || option)}</option>\`;
+                        });
+                    }
+                    
+                    fieldHtml += \`</select>\`;
+                    break;
+            }
+            
+            return fieldHtml;
+        }
+
+        // Renderizar el formulario
+        const container = document.getElementById('aipi-form-container');
+        renderForm(container, mockFormData);
+        `;
+
+        eval(scriptContent);
+    </script>
+</body>
+</html>

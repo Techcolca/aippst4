@@ -69,102 +69,257 @@
   
   // Renderizar el formulario en el contenedor
   function renderForm(container, formData) {
-    // Estilos base para el formulario
+    // Estilos base para el formulario con diseño moderno de dos columnas
     const styles = `
-      .aipi-form {
+      .aipi-form-container {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-        max-width: 600px;
-        margin: 0 auto;
+        background: linear-gradient(135deg, #00f5a0 0%, #00d9f5 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-sizing: border-box;
       }
-      .aipi-form-title {
-        font-size: 24px;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #111827;
+      .aipi-form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        max-width: 900px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 600px;
       }
-      .aipi-form-description {
-        font-size: 16px;
-        margin-bottom: 24px;
-        color: #4B5563;
+      .aipi-form-hero {
+        background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .aipi-form-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%2300f5a0;stop-opacity:0.1" /><stop offset="100%" style="stop-color:%2300d9f5;stop-opacity:0.2" /></linearGradient></defs><polygon fill="url(%23grad)" points="0,0 100,0 80,100 0,100"/></svg>') no-repeat center;
+        background-size: cover;
+        opacity: 0.3;
+      }
+      .aipi-form-hero-content {
+        position: relative;
+        z-index: 1;
+      }
+      .aipi-form-hero h2 {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin: 0 0 20px 0;
+      }
+      .aipi-form-hero p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+      .aipi-form-content {
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .aipi-form-header {
+        margin-bottom: 30px;
+      }
+      .aipi-form-subtitle {
+        font-size: 1.1rem;
+        color: #374151;
+        margin: 0;
+        font-weight: 400;
       }
       .aipi-form-field {
-        margin-bottom: 20px;
+        margin-bottom: 24px;
       }
-      .aipi-form-label {
-        display: block;
-        font-size: 14px;
-        font-weight: 500;
-        margin-bottom: 8px;
-        color: #374151;
+      .aipi-form-field-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
       }
       .aipi-form-input,
       .aipi-form-textarea,
       .aipi-form-select {
         width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #D1D5DB;
-        border-radius: 6px;
+        padding: 16px 0 8px 0;
+        border: none;
+        border-bottom: 2px solid #e5e7eb;
         font-size: 16px;
-        transition: border-color 0.15s ease;
+        background: transparent;
+        color: #111827;
+        outline: none;
+        transition: border-color 0.3s ease;
+        box-sizing: border-box;
       }
       .aipi-form-input:focus,
       .aipi-form-textarea:focus,
       .aipi-form-select:focus {
-        outline: none;
-        border-color: #2563EB;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        border-bottom-color: #00d9f5;
+      }
+      .aipi-form-input::placeholder,
+      .aipi-form-textarea::placeholder {
+        color: #9ca3af;
+        font-size: 16px;
+      }
+      .aipi-form-select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="%239ca3af"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>');
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 16px;
+        padding-right: 32px;
       }
       .aipi-form-submit {
-        background-color: ${formData.buttonColor || '#2563EB'};
+        background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
         color: white;
         font-size: 16px;
-        font-weight: 500;
-        padding: 10px 16px;
+        font-weight: 600;
+        padding: 16px 32px;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.15s ease;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
       .aipi-form-submit:hover {
-        background-color: ${adjustColor(formData.buttonColor || '#2563EB', -15)};
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(30, 58, 138, 0.3);
       }
-      .aipi-form-required {
-        color: #DC2626;
-        margin-left: 4px;
+      .aipi-form-submit:active {
+        transform: translateY(0);
+      }
+      .aipi-form-checkbox-field {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .aipi-form-checkbox {
+        width: 20px;
+        height: 20px;
+        accent-color: #00d9f5;
+      }
+      .aipi-form-checkbox-label {
+        font-size: 14px;
+        color: #6b7280;
+        line-height: 1.4;
       }
       .aipi-form-error {
-        color: #DC2626;
+        color: #ef4444;
         font-size: 14px;
-        margin-top: 4px;
+        margin-top: 8px;
       }
       .aipi-form-success {
-        background-color: #ECFDF5;
-        color: #065F46;
-        padding: 16px;
-        border-radius: 6px;
-        margin-top: 20px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 24px;
+        border-radius: 12px;
         text-align: center;
+        font-weight: 500;
+      }
+      
+      @media (max-width: 768px) {
+        .aipi-form-container {
+          padding: 10px;
+          min-height: 100vh;
+        }
+        .aipi-form-card {
+          grid-template-columns: 1fr;
+          min-height: auto;
+        }
+        .aipi-form-hero {
+          padding: 40px 30px;
+          min-height: 200px;
+        }
+        .aipi-form-hero h2 {
+          font-size: 2rem;
+        }
+        .aipi-form-content {
+          padding: 40px 30px;
+        }
+        .aipi-form-field-group {
+          grid-template-columns: 1fr;
+        }
       }
     `;
     
-    // Crear la estructura HTML del formulario
+    // Crear la estructura HTML del formulario con diseño moderno
     let html = `
       <style>${styles}</style>
-      <div class="aipi-form">
-        <h2 class="aipi-form-title">${escapeHTML(formData.title)}</h2>
-        ${formData.description ? `<p class="aipi-form-description">${escapeHTML(formData.description)}</p>` : ''}
-        <form id="aipi-form-${formData.id}" class="aipi-form-inner">
+      <div class="aipi-form-container">
+        <div class="aipi-form-card">
+          <div class="aipi-form-hero">
+            <div class="aipi-form-hero-content">
+              <h2>${escapeHTML(formData.title)}</h2>
+              <p>${formData.description ? escapeHTML(formData.description) : 'Complete este formulario para continuar'}</p>
+            </div>
+          </div>
+          <div class="aipi-form-content">
+            <div class="aipi-form-header">
+              <p class="aipi-form-subtitle">Por favor complete la información solicitada para comenzar.</p>
+            </div>
+            <form id="aipi-form-${formData.id}" class="aipi-form-inner">
     `;
     
-    // Agregar campos del formulario
-    formData.fields.forEach(field => {
-      html += `<div class="aipi-form-field">`;
+    // Determinar si usar diseño de dos columnas para los campos
+    const shouldUseGroupLayout = formData.fields.length >= 4;
+    let fieldIndex = 0;
+    
+    while (fieldIndex < formData.fields.length) {
+      const field = formData.fields[fieldIndex];
+      const nextField = formData.fields[fieldIndex + 1];
       
-      // Etiqueta del campo
-      html += `<label class="aipi-form-label" for="aipi-field-${field.id}">
-        ${escapeHTML(field.label)}
-        ${field.required ? '<span class="aipi-form-required">*</span>' : ''}
-      </label>`;
+      // Si es un campo que debe ocupar toda la fila (textarea o select) o es el último campo impar
+      if (field.type === 'textarea' || field.type === 'select' || 
+          !shouldUseGroupLayout || 
+          (!nextField && fieldIndex % 2 === 0)) {
+        
+        html += `<div class="aipi-form-field">`;
+        html += renderField(field);
+        html += `</div>`;
+        fieldIndex++;
+        
+      } else if (shouldUseGroupLayout && nextField && 
+                 field.type !== 'textarea' && field.type !== 'select' &&
+                 nextField.type !== 'textarea' && nextField.type !== 'select') {
+        
+        // Grupo de dos campos
+        html += `<div class="aipi-form-field-group">`;
+        html += `<div class="aipi-form-field">${renderField(field)}</div>`;
+        html += `<div class="aipi-form-field">${renderField(nextField)}</div>`;
+        html += `</div>`;
+        fieldIndex += 2;
+        
+      } else {
+        html += `<div class="aipi-form-field">`;
+        html += renderField(field);
+        html += `</div>`;
+        fieldIndex++;
+      }
+    }
+    
+    // Función auxiliar para renderizar un campo individual
+    function renderField(field) {
+      let fieldHtml = '';
       
       // Campo de entrada según el tipo
       switch (field.type) {
@@ -172,29 +327,29 @@
         case 'email':
         case 'phone':
         case 'number':
-          html += `<input 
+          fieldHtml = `<input 
             type="${field.type === 'phone' ? 'tel' : field.type}" 
             id="aipi-field-${field.id}" 
             name="${field.id}" 
             class="aipi-form-input" 
-            ${field.placeholder ? `placeholder="${escapeHTML(field.placeholder)}"` : ''} 
+            placeholder="${escapeHTML(field.label)}${field.required ? ' *' : ''}"
             ${field.required ? 'required' : ''}
           >`;
           break;
           
         case 'textarea':
-          html += `<textarea 
+          fieldHtml = `<textarea 
             id="aipi-field-${field.id}" 
             name="${field.id}" 
             class="aipi-form-textarea" 
             rows="4"
-            ${field.placeholder ? `placeholder="${escapeHTML(field.placeholder)}"` : ''} 
+            placeholder="${escapeHTML(field.label)}${field.required ? ' *' : ''}"
             ${field.required ? 'required' : ''}
           ></textarea>`;
           break;
           
         case 'select':
-          html += `<select 
+          fieldHtml = `<select 
             id="aipi-field-${field.id}" 
             name="${field.id}" 
             class="aipi-form-select"
@@ -202,43 +357,56 @@
           >`;
           
           // Opción vacía predeterminada
-          html += `<option value="">${field.placeholder || 'Seleccionar...'}</option>`;
+          fieldHtml += `<option value="">${field.placeholder || field.label || 'Seleccionar...'}</option>`;
           
           // Opciones del select
           if (field.options && Array.isArray(field.options)) {
             field.options.forEach(option => {
-              html += `<option value="${escapeHTML(option.value || option)}">${escapeHTML(option.label || option)}</option>`;
+              fieldHtml += `<option value="${escapeHTML(option.value || option)}">${escapeHTML(option.label || option)}</option>`;
             });
           }
           
-          html += `</select>`;
+          fieldHtml += `</select>`;
           break;
           
         case 'checkbox':
-          html += `<div class="aipi-form-checkbox">
+          fieldHtml = `<div class="aipi-form-checkbox-field">
             <input 
               type="checkbox" 
               id="aipi-field-${field.id}" 
               name="${field.id}" 
+              class="aipi-form-checkbox"
               ${field.required ? 'required' : ''}
             >
-            <label for="aipi-field-${field.id}">${escapeHTML(field.label)}</label>
+            <label for="aipi-field-${field.id}" class="aipi-form-checkbox-label">${escapeHTML(field.label)}</label>
           </div>`;
           break;
       }
       
-      // Contenedor para mensajes de error
-      html += `<div id="aipi-error-${field.id}" class="aipi-form-error"></div>`;
-      
-      html += `</div>`;
-    });
+      return fieldHtml;
+    }
+    
+    // Agregar términos y condiciones si hay un campo checkbox
+    const hasCheckbox = formData.fields.some(field => field.type === 'checkbox');
+    if (hasCheckbox || formData.fields.length > 0) {
+      html += `
+        <div class="aipi-form-checkbox-field">
+          <input type="checkbox" id="terms-checkbox" class="aipi-form-checkbox" required>
+          <label for="terms-checkbox" class="aipi-form-checkbox-label">
+            Acepto los términos y condiciones
+          </label>
+        </div>
+      `;
+    }
     
     // Botón de envío
     html += `
-        <button type="submit" class="aipi-form-submit">${formData.submitButtonText || 'Enviar'}</button>
-        <div id="aipi-form-response" class="aipi-form-response"></div>
-      </form>
-    </div>
+              <button type="submit" class="aipi-form-submit">${formData.submitButtonText || 'ENVIAR'}</button>
+              <div id="aipi-form-response"></div>
+            </form>
+          </div>
+        </div>
+      </div>
     `;
     
     container.innerHTML = html;
