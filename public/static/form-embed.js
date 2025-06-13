@@ -150,7 +150,8 @@
       .aipi-form-field-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 16px;
+        gap: 24px;
+        margin-bottom: 24px;
       }
       .aipi-form-input,
       .aipi-form-textarea,
@@ -280,40 +281,69 @@
             <form id="aipi-form-${formData.id}" class="aipi-form-inner">
     `;
     
-    // Determinar si usar diseño de dos columnas para los campos
-    const shouldUseGroupLayout = formData.fields.length >= 4;
-    let fieldIndex = 0;
-    
-    while (fieldIndex < formData.fields.length) {
-      const field = formData.fields[fieldIndex];
-      const nextField = formData.fields[fieldIndex + 1];
+    // Si no hay campos definidos, usar campos de ejemplo modernos
+    if (!formData.fields || formData.fields.length === 0) {
+      html += `
+        <div class="aipi-form-field-group">
+          <div class="aipi-form-field">
+            <input type="text" name="nombre" class="aipi-form-input" placeholder="Nombre *" required>
+          </div>
+          <div class="aipi-form-field">
+            <input type="text" name="apellido" class="aipi-form-input" placeholder="Apellido *" required>
+          </div>
+        </div>
+        <div class="aipi-form-field">
+          <input type="email" name="email" class="aipi-form-input" placeholder="Correo Electrónico *" required>
+        </div>
+        <div class="aipi-form-checkbox-field">
+          <input type="checkbox" id="terms-default" class="aipi-form-checkbox" required>
+          <label for="terms-default" class="aipi-form-checkbox-label">
+            Acepto los términos y condiciones
+          </label>
+        </div>
+      `;
+    } else {
+      // Renderizar campos con layout inteligente como en la vista previa
+      let currentGroup = [];
       
-      // Si es un campo que debe ocupar toda la fila (textarea o select) o es el último campo impar
-      if (field.type === 'textarea' || field.type === 'select' || 
-          !shouldUseGroupLayout || 
-          (!nextField && fieldIndex % 2 === 0)) {
+      for (let i = 0; i < formData.fields.length; i++) {
+      const field = formData.fields[i];
+      
+      // Los campos de texto cortos se agrupan en dos columnas
+      if ((field.type === 'text' || field.type === 'email') && currentGroup.length < 2) {
+        currentGroup.push(field);
         
-        html += `<div class="aipi-form-field">`;
-        html += renderField(field);
-        html += `</div>`;
-        fieldIndex++;
-        
-      } else if (shouldUseGroupLayout && nextField && 
-                 field.type !== 'textarea' && field.type !== 'select' &&
-                 nextField.type !== 'textarea' && nextField.type !== 'select') {
-        
-        // Grupo de dos campos
-        html += `<div class="aipi-form-field-group">`;
-        html += `<div class="aipi-form-field">${renderField(field)}</div>`;
-        html += `<div class="aipi-form-field">${renderField(nextField)}</div>`;
-        html += `</div>`;
-        fieldIndex += 2;
-        
+        // Si completamos el grupo o es el último campo
+        if (currentGroup.length === 2 || i === formData.fields.length - 1) {
+          if (currentGroup.length === 2) {
+            html += `<div class="aipi-form-field-group">`;
+            currentGroup.forEach(f => {
+              html += `<div class="aipi-form-field">`;
+              html += renderField(f);
+              html += `</div>`;
+            });
+            html += `</div>`;
+          } else {
+            // Campo único
+            html += `<div class="aipi-form-field">`;
+            html += renderField(currentGroup[0]);
+            html += `</div>`;
+          }
+          currentGroup = [];
+        }
       } else {
+        // Campos que ocupan toda la fila (textarea, select, checkbox)
+        if (currentGroup.length > 0) {
+          // Primero renderizar cualquier campo pendiente
+          html += `<div class="aipi-form-field">`;
+          html += renderField(currentGroup[0]);
+          html += `</div>`;
+          currentGroup = [];
+        }
+        
         html += `<div class="aipi-form-field">`;
         html += renderField(field);
         html += `</div>`;
-        fieldIndex++;
       }
     }
     
@@ -386,9 +416,9 @@
       return fieldHtml;
     }
     
-    // Agregar términos y condiciones si hay un campo checkbox
-    const hasCheckbox = formData.fields.some(field => field.type === 'checkbox');
-    if (hasCheckbox || formData.fields.length > 0) {
+    // Solo agregar términos y condiciones si no hay un campo checkbox específico
+    const hasCheckboxField = formData.fields.some(field => field.type === 'checkbox');
+    if (!hasCheckboxField && formData.fields.length > 0) {
       html += `
         <div class="aipi-form-checkbox-field">
           <input type="checkbox" id="terms-checkbox" class="aipi-form-checkbox" required>
@@ -447,6 +477,7 @@
           default:
             submission[field.id] = element.value;
         }
+      }
       }
     });
     
