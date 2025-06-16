@@ -16,7 +16,26 @@
     "en": "Inglés"
   },
   "home": "Inicio",
-  "features": "Características",
+  "features": {
+    "title": "Características Poderosas",
+    "subtitle": "Descubre cómo AIPPS puede transformar tu sitio web con asistencia inteligente de IA",
+    "conversationalAI": {
+      "title": "IA Conversacional",
+      "description": "Procesamiento avanzado de lenguaje natural para interacciones similares a las humanas"
+    },
+    "taskAutomation": {
+      "title": "Automatización de Tareas",
+      "description": "Optimiza tareas repetitivas y flujos de trabajo con automatización inteligente"
+    },
+    "easyIntegration": {
+      "title": "Integración Fácil", 
+      "description": "Configuración simple con solo unas pocas líneas de código en cualquier sitio web"
+    },
+    "analytics": {
+      "title": "Analíticas",
+      "description": "Información detallada y reportes sobre interacciones de usuarios y rendimiento"
+    }
+  },
   "pricing": "Precios",
   "pricing.plans": "Planes",
   "pricing.title": "Potencia tu Sitio Web con IA",

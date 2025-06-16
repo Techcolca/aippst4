@@ -30,7 +30,7 @@ i18n
     resources,
     fallbackLng: 'fr', // Langue par défaut (français)
     debug: true, // Debug mode pour le développement
-    returnObjects: false, // Deshabilitar por defecto
+    returnObjects: false, // Mantener false para evitar errores de renderizado
 
     interpolation: {
       escapeValue: false, // Non nécessaire pour React
