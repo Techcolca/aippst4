@@ -45,7 +45,7 @@ export default function Header() {
   
   const publicLinks = [
     { name: t("home"), href: "/" },
-    { name: t("features"), href: "/#features" },
+    { name: "Features", href: "/#features" },
     { name: t("pricing"), href: "/pricing" },
     { name: t("documentation"), href: "/docs" },
   ];

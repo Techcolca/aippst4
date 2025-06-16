@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,7 +21,6 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Edit3, Trash } from "lucide-react";
-import { apiRequest } from "@/lib/queryClient";
 
 // Definición de tipos
 interface Integration {
@@ -293,19 +293,7 @@ export default function DashboardTabs() {
   // Mutación para eliminar formularios
   const deleteFormMutation = useMutation({
     mutationFn: async (formId: number) => {
-      const response = await fetch(`/api/forms/${formId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(t("form_not_found", "Form not found or already deleted"));
-        }
-        throw new Error(t("error_deleting_form", "Failed to delete form"));
-      }
-      // El endpoint DELETE devuelve 204 (No Content), no JSON
+      await apiRequest('DELETE', `/api/forms/${formId}`);
       return {};
     },
     onSuccess: () => {
