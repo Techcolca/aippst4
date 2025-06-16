@@ -256,13 +256,12 @@ export default function FormIntegration() {
   
   // Generar el código para incrustar directamente el formulario
   const generateEmbedCode = () => {
-    return `<iframe 
-  src="${window.location.origin}/forms/${id}/embed" 
-  width="100%" 
-  height="600px" 
-  style="border: none; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);" 
-  title="${form?.title || 'Formulario AIPI'}">
-</iframe>`;
+    const timestamp = Date.now();
+    return `<!-- Contenedor para el formulario -->
+<div id="aipi-form-container"></div>
+
+<!-- Script del formulario AIPI con cache busting -->
+<script src="${window.location.origin}/static/form-embed.js?id=${form?.slug}&v=${timestamp}"></script>`;
   };
   
   // Copiar el código al portapapeles

@@ -3190,6 +3190,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(404).json({ message: "Embed script not found" });
     }
   });
+
+  // Serve the form embed script with cache busting
+  app.get("/static/form-embed.js", (req, res) => {
+    const currentDir = path.dirname(new URL(import.meta.url).pathname);
+    const formEmbedPath = path.resolve(currentDir, '../public/static/form-embed.js');
+    
+    if (fs.existsSync(formEmbedPath)) {
+      // Add cache control headers to force fresh downloads
+      res.setHeader("Content-Type", "application/javascript");
+      res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
+      res.sendFile(formEmbedPath);
+    } else {
+      res.status(404).json({ message: "Form embed script not found" });
+    }
+  });
   
   // Serve the fullscreen embed script
   app.get("/fullscreen-embed.js", (req, res) => {
