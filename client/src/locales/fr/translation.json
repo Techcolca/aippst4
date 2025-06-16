@@ -16,7 +16,32 @@
     "en": "Anglais"
   },
   "home": "Accueil",
-  "features": "Fonctionnalités",
+  "features": {
+    "title": "Fonctionnalités Puissantes",
+    "subtitle": "Découvrez comment AIPPS peut transformer votre site web avec une assistance IA intelligente",
+    "conversationalAI": {
+      "title": "IA Conversationnelle",
+      "description": "Traitement avancé du langage naturel pour des interactions semblables à celles des humains"
+    },
+    "taskAutomation": {
+      "title": "Automatisation des Tâches",
+      "description": "Optimisez les tâches répétitives et les flux de travail avec une automatisation intelligente"
+    },
+    "easyIntegration": {
+      "title": "Intégration Facile",
+      "description": "Configuration simple avec seulement quelques lignes de code sur n'importe quel site web"
+    },
+    "analytics": {
+      "title": "Analytiques",
+      "description": "Insights détaillés et rapports sur les interactions utilisateur et les performances"
+    }
+  },
+  "cta": {
+    "title": "Prêt à Commencer?",
+    "subtitle": "Transformez votre site web avec une assistance IA dès aujourd'hui",
+    "getStartedFree": "Commencer Gratuitement",
+    "scheduleDemo": "Planifier une Démo"
+  },
   "pricing": "Tarifs",
   "pricing.login_required": "Connexion requise",
   "pricing.login_description": "Vous devez vous connecter pour vous abonner à un forfait.",

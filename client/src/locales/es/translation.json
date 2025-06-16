@@ -36,6 +36,12 @@
       "description": "Información detallada y reportes sobre interacciones de usuarios y rendimiento"
     }
   },
+  "cta": {
+    "title": "¿Listo para Comenzar?",
+    "subtitle": "Transforma tu sitio web con asistencia impulsada por IA hoy",
+    "getStartedFree": "Comenzar Gratis",
+    "scheduleDemo": "Programar Demo"
+  },
   "pricing": "Precios",
   "pricing.plans": "Planes",
   "pricing.title": "Potencia tu Sitio Web con IA",

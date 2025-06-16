@@ -36,6 +36,12 @@
       "description": "Detailed insights and reporting on user interactions and performance"
     }
   },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "subtitle": "Transform your website with AI-powered assistance today",
+    "getStartedFree": "Get Started Free",
+    "scheduleDemo": "Schedule Demo"
+  },
   "pricing": "Pricing",
   "pricing.plans": "Plans",
   "pricing.title": "Power Your Website With AI",
