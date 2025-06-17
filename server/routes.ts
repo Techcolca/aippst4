@@ -5245,7 +5245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Ruta para la vista embebida de formularios
+  // Ruta para la vista embebida de formularios con diseño moderno de dos columnas
   app.get("/forms/:id/embed", async (req, res) => {
     try {
       const formId = parseInt(req.params.id);
@@ -5257,8 +5257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).send('Formulario no encontrado');
       }
       
-      // Renderizar una página HTML simple con el formulario embebido
-      // Este HTML será servido en un iframe
+      // Generar HTML con diseño moderno de dos columnas
       const html = `
         <!DOCTYPE html>
         <html lang="es">
@@ -5267,116 +5266,389 @@ export async function registerRoutes(app: Express): Promise<Server> {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>${form.title || 'Formulario AIPI'}</title>
           <style>
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            * {
               margin: 0;
-              padding: 16px;
-              color: #333;
-              background-color: #fff;
+              padding: 0;
+              box-sizing: border-box;
             }
             
-            h1 {
-              font-size: 1.5rem;
-              margin-bottom: 1rem;
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+              line-height: 1.6;
+              background: #f8fafc;
+              margin: 0;
+              padding: 1rem;
             }
             
-            p {
-              margin-bottom: 1.5rem;
-              color: #666;
+            .modern-form-wrapper {
+              max-width: 900px;
+              margin: 0 auto;
+              background: white;
+              border-radius: 16px;
+              box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+              overflow: hidden;
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              min-height: 600px;
             }
             
-            .form-container {
-              max-width: 100%;
-              border-radius: ${form.styling?.borderRadius || '8px'};
+            .form-hero {
+              background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #0f172a 100%);
+              padding: 3rem 2.5rem;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              position: relative;
               overflow: hidden;
             }
             
-            form {
+            .form-hero::before {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+              opacity: 0.7;
+            }
+            
+            .form-hero-content {
+              position: relative;
+              z-index: 1;
+            }
+            
+            .form-hero h1 {
+              color: white;
+              font-size: 2.25rem;
+              font-weight: 700;
+              line-height: 1.2;
+              margin: 0 0 1.5rem 0;
+              text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            
+            .form-hero p {
+              color: rgba(255, 255, 255, 0.9);
+              font-size: 1.125rem;
+              line-height: 1.7;
+              margin: 0;
+              font-weight: 400;
+            }
+            
+            .form-content {
+              padding: 3rem 2.5rem;
               display: flex;
               flex-direction: column;
-              gap: 1rem;
+              justify-content: center;
+              background: white;
             }
             
-            label {
-              font-weight: 500;
-              margin-bottom: 0.25rem;
+            .form-header {
+              margin-bottom: 2rem;
+            }
+            
+            .form-subtitle {
+              font-size: 1.125rem;
+              color: #6b7280;
+              margin: 0;
+              font-weight: 400;
+              line-height: 1.6;
+            }
+            
+            .form-field {
+              margin-bottom: 1.5rem;
+            }
+            
+            .form-label {
               display: block;
+              font-size: 0.875rem;
+              font-weight: 500;
+              color: #374151;
+              margin-bottom: 0.5rem;
+              letter-spacing: 0.025em;
             }
             
-            input, textarea, select {
+            .form-input, .form-select, .form-textarea {
               width: 100%;
-              padding: 0.5rem;
-              border: 1px solid #ddd;
-              border-radius: 4px;
+              padding: 0.75rem 0;
               font-size: 1rem;
+              color: #111827;
+              background: transparent;
+              border: none;
+              border-bottom: 2px solid #e5e7eb;
+              outline: none;
+              transition: all 0.3s ease;
               font-family: inherit;
+              box-sizing: border-box;
             }
             
-            button {
-              background-color: ${form.styling?.primaryColor || '#3B82F6'};
+            .form-input:focus, .form-select:focus, .form-textarea:focus {
+              border-bottom-color: #3b82f6;
+              background: rgba(59, 130, 246, 0.02);
+            }
+            
+            .form-input::placeholder, .form-textarea::placeholder {
+              color: #9ca3af;
+              opacity: 1;
+            }
+            
+            .form-select {
+              cursor: pointer;
+              appearance: none;
+              background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+              background-position: right 0.5rem center;
+              background-repeat: no-repeat;
+              background-size: 1.5em 1.5em;
+              padding-right: 2.5rem;
+            }
+            
+            .form-textarea {
+              resize: vertical;
+              min-height: 100px;
+            }
+            
+            .checkbox-field {
+              display: flex;
+              align-items: flex-start;
+              gap: 0.75rem;
+              margin: 1.5rem 0;
+            }
+            
+            .checkbox {
+              width: 1.25rem;
+              height: 1.25rem;
+              margin-top: 0.125rem;
+              accent-color: #3b82f6;
+              cursor: pointer;
+            }
+            
+            .checkbox-label {
+              font-size: 0.875rem;
+              color: #6b7280;
+              cursor: pointer;
+              flex: 1;
+            }
+            
+            .submit-button {
+              width: 100%;
+              background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
               color: white;
               border: none;
-              padding: 0.75rem 1rem;
-              border-radius: 4px;
+              padding: 0.875rem 1.5rem;
               font-size: 1rem;
+              font-weight: 600;
+              border-radius: 8px;
               cursor: pointer;
-              font-weight: 500;
-              margin-top: 0.5rem;
+              transition: all 0.3s ease;
+              margin-top: 1rem;
+              letter-spacing: 0.025em;
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             }
             
-            button:hover {
-              opacity: 0.9;
+            .submit-button:hover {
+              background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+              transform: translateY(-1px);
+              box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.15);
+            }
+            
+            .submit-button:active {
+              transform: translateY(0);
+            }
+            
+            .submit-button:disabled {
+              opacity: 0.6;
+              cursor: not-allowed;
+              transform: none;
             }
             
             .required:after {
               content: " *";
-              color: #e53e3e;
+              color: #ef4444;
+              font-weight: 500;
+            }
+            
+            .success-message {
+              text-align: center;
+              padding: 2rem;
+              color: #059669;
+            }
+            
+            .success-icon {
+              font-size: 3rem;
+              margin-bottom: 1rem;
+            }
+            
+            .success-title {
+              margin: 0 0 1rem 0;
+              color: #047857;
+              font-size: 1.5rem;
+              font-weight: 600;
+            }
+            
+            .success-text {
+              margin: 0;
+              color: #6b7280;
+            }
+            
+            /* Responsive Design */
+            @media (max-width: 768px) {
+              body {
+                padding: 0.5rem;
+              }
+              
+              .modern-form-wrapper {
+                grid-template-columns: 1fr;
+                border-radius: 12px;
+              }
+              
+              .form-hero {
+                padding: 2rem 1.5rem;
+                min-height: 200px;
+              }
+              
+              .form-hero h1 {
+                font-size: 1.875rem;
+              }
+              
+              .form-content {
+                padding: 2rem 1.5rem;
+              }
+            }
+            
+            @media (max-width: 480px) {
+              .form-hero, .form-content {
+                padding: 1.5rem 1rem;
+              }
             }
           </style>
         </head>
         <body>
-          <div class="form-container">
-            <h1>${form.title || 'Formulario'}</h1>
-            ${form.description ? `<p>${form.description}</p>` : ''}
+          <div class="modern-form-wrapper">
+            <div class="form-hero">
+              <div class="form-hero-content">
+                <h1>${form.title || 'Formulario'}</h1>
+                <p>${form.description || 'Complete la información solicitada para comenzar.'}</p>
+              </div>
+            </div>
             
-            <form id="aipi-form">
-              ${form.structure.fields.map(field => `
-                <div class="form-field">
-                  <label for="${field.name}" class="${field.required ? 'required' : ''}">${field.label}</label>
-                  ${field.type === 'text' ? `
-                    <input type="text" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
-                  ` : field.type === 'email' ? `
-                    <input type="email" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
-                  ` : field.type === 'number' ? `
-                    <input type="number" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
-                  ` : field.type === 'textarea' ? `
-                    <textarea id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" rows="4" ${field.required ? 'required' : ''}></textarea>
-                  ` : field.type === 'select' ? `
-                    <select id="${field.name}" name="${field.name}" ${field.required ? 'required' : ''}>
-                      <option value="">Selecciona una opción</option>
-                      ${field.options && field.options.map(option => {
-                        const optionValue = typeof option === 'string' ? option : option.value || option.label;
-                        const optionLabel = typeof option === 'string' ? option : option.label;
-                        return `<option value="${optionValue}">${optionLabel}</option>`;
-                      }).join('')}
-                    </select>
-                  ` : `
-                    <input type="text" id="${field.name}" name="${field.name}" placeholder="${field.placeholder || ''}" ${field.required ? 'required' : ''}>
-                  `}
-                </div>
-              `).join('')}
+            <div class="form-content">
+              <div class="form-header">
+                <p class="form-subtitle">Por favor complete la información solicitada para comenzar.</p>
+              </div>
               
-              <button type="submit">${form.structure.submitButtonText || 'Enviar'}</button>
-            </form>
-            
-            <div id="success-message" style="display: none; margin-top: 1rem; padding: 1rem; background-color: #f0fff4; color: #2f855a; border-radius: 4px; border: 1px solid #c6f6d5;">
-              ${form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.'}
+              <form id="modern-form" method="POST">
+                ${form.structure.fields.map(field => {
+                  const fieldId = `field_${field.name}`;
+                  let fieldHTML = `<div class="form-field">`;
+                  
+                  switch (field.type) {
+                    case 'text':
+                    case 'email':
+                    case 'tel':
+                    case 'url':
+                    case 'number':
+                      fieldHTML += `
+                        <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
+                          ${field.label}
+                        </label>
+                        <input
+                          type="${field.type}"
+                          id="${fieldId}"
+                          name="${field.name}"
+                          class="form-input"
+                          placeholder="${field.placeholder || ''}"
+                          ${field.required ? 'required' : ''}
+                        >
+                      `;
+                      break;
+                      
+                    case 'textarea':
+                      fieldHTML += `
+                        <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
+                          ${field.label}
+                        </label>
+                        <textarea
+                          id="${fieldId}"
+                          name="${field.name}"
+                          class="form-textarea"
+                          placeholder="${field.placeholder || ''}"
+                          ${field.required ? 'required' : ''}
+                        ></textarea>
+                      `;
+                      break;
+                      
+                    case 'select':
+                      fieldHTML += `
+                        <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
+                          ${field.label}
+                        </label>
+                        <select id="${fieldId}" name="${field.name}" class="form-select" ${field.required ? 'required' : ''}>
+                          <option value="">Selecciona una opción</option>
+                      `;
+                      
+                      if (field.options && Array.isArray(field.options)) {
+                        field.options.forEach(option => {
+                          const optionValue = typeof option === 'string' ? option : option.value || option.label;
+                          const optionLabel = typeof option === 'string' ? option : option.label;
+                          fieldHTML += `<option value="${optionValue}">${optionLabel}</option>`;
+                        });
+                      }
+                      
+                      fieldHTML += `</select>`;
+                      break;
+                      
+                    case 'checkbox':
+                      fieldHTML += `
+                        <div class="checkbox-field">
+                          <input
+                            type="checkbox"
+                            id="${fieldId}"
+                            name="${field.name}"
+                            class="checkbox"
+                            value="1"
+                            ${field.required ? 'required' : ''}
+                          >
+                          <label for="${fieldId}" class="checkbox-label">
+                            ${field.label}
+                          </label>
+                        </div>
+                      `;
+                      break;
+                      
+                    default:
+                      fieldHTML += `
+                        <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
+                          ${field.label}
+                        </label>
+                        <input
+                          type="text"
+                          id="${fieldId}"
+                          name="${field.name}"
+                          class="form-input"
+                          placeholder="${field.placeholder || ''}"
+                          ${field.required ? 'required' : ''}
+                        >
+                      `;
+                  }
+                  
+                  fieldHTML += `</div>`;
+                  return fieldHTML;
+                }).join('')}
+                
+                <button type="submit" class="submit-button">
+                  ${form.structure.submitButtonText || 'Enviar'}
+                </button>
+              </form>
             </div>
           </div>
           
           <script>
-            document.getElementById('aipi-form').addEventListener('submit', async function(e) {
+            document.getElementById('modern-form').addEventListener('submit', async function(e) {
               e.preventDefault();
+              
+              const submitButton = this.querySelector('.submit-button');
+              submitButton.disabled = true;
+              submitButton.textContent = 'Enviando...';
               
               const formData = new FormData(this);
               const formDataObj = Object.fromEntries(formData.entries());
@@ -5395,8 +5667,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 
                 if (response.ok) {
                   // Mostrar mensaje de éxito
-                  document.getElementById('aipi-form').style.display = 'none';
-                  document.getElementById('success-message').style.display = 'block';
+                  this.innerHTML = \`
+                    <div class="success-message">
+                      <div class="success-icon">✓</div>
+                      <h3 class="success-title">¡Formulario enviado correctamente!</h3>
+                      <p class="success-text">Gracias por tu información. Te contactaremos pronto.</p>
+                    </div>
+                  \`;
                   
                   // Si hay URL de redirección configurada, redirigir después de un breve retraso
                   ${form.settings?.redirectUrl ? `
@@ -5405,10 +5682,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     }, 3000);
                   ` : ''}
                 } else {
-                  alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                  throw new Error('Error en el servidor');
                 }
               } catch (error) {
                 console.error('Error al enviar el formulario:', error);
+                
+                // Restaurar el botón
+                submitButton.disabled = false;
+                submitButton.textContent = '${form.structure.submitButtonText || 'Enviar'}';
+                
                 alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
               }
             });
@@ -5418,6 +5700,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       `;
       
       res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       res.send(html);
     } catch (error) {
       console.error("Error al renderizar el formulario embebido:", error);
