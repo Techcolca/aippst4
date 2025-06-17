@@ -5245,6 +5245,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Función auxiliar para escapar HTML
+  function escapeHtml(text: string): string {
+    if (!text) return '';
+    const map: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
+
+  // Función para obtener traducciones del formulario
+  function getFormTranslations(language: string) {
+    const translations = {
+      es: {
+        completeInfo: 'Por favor complete la información solicitada para comenzar.',
+        selectOption: 'Selecciona una opción',
+        submit: 'Enviar',
+        sending: 'Enviando...',
+        successTitle: '¡Formulario enviado correctamente!',
+        successMessage: 'Gracias por tu información. Te contactaremos pronto.',
+        errorMessage: 'Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.'
+      },
+      en: {
+        completeInfo: 'Please complete the requested information to get started.',
+        selectOption: 'Select an option',
+        submit: 'Submit',
+        sending: 'Sending...',
+        successTitle: 'Form submitted successfully!',
+        successMessage: 'Thank you for your information. We will contact you soon.',
+        errorMessage: 'An error occurred while submitting the form. Please try again.'
+      },
+      fr: {
+        completeInfo: 'Veuillez compléter les informations demandées pour commencer.',
+        selectOption: 'Sélectionnez une option',
+        submit: 'Envoyer',
+        sending: 'Envoi en cours...',
+        successTitle: 'Formulaire envoyé avec succès!',
+        successMessage: 'Merci pour vos informations. Nous vous contactons bientôt.',
+        errorMessage: 'Une erreur s\'est produite lors de l\'envoi du formulaire. Veuillez réessayer.'
+      }
+    };
+    
+    return translations[language as keyof typeof translations] || translations.es;
+  }
+
   // Ruta para la vista embebida de formularios con diseño moderno de dos columnas
   app.get("/forms/:id/embed", async (req, res) => {
     try {
@@ -5256,6 +5304,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!form) {
         return res.status(404).send('Formulario no encontrado');
       }
+
+      // Detectar idioma del navegador
+      const acceptLanguage = req.headers['accept-language'] || 'es';
+      let language = 'es';
+      
+      if (acceptLanguage.includes('en')) {
+        language = 'en';
+      } else if (acceptLanguage.includes('fr')) {
+        language = 'fr';
+      }
+      
+      const t = getFormTranslations(language);
       
       // Generar HTML con diseño moderno de dos columnas
       const html = `
@@ -5526,18 +5586,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
           <div class="modern-form-wrapper">
             <div class="form-hero">
               <div class="form-hero-content">
-                <h1>${form.title || 'Formulario'}</h1>
-                <p>${form.description || 'Complete la información solicitada para comenzar.'}</p>
+                <h1>${escapeHtml(form.title) || 'Formulario'}</h1>
+                <p>${escapeHtml(form.description) || 'Complete la información solicitada para comenzar.'}</p>
               </div>
             </div>
             
             <div class="form-content">
               <div class="form-header">
-                <p class="form-subtitle">Por favor complete la información solicitada para comenzar.</p>
+                <p class="form-subtitle">${t.completeInfo}</p>
               </div>
               
               <form id="modern-form" method="POST">
-                ${form.structure.fields.map(field => {
+                ${(form.structure as any)?.fields?.map((field: any) => {
                   const fieldId = `field_${field.name}`;
                   let fieldHTML = `<div class="form-field">`;
                   
@@ -5583,7 +5643,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                           ${field.label}
                         </label>
                         <select id="${fieldId}" name="${field.name}" class="form-select" ${field.required ? 'required' : ''}>
-                          <option value="">Selecciona una opción</option>
+                          <option value="">${t.selectOption}</option>
                       `;
                       
                       if (field.options && Array.isArray(field.options)) {
@@ -5636,19 +5696,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 }).join('')}
                 
                 <button type="submit" class="submit-button">
-                  ${form.structure.submitButtonText || 'Enviar'}
+                  ${(form.structure as any)?.submitButtonText || t.submit}
                 </button>
               </form>
             </div>
           </div>
           
           <script>
+            // Variables de traducción
+            const translations = {
+              sending: '${t.sending}',
+              successTitle: '${t.successTitle}',
+              successMessage: '${t.successMessage}',
+              errorMessage: '${t.errorMessage}',
+              submitText: '${(form.structure as any)?.submitButtonText || t.submit}'
+            };
+            
             document.getElementById('modern-form').addEventListener('submit', async function(e) {
               e.preventDefault();
               
               const submitButton = this.querySelector('.submit-button');
               submitButton.disabled = true;
-              submitButton.textContent = 'Enviando...';
+              submitButton.textContent = translations.sending;
               
               const formData = new FormData(this);
               const formDataObj = Object.fromEntries(formData.entries());
@@ -5670,15 +5739,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   this.innerHTML = \`
                     <div class="success-message">
                       <div class="success-icon">✓</div>
-                      <h3 class="success-title">¡Formulario enviado correctamente!</h3>
-                      <p class="success-text">Gracias por tu información. Te contactaremos pronto.</p>
+                      <h3 class="success-title">\${translations.successTitle}</h3>
+                      <p class="success-text">\${translations.successMessage}</p>
                     </div>
                   \`;
                   
                   // Si hay URL de redirección configurada, redirigir después de un breve retraso
-                  ${form.settings?.redirectUrl ? `
+                  ${(form.settings as any)?.redirectUrl ? `
                     setTimeout(() => {
-                      window.top.location.href = "${form.settings.redirectUrl}";
+                      window.top.location.href = "${(form.settings as any).redirectUrl}";
                     }, 3000);
                   ` : ''}
                 } else {
@@ -5689,9 +5758,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 
                 // Restaurar el botón
                 submitButton.disabled = false;
-                submitButton.textContent = '${form.structure.submitButtonText || 'Enviar'}';
+                submitButton.textContent = translations.submitText;
                 
-                alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                alert(translations.errorMessage);
               }
             });
           </script>
