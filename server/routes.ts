@@ -5305,17 +5305,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).send('Formulario no encontrado');
       }
 
-      // Detectar idioma del navegador
-      const acceptLanguage = req.headers['accept-language'] || 'es';
-      let language = 'es';
+      // Detectar idioma de múltiples fuentes
+      const acceptLanguage = req.headers['accept-language'] || '';
+      const formTitle = form.title || '';
+      const formDescription = form.description || '';
       
-      if (acceptLanguage.includes('en')) {
-        language = 'en';
-      } else if (acceptLanguage.includes('fr')) {
-        language = 'fr';
+      let detectedLanguage = 'es'; // Default español
+      
+      // 1. Detectar por contenido del formulario
+      const frenchWords = ['liste', 'attente', 'utilisateurs', 'modèle', 'rejoindre', 'français'];
+      const englishWords = ['list', 'wait', 'users', 'template', 'join', 'english', 'name', 'email'];
+      const spanishWords = ['lista', 'espera', 'usuarios', 'plantilla', 'unirse', 'español', 'nombre', 'correo'];
+      
+      const textToAnalyze = (formTitle + ' ' + formDescription).toLowerCase();
+      
+      let frenchScore = 0;
+      let englishScore = 0;
+      let spanishScore = 0;
+      
+      frenchWords.forEach(word => {
+        if (textToAnalyze.includes(word)) frenchScore++;
+      });
+      
+      englishWords.forEach(word => {
+        if (textToAnalyze.includes(word)) englishScore++;
+      });
+      
+      spanishWords.forEach(word => {
+        if (textToAnalyze.includes(word)) spanishScore++;
+      });
+      
+      // 2. Determinar idioma por puntuación del contenido
+      if (frenchScore > englishScore && frenchScore > spanishScore) {
+        detectedLanguage = 'fr';
+      } else if (englishScore > frenchScore && englishScore > spanishScore) {
+        detectedLanguage = 'en';
+      } else {
+        // 3. Fallback a Accept-Language header
+        if (acceptLanguage.includes('fr')) {
+          detectedLanguage = 'fr';
+        } else if (acceptLanguage.includes('en')) {
+          detectedLanguage = 'en';
+        }
       }
       
-      const t = getFormTranslations(language);
+      console.log(`Idioma detectado para formulario ${formId}: ${detectedLanguage} (scores: fr=${frenchScore}, en=${englishScore}, es=${spanishScore})`);
+      
+      const t = getFormTranslations(detectedLanguage);
       
       // Generar HTML con diseño moderno de dos columnas
       const html = `
