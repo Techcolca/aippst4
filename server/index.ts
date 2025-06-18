@@ -94,6 +94,11 @@ app.get('/test-widget.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/test-widget.html'));
 });
 
+// Servir archivo de prueba de integración externa
+app.get('/test-external-integration.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/test-external-integration.html'));
+});
+
 (async () => {
   const server = await registerRoutes(app);
 
