@@ -8,22 +8,43 @@
   // Configuración
   const containerId = "aipi-form-container";
   
+  // Variables globales para guardar la información del script
+  let currentScriptSrc = null;
+  
+  // Obtener el script actual inmediatamente cuando se ejecuta
+  (function() {
+    const scripts = document.getElementsByTagName('script');
+    for (let i = 0; i < scripts.length; i++) {
+      if (scripts[i].src && scripts[i].src.includes('form-embed.js')) {
+        currentScriptSrc = scripts[i].src;
+        break;
+      }
+    }
+  })();
+  
   // Obtener el ID del formulario desde la URL del script
   function getFormId() {
-    const scripts = document.getElementsByTagName('script');
-    const currentScript = scripts[scripts.length - 1];
-    const url = new URL(currentScript.src);
-    return url.searchParams.get('id');
+    if (!currentScriptSrc) {
+      console.error('AIPI Form: No se pudo encontrar el script form-embed.js');
+      return null;
+    }
+    const url = new URL(currentScriptSrc);
+    const formId = url.searchParams.get('id');
+    console.log('AIPI Form: ID extraído:', formId, 'de URL:', currentScriptSrc);
+    return formId;
   }
   
   // Construir la URL del API
   function getApiUrl(formId) {
-    // Usar la misma base URL que el script
-    const scripts = document.getElementsByTagName('script');
-    const currentScript = scripts[scripts.length - 1];
-    const scriptUrl = new URL(currentScript.src);
+    if (!currentScriptSrc) {
+      console.error('AIPI Form: No se pudo encontrar el script form-embed.js');
+      return null;
+    }
+    const scriptUrl = new URL(currentScriptSrc);
     const baseUrl = `${scriptUrl.protocol}//${scriptUrl.host}`;
-    return `${baseUrl}/api/forms/public/${formId}`;
+    const apiUrl = `${baseUrl}/api/forms/public/${formId}`;
+    console.log('AIPI Form: URL del API construida:', apiUrl);
+    return apiUrl;
   }
   
   // Cargar el formulario

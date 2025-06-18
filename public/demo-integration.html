@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Completa - Integración de Formularios AIPI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4f46e5;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: #4f46e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .form-demo {
+            background: #f1f5f9;
+            padding: 3rem;
+            border-radius: 15px;
+            margin: 3rem 0;
+            border: 2px dashed #cbd5e1;
+        }
+        
+        .form-demo h3 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #475569;
+        }
+        
+        .integration-info {
+            background: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .integration-info h4 {
+            color: #047857;
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-preview {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #10b981;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem 0;
+            text-align: center;
+            color: #64748b;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">🚀 AIPI Forms</div>
+                <ul class="nav-links">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#caracteristicas">Características</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Formularios Inteligentes</h1>
+            <p>Crea y despliega formularios dinámicos en cualquier sitio web con tecnología AI</p>
+        </div>
+    </section>
+
+    <main class="container">
+        <section class="content">
+            <h2>Demostración de Integración Externa</h2>
+            <p>Esta página demuestra cómo los formularios AIPI se integran perfectamente en sitios web externos, manteniendo un diseño responsive y funcionalidad completa.</p>
+            
+            <div class="integration-info">
+                <h4><span class="status-indicator"></span>Estado de Integración: Activo</h4>
+                <p>El formulario se carga dinámicamente desde el servidor AIPI con headers CORS configurados para acceso cross-domain.</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Diseño Moderno</h3>
+                    <p>Formularios con diseño de dos columnas, completamente responsivos y adaptables a cualquier sitio web.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Multiidioma</h3>
+                    <p>Soporte completo para español, francés e inglés con traducción dinámica de campos.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Carga Rápida</h3>
+                    <p>Optimizado para carga rápida con cache inteligente y compresión de recursos.</p>
+                </div>
+            </div>
+
+            <div class="form-demo">
+                <h3>📋 Formulario de Lista de Espera</h3>
+                <p style="text-align: center; margin-bottom: 2rem; color: #64748b;">
+                    El siguiente formulario se carga dinámicamente desde el servidor AIPI:
+                </p>
+                
+                <!-- Contenedor para el formulario AIPI -->
+                <div id="aipi-form-container"></div>
+                
+                <div class="code-preview">
+&lt;!-- Código de integración --&gt;
+&lt;div id="aipi-form-container"&gt;&lt;/div&gt;
+&lt;script src="https://tu-dominio.com/static/form-embed.js?id=liste-dattente-1862025-618"&gt;&lt;/script&gt;
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h2>¿Listo para integrar AIPI Forms?</h2>
+                <p>Únete a cientos de empresas que ya utilizan nuestros formularios inteligentes para capturar leads y automatizar procesos.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 AIPI Forms. Demostración de integración externa funcional.</p>
+        </div>
+    </footer>
+
+    <!-- Script del formulario AIPI -->
+    <script src="/static/form-embed.js?id=liste-dattente-1862025-618&v=1750278901000"></script>
+    
+    <!-- Script de seguimiento de carga -->
+    <script>
+        console.log('🚀 Demo de integración AIPI cargada');
+        console.log('📍 Contenedor objetivo:', document.getElementById('aipi-form-container'));
+        
+        // Monitorear la carga del formulario
+        let checkCount = 0;
+        const maxChecks = 20;
+        
+        const checkFormLoad = setInterval(() => {
+            const container = document.getElementById('aipi-form-container');
+            checkCount++;
+            
+            if (container && container.innerHTML.trim() !== '') {
+                console.log('✅ Formulario cargado exitosamente');
+                console.log('📊 Contenido:', container.innerHTML.substring(0, 100) + '...');
+                clearInterval(checkFormLoad);
+            } else if (checkCount >= maxChecks) {
+                console.log('⚠️ Tiempo de espera agotado para la carga del formulario');
+                clearInterval(checkFormLoad);
+            } else {
+                console.log(`🔄 Verificando carga del formulario... (${checkCount}/${maxChecks})`);
+            }
+        }, 500);
+        
+        // Efectos visuales adicionales
+        window.addEventListener('load', () => {
+            console.log('🎯 Página completamente cargada');
+            
+            // Agregar animación suave al contenedor del formulario
+            const formContainer = document.getElementById('aipi-form-container');
+            if (formContainer) {
+                formContainer.style.transition = 'all 0.3s ease-in-out';
+            }
+        });
+    </script>
+</body>
+</html>
