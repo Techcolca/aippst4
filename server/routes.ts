@@ -5268,7 +5268,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sending: 'Enviando...',
         successTitle: '¡Formulario enviado correctamente!',
         successMessage: 'Gracias por tu información. Te contactaremos pronto.',
-        errorMessage: 'Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.'
+        errorMessage: 'Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.',
+        // Traducciones específicas de campos comunes
+        name: 'Nombre',
+        email: 'Email',
+        phone: 'Teléfono',
+        message: 'Mensaje',
+        acceptTerms: 'Acepto los términos y condiciones'
       },
       en: {
         completeInfo: 'Please complete the requested information to get started.',
@@ -5277,7 +5283,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sending: 'Sending...',
         successTitle: 'Form submitted successfully!',
         successMessage: 'Thank you for your information. We will contact you soon.',
-        errorMessage: 'An error occurred while submitting the form. Please try again.'
+        errorMessage: 'An error occurred while submitting the form. Please try again.',
+        // Traducciones específicas de campos comunes
+        name: 'Name',
+        email: 'Email', 
+        phone: 'Phone',
+        message: 'Message',
+        acceptTerms: 'I accept the terms and conditions'
       },
       fr: {
         completeInfo: 'Veuillez compléter les informations demandées pour commencer.',
@@ -5286,11 +5298,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sending: 'Envoi en cours...',
         successTitle: 'Formulaire envoyé avec succès!',
         successMessage: 'Merci pour vos informations. Nous vous contactons bientôt.',
-        errorMessage: 'Une erreur s\'est produite lors de l\'envoi du formulaire. Veuillez réessayer.'
+        errorMessage: 'Une erreur s\'est produite lors de l\'envoi du formulaire. Veuillez réessayer.',
+        // Traducciones específicas de campos comunes
+        name: 'Nom',
+        email: 'Email',
+        phone: 'Téléphone', 
+        message: 'Message',
+        acceptTerms: 'J\'accepte les termes et conditions'
       }
     };
     
     return translations[language as keyof typeof translations] || translations.es;
+  }
+
+  // Función para traducir etiquetas de campo automáticamente
+  function translateFieldLabel(label: string, language: string): string {
+    const t = getFormTranslations(language);
+    
+    // Mapeo de traducciones comunes
+    const commonTranslations: Record<string, Record<string, string>> = {
+      es: {
+        'nombre': t.name,
+        'nom': t.name,
+        'name': t.name,
+        'email': t.email,
+        'correo': t.email,
+        'teléfono': t.phone,
+        'telefono': t.phone,
+        'phone': t.phone,
+        'téléphone': t.phone,
+        'mensaje': t.message,
+        'message': t.message,
+        'acepto': t.acceptTerms,
+        'términos': t.acceptTerms,
+        'condiciones': t.acceptTerms
+      },
+      en: {
+        'nombre': t.name,
+        'nom': t.name,
+        'name': t.name,
+        'email': t.email,
+        'correo': t.email,
+        'teléfono': t.phone,
+        'telefono': t.phone,
+        'phone': t.phone,
+        'téléphone': t.phone,
+        'mensaje': t.message,
+        'message': t.message,
+        'acepto': t.acceptTerms,
+        'términos': t.acceptTerms,
+        'condiciones': t.acceptTerms,
+        'accept': t.acceptTerms,
+        'terms': t.acceptTerms
+      },
+      fr: {
+        'nombre': t.name,
+        'nom': t.name,
+        'name': t.name,
+        'email': t.email,
+        'correo': t.email,
+        'teléfono': t.phone,
+        'telefono': t.phone,
+        'phone': t.phone,
+        'téléphone': t.phone,
+        'mensaje': t.message,
+        'message': t.message,
+        'acepto': t.acceptTerms,
+        'términos': t.acceptTerms,
+        'condiciones': t.acceptTerms,
+        'accept': t.acceptTerms,
+        'terms': t.acceptTerms,
+        'accepte': t.acceptTerms,
+        'termes': t.acceptTerms
+      }
+    };
+
+    const labelLower = label.toLowerCase().trim();
+    const translations = commonTranslations[language] || commonTranslations.es;
+    
+    // Buscar traducción exacta primero
+    for (const [key, value] of Object.entries(translations)) {
+      if (labelLower.includes(key)) {
+        return value;
+      }
+    }
+    
+    // Si no hay traducción, devolver el label original
+    return label;
   }
 
   // Ruta para la vista embebida de formularios con diseño moderno de dos columnas
@@ -5637,6 +5731,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
                   const fieldId = `field_${field.name}`;
                   let fieldHTML = `<div class="form-field">`;
                   
+                  // Traducir la etiqueta del campo automáticamente
+                  const translatedLabel = translateFieldLabel(field.label, detectedLanguage);
+                  
                   switch (field.type) {
                     case 'text':
                     case 'email':
@@ -5645,14 +5742,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     case 'number':
                       fieldHTML += `
                         <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
-                          ${field.label}
+                          ${escapeHtml(translatedLabel)}
                         </label>
                         <input
                           type="${field.type}"
                           id="${fieldId}"
                           name="${field.name}"
                           class="form-input"
-                          placeholder="${field.placeholder || ''}"
+                          placeholder="${escapeHtml(field.placeholder || '')}"
                           ${field.required ? 'required' : ''}
                         >
                       `;
@@ -5661,13 +5758,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     case 'textarea':
                       fieldHTML += `
                         <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
-                          ${field.label}
+                          ${escapeHtml(translatedLabel)}
                         </label>
                         <textarea
                           id="${fieldId}"
                           name="${field.name}"
                           class="form-textarea"
-                          placeholder="${field.placeholder || ''}"
+                          placeholder="${escapeHtml(field.placeholder || '')}"
                           ${field.required ? 'required' : ''}
                         ></textarea>
                       `;
@@ -5676,7 +5773,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                     case 'select':
                       fieldHTML += `
                         <label for="${fieldId}" class="form-label ${field.required ? 'required' : ''}">
-                          ${field.label}
+                          ${escapeHtml(translatedLabel)}
                         </label>
                         <select id="${fieldId}" name="${field.name}" class="form-select" ${field.required ? 'required' : ''}>
                           <option value="">${t.selectOption}</option>
@@ -5705,7 +5802,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                             ${field.required ? 'required' : ''}
                           >
                           <label for="${fieldId}" class="checkbox-label">
-                            ${field.label}
+                            ${escapeHtml(translatedLabel)}
                           </label>
                         </div>
                       `;
