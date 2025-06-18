@@ -5271,10 +5271,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         errorMessage: 'Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.',
         // Traducciones específicas de campos comunes
         name: 'Nombre',
+        fullName: 'Nombre completo',
         email: 'Email',
         phone: 'Teléfono',
         message: 'Mensaje',
-        acceptTerms: 'Acepto los términos y condiciones'
+        company: 'Empresa',
+        acceptTerms: 'Acepto los términos y condiciones',
+        // Frases problemáticas específicas
+        pleaseComplete: 'Por favor complete la información solicitada para comenzar.',
+        iAcceptTerms: 'Acepto los términos y condiciones'
       },
       en: {
         completeInfo: 'Please complete the requested information to get started.',
@@ -5286,10 +5291,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         errorMessage: 'An error occurred while submitting the form. Please try again.',
         // Traducciones específicas de campos comunes
         name: 'Name',
+        fullName: 'Full name',
         email: 'Email', 
         phone: 'Phone',
         message: 'Message',
-        acceptTerms: 'I accept the terms and conditions'
+        company: 'Company',
+        acceptTerms: 'I accept the terms and conditions',
+        // Frases problemáticas específicas
+        pleaseComplete: 'Please complete the requested information to get started.',
+        iAcceptTerms: 'I accept the terms and conditions'
       },
       fr: {
         completeInfo: 'Veuillez compléter les informations demandées pour commencer.',
@@ -5297,94 +5307,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
         submit: 'Envoyer',
         sending: 'Envoi en cours...',
         successTitle: 'Formulaire envoyé avec succès!',
-        successMessage: 'Merci pour vos informations. Nous vous contactons bientôt.',
+        successMessage: 'Merci pour vos informations. Nous vous contacterons bientôt.',
         errorMessage: 'Une erreur s\'est produite lors de l\'envoi du formulaire. Veuillez réessayer.',
         // Traducciones específicas de campos comunes
         name: 'Nom',
+        fullName: 'Nom complet',
         email: 'Email',
         phone: 'Téléphone', 
         message: 'Message',
-        acceptTerms: 'J\'accepte les termes et conditions'
+        company: 'Entreprise',
+        acceptTerms: 'J\'accepte les termes et conditions',
+        // Frases problemáticas específicas
+        pleaseComplete: 'Veuillez compléter les informations demandées pour commencer.',
+        iAcceptTerms: 'J\'accepte les termes et conditions'
       }
     };
     
     return translations[language as keyof typeof translations] || translations.es;
   }
 
-  // Función para traducir etiquetas de campo automáticamente
-  function translateFieldLabel(label: string, language: string): string {
+  // Función de traducción inteligente universal
+  function smartTranslate(text: string, language: string): string {
     const t = getFormTranslations(language);
     
-    // Mapeo de traducciones comunes
-    const commonTranslations: Record<string, Record<string, string>> = {
-      es: {
-        'nombre': t.name,
-        'nom': t.name,
-        'name': t.name,
-        'email': t.email,
-        'correo': t.email,
-        'teléfono': t.phone,
-        'telefono': t.phone,
-        'phone': t.phone,
-        'téléphone': t.phone,
-        'mensaje': t.message,
-        'message': t.message,
-        'acepto': t.acceptTerms,
-        'términos': t.acceptTerms,
-        'condiciones': t.acceptTerms
-      },
-      en: {
-        'nombre': t.name,
-        'nom': t.name,
-        'name': t.name,
-        'email': t.email,
-        'correo': t.email,
-        'teléfono': t.phone,
-        'telefono': t.phone,
-        'phone': t.phone,
-        'téléphone': t.phone,
-        'mensaje': t.message,
-        'message': t.message,
-        'acepto': t.acceptTerms,
-        'términos': t.acceptTerms,
-        'condiciones': t.acceptTerms,
-        'accept': t.acceptTerms,
-        'terms': t.acceptTerms
-      },
-      fr: {
-        'nombre': t.name,
-        'nom': t.name,
-        'name': t.name,
-        'email': t.email,
-        'correo': t.email,
-        'teléfono': t.phone,
-        'telefono': t.phone,
-        'phone': t.phone,
-        'téléphone': t.phone,
-        'mensaje': t.message,
-        'message': t.message,
-        'acepto': t.acceptTerms,
-        'términos': t.acceptTerms,
-        'condiciones': t.acceptTerms,
-        'accept': t.acceptTerms,
-        'terms': t.acceptTerms,
-        'accepte': t.acceptTerms,
-        'termes': t.acceptTerms
-      }
+    // Si ya está en el idioma correcto, no traducir
+    if (language === 'es') return text;
+    
+    // Diccionario completo de traducciones exactas
+    const exactTranslations: Record<string, string> = {
+      // Frases problemáticas específicas
+      'Por favor complete la información solicitada para comenzar.': t.pleaseComplete,
+      'Acepto los términos y condiciones': t.iAcceptTerms,
+      
+      // Campos comunes - coincidencias exactas
+      'Nombre': t.name,
+      'Nombre completo': t.fullName,
+      'Nom complet': t.fullName,
+      'Nom': t.name,
+      'Email': t.email,
+      'Teléfono': t.phone,
+      'Mensaje': t.message,
+      'Empresa': t.company,
+      'Entreprise': t.company,
+      
+      // Botones y acciones
+      'Enviar': t.submit,
+      'Enviando...': t.sending,
+      'Selecciona una opción': t.selectOption,
+      'Sélectionnez une option': t.selectOption
     };
-
-    const labelLower = label.toLowerCase().trim();
-    const translations = commonTranslations[language] || commonTranslations.es;
     
     // Buscar traducción exacta primero
-    for (const [key, value] of Object.entries(translations)) {
-      if (labelLower.includes(key)) {
-        return value;
-      }
+    if (exactTranslations[text]) {
+      return exactTranslations[text];
     }
     
-    // Si no hay traducción, devolver el label original
-    return label;
+    // Traducción por patrones para casos especiales
+    const textLower = text.toLowerCase();
+    if (textLower.includes('acepto') && textLower.includes('términos')) {
+      return t.iAcceptTerms;
+    }
+    
+    if (textLower.includes('complete') && textLower.includes('información')) {
+      return t.pleaseComplete;
+    }
+    
+    return text;
+  }
+
+  // Función para traducir etiquetas de campo automáticamente
+  function translateFieldLabel(label: string, language: string): string {
+    return smartTranslate(label, language);
   }
 
   // Ruta para la vista embebida de formularios con diseño moderno de dos columnas
@@ -5717,7 +5710,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             <div class="form-hero">
               <div class="form-hero-content">
                 <h1>${escapeHtml(form.title) || 'Formulario'}</h1>
-                <p>${escapeHtml(form.description) || 'Complete la información solicitada para comenzar.'}</p>
+                <p>${escapeHtml(smartTranslate(form.description || 'Complete la información solicitada para comenzar.', detectedLanguage))}</p>
               </div>
             </div>
             
