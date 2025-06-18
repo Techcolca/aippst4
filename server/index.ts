@@ -99,6 +99,11 @@ app.get('/test-external-integration.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/test-external-integration.html'));
 });
 
+// Servir página de demostración completa
+app.get('/demo-integration.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/demo-integration.html'));
+});
+
 (async () => {
   const server = await registerRoutes(app);
 
