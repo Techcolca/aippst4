@@ -62,6 +62,64 @@ const FormPreview = () => {
   const formId = parseInt(params?.id || '0');
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  // Sistema de detección de idioma y traducción
+  const detectLanguage = (form: any) => {
+    if (!form || !form.structure?.fields) return 'es';
+    
+    const allText = [
+      form.title || '',
+      form.description || '',
+      ...form.structure.fields.map((f: any) => f.label || ''),
+      ...form.structure.fields.map((f: any) => f.placeholder || ''),
+      form.structure.submitButtonText || ''
+    ].join(' ').toLowerCase();
+
+    const frenchWords = ['nom', 'email', 'comment', 'avez-vous', 'entendu', 'parler', 'nous', 'rejoindre', 'liste', 'attente', 'modèle', 'pour', 'capturer', 'utilisateurs', 'réseaux', 'sociaux', 'recherche', 'recommandation', 'autre'];
+    const englishWords = ['name', 'email', 'how', 'did', 'you', 'hear', 'about', 'us', 'join', 'waitlist', 'template', 'capture', 'users', 'social', 'media', 'google', 'search', 'recommendation', 'other'];
+    const spanishWords = ['nombre', 'correo', 'como', 'nos', 'conociste', 'unirse', 'plantilla', 'capturar', 'usuarios', 'redes', 'sociales', 'busqueda', 'recomendacion', 'otro'];
+
+    const frenchScore = frenchWords.filter(word => allText.includes(word)).length;
+    const englishScore = englishWords.filter(word => allText.includes(word)).length;
+    const spanishScore = spanishWords.filter(word => allText.includes(word)).length;
+
+    if (frenchScore > englishScore && frenchScore > spanishScore) return 'fr';
+    if (englishScore > spanishScore) return 'en';
+    return 'es';
+  };
+
+  const getTranslations = (language: string) => {
+    const translations = {
+      es: {
+        completeInfo: 'Por favor complete la información solicitada para comenzar.',
+        acceptTerms: 'Acepto los términos y condiciones',
+        submit: 'Enviar',
+        formSubmitted: '¡Formulario enviado!',
+        thankYou: 'Gracias por tu envío',
+        sendAnother: 'Enviar otra respuesta',
+        selectOption: 'Seleccionar...'
+      },
+      en: {
+        completeInfo: 'Please complete the requested information to get started.',
+        acceptTerms: 'I accept the terms and conditions',
+        submit: 'Submit',
+        formSubmitted: 'Form submitted!',
+        thankYou: 'Thank you for your submission',
+        sendAnother: 'Submit another response',
+        selectOption: 'Select...'
+      },
+      fr: {
+        completeInfo: 'Veuillez compléter les informations demandées pour commencer.',
+        acceptTerms: 'J\'accepte les termes et conditions',
+        submit: 'Envoyer',
+        formSubmitted: 'Formulaire envoyé!',
+        thankYou: 'Merci pour votre envoi',
+        sendAnother: 'Envoyer une autre réponse',
+        selectOption: 'Sélectionner...'
+      }
+    };
+    return translations[language as keyof typeof translations] || translations.es;
+  };
   
   const [formData, setFormData] = useState({
     title: '',
@@ -284,7 +342,14 @@ const FormPreview = () => {
               onCheckedChange={(checked) => handleFieldChange(field.name, checked)}
             />
             <Label htmlFor={fieldId} className="text-sm">
-              {field.label}
+              {(() => {
+                const detectedLang = detectLanguage(formData);
+                const t = getTranslations(detectedLang);
+                if (field.label.toLowerCase().includes('acepto') || field.label.toLowerCase().includes('términos')) {
+                  return t.acceptTerms;
+                }
+                return field.label;
+              })()}
             </Label>
           </div>
         );
@@ -522,7 +587,11 @@ const FormPreview = () => {
               <div className="p-12 flex flex-col justify-center">
                 <div className="mb-8">
                   <p className="text-gray-600 text-lg">
-                    Por favor complete la información solicitada para comenzar.
+                    {(() => {
+                      const detectedLang = detectLanguage(formData);
+                      const t = getTranslations(detectedLang);
+                      return t.completeInfo;
+                    })()}
                   </p>
                 </div>
                 
@@ -533,9 +602,19 @@ const FormPreview = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">¡Formulario enviado!</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                      {(() => {
+                        const detectedLang = detectLanguage(formData);
+                        const t = getTranslations(detectedLang);
+                        return t.formSubmitted;
+                      })()}
+                    </h3>
                     <p className="text-gray-600 mb-4">
-                      {form.settings?.successMessage || 'Gracias por tu envío'}
+                      {(() => {
+                        const detectedLang = detectLanguage(formData);
+                        const t = getTranslations(detectedLang);
+                        return form.settings?.successMessage || t.thankYou;
+                      })()}
                     </p>
                     <Button 
                       variant="outline" 
@@ -544,7 +623,11 @@ const FormPreview = () => {
                         setFormValues({});
                       }}
                     >
-                      Enviar otra respuesta
+                      {(() => {
+                        const detectedLang = detectLanguage(formData);
+                        const t = getTranslations(detectedLang);
+                        return t.sendAnother;
+                      })()}
                     </Button>
                   </div>
                 ) : (
@@ -611,7 +694,11 @@ const FormPreview = () => {
                             className="accent-blue-500"
                           />
                           <Label htmlFor="terms" className="text-sm text-gray-600 leading-5">
-                            Acepto los términos y condiciones
+                            {(() => {
+                              const detectedLang = detectLanguage(formData);
+                              const t = getTranslations(detectedLang);
+                              return t.acceptTerms;
+                            })()}
                           </Label>
                         </div>
                       </>
@@ -660,7 +747,11 @@ const FormPreview = () => {
                             className="accent-blue-500"
                           />
                           <Label htmlFor="terms" className="text-sm text-gray-600 leading-5">
-                            Acepto los términos y condiciones
+                            {(() => {
+                              const detectedLang = detectLanguage(formData);
+                              const t = getTranslations(detectedLang);
+                              return t.acceptTerms;
+                            })()}
                           </Label>
                         </div>
                       </>
