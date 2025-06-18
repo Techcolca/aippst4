@@ -5319,7 +5319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         acceptTerms: 'J\'accepte les termes et conditions',
         // Frases problemáticas específicas
         pleaseComplete: 'Veuillez compléter les informations demandées pour commencer.',
-        iAcceptTerms: 'J\'accepte les termes et conditions'
+        iAcceptTerms: 'J&apos;accepte les termes et conditions'
       }
     };
     
@@ -5360,27 +5360,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       'Sélectionnez une option': t.selectOption
     };
     
-    console.log(`smartTranslate: "${text}" -> buscando en diccionario...`);
-    
     // Buscar traducción exacta primero
     if (exactTranslations[text]) {
-      console.log(`smartTranslate: ENCONTRADO -> "${exactTranslations[text]}"`);
       return exactTranslations[text];
     }
     
     // Traducción por patrones para casos especiales
     const textLower = text.toLowerCase();
     if (textLower.includes('acepto') && textLower.includes('términos')) {
-      console.log(`smartTranslate: PATRÓN términos -> "${t.iAcceptTerms}"`);
       return t.iAcceptTerms;
     }
     
     if (textLower.includes('complete') && textLower.includes('información')) {
-      console.log(`smartTranslate: PATRÓN complete -> "${t.pleaseComplete}"`);
       return t.pleaseComplete;
     }
     
-    console.log(`smartTranslate: NO ENCONTRADO -> devolviendo original: "${text}"`);
     return text;
   }
 
@@ -5449,10 +5443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const t = getFormTranslations(detectedLanguage);
       
-      // Debug de traducciones
-      console.log(`Traducción completeInfo: "${t.completeInfo}"`);
-      console.log(`Traducción iAcceptTerms: "${t.iAcceptTerms}"`);
-      console.log(`smartTranslate test: "${smartTranslate('Acepto los términos y condiciones', detectedLanguage)}"`);
+
       
       // Generar HTML con diseño moderno de dos columnas
       const html = `
@@ -5809,7 +5800,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                             ${field.required ? 'required' : ''}
                           >
                           <label for="${fieldId}" class="checkbox-label">
-                            ${escapeHtml(detectedLanguage === 'fr' && field.label.toLowerCase().includes('acepto') ? 'J\'accepte les termes et conditions' : detectedLanguage === 'en' && field.label.toLowerCase().includes('acepto') ? 'I accept the terms and conditions' : translatedLabel)}
+                            ${escapeHtml(detectedLanguage === 'fr' && field.label.toLowerCase().includes('acepto') ? 'J&apos;accepte les termes et conditions' : detectedLanguage === 'en' && field.label.toLowerCase().includes('acepto') ? 'I accept the terms and conditions' : translatedLabel)}
                           </label>
                         </div>
                       `;
