@@ -326,10 +326,16 @@
     `;
     
     // Procesar los campos del formulario
-    if (formData.fields && Array.isArray(formData.fields)) {
-      formData.fields.forEach(field => {
+    console.log('AIPI Form: Datos del formulario:', formData);
+    const fields = formData.structure?.fields || formData.fields || [];
+    console.log('AIPI Form: Campos encontrados:', fields);
+    
+    if (fields && Array.isArray(fields)) {
+      fields.forEach(field => {
         formHTML += generateFieldHTML(field);
       });
+    } else {
+      console.warn('AIPI Form: No se encontraron campos válidos en el formulario');
     }
     
     // Agregar checkbox de términos si está configurado
@@ -381,7 +387,7 @@
           <input
             type="${field.type}"
             id="${fieldId}"
-            name="${field.name}"
+            name="${field.id}"
             class="aipi-form-input"
             placeholder="${escapeHtml(field.placeholder || '')}"
             ${required}
@@ -396,7 +402,7 @@
           </label>
           <textarea
             id="${fieldId}"
-            name="${field.name}"
+            name="${field.id}"
             class="aipi-form-textarea"
             placeholder="${escapeHtml(field.placeholder || '')}"
             ${required}
@@ -409,13 +415,19 @@
           <label for="${fieldId}" class="aipi-form-label">
             ${escapeHtml(field.label)} ${field.required ? '*' : ''}
           </label>
-          <select id="${fieldId}" name="${field.name}" class="aipi-form-select" ${required}>
+          <select id="${fieldId}" name="${field.id}" class="aipi-form-select" ${required}>
             <option value="">Selecciona una opción</option>
         `;
         
         if (field.options && Array.isArray(field.options)) {
           field.options.forEach(option => {
-            fieldHTML += `<option value="${escapeHtml(option.value)}">${escapeHtml(option.label)}</option>`;
+            // Si la opción es un string simple, usar como valor y etiqueta
+            if (typeof option === 'string') {
+              fieldHTML += `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`;
+            } else {
+              // Si es un objeto con value y label
+              fieldHTML += `<option value="${escapeHtml(option.value || option)}">${escapeHtml(option.label || option)}</option>`;
+            }
           });
         }
         
@@ -498,12 +510,17 @@
           data[key] = value;
         }
         
-        // Construir URL de envío
-        const scripts = document.getElementsByTagName('script');
-        const currentScript = scripts[scripts.length - 1];
-        const scriptUrl = new URL(currentScript.src);
+        // Construir URL de envío usando el script actual guardado
+        if (!currentScriptSrc) {
+          throw new Error('No se pudo determinar la URL del servidor');
+        }
+        
+        const scriptUrl = new URL(currentScriptSrc);
         const baseUrl = `${scriptUrl.protocol}//${scriptUrl.host}`;
-        const submitUrl = `${baseUrl}/api/public/form/${formData.slug}/submit`;
+        const formSlug = formData.slug || getFormId();
+        const submitUrl = `${baseUrl}/api/public/form/${formSlug}/submit`;
+        
+        console.log('AIPI Form: URL de envío:', submitUrl);
         
         // Enviar los datos
         const response = await fetch(submitUrl, {

@@ -1,0 +1,33 @@
+AIPI Form: ID extraído: liste-dattente-1862025-618 de URL: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/form-embed.js?id=liste-dattente-1862025-618&v=1750279160162
+form-embed.js?id=liste-dattente-1862025-618&v=1750279160162:46 AIPI Form: URL del API construida: https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/forms/public/liste-dattente-1862025-618
+chatgpt-embed.js:30 AIPI Widget: Inicializando...
+chatgpt-embed.js:78 AIPI Widget: Clave API cargada - aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD
+chatgpt-embed.js:84 AIPI Widget: URL del servidor personalizada - https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev
+chatgpt-embed.js:249 AIPI Widget: Elementos creados correctamente
+chatgpt-embed.js:263 AIPI Widget: Evento de clic adjuntado al botón de chat
+chatgpt-embed.js:334 AIPI Widget: Todos los eventos adjuntados correctamente
+chatgpt-embed.js:42 AIPI Widget: Inicializado correctamente
+chatgpt-embed.js:113 
+            
+            
+           GET https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/widget/aipi_mrPg94zRtTKr31hOY0m8PaPk305PJNVD 404 (Not Found)
+loadConfig @ chatgpt-embed.js:113
+initialize @ chatgpt-embed.js:34Understand this error
+chatgpt-embed.js:136 AIPI Widget Error: Error: Error al cargar datos de integración: 404
+    at loadConfig (chatgpt-embed.js:115:15)
+loadConfig @ chatgpt-embed.js:136
+await in loadConfig
+initialize @ chatgpt-embed.js:34Understand this error
+chatgpt-embed.js:137 Uncaught (in promise) Error: Error al cargar la configuración: Error al cargar datos de integración: 404
+    at loadConfig (chatgpt-embed.js:137:13)
+loadConfig @ chatgpt-embed.js:137
+await in loadConfig
+initialize @ chatgpt-embed.js:34Understand this error
+form-embed.js?id=liste-dattente-1862025-618&v=1750279160162:509 
+            
+            
+           POST https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/api/public/form/undefined/submit 404 (Not Found)
+(anonymous) @ form-embed.js?id=liste-dattente-1862025-618&v=1750279160162:509Understand this error
+form-embed.js?id=liste-dattente-1862025-618&v=1750279160162:538 Error al enviar el formulario: Error: Error al enviar el formulario
+    at HTMLFormElement.<anonymous> (form-embed.js?id=liste-dattente-1862025-618&v=1750279160162:534:17)
+(anonymous) @ form-embed.js?id=liste-dattente-1862025-618&v=1750279160162:538Understand this error
