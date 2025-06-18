@@ -5328,16 +5328,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Función de traducción inteligente universal
   function smartTranslate(text: string, language: string): string {
+    if (!text) return text;
+    
     const t = getFormTranslations(language);
     
     // Si ya está en el idioma correcto, no traducir
     if (language === 'es') return text;
     
-    // Diccionario completo de traducciones exactas
+    // Diccionario completo de traducciones exactas con debug
     const exactTranslations: Record<string, string> = {
       // Frases problemáticas específicas
       'Por favor complete la información solicitada para comenzar.': t.pleaseComplete,
       'Acepto los términos y condiciones': t.iAcceptTerms,
+      'Complete la información solicitada para comenzar.': t.pleaseComplete,
       
       // Campos comunes - coincidencias exactas
       'Nombre': t.name,
@@ -5357,21 +5360,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       'Sélectionnez une option': t.selectOption
     };
     
+    console.log(`smartTranslate: "${text}" -> buscando en diccionario...`);
+    
     // Buscar traducción exacta primero
     if (exactTranslations[text]) {
+      console.log(`smartTranslate: ENCONTRADO -> "${exactTranslations[text]}"`);
       return exactTranslations[text];
     }
     
     // Traducción por patrones para casos especiales
     const textLower = text.toLowerCase();
     if (textLower.includes('acepto') && textLower.includes('términos')) {
+      console.log(`smartTranslate: PATRÓN términos -> "${t.iAcceptTerms}"`);
       return t.iAcceptTerms;
     }
     
     if (textLower.includes('complete') && textLower.includes('información')) {
+      console.log(`smartTranslate: PATRÓN complete -> "${t.pleaseComplete}"`);
       return t.pleaseComplete;
     }
     
+    console.log(`smartTranslate: NO ENCONTRADO -> devolviendo original: "${text}"`);
     return text;
   }
 
@@ -5439,6 +5448,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`Idioma detectado para formulario ${formId}: ${detectedLanguage} (scores: fr=${frenchScore}, en=${englishScore}, es=${spanishScore})`);
       
       const t = getFormTranslations(detectedLanguage);
+      
+      // Debug de traducciones
+      console.log(`Traducción completeInfo: "${t.completeInfo}"`);
+      console.log(`Traducción iAcceptTerms: "${t.iAcceptTerms}"`);
+      console.log(`smartTranslate test: "${smartTranslate('Acepto los términos y condiciones', detectedLanguage)}"`);
       
       // Generar HTML con diseño moderno de dos columnas
       const html = `
@@ -5710,13 +5724,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
             <div class="form-hero">
               <div class="form-hero-content">
                 <h1>${escapeHtml(form.title) || 'Formulario'}</h1>
-                <p>${escapeHtml(smartTranslate(form.description || 'Complete la información solicitada para comenzar.', detectedLanguage))}</p>
+                <p>${escapeHtml(smartTranslate(form.description || 'Por favor complete la información solicitada para comenzar.', detectedLanguage))}</p>
               </div>
             </div>
             
             <div class="form-content">
               <div class="form-header">
-                <p class="form-subtitle">${t.completeInfo}</p>
+                <p class="form-subtitle">${detectedLanguage === 'fr' ? 'Veuillez compléter les informations demandées pour commencer.' : detectedLanguage === 'en' ? 'Please complete the requested information to get started.' : t.completeInfo}</p>
               </div>
               
               <form id="modern-form" method="POST">
@@ -5795,7 +5809,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                             ${field.required ? 'required' : ''}
                           >
                           <label for="${fieldId}" class="checkbox-label">
-                            ${escapeHtml(translatedLabel)}
+                            ${escapeHtml(detectedLanguage === 'fr' && field.label.toLowerCase().includes('acepto') ? 'J\'accepte les termes et conditions' : detectedLanguage === 'en' && field.label.toLowerCase().includes('acepto') ? 'I accept the terms and conditions' : translatedLabel)}
                           </label>
                         </div>
                       `;
