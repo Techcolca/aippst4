@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Integración Externa - AIPI Forms</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .form-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        .form-section h2 {
+            margin-top: 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prueba de Integración Externa</h1>
+        
+        <div class="info-box">
+            <strong>Simulación de sitio web externo:</strong><br>
+            Esta página simula cómo se vería el formulario AIPI integrado en un sitio web externo.
+            El formulario debería cargarse automáticamente en la sección de abajo.
+        </div>
+        
+        <p>Este es el contenido normal de un sitio web. Aquí tienes información sobre tu empresa, productos, servicios, etc.</p>
+        
+        <div class="form-section">
+            <h2>Formulario de Lista de Espera</h2>
+            <p>El formulario se cargará aquí:</p>
+            
+            <!-- Contenedor para el formulario -->
+            <div id="aipi-form-container"></div>
+        </div>
+        
+        <p>Más contenido del sitio web después del formulario...</p>
+    </div>
+    
+    <!-- Script del formulario AIPI con cache busting -->
+    <script src="/static/form-embed.js?id=liste-dattente-1862025-618&v=1750278306906"></script>
+    
+    <script>
+        // Log para debugging
+        console.log('Página de prueba cargada');
+        console.log('Contenedor del formulario:', document.getElementById('aipi-form-container'));
+        
+        // Verificar que el script se carga
+        window.addEventListener('load', function() {
+            console.log('Página completamente cargada');
+            setTimeout(function() {
+                const container = document.getElementById('aipi-form-container');
+                console.log('Contenido del contenedor después de 2s:', container.innerHTML);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
