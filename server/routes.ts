@@ -4860,13 +4860,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Excluimos información sensible
       const publicFormData = {
         id: form.id,
+        slug: form.slug,
         title: form.title,
         description: form.description,
-        buttonColor: form.settings?.buttonColor || '#2563EB',
-        submitButtonText: form.settings?.submitButtonText || 'Enviar',
-        successMessage: form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.',
+        buttonColor: form.structure?.buttonColor || form.settings?.buttonColor || '#2563EB',
+        submitButtonText: form.structure?.submitButtonText || form.settings?.submitButtonText || 'Enviar',
+        successMessage: form.structure?.successMessage || form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.',
         successUrl: form.settings?.successRedirectUrl,
-        fields: form.fields
+        structure: form.structure,
+        settings: form.settings
       };
       
       res.json(publicFormData);

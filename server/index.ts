@@ -74,6 +74,10 @@ app.use('/static', (req, res, next) => {
   // Establecer tipo de contenido correcto para archivos JS
   if (req.path.endsWith('.js')) {
     res.type('application/javascript');
+    // No cache para archivos JS durante desarrollo
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
   }
   
   next();
@@ -83,9 +87,13 @@ app.use('/static', (req, res, next) => {
     // Asegurar que los archivos JS se sirvan con el tipo correcto
     if (path.endsWith('.js')) {
       res.set('Content-Type', 'application/javascript');
+      res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
+    } else {
+      // Headers de cache para otros archivos
+      res.set('Cache-Control', 'public, max-age=3600');
     }
-    // Headers de cache para mejorar rendimiento
-    res.set('Cache-Control', 'public, max-age=3600');
   }
 }));
 
