@@ -4281,11 +4281,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/forms/:id", authenticateJWT, async (req, res) => {
     try {
       const formId = parseInt(req.params.id);
-      const form = await storage.getForm(formId);
       
-      if (!form) {
+      // Consultar directamente PostgreSQL para obtener todos los campos incluyendo 'language'
+      const result = await db.select().from(forms).where(eq(forms.id, formId));
+      
+      if (result.length === 0) {
         return res.status(404).json({ error: "Form not found" });
       }
+      
+      const form = result[0];
       
       // Verificar que el usuario es propietario del formulario
       if (form.userId !== req.user!.id) {
