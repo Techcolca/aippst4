@@ -332,7 +332,7 @@
     
     if (fields && Array.isArray(fields)) {
       fields.forEach(field => {
-        formHTML += generateFieldHTML(field);
+        formHTML += generateFieldHTML(field, formData.language || 'fr');
       });
     } else {
       console.warn('AIPI Form: No se encontraron campos válidos en el formulario');
@@ -369,7 +369,7 @@
   }
   
   // Generar HTML para cada campo
-  function generateFieldHTML(field) {
+  function generateFieldHTML(field, language = 'fr') {
     const required = field.required ? 'required' : '';
     const fieldId = `field_${field.id}`;
     
@@ -416,7 +416,7 @@
             ${escapeHtml(field.label)} ${field.required ? '*' : ''}
           </label>
           <select id="${fieldId}" name="${field.id}" class="aipi-form-select" ${required}>
-            <option value="">${getSelectPlaceholder(formData.language || 'fr')}</option>
+            <option value="">${getSelectPlaceholder(language)}</option>
         `;
         
         if (field.options && Array.isArray(field.options)) {
