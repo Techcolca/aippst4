@@ -44,7 +44,7 @@ import {
 } from "./lib/aws-email";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema, welcomeMessages } from "@shared/schema";
+import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema, welcomeMessages, forms } from "@shared/schema";
 import cookieParser from "cookie-parser";
 import { and, eq, gt } from "drizzle-orm";
 import fs from "fs";
