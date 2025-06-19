@@ -774,7 +774,7 @@ const FormPreview = () => {
                       {(() => {
                         const detectedLang = detectLanguage(form);
                         const t = getTranslations(detectedLang);
-                        return formData.structure.submitButtonText || t.submit;
+                        return form?.submitButtonText || formData.structure.submitButtonText || t.submit;
                       })()}
                     </Button>
                   </form>
