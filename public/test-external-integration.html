@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Integración Externa - AIPI Forms</title>
+    <title>Test d'Intégration Externe - AIPI Forms</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -46,29 +46,29 @@
 </head>
 <body>
     <div class="container">
-        <h1>Prueba de Integración Externa</h1>
+        <h1>Test d'Intégration Externe</h1>
         
         <div class="info-box">
-            <strong>Simulación de sitio web externo:</strong><br>
-            Esta página simula cómo se vería el formulario AIPI integrado en un sitio web externo.
-            El formulario debería cargarse automáticamente en la sección de abajo.
+            <strong>Simulation de site web externe :</strong><br>
+            Cette page simule l'apparence du formulaire AIPI intégré dans un site web externe.
+            Le formulaire devrait se charger automatiquement dans la section ci-dessous.
         </div>
         
-        <p>Este es el contenido normal de un sitio web. Aquí tienes información sobre tu empresa, productos, servicios, etc.</p>
+        <p>Voici le contenu normal d'un site web. Ici vous avez des informations sur votre entreprise, produits, services, etc.</p>
         
         <div class="form-section">
-            <h2>Formulario de Lista de Espera</h2>
-            <p>El formulario se cargará aquí:</p>
+            <h2>Formulaire de Liste d'Attente</h2>
+            <p>Le formulaire se chargera ici :</p>
             
             <!-- Contenedor para el formulario -->
             <div id="aipi-form-container"></div>
         </div>
         
-        <p>Más contenido del sitio web después del formulario...</p>
+        <p>Plus de contenu du site web après le formulaire...</p>
     </div>
     
     <!-- Script del formulario AIPI con cache busting -->
-    <script src="/static/form-embed.js?id=liste-dattente-1862025-618&v=1750278901000"></script>
+    <script src="/static/form-embed.js?id=liste-dattente-1862025-618&v=1750354800000"></script>
     
     <!-- Script del widget de chat AIPI -->
     <script src="/static/chatgpt-embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f" 
@@ -77,16 +77,16 @@
             data-position="bottom-right"></script>
     
     <script>
-        // Log para debugging
-        console.log('Página de prueba cargada');
-        console.log('Contenedor del formulario:', document.getElementById('aipi-form-container'));
+        // Log pour le débogage
+        console.log('Page de test chargée');
+        console.log('Conteneur du formulaire:', document.getElementById('aipi-form-container'));
         
-        // Verificar que el script se carga
+        // Vérifier que le script se charge
         window.addEventListener('load', function() {
-            console.log('Página completamente cargada');
+            console.log('Page complètement chargée');
             setTimeout(function() {
                 const container = document.getElementById('aipi-form-container');
-                console.log('Contenido del contenedor después de 2s:', container.innerHTML);
+                console.log('Contenu du conteneur après 2s:', container.innerHTML);
             }, 2000);
         });
     </script>

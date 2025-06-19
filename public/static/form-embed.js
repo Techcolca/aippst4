@@ -351,7 +351,7 @@
     }
     
     // Botón de envío
-    const submitText = formData.settings?.submitText || 'Enviar';
+    const submitText = formData.submitButtonText || formData.settings?.submitText || 'Enviar';
     formHTML += `
             <button type="submit" class="aipi-submit-button">
               ${escapeHtml(submitText)}
@@ -557,7 +557,7 @@
         
         // Restaurar el botón
         submitButton.disabled = false;
-        submitButton.textContent = formData.submitButtonText || 'Enviar';
+        submitButton.textContent = formData.submitButtonText || formData.settings?.submitText || 'Enviar';
         
         // Mostrar mensaje de error
         alert(validationTexts.error);
