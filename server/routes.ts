@@ -4856,6 +4856,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Form not found" });
       }
       
+      // Detectar idioma del formulario basado en los campos
+      let detectedLanguage = 'fr'; // Por defecto francés
+      if (form.structure?.fields) {
+        const sampleText = form.structure.fields[0]?.label || form.title || '';
+        if (sampleText.match(/\b(nombre|email|selecciona|enviar|gracias)\b/i)) {
+          detectedLanguage = 'es';
+        } else if (sampleText.match(/\b(name|email|select|submit|thank)\b/i)) {
+          detectedLanguage = 'en';
+        } else if (sampleText.match(/\b(nom|email|sélectionnez|envoyer|merci)\b/i)) {
+          detectedLanguage = 'fr';
+        }
+      }
+
       // Devolver solo la información pública necesaria para renderizar el formulario
       // Excluimos información sensible
       const publicFormData = {
@@ -4863,6 +4876,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         slug: form.slug,
         title: form.title,
         description: form.description,
+        language: detectedLanguage,
         buttonColor: form.structure?.buttonColor || form.settings?.buttonColor || '#2563EB',
         submitButtonText: form.structure?.submitButtonText || form.settings?.submitButtonText || 'Enviar',
         successMessage: form.structure?.successMessage || form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.',

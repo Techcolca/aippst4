@@ -416,7 +416,7 @@
             ${escapeHtml(field.label)} ${field.required ? '*' : ''}
           </label>
           <select id="${fieldId}" name="${field.id}" class="aipi-form-select" ${required}>
-            <option value="">Selecciona una opción</option>
+            <option value="">${getSelectPlaceholder(formData.language || 'fr')}</option>
         `;
         
         if (field.options && Array.isArray(field.options)) {
@@ -498,8 +498,9 @@
       e.preventDefault();
       
       // Deshabilitar el botón de envío
+      const validationTexts = getValidationTexts(formData.language || 'fr');
       submitButton.disabled = true;
-      submitButton.textContent = 'Enviando...';
+      submitButton.textContent = validationTexts.submitting;
       
       try {
         // Recopilar datos del formulario
@@ -536,8 +537,8 @@
           form.innerHTML = `
             <div style="text-align: center; padding: 2rem; color: #059669;">
               <div style="font-size: 3rem; margin-bottom: 1rem;">✓</div>
-              <h3 style="margin: 0 0 1rem 0; color: #047857;">¡Formulario enviado correctamente!</h3>
-              <p style="margin: 0; color: #6b7280;">Gracias por tu información. Te contactaremos pronto.</p>
+              <h3 style="margin: 0 0 1rem 0; color: #047857;">${validationTexts.success}</h3>
+              <p style="margin: 0; color: #6b7280;">${validationTexts.successDescription}</p>
             </div>
           `;
           
@@ -556,10 +557,10 @@
         
         // Restaurar el botón
         submitButton.disabled = false;
-        submitButton.textContent = formData.settings?.submitText || 'Enviar';
+        submitButton.textContent = formData.submitButtonText || 'Enviar';
         
         // Mostrar mensaje de error
-        alert('Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+        alert(validationTexts.error);
       }
     });
   }
@@ -570,6 +571,47 @@
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  // Función para obtener el placeholder del select según el idioma
+  function getSelectPlaceholder(language) {
+    const placeholders = {
+      'fr': 'Sélectionnez une option',
+      'es': 'Selecciona una opción',
+      'en': 'Select an option'
+    };
+    return placeholders[language] || placeholders['fr'];
+  }
+
+  // Función para obtener textos de validación según el idioma
+  function getValidationTexts(language) {
+    const texts = {
+      'fr': {
+        required: 'Ce champ est obligatoire',
+        email: 'Veuillez entrer une adresse email valide',
+        submitting: 'Envoi en cours...',
+        success: 'Merci pour votre envoi!',
+        error: 'Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.',
+        successDescription: 'Merci pour votre information. Nous vous contacterons bientôt.'
+      },
+      'es': {
+        required: 'Este campo es obligatorio',
+        email: 'Por favor ingresa un email válido',
+        submitting: 'Enviando...',
+        success: 'Gracias por tu envío!',
+        error: 'Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.',
+        successDescription: 'Gracias por tu información. Te contactaremos pronto.'
+      },
+      'en': {
+        required: 'This field is required',
+        email: 'Please enter a valid email address',
+        submitting: 'Submitting...',
+        success: 'Thank you for your submission!',
+        error: 'An error occurred while submitting the form. Please try again.',
+        successDescription: 'Thank you for your information. We will contact you soon.'
+      }
+    };
+    return texts[language] || texts['fr'];
   }
   
   // Inicializar cuando el DOM esté listo
