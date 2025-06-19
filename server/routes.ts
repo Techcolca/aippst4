@@ -4869,6 +4869,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
+      // Textos por defecto según el idioma detectado
+      const defaultTexts = {
+        'fr': {
+          submitButtonText: 'Envoyer',
+          successMessage: 'Merci ! Votre information a été envoyée avec succès.'
+        },
+        'es': {
+          submitButtonText: 'Enviar',
+          successMessage: '¡Gracias! Tu información ha sido enviada correctamente.'
+        },
+        'en': {
+          submitButtonText: 'Submit',
+          successMessage: 'Thank you! Your information has been sent successfully.'
+        }
+      };
+
+      const defaults = defaultTexts[detectedLanguage] || defaultTexts['fr'];
+
       // Devolver solo la información pública necesaria para renderizar el formulario
       // Excluimos información sensible
       const publicFormData = {
@@ -4878,8 +4896,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         description: form.description,
         language: detectedLanguage,
         buttonColor: form.structure?.buttonColor || form.settings?.buttonColor || '#2563EB',
-        submitButtonText: form.structure?.submitButtonText || form.settings?.submitButtonText || 'Enviar',
-        successMessage: form.structure?.successMessage || form.settings?.successMessage || '¡Gracias! Tu información ha sido enviada correctamente.',
+        submitButtonText: form.structure?.submitButtonText || form.settings?.submitButtonText || defaults.submitButtonText,
+        successMessage: form.structure?.successMessage || form.settings?.successMessage || defaults.successMessage,
         successUrl: form.settings?.successRedirectUrl,
         structure: form.structure,
         settings: form.settings
