@@ -203,7 +203,7 @@ const FormPreview = () => {
       setFormData({
         title: form.title || '',
         description: form.description || '',
-        structure: form.structure || { fields: [], submitButtonText: 'Enviar' },
+        structure: form.structure || { fields: [], submitButtonText: form.submitButtonText || 'Rejoindre la liste d\'attente' },
         styling: form.styling || {
           theme: 'light',
           fontFamily: 'Inter',

@@ -351,7 +351,7 @@
     }
     
     // Botón de envío
-    const submitText = formData.submitButtonText || formData.settings?.submitText || 'Enviar';
+    const submitText = formData.submitButtonText || formData.settings?.submitText || 'Rejoindre la liste d\'attente';
     formHTML += `
             <button type="submit" class="aipi-submit-button">
               ${escapeHtml(submitText)}
@@ -500,7 +500,7 @@
       // Deshabilitar el botón de envío
       const validationTexts = getValidationTexts(formData.language || 'fr');
       submitButton.disabled = true;
-      submitButton.textContent = validationTexts.submitting;
+      submitButton.textContent = 'Envoi en cours...';
       
       try {
         // Recopilar datos del formulario
@@ -537,8 +537,8 @@
           form.innerHTML = `
             <div style="text-align: center; padding: 2rem; color: #059669;">
               <div style="font-size: 3rem; margin-bottom: 1rem;">✓</div>
-              <h3 style="margin: 0 0 1rem 0; color: #047857;">${validationTexts.success}</h3>
-              <p style="margin: 0; color: #6b7280;">${validationTexts.successDescription}</p>
+              <h3 style="margin: 0 0 1rem 0; color: #047857;">${escapeHtml(formData.successMessage || 'Merci pour votre envoi!')}</h3>
+              <p style="margin: 0; color: #6b7280;">Merci pour votre information. Nous vous contacterons bientôt.</p>
             </div>
           `;
           
@@ -557,10 +557,10 @@
         
         // Restaurar el botón
         submitButton.disabled = false;
-        submitButton.textContent = formData.submitButtonText || formData.settings?.submitText || 'Enviar';
+        submitButton.textContent = formData.submitButtonText || formData.settings?.submitText || 'Rejoindre la liste d\'attente';
         
         // Mostrar mensaje de error
-        alert(validationTexts.error);
+        alert('Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.');
       }
     });
   }
