@@ -65,6 +65,12 @@ const FormPreview = () => {
 
   // Sistema de detección de idioma y traducción
   const detectLanguage = (form: any) => {
+    // Primero verificar si el formulario ya tiene un idioma detectado en el API
+    if (form?.language) {
+      console.log('Idioma detectado desde API:', form.language);
+      return form.language;
+    }
+    
     if (!form || !form.structure?.fields) return 'es';
     
     const allText = [
@@ -75,13 +81,17 @@ const FormPreview = () => {
       form.structure.submitButtonText || ''
     ].join(' ').toLowerCase();
 
-    const frenchWords = ['nom', 'email', 'comment', 'avez-vous', 'entendu', 'parler', 'nous', 'rejoindre', 'liste', 'attente', 'modèle', 'pour', 'capturer', 'utilisateurs', 'réseaux', 'sociaux', 'recherche', 'recommandation', 'autre'];
+    console.log('Texto para detección de idioma:', allText);
+
+    const frenchWords = ['nom', 'email', 'comment', 'avez-vous', 'entendu', 'parler', 'nous', 'rejoindre', 'liste', 'attente', 'modèle', 'pour', 'capturer', 'utilisateurs', 'réseaux', 'sociaux', 'recherche', 'recommandation', 'autre', 'votre', 'vous'];
     const englishWords = ['name', 'email', 'how', 'did', 'you', 'hear', 'about', 'us', 'join', 'waitlist', 'template', 'capture', 'users', 'social', 'media', 'google', 'search', 'recommendation', 'other'];
     const spanishWords = ['nombre', 'correo', 'como', 'nos', 'conociste', 'unirse', 'plantilla', 'capturar', 'usuarios', 'redes', 'sociales', 'busqueda', 'recomendacion', 'otro'];
 
     const frenchScore = frenchWords.filter(word => allText.includes(word)).length;
     const englishScore = englishWords.filter(word => allText.includes(word)).length;
     const spanishScore = spanishWords.filter(word => allText.includes(word)).length;
+
+    console.log('Puntuaciones:', { frenchScore, englishScore, spanishScore });
 
     if (frenchScore > englishScore && frenchScore > spanishScore) return 'fr';
     if (englishScore > spanishScore) return 'en';
@@ -761,7 +771,11 @@ const FormPreview = () => {
                       type="submit" 
                       className="w-full bg-gradient-to-r from-blue-900 to-slate-900 hover:from-blue-800 hover:to-slate-800 text-white font-semibold py-4 rounded-lg transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg text-sm uppercase tracking-wide"
                     >
-                      {formData.structure.submitButtonText || 'ENVIAR'}
+                      {(() => {
+                        const detectedLang = detectLanguage(form);
+                        const t = getTranslations(detectedLang);
+                        return formData.structure.submitButtonText || t.submit;
+                      })()}
                     </Button>
                   </form>
                 )}
