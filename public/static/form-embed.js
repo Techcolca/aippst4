@@ -450,19 +450,23 @@
       </style>
     `;
     
-    // Crear el HTML del formulario con diseño moderno
+    // Create modern form HTML with dynamic translations
+    const language = formData.language || 'en';
+    const t = getTranslations(language);
+    const defaultDescription = formData.description || t.defaultDescription;
+    
     let formHTML = styles + `
       <div class="aipi-modern-form-wrapper">
         <div class="aipi-form-hero">
           <div class="aipi-form-hero-content">
             <h2>${escapeHtml(formData.title)}</h2>
-            <p>${escapeHtml(formData.description || 'Veuillez compléter les informations demandées pour commencer.')}</p>
+            <p>${escapeHtml(defaultDescription)}</p>
           </div>
         </div>
         
         <div class="aipi-form-content">
           <div class="aipi-form-header">
-            <p class="aipi-form-subtitle">Veuillez compléter les informations demandées pour commencer.</p>
+            <p class="aipi-form-subtitle">${escapeHtml(defaultDescription)}</p>
           </div>
           
           <form id="aipi-form" method="POST">
@@ -475,26 +479,26 @@
     
     if (fields && Array.isArray(fields)) {
       fields.forEach(field => {
-        formHTML += generateFieldHTML(field, formData.language || 'fr');
+        formHTML += generateFieldHTML(field, language);
       });
     } else {
-      console.warn('AIPI Form: No se encontraron campos válidos en el formulario');
+      console.warn('AIPI Form: No valid fields found in form');
     }
     
-    // Agregar checkbox de términos si está configurado
+    // Add terms checkbox if configured
     if (formData.settings?.requireTerms) {
       formHTML += `
         <div class="aipi-checkbox-field">
           <input type="checkbox" id="terms" name="terms" class="aipi-checkbox" required>
           <label for="terms" class="aipi-checkbox-label">
-            Acepto los términos y condiciones
+            ${t.labels.acceptTerms}
           </label>
         </div>
       `;
     }
     
-    // Botón de envío
-    const submitText = formData.submitButtonText || formData.settings?.submitText || 'Rejoindre la liste d\'attente';
+    // Submit button using form text or translated fallback
+    const submitText = formData.submitButtonText || formData.settings?.submitText || t.buttons.submit;
     formHTML += `
             <button type="submit" class="aipi-submit-button">
               ${escapeHtml(submitText)}
@@ -678,34 +682,35 @@
         });
         
         if (response.ok) {
-          // Mostrar mensaje de éxito
+          // Show success message with dynamic translation
+          const successMessage = formData.successMessage || formData.settings?.successMessage || t.messages.success;
           form.innerHTML = `
             <div style="text-align: center; padding: 2rem; color: #059669;">
               <div style="font-size: 3rem; margin-bottom: 1rem;">✓</div>
-              <h3 style="margin: 0 0 1rem 0; color: #047857;">${escapeHtml(formData.successMessage || 'Merci pour votre envoi!')}</h3>
-              <p style="margin: 0; color: #6b7280;">Merci pour votre information. Nous vous contacterons bientôt.</p>
+              <h3 style="margin: 0 0 1rem 0; color: #047857;">${escapeHtml(successMessage)}</h3>
+              <p style="margin: 0; color: #6b7280;">${escapeHtml(t.messages.success)}</p>
             </div>
           `;
           
-          // Redirección si está configurada
+          // Redirect if configured
           if (formData.settings?.redirectUrl) {
             setTimeout(() => {
               window.location.href = formData.settings.redirectUrl;
             }, 3000);
           }
         } else {
-          throw new Error('Error al enviar el formulario');
+          throw new Error(t.messages.error);
         }
         
       } catch (error) {
-        console.error('Error al enviar el formulario:', error);
+        console.error('Form submission error:', error);
         
-        // Restaurar el botón
+        // Restore button with dynamic text
         submitButton.disabled = false;
-        submitButton.textContent = formData.submitButtonText || formData.settings?.submitText || 'Rejoindre la liste d\'attente';
+        submitButton.textContent = formData.submitButtonText || formData.settings?.submitText || t.buttons.submit;
         
-        // Mostrar mensaje de error
-        alert('Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.');
+        // Show error message with dynamic translation
+        alert(t.messages.error);
       }
     });
   }
@@ -718,14 +723,15 @@
     return div.innerHTML;
   }
 
-  // Función para obtener el placeholder del select según el idioma
+  // Function to get select placeholder based on language
   function getSelectPlaceholder(language) {
+    const t = getTranslations(language);
     const placeholders = {
       'fr': 'Sélectionnez une option',
-      'es': 'Selecciona una opción',
+      'es': 'Selecciona una opción', 
       'en': 'Select an option'
     };
-    return placeholders[language] || placeholders['fr'];
+    return placeholders[language] || placeholders['en'];
   }
 
   // Función para obtener textos de validación según el idioma
