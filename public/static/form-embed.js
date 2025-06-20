@@ -313,13 +313,13 @@
         <div class="aipi-form-hero">
           <div class="aipi-form-hero-content">
             <h2>${escapeHtml(formData.title)}</h2>
-            <p>${escapeHtml(formData.description || 'Complete la información solicitada para comenzar.')}</p>
+            <p>${escapeHtml(formData.description || 'Veuillez compléter les informations demandées pour commencer.')}</p>
           </div>
         </div>
         
         <div class="aipi-form-content">
           <div class="aipi-form-header">
-            <p class="aipi-form-subtitle">Por favor complete la información solicitada para comenzar.</p>
+            <p class="aipi-form-subtitle">Veuillez compléter les informations demandées pour commencer.</p>
           </div>
           
           <form id="aipi-form" method="POST">
