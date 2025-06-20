@@ -11,6 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2, ArrowLeft, PenSquare } from 'lucide-react';
 import Header from '@/components/header';
 import { useToast } from '@/hooks/use-toast';
+import { getLanguageTranslations, getTranslation } from '@/../../shared/translations';
 
 // Definir tipo para los datos del formulario
 interface FormData {
@@ -63,39 +64,16 @@ const FormPreview = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Sistema de detección de idioma y traducción
-  const detectLanguage = (form: any) => {
-    // Primero verificar si el formulario ya tiene un idioma detectado en el API
-    if (form?.language) {
-      console.log('Idioma detectado desde API:', form.language);
-      return form.language;
-    }
-    
-    if (!form || !form.structure?.fields) return 'es';
-    
-    const allText = [
-      form.title || '',
-      form.description || '',
-      ...form.structure.fields.map((f: any) => f.label || ''),
-      ...form.structure.fields.map((f: any) => f.placeholder || ''),
-      form.structure.submitButtonText || ''
-    ].join(' ').toLowerCase();
+  // Obtener idioma del formulario desde la base de datos
+  const getFormLanguage = (form: any) => {
+    // Usar el idioma directamente de la base de datos
+    return form?.language || 'en';
+  };
 
-    console.log('Texto para detección de idioma:', allText);
-
-    const frenchWords = ['nom', 'email', 'comment', 'avez-vous', 'entendu', 'parler', 'nous', 'rejoindre', 'liste', 'attente', 'modèle', 'pour', 'capturer', 'utilisateurs', 'réseaux', 'sociaux', 'recherche', 'recommandation', 'autre', 'votre', 'vous'];
-    const englishWords = ['name', 'email', 'how', 'did', 'you', 'hear', 'about', 'us', 'join', 'waitlist', 'template', 'capture', 'users', 'social', 'media', 'google', 'search', 'recommendation', 'other'];
-    const spanishWords = ['nombre', 'correo', 'como', 'nos', 'conociste', 'unirse', 'plantilla', 'capturar', 'usuarios', 'redes', 'sociales', 'busqueda', 'recomendacion', 'otro'];
-
-    const frenchScore = frenchWords.filter(word => allText.includes(word)).length;
-    const englishScore = englishWords.filter(word => allText.includes(word)).length;
-    const spanishScore = spanishWords.filter(word => allText.includes(word)).length;
-
-    console.log('Puntuaciones:', { frenchScore, englishScore, spanishScore });
-
-    if (frenchScore > englishScore && frenchScore > spanishScore) return 'fr';
-    if (englishScore > spanishScore) return 'en';
-    return 'es';
+  // Obtener traducciones para el idioma actual
+  const getFormTranslations = (form: any) => {
+    const language = getFormLanguage(form);
+    return getLanguageTranslations(language);
   };
 
   const getTranslations = (language: string) => {
@@ -202,8 +180,8 @@ const FormPreview = () => {
     if (form) {
       setFormData({
         title: form.title || '',
-        description: form.description || '',
-        structure: form.structure || { fields: [], submitButtonText: form.submitButtonText || 'Rejoindre la liste d\'attente' },
+        description: form.description || getFormTranslations(form).defaultDescription,
+        structure: form.structure || { fields: [], submitButtonText: form.submitButtonText || getFormTranslations(form).buttons.submit },
         styling: form.styling || {
           theme: 'light',
           fontFamily: 'Inter',
