@@ -4947,6 +4947,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const slug = req.params.slug;
       const responseData = req.body;
       
+      console.log("Form submission data:", JSON.stringify(responseData, null, 2));
+      
       // Verificar que el formulario existe
       const form = await storage.getFormBySlug(slug);
       
@@ -4959,16 +4961,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ error: "This form is not published" });
       }
       
+      // Los datos pueden venir directamente en responseData o en responseData.data
+      const formData = responseData.data || responseData;
+      
       // Validar los datos de la respuesta según la estructura del formulario
       const requiredFields = form.structure.fields
         .filter(field => field.required)
         .map(field => field.id);
       
       for (const field of requiredFields) {
-        if (!responseData.data[field]) {
+        if (!formData[field]) {
           return res.status(400).json({ 
             error: "Missing required fields", 
-            missingFields: requiredFields.filter(f => !responseData.data[f])
+            missingFields: requiredFields.filter(f => !formData[f])
           });
         }
       }
@@ -4976,7 +4981,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Crear la respuesta
       const newResponse = await storage.createFormResponse({
         formId: form.id,
-        data: responseData.data,
+        data: formData,
         metadata: responseData.metadata || {}
       });
       
