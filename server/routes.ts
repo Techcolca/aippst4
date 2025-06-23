@@ -7,6 +7,7 @@ import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from
 import { getInteractionLimitByTier } from "./middleware/subscription";
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
+import { buildKnowledgeBase } from "./lib/content-knowledge";
 import { webscraper } from "./lib/webscraper";
 import stripe, { 
   PRODUCTS,
@@ -2565,11 +2566,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         hasIntegrationBehavior: !!integration.botBehavior
       });
       
+      // Get documents and site content for knowledge base
+      const documents = await storage.getDocuments(integration.id);
+      const siteContent = await storage.getSiteContent(integration.id);
+      
+      // Build enhanced context with knowledge base
+      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContent);
+      const enhancedContext = context + "\n\n" + knowledgeBase;
+      
       // Detect language and generate AI response with bot configuration
       const detectedLanguage = detectLanguage(message);
       const completion = await generateChatCompletion(
         messages.map(m => ({ role: m.role, content: m.content })),
-        context,
+        enhancedContext,
         detectedLanguage,
         botConfig
       );
@@ -2729,11 +2738,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messagePreview: message.substring(0, 50) + '...'
       });
       
+      // Get documents and site content for knowledge base
+      const documents = await storage.getDocuments(integration.id);
+      const siteContent = await storage.getSiteContent(integration.id);
+      
+      // Build enhanced context with knowledge base
+      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContent);
+      const enhancedContext = context + "\n\n" + knowledgeBase;
+      
       // Detect language and generate AI response
       const detectedLanguage = detectLanguage(message);
       const completion = await generateChatCompletion(
         messages.map(m => ({ role: m.role, content: m.content })),
-        context,
+        enhancedContext,
         detectedLanguage,
         botConfig
       );
@@ -2940,11 +2957,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           isWidget: true // Marca este bot como widget para aplicar restricciones
         };
         
+        // Get documents and site content for knowledge base
+        const widgetDocuments = await storage.getDocuments(integration.id);
+        const widgetSiteContent = await storage.getSiteContent(integration.id);
+        
+        // Build enhanced context with knowledge base
+        const knowledgeBase = buildKnowledgeBase(integration, widgetDocuments, widgetSiteContent);
+        const enhancedContext = context + "\n\n" + knowledgeBase;
+        
         // Generate AI response with detected language support and widget restrictions
         console.log(`Generating response in language: ${responseLanguage}`);
         const completion = await generateChatCompletion(
           messages.map(msg => ({ role: msg.role, content: msg.content || '' })),
-          context,
+          enhancedContext,
           responseLanguage,
           botConfig
         );
