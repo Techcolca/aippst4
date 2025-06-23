@@ -402,7 +402,9 @@ const FormEditor = () => {
         });
     },
     onSuccess: () => {
+      // Invalidar tanto el formulario específico como la lista general
       queryClient.invalidateQueries({ queryKey: [`/api/forms/${formId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/forms"] });
       toast({
         title: 'Formulario actualizado',
         description: 'Los cambios han sido guardados correctamente'
