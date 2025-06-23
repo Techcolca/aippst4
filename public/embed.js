@@ -2940,7 +2940,7 @@ Contenido: [Error al extraer contenido detallado]
 
     chatPanel.innerHTML = `
       <div class="aipi-fullscreen-layout">
-        <div class="aipi-conversations-sidebar">
+        <div class="aipi-conversations-sidebar" id="aipi-conversations-sidebar">
           <div class="aipi-sidebar-header">
             <div class="aipi-header-title">
               <h3>Conversaciones</h3>
@@ -2958,6 +2958,13 @@ Contenido: [Error al extraer contenido detallado]
         <div class="aipi-chat-main">
           <div id="aipi-chat-header">
             <div id="aipi-header-info">
+              <button class="aipi-mobile-menu-btn" id="aipi-mobile-menu-btn" onclick="toggleConversationsSidebar()" aria-label="Toggle conversations">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              </button>
               <div id="aipi-avatar">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
@@ -2997,6 +3004,7 @@ Contenido: [Error al extraer contenido detallado]
         display: flex;
         height: 100vh;
         font-family: ${getFontFamily()};
+        position: relative;
       }
       
       .aipi-conversations-sidebar {
@@ -3005,6 +3013,66 @@ Contenido: [Error al extraer contenido detallado]
         border-right: 1px solid #e5e7eb;
         display: flex;
         flex-direction: column;
+        transition: transform 0.3s ease;
+      }
+      
+      .aipi-mobile-menu-btn {
+        display: none;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-right: 12px;
+        transition: background 0.2s;
+      }
+      
+      .aipi-mobile-menu-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      
+      .aipi-sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+      
+      /* Mobile responsive styles */
+      @media (max-width: 768px) {
+        .aipi-conversations-sidebar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 100vh;
+          z-index: 1001;
+          transform: translateX(-100%);
+          width: 280px;
+          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .aipi-conversations-sidebar.show {
+          transform: translateX(0);
+        }
+        
+        .aipi-chat-main {
+          width: 100% !important;
+        }
+        
+        .aipi-mobile-menu-btn {
+          display: flex !important;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .aipi-sidebar-overlay.show {
+          display: block;
+        }
       }
       
       .aipi-sidebar-header {
@@ -3658,6 +3726,24 @@ Contenido: [Error al extraer contenido detallado]
       return `hace ${months} mes${months !== 1 ? 'es' : ''}`;
     }
   }
+
+  // Toggle conversations sidebar for mobile
+  window.toggleConversationsSidebar = function() {
+    const sidebar = document.getElementById('aipi-conversations-sidebar');
+    const overlay = document.getElementById('aipi-sidebar-overlay');
+    
+    if (sidebar && overlay) {
+      const isShowing = sidebar.classList.contains('show');
+      
+      if (isShowing) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      } else {
+        sidebar.classList.add('show');
+        overlay.classList.add('show');
+      }
+    }
+  };
 
   // Global event handlers for fullscreen mode
   window.aipiCloseFullscreen = function() {
