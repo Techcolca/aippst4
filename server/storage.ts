@@ -49,6 +49,16 @@ export interface IStorage {
   updateSettings(userId: number, data: Partial<Settings>): Promise<Settings>;
   createSettings(settings: { userId: number }): Promise<Settings>;
 
+  // Document methods
+  getDocuments(integrationId: number): Promise<any[]>;
+  createDocument(doc: any): Promise<any>;
+  deleteDocument(id: number): Promise<void>;
+
+  // Site content methods
+  getSiteContent(integrationId: number): Promise<any[]>;
+  createSiteContent(content: any): Promise<any>;
+  updateSiteContent(integrationId: number, url: string, data: any): Promise<any>;
+
   // Dashboard methods
   getDashboardStats(userId: number): Promise<{
     totalConversations: number;
