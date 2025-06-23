@@ -190,8 +190,18 @@
     return apiUrl;
   }
   
+  // Marcar que hay un formulario AIPPS activo
+  function markFormAsActive() {
+    // Añadir atributo al documento para que el widget de chat lo detecte
+    document.documentElement.setAttribute('data-aipps-form-active', 'true');
+    console.log('AIPPS Form: Marcando formulario como activo para evitar conflictos con chat');
+  }
+
   // Cargar el formulario
   async function loadForm() {
+    // Marcar formulario como activo inmediatamente
+    markFormAsActive();
+    
     const formId = getFormId();
     
     if (!formId) {

@@ -74,6 +74,38 @@
     }
   }
 
+  // Detectar si hay formularios AIPPS activos en la página
+  function detectActiveAippsForm() {
+    // Verificar atributo marcador del formulario
+    if (document.documentElement.hasAttribute('data-aipps-form-active')) {
+      console.log('AIPPS Widget: Formulario AIPPS activo detectado por atributo');
+      return true;
+    }
+
+    // Buscar contenedores de formularios AIPPS
+    const formContainers = document.querySelectorAll('[id*="aipps-form"], [class*="aipps-form"], [data-aipps-form]');
+    if (formContainers.length > 0) {
+      console.log('AIPPS Widget: Contenedor de formulario detectado');
+      return true;
+    }
+
+    // Buscar scripts de formulario activos
+    const formScripts = document.querySelectorAll('script[src*="form-embed.js"]');
+    if (formScripts.length > 0) {
+      console.log('AIPPS Widget: Script de formulario detectado');
+      return true;
+    }
+
+    // Buscar elementos del wrapper del formulario moderno
+    const modernFormWrappers = document.querySelectorAll('.aipi-modern-form-wrapper');
+    if (modernFormWrappers.length > 0) {
+      console.log('AIPPS Widget: Wrapper de formulario moderno detectado');
+      return true;
+    }
+
+    return false;
+  }
+
   // Initialize widget
   function init() {
     // Verificar si el widget ya existe para evitar duplicados
@@ -81,6 +113,22 @@
       console.log('AIPPS Widget: Ya inicializado, evitando duplicación');
       return;
     }
+
+    // Verificar si hay formularios activos antes de continuar
+    if (detectActiveAippsForm()) {
+      console.log('AIPPS Widget: No se iniciará el widget porque hay un formulario activo');
+      return;
+    }
+
+    // También verificar después de un pequeño delay para formularios que se cargan dinámicamente
+    setTimeout(() => {
+      if (detectActiveAippsForm() && document.getElementById('aipi-widget-container')) {
+        console.log('AIPPS Widget: Formulario detectado después de inicialización, ocultando widget');
+        const widget = document.getElementById('aipi-widget-container');
+        if (widget) widget.style.display = 'none';
+      }
+    }, 1000);
+
     window.AIPPS_WIDGET_INITIALIZED = true;
     
     // Setup dashboard communication first
