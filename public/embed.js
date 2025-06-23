@@ -3966,19 +3966,29 @@ Contenido: [Error al extraer contenido detallado]
 
   // Toggle conversations sidebar for mobile/tablet
   window.toggleConversationsSidebar = function() {
+    console.log('AIPPS Debug: Toggle sidebar clicked');
     const sidebar = document.getElementById('aipi-conversations-sidebar');
     const overlay = document.getElementById('aipi-sidebar-overlay');
     
     if (sidebar && overlay) {
       const isShowing = sidebar.classList.contains('show');
+      console.log('AIPPS Debug: Sidebar currently showing:', isShowing);
       
       if (isShowing) {
         sidebar.classList.remove('show');
         overlay.classList.remove('show');
+        sidebar.style.transform = 'translateX(-100%)';
+        overlay.style.display = 'none';
+        console.log('AIPPS Debug: Sidebar hidden');
       } else {
         sidebar.classList.add('show');
         overlay.classList.add('show');
+        sidebar.style.transform = 'translateX(0)';
+        overlay.style.display = 'block';
+        console.log('AIPPS Debug: Sidebar shown');
       }
+    } else {
+      console.log('AIPPS Debug: Sidebar or overlay not found');
     }
   };
   
