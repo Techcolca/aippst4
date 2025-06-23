@@ -1,76 +1,60 @@
-// Sistema de conocimiento para el chatbot
+// Sistema de conocimiento personalizado para cada chatbot
 export function buildKnowledgeBase(integration: any, documents: any[], siteContent: any[]): string {
   let knowledgeBase = integration.botBehavior || "Eres un asistente útil para este sitio web.";
   
-  // Información específica sobre AIPPS
+  // Agregar información específica del sitio web basada en la integración
   knowledgeBase += `
 
-INFORMACIÓN SOBRE AIPPS Y TECHCOLCA:
+INFORMACIÓN ESPECÍFICA DEL SITIO WEB:
+Nombre del sitio: ${integration.name}
+URL: ${integration.url}
+Descripción: ${integration.description || 'No hay descripción disponible'}
 
-AIPPS es una plataforma de inteligencia artificial desarrollada por Techcolca que permite:
-- Crear chatbots inteligentes para sitios web
-- Generar formularios interactivos personalizados
-- Automatizar procesos de atención al cliente
-- Integrar fácilmente con WordPress y otros CMS
-- Analizar conversaciones y generar reportes
-
-CARACTERÍSTICAS PRINCIPALES:
-- Widget de chat flotante personalizable
-- Formularios con campos dinámicos
-- Soporte multiidioma (Español, Inglés, Francés)
-- Integración con sistemas de email
-- Dashboard completo de gestión
-- API REST para integraciones avanzadas
-
-PLANES DISPONIBLES:
-- Plan Gratuito: Hasta 100 conversaciones/mes
-- Plan Profesional: Conversaciones ilimitadas + funciones avanzadas
-- Plan Empresarial: Soluciones personalizadas
-
-IMPLEMENTACIÓN:
-1. Registro en la plataforma AIPPS
-2. Creación de integración para el sitio web
-3. Inserción de código JavaScript en el sitio
-4. Configuración del comportamiento del bot
-5. Personalización visual y mensajes
-
-SOPORTE TÉCNICO:
-- Documentación completa disponible
-- Soporte por email y chat
-- Guías de integración paso a paso
-- Ejemplos de código y mejores prácticas
 `;
 
-  // Agregar documentos de la base de datos
+  // Agregar documentos específicos subidos por el usuario
   if (documents && documents.length > 0) {
-    knowledgeBase += "\n\nDOCUMENTOS TÉCNICOS DISPONIBLES:\n";
+    knowledgeBase += "\n\nDOCUMENTOS Y ARCHIVOS SUBIDOS POR EL USUARIO:\n";
     documents.forEach(doc => {
       if (doc.content) {
-        knowledgeBase += `\n--- ${doc.original_name} ---\n${doc.content.substring(0, 2000)}...\n`;
+        knowledgeBase += `\n--- DOCUMENTO: ${doc.original_name || doc.filename} ---\n`;
+        knowledgeBase += `${doc.content}\n\n`;
       }
     });
   }
   
-  // Agregar contenido del sitio web
+  // Agregar contenido específico del sitio web extraído por scraping
   if (siteContent && siteContent.length > 0) {
-    knowledgeBase += "\n\nCONTENIDO ACTUALIZADO DEL SITIO WEB:\n";
+    knowledgeBase += "\n\nCONTENIDO EXTRAÍDO DEL SITIO WEB:\n";
     siteContent.forEach(content => {
-      if (content.content) {
-        knowledgeBase += `\n--- ${content.title} (${content.url}) ---\n${content.content.substring(0, 1500)}...\n`;
+      if (content.content && content.title) {
+        knowledgeBase += `\n--- PÁGINA: ${content.title} ---\n`;
+        knowledgeBase += `URL: ${content.url}\n`;
+        knowledgeBase += `Contenido: ${content.content}\n\n`;
       }
     });
+  }
+  
+  // Solo agregar información de AIPPS si es la integración específica de AIPPS
+  if (integration.apiKey === 'aipps_web_internal' || integration.name.toLowerCase().includes('aipps')) {
+    knowledgeBase += `\n\nINFORMACIÓN SOBRE AIPPS (solo para consultas sobre la plataforma):
+AIPPS es una plataforma de inteligencia artificial que permite crear chatbots y formularios interactivos.
+- Características: Widget personalizable, soporte multiidioma, integración WordPress
+- Planes: Gratuito (100 conversaciones/mes), Profesional, Empresarial
+- Implementación: Registro → Crear integración → Insertar código → Configurar
+`;
   }
 
   knowledgeBase += `
 
-INSTRUCCIONES PARA EL ASISTENTE:
+INSTRUCCIONES ESPECÍFICAS PARA ESTE CHATBOT:
+- Responde ÚNICAMENTE basándote en la información de ESTE sitio web específico
+- Usa la información de los documentos subidos y contenido extraído de ${integration.url}
+- Si te preguntan sobre otros sitios web o servicios no relacionados, explica que solo puedes ayudar con información de este sitio
 - Responde siempre en el idioma en que te hablen
-- Proporciona información precisa sobre AIPPS y Techcolca
-- Si no tienes información específica, di que contacten al soporte
-- Ayuda con problemas de integración y configuración
-- Explica las funcionalidades de manera clara y técnica
-- Ofrece ejemplos de código cuando sea relevante
-- Mantén un tono profesional y servicial
+- Si no tienes información específica sobre lo que preguntan, di que no tienes esa información disponible
+- Mantén un tono profesional acorde al sitio web: ${integration.name}
+- Prioriza la información de los documentos subidos por el usuario por encima de cualquier conocimiento general
 `;
 
   return knowledgeBase;
