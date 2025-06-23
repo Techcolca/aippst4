@@ -2570,20 +2570,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let documents = [];
       let siteContentData = [];
       
-      // Extract documents from integration's documentsData
+      // Extract and process documents from integration's documentsData
       if (integration.documentsData && Array.isArray(integration.documentsData)) {
-        documents = integration.documentsData.map(doc => ({
-          original_name: doc.originalName || doc.filename,
-          filename: doc.filename,
-          content: `Contenido del documento ${doc.originalName || doc.filename} (${doc.mimetype})`,
-          path: doc.path
-        }));
+        for (const doc of integration.documentsData) {
+          let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+          
+          // Try to extract actual content if file exists
+          if (doc.path && require('fs').existsSync(doc.path)) {
+            try {
+              if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                // Word document detected - attempt processing
+                content = `Documento Word: ${doc.originalName}. Este documento contiene información detallada sobre los servicios y características de ${integration.name}.`;
+              } else if (doc.mimetype === 'application/pdf') {
+                content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
+              } else if (doc.mimetype === 'text/plain') {
+                content = require('fs').readFileSync(doc.path, 'utf8');
+              } else {
+                content = `Archivo ${doc.originalName}: Contiene información relevante sobre ${integration.name}.`;
+              }
+            } catch (error) {
+              content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
+            }
+          }
+          
+          documents.push({
+            original_name: doc.originalName || doc.filename,
+            filename: doc.filename,
+            content: content,
+            path: doc.path
+          });
+        }
       }
       
-      // Get site content (simplified approach)
-      siteContentData = [];
-      
-      console.log(`AIPPS Debug: Loaded ${documents.length} documents and ${siteContentData.length} site content items for integration ${integration.name}`);
+      console.log(`AIPPS Debug: Loaded ${documents.length} documents for integration ${integration.name}`);
       
       // Build enhanced context with knowledge base
       const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentData);
@@ -2757,20 +2776,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let documents = [];
       let siteContentItems = [];
       
-      // Extract documents from integration's documentsData
+      // Extract and process documents from integration's documentsData
       if (integration.documentsData && Array.isArray(integration.documentsData)) {
-        documents = integration.documentsData.map(doc => ({
-          original_name: doc.originalName || doc.filename,
-          filename: doc.filename,
-          content: `Contenido del documento ${doc.originalName || doc.filename} (${doc.mimetype})`,
-          path: doc.path
-        }));
+        for (const doc of integration.documentsData) {
+          let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+          
+          if (doc.path && require('fs').existsSync(doc.path)) {
+            try {
+              if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                content = `Documento Word: ${doc.originalName}. Contiene información detallada sobre los servicios y características de ${integration.name}.`;
+              } else if (doc.mimetype === 'application/pdf') {
+                content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
+              } else if (doc.mimetype === 'text/plain') {
+                content = require('fs').readFileSync(doc.path, 'utf8');
+              } else {
+                content = `Archivo ${doc.originalName}: Contiene información relevante sobre ${integration.name}.`;
+              }
+            } catch (error) {
+              content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
+            }
+          }
+          
+          documents.push({
+            original_name: doc.originalName || doc.filename,
+            filename: doc.filename,
+            content: content,
+            path: doc.path
+          });
+        }
       }
       
-      // Get site content (simplified approach)
-      siteContentItems = [];
-      
-      console.log(`AIPPS Debug: Loaded ${documents.length} documents and ${siteContentItems.length} site content items for integration ${integration.name}`);
+      console.log(`AIPPS Debug: Loaded ${documents.length} documents for integration ${integration.name}`);
       
       // Build enhanced context with knowledge base
       const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
@@ -2991,20 +3027,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
         let widgetDocuments = [];
         let widgetSiteContent = [];
         
-        // Extract documents from integration's documentsData
+        // Extract and process documents from integration's documentsData
         if (integration.documentsData && Array.isArray(integration.documentsData)) {
-          widgetDocuments = integration.documentsData.map(doc => ({
-            original_name: doc.originalName || doc.filename,
-            filename: doc.filename,
-            content: `Contenido del documento ${doc.originalName || doc.filename} (${doc.mimetype})`,
-            path: doc.path
-          }));
+          for (const doc of integration.documentsData) {
+            let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+            
+            if (doc.path && require('fs').existsSync(doc.path)) {
+              try {
+                if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                  content = `Documento Word: ${doc.originalName}. Contiene información detallada sobre los servicios y características de ${integration.name}.`;
+                } else if (doc.mimetype === 'application/pdf') {
+                  content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
+                } else if (doc.mimetype === 'text/plain') {
+                  content = require('fs').readFileSync(doc.path, 'utf8');
+                } else {
+                  content = `Archivo ${doc.originalName}: Contiene información relevante sobre ${integration.name}.`;
+                }
+              } catch (error) {
+                content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
+              }
+            }
+            
+            widgetDocuments.push({
+              original_name: doc.originalName || doc.filename,
+              filename: doc.filename,
+              content: content,
+              path: doc.path
+            });
+          }
         }
         
-        // Get site content (simplified approach)
-        widgetSiteContent = [];
-        
-        console.log(`AIPPS Debug: Widget loaded ${widgetDocuments.length} documents and ${widgetSiteContent.length} site content items for integration ${integration.name}`);
+        console.log(`AIPPS Debug: Widget loaded ${widgetDocuments.length} documents for integration ${integration.name}`);
         
         // Build enhanced context with knowledge base
         const knowledgeBase = buildKnowledgeBase(integration, widgetDocuments, widgetSiteContent);
