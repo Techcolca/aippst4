@@ -3231,13 +3231,35 @@ Contenido: [Error al extraer contenido detallado]
       /* Desktop */
       @media (min-width: 1025px) {
         .aipi-mobile-menu-btn {
-          display: none !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
         }
         
         .aipi-conversations-sidebar {
-          position: relative !important;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          height: 100vh !important;
+          z-index: 1001 !important;
           transform: translateX(0) !important;
           width: 300px !important;
+          box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .aipi-conversations-sidebar.hide {
+          transform: translateX(-100%) !important;
+        }
+        
+        .aipi-chat-main {
+          margin-left: 300px !important;
+          width: calc(100% - 300px) !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .aipi-chat-main.full-width {
+          margin-left: 0 !important;
+          width: 100% !important;
         }
         
         .aipi-sidebar-overlay {
@@ -3972,6 +3994,7 @@ Contenido: [Error al extraer contenido detallado]
         if (chatMain) {
           chatMain.style.width = '100%';
           chatMain.style.flex = '1';
+          chatMain.style.marginLeft = '0';
         }
         
         if (menuBtn) {
@@ -3980,15 +4003,26 @@ Contenido: [Error al extraer contenido detallado]
           menuBtn.style.justifyContent = 'center';
         }
       } else {
-        // Desktop styles
-        sidebar.style.position = 'relative';
+        // Desktop styles - también mostrar botón hamburguesa
+        sidebar.style.position = 'fixed';
+        sidebar.style.top = '0';
+        sidebar.style.left = '0';
+        sidebar.style.height = '100vh';
+        sidebar.style.zIndex = '1001';
         sidebar.style.transform = 'translateX(0)';
         sidebar.style.width = '300px';
-        sidebar.style.zIndex = 'auto';
-        sidebar.style.boxShadow = 'none';
+        sidebar.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.1)';
+        
+        if (chatMain) {
+          chatMain.style.marginLeft = '300px';
+          chatMain.style.width = 'calc(100% - 300px)';
+          chatMain.style.transition = 'all 0.3s ease';
+        }
         
         if (menuBtn) {
-          menuBtn.style.display = 'none';
+          menuBtn.style.display = 'flex';
+          menuBtn.style.alignItems = 'center';
+          menuBtn.style.justifyContent = 'center';
         }
         
         overlay.style.display = 'none';
@@ -3996,31 +4030,61 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
-  // Toggle conversations sidebar for mobile/tablet
+  // Toggle conversations sidebar for all devices
   window.toggleConversationsSidebar = function() {
     console.log('AIPPS Debug: Toggle sidebar clicked');
     const sidebar = document.getElementById('aipi-conversations-sidebar');
     const overlay = document.getElementById('aipi-sidebar-overlay');
+    const chatMain = document.querySelector('.aipi-chat-main');
     
-    if (sidebar && overlay) {
-      const isShowing = sidebar.classList.contains('show');
-      console.log('AIPPS Debug: Sidebar currently showing:', isShowing);
+    if (sidebar) {
+      const isDesktop = window.innerWidth > 1024;
+      let isHidden;
       
-      if (isShowing) {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
-        sidebar.style.transform = 'translateX(-100%)';
-        overlay.style.display = 'none';
-        console.log('AIPPS Debug: Sidebar hidden');
+      if (isDesktop) {
+        isHidden = sidebar.classList.contains('hide');
+        console.log('AIPPS Debug: Desktop sidebar currently hidden:', isHidden);
+        
+        if (isHidden) {
+          sidebar.classList.remove('hide');
+          sidebar.style.transform = 'translateX(0)';
+          if (chatMain) {
+            chatMain.classList.remove('full-width');
+            chatMain.style.marginLeft = '300px';
+            chatMain.style.width = 'calc(100% - 300px)';
+          }
+          console.log('AIPPS Debug: Desktop sidebar shown');
+        } else {
+          sidebar.classList.add('hide');
+          sidebar.style.transform = 'translateX(-100%)';
+          if (chatMain) {
+            chatMain.classList.add('full-width');
+            chatMain.style.marginLeft = '0';
+            chatMain.style.width = '100%';
+          }
+          console.log('AIPPS Debug: Desktop sidebar hidden');
+        }
       } else {
-        sidebar.classList.add('show');
-        overlay.classList.add('show');
-        sidebar.style.transform = 'translateX(0)';
-        overlay.style.display = 'block';
-        console.log('AIPPS Debug: Sidebar shown');
+        // Mobile/tablet behavior
+        const isShowing = sidebar.classList.contains('show');
+        console.log('AIPPS Debug: Mobile sidebar currently showing:', isShowing);
+        
+        if (isShowing) {
+          sidebar.classList.remove('show');
+          if (overlay) overlay.classList.remove('show');
+          sidebar.style.transform = 'translateX(-100%)';
+          if (overlay) overlay.style.display = 'none';
+          console.log('AIPPS Debug: Mobile sidebar hidden');
+        } else {
+          sidebar.classList.add('show');
+          if (overlay) overlay.classList.add('show');
+          sidebar.style.transform = 'translateX(0)';
+          if (overlay) overlay.style.display = 'block';
+          console.log('AIPPS Debug: Mobile sidebar shown');
+        }
       }
     } else {
-      console.log('AIPPS Debug: Sidebar or overlay not found');
+      console.log('AIPPS Debug: Sidebar not found');
     }
   };
   
