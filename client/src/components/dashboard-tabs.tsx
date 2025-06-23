@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { RefreshCw } from "lucide-react";
 import { IntegrationCard } from "./integration-card";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
@@ -285,9 +286,12 @@ export default function DashboardTabs() {
     );
   };
 
-  // Consulta para obtener los formularios
-  const { data: forms, isLoading: isLoadingForms } = useQuery({
+  // Consulta para obtener los formularios con configuración de refresco automático
+  const { data: forms, isLoading: isLoadingForms, refetch: refetchForms } = useQuery({
     queryKey: ["/api/forms"],
+    staleTime: 1000, // Considera los datos obsoletos después de 1 segundo
+    refetchOnWindowFocus: true, // Refresca cuando la ventana recibe el foco
+    refetchInterval: 5000, // Refresca cada 5 segundos
   });
 
   // Mutación para eliminar formularios
@@ -319,7 +323,15 @@ export default function DashboardTabs() {
         <h2 className="text-xl font-semibold mb-4">{t("forms")}</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">{t("forms_description", "Create and manage your forms.")}</p>
         
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-between items-center mb-4">
+          <Button 
+            variant="outline" 
+            onClick={() => refetchForms()}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            {t("refresh", "Refresh")}
+          </Button>
           <Button onClick={() => navigate("/create-form")}>{t("create_form", "Create Form")}</Button>
         </div>
         
