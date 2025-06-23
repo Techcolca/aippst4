@@ -3667,6 +3667,7 @@ Contenido: [Error al extraer contenido detallado]
     const listContainer = document.getElementById('aipi-conversations-list');
     if (listContainer) {
       listContainer.innerHTML = renderConversationsList();
+      console.log('AIPPS Debug: Lista de conversaciones actualizada, conversación activa:', currentConversationId);
     }
   }
 
