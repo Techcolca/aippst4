@@ -9,6 +9,7 @@ import {
   Appointment, InsertAppointment, CalendarToken, InsertCalendarToken
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
+import fs from "fs";
 
 // Interface for storage methods
 export interface IStorage {
@@ -791,10 +792,93 @@ export class MemStorage implements IStorage {
     return newSettings;
   }
 
-  // Site content methods
-  async getSiteContent(integrationId: number): Promise<SiteContent[]> {
-    return Array.from(this.siteContents.values())
+  // Document methods (enhanced to get real documents from documentsData)
+  async getDocuments(integrationId: number): Promise<any[]> {
+    // Get documents from integration's documentsData field
+    const integration = await this.getIntegration(integrationId);
+    if (integration && integration.documentsData && Array.isArray(integration.documentsData)) {
+      // Process each document to extract content
+      const processedDocs = [];
+      
+      for (const doc of integration.documentsData) {
+        let content = doc.content || 'Contenido no disponible';
+        
+        // If no content but we have a file path, try to process it
+        if (!doc.content && doc.path && fs.existsSync(doc.path)) {
+          try {
+            const { enhancedDocumentProcessor } = await import('./lib/document-processor-enhanced');
+            content = await enhancedDocumentProcessor.processDocumentContent(doc.path, doc.mimetype);
+          } catch (error) {
+            console.error('Error processing document content:', error);
+            content = 'Error al procesar el contenido del documento';
+          }
+        }
+        
+        processedDocs.push({
+          id: doc.id,
+          integration_id: integrationId,
+          filename: doc.filename,
+          original_name: doc.originalName || doc.filename,
+          content: content,
+          content_type: doc.mimetype,
+          file_size: doc.size
+        });
+      }
+      
+      return processedDocs;
+    }
+    
+    return [];
+  }
+
+  async createDocument(doc: any): Promise<any> {
+    // Mock implementation - in real system this would insert into documents table
+    return { id: 1, ...doc };
+  }
+
+  async deleteDocument(id: number): Promise<void> {
+    // Mock implementation - in real system this would delete from documents table
+  }
+
+  // Site content methods (personalized for each integration)
+  async getSiteContent(integrationId: number): Promise<any[]> {
+    // Get the integration to check for specific site content
+    const integration = await this.getIntegration(integrationId);
+    if (!integration) {
+      return [];
+    }
+    
+    // Check existing site contents for this integration
+    const existingContent = Array.from(this.siteContents.values())
       .filter(content => content.integrationId === integrationId);
+    
+    if (existingContent.length > 0) {
+      return existingContent.map(content => ({
+        id: content.id,
+        integration_id: content.integrationId,
+        url: content.url,
+        title: content.title,
+        content: content.content,
+        meta_description: content.metaDescription
+      }));
+    }
+    
+    // Only return demo content for AIPPS-specific integrations
+    if (integration.name.toLowerCase().includes('aipps') || integration.apiKey === 'aipps_web_internal') {
+      return [
+        {
+          id: 1,
+          integration_id: integrationId,
+          url: integration.url || 'https://techcolca.com/',
+          title: 'AIPPS - Plataforma de IA',
+          content: 'AIPPS es una plataforma de inteligencia artificial que permite crear chatbots inteligentes para sitios web, generar formularios interactivos personalizados, automatizar procesos de atención al cliente e integrar fácilmente con WordPress y otros CMS. Planes disponibles: Gratuito (100 conversaciones/mes), Profesional (conversaciones ilimitadas), Empresarial (soluciones personalizadas).',
+          meta_description: 'Plataforma de inteligencia artificial AIPPS'
+        }
+      ];
+    }
+    
+    // For other integrations, return empty array to rely on user-uploaded documents
+    return [];
   }
 
   async getSiteContentByUrl(integrationId: number, url: string): Promise<SiteContent | undefined> {
@@ -835,6 +919,16 @@ export class MemStorage implements IStorage {
 
   async deleteSiteContent(id: number): Promise<void> {
     this.siteContents.delete(id);
+  }
+
+  async createSiteContent(content: any): Promise<any> {
+    // Mock implementation - in real system this would insert into site_content table
+    return { id: Date.now(), ...content };
+  }
+
+  async updateSiteContent(integrationId: number, url: string, data: any): Promise<any> {
+    // Mock implementation - in real system this would update site_content table
+    return { integrationId, url, ...data };
   }
   
   // Subscription methods
