@@ -195,6 +195,32 @@
     // Añadir atributo al documento para que el widget de chat lo detecte
     document.documentElement.setAttribute('data-aipps-form-active', 'true');
     console.log('AIPPS Form: Marcando formulario como activo para evitar conflictos con chat');
+    
+    // También ocultar cualquier widget de chat que ya esté visible
+    hideExistingChatWidgets();
+  }
+
+  // Ocultar widgets de chat existentes
+  function hideExistingChatWidgets() {
+    // Lista de selectores para diferentes tipos de widgets de chat
+    const chatWidgetSelectors = [
+      '#aipi-widget-container',
+      '#aipps-widget-container', 
+      '[id*="chat-widget"]',
+      '[class*="chat-widget"]',
+      '[id*="aipi-widget"]',
+      '[class*="aipi-widget"]'
+    ];
+
+    chatWidgetSelectors.forEach(selector => {
+      const widgets = document.querySelectorAll(selector);
+      widgets.forEach(widget => {
+        if (widget && widget.style.display !== 'none') {
+          console.log('AIPPS Form: Ocultando widget de chat existente:', selector);
+          widget.style.display = 'none';
+        }
+      });
+    });
   }
 
   // Cargar el formulario

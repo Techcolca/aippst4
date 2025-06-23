@@ -25,9 +25,47 @@
   // Inicializar widget
   document.addEventListener('DOMContentLoaded', initialize);
   
+  // Detectar si hay formularios AIPPS activos en la página
+  function detectActiveAippsForm() {
+    // Verificar atributo marcador del formulario
+    if (document.documentElement.hasAttribute('data-aipps-form-active')) {
+      console.log('AIPI Widget: Formulario AIPPS activo detectado por atributo');
+      return true;
+    }
+
+    // Buscar contenedores de formularios AIPPS
+    const formContainers = document.querySelectorAll('[id*="aipps-form"], [class*="aipps-form"], [data-aipps-form]');
+    if (formContainers.length > 0) {
+      console.log('AIPI Widget: Contenedor de formulario detectado');
+      return true;
+    }
+
+    // Buscar scripts de formulario activos
+    const formScripts = document.querySelectorAll('script[src*="form-embed.js"]');
+    if (formScripts.length > 0) {
+      console.log('AIPI Widget: Script de formulario detectado');
+      return true;
+    }
+
+    // Buscar elementos del wrapper del formulario moderno
+    const modernFormWrappers = document.querySelectorAll('.aipi-modern-form-wrapper');
+    if (modernFormWrappers.length > 0) {
+      console.log('AIPI Widget: Wrapper de formulario moderno detectado');
+      return true;
+    }
+
+    return false;
+  }
+
   // Función principal de inicialización
   function initialize() {
     console.log('AIPI Widget: Inicializando...');
+    
+    // Verificar si hay formularios activos antes de continuar
+    if (detectActiveAippsForm()) {
+      console.log('AIPI Widget: No se iniciará el widget porque hay un formulario activo');
+      return;
+    }
     
     try {
       // Cargar configuración
@@ -44,6 +82,17 @@
       console.error('AIPI Widget Error:', error);
       alert('Error al inicializar el widget AIPI: ' + error.message);
     }
+    
+    // Verificación periódica para formularios que se cargan dinámicamente
+    setInterval(() => {
+      if (detectActiveAippsForm()) {
+        const existingWidget = document.querySelector('[id*="aipi"], [id*="chat-widget"]');
+        if (existingWidget && existingWidget.style.display !== 'none') {
+          console.log('AIPI Widget: Verificación periódica - ocultando por formulario activo');
+          existingWidget.style.display = 'none';
+        }
+      }
+    }, 3000);
   }
   
   // Cargar configuración desde el script

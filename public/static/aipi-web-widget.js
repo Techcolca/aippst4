@@ -8,8 +8,46 @@
   const API_KEY = "aipi_web_internal";
   const SERVER_URL = window.location.origin;
   
+  // Detectar si hay formularios AIPPS activos en la página
+  function detectActiveAippsForm() {
+    // Verificar atributo marcador del formulario
+    if (document.documentElement.hasAttribute('data-aipps-form-active')) {
+      console.log('AIPI Widget: Formulario AIPPS activo detectado por atributo');
+      return true;
+    }
+
+    // Buscar contenedores de formularios AIPPS
+    const formContainers = document.querySelectorAll('[id*="aipps-form"], [class*="aipps-form"], [data-aipps-form]');
+    if (formContainers.length > 0) {
+      console.log('AIPI Widget: Contenedor de formulario detectado');
+      return true;
+    }
+
+    // Buscar scripts de formulario activos
+    const formScripts = document.querySelectorAll('script[src*="form-embed.js"]');
+    if (formScripts.length > 0) {
+      console.log('AIPI Widget: Script de formulario detectado');
+      return true;
+    }
+
+    // Buscar elementos del wrapper del formulario moderno
+    const modernFormWrappers = document.querySelectorAll('.aipi-modern-form-wrapper');
+    if (modernFormWrappers.length > 0) {
+      console.log('AIPI Widget: Wrapper de formulario moderno detectado');
+      return true;
+    }
+
+    return false;
+  }
+
   function init() {
     console.log("AIPI Widget para sitio web principal: Inicializando...");
+    
+    // Verificar si hay formularios activos antes de continuar
+    if (detectActiveAippsForm()) {
+      console.log('AIPI Widget: No se iniciará el widget porque hay un formulario activo');
+      return;
+    }
     
     loadWidgetConfig()
       .then(() => {

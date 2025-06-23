@@ -8,9 +8,11 @@ Hemos desarrollado un **sistema de detección inteligente** que evita automátic
 
 ### Cómo Funciona
 
-1. **Detección Automática**: El widget de chat detecta si hay formularios AIPPS en la página
+1. **Detección Automática**: Todos los widgets de chat (embed.js, chatgpt-embed.js, aipi-web-widget.js) detectan si hay formularios AIPPS en la página
 2. **Prevención de Conflictos**: Si encuentra un formulario, no se inicia el widget de chat
 3. **Marcadores Inteligentes**: Los formularios marcan automáticamente su presencia
+4. **Ocultación Activa**: Los formularios pueden ocultar widgets de chat que ya estén visibles
+5. **Compatibilidad Universal**: Funciona con todas las versiones de scripts de chat AIPPS
 
 ## 📋 Instrucciones para el Cliente
 
@@ -128,6 +130,14 @@ if (window.location.pathname.includes('/blog/') ||
 2. **Revisa los scripts**: Asegúrate de que ambos scripts estén actualizados
 3. **Limpia la cache**: Del navegador y del sitio web
 4. **Contacta soporte**: Si el problema persiste
+
+### Scripts soportados:
+
+El sistema funciona automáticamente con todos estos scripts de chat:
+- `embed.js` (versión principal)
+- `chatgpt-embed.js` (versión estilo ChatGPT)  
+- `aipi-web-widget.js` (widget interno)
+- Cualquier script personalizado que use los selectores estándar
 
 ### Scripts desactualizados:
 
