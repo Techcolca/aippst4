@@ -2576,7 +2576,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           let content = `Información del archivo: ${doc.originalName || doc.filename}`;
           
           // Try to extract actual content if file exists
-          if (doc.path && require('fs').existsSync(doc.path)) {
+          if (doc.path && fs.existsSync(doc.path)) {
             try {
               if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                 // Word document detected - attempt processing
@@ -2781,7 +2781,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         for (const doc of integration.documentsData) {
           let content = `Información del archivo: ${doc.originalName || doc.filename}`;
           
-          if (doc.path && require('fs').existsSync(doc.path)) {
+          if (doc.path && fs.existsSync(doc.path)) {
             try {
               if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                 content = `Documento Word: ${doc.originalName}. Contiene información detallada sobre los servicios y características de ${integration.name}.`;
