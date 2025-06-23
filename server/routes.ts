@@ -2568,10 +2568,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get documents and site content for knowledge base
       const documents = await storage.getDocuments(integration.id);
-      const siteContent = await storage.getSiteContent(integration.id);
+      const siteContentData = await storage.getSiteContent(integration.id);
       
       // Build enhanced context with knowledge base
-      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContent);
+      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentData);
       const enhancedContext = context + "\n\n" + knowledgeBase;
       
       // Detect language and generate AI response with bot configuration
@@ -2740,10 +2740,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get documents and site content for knowledge base
       const documents = await storage.getDocuments(integration.id);
-      const siteContent = await storage.getSiteContent(integration.id);
+      const siteContentItems = await storage.getSiteContent(integration.id);
       
       // Build enhanced context with knowledge base
-      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContent);
+      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
       const enhancedContext = context + "\n\n" + knowledgeBase;
       
       // Detect language and generate AI response
