@@ -3027,7 +3027,7 @@ Contenido: [Error al extraer contenido detallado]
         <div class="aipi-chat-main">
           <div id="aipi-chat-header">
             <div id="aipi-header-info">
-              <button class="aipi-mobile-menu-btn" id="aipi-mobile-menu-btn" onclick="window.toggleConversationsSidebar()" aria-label="Toggle conversations">
+              <button class="aipi-mobile-menu-btn" id="aipi-mobile-menu-btn" aria-label="Toggle conversations">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="3" y1="6" x2="21" y2="6"></line>
                   <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -3381,6 +3381,32 @@ Contenido: [Error al extraer contenido detallado]
       
       // Initialize sidebar state for responsive design
       initializeSidebarState();
+      
+      // Add event listeners after DOM is created
+      const menuBtn = document.getElementById('aipi-mobile-menu-btn');
+      const overlay = document.getElementById('aipi-sidebar-overlay');
+      
+      if (menuBtn) {
+        menuBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('AIPPS Debug: Menu button clicked via event listener');
+          window.toggleConversationsSidebar();
+        });
+        console.log('AIPPS Debug: Event listener añadido al botón menú');
+      } else {
+        console.error('AIPPS Debug: No se encontró el botón menú');
+      }
+      
+      if (overlay) {
+        overlay.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('AIPPS Debug: Overlay clicked via event listener');
+          window.toggleConversationsSidebar();
+        });
+        console.log('AIPPS Debug: Event listener añadido al overlay');
+      }
       
       // NO TOKEN NEEDED - using bubble system directly
       console.log('AIPPS Debug: Sistema bubble sin autenticación iniciado');
