@@ -3083,6 +3083,7 @@ Contenido: [Error al extraer contenido detallado]
         display: flex;
         flex-direction: column;
         transition: transform 0.3s ease;
+        position: relative;
       }
       
       .aipi-mobile-menu-btn {
@@ -3908,14 +3909,57 @@ Contenido: [Error al extraer contenido detallado]
   function initializeSidebarState() {
     const sidebar = document.getElementById('aipi-conversations-sidebar');
     const overlay = document.getElementById('aipi-sidebar-overlay');
+    const menuBtn = document.getElementById('aipi-mobile-menu-btn');
+    const chatMain = document.querySelector('.aipi-chat-main');
     
     if (sidebar && overlay) {
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+      
       if (isMobileOrTablet()) {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
+        // Force mobile/tablet styles
+        sidebar.style.position = 'fixed';
+        sidebar.style.top = '0';
+        sidebar.style.left = '0';
+        sidebar.style.height = '100vh';
+        sidebar.style.zIndex = '1001';
+        sidebar.style.transform = 'translateX(-100%)';
+        sidebar.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.2)';
+        
+        if (window.innerWidth <= 480) {
+          sidebar.style.width = '90vw';
+          sidebar.style.maxWidth = '320px';
+        } else if (window.innerWidth <= 768) {
+          sidebar.style.width = '70vw';
+          sidebar.style.maxWidth = '350px';
+        } else {
+          sidebar.style.width = '50vw';
+          sidebar.style.maxWidth = '400px';
+        }
+        
+        if (chatMain) {
+          chatMain.style.width = '100%';
+          chatMain.style.flex = '1';
+        }
+        
+        if (menuBtn) {
+          menuBtn.style.display = 'flex';
+          menuBtn.style.alignItems = 'center';
+          menuBtn.style.justifyContent = 'center';
+        }
       } else {
-        sidebar.classList.remove('show');
-        overlay.classList.remove('show');
+        // Desktop styles
+        sidebar.style.position = 'relative';
+        sidebar.style.transform = 'translateX(0)';
+        sidebar.style.width = '300px';
+        sidebar.style.zIndex = 'auto';
+        sidebar.style.boxShadow = 'none';
+        
+        if (menuBtn) {
+          menuBtn.style.display = 'none';
+        }
+        
+        overlay.style.display = 'none';
       }
     }
   }
