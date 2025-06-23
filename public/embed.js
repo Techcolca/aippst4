@@ -3113,7 +3113,7 @@ Contenido: [Error al extraer contenido detallado]
         z-index: 1000;
       }
       
-      /* Mobile responsive styles - Mobile First Approach */
+      /* Mobile responsive styles - Consistent with Desktop Behavior */
       @media (max-width: 480px) {
         .aipi-conversations-sidebar {
           position: fixed !important;
@@ -3122,8 +3122,8 @@ Contenido: [Error al extraer contenido detallado]
           height: 100vh !important;
           z-index: 1001 !important;
           transform: translateX(-100%) !important;
-          width: 90vw !important;
-          max-width: 320px !important;
+          width: 75vw !important;
+          max-width: 280px !important;
           box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
         }
         
@@ -3133,7 +3133,12 @@ Contenido: [Error al extraer contenido detallado]
         
         .aipi-chat-main {
           width: 100% !important;
-          flex: 1 !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .aipi-chat-main.sidebar-open {
+          margin-left: 75vw !important;
+          width: 25vw !important;
         }
         
         .aipi-mobile-menu-btn {
@@ -3142,12 +3147,12 @@ Contenido: [Error al extraer contenido detallado]
           justify-content: center !important;
         }
         
-        .aipi-sidebar-overlay.show {
-          display: block !important;
+        .aipi-sidebar-overlay {
+          display: none !important;
         }
         
         .aipi-sidebar-header {
-          padding: 15px !important;
+          padding: 12px !important;
         }
         
         .aipi-sidebar-header h3 {
@@ -3169,8 +3174,8 @@ Contenido: [Error al extraer contenido detallado]
           height: 100vh !important;
           z-index: 1001 !important;
           transform: translateX(-100%) !important;
-          width: 70vw !important;
-          max-width: 350px !important;
+          width: 60vw !important;
+          max-width: 320px !important;
           box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
         }
         
@@ -3180,7 +3185,12 @@ Contenido: [Error al extraer contenido detallado]
         
         .aipi-chat-main {
           width: 100% !important;
-          flex: 1 !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .aipi-chat-main.sidebar-open {
+          margin-left: 60vw !important;
+          width: 40vw !important;
         }
         
         .aipi-mobile-menu-btn {
@@ -3189,8 +3199,8 @@ Contenido: [Error al extraer contenido detallado]
           justify-content: center !important;
         }
         
-        .aipi-sidebar-overlay.show {
-          display: block !important;
+        .aipi-sidebar-overlay {
+          display: none !important;
         }
       }
       
@@ -3204,7 +3214,7 @@ Contenido: [Error al extraer contenido detallado]
           z-index: 1001 !important;
           transform: translateX(-100%) !important;
           width: 50vw !important;
-          max-width: 400px !important;
+          max-width: 350px !important;
           box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
         }
         
@@ -3214,7 +3224,12 @@ Contenido: [Error al extraer contenido detallado]
         
         .aipi-chat-main {
           width: 100% !important;
-          flex: 1 !important;
+          transition: all 0.3s ease !important;
+        }
+        
+        .aipi-chat-main.sidebar-open {
+          margin-left: 50vw !important;
+          width: 50vw !important;
         }
         
         .aipi-mobile-menu-btn {
@@ -3223,8 +3238,8 @@ Contenido: [Error al extraer contenido detallado]
           justify-content: center !important;
         }
         
-        .aipi-sidebar-overlay.show {
-          display: block !important;
+        .aipi-sidebar-overlay {
+          display: none !important;
         }
       }
       
@@ -3971,7 +3986,7 @@ Contenido: [Error al extraer contenido detallado]
       overlay.classList.remove('show');
       
       if (isMobileOrTablet()) {
-        // Force mobile/tablet styles
+        // Force mobile/tablet styles - consistent with desktop behavior
         sidebar.style.position = 'fixed';
         sidebar.style.top = '0';
         sidebar.style.left = '0';
@@ -3981,26 +3996,31 @@ Contenido: [Error al extraer contenido detallado]
         sidebar.style.boxShadow = '2px 0 15px rgba(0, 0, 0, 0.2)';
         
         if (window.innerWidth <= 480) {
-          sidebar.style.width = '90vw';
-          sidebar.style.maxWidth = '320px';
+          sidebar.style.width = '75vw';
+          sidebar.style.maxWidth = '280px';
         } else if (window.innerWidth <= 768) {
-          sidebar.style.width = '70vw';
-          sidebar.style.maxWidth = '350px';
+          sidebar.style.width = '60vw';
+          sidebar.style.maxWidth = '320px';
         } else {
           sidebar.style.width = '50vw';
-          sidebar.style.maxWidth = '400px';
+          sidebar.style.maxWidth = '350px';
         }
         
         if (chatMain) {
           chatMain.style.width = '100%';
-          chatMain.style.flex = '1';
+          chatMain.style.transition = 'all 0.3s ease';
           chatMain.style.marginLeft = '0';
+          chatMain.classList.remove('sidebar-open');
         }
         
         if (menuBtn) {
           menuBtn.style.display = 'flex';
           menuBtn.style.alignItems = 'center';
           menuBtn.style.justifyContent = 'center';
+        }
+        
+        if (overlay) {
+          overlay.style.display = 'none';
         }
       } else {
         // Desktop styles - también mostrar botón hamburguesa
@@ -4025,7 +4045,9 @@ Contenido: [Error al extraer contenido detallado]
           menuBtn.style.justifyContent = 'center';
         }
         
-        overlay.style.display = 'none';
+        if (overlay) {
+          overlay.style.display = 'none';
+        }
       }
     }
   }
@@ -4065,21 +4087,35 @@ Contenido: [Error al extraer contenido detallado]
           console.log('AIPPS Debug: Desktop sidebar hidden');
         }
       } else {
-        // Mobile/tablet behavior
+        // Mobile/tablet behavior - now consistent with desktop
         const isShowing = sidebar.classList.contains('show');
         console.log('AIPPS Debug: Mobile sidebar currently showing:', isShowing);
         
         if (isShowing) {
           sidebar.classList.remove('show');
-          if (overlay) overlay.classList.remove('show');
           sidebar.style.transform = 'translateX(-100%)';
-          if (overlay) overlay.style.display = 'none';
+          if (chatMain) {
+            chatMain.classList.remove('sidebar-open');
+            chatMain.style.marginLeft = '0';
+            chatMain.style.width = '100%';
+          }
           console.log('AIPPS Debug: Mobile sidebar hidden');
         } else {
           sidebar.classList.add('show');
-          if (overlay) overlay.classList.add('show');
           sidebar.style.transform = 'translateX(0)';
-          if (overlay) overlay.style.display = 'block';
+          if (chatMain) {
+            chatMain.classList.add('sidebar-open');
+            if (window.innerWidth <= 480) {
+              chatMain.style.marginLeft = '75vw';
+              chatMain.style.width = '25vw';
+            } else if (window.innerWidth <= 768) {
+              chatMain.style.marginLeft = '60vw';
+              chatMain.style.width = '40vw';
+            } else {
+              chatMain.style.marginLeft = '50vw';
+              chatMain.style.width = '50vw';
+            }
+          }
           console.log('AIPPS Debug: Mobile sidebar shown');
         }
       }
