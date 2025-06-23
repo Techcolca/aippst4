@@ -3032,14 +3032,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
           for (const doc of integration.documentsData) {
             let content = `Información del archivo: ${doc.originalName || doc.filename}`;
             
-            if (doc.path && require('fs').existsSync(doc.path)) {
+            if (doc.path && fs.existsSync(doc.path)) {
               try {
                 if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
                   content = `Documento Word: ${doc.originalName}. Contiene información detallada sobre los servicios y características de ${integration.name}.`;
                 } else if (doc.mimetype === 'application/pdf') {
                   content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
                 } else if (doc.mimetype === 'text/plain') {
-                  content = require('fs').readFileSync(doc.path, 'utf8');
+                  content = fs.readFileSync(doc.path, 'utf8');
                 } else {
                   content = `Archivo ${doc.originalName}: Contiene información relevante sobre ${integration.name}.`;
                 }
