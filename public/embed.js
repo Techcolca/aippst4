@@ -3486,9 +3486,9 @@ Contenido: [Error al extraer contenido detallado]
 
     return userConversations.map(conv => `
       <div class="aipi-conversation-item ${conv.id === currentConversationId ? 'active' : ''}" 
-           onclick="loadConversation(${conv.id})">
+           onclick="window.loadConversation(${conv.id}); console.log('AIPPS Debug: Clicked conversation ${conv.id}');">
         <div class="aipi-conversation-content">
-          <div class="aipi-conversation-title">${conv.title || 'Nueva conversación'}</div>
+          <div class="aipi-conversation-title">${escapeHTML(conv.title || 'Nueva conversación')}</div>
           <div class="aipi-conversation-preview">${conv.createdAt ? getRelativeTime(conv.createdAt) : 'Iniciada hace poco'}</div>
         </div>
         <button class="aipi-delete-conversation-btn" 
@@ -3586,48 +3586,80 @@ Contenido: [Error al extraer contenido detallado]
 
   window.loadConversation = async function(conversationId) {
     try {
-      currentConversationId = conversationId;
-      console.log('AIPPS Debug: Cargando conversación:', conversationId);
+      console.log('AIPPS Debug: === INICIANDO CARGA DE CONVERSACIÓN ===');
+      console.log('AIPPS Debug: Conversation ID recibido:', conversationId, typeof conversationId);
+      
+      // Set current conversation ID
+      currentConversationId = parseInt(conversationId);
+      console.log('AIPPS Debug: Current conversation ID establecido:', currentConversationId);
       
       // Clear current messages
       const messagesContainer = document.getElementById('aipi-messages-container');
       if (messagesContainer) {
-        messagesContainer.innerHTML = '';
+        messagesContainer.innerHTML = '<div class="aipi-message assistant"><div class="aipi-message-content">Cargando mensajes...</div></div>';
+        console.log('AIPPS Debug: Contenedor de mensajes limpiado y mensaje de carga mostrado');
+      } else {
+        console.error('AIPPS Debug: No se encontró el contenedor de mensajes');
+        return;
       }
       
-      // Load messages for this conversation using dashboard token
-      const token = getAuthToken();
+      // Build API URL
+      const apiUrl = `${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${conversationId}/messages`;
+      console.log('AIPPS Debug: URL de API construida:', apiUrl);
       
-      // Use the correct base URL for API calls
-      const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? `${window.location.protocol}//${window.location.host}` 
-        : config.baseUrl || `${window.location.protocol}//${window.location.host}`;
-      
-      const response = await fetch(`${getApiBaseUrl()}/api/widget/${config.apiKey}/conversation/${conversationId}/messages`, {
+      const response = await fetch(apiUrl, {
         headers: {
           'Content-Type': 'application/json'
         },
       });
 
-      console.log('AIPPS Debug: Load messages response status:', response.status);
+      console.log('AIPPS Debug: Response status:', response.status);
+      console.log('AIPPS Debug: Response headers:', Object.fromEntries(response.headers.entries()));
 
       if (response.ok) {
         const messages = await response.json();
-        console.log('AIPPS Debug: Mensajes cargados:', messages.length);
+        console.log('AIPPS Debug: Mensajes obtenidos de API:', messages.length);
+        console.log('AIPPS Debug: Primer mensaje:', messages[0]);
         
-        // Display messages
-        messages.forEach(message => {
-          addMessage(message.content, message.role === 'user' ? 'user' : 'assistant');
-        });
+        // Clear loading message
+        messagesContainer.innerHTML = '';
+        
+        // Display messages in correct order
+        if (messages.length > 0) {
+          messages.forEach((message, index) => {
+            console.log(`AIPPS Debug: Procesando mensaje ${index + 1}:`, {
+              role: message.role,
+              contentLength: message.content?.length,
+              contentPreview: message.content?.substring(0, 50) + '...'
+            });
+            addMessage(message.content, message.role === 'user' ? 'user' : 'assistant');
+          });
+          
+          // Scroll to bottom
+          setTimeout(scrollToBottom, 100);
+          console.log('AIPPS Debug: Todos los mensajes cargados y scroll aplicado');
+        } else {
+          messagesContainer.innerHTML = '<div class="aipi-message assistant"><div class="aipi-message-content">Esta conversación no tiene mensajes.</div></div>';
+          console.log('AIPPS Debug: No hay mensajes en esta conversación');
+        }
         
         // Update active conversation in sidebar
         updateConversationsList();
+        console.log('AIPPS Debug: Lista de conversaciones actualizada');
+        
       } else {
         const errorText = await response.text();
-        console.error('Error loading messages:', response.status, errorText);
+        console.error('AIPPS Debug: Error HTTP:', response.status, errorText);
+        messagesContainer.innerHTML = '<div class="aipi-message assistant"><div class="aipi-message-content">Error al cargar los mensajes de esta conversación.</div></div>';
       }
+      
+      console.log('AIPPS Debug: === CARGA DE CONVERSACIÓN COMPLETADA ===');
     } catch (error) {
-      console.error('Error loading conversation:', error);
+      console.error('AIPPS Debug: Error en loadConversation:', error);
+      const messagesContainer = document.getElementById('aipi-messages-container');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '<div class="aipi-message assistant"><div class="aipi-message-content">Error de conexión al cargar la conversación.</div></div>';
+      }
     }
   }
 
