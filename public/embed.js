@@ -128,6 +128,17 @@
         if (widget) widget.style.display = 'none';
       }
     }, 1000);
+    
+    // Verificación periódica cada 2 segundos para casos edge
+    setInterval(() => {
+      if (detectActiveAippsForm() && document.getElementById('aipi-widget-container')) {
+        const widget = document.getElementById('aipi-widget-container');
+        if (widget && widget.style.display !== 'none') {
+          console.log('AIPPS Widget: Verificación periódica - ocultando widget por formulario activo');
+          widget.style.display = 'none';
+        }
+      }
+    }, 2000);
 
     window.AIPPS_WIDGET_INITIALIZED = true;
     
