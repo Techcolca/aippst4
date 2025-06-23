@@ -3744,13 +3744,6 @@ Contenido: [Error al extraer contenido detallado]
 
   // Expose functions globally for HTML onclick handlers
   window.showDeleteConfirmation = showDeleteConfirmation;
-  window.loadConversation = async function(conversationId) {
-    await loadConversation(conversationId);
-  };
-  window.createNewConversation = async function() {
-    await createNewConversation();
-  };
-  window.loadConversation = loadConversation;
   window.createNewConversation = createNewConversation;
 
   async function deleteConversation(conversationId) {
