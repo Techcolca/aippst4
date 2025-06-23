@@ -2672,13 +2672,82 @@ Contenido: [Error al extraer contenido detallado]
         display: inline-block;
       }
       
+      /* Responsive Auth Modal */
       @media (max-width: 480px) {
-        .aipi-benefits {
-          grid-template-columns: 1fr;
+        .aipi-auth-modal {
+          width: 95vw !important;
+          max-width: 95vw !important;
+          margin: 10px !important;
         }
         
+        .aipi-auth-header {
+          padding: 15px !important;
+        }
+        
+        .aipi-auth-header h2 {
+          font-size: 16px !important;
+        }
+        
+        .aipi-auth-content {
+          padding: 15px !important;
+        }
+        
+        .aipi-auth-explanation {
+          padding: 15px !important;
+          margin-bottom: 20px !important;
+        }
+        
+        .aipi-auth-explanation h3 {
+          font-size: 18px !important;
+        }
+        
+        .aipi-explanation-text {
+          font-size: 14px !important;
+        }
+        
+        .aipi-benefits {
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }
+        
+        .aipi-benefit-item {
+          font-size: 13px !important;
+        }
+        
+        .aipi-auth-form input {
+          padding: 10px !important;
+          font-size: 16px !important;
+        }
+        
+        .aipi-auth-submit {
+          padding: 12px !important;
+          font-size: 16px !important;
+        }
+      }
+      
+      @media (min-width: 481px) and (max-width: 768px) {
         .aipi-auth-modal {
-          width: 95vw;
+          width: 85vw !important;
+          max-width: 85vw !important;
+        }
+        
+        .aipi-auth-explanation h3 {
+          font-size: 19px !important;
+        }
+        
+        .aipi-explanation-text {
+          font-size: 15px !important;
+        }
+        
+        .aipi-benefits {
+          grid-template-columns: 1fr !important;
+        }
+      }
+      
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .aipi-auth-modal {
+          width: 70vw !important;
+          max-width: 500px !important;
         }
       }
       
@@ -3043,35 +3112,135 @@ Contenido: [Error al extraer contenido detallado]
         z-index: 1000;
       }
       
-      /* Mobile responsive styles */
-      @media (max-width: 768px) {
+      /* Mobile responsive styles - Mobile First Approach */
+      @media (max-width: 480px) {
         .aipi-conversations-sidebar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          height: 100vh;
-          z-index: 1001;
-          transform: translateX(-100%);
-          width: 280px;
-          box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          height: 100vh !important;
+          z-index: 1001 !important;
+          transform: translateX(-100%) !important;
+          width: 90vw !important;
+          max-width: 320px !important;
+          box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
         }
         
         .aipi-conversations-sidebar.show {
-          transform: translateX(0);
+          transform: translateX(0) !important;
         }
         
         .aipi-chat-main {
           width: 100% !important;
+          flex: 1 !important;
         }
         
         .aipi-mobile-menu-btn {
           display: flex !important;
-          align-items: center;
-          justify-content: center;
+          align-items: center !important;
+          justify-content: center !important;
         }
         
         .aipi-sidebar-overlay.show {
-          display: block;
+          display: block !important;
+        }
+        
+        .aipi-sidebar-header {
+          padding: 15px !important;
+        }
+        
+        .aipi-sidebar-header h3 {
+          font-size: 14px !important;
+        }
+        
+        .aipi-new-chat-btn {
+          padding: 4px 8px !important;
+          font-size: 11px !important;
+        }
+      }
+      
+      /* Tablet Portrait */
+      @media (min-width: 481px) and (max-width: 768px) {
+        .aipi-conversations-sidebar {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          height: 100vh !important;
+          z-index: 1001 !important;
+          transform: translateX(-100%) !important;
+          width: 70vw !important;
+          max-width: 350px !important;
+          box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        .aipi-conversations-sidebar.show {
+          transform: translateX(0) !important;
+        }
+        
+        .aipi-chat-main {
+          width: 100% !important;
+          flex: 1 !important;
+        }
+        
+        .aipi-mobile-menu-btn {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        
+        .aipi-sidebar-overlay.show {
+          display: block !important;
+        }
+      }
+      
+      /* Tablet Landscape */
+      @media (min-width: 769px) and (max-width: 1024px) {
+        .aipi-conversations-sidebar {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          height: 100vh !important;
+          z-index: 1001 !important;
+          transform: translateX(-100%) !important;
+          width: 50vw !important;
+          max-width: 400px !important;
+          box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        .aipi-conversations-sidebar.show {
+          transform: translateX(0) !important;
+        }
+        
+        .aipi-chat-main {
+          width: 100% !important;
+          flex: 1 !important;
+        }
+        
+        .aipi-mobile-menu-btn {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        
+        .aipi-sidebar-overlay.show {
+          display: block !important;
+        }
+      }
+      
+      /* Desktop */
+      @media (min-width: 1025px) {
+        .aipi-mobile-menu-btn {
+          display: none !important;
+        }
+        
+        .aipi-conversations-sidebar {
+          position: relative !important;
+          transform: translateX(0) !important;
+          width: 300px !important;
+        }
+        
+        .aipi-sidebar-overlay {
+          display: none !important;
         }
       }
       
@@ -3208,6 +3377,9 @@ Contenido: [Error al extraer contenido detallado]
     // Initialize fullscreen chat with bubble system (no authentication needed)
     setTimeout(async () => {
       console.log('AIPPS Debug: Inicializando chat fullscreen con sistema bubble');
+      
+      // Initialize sidebar state for responsive design
+      initializeSidebarState();
       
       // NO TOKEN NEEDED - using bubble system directly
       console.log('AIPPS Debug: Sistema bubble sin autenticación iniciado');
@@ -3727,7 +3899,28 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
-  // Toggle conversations sidebar for mobile
+  // Check if device is mobile/tablet
+  function isMobileOrTablet() {
+    return window.innerWidth <= 1024;
+  }
+  
+  // Initialize sidebar state based on device type
+  function initializeSidebarState() {
+    const sidebar = document.getElementById('aipi-conversations-sidebar');
+    const overlay = document.getElementById('aipi-sidebar-overlay');
+    
+    if (sidebar && overlay) {
+      if (isMobileOrTablet()) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      } else {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+      }
+    }
+  }
+
+  // Toggle conversations sidebar for mobile/tablet
   window.toggleConversationsSidebar = function() {
     const sidebar = document.getElementById('aipi-conversations-sidebar');
     const overlay = document.getElementById('aipi-sidebar-overlay');
@@ -3744,6 +3937,11 @@ Contenido: [Error al extraer contenido detallado]
       }
     }
   };
+  
+  // Handle window resize
+  window.addEventListener('resize', function() {
+    initializeSidebarState();
+  });
 
   // Global event handlers for fullscreen mode
   window.aipiCloseFullscreen = function() {
