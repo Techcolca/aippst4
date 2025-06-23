@@ -3027,7 +3027,7 @@ Contenido: [Error al extraer contenido detallado]
         <div class="aipi-chat-main">
           <div id="aipi-chat-header">
             <div id="aipi-header-info">
-              <button class="aipi-mobile-menu-btn" id="aipi-mobile-menu-btn" onclick="toggleConversationsSidebar()" aria-label="Toggle conversations">
+              <button class="aipi-mobile-menu-btn" id="aipi-mobile-menu-btn" onclick="window.toggleConversationsSidebar()" aria-label="Toggle conversations">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="3" y1="6" x2="21" y2="6"></line>
                   <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -3648,6 +3648,12 @@ Contenido: [Error al extraer contenido detallado]
 
   // Expose functions globally for HTML onclick handlers
   window.showDeleteConfirmation = showDeleteConfirmation;
+  window.loadConversation = async function(conversationId) {
+    await loadConversation(conversationId);
+  };
+  window.createNewConversation = async function() {
+    await createNewConversation();
+  };
   window.loadConversation = loadConversation;
   window.createNewConversation = createNewConversation;
 
