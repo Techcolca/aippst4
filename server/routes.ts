@@ -2566,9 +2566,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         hasIntegrationBehavior: !!integration.botBehavior
       });
       
-      // Get documents and site content for knowledge base
-      const documents = await storage.getDocuments(integration.id);
-      const siteContentData = await storage.getSiteContent(integration.id);
+      // Get documents and site content for knowledge base  
+      let documents = [];
+      let siteContentData = [];
+      
+      // Extract documents from integration's documentsData
+      if (integration.documentsData && Array.isArray(integration.documentsData)) {
+        documents = integration.documentsData.map(doc => ({
+          original_name: doc.originalName || doc.filename,
+          filename: doc.filename,
+          content: `Contenido del documento ${doc.originalName || doc.filename} (${doc.mimetype})`,
+          path: doc.path
+        }));
+      }
+      
+      // Get site content (simplified approach)
+      siteContentData = [];
+      
+      console.log(`AIPPS Debug: Loaded ${documents.length} documents and ${siteContentData.length} site content items for integration ${integration.name}`);
       
       // Build enhanced context with knowledge base
       const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentData);
@@ -2739,8 +2754,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       // Get documents and site content for knowledge base
-      const documents = await storage.getDocuments(integration.id);
-      const siteContentItems = await storage.getSiteContent(integration.id);
+      let documents = [];
+      let siteContentItems = [];
+      
+      // Extract documents from integration's documentsData
+      if (integration.documentsData && Array.isArray(integration.documentsData)) {
+        documents = integration.documentsData.map(doc => ({
+          original_name: doc.originalName || doc.filename,
+          filename: doc.filename,
+          content: `Contenido del documento ${doc.originalName || doc.filename} (${doc.mimetype})`,
+          path: doc.path
+        }));
+      }
+      
+      // Get site content (simplified approach)
+      siteContentItems = [];
+      
+      console.log(`AIPPS Debug: Loaded ${documents.length} documents and ${siteContentItems.length} site content items for integration ${integration.name}`);
       
       // Build enhanced context with knowledge base
       const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
@@ -2958,8 +2988,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
         
         // Get documents and site content for knowledge base
-        const widgetDocuments = await storage.getDocuments(integration.id);
-        const widgetSiteContent = await storage.getSiteContent(integration.id);
+        let widgetDocuments = [];
+        let widgetSiteContent = [];
+        
+        // Extract documents from integration's documentsData
+        if (integration.documentsData && Array.isArray(integration.documentsData)) {
+          widgetDocuments = integration.documentsData.map(doc => ({
+            original_name: doc.originalName || doc.filename,
+            filename: doc.filename,
+            content: `Contenido del documento ${doc.originalName || doc.filename} (${doc.mimetype})`,
+            path: doc.path
+          }));
+        }
+        
+        // Get site content (simplified approach)
+        widgetSiteContent = [];
+        
+        console.log(`AIPPS Debug: Widget loaded ${widgetDocuments.length} documents and ${widgetSiteContent.length} site content items for integration ${integration.name}`);
         
         // Build enhanced context with knowledge base
         const knowledgeBase = buildKnowledgeBase(integration, widgetDocuments, widgetSiteContent);
