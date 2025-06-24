@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Sparkles, Zap } from "lucide-react";
-import { useNavigate } from "wouter";
+import { useLocation } from "wouter";
 
 interface UpgradePopupProps {
   isOpen: boolean;
@@ -75,7 +75,7 @@ export function UpgradePopup({
   requiredPlanName,
   upgradeMessage
 }: UpgradePopupProps) {
-  const [, navigate] = useNavigate();
+  const [, setLocation] = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
   const PlanIcon = PLAN_ICONS[requiredPlan as keyof typeof PLAN_ICONS] || Crown;
