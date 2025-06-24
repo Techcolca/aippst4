@@ -1584,6 +1584,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ================ Feature Access Routes ================
+  // Verificar acceso a características específicas
+  app.post("/api/features/check-access", authenticateJWT, async (req, res) => {
+    try {
+      const { feature } = req.body;
+      
+      if (!feature) {
+        return res.status(400).json({ message: 'Feature name is required' });
+      }
+
+      // Obtener suscripción del usuario
+      const subscription = await getUserSubscription(req.userId);
+      const userPlan = subscription?.tier || 'basic';
+
+      // Importar funciones de verificación de características
+      const { hasFeatureAccess, getRequiredPlanForFeature, FEATURE_NAMES, PLAN_NAMES } = await import('../../shared/feature-permissions');
+      
+      // Verificar si tiene acceso a la característica
+      const hasAccess = hasFeatureAccess(userPlan, feature);
+
+      if (!hasAccess) {
+        const requiredPlan = getRequiredPlanForFeature(feature);
+        const featureName = FEATURE_NAMES[feature] || feature;
+        const planName = PLAN_NAMES[requiredPlan] || requiredPlan;
+
+        return res.json({
+          hasAccess: false,
+          currentPlan: userPlan,
+          requiredPlan: requiredPlan,
+          requiredPlanName: planName,
+          upgradeMessage: `Para acceder a ${featureName}, necesitas actualizar a ${planName}`,
+          feature: featureName
+        });
+      }
+
+      res.json({
+        hasAccess: true,
+        currentPlan: userPlan,
+        feature: FEATURE_NAMES[feature] || feature
+      });
+    } catch (error) {
+      console.error('Error checking feature access:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   // ================ OpenAI Routes ================
   app.post("/api/openai/completion", async (req, res) => {
     try {
