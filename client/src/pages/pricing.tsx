@@ -192,7 +192,9 @@ export default function PricingPage() {
                           </div>
                         )}
                         <span className="text-3xl font-bold text-green-600 dark:text-green-400">
-                          {plan.price === 0 ? t('pricing.free') : formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
+                          {plan.price === 0 ? t('pricing.free') : 
+                           plan.id.includes('enterprise') ? `Desde ${formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}` :
+                           formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (
                           <span className="text-gray-500 dark:text-gray-400 ml-2">/{t(`pricing.${plan.interval}`)}</span>
@@ -230,7 +232,9 @@ export default function PricingPage() {
                           </>
                         ) : (
                           <>
-                            {plan.discount > 0 ? (
+                            {plan.id.includes('enterprise') ? (
+                              'Habla con Nosotros'
+                            ) : plan.discount > 0 ? (
                               plan.isAnnual ? 'Aprovechar Oferta Anual' : 'Aprovechar Oferta'
                             ) : (
                               plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')
@@ -241,7 +245,10 @@ export default function PricingPage() {
                       </Button>
                       {plan.campaignInfo && plan.campaignInfo.promotionalMonths < 12 && !plan.isAnnual && (
                         <p className="text-xs text-gray-500 mt-2 text-center">
-                          Precio promocional por {plan.campaignInfo.promotionalMonths} meses
+                          {plan.id.includes('enterprise') ? 
+                            `Descuento del ${plan.discount}% por ${plan.campaignInfo.promotionalMonths} meses` :
+                            `Precio promocional por ${plan.campaignInfo.promotionalMonths} meses`
+                          }
                         </p>
                       )}
                     </CardFooter>

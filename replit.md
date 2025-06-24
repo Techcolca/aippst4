@@ -104,17 +104,17 @@ AIPI is an advanced conversational AI platform designed to integrate intelligent
 ## Recent Changes
 
 June 24, 2025:
-- ✓ Implemented plan-based feature restriction system
-- ✓ Created 4 pricing plans according to document specifications:
-  - Básico ($7 USD/mes): 500 conversations, 1 form, bubble widget only, 1 website
-  - Startup ($29 USD/mes): 2000 conversations, 5 forms, bubble + fullscreen widget, 3 websites
-  - Profesional ($89 USD/mes): 10000 conversations, unlimited forms, unlimited websites, basic automations, CRM integrations
-  - Empresarial ($299 USD/mes): Unlimited everything + AI automations
-- ✓ Implemented feature access verification system with popup upgrades
-- ✓ Added middleware for soft and hard feature restrictions
-- ✓ Created React components for feature-restricted buttons and guards
-- ✓ Updated dashboard with plan-based access controls
-- ✓ All users can see all buttons and sections but get upgrade prompts for restricted features
+- ✓ Implemented complete marketing campaign system with promotional pricing
+- ✓ Created database-driven promotional campaigns with discount management
+- ✓ Updated pricing page to show strikethrough prices and promotional discounts
+- ✓ Implemented rotating promotional messages on homepage
+- ✓ Applied specific discounts per marketing plan:
+  - Básico: 10% anual
+  - Startup: 35% mensual (5 meses), 40% anual
+  - Profesional: 40% mensual (5 meses), 45% anual
+  - Empresarial: 30% mensual (3 meses), "Desde $299", botón "Habla con Nosotros"
+- ✓ Added urgency messaging with subscriber counters (500 limit)
+- ✓ Plan-based feature restriction system with soft restrictions and upgrade popups
 
 Changelog:
 - June 23, 2025. Initial setup
