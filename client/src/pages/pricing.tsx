@@ -31,11 +31,11 @@ type PricingPlan = {
 };
 
 const formatCurrency = (amount: number, currency: string) => {
-  return new Intl.NumberFormat('en-CA', { 
+  return new Intl.NumberFormat('en-US', { 
     style: 'currency', 
     currency: currency.toUpperCase(),
     minimumFractionDigits: 0
-  }).format(amount);
+  }).format(amount / 100); // Convertir centavos a dólares
 };
 
 export default function PricingPage() {
