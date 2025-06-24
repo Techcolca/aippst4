@@ -187,11 +187,11 @@ export default function PricingPage() {
                               {formatCurrency(plan.originalPrice, plan.currency)}
                             </span>
                             <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-medium">
-                              -{plan.discount}%
+                              -{plan.discount}% OFF
                             </span>
                           </div>
                         )}
-                        <span className="text-3xl font-bold">
+                        <span className="text-3xl font-bold text-green-600 dark:text-green-400">
                           {plan.price === 0 ? t('pricing.free') : formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (

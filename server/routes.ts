@@ -1737,26 +1737,131 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // No necesitamos inicializar los productos de Stripe aquí
   // Los productos se crean según sea necesario cuando alguien intenta suscribirse
   
-  // Obtener los planes disponibles
+  // Obtener los planes disponibles con promociones activas
   app.get("/api/pricing/plans", async (req, res) => {
     try {
+      // Obtener campaña activa
+      const campaignResult = await pool.query(`
+        SELECT * FROM marketing_campaigns 
+        WHERE is_active = true 
+        AND start_date <= NOW() 
+        AND (end_date IS NULL OR end_date >= NOW())
+        AND current_subscribers < max_subscribers
+        LIMIT 1
+      `);
+      
+      const activeCampaign = campaignResult.rows[0];
+      
       // Obtener los planes de precios de la base de datos
       const pricingPlans = await storage.getAvailablePricingPlans();
       
-      // Transformar los planes para que coincidan con el formato que espera el frontend
-      const products = pricingPlans.map(plan => ({
-        id: plan.planId.toLowerCase(),
-        name: plan.name,
-        description: plan.description,
-        price: plan.price,
-        currency: plan.currency || "cad",
-        interval: plan.interval,
-        features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
-        tier: plan.tier,
-        interactionsLimit: plan.interactionsLimit,
-        isAnnual: plan.isAnnual,
-        discount: plan.discount
-      }));
+      let products = [];
+      
+      // Si hay campaña activa, aplicar descuentos
+      if (activeCampaign) {
+        const discountsResult = await pool.query(`
+          SELECT * FROM campaign_discounts 
+          WHERE campaign_id = $1
+        `, [activeCampaign.id]);
+        
+        const discounts = discountsResult.rows;
+        
+        products = pricingPlans.flatMap(plan => {
+          const discount = discounts.find(d => d.plan_id === plan.planId.toLowerCase());
+          const planVariants = [];
+          
+          // Plan mensual
+          const monthlyPlan = {
+            id: plan.planId.toLowerCase(),
+            name: plan.name,
+            description: plan.description,
+            price: plan.price,
+            currency: plan.currency || "usd",
+            interval: plan.interval,
+            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            tier: plan.tier,
+            interactionsLimit: plan.interactionsLimit,
+            isAnnual: false,
+            discount: discount ? discount.monthly_discount_percent : 0,
+            originalPrice: plan.price,
+            promotionalPrice: discount && discount.monthly_discount_percent > 0 
+              ? Math.round(plan.price * (1 - discount.monthly_discount_percent / 100))
+              : plan.price,
+            campaignInfo: activeCampaign ? {
+              name: activeCampaign.name,
+              remainingSpots: activeCampaign.max_subscribers - activeCampaign.current_subscribers,
+              maxSubscribers: activeCampaign.max_subscribers,
+              promotionalMonths: discount ? discount.promotional_months : 0
+            } : null
+          };
+          
+          planVariants.push(monthlyPlan);
+          
+          // Plan anual
+          const annualDiscount = discount ? discount.annual_discount_percent : 0;
+          const annualPrice = plan.price * 12;
+          const annualPlan = {
+            id: plan.planId.toLowerCase() + '_annual',
+            name: plan.name,
+            description: plan.description,
+            price: annualDiscount > 0 
+              ? Math.round(annualPrice * (1 - annualDiscount / 100))
+              : Math.round(annualPrice * 0.85), // 15% descuento estándar anual
+            currency: plan.currency || "usd",
+            interval: 'year',
+            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            tier: plan.tier,
+            interactionsLimit: plan.interactionsLimit,
+            originalPrice: annualPrice,
+            promotionalPrice: annualDiscount > 0 
+              ? Math.round(annualPrice * (1 - annualDiscount / 100))
+              : Math.round(annualPrice * 0.85),
+            isAnnual: true,
+            discount: annualDiscount > 0 ? annualDiscount : 15,
+            campaignInfo: activeCampaign ? {
+              name: activeCampaign.name,
+              remainingSpots: activeCampaign.max_subscribers - activeCampaign.current_subscribers,
+              maxSubscribers: activeCampaign.max_subscribers,
+              promotionalMonths: 12
+            } : null
+          };
+          
+          planVariants.push(annualPlan);
+          
+          return planVariants;
+        });
+      } else {
+        // Sin campaña activa, transformar planes normalmente
+        products = pricingPlans.flatMap(plan => [
+          {
+            id: plan.planId.toLowerCase(),
+            name: plan.name,
+            description: plan.description,
+            price: plan.price,
+            currency: plan.currency || "usd",
+            interval: plan.interval,
+            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            tier: plan.tier,
+            interactionsLimit: plan.interactionsLimit,
+            isAnnual: false,
+            discount: 0
+          },
+          {
+            id: plan.planId.toLowerCase() + '_annual',
+            name: plan.name,
+            description: plan.description,
+            price: Math.round(plan.price * 12 * 0.85), // 15% descuento anual estándar
+            currency: plan.currency || "usd",
+            interval: 'year',
+            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            tier: plan.tier,
+            interactionsLimit: plan.interactionsLimit,
+            originalPrice: plan.price * 12,
+            isAnnual: true,
+            discount: 15
+          }
+        ]);
+      }
       
       // Si no hay planes en la base de datos, utilizamos los planes predefinidos
       if (products.length === 0) {
