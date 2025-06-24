@@ -22,6 +22,8 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { Trash2, Edit3, Trash } from "lucide-react";
+import { FeatureRestrictedButton } from "./feature-restricted-button";
+import { FeatureGuard } from "./feature-guard";
 
 // Definición de tipos
 interface Integration {
@@ -60,9 +62,12 @@ export default function DashboardTabs() {
               {t("integrations_description", "Create and manage website integrations for AIPI.")}
             </p>
           </div>
-          <Button onClick={() => navigate("/create-integration")}>
+          <FeatureRestrictedButton 
+            feature="maxWebsites"
+            onAccessGranted={() => navigate("/create-integration")}
+          >
             {t("create_integration", "Create Integration")}
-          </Button>
+          </FeatureRestrictedButton>
         </div>
 
         {isLoadingIntegrations ? (
@@ -82,9 +87,14 @@ export default function DashboardTabs() {
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 {t("add_new_integration_desc", "Add a new website integration to connect AIPI with your site")}
               </p>
-              <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/create-integration")}>
+              <FeatureRestrictedButton 
+                feature="maxWebsites"
+                onAccessGranted={() => navigate("/create-integration")}
+                variant="default" 
+                className="w-full sm:w-auto px-8"
+              >
                 {t("create_integration", "Create Integration")}
-              </Button>
+              </FeatureRestrictedButton>
             </Card>
           </>
         )}
@@ -332,7 +342,12 @@ export default function DashboardTabs() {
             <RefreshCw className="h-4 w-4" />
             {t("refresh", "Refresh")}
           </Button>
-          <Button onClick={() => navigate("/create-form")}>{t("create_form", "Create Form")}</Button>
+          <FeatureRestrictedButton 
+            feature="maxForms"
+            onAccessGranted={() => navigate("/create-form")}
+          >
+            {t("create_form", "Create Form")}
+          </FeatureRestrictedButton>
         </div>
         
         {isLoadingForms ? (
@@ -418,9 +433,14 @@ export default function DashboardTabs() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {t("forms_empty_message", "Create a new form to collect information from your visitors")}
             </p>
-            <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/create-form")}>
+            <FeatureRestrictedButton 
+              feature="maxForms"
+              onAccessGranted={() => navigate("/create-form")}
+              variant="default" 
+              className="w-full sm:w-auto px-8"
+            >
               {t("create_form", "Create Form")}
-            </Button>
+            </FeatureRestrictedButton>
           </Card>
         )}
       </div>
@@ -440,7 +460,12 @@ export default function DashboardTabs() {
         <p className="text-gray-600 dark:text-gray-400 mb-6">{t("task_automation_description", "Set up automated tasks and workflows powered by AI.")}</p>
         
         <div className="flex justify-end mb-4">
-          <Button onClick={() => navigate("/automations/create")}>{t("create_automation", "Create Automation")}</Button>
+          <FeatureRestrictedButton 
+            feature="basicAutomations"
+            onAccessGranted={() => navigate("/automations/create")}
+          >
+            {t("create_automation", "Create Automation")}
+          </FeatureRestrictedButton>
         </div>
         
         {isLoadingAutomations ? (
@@ -490,9 +515,14 @@ export default function DashboardTabs() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               {t("automations_empty_message", "Create your first automation to streamline repetitive tasks with AI")}
             </p>
-            <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/automations/create")}>
+            <FeatureRestrictedButton 
+              feature="basicAutomations"
+              onAccessGranted={() => navigate("/automations/create")}
+              variant="default" 
+              className="w-full sm:w-auto px-8"
+            >
               {t("create_automation", "Create Automation")}
-            </Button>
+            </FeatureRestrictedButton>
           </Card>
         )}
       </div>

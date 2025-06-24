@@ -833,7 +833,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // ================ Automation Routes ================
-  app.get("/api/automations", verifyToken, async (req, res) => {
+  app.get("/api/automations", authenticateJWT, softFeatureCheck('basicAutomations'), async (req, res) => {
     try {
       const automations = await storage.getAutomations(req.userId);
       res.json(automations);
@@ -843,7 +843,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/automations", verifyToken, async (req, res) => {
+  app.post("/api/automations", authenticateJWT, requireFeatureAccess('basicAutomations'), async (req, res) => {
     try {
       const validatedData = z.object({
         name: z.string(),
@@ -875,7 +875,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/integrations", verifyToken, upload.array('documents'), async (req, res) => {
+  app.post("/api/integrations", authenticateJWT, softFeatureCheck('maxWebsites'), upload.array('documents'), async (req, res) => {
     try {
       console.log("Create integration request body:", req.body);
       // User authenticated successfully
@@ -4437,7 +4437,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Forms API endpoints
-  app.get("/api/forms", authenticateJWT, async (req, res) => {
+  app.get("/api/forms", authenticateJWT, softFeatureCheck('maxForms'), async (req, res) => {
     try {
       const userId = req.user!.id;
       const forms = await storage.getForms(userId);
@@ -4735,7 +4735,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return structure;
   };
 
-  app.post("/api/forms", authenticateJWT, async (req, res) => {
+  app.post("/api/forms", authenticateJWT, softFeatureCheck('maxForms'), async (req, res) => {
     try {
       const userId = req.user!.id;
       const { templateId, language = 'es', ...formData } = req.body;
