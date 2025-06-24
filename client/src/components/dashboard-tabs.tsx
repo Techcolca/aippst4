@@ -40,7 +40,7 @@ interface Integration {
 }
 
 export default function DashboardTabs() {
-  const [, navigate] = useLocation();
+  const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState("integrations");
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -64,7 +64,7 @@ export default function DashboardTabs() {
           </div>
           <FeatureRestrictedButton 
             feature="maxWebsites"
-            onAccessGranted={() => navigate("/create-integration")}
+            onAccessGranted={() => setLocation("/create-integration")}
           >
             {t("create_integration", "Create Integration")}
           </FeatureRestrictedButton>
@@ -89,7 +89,7 @@ export default function DashboardTabs() {
               </p>
               <FeatureRestrictedButton 
                 feature="maxWebsites"
-                onAccessGranted={() => navigate("/create-integration")}
+                onAccessGranted={() => setLocation("/create-integration")}
                 variant="default" 
                 className="w-full sm:w-auto px-8"
               >
@@ -212,7 +212,7 @@ export default function DashboardTabs() {
               </div>
               
               <div className="flex justify-end">
-                <Button onClick={() => navigate("/settings/edit")}>
+                <Button onClick={() => setLocation("/settings/edit")}>
                   Edit Settings
                 </Button>
               </div>
@@ -224,7 +224,7 @@ export default function DashboardTabs() {
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Create your assistant settings to customize your AIPI experience
             </p>
-            <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => navigate("/settings/edit")}>
+            <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => setLocation("/settings/edit")}>
               Configure Settings
             </Button>
           </Card>
@@ -344,7 +344,7 @@ export default function DashboardTabs() {
           </Button>
           <FeatureRestrictedButton 
             feature="maxForms"
-            onAccessGranted={() => navigate("/create-form")}
+            onAccessGranted={() => setLocation("/create-form")}
           >
             {t("create_form", "Create Form")}
           </FeatureRestrictedButton>
@@ -378,7 +378,7 @@ export default function DashboardTabs() {
                     variant="outline"
                     size="sm"
                     className="flex-1"
-                    onClick={() => navigate(`/forms/${form.id}/edit`)}
+                    onClick={() => setLocation(`/forms/${form.id}/edit`)}
                   >
                     <Edit3 className="h-4 w-4 mr-1" />
                     {t("edit", "Edit")}
@@ -388,7 +388,7 @@ export default function DashboardTabs() {
                     variant="outline"
                     size="sm"
                     className="flex-1"
-                    onClick={() => navigate(`/forms/${form.id}/responses`)}
+                    onClick={() => setLocation(`/forms/${form.id}/responses`)}
                   >
                     {t("responses", "Responses")}
                   </Button>
@@ -435,7 +435,7 @@ export default function DashboardTabs() {
             </p>
             <FeatureRestrictedButton 
               feature="maxForms"
-              onAccessGranted={() => navigate("/create-form")}
+              onAccessGranted={() => setLocation("/create-form")}
               variant="default" 
               className="w-full sm:w-auto px-8"
             >
@@ -462,7 +462,7 @@ export default function DashboardTabs() {
         <div className="flex justify-end mb-4">
           <FeatureRestrictedButton 
             feature="basicAutomations"
-            onAccessGranted={() => navigate("/automations/create")}
+            onAccessGranted={() => setLocation("/automations/create")}
           >
             {t("create_automation", "Create Automation")}
           </FeatureRestrictedButton>
@@ -517,7 +517,7 @@ export default function DashboardTabs() {
             </p>
             <FeatureRestrictedButton 
               feature="basicAutomations"
-              onAccessGranted={() => navigate("/automations/create")}
+              onAccessGranted={() => setLocation("/automations/create")}
               variant="default" 
               className="w-full sm:w-auto px-8"
             >
