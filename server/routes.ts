@@ -1584,6 +1584,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ================ Marketing Routes ================
+  // Endpoint para obtener mensajes promocionales rotativos
+  app.get("/api/marketing/promotional-messages", async (req, res) => {
+    try {
+      const result = await pool.query(`
+        SELECT pm.message_text, pm.message_type, pm.display_order
+        FROM promotional_messages pm
+        JOIN marketing_campaigns mc ON pm.campaign_id = mc.id
+        WHERE mc.is_active = true 
+        AND mc.start_date <= NOW() 
+        AND (mc.end_date IS NULL OR mc.end_date >= NOW())
+        AND mc.current_subscribers < mc.max_subscribers
+        AND pm.is_active = true
+        ORDER BY pm.display_order ASC
+      `);
+      
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Error getting promotional messages:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Endpoint para obtener información de campaña activa
+  app.get("/api/marketing/active-campaign", async (req, res) => {
+    try {
+      const result = await pool.query(`
+        SELECT 
+          name,
+          description,
+          max_subscribers,
+          current_subscribers,
+          (max_subscribers - current_subscribers) as remaining_spots,
+          end_date
+        FROM marketing_campaigns 
+        WHERE is_active = true 
+        AND start_date <= NOW() 
+        AND (end_date IS NULL OR end_date >= NOW())
+        AND current_subscribers < max_subscribers
+        LIMIT 1
+      `);
+      
+      if (result.rows.length > 0) {
+        res.json(result.rows[0]);
+      } else {
+        res.json(null);
+      }
+    } catch (error) {
+      console.error("Error getting active campaign:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // ================ Feature Access Routes ================
   // Verificar acceso a características específicas
   app.post("/api/features/check-access", authenticateJWT, async (req, res) => {

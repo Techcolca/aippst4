@@ -23,6 +23,7 @@ import { useAuth } from "@/context/auth-context";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ChatInterface from "@/components/chat-interface";
+import { RotatingWelcomeMessage } from "@/components/RotatingWelcomeMessage";
 import { Bot, Code, BarChart3, Rocket, CopyIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -74,9 +75,7 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
                   {t("welcome")}
                 </h1>
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8">
-                  {t("tagline")}
-                </p>
+                <RotatingWelcomeMessage className="text-lg text-gray-700 dark:text-gray-300 mb-8" />
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button size="lg" className="bg-indigo-500 hover:bg-indigo-600 text-white dark:bg-indigo-600 dark:hover:bg-indigo-700 border-0" asChild>
                     <Link href="/get-started">{t("getStarted")}</Link>

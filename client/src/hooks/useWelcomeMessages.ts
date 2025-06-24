@@ -13,16 +13,36 @@ export function useWelcomeMessages() {
   const [currentMessage, setCurrentMessage] = useState<string>('');
   const { i18n } = useTranslation();
 
-  // Cargar mensajes desde la API con el idioma actual
-  const { data: messages, isLoading, error } = useQuery({
+  // Cargar mensajes promocionales desde la API
+  const { data: promotionalMessages, isLoading: isLoadingPromo, error: promoError } = useQuery({
+    queryKey: ['/api/marketing/promotional-messages'],
+    queryFn: () => 
+      fetch('/api/marketing/promotional-messages')
+        .then(res => res.json()),
+    staleTime: 1000 * 60 * 2, // 2 minutos
+    cacheTime: 1000 * 60 * 5, // 5 minutos
+    retry: 2
+  });
+
+  // Cargar mensajes de bienvenida tradicionales como respaldo
+  const { data: welcomeMessages, isLoading: isLoadingWelcome, error: welcomeError } = useQuery({
     queryKey: ['/api/welcome-messages', i18n.language],
     queryFn: () => 
       fetch(`/api/welcome-messages?lang=${i18n.language}`)
         .then(res => res.json()),
     staleTime: 1000 * 60 * 5, // 5 minutos
     cacheTime: 1000 * 60 * 10, // 10 minutos
-    retry: 2
+    retry: 2,
+    enabled: !promotionalMessages || promotionalMessages.length === 0
   });
+
+  // Priorizar mensajes promocionales sobre mensajes de bienvenida regulares
+  const messages = promotionalMessages && promotionalMessages.length > 0 
+    ? promotionalMessages.map(msg => ({ message_text: msg.message_text, message_type: msg.message_type, order_index: msg.display_order }))
+    : welcomeMessages;
+  
+  const isLoading = isLoadingPromo || isLoadingWelcome;
+  const error = promoError || welcomeError;
 
   // Mensaje de fallback según el idioma
   const getFallbackMessage = (language: string) => {

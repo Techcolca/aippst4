@@ -1,0 +1,64 @@
+PLAN DE MARKETING PARA EL PRIMER AÑO - AIPI
+Estrategia de Lanzamiento con Descuentos Limitados (Versión Revisada)
+
+📊 ESTRUCTURA DE DESCUENTOS PROMOCIONALES
+PLAN BÁSICO ($7/mes)
+Hacer el 10% sobre el plan anual
+Sin descuentos adicionales (precio ya muy competitivo)
+Conversión objetivo: 65% de trials a suscripción paga
+PLAN PROFESIONAL ($29/mes)
+Promoción de Lanzamiento:
+Descuento mensual: 35% OFF ($18.85/mes)
+Descuento anual: 40% OFF ($17.40/mes - $209/año)
+Precio regular anual: $29 × 12 = $348
+Precio promocional anual: $209 (ahorro de $139)
+PLAN EMPRESARIAL ($89/mes)
+Promoción de Lanzamiento:
+Descuento mensual: 40% OFF ($53.40/mes)
+Descuento anual: 40% OFF ($53.40/mes - $641/año)
+Precio regular anual: $89 × 12 = $1,068
+Precio promocional anual: $641 (ahorro de $427)
+
+⏰ DURACIÓN DE PROMOCIONES
+Límites de Tiempo:
+Pago mensual: 3 meses a precio promocional, luego precio regular
+Pago anual: Todo el año a precio promocional
+Disponibilidad: Limitado a los primeros 500 suscriptores
+Cronograma de Lanzamiento:
+Mes 1-2: Promoción completa activa
+Mes 3: Última oportunidad (urgencia)
+Mes 4+: Precios regulares con descuentos anuales estándar (15%)
+
+💰 ANÁLISIS FINANCIERO DETALLADO DE PROMOCIONES
+Plan Profesional con Descuento:
+PAGO MENSUAL (3 meses promocionales):
+Precio promocional: $18.85/mes
+Costos operativos: $6.40/mes
+Ganancia promocional: $12.45/mes (66% margen)
+Ganancia 3 meses: $37.35
+Precio regular meses 4-12: $29/mes × 9 = $261
+Ganancia regular: $22.60/mes × 9 = $203.40
+Ganancia total año 1: $240.75
+Pérdida vs precio regular: $30.45 por cliente
+PAGO ANUAL:
+Precio promocional: $209/año
+Costos operativos: $6.40/mes × 12 = $76.80
+Ganancia promocional: $132.20 (63% margen)
+Pérdida vs precio regular: $139.00 por cliente
+Ganancia vs precio regular anual: $271.20
+Plan Empresarial con Descuento:
+PAGO MENSUAL (3 meses promocionales):
+Precio promocional: $53.40/mes
+Costos operativos: $24.50/mes
+Ganancia promocional: $28.90/mes (54% margen)
+Ganancia 3 meses: $86.70
+Precio regular meses 4-12: $89/mes × 9 = $801
+Ganancia regular: $64.50/mes × 9 = $580.50
+Ganancia total año 1: $667.20
+Pérdida vs precio regular: $106.80 por cliente
+PAGO ANUAL:
+Precio promocional: $641/año
+Costos operativos: $24.50/mes × 12 = $294
+Ganancia promocional: $347.00 (54% margen)
+Pérdida vs precio regular: $427.00 por cliente
+Ganancia vs precio regular anual: $774.00

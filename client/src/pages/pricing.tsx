@@ -181,11 +181,26 @@ export default function PricingPage() {
                       <CardTitle className="text-xl">{t(`pricing.plan_${plan.id}.name`, plan.name)}</CardTitle>
                       <CardDescription>{t(`pricing.plan_${plan.id}.description`, plan.description)}</CardDescription>
                       <div className="mt-4">
+                        {plan.discount > 0 && plan.originalPrice && (
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-lg text-gray-500 dark:text-gray-400 line-through">
+                              {formatCurrency(plan.originalPrice, plan.currency)}
+                            </span>
+                            <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm font-medium">
+                              -{plan.discount}%
+                            </span>
+                          </div>
+                        )}
                         <span className="text-3xl font-bold">
-                          {plan.price === 0 ? t('pricing.free') : formatCurrency(plan.price, plan.currency)}
+                          {plan.price === 0 ? t('pricing.free') : formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (
                           <span className="text-gray-500 dark:text-gray-400 ml-2">/{t(`pricing.${plan.interval}`)}</span>
+                        )}
+                        {plan.campaignInfo && (
+                          <div className="mt-2 text-sm text-orange-600 dark:text-orange-400 font-medium">
+                            ⚡ Solo quedan {plan.campaignInfo.remainingSpots} lugares de {plan.campaignInfo.maxSubscribers}
+                          </div>
                         )}
                       </div>
                     </CardHeader>
@@ -203,7 +218,7 @@ export default function PricingPage() {
                     </CardContent>
                     <CardFooter>
                       <Button 
-                        className="w-full" 
+                        className={`w-full ${plan.discount > 0 ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white' : ''}`}
                         variant={plan.id === recommendedPlanId ? "default" : "outline"}
                         disabled={!!checkoutInProgress}
                         onClick={() => handleSubscribe(plan.id)}
@@ -215,11 +230,20 @@ export default function PricingPage() {
                           </>
                         ) : (
                           <>
-                            {plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')}
+                            {plan.discount > 0 ? (
+                              plan.isAnnual ? 'Aprovechar Oferta Anual' : 'Aprovechar Oferta'
+                            ) : (
+                              plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')
+                            )}
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
                         )}
                       </Button>
+                      {plan.campaignInfo && plan.campaignInfo.promotionalMonths < 12 && !plan.isAnnual && (
+                        <p className="text-xs text-gray-500 mt-2 text-center">
+                          Precio promocional por {plan.campaignInfo.promotionalMonths} meses
+                        </p>
+                      )}
                     </CardFooter>
                   </Card>
                 ))}
@@ -230,6 +254,21 @@ export default function PricingPage() {
               <p className="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
                 {t('pricing.pricing_note')}
               </p>
+              {/* Mostrar información de campaña activa si existe */}
+              {plans.some(plan => plan.campaignInfo) && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 rounded-lg border border-orange-200 dark:border-orange-800">
+                  <h3 className="text-lg font-semibold text-orange-800 dark:text-orange-200 mb-2">
+                    🚀 Oferta de Lanzamiento Limitada
+                  </h3>
+                  <p className="text-orange-700 dark:text-orange-300">
+                    Solo quedan <strong>{plans.find(p => p.campaignInfo)?.campaignInfo.remainingSpots}</strong> lugares 
+                    de <strong>{plans.find(p => p.campaignInfo)?.campaignInfo.maxSubscribers}</strong> en esta promoción especial.
+                  </p>
+                  <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
+                    ⏰ Aprovecha estos precios únicos antes de que vuelvan a los precios regulares.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </section>
