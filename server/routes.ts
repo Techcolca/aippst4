@@ -4707,7 +4707,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Forms API endpoints
-  app.get("/api/forms", authenticateJWT, softFeatureCheck('maxForms'), async (req, res) => {
+  app.get("/api/forms", authenticateJWT, async (req, res) => {
     try {
       const userId = req.user!.id;
       const forms = await storage.getForms(userId);

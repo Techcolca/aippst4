@@ -324,7 +324,7 @@ export async function extractKeyInformation(text: string, query: string): Promis
       messages: [{ role: "user", content: prompt }],
     });
 
-    return response.choices[0].message.content;
+    return response.choices[0].message.content || "";
   } catch (error: unknown) {
     console.error("Failed to extract key information:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -379,7 +379,7 @@ export async function generateAutomatedResponse(
       ],
     });
 
-    return response.choices[0].message.content;
+    return response.choices[0].message.content || "";
   } catch (error: unknown) {
     console.error("Failed to generate automated response:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
