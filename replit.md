@@ -110,6 +110,13 @@ June 25, 2025:
 - ✓ Fixed React Query implementation for promotional messages API
 - ✓ Ensured 7 promotional messages rotate every 7 seconds as designed
 - ✓ Messages now properly display below "Bienvenidos a AiPPS" title with full rotation
+- ✓ Added complete multilingual support for promotional messages (Spanish, French, English)
+- ✓ Updated database schema to support language-specific promotional messages
+- ✓ Modified API to filter messages by language parameter automatically
+- ✓ Created 3 test users with different subscription plans:
+  - usuario_basico (Plan Básico) - Test123!
+  - usuario_startup (Plan Startup) - Test123!
+  - usuario_profesional (Plan Profesional) - Test123!
 
 June 24, 2025:
 - ✓ Implemented complete marketing campaign system with promotional pricing
