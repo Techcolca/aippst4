@@ -904,10 +904,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/integrations", authenticateJWT, softFeatureCheck('maxWebsites'), upload.array('documents'), async (req, res) => {
+  app.post("/api/integrations", authenticateJWT, upload.array('documents'), async (req, res) => {
     try {
       console.log("Create integration request body:", req.body);
-      // User authenticated successfully
+      
+      // Verificar permisos del plan para crear integraciones
+      const subscription = await getUserSubscription(req.userId);
+      const userPlan = subscription?.tier || 'basic';
+      
+      // Importar funciones de verificación de permisos
+      const { canCreateResource, getResourceLimit, getUpgradeMessage } = await import('../shared/feature-permissions');
+      
+      // Contar integraciones actuales del usuario
+      const currentIntegrations = await storage.getIntegrations(req.userId);
+      const currentCount = currentIntegrations.length;
+      
+      // Verificar si puede crear más integraciones
+      const canCreate = canCreateResource(userPlan, 'integrations', currentCount);
+      const limit = getResourceLimit(userPlan, 'integrations');
+      
+      if (!canCreate) {
+        const upgradeMessage = getUpgradeMessage(userPlan, 'createIntegrations');
+        return res.status(403).json({
+          message: upgradeMessage,
+          currentCount: currentCount,
+          limit: limit === -1 ? 'Ilimitado' : limit,
+          planRequired: userPlan === 'basic' ? 'startup' : 'professional'
+        });
+      }
       
       // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
       const isPablo = req.userId === 1; // ID del usuario Pablo
@@ -1728,6 +1752,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ================ Feature Access Routes ================
+  app.post("/api/features/check-access", authenticateJWT, async (req, res) => {
+    try {
+      const { feature } = req.body;
+      
+      if (!feature) {
+        return res.status(400).json({ message: "Feature parameter is required" });
+      }
+      
+      // Obtener suscripción del usuario
+      const subscription = await getUserSubscription(req.userId);
+      const userPlan = subscription?.tier || 'basic';
+
+      // Importar funciones de verificación de características
+      const { hasFeatureAccess, getNextPlanForFeature, PLAN_NAMES, getUpgradeMessage } = await import('../shared/feature-permissions');
+      
+      // Verificar si tiene acceso a la característica
+      const hasAccess = hasFeatureAccess(userPlan, feature as any);
+
+      if (!hasAccess) {
+        const requiredPlan = getNextPlanForFeature(userPlan, feature as any);
+        const upgradeMessage = getUpgradeMessage(userPlan, feature);
+
+        return res.json({
+          hasAccess: false,
+          currentPlan: userPlan,
+          requiredPlan: requiredPlan,
+          requiredPlanName: PLAN_NAMES[requiredPlan || 'professional'] || 'Plan Superior',
+          upgradeMessage: upgradeMessage,
+          feature: feature
+        });
+      }
+
+      res.json({
+        hasAccess: true,
+        currentPlan: userPlan,
+        feature: feature
+      });
+    } catch (error) {
+      console.error("Error checking feature access:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // ================ Feature Access Routes ================
   // Verificar acceso a características específicas
   app.post("/api/features/check-access", authenticateJWT, async (req, res) => {
     try {
@@ -1742,30 +1810,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userPlan = subscription?.tier || 'basic';
 
       // Importar funciones de verificación de características
-      const { hasFeatureAccess, getRequiredPlanForFeature, FEATURE_NAMES, PLAN_NAMES } = await import('../../shared/feature-permissions');
+      const { hasFeatureAccess, getNextPlanForFeature, PLAN_NAMES, getUpgradeMessage } = await import('../shared/feature-permissions');
       
       // Verificar si tiene acceso a la característica
       const hasAccess = hasFeatureAccess(userPlan, feature);
 
       if (!hasAccess) {
-        const requiredPlan = getRequiredPlanForFeature(feature);
-        const featureName = FEATURE_NAMES[feature] || feature;
-        const planName = PLAN_NAMES[requiredPlan] || requiredPlan;
+        const requiredPlan = getNextPlanForFeature(userPlan, feature as any);
+        const upgradeMessage = getUpgradeMessage(userPlan, feature);
 
         return res.json({
           hasAccess: false,
           currentPlan: userPlan,
           requiredPlan: requiredPlan,
-          requiredPlanName: planName,
-          upgradeMessage: `Para acceder a ${featureName}, necesitas actualizar a ${planName}`,
-          feature: featureName
+          requiredPlanName: PLAN_NAMES[requiredPlan || 'professional'] || 'Plan Superior',
+          upgradeMessage: upgradeMessage,
+          feature: feature
         });
       }
 
       res.json({
         hasAccess: true,
         currentPlan: userPlan,
-        feature: FEATURE_NAMES[feature] || feature
+        feature: feature
       });
     } catch (error) {
       console.error('Error checking feature access:', error);
@@ -4983,10 +5050,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return structure;
   };
 
-  app.post("/api/forms", authenticateJWT, softFeatureCheck('maxForms'), async (req, res) => {
+  app.post("/api/forms", authenticateJWT, async (req, res) => {
     try {
-      const userId = req.user!.id;
+      const userId = req.userId;
       const { templateId, language = 'es', ...formData } = req.body;
+      
+      // Verificar permisos del plan para crear formularios
+      const subscription = await getUserSubscription(userId);
+      const userPlan = subscription?.tier || 'basic';
+      
+      // Importar funciones de verificación de permisos
+      const { canCreateResource, getResourceLimit, getUpgradeMessage } = await import('../shared/feature-permissions');
+      
+      // Contar formularios actuales del usuario
+      const currentForms = await storage.getForms(userId);
+      const currentCount = currentForms.length;
+      
+      // Verificar si puede crear más formularios
+      const canCreate = canCreateResource(userPlan, 'forms', currentCount);
+      const limit = getResourceLimit(userPlan, 'forms');
+      
+      if (!canCreate) {
+        const upgradeMessage = getUpgradeMessage(userPlan, 'createForms');
+        return res.status(403).json({
+          message: upgradeMessage,
+          currentCount: currentCount,
+          limit: limit === -1 ? 'Ilimitado' : limit,
+          planRequired: userPlan === 'basic' ? 'startup' : 'professional'
+        });
+      }
       
       // Si se proporciona templateId, crear formulario basado en plantilla
       if (templateId) {
