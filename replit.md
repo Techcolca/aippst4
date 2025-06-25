@@ -103,6 +103,14 @@ AIPI is an advanced conversational AI platform designed to integrate intelligent
 
 ## Recent Changes
 
+June 25, 2025:
+- ✓ Fixed promotional message rotation system on homepage
+- ✓ Implemented missing generateAIPromotionalMessages function in backend
+- ✓ Created proper database integration for AI-generated promotional messages
+- ✓ Fixed React Query implementation for promotional messages API
+- ✓ Ensured 7 promotional messages rotate every 7 seconds as designed
+- ✓ Messages now properly display below "Bienvenidos a AiPPS" title with full rotation
+
 June 24, 2025:
 - ✓ Implemented complete marketing campaign system with promotional pricing
 - ✓ Created database-driven promotional campaigns with discount management
