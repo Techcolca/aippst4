@@ -388,31 +388,122 @@ export async function generateAutomatedResponse(
 }
 
 // Generate AI promotional messages for marketing campaigns
-export async function generateAIPromotionalMessages(): Promise<Array<{
+export async function generateAIPromotionalMessages(language = 'es'): Promise<Array<{
   message_text: string;
   message_type: string;
   display_order: number;
 }>> {
   try {
-    const systemPrompt = `Eres un experto en marketing digital especializado en plataformas de IA conversacional. 
-    Genera exactamente 7 mensajes promocionales únicos y atractivos para AIPPS, una plataforma de chatbots con IA.
+    let systemPrompt = '';
+    let fallbackMessages: Array<{
+      message_text: string;
+      message_type: string;
+      display_order: number;
+    }> = [];
     
-    Los mensajes deben:
-    - Ser llamativos y comerciales
-    - Destacar diferentes beneficios de AIPPS
-    - Ser variados en enfoque (automatización, leads, ventas, soporte, etc.)
-    - Tener entre 8-15 palabras cada uno
-    - Incluir emojis relevantes
-    - Crear urgencia o interés
-    
-    Responde SOLO con un JSON válido en este formato:
-    {
-      "messages": [
-        {"text": "🚀 Mensaje 1", "order": 1},
-        {"text": "💬 Mensaje 2", "order": 2},
-        ...
-      ]
-    }`;
+    if (language === 'fr') {
+      systemPrompt = `Vous êtes un expert en marketing numérique spécialisé dans les plateformes d'IA conversationnelle. 
+      Générez exactement 7 messages promotionnels uniques et attrayants pour AIPPS, une plateforme de chatbots avec IA.
+      
+      Les messages doivent:
+      - Être accrocheurs et commerciaux
+      - Mettre en évidence différents avantages d'AIPPS
+      - Être variés dans l'approche (automatisation, prospects, ventes, support, etc.)
+      - Avoir entre 8-15 mots chacun
+      - Inclure des emojis pertinents
+      - Créer de l'urgence ou de l'intérêt
+      
+      Répondez UNIQUEMENT avec un JSON valide dans ce format:
+      {
+        "messages": [
+          {"text": "🚀 Message 1", "order": 1},
+          {"text": "💬 Message 2", "order": 2},
+          {"text": "⚡ Message 3", "order": 3},
+          {"text": "📈 Message 4", "order": 4},
+          {"text": "🎯 Message 5", "order": 5},
+          {"text": "🔧 Message 6", "order": 6},
+          {"text": "💡 Message 7", "order": 7}
+        ]
+      }`;
+      
+      fallbackMessages = [
+        { message_text: "🚀 Automatisez votre service client avec IA avancée!", message_type: 'ai_generated', display_order: 1 },
+        { message_text: "💬 Chatbots intelligents qui convertissent visiteurs en clients", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "⚡ Réponses instantanées 24/7 pour votre entreprise", message_type: 'ai_generated', display_order: 3 },
+        { message_text: "📈 Augmentez vos ventes pendant que vous dormez", message_type: 'ai_generated', display_order: 4 },
+        { message_text: "🎯 Capturez des prospects automatiquement et intelligemment", message_type: 'ai_generated', display_order: 5 },
+        { message_text: "🔧 Intégration facile sur n'importe quel site web", message_type: 'ai_generated', display_order: 6 },
+        { message_text: "💡 IA qui comprend vos clients mieux que jamais", message_type: 'ai_generated', display_order: 7 }
+      ];
+    } else if (language === 'en') {
+      systemPrompt = `You are a digital marketing expert specialized in conversational AI platforms. 
+      Generate exactly 7 unique and engaging promotional messages for AIPPS, an AI chatbot platform.
+      
+      The messages should:
+      - Be catchy and commercial
+      - Highlight different benefits of AIPPS
+      - Be varied in approach (automation, leads, sales, support, etc.)
+      - Have between 8-15 words each
+      - Include relevant emojis
+      - Create urgency or interest
+      
+      Respond ONLY with a valid JSON in this format:
+      {
+        "messages": [
+          {"text": "🚀 Message 1", "order": 1},
+          {"text": "💬 Message 2", "order": 2},
+          {"text": "⚡ Message 3", "order": 3},
+          {"text": "📈 Message 4", "order": 4},
+          {"text": "🎯 Message 5", "order": 5},
+          {"text": "🔧 Message 6", "order": 6},
+          {"text": "💡 Message 7", "order": 7}
+        ]
+      }`;
+      
+      fallbackMessages = [
+        { message_text: "🚀 Automate your customer service with advanced AI!", message_type: 'ai_generated', display_order: 1 },
+        { message_text: "💬 Smart chatbots that convert visitors into customers", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "⚡ Instant responses 24/7 for your business", message_type: 'ai_generated', display_order: 3 },
+        { message_text: "📈 Increase your sales while you sleep", message_type: 'ai_generated', display_order: 4 },
+        { message_text: "🎯 Capture leads automatically and intelligently", message_type: 'ai_generated', display_order: 5 },
+        { message_text: "🔧 Easy integration on any website", message_type: 'ai_generated', display_order: 6 },
+        { message_text: "💡 AI that understands your customers better than ever", message_type: 'ai_generated', display_order: 7 }
+      ];
+    } else {
+      systemPrompt = `Eres un experto en marketing digital especializado en plataformas de IA conversacional. 
+      Genera exactamente 7 mensajes promocionales únicos y atractivos para AIPPS, una plataforma de chatbots con IA.
+      
+      Los mensajes deben:
+      - Ser llamativos y comerciales
+      - Destacar diferentes beneficios de AIPPS
+      - Ser variados en enfoque (automatización, leads, ventas, soporte, etc.)
+      - Tener entre 8-15 palabras cada uno
+      - Incluir emojis relevantes
+      - Crear urgencia o interés
+      
+      Responde SOLO con un JSON válido en este formato:
+      {
+        "messages": [
+          {"text": "🚀 Mensaje 1", "order": 1},
+          {"text": "💬 Mensaje 2", "order": 2},
+          {"text": "⚡ Mensaje 3", "order": 3},
+          {"text": "📈 Mensaje 4", "order": 4},
+          {"text": "🎯 Mensaje 5", "order": 5},
+          {"text": "🔧 Mensaje 6", "order": 6},
+          {"text": "💡 Mensaje 7", "order": 7}
+        ]
+      }`;
+      
+      fallbackMessages = [
+        { message_text: "🚀 ¡Automatiza tu atención al cliente con IA avanzada!", message_type: 'ai_generated', display_order: 1 },
+        { message_text: "💬 Chatbots inteligentes que convierten visitantes en clientes", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "⚡ Respuestas instantáneas 24/7 para tu negocio", message_type: 'ai_generated', display_order: 3 },
+        { message_text: "📈 Aumenta tus ventas mientras duermes", message_type: 'ai_generated', display_order: 4 },
+        { message_text: "🎯 Captura leads de forma automática e inteligente", message_type: 'ai_generated', display_order: 5 },
+        { message_text: "🔧 Integración fácil en cualquier sitio web", message_type: 'ai_generated', display_order: 6 },
+        { message_text: "💡 IA que entiende a tus clientes mejor que nunca", message_type: 'ai_generated', display_order: 7 }
+      ];
+    }
 
     const response = await openai.chat.completions.create({
       model: OPENAI_MODEL,
@@ -439,17 +530,7 @@ export async function generateAIPromotionalMessages(): Promise<Array<{
 
   } catch (error) {
     console.error("Error generating AI promotional messages:", error);
-    
-    // Mensajes de respaldo si falla la IA
-    return [
-      { message_text: "🚀 ¡Automatiza tu atención al cliente con IA avanzada!", message_type: 'ai_generated', display_order: 1 },
-      { message_text: "💬 Chatbots inteligentes que convierten visitantes en clientes", message_type: 'ai_generated', display_order: 2 },
-      { message_text: "⚡ Respuestas instantáneas 24/7 para tu negocio", message_type: 'ai_generated', display_order: 3 },
-      { message_text: "📈 Aumenta tus ventas mientras duermes", message_type: 'ai_generated', display_order: 4 },
-      { message_text: "🎯 Captura leads de forma automática e inteligente", message_type: 'ai_generated', display_order: 5 },
-      { message_text: "🔧 Integración fácil en cualquier sitio web", message_type: 'ai_generated', display_order: 6 },
-      { message_text: "💡 IA que entiende a tus clientes mejor que nunca", message_type: 'ai_generated', display_order: 7 }
-    ];
+    return fallbackMessages;
   }
 }
 
