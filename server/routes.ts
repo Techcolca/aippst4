@@ -48,6 +48,7 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema, welcomeMessages, forms } from "@shared/schema";
 import cookieParser from "cookie-parser";
+import OpenAI from 'openai';
 import { and, eq, gt } from "drizzle-orm";
 import fs from "fs";
 import path from "path";
@@ -1601,7 +1602,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (needsRegen) {
         console.log("Generando nuevos mensajes promocionales con IA...");
-        await generateAIPromotionalMessages();
+        await generateAIPromotionalMessages(pool);
       }
       
       // Obtener mensajes generados por IA
@@ -1666,8 +1667,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/marketing/regenerate-messages", authenticateJWT, async (req, res) => {
     try {
       console.log("Regenerando mensajes promocionales manualmente...");
-      await generateAIPromotionalMessages();
-      res.json({ message: "Mensajes regenerados exitosamente" });
+      const newMessages = await generateAIPromotionalMessages(pool);
+      res.json({ 
+        message: "Mensajes regenerados exitosamente", 
+        count: newMessages.length,
+        messages: newMessages 
+      });
     } catch (error) {
       console.error("Error regenerating messages:", error);
       res.status(500).json({ message: "Error regenerando mensajes" });
