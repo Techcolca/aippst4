@@ -1585,17 +1585,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ================ Marketing Routes ================
-  // Endpoint para obtener mensajes promocionales rotativos
+  // Endpoint para obtener mensajes promocionales dinámicos generados por IA
   app.get("/api/marketing/promotional-messages", async (req, res) => {
     try {
+      // Verificar si necesitamos generar nuevos mensajes (cada 7 días)
+      const lastGenerated = await pool.query(`
+        SELECT created_at FROM promotional_messages 
+        WHERE message_type = 'ai_generated' 
+        ORDER BY created_at DESC 
+        LIMIT 1
+      `);
+      
+      const needsRegen = !lastGenerated.rows[0] || 
+        (Date.now() - new Date(lastGenerated.rows[0].created_at).getTime()) > (7 * 24 * 60 * 60 * 1000);
+      
+      if (needsRegen) {
+        console.log("Generando nuevos mensajes promocionales con IA...");
+        await generateAIPromotionalMessages();
+      }
+      
+      // Obtener mensajes generados por IA
       const result = await pool.query(`
         SELECT pm.message_text, pm.message_type, pm.display_order
         FROM promotional_messages pm
-        JOIN marketing_campaigns mc ON pm.campaign_id = mc.id
-        WHERE mc.is_active = true 
-        AND mc.start_date <= NOW() 
-        AND (mc.end_date IS NULL OR mc.end_date >= NOW())
-        AND mc.current_subscribers < mc.max_subscribers
+        WHERE pm.message_type = 'ai_generated'
         AND pm.is_active = true
         ORDER BY pm.display_order ASC
       `);
@@ -1603,7 +1616,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(result.rows);
     } catch (error) {
       console.error("Error getting promotional messages:", error);
-      res.status(500).json({ message: "Internal server error" });
+      
+      // Fallback a mensajes estáticos si falla la IA
+      const fallbackResult = await pool.query(`
+        SELECT pm.message_text, pm.message_type, pm.display_order
+        FROM promotional_messages pm
+        JOIN marketing_campaigns mc ON pm.campaign_id = mc.id
+        WHERE mc.is_active = true 
+        AND pm.message_type != 'ai_generated'
+        AND pm.is_active = true
+        ORDER BY pm.display_order ASC
+      `);
+      
+      res.json(fallbackResult.rows);
     }
   });
 
@@ -1634,6 +1659,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error getting active campaign:", error);
       res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Endpoint para forzar regeneración de mensajes promocionales (admin)
+  app.post("/api/marketing/regenerate-messages", authenticateJWT, async (req, res) => {
+    try {
+      console.log("Regenerando mensajes promocionales manualmente...");
+      await generateAIPromotionalMessages();
+      res.json({ message: "Mensajes regenerados exitosamente" });
+    } catch (error) {
+      console.error("Error regenerating messages:", error);
+      res.status(500).json({ message: "Error regenerando mensajes" });
     }
   });
 

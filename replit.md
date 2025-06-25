@@ -107,7 +107,8 @@ June 24, 2025:
 - ✓ Implemented complete marketing campaign system with promotional pricing
 - ✓ Created database-driven promotional campaigns with discount management
 - ✓ Updated pricing page to show strikethrough prices and promotional discounts
-- ✓ Implemented rotating promotional messages on homepage
+- ✓ Implemented AI-generated rotating promotional messages that auto-refresh weekly
+- ✓ Messages include real-time campaign data, discounts, features, and remaining spots
 - ✓ Applied specific discounts per marketing plan:
   - Básico: 10% anual
   - Startup: 35% mensual (5 meses), 40% anual

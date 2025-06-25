@@ -74,7 +74,7 @@ export function useWelcomeMessages() {
       return;
     }
 
-    // Configurar intervalo de rotación cada 7 segundos
+    // Configurar intervalo de rotación cada 7 segundos para mensajes dinámicos
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) % messages.length;
