@@ -387,6 +387,72 @@ export async function generateAutomatedResponse(
   }
 }
 
+// Generate AI promotional messages for marketing campaigns
+export async function generateAIPromotionalMessages(): Promise<Array<{
+  message_text: string;
+  message_type: string;
+  display_order: number;
+}>> {
+  try {
+    const systemPrompt = `Eres un experto en marketing digital especializado en plataformas de IA conversacional. 
+    Genera exactamente 7 mensajes promocionales únicos y atractivos para AIPPS, una plataforma de chatbots con IA.
+    
+    Los mensajes deben:
+    - Ser llamativos y comerciales
+    - Destacar diferentes beneficios de AIPPS
+    - Ser variados en enfoque (automatización, leads, ventas, soporte, etc.)
+    - Tener entre 8-15 palabras cada uno
+    - Incluir emojis relevantes
+    - Crear urgencia o interés
+    
+    Responde SOLO con un JSON válido en este formato:
+    {
+      "messages": [
+        {"text": "🚀 Mensaje 1", "order": 1},
+        {"text": "💬 Mensaje 2", "order": 2},
+        ...
+      ]
+    }`;
+
+    const response = await openai.chat.completions.create({
+      model: OPENAI_MODEL,
+      messages: [
+        { role: "system", content: systemPrompt }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.8,
+      max_tokens: 800
+    });
+
+    const content = response.choices[0].message.content;
+    if (!content) {
+      throw new Error("No content received from OpenAI");
+    }
+
+    const parsed = JSON.parse(content);
+    
+    return parsed.messages.map((msg: any, index: number) => ({
+      message_text: msg.text,
+      message_type: 'ai_generated',
+      display_order: msg.order || (index + 1)
+    }));
+
+  } catch (error) {
+    console.error("Error generating AI promotional messages:", error);
+    
+    // Mensajes de respaldo si falla la IA
+    return [
+      { message_text: "🚀 ¡Automatiza tu atención al cliente con IA avanzada!", message_type: 'ai_generated', display_order: 1 },
+      { message_text: "💬 Chatbots inteligentes que convierten visitantes en clientes", message_type: 'ai_generated', display_order: 2 },
+      { message_text: "⚡ Respuestas instantáneas 24/7 para tu negocio", message_type: 'ai_generated', display_order: 3 },
+      { message_text: "📈 Aumenta tus ventas mientras duermes", message_type: 'ai_generated', display_order: 4 },
+      { message_text: "🎯 Captura leads de forma automática e inteligente", message_type: 'ai_generated', display_order: 5 },
+      { message_text: "🔧 Integración fácil en cualquier sitio web", message_type: 'ai_generated', display_order: 6 },
+      { message_text: "💡 IA que entiende a tus clientes mejor que nunca", message_type: 'ai_generated', display_order: 7 }
+    ];
+  }
+}
+
 // Helper function to get style prompt based on conversation style
 function getStylePrompt(style: string): string {
   switch (style.toLowerCase()) {

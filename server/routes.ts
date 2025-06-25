@@ -7,7 +7,7 @@ import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
 import { checkFeatureAccess, requireFeatureAccess, softFeatureCheck } from "./middleware/feature-access";
 import { generateApiKey } from "./lib/utils";
-import { generateChatCompletion, analyzeSentiment, summarizeText } from "./lib/openai";
+import { generateChatCompletion, analyzeSentiment, summarizeText, generateAIPromotionalMessages } from "./lib/openai";
 import { buildKnowledgeBase } from "./lib/content-knowledge";
 import { webscraper } from "./lib/webscraper";
 import stripe, { 
@@ -60,6 +60,34 @@ import { db, pool } from "./db";
 // Obtener el equivalente a __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Función auxiliar para generar y almacenar mensajes promocionales
+async function generateAndStorePromotionalMessages() {
+  try {
+    if (!pool) {
+      console.error("Database pool not available");
+      return;
+    }
+
+    // Generar mensajes con IA
+    const messages = await generateAIPromotionalMessages();
+    
+    // Limpiar mensajes anteriores
+    await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated'`);
+    
+    // Insertar nuevos mensajes
+    for (const message of messages) {
+      await pool.query(`
+        INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at)
+        VALUES ($1, $2, $3, true, NOW())
+      `, [message.message_text, message.message_type, message.display_order]);
+    }
+    
+    console.log(`Successfully generated and stored ${messages.length} promotional messages`);
+  } catch (error) {
+    console.error("Error generating and storing promotional messages:", error);
+  }
+}
 
 // Configurar multer para manejar subida de archivos
 const upload = multer({
@@ -1602,7 +1630,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (needsRegen) {
         console.log("Generando nuevos mensajes promocionales con IA...");
-        await generateAIPromotionalMessages(pool);
+        await generateAndStorePromotionalMessages();
       }
       
       // Obtener mensajes generados por IA
