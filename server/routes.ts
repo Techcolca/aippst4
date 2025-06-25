@@ -1679,6 +1679,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Endpoint de prueba para generar mensajes (sin autenticación)
+  app.get("/api/test-generate-messages", async (req, res) => {
+    try {
+      console.log("Generando mensajes de prueba...");
+      const newMessages = await generateAIPromotionalMessages(pool);
+      res.json({ 
+        success: true,
+        count: newMessages.length,
+        messages: newMessages 
+      });
+    } catch (error) {
+      console.error("Error en prueba de generación:", error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // ================ Feature Access Routes ================
   // Verificar acceso a características específicas
   app.post("/api/features/check-access", authenticateJWT, async (req, res) => {
