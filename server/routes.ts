@@ -5,7 +5,7 @@ import { storage } from "./storage";
 import jwt from "jsonwebtoken";
 import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
-import { checkFeatureAccess, requireFeatureAccess, softFeatureCheck } from "./middleware/feature-access";
+// Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText, generateAIPromotionalMessages } from "./lib/openai";
 import { buildKnowledgeBase } from "./lib/content-knowledge";
@@ -862,7 +862,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // ================ Automation Routes ================
-  app.get("/api/automations", authenticateJWT, softFeatureCheck('basicAutomations'), async (req, res) => {
+  app.get("/api/automations", authenticateJWT, async (req, res) => {
     try {
       const automations = await storage.getAutomations(req.userId);
       res.json(automations);
@@ -872,7 +872,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post("/api/automations", authenticateJWT, requireFeatureAccess('basicAutomations'), async (req, res) => {
+  app.post("/api/automations", authenticateJWT, async (req, res) => {
     try {
       const validatedData = z.object({
         name: z.string(),
@@ -1792,51 +1792,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error checking feature access:", error);
       res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  // ================ Feature Access Routes ================
-  // Verificar acceso a características específicas
-  app.post("/api/features/check-access", authenticateJWT, async (req, res) => {
-    try {
-      const { feature } = req.body;
-      
-      if (!feature) {
-        return res.status(400).json({ message: 'Feature name is required' });
-      }
-
-      // Obtener suscripción del usuario
-      const subscription = await getUserSubscription(req.userId);
-      const userPlan = subscription?.tier || 'basic';
-
-      // Importar funciones de verificación de características
-      const { hasFeatureAccess, getNextPlanForFeature, PLAN_NAMES, getUpgradeMessage } = await import('../shared/feature-permissions');
-      
-      // Verificar si tiene acceso a la característica
-      const hasAccess = hasFeatureAccess(userPlan, feature);
-
-      if (!hasAccess) {
-        const requiredPlan = getNextPlanForFeature(userPlan, feature as any);
-        const upgradeMessage = getUpgradeMessage(userPlan, feature);
-
-        return res.json({
-          hasAccess: false,
-          currentPlan: userPlan,
-          requiredPlan: requiredPlan,
-          requiredPlanName: PLAN_NAMES[requiredPlan || 'professional'] || 'Plan Superior',
-          upgradeMessage: upgradeMessage,
-          feature: feature
-        });
-      }
-
-      res.json({
-        hasAccess: true,
-        currentPlan: userPlan,
-        feature: feature
-      });
-    } catch (error) {
-      console.error('Error checking feature access:', error);
-      res.status(500).json({ message: 'Internal server error' });
     }
   });
 

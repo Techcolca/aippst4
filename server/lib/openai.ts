@@ -306,7 +306,7 @@ export async function summarizeText(text: string): Promise<string> {
       messages: [{ role: "user", content: prompt }],
     });
 
-    return response.choices[0].message.content;
+    return response.choices[0].message.content || "";
   } catch (error: unknown) {
     console.error("Failed to summarize text:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -530,7 +530,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
 
   } catch (error) {
     console.error("Error generating AI promotional messages:", error);
-    return fallbackMessages;
+    return [];
   }
 }
 
