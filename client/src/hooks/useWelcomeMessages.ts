@@ -14,11 +14,11 @@ export function useWelcomeMessages() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { i18n } = useTranslation();
 
-  // Cargar mensajes promocionales desde la API - SIEMPRE cargar
+  // Cargar mensajes promocionales desde la API con idioma actual
   const { data: promotionalMessages, isLoading, error } = useQuery({
-    queryKey: ['/api/marketing/promotional-messages'],
+    queryKey: ['/api/marketing/promotional-messages', i18n.language],
     queryFn: async () => {
-      const response = await fetch('/api/marketing/promotional-messages');
+      const response = await fetch(`/api/marketing/promotional-messages?lang=${i18n.language}`);
       if (!response.ok) {
         throw new Error('Failed to fetch promotional messages');
       }
