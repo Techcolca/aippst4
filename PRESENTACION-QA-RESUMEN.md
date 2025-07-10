@@ -2,7 +2,7 @@
 
 ## Resumen Ejecutivo
 
-**AIPPS** es una plataforma conversacional de IA que permite a empresas integrar chatbots inteligentes en sus sitios web con un sistema de suscripciones por niveles.
+**AIPPS** es una plataforma conversacional de IA que permite a empresas integrar múltiples tipos de soluciones interactivas en sus sitios web, incluyendo chatbots inteligentes y formularios dinámicos, todo gestionado a través de un sistema de suscripciones por niveles.
 
 ## ¿Qué vas a testear?
 
@@ -11,15 +11,36 @@
 - **Limitaciones específicas**: Cada plan tiene límites diferentes de integraciones y formularios
 - **Validación estricta**: El sistema debe bloquear acciones no permitidas
 
-### 🤖 Funcionalidad de IA
-- **Chat inteligente** que responde preguntas
-- **Widget embebible** para sitios externos
-- **Respuestas contextuales** basadas en el contenido del sitio
+### 🤖 Tres Tipos de Integraciones Principales
+
+#### 1. **Widget Flotante (Burbuja)**
+- **Descripción**: Pequeña burbuja discreta en esquina del sitio web
+- **Funcionalidad**: Chat compacto sin interrumpir la navegación
+- **Características**: Personalización de colores, posición, mensaje de bienvenida
+- **Responsive**: Se adapta a dispositivos móviles
+
+#### 2. **Chat Pantalla Completa (Estilo ChatGPT)**
+- **Descripción**: Experiencia inmersiva que ocupa toda la pantalla
+- **Funcionalidad**: Interfaz similar a ChatGPT para interacciones complejas
+- **Uso ideal**: Consultas detalladas, soporte técnico, conversaciones largas
+- **Características**: Historial de conversaciones, funciones avanzadas
+
+#### 3. **Formularios Integrados**
+- **Tipos disponibles**: Contacto, Lista de espera, Encuestas, Feedback, Captura de leads, Personalizados
+- **Funcionalidad**: Generación dinámica de formularios con validación
+- **Integración**: Embebibles en sitios externos con JavaScript
+- **Analytics**: Almacenamiento y análisis de respuestas
 
 ### 🌍 Soporte Multiidioma
 - **3 idiomas**: Español, Francés, Inglés
 - **Cambio dinámico** sin recargar página
 - **Persistencia** del idioma seleccionado
+
+### 🎯 Funcionalidad de IA
+- **Chat inteligente** que responde preguntas contextuales
+- **Procesamiento de documentos** (PDF, DOCX) para base de conocimiento
+- **Scraping de contenido** para respuestas específicas del sitio
+- **Respuestas contextuales** basadas en el contenido del sitio web
 
 ## Credenciales de Testing
 
@@ -39,15 +60,31 @@ ENTONCES debo ver popup de "Actualizar Plan"
 Y NO debe crearse la integración
 ```
 
-### 🎯 Caso Crítico #2: Funcionalidad de Chat
+### 🎯 Caso Crítico #2: Widget Flotante (Burbuja)
 ```gherkin
-DADO que tengo el widget abierto
-CUANDO escribo "¿Cómo funciona el servicio?"
-ENTONCES debo recibir respuesta en < 10 segundos
-Y la respuesta debe ser coherente
+DADO que tengo una integración tipo "bubble" creada
+CUANDO visito el sitio web con el widget integrado
+ENTONCES debo ver la burbuja flotante en la esquina
+Y al hacer clic debe abrir el chat sin interrumpir la navegación
 ```
 
-### 🎯 Caso Crítico #3: Cambio de Idioma
+### 🎯 Caso Crítico #3: Chat Pantalla Completa
+```gherkin
+DADO que tengo una integración tipo "fullscreen" creada
+CUANDO accedo a la URL del widget
+ENTONCES debo ver la interfaz estilo ChatGPT
+Y debo poder mantener conversaciones largas con historial
+```
+
+### 🎯 Caso Crítico #4: Formularios Integrados
+```gherkin
+DADO que creo un formulario de "contacto"
+CUANDO integro el código en un sitio web
+ENTONCES el formulario debe cargar correctamente
+Y al enviarlo debe almacenar las respuestas en la base de datos
+```
+
+### 🎯 Caso Crítico #5: Cambio de Idioma
 ```gherkin
 DADO que estoy en la página principal
 CUANDO cambio idioma a "Français"
