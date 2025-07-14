@@ -21,11 +21,8 @@ export function useFeatureAccess(feature: string) {
   return useQuery({
     queryKey: ['feature-access', feature],
     queryFn: async () => {
-      const response = await apiRequest('/api/features/check-access', {
-        method: 'POST',
-        body: { feature }
-      });
-      return response as FeatureAccessResponse;
+      const response = await apiRequest('POST', '/api/features/check-access', { feature });
+      return response.json() as Promise<FeatureAccessResponse>;
     },
     staleTime: 5 * 60 * 1000, // 5 minutos
     enabled: !!feature
@@ -42,11 +39,9 @@ export function useMultipleFeatureAccess(features: string[]) {
       const results = await Promise.all(
         features.map(async (feature) => {
           try {
-            const response = await apiRequest('/api/features/check-access', {
-              method: 'POST',
-              body: { feature }
-            });
-            return { feature, ...response };
+            const response = await apiRequest('POST', '/api/features/check-access', { feature });
+            const result = await response.json();
+            return { feature, ...result };
           } catch (error) {
             console.error(`Error checking access for feature ${feature}:`, error);
             return { 
@@ -75,11 +70,8 @@ export function useMultipleFeatureAccess(features: string[]) {
 export function useCheckFeatureAccess() {
   return useMutation({
     mutationFn: async (request: FeatureAccessRequest) => {
-      const response = await apiRequest('/api/features/check-access', {
-        method: 'POST',
-        body: request
-      });
-      return response as FeatureAccessResponse;
+      const response = await apiRequest('POST', '/api/features/check-access', request);
+      return response.json() as Promise<FeatureAccessResponse>;
     }
   });
 }
