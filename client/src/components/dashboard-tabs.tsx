@@ -63,7 +63,7 @@ export default function DashboardTabs() {
             </p>
           </div>
           <FeatureRestrictedButton 
-            feature="maxWebsites"
+            feature="createIntegrations"
             onAccessGranted={() => setLocation("/create-integration")}
           >
             {t("create_integration", "Create Integration")}
@@ -88,7 +88,7 @@ export default function DashboardTabs() {
                 {t("add_new_integration_desc", "Add a new website integration to connect AIPI with your site")}
               </p>
               <FeatureRestrictedButton 
-                feature="maxWebsites"
+                feature="createIntegrations"
                 onAccessGranted={() => setLocation("/create-integration")}
                 variant="default" 
                 className="w-full sm:w-auto px-8"
