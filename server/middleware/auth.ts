@@ -156,6 +156,11 @@ export async function authenticateJWT(req: Request, res: Response, next: NextFun
     token = req.cookies.auth_token;
     console.log("Token encontrado en cookies");
   }
+  // También intentar con el nombre 'token' por compatibilidad
+  else if (req.cookies?.token) {
+    token = req.cookies.token;
+    console.log("Token encontrado en cookies");
+  }
   // 2. Intentar obtener del header Authorization
   else if (req.headers.authorization) {
     // Depuración para el header de autorización
