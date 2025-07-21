@@ -64,6 +64,8 @@ export async function generateChatCompletion(
     // Log para debug
     console.log("OpenAI: Idioma recibido del servidor:", language);
     console.log("OpenAI: Respondiendo en idioma:", responseLanguage);
+    console.log("OpenAI: Contexto recibido longitud:", context?.length || 0);
+    console.log("OpenAI: Contexto preview:", context?.substring(0, 200) + "...");
     
     // Crear configuración personalizada del bot
     const getBotPersonality = (config?: BotConfig) => {
