@@ -33,6 +33,9 @@ const formSchema = z.object({
   ignoredSections: z.array(z.string()).default([]),
   ignoredSectionsText: z.string().optional(),
   description: z.string().optional(),
+  language: z.enum(["es", "en", "fr"], {
+    required_error: "Debes seleccionar un idioma"
+  }).default("es"),
   customization: z.object({
     assistantName: z.string().optional(),
     defaultGreeting: z.string().optional(),
@@ -72,6 +75,7 @@ interface Integration {
     font?: string;
     conversationStyle?: string;
   };
+  language?: string;
 }
 
 interface SiteContent {
@@ -110,6 +114,7 @@ export default function EditIntegration() {
       ignoredSections: [],
       ignoredSectionsText: "",
       description: "",
+      language: "es",
       customization: {
         assistantName: "AIPI Assistant",
         defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
@@ -366,6 +371,7 @@ export default function EditIntegration() {
         ignoredSections: integration.ignoredSections || [],
         ignoredSectionsText: integration.ignoredSectionsText || "",
         description: integration.description || "",
+        language: integration.language || "es",
         customization: integration.customization || {
           assistantName: "AIPI Assistant",
           defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
@@ -736,6 +742,43 @@ export default function EditIntegration() {
                     </Select>
                     <FormDescription>
                       Dónde aparecerá el widget en la página (se guarda automáticamente)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="language"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Idioma del widget</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        // Auto-save language changes
+                        const currentValues = form.getValues();
+                        updateIntegrationMutation.mutate({
+                          ...currentValues,
+                          language: value
+                        });
+                      }}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona un idioma" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="fr">Français</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      El idioma en que se mostrará el widget a los usuarios (se guarda automáticamente)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

@@ -41,6 +41,7 @@ export const integrations = pgTable("integrations", {
   description: text("description"), // Descripción de la integración
   ignoredSectionsText: text("ignored_sections_text"), // Texto de secciones ignoradas para scraping
   customization: json("customization"), // Personalización del chatbot (colores, fuentes, mensajes, etc.)
+  language: text("language").default("es"), // Idioma del widget (es, en, fr)
 });
 
 export const insertIntegrationSchema = createInsertSchema(integrations).pick({
@@ -54,6 +55,7 @@ export const insertIntegrationSchema = createInsertSchema(integrations).pick({
   documentsData: true,
   ignoredSections: true,
   description: true,
+  language: true,
 });
 
 // Conversation schema

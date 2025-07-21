@@ -36,6 +36,9 @@ const formSchema = z.object({
   ignoredSections: z.array(z.string()).default([]),
   ignoredSectionsText: z.string().optional(),
   description: z.string().min(10, { message: "La descripción debe tener al menos 10 caracteres" }),
+  language: z.enum(["es", "en", "fr"], {
+    required_error: "Debes seleccionar un idioma"
+  }).default("es"),
   // Mantenemos customization para compatibilidad
   customization: z.object({
     assistantName: z.string().optional(),
@@ -73,6 +76,7 @@ export default function CreateIntegration() {
       active: true,
       botBehavior: "",
       widgetType: "bubble",
+      language: "es",
       ignoredSections: [],
       ignoredSectionsText: "",
       description: "Soy un asistente inteligente especializado en ayudar a los usuarios de este sitio web. Estoy aquí para responder preguntas, brindar información y ofrecer soporte personalizado.",
@@ -374,6 +378,35 @@ export default function CreateIntegration() {
                     </Select>
                     <FormDescription>
                       Dónde aparecerá el widget en la página
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="language"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Idioma del widget</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona un idioma" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="fr">Français</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      El idioma en que se mostrará el widget a los usuarios
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
