@@ -32,7 +32,19 @@
         typing: "Escribiendo...",
         minimize: "Minimizar",
         close: "Cerrar",
-        expand: "Expandir"
+        expand: "Expandir",
+        // Auth form translations
+        welcomeTo: "Bienvenido a",
+        whyCreateAccount: "¿Por qué crear una cuenta?",
+        saveConversations: "Guarda todas tus conversaciones",
+        accessHistory: "Accede a tu historial cuando quieras",
+        secureData: "Tus datos están seguros y privados",
+        personalizedExperience: "Experiencia personalizada y continua",
+        signIn: "Iniciar Sesión",
+        register: "Registrarse",
+        username: "Nombre de usuario",
+        password: "Contraseña",
+        email: "Correo electrónico"
       },
       en: {
         placeholder: "Type your message...",
@@ -41,7 +53,19 @@
         typing: "Typing...",
         minimize: "Minimize",
         close: "Close",
-        expand: "Expand"
+        expand: "Expand",
+        // Auth form translations
+        welcomeTo: "Welcome to",
+        whyCreateAccount: "Why create an account?",
+        saveConversations: "Save all your conversations",
+        accessHistory: "Access your history whenever you want",
+        secureData: "Your data is secure and private",
+        personalizedExperience: "Personalized and continuous experience",
+        signIn: "Sign In",
+        register: "Register",
+        username: "Username",
+        password: "Password",
+        email: "Email"
       },
       fr: {
         placeholder: "Tapez votre message...",
@@ -50,7 +74,19 @@
         typing: "Saisie...",
         minimize: "Minimiser",
         close: "Fermer",
-        expand: "Développer"
+        expand: "Développer",
+        // Auth form translations
+        welcomeTo: "Bienvenue à",
+        whyCreateAccount: "Pourquoi créer un compte?",
+        saveConversations: "Sauvegardez toutes vos conversations",
+        accessHistory: "Accédez à votre historique quand vous voulez",
+        secureData: "Vos données sont sécurisées et privées",
+        personalizedExperience: "Expérience personnalisée et continue",
+        signIn: "Se connecter",
+        register: "S'inscrire",
+        username: "Nom d'utilisateur",
+        password: "Mot de passe",
+        email: "Email"
       }
     };
     return translations[lang] || translations.en;
@@ -2679,7 +2715,7 @@ Contenido: [Error al extraer contenido detallado]
       <div class="aipi-auth-overlay">
         <div class="aipi-auth-modal">
           <div class="aipi-auth-header">
-            <h2>Bienvenido a ${escapeHTML(integrationName)}</h2>
+            <h2>${t.welcomeTo} ${escapeHTML(integrationName)}</h2>
             <button class="aipi-auth-close" onclick="closeAuthForm()">×</button>
           </div>
           <div class="aipi-auth-content">
@@ -2689,44 +2725,44 @@ Contenido: [Error al extraer contenido detallado]
                   <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                 </svg>
               </div>
-              <h3>¿Por qué crear una cuenta?</h3>
+              <h3>${t.whyCreateAccount}</h3>
               <p class="aipi-explanation-text">${escapeHTML(personalizedExplanation)}</p>
               <div class="aipi-benefits">
                 <div class="aipi-benefit-item">
                   <span class="aipi-benefit-icon">💬</span>
-                  <span>Guarda todas tus conversaciones</span>
+                  <span>${t.saveConversations}</span>
                 </div>
                 <div class="aipi-benefit-item">
                   <span class="aipi-benefit-icon">📚</span>
-                  <span>Accede a tu historial cuando quieras</span>
+                  <span>${t.accessHistory}</span>
                 </div>
                 <div class="aipi-benefit-item">
                   <span class="aipi-benefit-icon">🔒</span>
-                  <span>Tus datos están seguros y privados</span>
+                  <span>${t.secureData}</span>
                 </div>
                 <div class="aipi-benefit-item">
                   <span class="aipi-benefit-icon">⚡</span>
-                  <span>Experiencia personalizada y continua</span>
+                  <span>${t.personalizedExperience}</span>
                 </div>
               </div>
             </div>
             
             <div class="aipi-auth-tabs">
-              <button class="aipi-auth-tab active" onclick="showLoginTab()">Iniciar Sesión</button>
-              <button class="aipi-auth-tab" onclick="showRegisterTab()">Registrarse</button>
+              <button class="aipi-auth-tab active" onclick="showLoginTab()">${t.signIn}</button>
+              <button class="aipi-auth-tab" onclick="showRegisterTab()">${t.register}</button>
             </div>
             
             <div id="aipi-login-form" class="aipi-auth-form">
-              <input type="text" id="login-username" placeholder="Nombre de usuario" required>
-              <input type="password" id="login-password" placeholder="Contraseña" required>
-              <button onclick="handleLogin()" class="aipi-auth-submit">Iniciar Sesión</button>
+              <input type="text" id="login-username" placeholder="${t.username}" required>
+              <input type="password" id="login-password" placeholder="${t.password}" required>
+              <button onclick="handleLogin()" class="aipi-auth-submit">${t.signIn}</button>
             </div>
             
             <div id="aipi-register-form" class="aipi-auth-form" style="display: none;">
-              <input type="text" id="register-username" placeholder="Nombre de usuario" required>
-              <input type="email" id="register-email" placeholder="Correo electrónico" required>
-              <input type="password" id="register-password" placeholder="Contraseña" required>
-              <button onclick="handleRegister()" class="aipi-auth-submit">Registrarse</button>
+              <input type="text" id="register-username" placeholder="${t.username}" required>
+              <input type="email" id="register-email" placeholder="${t.email}" required>
+              <input type="password" id="register-password" placeholder="${t.password}" required>
+              <button onclick="handleRegister()" class="aipi-auth-submit">${t.register}</button>
             </div>
           </div>
         </div>
