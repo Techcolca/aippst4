@@ -9,7 +9,9 @@
     "english": "Inglés",
     "french": "Francés"
   },
-  "login": {
+  "login": "Iniciar sesión",
+  "signup": "Registrarse",
+  "loginPage": {
     "success_title": "Inicio de sesión exitoso",
     "success_message": "¡Bienvenido de vuelta a AIPI!",
     "failed_title": "Error al iniciar sesión",

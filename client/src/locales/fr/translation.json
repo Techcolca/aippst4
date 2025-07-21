@@ -9,7 +9,9 @@
     "english": "Anglais",
     "french": "Français"
   },
-  "login": {
+  "login": "Se connecter",
+  "signup": "S'inscrire",
+  "loginPage": {
     "success_title": "Connexion réussie",
     "success_message": "Bon retour sur AIPI !",
     "failed_title": "Échec de la connexion",

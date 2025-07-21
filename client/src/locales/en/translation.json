@@ -9,7 +9,9 @@
     "english": "English",
     "french": "French"
   },
-  "login": {
+  "login": "Log in",
+  "signup": "Sign up",
+  "loginPage": {
     "success_title": "Login successful",
     "success_message": "Welcome back to AIPI!",
     "failed_title": "Login failed",

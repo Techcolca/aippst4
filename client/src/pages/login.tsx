@@ -40,15 +40,15 @@ export default function Login() {
     try {
       await login(values.username, values.password);
       toast({
-        title: t("login.success_title"),
-        description: t("login.success_message"),
+        title: t("loginPage.success_title"),
+        description: t("loginPage.success_message"),
       });
       navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       toast({
-        title: t("login.failed_title"),
-        description: t("login.failed_message"),
+        title: t("loginPage.failed_title"),
+        description: t("loginPage.failed_message"),
         variant: "destructive"
       });
     } finally {
@@ -63,9 +63,9 @@ export default function Login() {
           <div className="flex justify-center mb-6">
             <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400">AIPI</h1>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">{t("login.title")}</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">{t("loginPage.title")}</CardTitle>
           <CardDescription className="text-center">
-            {t("login.subtitle")}
+            {t("loginPage.subtitle")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -76,9 +76,9 @@ export default function Login() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("login.username")}</FormLabel>
+                    <FormLabel>{t("loginPage.username")}</FormLabel>
                     <FormControl>
-                      <Input placeholder={t("login.username_placeholder")} {...field} />
+                      <Input placeholder={t("loginPage.username_placeholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -90,9 +90,9 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("login.password")}</FormLabel>
+                    <FormLabel>{t("loginPage.password")}</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder={t("login.password_placeholder")} autoComplete="current-password" {...field} />
+                      <Input type="password" placeholder={t("loginPage.password_placeholder")} autoComplete="current-password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -100,7 +100,7 @@ export default function Login() {
               />
               
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? t("login.submitting") : t("login.submit")}
+                {isLoading ? t("loginPage.submitting") : t("loginPage.submit")}
               </Button>
             </form>
           </Form>
