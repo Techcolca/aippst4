@@ -2887,7 +2887,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get documents and site content for knowledge base  
       let documents = [];
-      let siteContentData = [];
+      let siteContentItems = [];
+      
+      console.log(`AIPPS Debug: Loading site content for integration ${integration.name}`);
+      
+      // Load site content items
+      try {
+        siteContentItems = await storage.getSiteContent(integration.id);
+        console.log(`AIPPS Debug: Loaded ${siteContentItems.length} site content items for integration ${integration.name}`);
+      } catch (error) {
+        console.error('Error loading site content:', error);
+        siteContentItems = [];
+      }
       
       // Extract and process documents from integration's documentsData
       if (integration.documentsData && Array.isArray(integration.documentsData)) {
@@ -2924,11 +2935,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`AIPPS Debug: Loaded ${documents.length} documents for integration ${integration.name}`);
       
       // Build enhanced context with knowledge base
-      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentData);
+      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
       const enhancedContext = context + "\n\n" + knowledgeBase;
+      
+      console.log(`AIPPS Debug: Knowledge base length: ${knowledgeBase.length} characters`);
+      console.log(`AIPPS Debug: Enhanced context length: ${enhancedContext.length} characters`);
       
       // Detect language and generate AI response with bot configuration
       const detectedLanguage = detectLanguage(message);
+      
+      console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
+      console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
+      
       const completion = await generateChatCompletion(
         messages.map(m => ({ role: m.role, content: m.content })),
         enhancedContext,
