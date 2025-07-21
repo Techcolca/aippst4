@@ -102,9 +102,9 @@ export async function generateChatCompletion(
     };
 
     // Crear mensaje del sistema específico para widgets con restricciones estrictas
-    let systemContent = getBotPersonality(botConfig);
+    let systemContent = "";
     
-    // Si es un widget, aplicar restricciones extremas
+    // Si es un widget, usar el contexto completo sin restricciones
     if (botConfig?.isWidget) {
       const assistantName = botConfig.assistantName || "Asistente";
       const description = botConfig.description || "un chatbot de ayuda";
@@ -185,6 +185,9 @@ TU COMPORTAMIENTO CONFIGURADO: "${behavior}"
 Puedes ayudar con preguntas sobre este sitio web específico. Tu comportamiento debe ser: ${behavior}. Responde siempre en español.`;
       }
     } else {
+      // Para la aplicación AIPPS principal (no widgets), usar personalidad + contexto
+      systemContent = getBotPersonality(botConfig);
+      
       // Prompt original para el dashboard principal de AIPPS
       if (responseLanguage === "fr") {
         systemContent += context 
