@@ -60,7 +60,10 @@
 
   // Función para actualizar elementos del DOM con el idioma correcto
   function updateLanguageElements() {
-    console.log('AIPPS Debug: Actualizando elementos de idioma a:', config.language, 'Traducciones:', t);
+    console.log('AIPPS Debug: ========= ACTUALIZANDO IDIOMA =========');
+    console.log('AIPPS Debug: Idioma objetivo:', config.language);
+    console.log('AIPPS Debug: Traducciones disponibles:', t);
+    console.log('AIPPS Debug: Placeholder objetivo:', t.placeholder);
     
     // Actualizar placeholder del input (bubble chat)
     const chatInput = document.getElementById('aipi-input');
@@ -108,22 +111,33 @@
     
     // Buscar todos los elementos con atributo data-translate-placeholder
     const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+    console.log('AIPPS Debug: Elementos con data-translate-placeholder encontrados:', placeholderElements.length);
     placeholderElements.forEach(element => {
       const key = element.getAttribute('data-translate-placeholder');
       if (t[key]) {
+        const oldPlaceholder = element.placeholder;
         element.placeholder = t[key];
         element.setAttribute('placeholder', t[key]);
-        console.log('AIPPS Debug: Placeholder actualizado para elemento:', element.id, 'con:', t[key]);
+        console.log('AIPPS Debug: Placeholder actualizado para elemento:', element.id, 'de:', oldPlaceholder, 'a:', t[key]);
       }
     });
     
-    // Buscar todos los elementos de input y actualizar sus placeholders si tienen algún patrón conocido
-    const allInputs = document.querySelectorAll('input[type="text"], textarea');
-    allInputs.forEach(input => {
+    // Buscar todos los elementos de input y actualizar sus placeholders de forma más agresiva
+    const allInputs = document.querySelectorAll('input[type="text"], textarea, input[placeholder]');
+    console.log('AIPPS Debug: Total inputs encontrados:', allInputs.length);
+    allInputs.forEach((input, index) => {
       if (input.id && input.id.includes('aipi')) {
+        const oldPlaceholder = input.placeholder;
         input.placeholder = t.placeholder;
         input.setAttribute('placeholder', t.placeholder);
-        console.log('AIPPS Debug: Input encontrado y actualizado:', input.id);
+        
+        // Force DOM update by removing and re-adding the attribute
+        input.removeAttribute('placeholder');
+        setTimeout(() => {
+          input.setAttribute('placeholder', t.placeholder);
+        }, 10);
+        
+        console.log(`AIPPS Debug: Input ${index} (${input.id}) actualizado de:`, oldPlaceholder, 'a:', t.placeholder);
       }
     });
   }
@@ -495,10 +509,22 @@
             
             // Update translations and elements
             t = getTranslations(config.language);
+            console.log('AIPPS Widget: New translations loaded:', t);
+            
+            // Call update function immediately and with delay for safety
+            updateLanguageElements();
             setTimeout(() => updateLanguageElements(), 100);
+            setTimeout(() => updateLanguageElements(), 500);
+            
             console.log('AIPPS Widget: Language updated to', newLanguage);
+            
+            // Additional aggressive update after a longer delay to ensure DOM is ready
+            setTimeout(() => {
+              console.log('AIPPS Widget: Performing final language update check');
+              updateLanguageElements();
+            }, 1000);
           } else {
-            console.log('AIPPS Widget: No language change detected');
+            console.log('AIPPS Widget: No language change detected. Current:', config.language, 'API response:', newLanguage);
           }
           
           if (newThemeColor !== config.themeColor) {
