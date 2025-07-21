@@ -60,19 +60,39 @@
 
   // Función para actualizar elementos del DOM con el idioma correcto
   function updateLanguageElements() {
-    console.log('AIPPS Debug: Actualizando elementos de idioma a:', config.language);
+    console.log('AIPPS Debug: Actualizando elementos de idioma a:', config.language, 'Traducciones:', t);
     
-    // Actualizar placeholder del input
+    // Actualizar placeholder del input (bubble chat)
     const chatInput = document.getElementById('aipi-input');
     if (chatInput) {
+      const oldPlaceholder = chatInput.placeholder;
       chatInput.placeholder = t.placeholder;
-      console.log('AIPPS Debug: Placeholder actualizado a:', t.placeholder);
+      console.log('AIPPS Debug: Placeholder actualizado de:', oldPlaceholder, 'a:', t.placeholder);
+      
+      // Forzar actualización visual
+      chatInput.setAttribute('placeholder', t.placeholder);
+    } else {
+      console.log('AIPPS Debug: No se encontró elemento aipi-input');
+    }
+    
+    // Actualizar placeholder del input fullscreen
+    const fullscreenInput = document.getElementById('aipi-fullscreen-input');
+    if (fullscreenInput) {
+      const oldPlaceholder = fullscreenInput.placeholder;
+      fullscreenInput.placeholder = t.placeholder;
+      console.log('AIPPS Debug: Fullscreen placeholder actualizado de:', oldPlaceholder, 'a:', t.placeholder);
+      
+      // Forzar actualización visual
+      fullscreenInput.setAttribute('placeholder', t.placeholder);
+    } else {
+      console.log('AIPPS Debug: No se encontró elemento aipi-fullscreen-input');
     }
     
     // Actualizar botón de nueva conversación si existe
     const newConversationBtn = document.querySelector('[data-translate="newConversation"]');
     if (newConversationBtn) {
       newConversationBtn.textContent = t.newConversation;
+      console.log('AIPPS Debug: Botón nueva conversación actualizado a:', t.newConversation);
     }
     
     // Actualizar cualquier otro elemento con atributo data-translate
@@ -80,16 +100,32 @@
     translatableElements.forEach(element => {
       const key = element.getAttribute('data-translate');
       if (t[key]) {
+        const oldText = element.textContent;
         element.textContent = t[key];
+        console.log('AIPPS Debug: Elemento', key, 'actualizado de:', oldText, 'a:', t[key]);
       }
     });
     
-    // Forzar actualización del DOM
-    if (chatInput && chatInput.parentNode) {
-      const parent = chatInput.parentNode;
-      parent.removeChild(chatInput);
-      parent.appendChild(chatInput);
-    }
+    // Buscar todos los elementos con atributo data-translate-placeholder
+    const placeholderElements = document.querySelectorAll('[data-translate-placeholder]');
+    placeholderElements.forEach(element => {
+      const key = element.getAttribute('data-translate-placeholder');
+      if (t[key]) {
+        element.placeholder = t[key];
+        element.setAttribute('placeholder', t[key]);
+        console.log('AIPPS Debug: Placeholder actualizado para elemento:', element.id, 'con:', t[key]);
+      }
+    });
+    
+    // Buscar todos los elementos de input y actualizar sus placeholders si tienen algún patrón conocido
+    const allInputs = document.querySelectorAll('input[type="text"], textarea');
+    allInputs.forEach(input => {
+      if (input.id && input.id.includes('aipi')) {
+        input.placeholder = t.placeholder;
+        input.setAttribute('placeholder', t.placeholder);
+        console.log('AIPPS Debug: Input encontrado y actualizado:', input.id);
+      }
+    });
   }
 
   // State variables
@@ -353,6 +389,12 @@
 
       // Start periodic config refresh to detect changes
       startConfigRefresh();
+      
+      // Forzar actualización de idioma después de la creación del widget
+      setTimeout(() => {
+        console.log('AIPPS Debug: Ejecutando actualización de idioma post-creación de widget');
+        updateLanguageElements();
+      }, 250);
     }).catch(error => {
       console.error('AIPI Widget Error:', error);
     });
@@ -386,7 +428,10 @@
         // Actualizar traducciones con el idioma de la integración
         t = getTranslations(config.language);
         
-        // Actualizar elementos del DOM con el nuevo idioma
+        // Actualizar elementos del DOM con el nuevo idioma (esperar a que el DOM esté listo)
+        setTimeout(() => updateLanguageElements(), 100);
+        
+        // También llamar inmediatamente para elementos ya existentes
         updateLanguageElements();
       }
 
@@ -428,6 +473,7 @@
           const newLanguage = data.integration?.language || 'es';
           
           console.log('AIPPS Widget: Checking position - Current:', config.position, 'New:', newPosition);
+          console.log('AIPPS Widget: Checking language - Current:', config.language, 'New:', newLanguage);
           
           if (newPosition !== config.position) {
             console.log('AIPPS Widget: Position changed from', config.position, 'to', newPosition);
@@ -449,8 +495,10 @@
             
             // Update translations and elements
             t = getTranslations(config.language);
-            updateLanguageElements();
+            setTimeout(() => updateLanguageElements(), 100);
             console.log('AIPPS Widget: Language updated to', newLanguage);
+          } else {
+            console.log('AIPPS Widget: No language change detected');
           }
           
           if (newThemeColor !== config.themeColor) {
@@ -1514,7 +1562,7 @@ Contenido: [Error al extraer contenido detallado]
         </div>
         <div id="aipi-messages-container"></div>
         <div id="aipi-input-container">
-          <input type="text" id="aipi-input" placeholder="${t.placeholder}">
+          <input type="text" id="aipi-input" placeholder="" data-translate-placeholder="placeholder">
           <button id="aipi-send-button" disabled>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -3146,7 +3194,7 @@ Contenido: [Error al extraer contenido detallado]
           </div>
           <div id="aipi-messages-container"></div>
           <div id="aipi-input-container">
-            <input type="text" id="aipi-fullscreen-input" placeholder="${t.placeholder}" onkeydown="if(event.key==='Enter') window.aipiSendFullscreenMessage()">
+            <input type="text" id="aipi-fullscreen-input" placeholder="" data-translate-placeholder="placeholder" onkeydown="if(event.key==='Enter') window.aipiSendFullscreenMessage()">
             <button onclick="window.aipiSendFullscreenMessage()">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
