@@ -23,17 +23,20 @@ import { formatRelativeTime } from "@/utils/format-time";
 export default function IntegrationConversations() {
   const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
+
+  // Debug: Log current language
+  console.log('Current language in conversations page:', i18n.language);
   
   // Obtener la integración para mostrar su nombre
   const { data: integration, isLoading: isLoadingIntegration } = useQuery({
-    queryKey: [`/api/integrations/${id}`],
+    queryKey: [`/api/integrations/${id}`, i18n.language],
   });
 
   // Obtener conversaciones específicas de esta integración
   const { data: conversations, isLoading: isLoadingConversations } = useQuery({
-    queryKey: [`/api/integrations/${id}/conversations`],
+    queryKey: [`/api/integrations/${id}/conversations`, i18n.language],
   });
 
   // Filtrar conversaciones por término de búsqueda
