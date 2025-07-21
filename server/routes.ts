@@ -2909,10 +2909,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (doc.path && fs.existsSync(doc.path)) {
             try {
               if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                // Word document detected - attempt processing
-                content = `Documento Word: ${doc.originalName}. Este documento contiene información detallada sobre los servicios y características de ${integration.name}.`;
+                // Word document detected - extract actual content using Mammoth
+                try {
+                  const mammoth = require('mammoth');
+                  const fileBuffer = require('fs').readFileSync(doc.path);
+                  const result = await mammoth.extractRawText({ buffer: fileBuffer });
+                  content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
+                } catch (mammothError) {
+                  console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
+                  content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+                }
               } else if (doc.mimetype === 'application/pdf') {
-                content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
+                // PDF document detected - extract actual content using pdf-parse
+                try {
+                  const pdfParse = require('pdf-parse');
+                  const fileBuffer = require('fs').readFileSync(doc.path);
+                  const pdfData = await pdfParse(fileBuffer);
+                  content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
+                } catch (pdfError) {
+                  console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
+                  content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+                }
               } else if (doc.mimetype === 'text/plain') {
                 content = require('fs').readFileSync(doc.path, 'utf8');
               } else {
@@ -3122,9 +3139,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (doc.path && fs.existsSync(doc.path)) {
             try {
               if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                content = `Documento Word: ${doc.originalName}. Contiene información detallada sobre los servicios y características de ${integration.name}.`;
+                // Word document detected - extract actual content using Mammoth
+                try {
+                  const mammoth = require('mammoth');
+                  const fileBuffer = require('fs').readFileSync(doc.path);
+                  const result = await mammoth.extractRawText({ buffer: fileBuffer });
+                  content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
+                } catch (mammothError) {
+                  console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
+                  content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+                }
               } else if (doc.mimetype === 'application/pdf') {
-                content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
+                // PDF document detected - extract actual content using pdf-parse
+                try {
+                  const pdfParse = require('pdf-parse');
+                  const fileBuffer = require('fs').readFileSync(doc.path);
+                  const pdfData = await pdfParse(fileBuffer);
+                  content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
+                } catch (pdfError) {
+                  console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
+                  content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+                }
               } else if (doc.mimetype === 'text/plain') {
                 content = require('fs').readFileSync(doc.path, 'utf8');
               } else {
@@ -3380,9 +3415,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (doc.path && fs.existsSync(doc.path)) {
               try {
                 if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                  content = `Documento Word: ${doc.originalName}. Contiene información detallada sobre los servicios y características de ${integration.name}.`;
+                  // Word document detected - extract actual content using Mammoth
+                  try {
+                    const mammoth = require('mammoth');
+                    const fileBuffer = require('fs').readFileSync(doc.path);
+                    const result = await mammoth.extractRawText({ buffer: fileBuffer });
+                    content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
+                  } catch (mammothError) {
+                    console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
+                    content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+                  }
                 } else if (doc.mimetype === 'application/pdf') {
-                  content = `Documento PDF: ${doc.originalName}. Contiene información técnica y comercial de ${integration.name}.`;
+                  // PDF document detected - extract actual content using pdf-parse
+                  try {
+                    const pdfParse = require('pdf-parse');
+                    const fileBuffer = require('fs').readFileSync(doc.path);
+                    const pdfData = await pdfParse(fileBuffer);
+                    content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
+                  } catch (pdfError) {
+                    console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
+                    content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+                  }
                 } else if (doc.mimetype === 'text/plain') {
                   content = fs.readFileSync(doc.path, 'utf8');
                 } else {
