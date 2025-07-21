@@ -113,7 +113,7 @@ export async function generateChatCompletion(
       
       if (responseLanguage === "fr") {
         // Pour widgets en français, utiliser le contexte complet du site web
-        systemContent += context 
+        systemContent = context 
           ? `Vous êtes ${assistantName}, un assistant IA intégré spécifiquement pour ce site web. Votre objectif principal est de fournir des informations utiles, précises et complètes basées sur le contexte du site web et les documents fournis.
 
 INSTRUCTIONS IMPORTANTES:
@@ -137,7 +137,7 @@ VOTRE COMPORTEMENT CONFIGURÉ: "${behavior}"
 Vous pouvez aider avec des questions sur ce site web spécifique. Votre comportement doit être: ${behavior}. Répondez toujours en français.`;
       } else if (responseLanguage === "en") {
         // For English widgets, use the full website context
-        systemContent += context 
+        systemContent = context 
           ? `You are ${assistantName}, an AI assistant integrated specifically for this website. Your main goal is to provide useful, accurate, and complete information based on the website context and provided documents.
 
 IMPORTANT INSTRUCTIONS:
@@ -161,7 +161,7 @@ YOUR CONFIGURED BEHAVIOR: "${behavior}"
 You can help with questions about this specific website. Your behavior should be: ${behavior}. Always respond in English.`;
       } else {
         // Para widgets en español, usar el contexto completo del sitio web
-        systemContent += context 
+        systemContent = context 
           ? `Eres ${assistantName}, un asistente de IA integrado específicamente para este sitio web. Tu objetivo principal es proporcionar información útil, precisa y completa basada en el contexto del sitio web y los documentos proporcionados.
 
 INSTRUCCIONES IMPORTANTES:
