@@ -612,6 +612,12 @@ export class MemStorage implements IStorage {
 
     const updatedIntegration = { ...integration, ...data };
     this.integrations.set(id, updatedIntegration);
+    
+    // Log language changes for debugging
+    if (data.language && integration.language !== data.language) {
+      console.log(`Language updated for integration ${id}: ${integration.language} → ${data.language}`);
+    }
+    
     return updatedIntegration;
   }
 

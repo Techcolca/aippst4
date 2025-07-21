@@ -27,15 +27,30 @@
     const translations = {
       es: {
         placeholder: "Escribe tu mensaje...",
-        newConversation: "Nueva conversación"
+        newConversation: "Nueva conversación",
+        sending: "Enviando...",
+        typing: "Escribiendo...",
+        minimize: "Minimizar",
+        close: "Cerrar",
+        expand: "Expandir"
       },
       en: {
         placeholder: "Type your message...",
-        newConversation: "New conversation"
+        newConversation: "New conversation",
+        sending: "Sending...",
+        typing: "Typing...",
+        minimize: "Minimize",
+        close: "Close",
+        expand: "Expand"
       },
       fr: {
         placeholder: "Tapez votre message...",
-        newConversation: "Nouvelle conversation"
+        newConversation: "Nouvelle conversation",
+        sending: "Envoi...",
+        typing: "Saisie...",
+        minimize: "Minimiser",
+        close: "Fermer",
+        expand: "Développer"
       }
     };
     return translations[lang] || translations.en;
@@ -45,14 +60,36 @@
 
   // Función para actualizar elementos del DOM con el idioma correcto
   function updateLanguageElements() {
+    console.log('AIPPS Debug: Actualizando elementos de idioma a:', config.language);
+    
     // Actualizar placeholder del input
     const chatInput = document.getElementById('aipi-input');
     if (chatInput) {
       chatInput.placeholder = t.placeholder;
+      console.log('AIPPS Debug: Placeholder actualizado a:', t.placeholder);
     }
     
-    // Actualizar otros elementos de texto si es necesario
-    // Se pueden agregar más elementos aquí según sea necesario
+    // Actualizar botón de nueva conversación si existe
+    const newConversationBtn = document.querySelector('[data-translate="newConversation"]');
+    if (newConversationBtn) {
+      newConversationBtn.textContent = t.newConversation;
+    }
+    
+    // Actualizar cualquier otro elemento con atributo data-translate
+    const translatableElements = document.querySelectorAll('[data-translate]');
+    translatableElements.forEach(element => {
+      const key = element.getAttribute('data-translate');
+      if (t[key]) {
+        element.textContent = t[key];
+      }
+    });
+    
+    // Forzar actualización del DOM
+    if (chatInput && chatInput.parentNode) {
+      const parent = chatInput.parentNode;
+      parent.removeChild(chatInput);
+      parent.appendChild(chatInput);
+    }
   }
 
   // State variables
@@ -388,6 +425,7 @@
           // Check if position has changed
           const newPosition = data.integration?.position || 'bottom-right';
           const newThemeColor = data.integration?.themeColor || config.themeColor;
+          const newLanguage = data.integration?.language || 'es';
           
           console.log('AIPPS Widget: Checking position - Current:', config.position, 'New:', newPosition);
           
@@ -402,6 +440,17 @@
             }
           } else {
             console.log('AIPPS Widget: No position change detected');
+          }
+          
+          // Check if language has changed
+          if (newLanguage !== config.language) {
+            console.log('AIPPS Widget: Language changed from', config.language, 'to', newLanguage);
+            config.language = newLanguage;
+            
+            // Update translations and elements
+            t = getTranslations(config.language);
+            updateLanguageElements();
+            console.log('AIPPS Widget: Language updated to', newLanguage);
           }
           
           if (newThemeColor !== config.themeColor) {

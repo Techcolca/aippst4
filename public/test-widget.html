@@ -3,71 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba Widget AIPPS - Mensajes Rotativos</title>
+    <title>Test Widget Language Change</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 40px;
             line-height: 1.6;
         }
-        .content {
-            background: #f9f9f9;
-            padding: 30px;
-            border-radius: 10px;
-            margin: 20px 0;
+        .info-box {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        p {
-            color: #666;
-            margin-bottom: 15px;
-        }
-        .note {
-            background: #e3f2fd;
+        .status {
+            background: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
             padding: 15px;
-            border-left: 4px solid #2196f3;
             margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <h1>Página de Prueba - Widget AIPPS</h1>
+    <h1>Test Widget Language Change</h1>
     
-    <div class="content">
-        <h2>Mensajes Rotativos Implementados</h2>
-        <p>Esta página está diseñada para probar el sistema de mensajes rotativos del widget AIPPS.</p>
-        
-        <div class="note">
-            <strong>Características del sistema:</strong>
-            <ul>
-                <li>7 mensajes comerciales diferentes</li>
-                <li>Rotación automática cada 7 segundos</li>
-                <li>Carga dinámica desde la base de datos</li>
-                <li>Mensajes de respaldo en caso de fallo del API</li>
-            </ul>
-        </div>
-        
-        <p>El widget flotante en la esquina inferior derecha debería mostrar diferentes mensajes cada 7 segundos.</p>
-        
-        <h3>Lista de Mensajes:</h3>
+    <div class="info-box">
+        <h3>Instrucciones de Prueba:</h3>
         <ol>
-            <li>Bienvenido a AIPPS - La plataforma conversacional con IA</li>
-            <li>Automatiza tu atención al cliente con IA avanzada</li>
-            <li>Integra chatbots personalizados en minutos</li>
-            <li>Captura leads mientras duermes</li>
-            <li>Agenda citas automáticamente</li>
-            <li>Análisis en tiempo real</li>
-            <li>Multiplataforma y escalable</li>
+            <li>El widget debería aparecer en la esquina inferior derecha</li>
+            <li>Debería mostrar el placeholder en francés: "Tapez votre message..."</li>
+            <li>Cambia el idioma de la integración desde el dashboard</li>
+            <li>El widget debería actualizar automáticamente en unos segundos</li>
         </ol>
-        
-        <p>Abre la consola del navegador (F12) para ver los logs de depuración del sistema de rotación.</p>
     </div>
 
-    <!-- Widget AIPPS -->
-    <script src="/embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f"></script>
+    <div class="status">
+        <strong>Estado actual:</strong> Widget configurado con API Key de Techcolca (idioma: francés)
+    </div>
+
+    <p>Esta es una página de prueba para verificar que el widget de chat actualiza su idioma correctamente cuando se modifica desde el dashboard de administración.</p>
+
+    <p>El widget utiliza la API key: <code>ac1b29fdd5b0e1e207bb3b71cc6cd2b1d0cf356c1ffa6c74</code></p>
+
+    <!-- Widget Script -->
+    <script src="http://localhost:5000/static/embed.js?key=ac1b29fdd5b0e1e207bb3b71cc6cd2b1d0cf356c1ffa6c74"></script>
 </body>
 </html>

@@ -123,6 +123,14 @@ July 21, 2025:
 - ✓ Updated PDF export functionality to use translated text for all languages
 - ✓ Added 40+ translation keys for analytics interface, PDF export, and advanced metrics
 - ✓ Analytics page now fully supports Spanish, English, and French language switching
+- ✓ CRITICAL FIX: Resolved widget language persistence bug - integration language changes now persist and update widgets
+- ✓ Added language field to widget API endpoint response (server/routes.ts)
+- ✓ Enhanced embed.js widget to use integration-specific language settings
+- ✓ Implemented automatic widget language detection and periodic refresh system
+- ✓ Updated memory storage to include language field for all existing integrations
+- ✓ Widget elements (placeholder, buttons, messages) now dynamically update when language changes
+- ✓ Created comprehensive translation system for widget interface elements (ES/EN/FR)
+- ✓ Added live configuration refresh system that detects language changes every 3 seconds
 
 June 25, 2025:
 - ✓ Fixed promotional message rotation system on homepage
