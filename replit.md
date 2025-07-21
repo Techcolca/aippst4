@@ -109,6 +109,10 @@ July 21, 2025:
 - ✓ Maintained backward compatibility for existing integrations with bottom-center position
 - ✓ Fixed TypeScript errors in edit integration form by handling legacy position values
 - ✓ Kept CSS styling for bottom-center position for existing embedded widgets
+- ✓ Fixed login success/failure message localization issue
+- ✓ Added complete translation keys for login page in English, French, and Spanish
+- ✓ Implemented useTranslation hook in login component for proper i18n support
+- ✓ Login messages now appear in user's selected language instead of hardcoded English
 
 June 25, 2025:
 - ✓ Fixed promotional message rotation system on homepage

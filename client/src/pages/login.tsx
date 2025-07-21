@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function Login() {
   const { login } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [, navigate] = useLocation();
   
@@ -38,15 +40,15 @@ export default function Login() {
     try {
       await login(values.username, values.password);
       toast({
-        title: "Login successful",
-        description: "Welcome back to AIPI!",
+        title: t("login.success_title"),
+        description: t("login.success_message"),
       });
       navigate("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
       toast({
-        title: "Login failed",
-        description: "Invalid username or password. Please try again.",
+        title: t("login.failed_title"),
+        description: t("login.failed_message"),
         variant: "destructive"
       });
     } finally {
@@ -61,9 +63,9 @@ export default function Login() {
           <div className="flex justify-center mb-6">
             <h1 className="text-3xl font-bold text-primary-600 dark:text-primary-400">AIPI</h1>
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Log in to your account</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">{t("login.title")}</CardTitle>
           <CardDescription className="text-center">
-            Enter your credentials to access your dashboard
+            {t("login.subtitle")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,9 +76,9 @@ export default function Login() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>{t("login.username")}</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your username" {...field} />
+                      <Input placeholder={t("login.username_placeholder")} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -88,9 +90,9 @@ export default function Login() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t("login.password")}</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter your password" autoComplete="current-password" {...field} />
+                      <Input type="password" placeholder={t("login.password_placeholder")} autoComplete="current-password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -98,7 +100,7 @@ export default function Login() {
               />
               
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Logging in..." : "Log in"}
+                {isLoading ? t("login.submitting") : t("login.submit")}
               </Button>
             </form>
           </Form>

@@ -9,6 +9,21 @@
     "english": "English",
     "french": "French"
   },
+  "login": {
+    "success_title": "Login successful",
+    "success_message": "Welcome back to AIPI!",
+    "failed_title": "Login failed",
+    "failed_message": "Invalid username or password. Please try again.",
+    "title": "Log in to your account",
+    "subtitle": "Enter your credentials to access your dashboard",
+    "username": "Username",
+    "password": "Password",
+    "submit": "Log in",
+    "submitting": "Logging in...",
+    "username_placeholder": "Enter your username",
+    "password_placeholder": "Enter your password",
+    "register_link": "Don't have an account? Register here"
+  },
   "language": {
     "select": "Language",
     "fr": "French",

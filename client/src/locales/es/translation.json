@@ -9,6 +9,21 @@
     "english": "Inglés",
     "french": "Francés"
   },
+  "login": {
+    "success_title": "Inicio de sesión exitoso",
+    "success_message": "¡Bienvenido de vuelta a AIPI!",
+    "failed_title": "Error al iniciar sesión",
+    "failed_message": "Nombre de usuario o contraseña inválidos. Por favor, inténtalo de nuevo.",
+    "title": "Iniciar sesión en tu cuenta",
+    "subtitle": "Ingresa tus credenciales para acceder a tu panel de control",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "submit": "Iniciar Sesión",
+    "submitting": "Iniciando sesión...",
+    "username_placeholder": "Ingresa tu nombre de usuario",
+    "password_placeholder": "Ingresa tu contraseña",
+    "register_link": "¿No tienes una cuenta? Regístrate aquí"
+  },
   "language": {
     "select": "Idioma",
     "fr": "Francés",
