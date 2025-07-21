@@ -2,6 +2,10 @@
 export function buildKnowledgeBase(integration: any, documents: any[], siteContent: any[]): string {
   let knowledgeBase = integration.botBehavior || "Eres un asistente útil para este sitio web.";
   
+  console.log(`buildKnowledgeBase Debug: Building knowledge for ${integration.name}`);
+  console.log(`buildKnowledgeBase Debug: Documents count: ${documents.length}`);
+  console.log(`buildKnowledgeBase Debug: Site content count: ${siteContent.length}`);
+  
   // Agregar información específica del sitio web basada en la integración
   knowledgeBase += `
 

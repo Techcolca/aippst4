@@ -3137,6 +3137,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Detect language and generate AI response
       const detectedLanguage = detectLanguage(message);
+      
+      console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
+      console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
+      
       const completion = await generateChatCompletion(
         messages.map(m => ({ role: m.role, content: m.content })),
         enhancedContext,
