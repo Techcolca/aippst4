@@ -137,6 +137,14 @@ July 21, 2025:
 - ✓ Inserted specific TechColca website content into database for testing (services, AI solutions, security focus)
 - ✓ Enhanced debug logging in OpenAI integration to track context and system message construction
 - ✓ Chatbot now has access to website-specific content for contextual responses instead of generic replies
+- ✓ FRONTEND INTERNATIONALIZATION COMPLETION: Fixed remaining translation issues for complete multilingual support
+- ✓ Added missing translation keys for "conversations_for", "online" status, and relative time formats (ES/EN/FR)
+- ✓ Created formatRelativeTime() utility function for consistent "hace X minutos/horas/días" time display
+- ✓ Updated integration-conversations.tsx to use dynamic relative time formatting instead of raw timestamps
+- ✓ Enhanced embed.js widgets with language-specific "Online" status display (En línea/Online/En ligne)
+- ✓ Widget headers now show "Online" status in correct integration language (Spanish/English/French)
+- ✓ Both bubble and fullscreen chat widgets support dynamic "Online" status translation
+- ✓ Time stamps in conversation lists now display as "hace 2 horas" instead of raw dates for better UX
 
 June 25, 2025:
 - ✓ Fixed promotional message rotation system on homepage
