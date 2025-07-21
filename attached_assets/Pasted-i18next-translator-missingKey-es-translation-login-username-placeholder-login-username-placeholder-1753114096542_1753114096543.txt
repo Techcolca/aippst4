@@ -1,0 +1,85 @@
+i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.password login.password
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.title login.title
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.subtitle login.subtitle
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.submit login.submit
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.username login.username
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.password login.password
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.title login.title
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.subtitle login.subtitle
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey es translation login.submit login.submit
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:66 i18next::translator: missingKey es translation login.title login.title
+login.tsx:68 i18next::translator: missingKey es translation login.subtitle login.subtitle
+login.tsx:103 i18next::translator: missingKey es translation login.submit login.submit
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+login.tsx:66 i18next::translator: missingKey es translation login.title login.title
+login.tsx:68 i18next::translator: missingKey es translation login.subtitle login.subtitle
+login.tsx:103 i18next::translator: missingKey es translation login.submit login.submit
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+auth-context.tsx:180 Intentando iniciar sesión para el usuario: Pablo
+login.tsx:66 i18next::translator: missingKey es translation login.title login.title
+login.tsx:68 i18next::translator: missingKey es translation login.subtitle login.subtitle
+login.tsx:103 i18next::translator: missingKey es translation login.submitting login.submitting
+login.tsx:79 i18next::translator: missingKey es translation login.username login.username
+login.tsx:81 i18next::translator: missingKey es translation login.username_placeholder login.username_placeholder
+login.tsx:93 i18next::translator: missingKey es translation login.password login.password
+login.tsx:95 i18next::translator: missingKey es translation login.password_placeholder login.password_placeholder
+auth-context.tsx:190 Usuario autenticado: {id: 1, username: 'Pablo', email: 'techcolca@gmail.com', fullName: 'Pablo Emilio Rueda Criales', apiKey: 'd204415da71970ea19d70badd63195719dc05afef6ffe38e', …}
+auth-context.tsx:195 Token guardado en localStorage: eyJhbGciOiJIUzI1NiIs...
+login.tsx:43 i18next::translator: missingKey es translation login.success_title login.success_title
+login.tsx:44 i18next::translator: missingKey es translation login.success_message login.success_message
+dashboard-tabs.tsx:343 i18next::translator: missingKey es translation refresh Refresh
+language-selector.tsx:25 i18next: languageChanged es
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+dashboard-tabs.tsx:343 i18next::translator: missingKey es translation refresh Refresh
+queryClient.ts:70 Respuesta: 200 OK
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK
+dashboard-tabs.tsx:343 i18next::translator: missingKey es translation refresh Refresh
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK

@@ -28,9 +28,13 @@ i18n
   // Initialisation de i18next
   .init({
     resources,
-    fallbackLng: 'fr', // Langue par défaut (français)
+    fallbackLng: 'en', // Langue par défaut (english - mejor fallback)
     debug: true, // Debug mode pour le développement
     returnObjects: false, // Mantener false para evitar errores de renderizado
+    saveMissing: true, // Guardar claves faltantes para debug
+    missingKeyHandler: function(lng, ns, key, fallbackValue) {
+      console.log(`Missing translation: ${lng}.${ns}.${key}`);
+    },
 
     interpolation: {
       escapeValue: false, // Non nécessaire pour React
