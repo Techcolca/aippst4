@@ -525,6 +525,12 @@
             }, 1000);
           } else {
             console.log('AIPPS Widget: No language change detected. Current:', config.language, 'API response:', newLanguage);
+            
+            // For debugging: force update every 10th check to ensure elements are always correct
+            if (Math.random() < 0.1) {
+              console.log('AIPPS Widget: Forcing periodic language refresh');
+              updateLanguageElements();
+            }
           }
           
           if (newThemeColor !== config.themeColor) {
