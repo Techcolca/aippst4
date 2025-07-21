@@ -34,13 +34,21 @@
         <ol>
             <li>El widget debería aparecer en la esquina inferior derecha</li>
             <li>Debería mostrar el placeholder en francés: "Tapez votre message..."</li>
-            <li>Cambia el idioma de la integración desde el dashboard</li>
-            <li>El widget debería actualizar automáticamente en unos segundos</li>
+            <li><strong><a href="http://localhost:5000" target="_blank">Abre el dashboard en otra pestaña</a></strong></li>
+            <li>Inicia sesión (Usuario: Pablo, Contraseña: admin)</li>
+            <li>Ve a Integraciones → Busca "Techcolca" → Editar</li>
+            <li>Cambia el idioma (español/inglés/francés) y guarda</li>
+            <li>Regresa a esta pestaña - el widget debería actualizar automáticamente</li>
         </ol>
     </div>
 
     <div class="status">
         <strong>Estado actual:</strong> Widget configurado con API Key de Techcolca (idioma: francés)
+        <br><br>
+        <strong>Cambio rápido de idioma:</strong>
+        <button onclick="changeLanguage('es')" style="margin: 5px; padding: 8px 15px;">Español</button>
+        <button onclick="changeLanguage('en')" style="margin: 5px; padding: 8px 15px;">English</button>
+        <button onclick="changeLanguage('fr')" style="margin: 5px; padding: 8px 15px;">Français</button>
     </div>
 
     <p>Esta es una página de prueba para verificar que el widget de chat actualiza su idioma correctamente cuando se modifica desde el dashboard de administración.</p>
@@ -49,5 +57,41 @@
 
     <!-- Widget Script -->
     <script src="http://localhost:5000/static/embed.js?key=ac1b29fdd5b0e1e207bb3b71cc6cd2b1d0cf356c1ffa6c74"></script>
+
+    <script>
+        async function changeLanguage(language) {
+            try {
+                // Primero intentar obtener el token desde localStorage
+                let token = localStorage.getItem('aipi_auth_token');
+                
+                if (!token) {
+                    alert('Para cambiar el idioma, necesitas estar autenticado. Por favor, inicia sesión en el dashboard primero.');
+                    window.open('http://localhost:5000', '_blank');
+                    return;
+                }
+                
+                const response = await fetch('http://localhost:5000/api/integrations/8', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ language: language })
+                });
+                
+                if (response.ok) {
+                    alert(`Idioma cambiado a: ${language === 'es' ? 'Español' : language === 'en' ? 'English' : 'Français'}. El widget se actualizará en unos segundos.`);
+                } else if (response.status === 401) {
+                    alert('Token expirado. Por favor, inicia sesión en el dashboard nuevamente.');
+                    window.open('http://localhost:5000', '_blank');
+                } else {
+                    alert('Error al cambiar el idioma. Intenta desde el dashboard.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error de conexión. Intenta desde el dashboard.');
+            }
+        }
+    </script>
 </body>
 </html>
