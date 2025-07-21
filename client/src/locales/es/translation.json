@@ -11,6 +11,12 @@
   },
   "login": "Iniciar sesión",
   "signup": "Registrarse",
+  "chat": {
+    "placeholder": "Escribe tu mensaje...",
+    "send": "Enviar",
+    "typing": "Escribiendo...",
+    "new_conversation": "Nueva conversación"
+  },
   "loginPage": {
     "success_title": "Inicio de sesión exitoso",
     "success_message": "¡Bienvenido de vuelta a AIPI!",

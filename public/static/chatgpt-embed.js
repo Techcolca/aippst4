@@ -5,6 +5,28 @@
  * Este script crea un botón flotante que al hacer clic abre un chat en pantalla completa.
  */
 (function() {
+  // Función para obtener traducciones según el idioma del navegador
+  function getTranslations() {
+    const lang = navigator.language.substring(0, 2);
+    const translations = {
+      es: {
+        placeholder: "Escribe tu mensaje...",
+        newConversation: "Nueva conversación"
+      },
+      en: {
+        placeholder: "Type your message...",
+        newConversation: "New conversation"
+      },
+      fr: {
+        placeholder: "Tapez votre message...",
+        newConversation: "Nouvelle conversation"
+      }
+    };
+    return translations[lang] || translations.en;
+  }
+  
+  const t = getTranslations();
+  
   // Configuración inicial y datos de estado
   let config = {
     apiKey: '',
@@ -270,7 +292,7 @@
             <div id="aipi-new-chat">
               <button id="aipi-new-chat-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Nueva conversación
+${t.newConversation}
               </button>
             </div>
           </div>
@@ -281,7 +303,7 @@
               <!-- Los mensajes se añadirán aquí -->
             </div>
             <div id="aipi-chat-input-area">
-              <textarea id="aipi-chat-input" placeholder="Escribe tu mensaje..." rows="1"></textarea>
+              <textarea id="aipi-chat-input" placeholder="${t.placeholder}" rows="1"></textarea>
               <button id="aipi-chat-send" disabled style="background-color: ${config.mainColor};">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13"></line>

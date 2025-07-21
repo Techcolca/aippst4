@@ -20,6 +20,28 @@
     fontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
   };
 
+  // Función para obtener traducciones según el idioma del navegador
+  function getTranslations() {
+    const lang = navigator.language.substring(0, 2);
+    const translations = {
+      es: {
+        placeholder: "Escribe tu mensaje...",
+        newConversation: "Nueva conversación"
+      },
+      en: {
+        placeholder: "Type your message...",
+        newConversation: "New conversation"
+      },
+      fr: {
+        placeholder: "Tapez votre message...",
+        newConversation: "Nouvelle conversation"
+      }
+    };
+    return translations[lang] || translations.en;
+  }
+  
+  const t = getTranslations();
+
   // State variables
   let widgetInstance = null;
   let isOpen = false;
@@ -3055,7 +3077,7 @@ Contenido: [Error al extraer contenido detallado]
           </div>
           <div id="aipi-messages-container"></div>
           <div id="aipi-input-container">
-            <input type="text" id="aipi-fullscreen-input" placeholder="Escribe tu mensaje..." onkeydown="if(event.key==='Enter') window.aipiSendFullscreenMessage()">
+            <input type="text" id="aipi-fullscreen-input" placeholder="${t.placeholder}" onkeydown="if(event.key==='Enter') window.aipiSendFullscreenMessage()">
             <button onclick="window.aipiSendFullscreenMessage()">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="22" y1="2" x2="11" y2="13"></line>

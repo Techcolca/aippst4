@@ -5,6 +5,28 @@
  * Este script crea un botón flotante que al hacer clic abre un chat en pantalla completa.
  */
 (function() {
+  // Función para obtener traducciones según el idioma del navegador
+  function getTranslations() {
+    const lang = navigator.language.substring(0, 2);
+    const translations = {
+      es: {
+        placeholder: "Escribe tu mensaje...",
+        newConversación: "Nueva conversación"
+      },
+      en: {
+        placeholder: "Type your message...",
+        newConversation: "New conversation"
+      },
+      fr: {
+        placeholder: "Tapez votre message...",
+        newConversation: "Nouvelle conversation"
+      }
+    };
+    return translations[lang] || translations.en;
+  }
+  
+  const t = getTranslations();
+
   // Configuración inicial y datos de estado
   let config = {
     apiKey: '',
@@ -176,7 +198,7 @@
           <!-- Los mensajes se añadirán aquí -->
         </div>
         <div id="aipi-chat-input-area">
-          <input type="text" id="aipi-chat-input" placeholder="Escribe tu mensaje...">
+          <input type="text" id="aipi-chat-input" placeholder="${t.placeholder}">
           <button id="aipi-chat-send" disabled style="background-color: ${config.mainColor};">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>

@@ -653,7 +653,7 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
           value={inputValue}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
-          placeholder="Escribe tu mensaje..."
+          placeholder={t("chat.placeholder")}
           className="flex-1"
         />
         <Button 
