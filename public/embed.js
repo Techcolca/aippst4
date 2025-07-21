@@ -47,7 +47,9 @@
         email: "Correo electrónico",
         // Welcome messages
         defaultWelcome: "¡Hola! ¿En qué puedo ayudarte hoy?",
-        fallbackWelcome: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿Cómo puedo ayudarte hoy?"
+        fallbackWelcome: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿Cómo puedo ayudarte hoy?",
+        // Status
+        online: "En línea"
       },
       en: {
         placeholder: "Type your message...",
@@ -71,7 +73,9 @@
         email: "Email",
         // Welcome messages
         defaultWelcome: "Hello! How can I help you today?",
-        fallbackWelcome: "👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?"
+        fallbackWelcome: "👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?",
+        // Status
+        online: "Online"
       },
       fr: {
         placeholder: "Tapez votre message...",
@@ -95,7 +99,9 @@
         email: "Email",
         // Welcome messages
         defaultWelcome: "Bonjour! Comment puis-je vous aider aujourd'hui?",
-        fallbackWelcome: "👋 Bonjour! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui?"
+        fallbackWelcome: "👋 Bonjour! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui?",
+        // Status
+        online: "En ligne"
       }
     };
     return translations[lang] || translations.en;
@@ -134,6 +140,14 @@
       fullscreenInput.setAttribute('placeholder', t.placeholder);
     } else {
       console.log('AIPPS Debug: No se encontró elemento aipi-fullscreen-input');
+    }
+    
+    // Actualizar estado "Online" si existe
+    const statusElement = document.getElementById('aipi-status');
+    if (statusElement && config.showAvailability) {
+      const oldStatus = statusElement.textContent;
+      statusElement.textContent = t.online;
+      console.log('AIPPS Debug: Estado actualizado de:', oldStatus, 'a:', t.online);
     }
     
     // Actualizar botón de nueva conversación si existe
@@ -1659,7 +1673,7 @@ Contenido: [Error al extraer contenido detallado]
             </div>
             <div id="aipi-header-text">
               <span id="aipi-assistant-name">${escapeHTML(config.integrationName || config.assistantName)}</span>
-              ${config.showAvailability ? '<span id="aipi-status">Online</span>' : ''}
+              ${config.showAvailability ? `<span id="aipi-status">${t.online}</span>` : ''}
             </div>
           </div>
           <div id="aipi-header-actions">
@@ -3374,7 +3388,7 @@ Contenido: [Error al extraer contenido detallado]
               </div>
               <div id="aipi-header-text">
                 <span id="aipi-assistant-name">${escapeHTML(config.integrationName || config.assistantName)}</span>
-                <span id="aipi-status">Online</span>
+                <span id="aipi-status">${t.online}</span>
               </div>
             </div>
             <div id="aipi-header-actions">

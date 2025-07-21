@@ -18,6 +18,7 @@ import {
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
+import { formatRelativeTime } from "@/utils/format-time";
 
 export default function IntegrationConversations() {
   const { id } = useParams<{ id: string }>();
@@ -123,7 +124,7 @@ export default function IntegrationConversations() {
                       <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
-                          <span>{new Date(conversation.createdAt).toLocaleString()}</span>
+                          <span>{formatRelativeTime(conversation.createdAt, t)}</span>
                         </div>
                         {conversation.messageCount && (
                           <div className="flex items-center gap-1">

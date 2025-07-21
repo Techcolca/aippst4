@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { X, Plus, Send } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import ChatInterface from "./chat-interface";
 
 interface EmbeddableWidgetProps {
@@ -18,6 +19,7 @@ export default function EmbeddableWidget({
 }: EmbeddableWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const { t } = useTranslation();
   
   // Position styles
   const getPositionStyles = () => {
@@ -65,7 +67,7 @@ export default function EmbeddableWidget({
               </div>
               <div className="ml-3">
                 <p className="font-medium">{assistantName}</p>
-                <p className="text-xs opacity-75">Online</p>
+                <p className="text-xs opacity-75">{t("chat.online")}</p>
               </div>
             </div>
             <div className="flex">
