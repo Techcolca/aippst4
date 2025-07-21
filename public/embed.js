@@ -44,7 +44,10 @@
         register: "Registrarse",
         username: "Nombre de usuario",
         password: "Contraseña",
-        email: "Correo electrónico"
+        email: "Correo electrónico",
+        // Welcome messages
+        defaultWelcome: "¡Hola! ¿En qué puedo ayudarte hoy?",
+        fallbackWelcome: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿Cómo puedo ayudarte hoy?"
       },
       en: {
         placeholder: "Type your message...",
@@ -65,7 +68,10 @@
         register: "Register",
         username: "Username",
         password: "Password",
-        email: "Email"
+        email: "Email",
+        // Welcome messages
+        defaultWelcome: "Hello! How can I help you today?",
+        fallbackWelcome: "👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?"
       },
       fr: {
         placeholder: "Tapez votre message...",
@@ -86,7 +92,10 @@
         register: "S'inscrire",
         username: "Nom d'utilisateur",
         password: "Mot de passe",
-        email: "Email"
+        email: "Email",
+        // Welcome messages
+        defaultWelcome: "Bonjour! Comment puis-je vous aider aujourd'hui?",
+        fallbackWelcome: "👋 Bonjour! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui?"
       }
     };
     return translations[lang] || translations.en;
@@ -145,6 +154,23 @@
         console.log('AIPPS Debug: Descripción personalizada actualizada de:', oldDescription.substring(0, 50) + '...', 'a:', translatedDescription.substring(0, 50) + '...');
       }
     }
+
+    // Actualizar mensaje de bienvenida en mensajes existentes
+    const firstAssistantMessage = document.querySelector('.aipi-message.assistant .aipi-message-text');
+    if (firstAssistantMessage) {
+      const currentText = firstAssistantMessage.textContent;
+      // Solo actualizar si es un mensaje de bienvenida típico (contiene "Hola" o similares)
+      if (currentText.includes('Hola') || currentText.includes('Hello') || currentText.includes('Bonjour') || 
+          currentText.includes('ayudarte') || currentText.includes('help') || currentText.includes('aider')) {
+        const newWelcomeMessage = config.welcomeMessage || t.defaultWelcome;
+        firstAssistantMessage.textContent = newWelcomeMessage;
+        console.log('AIPPS Debug: Mensaje de bienvenida actualizado de:', currentText, 'a:', newWelcomeMessage);
+      }
+    }
+
+    // Actualizar configuraciones de mensaje para futuras conversaciones
+    config.welcomeMessage = t.defaultWelcome;
+    config.greetingMessage = t.fallbackWelcome;
     
     // Actualizar título del formulario de auth
     const authTitle = document.querySelector('.aipi-auth-header h2');
@@ -508,7 +534,8 @@
 
       if (data.settings) {
         config.assistantName = data.settings.assistantName || config.assistantName;
-        config.greetingMessage = data.settings.defaultGreeting || config.greetingMessage;
+        config.greetingMessage = data.settings.defaultGreeting || t.fallbackWelcome;
+        config.welcomeMessage = data.settings.welcomeMessage || t.defaultWelcome;
         config.showAvailability = data.settings.showAvailability;
         config.userBubbleColor = data.settings.userBubbleColor || config.userBubbleColor;
         config.assistantBubbleColor = data.settings.assistantBubbleColor || config.assistantBubbleColor;
@@ -2072,8 +2099,9 @@ Contenido: [Error al extraer contenido detallado]
         config.conversationId = data.id;
         conversationStarted = true;
 
-        // Add initial greeting
-        addMessage(config.greetingMessage, 'assistant');
+        // Add initial greeting in the correct language
+        const welcomeMessage = config.welcomeMessage || t.defaultWelcome;
+        addMessage(welcomeMessage, 'assistant');
       } catch (error) {
         console.error('Error starting conversation:', error);
         addMessage('Sorry, I encountered an error. Please try again later.', 'assistant');
