@@ -98,25 +98,25 @@ export default function Analytics() {
       
       // Título y metadatos del informe
       doc.setFontSize(18);
-      doc.text(`Reporte de Analíticas AIPI`, pageWidth / 2, 20, { align: 'center' });
+      doc.text(t("pdf_report_title"), pageWidth / 2, 20, { align: 'center' });
       doc.setFontSize(10);
-      doc.text(`Generado: ${date}`, pageWidth / 2, 28, { align: 'center' });
+      doc.text(`${t("pdf_generated")}: ${date}`, pageWidth / 2, 28, { align: 'center' });
       doc.setLineWidth(0.5);
       doc.line(15, 35, pageWidth - 15, 35);
       
       // Resumen de estadísticas
       doc.setFontSize(14);
-      doc.text('Resumen', 15, 45);
+      doc.text(t("pdf_summary"), 15, 45);
       
       const summaryData = [
-        ['Conversaciones Totales', dashboardStats.totalConversations || 0],
-        ['Tasa de Resolución', `${formatPercentage(dashboardStats.resolutionRate)}`],
-        ['Tiempo Promedio de Respuesta', formatTime(dashboardStats.averageResponseTime)],
+        [t("total_conversations"), dashboardStats.totalConversations || 0],
+        [t("resolution_rate"), `${formatPercentage(dashboardStats.resolutionRate)}`],
+        [t("avg_response_time"), formatTime(dashboardStats.averageResponseTime)],
       ];
       
       // Añadir tabla de resumen
       autoTable(doc, {
-        head: [['Métrica', 'Valor']],
+        head: [[t("pdf_metric"), t("pdf_value")]],
         body: summaryData,
         startY: 50,
         theme: 'grid',
@@ -131,13 +131,13 @@ export default function Analytics() {
       if (productsChartElement) {
         try {
           doc.setFontSize(14);
-          doc.text('Productos y Servicios Más Demandados', 15, lastY);
+          doc.text(t("pdf_products_demanded"), 15, lastY);
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
           doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
-          doc.text('Las barras más largas indican productos/servicios mencionados con mayor frecuencia', 15, lastY + 8);
-          doc.text('en las conversaciones, lo que sugiere mayor interés o demanda.', 15, lastY + 12);
+          doc.text(t("pdf_products_description"), 15, lastY + 8);
+          doc.text(t("pdf_products_description2"), 15, lastY + 12);
           
           const productsCanvas = await html2canvas(productsChartElement);
           const productsImgData = productsCanvas.toDataURL('image/png');
@@ -164,7 +164,7 @@ export default function Analytics() {
             const productsData = conversationAnalytics.topProducts.map(item => [item.name, item.count]);
             
             autoTable(doc, {
-              head: [['Producto', 'Menciones']],
+              head: [[t("pdf_product"), t("pdf_mentions")]],
               body: productsData,
               startY: lastY + 5,
               theme: 'grid',
@@ -174,7 +174,7 @@ export default function Analytics() {
             lastY += 50; // Estimación después de tabla
           } else {
             doc.setFontSize(10);
-            doc.text('No hay datos de productos disponibles.', 15, lastY + 5);
+            doc.text(t("pdf_no_products_data"), 15, lastY + 5);
             lastY += 10;
           }
         }
@@ -190,13 +190,13 @@ export default function Analytics() {
       if (topicsChartElement) {
         try {
           doc.setFontSize(14);
-          doc.text('Temas Más Discutidos', 15, lastY);
+          doc.text(t("pdf_topics_discussed"), 15, lastY);
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
           doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
-          doc.text('Las barras muestran la frecuencia de cada tema y el color indica el sentimiento asociado.', 15, lastY + 8);
-          doc.text('Un mayor porcentaje indica un nivel más alto de satisfacción con ese tema.', 15, lastY + 12);
+          doc.text(t("pdf_topics_description"), 15, lastY + 8);
+          doc.text(t("pdf_topics_description2"), 15, lastY + 12);
           
           const topicsCanvas = await html2canvas(topicsChartElement);
           const topicsImgData = topicsCanvas.toDataURL('image/png');
@@ -223,7 +223,7 @@ export default function Analytics() {
             const topicsData = conversationAnalytics.topTopics.map(item => [item.topic, item.sentiment]);
             
             autoTable(doc, {
-              head: [['Tema', 'Sentimiento']],
+              head: [[t("pdf_topic"), t("pdf_sentiment")]],
               body: topicsData,
               startY: lastY + 5,
               theme: 'grid',
@@ -233,7 +233,7 @@ export default function Analytics() {
             lastY += 50;
           } else {
             doc.setFontSize(10);
-            doc.text('No hay datos de temas disponibles.', 15, lastY + 5);
+            doc.text(t("pdf_no_topics_data"), 15, lastY + 5);
             lastY += 10;
           }
         }
@@ -247,13 +247,13 @@ export default function Analytics() {
       if (trendChartElement) {
         try {
           doc.setFontSize(14);
-          doc.text('Tendencia de Conversaciones', 15, lastY);
+          doc.text(t("pdf_conversation_trend"), 15, lastY);
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
           doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
-          doc.text('La línea muestra cómo cambia el volumen de conversaciones a lo largo del tiempo.', 15, lastY + 8);
-          doc.text('Los picos indican días con mayor actividad, útil para identificar patrones y tendencias.', 15, lastY + 12);
+          doc.text(t("pdf_trend_description"), 15, lastY + 8);
+          doc.text(t("pdf_trend_description2"), 15, lastY + 12);
           
           const trendCanvas = await html2canvas(trendChartElement);
           const trendImgData = trendCanvas.toDataURL('image/png');
@@ -300,13 +300,13 @@ export default function Analytics() {
       if (keywordsElement && lastY < pageHeight - 100) {
         try {
           doc.setFontSize(14);
-          doc.text('Palabras Clave', 15, lastY);
+          doc.text(t("pdf_keywords"), 15, lastY);
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
           doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
-          doc.text('Las palabras más grandes aparecen con mayor frecuencia en las conversaciones.', 15, lastY + 8);
-          doc.text('Esto ayuda a identificar los términos e intereses principales de los visitantes.', 15, lastY + 12);
+          doc.text(t("pdf_keywords_description"), 15, lastY + 8);
+          doc.text(t("pdf_keywords_description2"), 15, lastY + 12);
           
           const keywordsCanvas = await html2canvas(keywordsElement);
           const keywordsImgData = keywordsCanvas.toDataURL('image/png');
@@ -336,7 +336,7 @@ export default function Analytics() {
           
           // Mostrar mensaje si falla la captura del gráfico
           doc.setFontSize(10);
-          doc.text('No fue posible generar la nube de palabras clave.', 15, lastY + 5);
+          doc.text(t("pdf_no_keywords"), 15, lastY + 5);
           lastY += 15;
           
           // Si no hay espacio suficiente, nueva página
@@ -351,13 +351,13 @@ export default function Analytics() {
       if (lastY < pageHeight - 100 && integrationPerformanceElement) {
         try {
           doc.setFontSize(14);
-          doc.text('Rendimiento de Integraciones', 15, lastY);
+          doc.text(t("pdf_integration_performance"), 15, lastY);
           
           // Añadir descripción explicativa
           doc.setFontSize(9);
           doc.setTextColor(40, 40, 40); // Color más oscuro para mejor visibilidad
-          doc.text('Las barras muestran el rendimiento de cada integración en 3 métricas: tiempo de respuesta (azul),', 15, lastY + 8);
-          doc.text('tasa de resolución (verde) y satisfacción del usuario (naranja). Valores más altos indican mejor rendimiento.', 15, lastY + 12);
+          doc.text(t("pdf_performance_description"), 15, lastY + 8);
+          doc.text(t("pdf_performance_description2"), 15, lastY + 12);
           
           const performanceCanvas = await html2canvas(integrationPerformanceElement);
           const performanceImgData = performanceCanvas.toDataURL('image/png');
@@ -381,14 +381,14 @@ export default function Analytics() {
           // Mostrar datos en forma de tabla si falla la captura del gráfico
           if (integrationPerformance && integrationPerformance.length > 0) {
             const performanceData = integrationPerformance.map(item => [
-              item.integrationName || 'Desconocido',
+              item.integrationName || t("pdf_unknown"),
               item.conversationCount || 0,
               `${Math.round(item.resolutionRate || 0)}%`,
               `${Math.round(item.userSatisfaction || 0)}%`
             ]);
             
             autoTable(doc, {
-              head: [['Integración', 'Conversaciones', 'Tasa de Resolución', 'Satisfacción']],
+              head: [[t("pdf_integration"), t("pdf_conversations"), t("pdf_resolution_rate"), t("pdf_satisfaction")]],
               body: performanceData,
               startY: lastY + 5,
               theme: 'grid',
@@ -397,7 +397,7 @@ export default function Analytics() {
             });
           } else {
             doc.setFontSize(10);
-            doc.text('No hay datos de rendimiento disponibles.', 15, lastY + 5);
+            doc.text(t("pdf_no_performance_data"), 15, lastY + 5);
           }
         }
       }
@@ -407,14 +407,14 @@ export default function Analytics() {
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(8);
-        doc.text(`Página ${i} de ${pageCount} - AIPI Analytics`, pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+        doc.text(t("pdf_page_footer", { page: i, total: pageCount }), pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
       }
       
       // Guardar el PDF
       doc.save(`analytics_report_${date.replace(/\//g, '-')}.pdf`);
     } catch (error) {
       console.error('Error al generar PDF:', error);
-      alert('Hubo un error al generar el PDF. Por favor intente de nuevo.');
+      alert(t("pdf_error_generating"));
     }
   };
 
@@ -583,27 +583,27 @@ export default function Analytics() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="p-4 backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Promedio de mensajes</h3>
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">{t("avg_messages")}</h3>
                       <p className="text-2xl font-bold mt-1 card-text-enhance">5.3</p>
-                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">mensajes por conversación</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">{t("messages_per_conversation")}</p>
                     </div>
                     
                     <div className="p-4 backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Duración promedio</h3>
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">{t("avg_duration")}</h3>
                       <p className="text-2xl font-bold mt-1 card-text-enhance">4m 12s</p>
-                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">tiempo por conversación</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">{t("time_per_conversation")}</p>
                     </div>
                     
                     <div className="p-4 backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Horario pico</h3>
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">{t("peak_hours")}</h3>
                       <p className="text-2xl font-bold mt-1 card-text-enhance">14:00 - 16:00</p>
-                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">mayor actividad</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">{t("highest_activity")}</p>
                     </div>
                     
                     <div className="p-4 backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg">
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">Dispositivos</h3>
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 card-text-enhance">{t("devices")}</h3>
                       <p className="text-2xl font-bold mt-1 card-text-enhance">68% / 32%</p>
-                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">móvil / escritorio</p>
+                      <p className="text-xs text-gray-500 mt-1 card-text-enhance">{t("mobile_desktop")}</p>
                     </div>
                   </div>
                 </CardContent>
