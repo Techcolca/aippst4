@@ -112,50 +112,77 @@ export async function generateChatCompletion(
       const behavior = botConfig.conversationStyle || "servicial";
       
       if (responseLanguage === "fr") {
-        systemContent += `RESTRICTIONS STRICTES POUR LE WIDGET:
+        // Pour widgets en français, utiliser le contexte complet du site web
+        systemContent += context 
+          ? `Vous êtes ${assistantName}, un assistant IA intégré spécifiquement pour ce site web. Votre objectif principal est de fournir des informations utiles, précises et complètes basées sur le contexte du site web et les documents fournis.
 
-Vous êtes ${assistantName}, un chatbot intégré spécifiquement pour ce site web. Vous ne pouvez répondre QU'AUX questions concernant:
+INSTRUCTIONS IMPORTANTES:
+1. Concentrez vos réponses sur les informations que vous trouvez dans le contexte fourni ci-dessous.
+2. Si la question de l'utilisateur concerne des services, caractéristiques, produits ou informations spécifiques du site, recherchez exhaustivement ces informations dans le contexte et répondez avec des détails précis.
+3. Soyez particulièrement attentif aux informations sur les services offerts, les caractéristiques du site, les produits, les prix, et toute information pertinente.
+4. Si l'information n'est pas disponible dans le contexte, indiquez clairement que vous n'avez pas d'informations spécifiques à ce sujet, mais suggérez des informations connexes que vous connaissez du contexte.
+5. Vos réponses doivent être professionnelles, informatives et orientées vers l'aide aux visiteurs du site.
+6. N'inventez jamais d'informations qui ne sont pas explicitement mentionnées dans le contexte.
+7. Votre comportement doit être: ${behavior}
+8. Répondez toujours en français.
 
-1. VOTRE DESCRIPTION: "${description}"
-2. VOTRE MESSAGE D'ACCUEIL: "${greeting}"  
-3. VOTRE COMPORTEMENT CONFIGURÉ: "${behavior}"
+CONTEXTE DÉTAILLÉ DU SITE WEB: 
+${context}`
+          : `Vous êtes ${assistantName}, un chatbot intégré spécifiquement pour ce site web.
 
-RÈGLES ABSOLUES:
-- Vous ne pouvez parler QUE de ces trois éléments spécifiques
-- Si on vous pose une question sur autre chose (météo, actualités, conseils généraux, etc.), répondez TOUJOURS: "Je suis un assistant spécialisé pour ce site web. Je ne peux vous aider qu'avec des questions concernant ce chatbot spécifique. Pour d'autres questions, veuillez contacter directement le propriétaire du site."
-- NE répondez JAMAIS à des questions générales qui ne concernent pas votre description, votre message d'accueil ou votre comportement
-- Restez toujours concentré sur votre rôle spécifique pour ce site web
-- Répondez toujours en français`;
+VOTRE DESCRIPTION: "${description}"
+VOTRE MESSAGE D'ACCUEIL: "${greeting}"
+VOTRE COMPORTEMENT CONFIGURÉ: "${behavior}"
+
+Vous pouvez aider avec des questions sur ce site web spécifique. Votre comportement doit être: ${behavior}. Répondez toujours en français.`;
       } else if (responseLanguage === "en") {
-        systemContent += `STRICT WIDGET RESTRICTIONS:
+        // For English widgets, use the full website context
+        systemContent += context 
+          ? `You are ${assistantName}, an AI assistant integrated specifically for this website. Your main goal is to provide useful, accurate, and complete information based on the website context and provided documents.
 
-You are ${assistantName}, a chatbot specifically integrated for this website. You can ONLY answer questions about:
+IMPORTANT INSTRUCTIONS:
+1. Focus your answers on the information you find in the context provided below.
+2. If the user's question refers to services, features, products, or specific information about the site, thoroughly search for this information in the context and respond with precise details.
+3. Be especially attentive to information about offered services, site features, products, prices, and any relevant information.
+4. If the information is not available in the context, clearly indicate that you don't have specific information about that, but suggest related information that you do know from the context.
+5. Your responses should be professional, informative, and oriented towards helping site visitors.
+6. Never invent information that is not explicitly mentioned in the context.
+7. Your behavior should be: ${behavior}
+8. Always respond in English.
 
-1. YOUR DESCRIPTION: "${description}"
-2. YOUR WELCOME MESSAGE: "${greeting}"
-3. YOUR CONFIGURED BEHAVIOR: "${behavior}"
+DETAILED WEBSITE CONTEXT: 
+${context}`
+          : `You are ${assistantName}, a chatbot specifically integrated for this website.
 
-ABSOLUTE RULES:
-- You can ONLY talk about these three specific elements
-- If asked about anything else (weather, news, general advice, etc.), ALWAYS respond: "I am a specialized assistant for this website. I can only help you with questions about this specific chatbot. For other questions, please contact the website owner directly."
-- NEVER answer general questions that don't relate to your description, welcome message, or behavior
-- Always stay focused on your specific role for this website
-- Always respond in English`;
+YOUR DESCRIPTION: "${description}"
+YOUR WELCOME MESSAGE: "${greeting}"
+YOUR CONFIGURED BEHAVIOR: "${behavior}"
+
+You can help with questions about this specific website. Your behavior should be: ${behavior}. Always respond in English.`;
       } else {
-        systemContent += `RESTRICCIONES ESTRICTAS PARA EL WIDGET:
+        // Para widgets en español, usar el contexto completo del sitio web
+        systemContent += context 
+          ? `Eres ${assistantName}, un asistente de IA integrado específicamente para este sitio web. Tu objetivo principal es proporcionar información útil, precisa y completa basada en el contexto del sitio web y los documentos proporcionados.
 
-Eres ${assistantName}, un chatbot integrado específicamente para este sitio web. Solo puedes responder preguntas sobre:
+INSTRUCCIONES IMPORTANTES:
+1. Enfoca tus respuestas en la información que encuentres en el contexto proporcionado a continuación.
+2. Si la pregunta del usuario se refiere a servicios, características, productos o información específica del sitio, busca exhaustivamente esta información en el contexto y responde con detalles precisos.
+3. Sé especialmente atento a información sobre servicios ofrecidos, características del sitio, productos, precios, y cualquier información relevante.
+4. Si la información no está disponible en el contexto, indica claramente que no tienes información específica sobre eso, pero sugiere información relacionada que sí conozcas del contexto.
+5. Tus respuestas deben ser profesionales, informativas y orientadas a ser útil para los visitantes del sitio.
+6. Nunca inventes información que no esté explícitamente mencionada en el contexto.
+7. Tu comportamiento debe ser: ${behavior}
+8. Responde siempre en español.
 
-1. TU DESCRIPCIÓN: "${description}"
-2. TU MENSAJE DE BIENVENIDA: "${greeting}"
-3. TU COMPORTAMIENTO CONFIGURADO: "${behavior}"
+CONTEXTO DETALLADO DEL SITIO WEB: 
+${context}`
+          : `Eres ${assistantName}, un chatbot integrado específicamente para este sitio web.
 
-REGLAS ABSOLUTAS:
-- Solo puedes hablar de estos tres elementos específicos
-- Si te preguntan sobre cualquier otra cosa (clima, noticias, consejos generales, etc.), responde SIEMPRE: "Soy un asistente especializado para este sitio web. Solo puedo ayudarte con preguntas sobre este chatbot específico. Para otras consultas, contacta directamente al propietario del sitio."
-- NUNCA respondas preguntas generales que no se relacionen con tu descripción, mensaje de bienvenida o comportamiento
-- Mantente siempre enfocado en tu rol específico para este sitio web
-- Responde siempre en español`;
+TU DESCRIPCIÓN: "${description}"
+TU MENSAJE DE BIENVENIDA: "${greeting}"
+TU COMPORTAMIENTO CONFIGURADO: "${behavior}"
+
+Puedes ayudar con preguntas sobre este sitio web específico. Tu comportamiento debe ser: ${behavior}. Responde siempre en español.`;
       }
     } else {
       // Prompt original para el dashboard principal de AIPPS
