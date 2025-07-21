@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from "recharts";
 import { TopProduct } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from 'react-i18next';
 
 interface ProductDemandChartProps {
   data: TopProduct[];
@@ -9,6 +10,7 @@ interface ProductDemandChartProps {
 }
 
 export default function ProductDemandChart({ data, loading = false }: ProductDemandChartProps) {
+  const { t } = useTranslation();
   const colors = [
     "#2563eb", // primary blue
     "#3b82f6",
@@ -27,10 +29,10 @@ export default function ProductDemandChart({ data, loading = false }: ProductDem
         <div className="bg-white dark:bg-gray-900 p-3 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg">
           <p className="font-medium">{payload[0].payload.name}</p>
           <p className="text-sm text-gray-500">
-            <span className="font-semibold text-primary">{payload[0].payload.count}</span> consultas
+            <span className="font-semibold text-primary">{payload[0].payload.count}</span> {t("queries")}
           </p>
           <p className="text-sm text-gray-500">
-            <span className="font-semibold text-primary">{payload[0].payload.percentage}%</span> del total
+            <span className="font-semibold text-primary">{payload[0].payload.percentage}%</span> {t("of_total")}
           </p>
         </div>
       );
@@ -42,7 +44,7 @@ export default function ProductDemandChart({ data, loading = false }: ProductDem
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Productos y Servicios Más Demandados</CardTitle>
+          <CardTitle className="text-lg">{t("products_services_most_demanded")}</CardTitle>
           <Skeleton className="h-4 w-[250px] mt-2" />
         </CardHeader>
         <CardContent>
@@ -55,12 +57,12 @@ export default function ProductDemandChart({ data, loading = false }: ProductDem
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Productos y Servicios Más Demandados</CardTitle>
+        <CardTitle className="text-lg">{t("products_services_most_demanded")}</CardTitle>
         <p className="text-sm text-gray-500">
-          Análisis de los productos y servicios más consultados por los visitantes
+          {t("products_analysis_description")}
         </p>
         <p className="text-xs text-gray-500 mt-1">
-          <strong>¿Qué significa?</strong> Las barras más largas indican los productos o servicios mencionados con mayor frecuencia en las conversaciones, lo que sugiere mayor interés o demanda.
+          <strong>{t("what_does_it_mean")}</strong> {t("products_bars_explanation")}
         </p>
       </CardHeader>
       <CardContent>

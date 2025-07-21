@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell, LabelList } from "recharts";
 import { TopTopic } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from 'react-i18next';
 
 interface TopicSentimentChartProps {
   data: TopTopic[];
@@ -9,6 +10,7 @@ interface TopicSentimentChartProps {
 }
 
 export default function TopicSentimentChart({ data, loading = false }: TopicSentimentChartProps) {
+  const { t } = useTranslation();
   // Función para determinar el color basado en el sentimiento
   const getSentimentColor = (sentiment: number) => {
     if (sentiment >= 70) return "#10b981"; // verde - positivo
@@ -26,10 +28,10 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
         <div className="bg-white dark:bg-gray-900 p-3 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg">
           <p className="font-medium">{item.topic}</p>
           <p className="text-sm text-gray-500">
-            <span className="font-semibold text-primary">{item.frequency}</span> menciones
+            <span className="font-semibold text-primary">{item.frequency}</span> {t("mentions")}
           </p>
           <p className="text-sm">
-            Sentimiento: 
+            {t("sentiment")}:
             <span 
               className="ml-1 font-semibold"
               style={{ color: getSentimentColor(item.sentiment) }}
@@ -47,7 +49,7 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Temas y Sentimiento</CardTitle>
+          <CardTitle className="text-lg">{t("topics_and_sentiment")}</CardTitle>
           <Skeleton className="h-4 w-[250px] mt-2" />
         </CardHeader>
         <CardContent>
@@ -60,12 +62,12 @@ export default function TopicSentimentChart({ data, loading = false }: TopicSent
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Temas y Sentimiento</CardTitle>
+        <CardTitle className="text-lg">{t("topics_and_sentiment")}</CardTitle>
         <p className="text-sm text-gray-500">
-          Análisis de los temas más discutidos y el sentimiento asociado
+          {t("topics_analysis_description")}
         </p>
         <p className="text-xs text-gray-500 mt-1">
-          <strong>¿Qué significa?</strong> Las barras muestran la frecuencia de cada tema y el color indica el sentimiento (verde = positivo, amarillo = neutro, rojo = negativo). El porcentaje a la derecha muestra el nivel de satisfacción con ese tema.
+          <strong>{t("what_does_it_mean")}</strong> {t("topics_bars_explanation")}
         </p>
       </CardHeader>
       <CardContent>

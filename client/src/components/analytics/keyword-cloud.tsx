@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from 'react-i18next';
 
 interface KeywordCloudProps {
   data: {
@@ -11,6 +12,7 @@ interface KeywordCloudProps {
 }
 
 export default function KeywordCloud({ data, loading = false }: KeywordCloudProps) {
+  const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   
   // Función para obtener un color aleatorio para cada palabra
@@ -130,12 +132,12 @@ export default function KeywordCloud({ data, loading = false }: KeywordCloudProp
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Palabras Clave</CardTitle>
+        <CardTitle className="text-lg">{t("keywords")}</CardTitle>
         <p className="text-sm text-gray-500">
-          Términos más frecuentes en las conversaciones con los visitantes
+          {t("keywords_description")}
         </p>
         <p className="text-xs text-gray-500 mt-1">
-          <strong>¿Qué significa?</strong> Las palabras más grandes aparecen con mayor frecuencia en las conversaciones. Esto ayuda a identificar los términos e intereses principales de los visitantes.
+          <strong>{t("what_does_it_mean")}</strong> {t("keywords_explanation")}
         </p>
       </CardHeader>
       <CardContent>

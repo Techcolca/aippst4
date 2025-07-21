@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTranslation } from 'react-i18next';
 
 interface ConversationTrendChartProps {
   data: {
@@ -11,6 +12,7 @@ interface ConversationTrendChartProps {
 }
 
 export default function ConversationTrendChart({ data, loading = false }: ConversationTrendChartProps) {
+  const { t } = useTranslation();
   // Componente de tooltip personalizado
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -24,7 +26,7 @@ export default function ConversationTrendChart({ data, loading = false }: Conver
         <div className="bg-white dark:bg-gray-900 p-3 border border-gray-200 dark:border-gray-800 rounded-md shadow-lg">
           <p className="font-medium">{formattedDate}</p>
           <p className="text-sm text-gray-500">
-            <span className="font-semibold text-primary">{payload[0].value}</span> conversaciones
+            <span className="font-semibold text-primary">{payload[0].value}</span> {t("conversations")}
           </p>
         </div>
       );
@@ -42,7 +44,7 @@ export default function ConversationTrendChart({ data, loading = false }: Conver
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Tendencia de Conversaciones</CardTitle>
+          <CardTitle className="text-lg">{t("conversation_trend")}</CardTitle>
           <Skeleton className="h-4 w-[250px] mt-2" />
         </CardHeader>
         <CardContent>
@@ -55,12 +57,12 @@ export default function ConversationTrendChart({ data, loading = false }: Conver
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Tendencia de Conversaciones</CardTitle>
+        <CardTitle className="text-lg">{t("conversation_trend")}</CardTitle>
         <p className="text-sm text-gray-500">
-          Evolución del número de conversaciones durante los últimos 30 días
+          {t("conversation_trend_description")}
         </p>
         <p className="text-xs text-gray-500 mt-1">
-          <strong>¿Qué significa?</strong> La línea muestra cómo cambia el volumen de conversaciones a lo largo del tiempo. Los picos indican días con mayor actividad, útil para identificar patrones y tendencias.
+          <strong>{t("what_does_it_mean")}</strong> {t("conversation_trend_explanation")}
         </p>
       </CardHeader>
       <CardContent>
