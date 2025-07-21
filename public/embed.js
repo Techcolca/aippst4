@@ -134,6 +134,27 @@
       console.log('AIPPS Debug: Botón nueva conversación actualizado a:', t.newConversation);
     }
     
+    // Actualizar descripción personalizada en el formulario de auth
+    const authExplanation = document.querySelector('.aipi-explanation-text');
+    if (authExplanation) {
+      const integrationDescription = config.description || config.botBehavior || '';
+      if (integrationDescription.trim().length > 0) {
+        const translatedDescription = translateUserContent(integrationDescription.trim(), config.language);
+        const oldDescription = authExplanation.textContent;
+        authExplanation.textContent = translatedDescription;
+        console.log('AIPPS Debug: Descripción personalizada actualizada de:', oldDescription.substring(0, 50) + '...', 'a:', translatedDescription.substring(0, 50) + '...');
+      }
+    }
+    
+    // Actualizar título del formulario de auth
+    const authTitle = document.querySelector('.aipi-auth-header h2');
+    if (authTitle) {
+      const integrationName = config.integrationName || config.assistantName || 'Asistente IA';
+      const oldTitle = authTitle.textContent;
+      authTitle.innerHTML = `${t.welcomeTo} ${integrationName}`;
+      console.log('AIPPS Debug: Título auth actualizado de:', oldTitle, 'a:', `${t.welcomeTo} ${integrationName}`);
+    }
+    
     // Actualizar cualquier otro elemento con atributo data-translate
     const translatableElements = document.querySelectorAll('[data-translate]');
     translatableElements.forEach(element => {
@@ -2689,6 +2710,78 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  // Function to translate user content dynamically
+  function translateUserContent(text, targetLang) {
+    if (!text || !targetLang || targetLang === 'es') return text;
+    
+    // Basic translation patterns for common business descriptions
+    const translations = {
+      en: {
+        // Spanish to English translations
+        'Soy tu asistente especializado en': 'I am your specialized assistant in',
+        'Estoy aquí para ayudarte con': 'I am here to help you with',
+        'información sobre nuestros servicios': 'information about our services',
+        'responder preguntas sobre nuestros productos': 'answer questions about our products',
+        'brindarte soporte profesional': 'provide professional support',
+        'Mi objetivo es ofrecerte': 'My goal is to offer you',
+        'una experiencia personalizada': 'a personalized experience',
+        'resolver todas tus consultas': 'resolve all your inquiries',
+        'de manera eficiente': 'efficiently',
+        'consultas': 'inquiries',
+        'productos': 'products',
+        'servicios': 'services',
+        'soporte': 'support',
+        'ayuda': 'help',
+        'información': 'information',
+        // Specific translations for Techcolca content
+        'TechColca': 'TechColca',
+        'especializado en TechColca': 'specialized in TechColca',
+        'ayudarte con información': 'help you with information',
+        'sobre nuestros': 'about our',
+        'responder preguntas': 'answer questions',
+        'brindarte': 'provide you'
+      },
+      fr: {
+        // Spanish to French translations
+        'Soy tu asistente especializado en': 'Je suis votre assistant spécialisé en',
+        'Estoy aquí para ayudarte con': 'Je suis ici pour vous aider avec',
+        'información sobre nuestros servicios': 'des informations sur nos services',
+        'responder preguntas sobre nuestros productos': 'répondre aux questions sur nos produits',
+        'brindarte soporte profesional': 'vous fournir un support professionnel',
+        'Mi objetivo es ofrecerte': 'Mon objectif est de vous offrir',
+        'una experiencia personalizada': 'une expérience personnalisée',
+        'resolver todas tus consultas': 'résoudre toutes vos questions',
+        'de manera eficiente': 'de manière efficace',
+        'consultas': 'questions',
+        'productos': 'produits',
+        'servicios': 'services',
+        'soporte': 'support',
+        'ayuda': 'aide',
+        'información': 'informations',
+        // Specific translations for Techcolca content
+        'TechColca': 'TechColca',
+        'especializado en TechColca': 'spécialisé en TechColca',
+        'ayudarte con información': 'vous aider avec des informations',
+        'sobre nuestros': 'sur nos',
+        'responder preguntas': 'répondre aux questions',
+        'brindarte': 'vous fournir'
+      }
+    };
+    
+    let translatedText = text;
+    const langTranslations = translations[targetLang];
+    
+    if (langTranslations) {
+      // Apply translations by replacing Spanish phrases with target language
+      Object.keys(langTranslations).forEach(spanishPhrase => {
+        const regex = new RegExp(spanishPhrase, 'gi');
+        translatedText = translatedText.replace(regex, langTranslations[spanishPhrase]);
+      });
+    }
+    
+    return translatedText;
+  }
+
   // Authentication functions for fullscreen mode
   function showAuthForm() {
     // Generate personalized explanation based on integration
@@ -2701,12 +2794,17 @@ Contenido: [Error al extraer contenido detallado]
     
     // Use integration description if available, otherwise fallback to bot behavior, then default message
     if (integrationDescription && integrationDescription.trim().length > 0) {
-      personalizedExplanation = integrationDescription.trim();
+      personalizedExplanation = translateUserContent(integrationDescription.trim(), config.language);
     } else if (botBehavior && botBehavior.trim().length > 0) {
-      personalizedExplanation = botBehavior.trim();
+      personalizedExplanation = translateUserContent(botBehavior.trim(), config.language);
     } else {
-      // Default fallback message only if no specific description is available
-      personalizedExplanation = `Soy una inteligencia artificial diseñada como consejero espiritual para ayudarte a crecer en tu fe. Todas mis respuestas están basadas en la Biblia y las enseñanzas de Jesucristo. Te ofrezco guía práctica, versículos relevantes y sabiduría bíblica para cualquier situación que enfrentes en tu vida cristiana.`;
+      // Default fallback message in current language
+      const defaultMessages = {
+        es: `Soy una inteligencia artificial diseñada como consejero espiritual para ayudarte a crecer en tu fe. Todas mis respuestas están basadas en la Biblia y las enseñanzas de Jesucristo. Te ofrezco guía práctica, versículos relevantes y sabiduría bíblica para cualquier situación que enfrentes en tu vida cristiana.`,
+        en: `I am an artificial intelligence designed as a spiritual counselor to help you grow in your faith. All my responses are based on the Bible and the teachings of Jesus Christ. I offer practical guidance, relevant verses, and biblical wisdom for any situation you face in your Christian life.`,
+        fr: `Je suis une intelligence artificielle conçue comme conseiller spirituel pour vous aider à grandir dans votre foi. Toutes mes réponses sont basées sur la Bible et les enseignements de Jésus-Christ. J'offre des conseils pratiques, des versets pertinents et la sagesse biblique pour toute situation que vous rencontrez dans votre vie chrétienne.`
+      };
+      personalizedExplanation = defaultMessages[config.language] || defaultMessages.es;
     }
     
     const authContainer = document.createElement('div');
