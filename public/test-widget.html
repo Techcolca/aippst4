@@ -61,35 +61,40 @@
     <script>
         async function changeLanguage(language) {
             try {
-                // Primero intentar obtener el token desde localStorage
-                let token = localStorage.getItem('aipi_auth_token');
-                
-                if (!token) {
-                    alert('Para cambiar el idioma, necesitas estar autenticado. Por favor, inicia sesión en el dashboard primero.');
-                    window.open('http://localhost:5000', '_blank');
-                    return;
-                }
-                
-                const response = await fetch('http://localhost:5000/api/integrations/8', {
+                // Intentar la petición usando cookies de sesión (más confiable)
+                const response = await fetch('/api/integrations/8', {
                     method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Content-Type': 'application/json'
                     },
+                    credentials: 'include', // Incluir cookies de sesión
                     body: JSON.stringify({ language: language })
                 });
                 
                 if (response.ok) {
                     alert(`Idioma cambiado a: ${language === 'es' ? 'Español' : language === 'en' ? 'English' : 'Français'}. El widget se actualizará en unos segundos.`);
+                    
+                    // Actualizar el estado visual inmediatamente
+                    document.querySelector('.status').innerHTML = `
+                        <strong>Estado actual:</strong> Widget configurado con API Key de Techcolca (idioma: ${language === 'es' ? 'español' : language === 'en' ? 'inglés' : 'francés'})
+                        <br><br>
+                        <strong>Cambio rápido de idioma:</strong>
+                        <button onclick="changeLanguage('es')" style="margin: 5px; padding: 8px 15px;">Español</button>
+                        <button onclick="changeLanguage('en')" style="margin: 5px; padding: 8px 15px;">English</button>
+                        <button onclick="changeLanguage('fr')" style="margin: 5px; padding: 8px 15px;">Français</button>
+                    `;
                 } else if (response.status === 401) {
-                    alert('Token expirado. Por favor, inicia sesión en el dashboard nuevamente.');
+                    alert('No estás autenticado. Abriendo el dashboard para que inicies sesión...');
                     window.open('http://localhost:5000', '_blank');
                 } else {
+                    const errorData = await response.text();
+                    console.error('Error response:', errorData);
                     alert('Error al cambiar el idioma. Intenta desde el dashboard.');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error de conexión. Intenta desde el dashboard.');
+                alert('Error de conexión. Asegúrate de estar autenticado en el dashboard e intenta de nuevo.');
+                window.open('http://localhost:5000', '_blank');
             }
         }
     </script>
