@@ -14,9 +14,14 @@ export function LanguageSelector() {
   const [currentLang, setCurrentLang] = useState(i18n.language || "fr");
 
   const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    setCurrentLang(lng);
-    localStorage.setItem("i18nextLng", lng);
+    console.log('LanguageSelector: Changing language to:', lng);
+    i18n.changeLanguage(lng).then(() => {
+      console.log('LanguageSelector: Language changed successfully to:', lng);
+      setCurrentLang(lng);
+      localStorage.setItem("i18nextLng", lng);
+      // Force a reload to ensure all components update
+      window.location.reload();
+    });
   };
 
   useEffect(() => {

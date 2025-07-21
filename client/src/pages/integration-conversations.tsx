@@ -26,8 +26,7 @@ export default function IntegrationConversations() {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Debug: Log current language
-  console.log('Current language in conversations page:', i18n.language);
+
   
   // Obtener la integración para mostrar su nombre
   const { data: integration, isLoading: isLoadingIntegration } = useQuery({

@@ -145,6 +145,10 @@ July 21, 2025:
 - ✓ Widget headers now show "Online" status in correct integration language (Spanish/English/French)
 - ✓ Both bubble and fullscreen chat widgets support dynamic "Online" status translation
 - ✓ Time stamps in conversation lists now display as "hace 2 horas" instead of raw dates for better UX
+- ✓ CRITICAL FIX: Enhanced LanguageSelector to force page reload after language change for complete UI update
+- ✓ Fixed language persistence issue where React components weren't re-rendering with new translations
+- ✓ Added query dependencies to force re-fetch data when language changes in conversation pages
+- ✓ Language switching now guarantees complete translation update across all UI elements
 
 June 25, 2025:
 - ✓ Fixed promotional message rotation system on homepage
