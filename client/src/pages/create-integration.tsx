@@ -368,7 +368,6 @@ export default function CreateIntegration() {
                       <SelectContent>
                         <SelectItem value="bottom-right">Abajo a la derecha</SelectItem>
                         <SelectItem value="bottom-left">Abajo a la izquierda</SelectItem>
-                        <SelectItem value="bottom-center">Abajo al centro</SelectItem>
                         <SelectItem value="top-right">Arriba a la derecha</SelectItem>
                         <SelectItem value="top-left">Arriba a la izquierda</SelectItem>
                       </SelectContent>

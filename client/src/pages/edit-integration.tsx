@@ -53,7 +53,7 @@ interface Integration {
   url: string;
   apiKey: string;
   themeColor: string;
-  position: string;
+  position: "bottom-right" | "bottom-left" | "top-right" | "top-left" | "bottom-center"; // Incluir bottom-center para compatibilidad
   active: boolean;
   createdAt: string;
   visitorCount: number;
@@ -359,7 +359,7 @@ export default function EditIntegration() {
         name: integration.name || "",
         url: integration.url || "",
         themeColor: integration.themeColor || "#3B82F6",
-        position: integration.position as any || "bottom-right",
+        position: integration.position === "bottom-center" ? "bottom-right" : integration.position || "bottom-right",
         active: integration.active,
         botBehavior: integration.botBehavior || "",
         widgetType: integration.widgetType as any || "bubble",

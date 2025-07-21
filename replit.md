@@ -103,6 +103,13 @@ AIPI is an advanced conversational AI platform designed to integrate intelligent
 
 ## Recent Changes
 
+July 21, 2025:
+- ✓ Removed "Abajo al Centro" (bottom-center) position option from integration creation form
+- ✓ Updated form validation to prevent new integrations from using bottom-center position
+- ✓ Maintained backward compatibility for existing integrations with bottom-center position
+- ✓ Fixed TypeScript errors in edit integration form by handling legacy position values
+- ✓ Kept CSS styling for bottom-center position for existing embedded widgets
+
 June 25, 2025:
 - ✓ Fixed promotional message rotation system on homepage
 - ✓ Implemented missing generateAIPromotionalMessages function in backend
