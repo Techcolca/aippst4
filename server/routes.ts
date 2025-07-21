@@ -1085,6 +1085,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         widgetType: req.body.widgetType,
         botBehavior: req.body.botBehavior,
         description: req.body.description,
+        language: req.body.language,
         customization: req.body.customization
       });
       
@@ -2722,6 +2723,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           widgetType: integration.widgetType || 'bubble',
           description: integration.description,
           ignoredSectionsText: integration.ignoredSectionsText,
+          language: integration.language || 'es',
           // No enviamos datos sensibles como userId o apiKey al cliente
         },
         settings: {

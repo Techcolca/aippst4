@@ -20,9 +20,10 @@
     fontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
   };
 
-  // Función para obtener traducciones según el idioma del navegador
-  function getTranslations() {
-    const lang = navigator.language.substring(0, 2);
+  // Función para obtener traducciones según el idioma configurado en la integración
+  function getTranslations(language = null) {
+    // Usar el idioma de la integración, luego el del navegador como fallback
+    const lang = language || config.language || navigator.language.substring(0, 2);
     const translations = {
       es: {
         placeholder: "Escribe tu mensaje...",
@@ -40,7 +41,19 @@
     return translations[lang] || translations.en;
   }
   
-  const t = getTranslations();
+  let t = getTranslations();
+
+  // Función para actualizar elementos del DOM con el idioma correcto
+  function updateLanguageElements() {
+    // Actualizar placeholder del input
+    const chatInput = document.getElementById('aipi-input');
+    if (chatInput) {
+      chatInput.placeholder = t.placeholder;
+    }
+    
+    // Actualizar otros elementos de texto si es necesario
+    // Se pueden agregar más elementos aquí según sea necesario
+  }
 
   // State variables
   let widgetInstance = null;
@@ -331,6 +344,13 @@
         config.integrationName = data.integration.name || config.assistantName; // Nombre específico de la integración
         config.description = data.integration.description || ''; // Descripción específica de la integración
         config.botBehavior = data.integration.botBehavior || ''; // Comportamiento del bot
+        config.language = data.integration.language || 'es'; // Idioma de la integración
+        
+        // Actualizar traducciones con el idioma de la integración
+        t = getTranslations(config.language);
+        
+        // Actualizar elementos del DOM con el nuevo idioma
+        updateLanguageElements();
       }
 
       if (data.settings) {
@@ -1445,7 +1465,7 @@ Contenido: [Error al extraer contenido detallado]
         </div>
         <div id="aipi-messages-container"></div>
         <div id="aipi-input-container">
-          <input type="text" id="aipi-input" placeholder="Type your message...">
+          <input type="text" id="aipi-input" placeholder="${t.placeholder}">
           <button id="aipi-send-button" disabled>
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="22" y1="2" x2="11" y2="13"></line>

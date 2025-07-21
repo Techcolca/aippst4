@@ -266,7 +266,8 @@ export class MemStorage implements IStorage {
       position: "bottom-right",
       active: true,
       createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
-      visitorCount: 2845
+      visitorCount: 2845,
+      language: "es"
     };
     this.integrations.set(demoIntegration1.id, demoIntegration1);
 
@@ -280,9 +281,18 @@ export class MemStorage implements IStorage {
       position: "bottom-right",
       active: true,
       createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
-      visitorCount: 5231
+      visitorCount: 5231,
+      language: "es"
     };
     this.integrations.set(demoIntegration2.id, demoIntegration2);
+
+    // Update all existing integrations to include language field if missing
+    for (const [id, integration] of this.integrations.entries()) {
+      if (!integration.language) {
+        const updatedIntegration = { ...integration, language: "es" };
+        this.integrations.set(id, updatedIntegration);
+      }
+    }
 
     // Add demo automations
     const demoAutomation1: Automation = {
@@ -587,7 +597,8 @@ export class MemStorage implements IStorage {
       id,
       active: true,
       createdAt: new Date(),
-      visitorCount: 0
+      visitorCount: 0,
+      language: integration.language || "es"
     };
     this.integrations.set(id, newIntegration);
     return newIntegration;
