@@ -5,9 +5,10 @@
  * Este script crea un botón flotante que al hacer clic abre un chat en pantalla completa.
  */
 (function() {
-  // Función para obtener traducciones según el idioma del navegador
-  function getTranslations() {
-    const lang = navigator.language.substring(0, 2);
+  // Función para obtener traducciones según el idioma configurado en la integración
+  function getTranslations(language = null) {
+    // Usar el idioma de la integración, luego el del navegador como fallback
+    const lang = language || config.language || navigator.language.substring(0, 2);
     const translations = {
       es: {
         placeholder: "Escribe tu mensaje...",
@@ -25,7 +26,7 @@
     return translations[lang] || translations.en;
   }
   
-  const t = getTranslations();
+  let t = getTranslations(); // Se actualizará después de cargar la configuración
   
   // Configuración inicial y datos de estado
   let config = {
@@ -198,9 +199,16 @@
           config.position = data.integration.position;
         }
         
+        if (data.integration.language) {
+          config.language = data.integration.language;
+        }
+        
         // El botBehavior no debe usarse como mensaje de bienvenida
         // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
+      
+      // Actualizar traducciones con el idioma de la integración
+      t = getTranslations(config.language);
       
       console.log('AIPI Widget: Configuración cargada correctamente');
     } catch (error) {
