@@ -9,6 +9,7 @@ export function formatRelativeTime(date: string | Date, t: TFunction): string {
   console.log('⏰ formatRelativeTime DEBUG:', {
     date,
     diffInSeconds,
+    currentLang: (t as any).language || 'unknown',
     testTranslation: t('hours_ago_plural', { count: 3 })
   });
 
