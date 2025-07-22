@@ -4,6 +4,13 @@ export function formatRelativeTime(date: string | Date, t: TFunction): string {
   const now = new Date();
   const targetDate = new Date(date);
   const diffInSeconds = Math.floor((now.getTime() - targetDate.getTime()) / 1000);
+  
+  // Debug log
+  console.log('⏰ formatRelativeTime DEBUG:', {
+    date,
+    diffInSeconds,
+    testTranslation: t('hours_ago_plural', { count: 3 })
+  });
 
   // Less than a minute
   if (diffInSeconds < 60) {

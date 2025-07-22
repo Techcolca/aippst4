@@ -27,14 +27,18 @@ export default function IntegrationConversations() {
   const [searchTerm, setSearchTerm] = useState("");
   
   // Debug translations
-  console.log('🔍 TRANSLATION DEBUG:', {
+  console.log('🔍 TRANSLATION DEBUG DASHBOARD:', {
     currentLanguage: i18n.language,
     localStorage: localStorage.getItem('i18nextLng'),
+    navigator: navigator.language,
+    i18nReady: i18n.isInitialized,
     testTranslations: {
       'hours_ago_plural': t('hours_ago_plural', { count: 3 }),
+      'weeks_ago_plural': t('weeks_ago_plural', { count: 4 }),
       'new': t('new'),
       'conversations_for': t('conversations_for')
-    }
+    },
+    resources: i18n.hasResourceBundle(i18n.language, 'translation')
   });
 
 
