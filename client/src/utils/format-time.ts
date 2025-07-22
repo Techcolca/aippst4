@@ -1,17 +1,21 @@
 import { TFunction } from 'i18next';
+import i18n from '@/i18n/i18n';
 
 export function formatRelativeTime(date: string | Date, t: TFunction): string {
   const now = new Date();
   const targetDate = new Date(date);
   const diffInSeconds = Math.floor((now.getTime() - targetDate.getTime()) / 1000);
   
-  // Debug log
-  console.log('⏰ formatRelativeTime DEBUG:', {
-    date,
-    diffInSeconds,
-    currentLang: (t as any).language || 'unknown',
-    testTranslation: t('hours_ago_plural', { count: 3 })
-  });
+  // Get current language from i18n instance
+  const currentLang = i18n.language;
+  
+  // Debug log (remove in production)
+  // console.log('⏰ formatRelativeTime FIXED:', {
+  //   date,
+  //   diffInSeconds,
+  //   currentLang,
+  //   testTranslation: t('hours_ago_plural', { count: 3 })
+  // });
 
   // Less than a minute
   if (diffInSeconds < 60) {

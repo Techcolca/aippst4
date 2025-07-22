@@ -1,0 +1,79 @@
+Missing translation: en.translation.no_new_notifications
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation account account
+i18n.ts:37 Missing translation: en.translation.account
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation subscription subscription
+i18n.ts:37 Missing translation: en.translation.subscription
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation get_started get_started
+i18n.ts:37 Missing translation: en.translation.get_started
+queryClient.ts:70 Respuesta: 200 OK
+debug-translations.ts:7 🔍 TRANSLATION DEBUG UTILITY: Object
+integration-conversations.tsx:32 🔍 DASHBOARD TRANSLATION STATE: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: Object
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation notifications notifications
+i18n.ts:37 Missing translation: en.translation.notifications
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation no_new_notifications no_new_notifications
+i18n.ts:37 Missing translation: en.translation.no_new_notifications
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation account account
+i18n.ts:37 Missing translation: en.translation.account
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation subscription subscription
+i18n.ts:37 Missing translation: en.translation.subscription
+i18next.js?v=bb0e58d3:209 i18next::translator: missingKey fr translation get_started get_started
+i18n.ts:37 Missing translation: en.translation.get_started
+debug-translations.ts:7 🔍 TRANSLATION DEBUG UTILITY: {currentLanguage: 'fr', localStorage: 'fr', navigator: 'fr-CA', isReady: true, resources: true, …}
+integration-conversations.tsx:32 🔍 DASHBOARD TRANSLATION STATE: {language: 'fr', isReady: true, hasResources: true}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-05-30T20:27:58.792Z', diffInSeconds: 4547997, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-05-30T20:29:14.507Z', diffInSeconds: 4547921, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-05-30T20:33:00.669Z', diffInSeconds: 4547695, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-06T18:14:13.517Z', diffInSeconds: 3951222, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T13:45:30.603Z', diffInSeconds: 2498545, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:12:05.055Z', diffInSeconds: 2496951, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:14:43.401Z', diffInSeconds: 2496792, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:15:07.992Z', diffInSeconds: 2496768, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:15:45.779Z', diffInSeconds: 2496730, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:16:38.439Z', diffInSeconds: 2496677, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:27:20.037Z', diffInSeconds: 2496036, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:27:59.389Z', diffInSeconds: 2495996, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:28:13.198Z', diffInSeconds: 2495983, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:29:09.643Z', diffInSeconds: 2495926, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-23T14:29:30.072Z', diffInSeconds: 2495906, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-06-24T16:08:08.530Z', diffInSeconds: 2403587, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-07-21T19:05:16.583Z', diffInSeconds: 60159, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-07-21T19:35:40.027Z', diffInSeconds: 58336, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+dashboard-layout.tsx:68 i18next::translator: missingKey fr translation notifications notifications
+i18n.ts:37 Missing translation: en.translation.notifications
+dashboard-layout.tsx:72 i18next::translator: missingKey fr translation no_new_notifications no_new_notifications
+i18n.ts:37 Missing translation: en.translation.no_new_notifications
+dashboard-layout.tsx:93 i18next::translator: missingKey fr translation account account
+i18n.ts:37 Missing translation: en.translation.account
+dashboard-layout.tsx:101 i18next::translator: missingKey fr translation subscription subscription
+i18n.ts:37 Missing translation: en.translation.subscription
+dashboard-layout.tsx:151 i18next::translator: missingKey fr translation get_started get_started
+i18n.ts:37 Missing translation: en.translation.get_started
+dashboard-tabs.tsx:343 i18next::translator: missingKey fr translation refresh Refresh
+i18n.ts:37 Missing translation: en.translation.refresh
+language-selector.tsx:30 i18next: languageChanged fr
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK
+debug-translations.ts:7 🔍 TRANSLATION DEBUG UTILITY: {currentLanguage: 'fr', localStorage: 'fr', navigator: 'fr-CA', isReady: true, resources: true, …}
+integration-conversations.tsx:32 🔍 DASHBOARD TRANSLATION STATE: {language: 'fr', isReady: true, hasResources: true}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-05-30T20:27:58.792Z', diffInSeconds: 4548003, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}
+format-time.ts:9 ⏰ formatRelativeTime DEBUG: {date: '2025-05-30T20:29:14.507Z', diffInSeconds: 4547927, currentLang: 'unknown', testTranslation: 'il y a 3 heures'}

@@ -27,9 +27,9 @@ export default function IntegrationConversations() {
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Debug translations
-  const debugInfo = debugTranslations();
-  console.log('🔍 DASHBOARD TRANSLATION STATE:', debugInfo);
+  // Debug translations (remove in production)
+  // const debugInfo = debugTranslations();
+  // console.log('🔍 DASHBOARD TRANSLATION STATE:', debugInfo);
 
 
   

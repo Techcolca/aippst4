@@ -14,10 +14,8 @@ export function LanguageSelector() {
   const [currentLang, setCurrentLang] = useState(i18n.language || "fr");
 
   const changeLanguage = (lng: string) => {
-    console.log('🌍 LanguageSelector: Changing language to:', lng);
     localStorage.setItem("i18nextLng", lng);
     i18n.changeLanguage(lng).then(() => {
-      console.log('🌍 LanguageSelector: Language changed, forcing reload...');
       setCurrentLang(lng);
       // Force complete reload with cache bypass
       window.location.href = window.location.href;

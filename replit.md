@@ -103,6 +103,14 @@ AIPI is an advanced conversational AI platform designed to integrate intelligent
 
 ## Recent Changes
 
+July 22, 2025:
+- ✓ CRITICAL BUG FIX: Fixed translation system for relative time formatting ("hace 3 horas" → "il y a 3 heures")
+- ✓ Resolved currentLang: 'unknown' issue in formatRelativeTime function by importing i18n instance directly
+- ✓ Enhanced LanguageSelector with proper cache bypass for complete page reload
+- ✓ Implemented comprehensive debug system to diagnose translation issues
+- ✓ Verified translation system works correctly: FR/ES/EN switching now updates all time displays
+- ✓ Cleaned up debug logs for production readiness
+
 July 21, 2025:
 - ✓ Removed "Abajo al Centro" (bottom-center) position option from integration creation form
 - ✓ Updated form validation to prevent new integrations from using bottom-center position
