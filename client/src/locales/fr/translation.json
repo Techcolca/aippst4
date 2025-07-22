@@ -113,6 +113,7 @@
   "weeks_ago_plural": "il y a {{count}} semaines",
   "months_ago": "il y a {{count}} mois",
   "months_ago_plural": "il y a {{count}} mois",
+  "new": "NOUVEAU",
   "pdf_mentions": "Mentions",
   "pdf_topic": "Sujet",
   "pdf_sentiment": "Sentiment",

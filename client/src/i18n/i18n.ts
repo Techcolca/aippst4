@@ -28,6 +28,7 @@ i18n
   // Initialisation de i18next
   .init({
     resources,
+    lng: localStorage.getItem('i18nextLng') || 'fr', // Force initial language
     fallbackLng: 'en', // Langue par défaut (english - mejor fallback)
     debug: true, // Debug mode pour le développement
     returnObjects: false, // Mantener false para evitar errores de renderizado
@@ -44,6 +45,10 @@ i18n
       order: ['localStorage', 'cookie', 'navigator'],
       lookupLocalStorage: 'i18nextLng',
       caches: ['localStorage', 'cookie'],
+    },
+    
+    react: {
+      useSuspense: false,
     }
   });
 

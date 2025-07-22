@@ -113,6 +113,7 @@
   "weeks_ago_plural": "{{count}} weeks ago",
   "months_ago": "{{count}} month ago",
   "months_ago_plural": "{{count}} months ago",
+  "new": "NEW",
   "pdf_mentions": "Mentions",
   "pdf_topic": "Topic",
   "pdf_sentiment": "Sentiment",

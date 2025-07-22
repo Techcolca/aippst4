@@ -25,6 +25,17 @@ export default function IntegrationConversations() {
   const [, navigate] = useLocation();
   const { t, i18n } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
+  
+  // Debug translations
+  console.log('🔍 TRANSLATION DEBUG:', {
+    currentLanguage: i18n.language,
+    localStorage: localStorage.getItem('i18nextLng'),
+    testTranslations: {
+      'hours_ago_plural': t('hours_ago_plural', { count: 3 }),
+      'new': t('new'),
+      'conversations_for': t('conversations_for')
+    }
+  });
 
 
   
@@ -93,6 +104,12 @@ export default function IntegrationConversations() {
               variant="outline"
             >
               {t('view_analytics')}
+            </Button>
+            <Button 
+              onClick={() => navigate(`/conversations/new`)}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              + {t('new', 'NUEVA')}
             </Button>
           </div>
         </div>
