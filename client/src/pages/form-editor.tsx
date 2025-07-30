@@ -4,6 +4,8 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { queryClient, apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { useUpgradeModal } from '@/hooks/use-upgrade-modal';
+import UpgradePlanModal from '@/components/upgrade-plan-modal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -248,6 +250,7 @@ const FormEditor = () => {
   const formId = parseInt(params?.id || '0');
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
+  const upgradeModal = useUpgradeModal();
   
   // Estado para el idioma seleccionado en el editor
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language || 'es');
@@ -410,12 +413,17 @@ const FormEditor = () => {
         description: 'Los cambios han sido guardados correctamente'
       });
     },
-    onError: () => {
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar el formulario',
-        variant: 'destructive'
-      });
+    onError: (error: any) => {
+      // Check if it's a plan limit error (403 status)
+      if (error.message && error.message.includes("límite")) {
+        upgradeModal.handlePlanLimitError(error.message);
+      } else {
+        toast({
+          title: 'Error',
+          description: 'No se pudo actualizar el formulario',
+          variant: 'destructive'
+        });
+      }
     }
   });
 
@@ -1385,6 +1393,14 @@ const FormEditor = () => {
 
         </Tabs>
       </div>
+
+      <UpgradePlanModal
+        isOpen={upgradeModal.isOpen}
+        onClose={upgradeModal.hideUpgradeModal}
+        limitType={upgradeModal.limitType}
+        currentLimit={upgradeModal.currentLimit}
+        planName={upgradeModal.planName}
+      />
     </div>
   );
 };

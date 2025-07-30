@@ -8,6 +8,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/auth-context-stub";
+import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
+import UpgradePlanModal from "@/components/upgrade-plan-modal";
 
 // Componentes UI
 import { Button } from "@/components/ui/button";
@@ -64,6 +66,7 @@ export default function CreateIntegration() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [extractedContent, setExtractedContent] = useState<Array<{url: string, title: string}>>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const upgradeModal = useUpgradeModal();
 
   // Inicializamos el formulario
   const form = useForm<FormValues>({
@@ -264,12 +267,18 @@ export default function CreateIntegration() {
       navigate("/dashboard");
     },
     onError: (error) => {
-      toast({
-        title: "Error al crear la integración",
-        description: error.message || "Ha ocurrido un error al crear la integración",
-        variant: "destructive",
-      });
       setIsSubmitting(false);
+      
+      // Check if it's a plan limit error (403 status)
+      if (error.message && error.message.includes("límite")) {
+        upgradeModal.handlePlanLimitError(error.message);
+      } else {
+        toast({
+          title: "Error al crear la integración",
+          description: error.message || "Ha ocurrido un error al crear la integración",
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -838,6 +847,14 @@ export default function CreateIntegration() {
           </form>
         </Form>
       </Card>
+
+      <UpgradePlanModal
+        isOpen={upgradeModal.isOpen}
+        onClose={upgradeModal.hideUpgradeModal}
+        limitType={upgradeModal.limitType}
+        currentLimit={upgradeModal.currentLimit}
+        planName={upgradeModal.planName}
+      />
     </div>
   );
 }

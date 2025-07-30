@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
+import UpgradePlanModal from "@/components/upgrade-plan-modal";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -38,6 +40,7 @@ export function FormTemplateSelector() {
   const [previewTemplate, setPreviewTemplate] = useState<FormTemplate | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language || 'es');
+  const upgradeModal = useUpgradeModal();
 
   // Sistema de traducción específico para plantillas
   const templateTranslations: Record<string, Record<string, string>> = {
@@ -264,11 +267,16 @@ export function FormTemplateSelector() {
       });
     },
     onError: (error: any) => {
-      toast({
-        title: t('common.error'),
-        description: `${t('formTemplateSelector.createFormError')}: ${error.message}`,
-        variant: "destructive",
-      });
+      // Check if it's a plan limit error (403 status)
+      if (error.message && error.message.includes("límite")) {
+        upgradeModal.handlePlanLimitError(error.message);
+      } else {
+        toast({
+          title: t('common.error'),
+          description: `${t('formTemplateSelector.createFormError')}: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -307,11 +315,16 @@ export function FormTemplateSelector() {
         setLocation('/dashboard?tab=forms');
       }
     } catch (error: any) {
-      toast({
-        title: t('common.error'),
-        description: `${t('formTemplateSelector.createFormError')}: ${error.message}`,
-        variant: "destructive",
-      });
+      // Check if it's a plan limit error (403 status)
+      if (error.message && error.message.includes("límite")) {
+        upgradeModal.handlePlanLimitError(error.message);
+      } else {
+        toast({
+          title: t('common.error'),
+          description: `${t('formTemplateSelector.createFormError')}: ${error.message}`,
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -1061,6 +1074,14 @@ export function FormTemplateSelector() {
           {createFormMutation.isPending ? "Creando..." : "Continuar"}
         </Button>
       </div>
+
+      <UpgradePlanModal
+        isOpen={upgradeModal.isOpen}
+        onClose={upgradeModal.hideUpgradeModal}
+        limitType={upgradeModal.limitType}
+        currentLimit={upgradeModal.currentLimit}
+        planName={upgradeModal.planName}
+      />
     </div>
   );
 }

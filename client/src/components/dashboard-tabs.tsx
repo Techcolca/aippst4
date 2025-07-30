@@ -21,6 +21,8 @@ import { IntegrationCard } from "./integration-card";
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
+import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
+import UpgradePlanModal from "@/components/upgrade-plan-modal";
 import { Trash2, Edit3, Trash } from "lucide-react";
 import { FeatureRestrictedButton } from "./feature-restricted-button";
 import { FeatureGuard } from "./feature-guard";
@@ -45,6 +47,7 @@ export default function DashboardTabs() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const upgradeModal = useUpgradeModal();
   
   // Consulta para obtener las integraciones
   const { data: integrations, isLoading: isLoadingIntegrations } = useQuery<Integration[]>({
@@ -318,11 +321,16 @@ export default function DashboardTabs() {
       });
     },
     onError: (error: any) => {
-      toast({
-        title: t("error", "Error"),
-        description: error.message || t("error_deleting_form", "Error deleting form"),
-        variant: "destructive",
-      });
+      // Check if it's a plan limit error (403 status)
+      if (error.message && error.message.includes("límite")) {
+        upgradeModal.handlePlanLimitError(error.message);
+      } else {
+        toast({
+          title: t("error", "Error"),
+          description: error.message || t("error_deleting_form", "Error deleting form"),
+          variant: "destructive",
+        });
+      }
     },
   });
 
@@ -546,6 +554,14 @@ export default function DashboardTabs() {
         <TabsContent value="forms">{renderFormsTab()}</TabsContent>
         <TabsContent value="settings">{renderSettingsTab()}</TabsContent>
       </Tabs>
+
+      <UpgradePlanModal
+        isOpen={upgradeModal.isOpen}
+        onClose={upgradeModal.hideUpgradeModal}
+        limitType={upgradeModal.limitType}
+        currentLimit={upgradeModal.currentLimit}
+        planName={upgradeModal.planName}
+      />
     </div>
   );
 }
