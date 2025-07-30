@@ -34,18 +34,38 @@ export function useUpgradeModal() {
   const handlePlanLimitError = useCallback((errorMessage: string) => {
     console.log('Processing plan limit error:', errorMessage);
     
-    // Extract plan information from error message - look for full plan names
-    const planMatch = errorMessage.match(/Tu (Plan [\w\s]+) ha alcanzado/i) || 
-                      errorMessage.match(/(Plan [\w\s]+) ha alcanzado/i) ||
-                      errorMessage.match(/Tu Plan\s+(\w+)/i) || 
-                      errorMessage.match(/Plan\s+(\w+)/i);
-    let planName = planMatch ? planMatch[1] : 'Plan Básico';
+    // Extract plan information from error message - first try to get full plan name
+    let planName = 'Plan Básico'; // default
     
-    // If we only got a partial name like "Básico", convert to full name
-    if (planName === 'Básico') planName = 'Plan Básico';
-    if (planName === 'Startup') planName = 'Plan Startup';
-    if (planName === 'Profesional') planName = 'Plan Profesional';
-    if (planName === 'Empresarial') planName = 'Plan Empresarial';
+    // Try different patterns to extract the plan name
+    const fullPlanMatch = errorMessage.match(/Tu (Plan [\wáéíóú\s]+) ha alcanzado/i);
+    if (fullPlanMatch) {
+      planName = fullPlanMatch[1].trim();
+    } else {
+      // Try to extract just the plan type and convert to full name
+      const planTypeMatch = errorMessage.match(/Tu Plan\s+([\wáéíóú]+)/i);
+      if (planTypeMatch) {
+        const planType = planTypeMatch[1];
+        switch (planType.toLowerCase()) {
+          case 'básico':
+            planName = 'Plan Básico';
+            break;
+          case 'startup':
+            planName = 'Plan Startup';
+            break;
+          case 'profesional':
+            planName = 'Plan Profesional';
+            break;
+          case 'empresarial':
+            planName = 'Plan Empresarial';
+            break;
+          default:
+            planName = `Plan ${planType}`;
+        }
+      }
+    }
+    
+    console.log('Extracted plan name:', planName, 'from message:', errorMessage);
 
     // More specific patterns for different types of limits
     if (errorMessage.includes('integración') || errorMessage.includes('integrations')) {

@@ -62,23 +62,13 @@ export default function UpgradePlanModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500">
-                <Crown className="w-6 h-6 text-white" />
-              </div>
-              <DialogTitle className="text-xl font-semibold">
-                {title}
-              </DialogTitle>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500">
+              <Crown className="w-6 h-6 text-white" />
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="rounded-full w-8 h-8 p-0"
-            >
-              <X className="w-4 h-4" />
-            </Button>
+            <DialogTitle className="text-xl font-semibold">
+              {title}
+            </DialogTitle>
           </div>
         </DialogHeader>
         
