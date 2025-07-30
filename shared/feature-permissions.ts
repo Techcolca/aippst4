@@ -243,12 +243,15 @@ export function canCreateResource(planTier: string, resource: keyof Pick<PlanLim
 
 export function getUpgradeMessage(currentPlan: string, requiredFeature: string): string {
   const planName = PLAN_NAMES[currentPlan] || 'Plan actual';
+  const limits = getPlanLimits(currentPlan);
   
   switch (requiredFeature) {
     case 'createIntegrations':
-      return `Tu ${planName} ha alcanzado el límite de integraciones. Actualiza para crear más.`;
+      const integrationLimit = limits.integrations;
+      return `Tu ${planName} ha alcanzado el límite de ${integrationLimit} ${integrationLimit === 1 ? 'integración' : 'integraciones'}. Actualiza tu plan para crear más chatbots inteligentes.`;
     case 'createForms':
-      return `Tu ${planName} ha alcanzado el límite de formularios. Actualiza para crear más.`;
+      const formLimit = limits.forms;
+      return `Tu ${planName} ha alcanzado el límite de ${formLimit} ${formLimit === 1 ? 'formulario' : 'formularios'}. Actualiza tu plan para crear más formularios.`;
     case 'advancedAnalytics':
       return `Las analíticas avanzadas requieren un plan superior al ${planName}.`;
     case 'apiAccess':

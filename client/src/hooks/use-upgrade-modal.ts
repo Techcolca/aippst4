@@ -34,9 +34,18 @@ export function useUpgradeModal() {
   const handlePlanLimitError = useCallback((errorMessage: string) => {
     console.log('Processing plan limit error:', errorMessage);
     
-    // Extract plan information from error message
-    const planMatch = errorMessage.match(/Tu Plan\s+(\w+)/i) || errorMessage.match(/Plan\s+(\w+)/i);
-    const planName = planMatch ? planMatch[1] : 'Básico';
+    // Extract plan information from error message - look for full plan names
+    const planMatch = errorMessage.match(/Tu (Plan [\w\s]+) ha alcanzado/i) || 
+                      errorMessage.match(/(Plan [\w\s]+) ha alcanzado/i) ||
+                      errorMessage.match(/Tu Plan\s+(\w+)/i) || 
+                      errorMessage.match(/Plan\s+(\w+)/i);
+    let planName = planMatch ? planMatch[1] : 'Plan Básico';
+    
+    // If we only got a partial name like "Básico", convert to full name
+    if (planName === 'Básico') planName = 'Plan Básico';
+    if (planName === 'Startup') planName = 'Plan Startup';
+    if (planName === 'Profesional') planName = 'Plan Profesional';
+    if (planName === 'Empresarial') planName = 'Plan Empresarial';
 
     // More specific patterns for different types of limits
     if (errorMessage.includes('integración') || errorMessage.includes('integrations')) {
