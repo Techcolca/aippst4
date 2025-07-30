@@ -103,6 +103,17 @@ AIPI is an advanced conversational AI platform designed to integrate intelligent
 
 ## Recent Changes
 
+July 30, 2025:
+- ✓ CRITICAL BUG FIX: Fixed duplicate "Profile" menu entries in header dropdown
+- ✓ Removed non-functional DropdownMenuLabel that created duplicate Profile entry
+- ✓ Maintained only functional Profile link that properly navigates to dashboard
+- ✓ MULTILINGUAL PARAMETERS SECTION: Implemented complete translation system for settings/parameters display
+- ✓ Added 25+ new translation keys for settings interface (Spanish, French, English)
+- ✓ Replaced all hardcoded text in dashboard settings tab with i18next translation functions
+- ✓ Parameters section now displays in user's selected language: "Configuración del Asistente IA" (ES), "AI Assistant Settings" (EN), "Paramètres de l'Assistant IA" (FR)
+- ✓ All settings labels now translate properly: Assistant Name, Appearance, Welcome Chat, Status, Colors, etc.
+- ✓ Settings buttons and messages fully localized across all supported languages
+
 July 22, 2025:
 - ✓ CRITICAL BUG FIX: Fixed translation system for relative time formatting ("hace 3 horas" → "il y a 3 heures")
 - ✓ Resolved currentLang: 'unknown' issue in formatRelativeTime function by importing i18n instance directly

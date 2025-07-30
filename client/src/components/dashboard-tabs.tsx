@@ -125,36 +125,36 @@ export default function DashboardTabs() {
           <Card className="p-6">
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-medium mb-2">AI Assistant Settings</h3>
+                <h3 className="text-lg font-medium mb-2">{t("ai_assistant_settings")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Assistant Name</p>
-                    <p className="text-sm text-gray-500">{settings.assistantName || 'AI Assistant'}</p>
+                    <p className="text-sm font-medium">{t("assistant_name")}</p>
+                    <p className="text-sm text-gray-500">{settings.assistantName || t("assistant_name")}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Default Greeting</p>
-                    <p className="text-sm text-gray-500">{settings.defaultGreeting || 'Hello! How can I help you today?'}</p>
+                    <p className="text-sm font-medium">{t("default_greeting")}</p>
+                    <p className="text-sm text-gray-500">{settings.defaultGreeting || t("default_greeting")}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Conversation Style</p>
-                    <p className="text-sm text-gray-500">{settings.conversationStyle || 'Professional'}</p>
+                    <p className="text-sm font-medium">{t("conversation_style")}</p>
+                    <p className="text-sm text-gray-500">{settings.conversationStyle || t("professional")}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Show Availability</p>
-                    <p className="text-sm text-gray-500">{settings.showAvailability ? 'Yes' : 'No'}</p>
+                    <p className="text-sm font-medium">{t("show_availability")}</p>
+                    <p className="text-sm text-gray-500">{settings.showAvailability ? t("yes") : t("no")}</p>
                   </div>
                 </div>
               </div>
               
               <div>
-                <h3 className="text-lg font-medium mb-2">Appearance</h3>
+                <h3 className="text-lg font-medium mb-2">{t("appearance")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Chat Font</p>
-                    <p className="text-sm text-gray-500">{settings.font || 'System Default'}</p>
+                    <p className="text-sm font-medium">{t("chat_font")}</p>
+                    <p className="text-sm text-gray-500">{settings.font || t("system_default")}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">User Message Color</p>
+                    <p className="text-sm font-medium">{t("user_message_color")}</p>
                     <div className="flex items-center">
                       <div 
                         className="w-5 h-5 rounded-full mr-2" 
@@ -164,7 +164,7 @@ export default function DashboardTabs() {
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Assistant Message Color</p>
+                    <p className="text-sm font-medium">{t("assistant_message_color")}</p>
                     <div className="flex items-center">
                       <div 
                         className="w-5 h-5 rounded-full mr-2" 
@@ -177,22 +177,22 @@ export default function DashboardTabs() {
               </div>
               
               <div>
-                <h3 className="text-lg font-medium mb-2">Chat de Bienvenida</h3>
+                <h3 className="text-lg font-medium mb-2">{t("welcome_chat")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Estado</p>
+                    <p className="text-sm font-medium">{t("status")}</p>
                     <p className="text-sm text-gray-500">
-                      {settings.welcomePageChatEnabled ? 'Activado' : 'Desactivado'}
+                      {settings.welcomePageChatEnabled ? t("enabled") : t("disabled")}
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Mensaje de Bienvenida</p>
+                    <p className="text-sm font-medium">{t("welcome_message")}</p>
                     <p className="text-sm text-gray-500">
                       {settings.welcomePageChatGreeting || '👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?'}
                     </p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Color de Burbuja</p>
+                    <p className="text-sm font-medium">{t("bubble_color")}</p>
                     <div className="flex items-center">
                       <div 
                         className="w-5 h-5 rounded-full mr-2" 
@@ -202,7 +202,7 @@ export default function DashboardTabs() {
                     </div>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm font-medium">Color de Texto</p>
+                    <p className="text-sm font-medium">{t("text_color")}</p>
                     <div className="flex items-center">
                       <div 
                         className="w-5 h-5 rounded-full mr-2 border border-gray-300" 
@@ -216,19 +216,19 @@ export default function DashboardTabs() {
               
               <div className="flex justify-end">
                 <Button onClick={() => setLocation("/settings/edit")}>
-                  Edit Settings
+                  {t("edit_settings")}
                 </Button>
               </div>
             </div>
           </Card>
         ) : (
           <Card className="p-6 text-center">
-            <h3 className="text-lg font-medium mb-2">No settings found</h3>
+            <h3 className="text-lg font-medium mb-2">{t("no_settings_found")}</h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Create your assistant settings to customize your AIPI experience
+              {t("no_settings_description")}
             </p>
             <Button variant="default" className="w-full sm:w-auto px-8" onClick={() => setLocation("/settings/edit")}>
-              Configure Settings
+              {t("configure_settings")}
             </Button>
           </Card>
         )}
