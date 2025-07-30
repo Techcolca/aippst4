@@ -106,8 +106,6 @@ export default function Header() {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{t("profile")}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard?tab=profile">{t("profile")}</Link>
                   </DropdownMenuItem>
