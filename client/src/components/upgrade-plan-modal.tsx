@@ -31,27 +31,27 @@ export default function UpgradePlanModal({
     switch (limitType) {
       case 'integrations':
         return {
-          title: t('upgrade.integrations.title', 'Actualiza tu plan'),
-          message: t('upgrade.integrations.message', `Has alcanzado el límite de ${currentLimit} ${currentLimit === 1 ? 'integración' : 'integraciones'} de tu plan ${planName}.`),
-          description: t('upgrade.integrations.description', 'Actualiza a un plan superior para crear más chatbots y formularios para tus sitios web.')
+          title: t('upgrade.integrations.title', 'No puedes crear más integraciones'),
+          message: t('upgrade.integrations.message', `Tu plan ${planName} permite un máximo de ${currentLimit} ${currentLimit === 1 ? 'integración' : 'integraciones'} y ya has alcanzado este límite.`),
+          description: t('upgrade.integrations.description', 'Para crear más chatbots inteligentes para tus sitios web, necesitas actualizar a un plan superior con más integraciones incluidas.')
         };
       case 'forms':
         return {
-          title: t('upgrade.forms.title', 'Actualiza tu plan'),
-          message: t('upgrade.forms.message', `Has alcanzado el límite de ${currentLimit} ${currentLimit === 1 ? 'formulario' : 'formularios'} de tu plan ${planName}.`),
-          description: t('upgrade.forms.description', 'Actualiza a un plan superior para crear más formularios inteligentes y capturar más leads.')
+          title: t('upgrade.forms.title', 'No puedes crear más formularios'),
+          message: t('upgrade.forms.message', `Tu plan ${planName} permite un máximo de ${currentLimit} ${currentLimit === 1 ? 'formulario' : 'formularios'} y ya has alcanzado este límite.`),
+          description: t('upgrade.forms.description', 'Para crear más formularios inteligentes y capturar más leads, necesitas actualizar a un plan superior que incluya más formularios.')
         };
       case 'conversations':
         return {
-          title: t('upgrade.conversations.title', 'Actualiza tu plan'),
-          message: t('upgrade.conversations.message', `Has alcanzado el límite mensual de ${currentLimit} conversaciones de tu plan ${planName}.`),
-          description: t('upgrade.conversations.description', 'Actualiza a un plan superior para tener conversaciones ilimitadas con tus clientes.')
+          title: t('upgrade.conversations.title', 'Has alcanzado tu límite de conversaciones'),
+          message: t('upgrade.conversations.message', `Tu plan ${planName} permite ${currentLimit} conversaciones por mes y ya has utilizado todas.`),
+          description: t('upgrade.conversations.description', 'Para continuar teniendo conversaciones con tus clientes este mes, necesitas actualizar a un plan con más conversaciones incluidas.')
         };
       default:
         return {
-          title: t('upgrade.general.title', 'Actualiza tu plan'),
-          message: t('upgrade.general.message', `Has alcanzado los límites de tu plan ${planName}.`),
-          description: t('upgrade.general.description', 'Actualiza a un plan superior para acceder a más funcionalidades y recursos.')
+          title: t('upgrade.general.title', 'Has alcanzado el límite de tu plan'),
+          message: t('upgrade.general.message', `Tu plan ${planName} no permite usar esta funcionalidad o has alcanzado su límite máximo.`),
+          description: t('upgrade.general.description', 'Para continuar usando esta funcionalidad, necesitas actualizar a un plan superior con más recursos incluidos.')
         };
     }
   };
