@@ -1100,7 +1100,10 @@
       "create_account_advanced": "Créer un Compte pour les Fonctionnalités Avancées",
       "create_forms": "Créer des Formulaires",
       "configure_auth": "Configurer l'Authentification",
-      "login": "Se connecter"
+      "login": "Se connecter",
+      "configure_sections": "Configurer les Sections",
+      "configure_assistant": "Configurer l'Assistant",
+      "configure_advanced_forms": "Configurer les Formulaires Avancés"
     },
     "fullscreen_features": {
       "title": "✨ Fonctionnalités d'Utilisateur Authentifié",
@@ -1119,7 +1122,35 @@
     "ignored_sections": {
       "title": "Nouveau! Contrôle précis du contenu analysé",
       "description": "La fonction \"Sections ignorées\" vous permet d'exclure des parties spécifiques de votre site web de l'analyse du chatbot, améliorant la précision et la pertinence des réponses.",
-      "step3_title": "Étape 3: Configurez les sections ignorées"
+      "step3_title": "Étape 3: Configurez les sections ignorées",
+      "benefit_1": "Excluez les menus, pieds de page et barres latérales non pertinents",
+      "benefit_2": "Améliorez la confidentialité en excluant les informations sensibles",
+      "benefit_3": "Réduisez les coûts en optimisant l'utilisation des tokens",
+      "benefit_4": "Obtenez des réponses plus précises et pertinentes",
+      "config_example": "Exemple de configuration:",
+      "config_description": "Configurez quelles sections ignorer depuis le panneau d'administration:",
+      "step_1": "Accédez à la section \"Intégrations\" du panneau",
+      "step_2": "Sélectionnez l'intégration que vous souhaitez configurer",
+      "step_3": "Trouvez la section \"Sections à ignorer\"",
+      "step_4": "Ajoutez les noms des sections que vous voulez exclure"
+    },
+    "fullscreen": {
+      "step4": {
+        "title": "Étape 4: Configurez les réponses",
+        "description": "Définissez le comportement de votre assistant et entraînez-le avec des documents spécifiques à votre entreprise:",
+        "feature_1": "Définissez des instructions spécifiques pour le chatbot",
+        "feature_2": "Téléchargez des documents contenant des informations pertinentes",
+        "feature_3": "Configurez des réponses automatiques pour les questions courantes",
+        "feature_4": "Établissez des règles de transfert vers des humains si nécessaire"
+      },
+      "step5": {
+        "title": "Étape 5: Intégrez les Formulaires et l'Authentification",
+        "description": "Le mode plein écran permet d'intégrer des formulaires avancés avec le système d'authentification:",
+        "feature_1": "Formulaires d'inscription d'utilisateurs intégrés",
+        "feature_2": "Capture de leads avec authentification",
+        "feature_3": "Suivi personnalisé par utilisateur",
+        "feature_4": "Exportation de données avec informations utilisateur"
+      }
     },
     "cta": {
       "title": "Prêt à dynamiser votre site web?",

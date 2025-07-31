@@ -1122,7 +1122,10 @@
       "create_account_advanced": "Crear Cuenta para Funciones Avanzadas",
       "create_forms": "Crear Formularios",
       "configure_auth": "Configurar Autenticación",
-      "login": "Iniciar Sesión"
+      "login": "Iniciar Sesión",
+      "configure_sections": "Configurar Secciones",
+      "configure_assistant": "Configurar Asistente",
+      "configure_advanced_forms": "Configurar Formularios Avanzados"
     },
     "cta": {
       "title": "¿Listo para potenciar tu sitio web?",
@@ -1147,7 +1150,35 @@
     "ignored_sections": {
       "title": "¡Novedad! Control preciso del contenido analizado",
       "description": "La función \"Secciones ignoradas\" te permite excluir partes específicas de tu sitio web del análisis del chatbot, mejorando la precisión y relevancia de las respuestas.",
-      "step3_title": "Paso 3: Configura las secciones ignoradas"
+      "step3_title": "Paso 3: Configura las secciones ignoradas",
+      "benefit_1": "Excluye menús, pies de página y barras laterales irrelevantes",
+      "benefit_2": "Mejora la privacidad excluyendo información sensible",
+      "benefit_3": "Reduce costos al optimizar el uso de tokens",
+      "benefit_4": "Obtén respuestas más precisas y relevantes",
+      "config_example": "Ejemplo de configuración:",
+      "config_description": "Configura qué secciones ignorar desde el panel de administración:",
+      "step_1": "Accede a la sección \"Integraciones\" del panel",
+      "step_2": "Selecciona la integración que deseas configurar",
+      "step_3": "Busca el apartado \"Secciones a ignorar\"",
+      "step_4": "Agrega los nombres de las secciones que quieres excluir"
+    },
+    "fullscreen": {
+      "step4": {
+        "title": "Paso 4: Configura las respuestas",
+        "description": "Define el comportamiento de tu asistente y entrénalo con documentos específicos de tu negocio:",
+        "feature_1": "Define instrucciones específicas para el chatbot",
+        "feature_2": "Sube documentos que contengan información relevante",
+        "feature_3": "Configura respuestas automáticas para preguntas comunes",
+        "feature_4": "Establece reglas de derivación a humanos cuando sea necesario"
+      },
+      "step5": {
+        "title": "Paso 5: Integra Formularios y Autenticación",
+        "description": "El modo pantalla completa permite integrar formularios avanzados con el sistema de autenticación:",
+        "feature_1": "Formularios de registro de usuarios integrados",
+        "feature_2": "Captura de leads con autenticación",
+        "feature_3": "Seguimiento personalizado por usuario",
+        "feature_4": "Exportación de datos con información de usuario"
+      }
     }
   },
   "formTemplates": {

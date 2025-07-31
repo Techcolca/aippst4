@@ -1221,7 +1221,10 @@
       "create_account_advanced": "Create Account for Advanced Features",
       "create_forms": "Create Forms",
       "configure_auth": "Configure Authentication",
-      "login": "Login"
+      "login": "Login",
+      "configure_sections": "Configure Sections",
+      "configure_assistant": "Configure Assistant",
+      "configure_advanced_forms": "Configure Advanced Forms"
     },
     "fullscreen_features": {
       "title": "✨ Authenticated User Features",
@@ -1240,7 +1243,35 @@
     "ignored_sections": {
       "title": "New! Precise control of analyzed content",
       "description": "The \"Ignored sections\" feature allows you to exclude specific parts of your website from chatbot analysis, improving the accuracy and relevance of responses.",
-      "step3_title": "Step 3: Configure ignored sections"
+      "step3_title": "Step 3: Configure ignored sections",
+      "benefit_1": "Exclude irrelevant menus, footers and sidebars",
+      "benefit_2": "Improve privacy by excluding sensitive information",
+      "benefit_3": "Reduce costs by optimizing token usage",
+      "benefit_4": "Get more accurate and relevant responses",
+      "config_example": "Configuration example:",
+      "config_description": "Configure which sections to ignore from the admin panel:",
+      "step_1": "Access the \"Integrations\" section of the panel",
+      "step_2": "Select the integration you want to configure",
+      "step_3": "Find the \"Sections to ignore\" section",
+      "step_4": "Add the names of the sections you want to exclude"
+    },
+    "fullscreen": {
+      "step4": {
+        "title": "Step 4: Configure responses",
+        "description": "Define your assistant's behavior and train it with business-specific documents:",
+        "feature_1": "Define specific instructions for the chatbot",
+        "feature_2": "Upload documents containing relevant information",
+        "feature_3": "Configure automatic responses for common questions",
+        "feature_4": "Establish human handoff rules when necessary"
+      },
+      "step5": {
+        "title": "Step 5: Integrate Forms and Authentication",
+        "description": "Fullscreen mode allows integrating advanced forms with the authentication system:",
+        "feature_1": "Integrated user registration forms",
+        "feature_2": "Lead capture with authentication",
+        "feature_3": "Personalized tracking per user",
+        "feature_4": "Data export with user information"
+      }
     },
     "cta": {
       "title": "Ready to power up your website?",

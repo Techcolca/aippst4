@@ -366,29 +366,29 @@ export default function GetStarted() {
                           <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
                             <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                           </span>
-                          <p className="text-sm">Excluye menús, pies de página y barras laterales irrelevantes</p>
+                          <p className="text-sm">{t("getStartedPage.ignored_sections.benefit_1")}</p>
                         </div>
                         <div className="flex items-start">
                           <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
                             <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                           </span>
-                          <p className="text-sm">Mejora la privacidad excluyendo información sensible</p>
+                          <p className="text-sm">{t("getStartedPage.ignored_sections.benefit_2")}</p>
                         </div>
                         <div className="flex items-start">
                           <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
                             <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                           </span>
-                          <p className="text-sm">Reduce costos al optimizar el uso de tokens</p>
+                          <p className="text-sm">{t("getStartedPage.ignored_sections.benefit_3")}</p>
                         </div>
                         <div className="flex items-start">
                           <span className="bg-primary-100 dark:bg-primary-800 rounded-full p-1 mr-2 flex-shrink-0">
                             <CheckCircle2 className="h-4 w-4 text-primary-600 dark:text-primary-400" />
                           </span>
-                          <p className="text-sm">Obtén respuestas más precisas y relevantes</p>
+                          <p className="text-sm">{t("getStartedPage.ignored_sections.benefit_4")}</p>
                         </div>
                       </div>
                       <div className="mt-3 bg-gray-50 dark:bg-gray-800 rounded p-3">
-                        <p className="text-sm font-medium mb-1">Ejemplo de configuración:</p>
+                        <p className="text-sm font-medium mb-1">{t("getStartedPage.ignored_sections.config_example")}</p>
                         <pre className="text-xs bg-gray-900 text-gray-100 p-2 rounded overflow-x-auto">
 {`aipi('init', {
   apiKey: 'TU_API_KEY',
@@ -400,21 +400,21 @@ export default function GetStarted() {
                     </div>
                     <div className="mt-4">
                       <p className="mb-4 text-gray-700 dark:text-gray-300">
-                        Configura qué secciones ignorar desde el panel de administración:
+{t("getStartedPage.ignored_sections.config_description")}
                       </p>
                       <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                        <li>Accede a la sección "Integraciones" del panel</li>
-                        <li>Selecciona la integración que deseas configurar</li>
-                        <li>Busca el apartado "Secciones a ignorar"</li>
-                        <li>Agrega los nombres de las secciones que quieres excluir</li>
+                        <li>{t("getStartedPage.ignored_sections.step_1")}</li>
+                        <li>{t("getStartedPage.ignored_sections.step_2")}</li>
+                        <li>{t("getStartedPage.ignored_sections.step_3")}</li>
+                        <li>{t("getStartedPage.ignored_sections.step_4")}</li>
                       </ol>
                       {user ? (
                         <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
-                          Configurar Secciones
+{t("getStartedPage.buttons.configure_sections")}
                         </Button>
                       ) : (
                         <Button size="lg" onClick={() => setLocation("/register")}>
-                          Crear Cuenta
+{t("getStartedPage.buttons.create_account")}
                         </Button>
                       )}
                     </div>
@@ -423,25 +423,25 @@ export default function GetStarted() {
 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 4: Configura las respuestas</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.fullscreen.step4.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Define el comportamiento de tu asistente y entrénalo con documentos específicos de tu negocio:
+{t("getStartedPage.fullscreen.step4.description")}
                     </p>
                     <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Define instrucciones específicas para el chatbot</li>
-                      <li>Sube documentos que contengan información relevante</li>
-                      <li>Configura respuestas automáticas para preguntas comunes</li>
-                      <li>Establece reglas de derivación a humanos cuando sea necesario</li>
+                      <li>{t("getStartedPage.fullscreen.step4.feature_1")}</li>
+                      <li>{t("getStartedPage.fullscreen.step4.feature_2")}</li>
+                      <li>{t("getStartedPage.fullscreen.step4.feature_3")}</li>
+                      <li>{t("getStartedPage.fullscreen.step4.feature_4")}</li>
                     </ul>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/automations")}>
-                        Configurar Asistente
+{t("getStartedPage.buttons.configure_assistant")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/register")}>
-                        Crear Cuenta
+{t("getStartedPage.buttons.create_account")}
                       </Button>
                     )}
                   </div>
@@ -449,25 +449,25 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 4: Integra Formularios y Autenticación</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.fullscreen.step5.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      El modo pantalla completa permite integrar formularios avanzados con el sistema de autenticación:
+{t("getStartedPage.fullscreen.step5.description")}
                     </p>
                     <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Formularios de registro de usuarios integrados</li>
-                      <li>Captura de leads con autenticación</li>
-                      <li>Seguimiento personalizado por usuario</li>
-                      <li>Exportación de datos con información de usuario</li>
+                      <li>{t("getStartedPage.fullscreen.step5.feature_1")}</li>
+                      <li>{t("getStartedPage.fullscreen.step5.feature_2")}</li>
+                      <li>{t("getStartedPage.fullscreen.step5.feature_3")}</li>
+                      <li>{t("getStartedPage.fullscreen.step5.feature_4")}</li>
                     </ul>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/forms")}>
-                        Configurar Formularios Avanzados
+{t("getStartedPage.buttons.configure_advanced_forms")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/register")}>
-                        Crear Cuenta para Funciones Avanzadas
+{t("getStartedPage.buttons.create_account_advanced")}
                       </Button>
                     )}
                   </div>
@@ -478,11 +478,11 @@ export default function GetStarted() {
               <TabsContent value="form" className="space-y-8">
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 1: Agrega este código a tu sitio web</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.form.step1.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre &lt;/body&gt;:
+{t("getStartedPage.form.step1.description")}
                     </p>
                     <div className="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 relative">
                       <code className="text-sm">{formWidgetCode}</code>
@@ -496,7 +496,7 @@ export default function GetStarted() {
                     </div>
                     {copiedForm && (
                       <p className="text-green-600 dark:text-green-400 text-sm mb-4">
-                        ✓ Código copiado al portapapeles
+{t("getStartedPage.form.step1.copied")}
                       </p>
                     )}
                   </div>
@@ -504,15 +504,15 @@ export default function GetStarted() {
 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 2: Configuración del formulario</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.form.step2.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      El botón flotante de formulario puede ser personalizado con los siguientes atributos:
+{t("getStartedPage.form.step2.description")}
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                        <h3 className="font-semibold mb-2">Atributos básicos:</h3>
+                        <h3 className="font-semibold mb-2">{t("getStartedPage.form.step2.basic_attributes")}</h3>
                         <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
                           <li><code>data-form-id</code>: ID del formulario a mostrar</li>
                           <li><code>data-display-type</code>: "modal" o "slide-in"</li>
@@ -521,7 +521,7 @@ export default function GetStarted() {
                         </ul>
                       </div>
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
-                        <h3 className="font-semibold mb-2">Personalización:</h3>
+                        <h3 className="font-semibold mb-2">{t("getStartedPage.form.step2.customization_attributes")}</h3>
                         <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
                           <li><code>data-theme-color</code>: Color del botón</li>
                           <li><code>data-icon</code>: "form", "message", "help"</li>
@@ -532,7 +532,7 @@ export default function GetStarted() {
                     </div>
                     <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4 rounded-lg">
                       <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                        <strong>Ejemplo completo:</strong>
+<strong>{t("getStartedPage.form.step2.example_title")}</strong>
                       </p>
                       <pre className="text-xs bg-gray-900 text-gray-100 p-2 rounded overflow-x-auto mt-2">
 {`<script src="${baseUrl}/form-button.js?key=TU_API_KEY" 
@@ -550,11 +550,11 @@ export default function GetStarted() {
 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 3: Gestiona tus formularios</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.form.step3.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Crea y personaliza formularios desde el panel de administración:
+{t("getStartedPage.form.step3.description")}
                     </p>
                     <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
                       <li>Accede a la sección "Formularios" en el panel</li>
@@ -568,14 +568,14 @@ export default function GetStarted() {
                         onClick={() => setLocation("/dashboard?tab=forms")}
                         className="bg-primary-600 hover:bg-primary-700"
                       >
-                        Ir a Formularios
+{t("getStartedPage.buttons.go_to_forms")}
                       </Button>
                     ) : (
                       <Button 
                         onClick={() => setLocation("/login")}
                         className="bg-primary-600 hover:bg-primary-700"
                       >
-                        Iniciar Sesión para Gestionar Formularios
+{t("getStartedPage.buttons.login_to_manage_forms")}
                       </Button>
                     )}
                   </div>
