@@ -404,7 +404,7 @@
   "upgrade": {
     "general": {
       "title": "You have reached your plan limit",
-      "message": "Your Basic plan does not allow using this functionality or you have reached its maximum limit.",
+      "message": "Your {{planName}} plan does not allow using this functionality or you have reached its maximum limit.",
       "description": "To continue using this functionality, you need to upgrade to a higher plan with more included resources."
     },
     "benefits": {
