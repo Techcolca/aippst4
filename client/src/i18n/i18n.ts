@@ -18,6 +18,12 @@ const resources = {
         english: "Anglais",
         french: "Français"
       },
+      language: {
+        select: "Sélectionner la langue",
+        fr: "Français",
+        es: "Espagnol", 
+        en: "Anglais"
+      },
       refresh: "Actualiser",
       edit: "Modifier",
       conversations: "Conversations",
@@ -71,6 +77,12 @@ const resources = {
         english: "Inglés",
         french: "Francés"
       },
+      language: {
+        select: "Seleccionar idioma",
+        fr: "Francés",
+        es: "Español",
+        en: "Inglés"
+      },
       refresh: "Actualizar",
       edit: "Editar",
       conversations: "Conversaciones",
@@ -123,6 +135,12 @@ const resources = {
         spanish: "Spanish",
         english: "English", 
         french: "French"
+      },
+      language: {
+        select: "Select language",
+        fr: "French",
+        es: "Spanish",
+        en: "English"
       },
       refresh: "Refresh",
       edit: "Edit",
