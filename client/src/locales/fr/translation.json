@@ -962,7 +962,8 @@
       "step1": {
         "title": "Étape 1: Ajoutez ce code à votre site web",
         "description": "Copiez et collez ce code dans le HTML de votre site web, juste avant la balise de fermeture </body>:",
-        "copied": "✓ Code copié dans le presse-papiers"
+        "copied": "✓ Code copié dans le presse-papiers",
+        "wordpress_note": "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
       },
       "step2": {
         "title": "Étape 2: Personnalisez votre widget (optionnel)",
@@ -1004,7 +1005,8 @@
       "step1": {
         "title": "Étape 1: Ajoutez ce code à votre site web",
         "description": "Copiez et collez ce code dans le HTML de votre site web, juste avant la balise de fermeture </body>:",
-        "copied": "✓ Code copié dans le presse-papiers"
+        "copied": "✓ Code copié dans le presse-papiers",
+        "wordpress_note": "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
       },
       "step2": {
         "title": "Étape 2: Personnalisez l'expérience",
@@ -1077,7 +1079,33 @@
       "go_to_forms": "Aller aux Formulaires",
       "login_to_manage": "Se Connecter pour Gérer",
       "login_to_manage_forms": "Se Connecter pour Gérer les Formulaires",
-      "preview_widget": "Aperçu du Widget"
+      "preview_widget": "Aperçu du Widget",
+      "manage_content": "Gérer le Contenu",
+      "create_account": "Créer un Compte",
+      "create_account_forms": "Créer un Compte pour les Formulaires",
+      "create_account_advanced": "Créer un Compte pour les Fonctionnalités Avancées",
+      "create_forms": "Créer des Formulaires",
+      "configure_auth": "Configurer l'Authentification",
+      "login": "Se connecter"
+    },
+    "fullscreen_features": {
+      "title": "✨ Fonctionnalités d'Utilisateur Authentifié",
+      "register_login": "Inscription et Connexion: Système complet d'authentification des utilisateurs",
+      "personal_history": "Historique Personnel: Chaque utilisateur maintient son propre historique de conversations",
+      "auto_titles": "Titres Automatiques: Génération automatique de titres descriptifs pour les conversations",
+      "conversation_management": "Gestion des Conversations: Créer, supprimer et organiser des conversations personnelles",
+      "user_info": "Informations Utilisateur: Profil personnalisé avec horodatages relatifs",
+      "jwt_security": "Sécurité JWT: Authentification sécurisée avec tokens chiffrés",
+      "visual_customization": "Personnalisez aussi l'interface visuelle pour qu'elle corresponde à votre marque:",
+      "brand_colors": "Couleurs et style visuel qui correspondent à votre marque",
+      "welcome_messages": "Messages de bienvenue personnalisés pour les nouveaux utilisateurs",
+      "registration_config": "Configuration des formulaires d'inscription",
+      "privacy_settings": "Paramètres de confidentialité et sécurité"
+    },
+    "ignored_sections": {
+      "title": "Nouveau! Contrôle précis du contenu analysé",
+      "description": "La fonction \"Sections ignorées\" vous permet d'exclure des parties spécifiques de votre site web de l'analyse du chatbot, améliorant la précision et la pertinence des réponses.",
+      "step3_title": "Étape 3: Configurez les sections ignorées"
     },
     "cta": {
       "title": "Prêt à dynamiser votre site web?",

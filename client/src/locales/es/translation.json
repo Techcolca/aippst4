@@ -983,7 +983,8 @@
       "step1": {
         "title": "Paso 1: Agrega este código a tu sitio web",
         "description": "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
-        "copied": "✓ Código copiado al portapapeles"
+        "copied": "✓ Código copiado al portapapeles",
+        "wordpress_note": "Si usas WordPress: Puedes agregarlo en el tema en footer.php o instalar un plugin que permita insertar código HTML."
       },
       "step2": {
         "title": "Paso 2: Personaliza tu widget (opcional)",
@@ -1003,15 +1004,21 @@
         }
       },
       "step3": {
-        "title": "Paso 3: Configura secciones a ignorar (opcional)",
-        "description": "Si tu sitio web tiene secciones que no quieres que el asistente analice (como menús, footer, publicidad), puedes configurarlas para ser ignoradas:",
-        "example_title": "Ejemplo de configuración:",
-        "configure_description": "Configura qué secciones ignorar desde el panel de administración:",
-        "dashboard_steps": [
-          "Accede a la sección \"Integraciones\" del panel",
-          "Selecciona la integración que deseas configurar",
-          "Busca el apartado \"Secciones a ignorar\"",
-          "Agrega los nombres de las secciones que quieres excluir"
+        "title": "Paso 3: Entrena tu asistente (opcional)",
+        "description": "Para que tu asistente proporcione respuestas útiles y relevantes, puedes entrenarlo con:",
+        "training_options": [
+          "Documentos PDF con información sobre tus productos o servicios",
+          "Archivos DOCX con preguntas frecuentes y sus respuestas",
+          "Archivos Excel con datos estructurados",
+          "Instrucciones específicas sobre el tono y estilo de las respuestas"
+        ],
+        "step4_title": "Paso 4: Configura Formularios (Opcional)",
+        "step4_description": "Potencia tu widget con formularios personalizados para capturar leads y información específica:",
+        "form_options": [
+          "Formularios de contacto y captura de leads",
+          "Encuestas de satisfacción y feedback",
+          "Formularios de registro para eventos",
+          "Integración automática con tu CRM"
         ]
       },
       "preview": {
@@ -1025,16 +1032,26 @@
       "step1": {
         "title": "Paso 1: Agrega este código a tu sitio web",
         "description": "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
-        "copied": "✓ Código copiado al portapapeles"
+        "copied": "✓ Código copiado al portapapeles",
+        "wordpress_note": "Si usas WordPress: Puedes agregarlo en el tema en footer.php o instalar un plugin que permita insertar código HTML."
       },
       "step2": {
-        "title": "Paso 2: Personaliza la experiencia",
-        "description": "El widget de pantalla completa ofrece una experiencia similar a ChatGPT integrada en tu sitio web:",
+        "title": "Paso 2: Sistema de Autenticación Avanzado",
+        "description": "El widget de pantalla completa incluye un sistema completo de autenticación que permite:",
         "features": [
-          "Interfaz de chat de pantalla completa",
-          "Historial de conversaciones",
-          "Registro de usuarios opcional",
-          "Respuestas contextuales basadas en tu contenido"
+          "Registro y inicio de sesión de usuarios",
+          "Conversaciones personalizadas y persistentes",
+          "Historial completo de todas las interacciones",
+          "Perfiles de usuario con preferencias",
+          "Sistema de seguimiento de progreso"
+        ],
+        "step3_title": "Paso 3: Entrena tu Asistente con Documentos",
+        "step3_description": "Sube y entrena tu asistente con documentos específicos para respuestas más relevantes:",
+        "training_features": [
+          "Procesamiento inteligente de PDFs y documentos Word",
+          "Análisis automático de contenido web de tu sitio",
+          "Base de conocimiento personalizada por proyecto",
+          "Respuestas contextuales específicas de tu negocio"
         ],
         "configure_description": "Personaliza la experiencia desde el panel de administración:",
         "dashboard_steps": [
@@ -1094,17 +1111,43 @@
     },
     "buttons": {
       "copy_code": "Copiar Código",
-      "go_to_integrations": "Ir a Integraciones",
+      "go_to_integrations": "Ir a Integraciones", 
       "go_to_forms": "Ir a Formularios",
       "login_to_manage": "Iniciar Sesión para Gestionar",
       "login_to_manage_forms": "Iniciar Sesión para Gestionar Formularios",
-      "preview_widget": "Vista Previa del Widget"
+      "preview_widget": "Vista Previa del Widget",
+      "manage_content": "Administrar Contenido",
+      "create_account": "Crear Cuenta",
+      "create_account_forms": "Crear Cuenta para Formularios",
+      "create_account_advanced": "Crear Cuenta para Funciones Avanzadas",
+      "create_forms": "Crear Formularios",
+      "configure_auth": "Configurar Autenticación",
+      "login": "Iniciar Sesión"
     },
     "cta": {
       "title": "¿Listo para potenciar tu sitio web?",
       "description": "Únete a miles de sitios web que ya están usando AIPPS para mejorar la experiencia de sus usuarios.",
       "create_account": "Crear Cuenta Gratuita",
       "learn_more": "Conocer Más"
+    },
+    "fullscreen_features": {
+      "title": "✨ Funcionalidades de Usuario Autenticado",
+      "register_login": "Registro y Login: Sistema completo de autenticación de usuarios",
+      "personal_history": "Historial Personal: Cada usuario mantiene su propio historial de conversaciones",
+      "auto_titles": "Títulos Automáticos: Generación automática de títulos descriptivos para conversaciones",
+      "conversation_management": "Gestión de Conversaciones: Crear, eliminar y organizar conversaciones personales",
+      "user_info": "Información de Usuario: Perfil personalizado con timestamps relativos",
+      "jwt_security": "Seguridad JWT: Autenticación segura con tokens encriptados",
+      "visual_customization": "Personaliza también la interfaz visual para que coincida con tu marca:",
+      "brand_colors": "Colores y estilo visual que coincida con tu marca",
+      "welcome_messages": "Mensajes de bienvenida personalizados para nuevos usuarios",
+      "registration_config": "Configuración de formularios de registro",
+      "privacy_settings": "Ajustes de privacidad y seguridad"
+    },
+    "ignored_sections": {
+      "title": "¡Novedad! Control preciso del contenido analizado",
+      "description": "La función \"Secciones ignoradas\" te permite excluir partes específicas de tu sitio web del análisis del chatbot, mejorando la precisión y relevancia de las respuestas.",
+      "step3_title": "Paso 3: Configura las secciones ignoradas"
     }
   },
   "formTemplates": {

@@ -161,7 +161,7 @@ export default function GetStarted() {
                     </div>
                     <div className="mt-4">
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Si usas WordPress:</strong> Puedes agregarlo en el tema en footer.php o instalar un plugin que permita insertar código HTML.
+                        <strong>{t("getStartedPage.widget.step1.wordpress_note")}</strong>
                       </p>
                     </div>
                   </div>
@@ -211,21 +211,30 @@ export default function GetStarted() {
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Para que tu asistente proporcione respuestas útiles y relevantes, puedes entrenarlo con:
+                      {t("getStartedPage.widget.step3.description")}
                     </p>
                     <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Documentos PDF con información sobre tus productos o servicios</li>
-                      <li>Archivos DOCX con preguntas frecuentes y sus respuestas</li>
-                      <li>Archivos Excel con datos estructurados</li>
-                      <li>Instrucciones específicas sobre el tono y estilo de las respuestas</li>
+                      {Array.isArray(t("getStartedPage.widget.step3.training_options", { returnObjects: true })) 
+                        ? t("getStartedPage.widget.step3.training_options", { returnObjects: true }).map((option: string, index: number) => (
+                            <li key={index}>{option}</li>
+                          ))
+                        : (
+                          <>
+                            <li>Documentos PDF con información sobre tus productos o servicios</li>
+                            <li>Archivos DOCX con preguntas frecuentes y sus respuestas</li>
+                            <li>Archivos Excel con datos estructurados</li>
+                            <li>Instrucciones específicas sobre el tono y estilo de las respuestas</li>
+                          </>
+                        )
+                      }
                     </ul>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/content")}>
-                        Administrar Contenido
+                        {t("getStartedPage.buttons.manage_content")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/register")}>
-                        Crear Cuenta
+                        {t("getStartedPage.buttons.create_account")}
                       </Button>
                     )}
                   </div>
@@ -233,25 +242,34 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 4: Configura Formularios (Opcional)</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.widget.step3.step4_title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Potencia tu widget con formularios personalizados para capturar leads y información específica:
+                      {t("getStartedPage.widget.step3.step4_description")}
                     </p>
                     <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Formularios de contacto y captura de leads</li>
-                      <li>Encuestas de satisfacción y feedback</li>
-                      <li>Formularios de registro para eventos</li>
-                      <li>Integración automática con tu CRM</li>
+                      {Array.isArray(t("getStartedPage.widget.step3.form_options", { returnObjects: true })) 
+                        ? t("getStartedPage.widget.step3.form_options", { returnObjects: true }).map((option: string, index: number) => (
+                            <li key={index}>{option}</li>
+                          ))
+                        : (
+                          <>
+                            <li>Formularios de contacto y captura de leads</li>
+                            <li>Encuestas de satisfacción y feedback</li>
+                            <li>Formularios de registro para eventos</li>
+                            <li>Integración automática con tu CRM</li>
+                          </>
+                        )
+                      }
                     </ul>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/forms")}>
-                        Crear Formularios
+                        {t("getStartedPage.buttons.create_forms")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/register")}>
-                        Crear Cuenta para Formularios
+                        {t("getStartedPage.buttons.create_account_forms")}
                       </Button>
                     )}
                   </div>
@@ -262,11 +280,11 @@ export default function GetStarted() {
               <TabsContent value="fullscreen" className="space-y-8">
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 1: Agrega este código a tu sitio web</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.fullscreen.step1.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Copia el siguiente código y pégalo justo antes de la etiqueta &lt;/body&gt; en tus páginas HTML:
+                      {t("getStartedPage.fullscreen.step1.description")}
                     </p>
                     <div className="relative">
                       <pre className="bg-gray-900 text-white p-6 rounded-md overflow-x-auto text-sm">
@@ -281,7 +299,7 @@ export default function GetStarted() {
                     </div>
                     <div className="mt-4">
                       <p className="text-gray-700 dark:text-gray-300">
-                        <strong>Si usas WordPress:</strong> Puedes agregarlo en el tema en footer.php o instalar un plugin que permita insertar código HTML.
+                        <strong>{t("getStartedPage.fullscreen.step1.wordpress_note")}</strong>
                       </p>
                     </div>
                   </div>
@@ -289,43 +307,43 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 2: Sistema de Autenticación Avanzado</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.fullscreen.step2.title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      El widget de pantalla completa incluye un sistema completo de autenticación que permite:
+                      {t("getStartedPage.fullscreen.step2.description")}
                     </p>
                     
                     <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800 mb-6">
                       <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-2">
-                        ✨ Funcionalidades de Usuario Autenticado
+                        {t("getStartedPage.fullscreen_features.title")}
                       </h3>
                       <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300">
-                        <li><strong>Registro y Login:</strong> Sistema completo de autenticación de usuarios</li>
-                        <li><strong>Historial Personal:</strong> Cada usuario mantiene su propio historial de conversaciones</li>
-                        <li><strong>Títulos Automáticos:</strong> Generación automática de títulos descriptivos para conversaciones</li>
-                        <li><strong>Gestión de Conversaciones:</strong> Crear, eliminar y organizar conversaciones personales</li>
-                        <li><strong>Información de Usuario:</strong> Perfil personalizado con timestamps relativos</li>
-                        <li><strong>Seguridad JWT:</strong> Autenticación segura con tokens encriptados</li>
+                        <li><strong>{t("getStartedPage.fullscreen_features.register_login")}</strong></li>
+                        <li><strong>{t("getStartedPage.fullscreen_features.personal_history")}</strong></li>
+                        <li><strong>{t("getStartedPage.fullscreen_features.auto_titles")}</strong></li>
+                        <li><strong>{t("getStartedPage.fullscreen_features.conversation_management")}</strong></li>
+                        <li><strong>{t("getStartedPage.fullscreen_features.user_info")}</strong></li>
+                        <li><strong>{t("getStartedPage.fullscreen_features.jwt_security")}</strong></li>
                       </ul>
                     </div>
                     
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
-                      Personaliza también la interfaz visual para que coincida con tu marca:
+                      {t("getStartedPage.fullscreen_features.visual_customization")}
                     </p>
                     <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Colores y estilo visual que coincida con tu marca</li>
-                      <li>Mensajes de bienvenida personalizados para nuevos usuarios</li>
-                      <li>Configuración de formularios de registro</li>
-                      <li>Ajustes de privacidad y seguridad</li>
+                      <li>{t("getStartedPage.fullscreen_features.brand_colors")}</li>
+                      <li>{t("getStartedPage.fullscreen_features.welcome_messages")}</li>
+                      <li>{t("getStartedPage.fullscreen_features.registration_config")}</li>
+                      <li>{t("getStartedPage.fullscreen_features.privacy_settings")}</li>
                     </ul>
                     {user ? (
                       <Button size="lg" onClick={() => setLocation("/dashboard/integrations")}>
-                        Configurar Autenticación
+                        {t("getStartedPage.buttons.configure_auth")}
                       </Button>
                     ) : (
                       <Button size="lg" onClick={() => setLocation("/login")}>
-                        Iniciar Sesión
+                        {t("getStartedPage.buttons.login")}
                       </Button>
                     )}
                   </div>
@@ -333,16 +351,15 @@ export default function GetStarted() {
                 
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">Paso 3: Configura las secciones ignoradas</h2>
+                    <h2 className="text-2xl font-bold">{t("getStartedPage.ignored_sections.step3_title")}</h2>
                   </div>
                   <div className="p-6 bg-white dark:bg-gray-900">
                     <div className="bg-primary-50 dark:bg-primary-900/20 rounded-lg p-4 border border-primary-200 dark:border-primary-800 mb-5">
                       <h3 className="text-lg font-semibold text-primary-800 dark:text-primary-300 mb-2">
-                        ¡Novedad! Control preciso del contenido analizado
+                        {t("getStartedPage.ignored_sections.title")}
                       </h3>
                       <p className="text-gray-700 dark:text-gray-300 mb-3">
-                        La función "Secciones ignoradas" te permite excluir partes específicas de tu sitio web 
-                        del análisis del chatbot, mejorando la precisión y relevancia de las respuestas.
+                        {t("getStartedPage.ignored_sections.description")}
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
                         <div className="flex items-start">

@@ -1090,7 +1090,8 @@
       "step1": {
         "title": "Step 1: Add this code to your website",
         "description": "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
-        "copied": "✓ Code copied to clipboard"
+        "copied": "✓ Code copied to clipboard",
+        "wordpress_note": "If you use WordPress: You can add it in the theme in footer.php or install a plugin that allows inserting HTML code."
       },
       "step2": {
         "title": "Step 2: Customize your widget (optional)",
@@ -1110,15 +1111,21 @@
         }
       },
       "step3": {
-        "title": "Step 3: Configure sections to ignore (optional)",
-        "description": "If your website has sections you don't want the assistant to analyze (like menus, footer, ads), you can configure them to be ignored:",
-        "example_title": "Configuration example:",
-        "configure_description": "Configure which sections to ignore from the admin panel:",
-        "dashboard_steps": [
-          "Access the \"Integrations\" section of the panel",
-          "Select the integration you want to configure",
-          "Find the \"Sections to ignore\" section",
-          "Add the names of sections you want to exclude"
+        "title": "Step 3: Train your assistant (optional)",
+        "description": "For your assistant to provide useful and relevant responses, you can train it with:",
+        "training_options": [
+          "PDF documents with information about your products or services",
+          "DOCX files with frequently asked questions and their answers",
+          "Excel files with structured data",
+          "Specific instructions about response tone and style"
+        ],
+        "step4_title": "Step 4: Configure Forms (Optional)",
+        "step4_description": "Power your widget with custom forms to capture leads and specific information:",
+        "form_options": [
+          "Contact forms and lead capture",
+          "Satisfaction surveys and feedback",
+          "Event registration forms",
+          "Automatic CRM integration"
         ]
       },
       "preview": {
@@ -1132,16 +1139,18 @@
       "step1": {
         "title": "Step 1: Add this code to your website",
         "description": "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
-        "copied": "✓ Code copied to clipboard"
+        "copied": "✓ Code copied to clipboard",
+        "wordpress_note": "If you use WordPress: You can add it in the theme in footer.php or install a plugin that allows inserting HTML code."
       },
       "step2": {
-        "title": "Step 2: Customize the experience",
-        "description": "The fullscreen widget offers a ChatGPT-like experience integrated into your website:",
+        "title": "Step 2: Advanced Authentication System",
+        "description": "The fullscreen widget includes a complete authentication system that enables:",
         "features": [
-          "Fullscreen chat interface",
-          "Conversation history",
-          "Optional user registration",
-          "Contextual responses based on your content"
+          "User registration and login",
+          "Personalized and persistent conversations",
+          "Complete history of all interactions",
+          "User profiles with preferences",
+          "Progress tracking system"
         ],
         "configure_description": "Customize the experience from the admin panel:",
         "dashboard_steps": [
@@ -1205,7 +1214,33 @@
       "go_to_forms": "Go to Forms",
       "login_to_manage": "Login to Manage",
       "login_to_manage_forms": "Login to Manage Forms",
-      "preview_widget": "Preview Widget"
+      "preview_widget": "Preview Widget",
+      "manage_content": "Manage Content",
+      "create_account": "Create Account",
+      "create_account_forms": "Create Account for Forms",
+      "create_account_advanced": "Create Account for Advanced Features",
+      "create_forms": "Create Forms",
+      "configure_auth": "Configure Authentication",
+      "login": "Login"
+    },
+    "fullscreen_features": {
+      "title": "✨ Authenticated User Features",
+      "register_login": "Registration and Login: Complete user authentication system",
+      "personal_history": "Personal History: Each user maintains their own conversation history",
+      "auto_titles": "Automatic Titles: Automatic generation of descriptive conversation titles",
+      "conversation_management": "Conversation Management: Create, delete and organize personal conversations",
+      "user_info": "User Information: Personalized profile with relative timestamps",
+      "jwt_security": "JWT Security: Secure authentication with encrypted tokens",
+      "visual_customization": "Also customize the visual interface to match your brand:",
+      "brand_colors": "Colors and visual style that match your brand",
+      "welcome_messages": "Personalized welcome messages for new users",
+      "registration_config": "Registration form configuration",
+      "privacy_settings": "Privacy and security settings"
+    },
+    "ignored_sections": {
+      "title": "New! Precise control of analyzed content",
+      "description": "The \"Ignored sections\" feature allows you to exclude specific parts of your website from chatbot analysis, improving the accuracy and relevance of responses.",
+      "step3_title": "Step 3: Configure ignored sections"
     },
     "cta": {
       "title": "Ready to power up your website?",
