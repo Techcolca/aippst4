@@ -983,15 +983,21 @@
         }
       },
       "step3": {
-        "title": "Étape 3: Configurez les sections à ignorer (optionnel)",
-        "description": "Si votre site web a des sections que vous ne voulez pas que l'assistant analyse (comme les menus, footer, publicités), vous pouvez les configurer pour qu'elles soient ignorées:",
-        "example_title": "Exemple de configuration:",
-        "configure_description": "Configurez quelles sections ignorer depuis le panneau d'administration:",
-        "dashboard_steps": [
-          "Accédez à la section \"Intégrations\" du panneau",
-          "Sélectionnez l'intégration que vous souhaitez configurer",
-          "Trouvez la section \"Sections à ignorer\"",
-          "Ajoutez les noms des sections que vous voulez exclure"
+        "title": "Étape 3: Entraînez votre assistant (optionnel)",
+        "description": "Pour que votre assistant fournisse des réponses utiles et pertinentes, vous pouvez l'entraîner avec:",
+        "training_options": [
+          "Documents PDF avec des informations sur vos produits ou services",
+          "Fichiers DOCX avec des questions fréquemment posées et leurs réponses",
+          "Fichiers Excel avec des données structurées",
+          "Instructions spécifiques sur le ton et le style des réponses"
+        ],
+        "step4_title": "Étape 4: Configurez les Formulaires (Optionnel)",
+        "step4_description": "Alimentez votre widget avec des formulaires personnalisés pour capturer des leads et des informations spécifiques:",
+        "form_options": [
+          "Formulaires de contact et capture de leads",
+          "Enquêtes de satisfaction et feedback",
+          "Formulaires d'inscription à des événements",
+          "Intégration automatique avec votre CRM"
         ]
       },
       "preview": {
@@ -1009,13 +1015,14 @@
         "wordpress_note": "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
       },
       "step2": {
-        "title": "Étape 2: Personnalisez l'expérience",
-        "description": "Le widget plein écran offre une expérience similaire à ChatGPT intégrée dans votre site web:",
+        "title": "Étape 2: Système d'Authentification Avancé",
+        "description": "Le widget plein écran inclut un système d'authentification complet qui permet:",
         "features": [
-          "Interface de chat plein écran",
-          "Historique des conversations",
-          "Inscription utilisateur optionnelle",
-          "Réponses contextuelles basées sur votre contenu"
+          "Inscription et connexion des utilisateurs",
+          "Conversations personnalisées et persistantes",
+          "Historique complet de toutes les interactions",
+          "Profils d'utilisateur avec préférences",
+          "Système de suivi de progression"
         ],
         "configure_description": "Personnalisez l'expérience depuis le panneau d'administration:",
         "dashboard_steps": [
@@ -1026,15 +1033,21 @@
         ]
       },
       "step3": {
-        "title": "Étape 3: Configurez les sections à ignorer (optionnel)",
-        "description": "Optimisez les réponses de l'assistant en configurant quelles parties de votre site web il doit ignorer:",
-        "example_title": "Exemple de configuration:",
-        "configure_description": "Configurez quelles sections ignorer depuis le panneau d'administration:",
-        "dashboard_steps": [
-          "Accédez à la section \"Intégrations\" du panneau",
-          "Sélectionnez l'intégration que vous souhaitez configurer",
-          "Trouvez la section \"Sections à ignorer\"",
-          "Ajoutez les noms des sections que vous voulez exclure"
+        "title": "Étape 3: Entraînez votre assistant (optionnel)",
+        "description": "Pour que votre assistant fournisse des réponses utiles et pertinentes, vous pouvez l'entraîner avec:",
+        "training_options": [
+          "Documents PDF avec des informations sur vos produits ou services",
+          "Fichiers DOCX avec des questions fréquemment posées et leurs réponses",
+          "Fichiers Excel avec des données structurées",
+          "Instructions spécifiques sur le ton et le style des réponses"
+        ],
+        "step4_title": "Étape 4: Configurez les Formulaires (Optionnel)",
+        "step4_description": "Alimentez votre widget avec des formulaires personnalisés pour capturer des leads et des informations spécifiques:",
+        "form_options": [
+          "Formulaires de contact et capture de leads",
+          "Enquêtes de satisfaction et feedback",
+          "Formulaires d'inscription à des événements",
+          "Intégration automatique avec votre CRM"
         ]
       }
     },
@@ -1042,7 +1055,8 @@
       "step1": {
         "title": "Étape 1: Ajoutez ce code à votre site web",
         "description": "Copiez et collez ce code dans le HTML de votre site web, juste avant la balise de fermeture </body>:",
-        "copied": "✓ Code copié dans le presse-papiers"
+        "copied": "✓ Code copié dans le presse-papiers",
+        "wordpress_note": "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
       },
       "step2": {
         "title": "Étape 2: Configuration du formulaire",
