@@ -514,19 +514,19 @@ export default function GetStarted() {
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                         <h3 className="font-semibold mb-2">{t("getStartedPage.form.step2.basic_attributes")}</h3>
                         <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
-                          <li><code>data-form-id</code>: ID del formulario a mostrar</li>
-                          <li><code>data-display-type</code>: "modal" o "slide-in"</li>
-                          <li><code>data-position</code>: "bottom-right", "bottom-left", etc.</li>
-                          <li><code>data-button-text</code>: Texto del botón</li>
+                          <li><code>data-form-id</code>: {t("getStartedPage.form.step2.attributes.form_id")}</li>
+                          <li><code>data-display-type</code>: {t("getStartedPage.form.step2.attributes.display_type")}</li>
+                          <li><code>data-position</code>: {t("getStartedPage.form.step2.attributes.position")}</li>
+                          <li><code>data-button-text</code>: {t("getStartedPage.form.step2.attributes.button_text")}</li>
                         </ul>
                       </div>
                       <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                         <h3 className="font-semibold mb-2">{t("getStartedPage.form.step2.customization_attributes")}</h3>
                         <ul className="text-sm space-y-1 text-gray-700 dark:text-gray-300">
-                          <li><code>data-theme-color</code>: Color del botón</li>
-                          <li><code>data-icon</code>: "form", "message", "help"</li>
-                          <li><code>data-button-size</code>: "small", "medium", "large"</li>
-                          <li><code>data-auto-show</code>: Mostrar automáticamente</li>
+                          <li><code>data-theme-color</code>: {t("getStartedPage.form.step2.attributes.theme_color")}</li>
+                          <li><code>data-icon</code>: {t("getStartedPage.form.step2.attributes.icon")}</li>
+                          <li><code>data-button-size</code>: {t("getStartedPage.form.step2.attributes.button_size")}</li>
+                          <li><code>data-auto-show</code>: {t("getStartedPage.form.step2.attributes.auto_show")}</li>
                         </ul>
                       </div>
                     </div>
@@ -557,11 +557,9 @@ export default function GetStarted() {
 {t("getStartedPage.form.step3.description")}
                     </p>
                     <ol className="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                      <li>Accede a la sección "Formularios" en el panel</li>
-                      <li>Crea un nuevo formulario con campos personalizados</li>
-                      <li>Configura notificaciones por email</li>
-                      <li>Personaliza el diseño y los colores</li>
-                      <li>Copia el ID del formulario para usarlo en el código</li>
+                      {(t("getStartedPage.form.step3.dashboard_steps", { returnObjects: true }) as string[]).map((step, index) => (
+                        <li key={index}>{step}</li>
+                      ))}
                     </ol>
                     {user ? (
                       <Button 
@@ -587,30 +585,30 @@ export default function GetStarted() {
             <div className="mt-10 bg-primary-50 dark:bg-gray-800 rounded-lg p-6 border border-primary-100 dark:border-gray-700">
               <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div>
-                  <h3 className="text-xl font-bold mb-2 text-primary-900 dark:text-primary-400">Formularios Personalizables</h3>
+                  <h3 className="text-xl font-bold mb-2 text-primary-900 dark:text-primary-400">{t("getStartedPage.cta.forms_title")}</h3>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Crea formularios personalizados para capturar información de tus visitantes, generar leads y aumentar las conversiones.
+                    {t("getStartedPage.cta.forms_description")}
                   </p>
                 </div>
                 <Button size="lg" asChild className="whitespace-nowrap">
                   <Link href="/forms-guide">
-                    Ver Guía de Formularios
+{t("getStartedPage.buttons.forms_guide")}
                   </Link>
                 </Button>
               </div>
             </div>
             
             <div className="mt-12 text-center">
-              <h3 className="text-2xl font-bold mb-4">¿Necesitas ayuda con la integración?</h3>
+              <h3 className="text-2xl font-bold mb-4">{t("getStartedPage.support.title")}</h3>
               <p className="text-gray-700 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-                Nuestro equipo de soporte está disponible para ayudarte con cualquier duda sobre la integración de AIPI en tu sitio web.
+                {t("getStartedPage.support.description")}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="outline">
-                  Ver Documentación
+{t("getStartedPage.buttons.view_docs")}
                 </Button>
                 <Button size="lg">
-                  Contactar Soporte
+{t("getStartedPage.buttons.contact_support")}
                 </Button>
               </div>
             </div>

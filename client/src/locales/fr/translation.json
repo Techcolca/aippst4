@@ -1103,7 +1103,18 @@
       "login": "Se connecter",
       "configure_sections": "Configurer les Sections",
       "configure_assistant": "Configurer l'Assistant",
-      "configure_advanced_forms": "Configurer les Formulaires Avancés"
+      "configure_advanced_forms": "Configurer les Formulaires Avancés",
+      "forms_guide": "Voir le Guide des Formulaires",
+      "view_docs": "Voir la Documentation",
+      "contact_support": "Contacter le Support"
+    },
+    "cta": {
+      "forms_title": "Formulaires Personnalisables",
+      "forms_description": "Créez des formulaires personnalisés pour capturer les informations de vos visiteurs, générer des leads et augmenter les conversions."
+    },
+    "support": {
+      "title": "Besoin d'aide avec l'intégration?",
+      "description": "Notre équipe de support est disponible pour vous aider avec toute question concernant l'intégration d'AIPI sur votre site web."
     },
     "fullscreen_features": {
       "title": "✨ Fonctionnalités d'Utilisateur Authentifié",

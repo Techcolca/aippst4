@@ -1125,7 +1125,18 @@
       "login": "Iniciar Sesión",
       "configure_sections": "Configurar Secciones",
       "configure_assistant": "Configurar Asistente",
-      "configure_advanced_forms": "Configurar Formularios Avanzados"
+      "configure_advanced_forms": "Configurar Formularios Avanzados",
+      "forms_guide": "Ver Guía de Formularios",
+      "view_docs": "Ver Documentación",
+      "contact_support": "Contactar Soporte"
+    },
+    "cta": {
+      "forms_title": "Formularios Personalizables",
+      "forms_description": "Crea formularios personalizados para capturar información de tus visitantes, generar leads y aumentar las conversiones."
+    },
+    "support": {
+      "title": "¿Necesitas ayuda con la integración?",
+      "description": "Nuestro equipo de soporte está disponible para ayudarte con cualquier duda sobre la integración de AIPI en tu sitio web."
     },
     "cta": {
       "title": "¿Listo para potenciar tu sitio web?",

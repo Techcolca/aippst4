@@ -1224,7 +1224,18 @@
       "login": "Login",
       "configure_sections": "Configure Sections",
       "configure_assistant": "Configure Assistant",
-      "configure_advanced_forms": "Configure Advanced Forms"
+      "configure_advanced_forms": "Configure Advanced Forms",
+      "forms_guide": "View Forms Guide",
+      "view_docs": "View Documentation",
+      "contact_support": "Contact Support"
+    },
+    "cta": {
+      "forms_title": "Customizable Forms",
+      "forms_description": "Create custom forms to capture visitor information, generate leads and increase conversions."
+    },
+    "support": {
+      "title": "Need help with integration?",
+      "description": "Our support team is available to help you with any questions about integrating AIPI into your website."
     },
     "fullscreen_features": {
       "title": "✨ Authenticated User Features",
