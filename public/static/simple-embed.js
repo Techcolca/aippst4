@@ -514,16 +514,22 @@
   function formatBotResponse(text) {
     if (!text) return '';
     
+    console.log('AIPI Debug: formatBotResponse called with text:', text.substring(0, 200));
+    
     const palette = generatePastelPalette(config.mainColor);
     const isDarkTheme = isColorDark(config.mainColor);
+    
+    console.log('AIPI Debug: Generated palette:', palette);
+    console.log('AIPI Debug: Main color:', config.mainColor);
+    console.log('AIPI Debug: Is dark theme:', isDarkTheme);
     
     // Colores de texto basados en el tema
     const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
     const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
     const accentColor = config.mainColor;
     
-    // Escape HTML para prevenir XSS
-    let safeText = escapeHTML(text);
+    // NO escapar HTML - trabajar directamente con el texto
+    let safeText = text;
     
     // Formatear títulos principales (líneas que empiezan con #) - ELIMINAR # del texto final
     safeText = safeText.replace(/^# (.+)$/gm, 
@@ -579,7 +585,9 @@
       return line;
     });
     
-    return formattedLines.join('');
+    const finalResult = formattedLines.join('');
+    console.log('AIPI Debug: Final formatted result:', finalResult.substring(0, 300));
+    return finalResult;
   }
 
   // Función auxiliar para escapar HTML
