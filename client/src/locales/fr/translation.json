@@ -1150,6 +1150,23 @@
       "step_4": "Ajoutez les noms des sections que vous voulez exclure"
     },
     "fullscreen": {
+      "step1": {
+        "title": "Étape 1: Ajoutez ce code à votre site web",
+        "description": "Copiez et collez ce code dans le HTML de votre site web, juste avant la balise de fermeture </body>:",
+        "copied": "✓ Code copié dans le presse-papiers",
+        "wordpress_note": "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
+      },
+      "step2": {
+        "title": "Étape 2: Système d'Authentification Avancé",
+        "description": "Le widget plein écran inclut un système complet d'authentification qui permet:",
+        "features": [
+          "Inscription et connexion d'utilisateurs",
+          "Conversations personnalisées et persistantes",
+          "Historique complet de toutes les interactions",
+          "Profils d'utilisateur avec préférences",
+          "Système de suivi de progression"
+        ]
+      },
       "step4": {
         "title": "Étape 4: Configurez les réponses",
         "description": "Définissez le comportement de votre assistant et entraînez-le avec des documents spécifiques à votre entreprise:",
@@ -1168,6 +1185,8 @@
       }
     },
     "cta": {
+      "forms_title": "Formulaires Personnalisables",
+      "forms_description": "Créez des formulaires personnalisés pour capturer les informations de vos visiteurs, générer des leads et augmenter les conversions.",
       "title": "Prêt à dynamiser votre site web?",
       "description": "Rejoignez des milliers de sites web qui utilisent déjà AIPPS pour améliorer l'expérience de leurs utilisateurs.",
       "create_account": "Créer un Compte Gratuit",

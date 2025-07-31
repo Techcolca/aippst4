@@ -1271,6 +1271,23 @@
       "step_4": "Add the names of the sections you want to exclude"
     },
     "fullscreen": {
+      "step1": {
+        "title": "Step 1: Add this code to your website",
+        "description": "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
+        "copied": "✓ Code copied to clipboard",
+        "wordpress_note": "If you use WordPress: You can add it in the theme in footer.php or install a plugin that allows inserting HTML code."
+      },
+      "step2": {
+        "title": "Step 2: Advanced Authentication System",
+        "description": "The fullscreen widget includes a complete authentication system that allows:",
+        "features": [
+          "User registration and login",
+          "Personalized and persistent conversations",
+          "Complete history of all interactions",
+          "User profiles with preferences",
+          "Progress tracking system"
+        ]
+      },
       "step4": {
         "title": "Step 4: Configure responses",
         "description": "Define your assistant's behavior and train it with business-specific documents:",
@@ -1289,6 +1306,8 @@
       }
     },
     "cta": {
+      "forms_title": "Customizable Forms",
+      "forms_description": "Create custom forms to capture visitor information, generate leads and increase conversions.",
       "title": "Ready to power up your website?",
       "description": "Join thousands of websites already using AIPPS to improve their users' experience.",
       "create_account": "Create Free Account",
