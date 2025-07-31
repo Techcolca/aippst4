@@ -17,8 +17,9 @@ export function LanguageSelector() {
     localStorage.setItem("i18nextLng", lng);
     i18n.changeLanguage(lng).then(() => {
       setCurrentLang(lng);
-      // Force complete reload with cache bypass
-      window.location.href = window.location.href;
+      // Preserve current navigation state when reloading
+      const currentUrl = window.location.href;
+      window.location.href = currentUrl;
     });
   };
 

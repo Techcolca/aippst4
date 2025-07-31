@@ -358,6 +358,24 @@
   "no_settings_found": "No se encontraron configuraciones",
   "no_settings_description": "Crea la configuración de tu asistente para personalizar tu experiencia AIPPS",
   "configure_settings": "Configurar Configuración",
+  "upgrade": {
+    "general": {
+      "title": "Has alcanzado el límite de tu plan",
+      "message": "Tu plan Básico no permite usar esta funcionalidad o has alcanzado su límite máximo.",
+      "description": "Para continuar usando esta funcionalidad, necesitas actualizar a un plan superior con más recursos incluidos."
+    },
+    "benefits": {
+      "title": "Beneficios de actualizar:",
+      "unlimited": "Más integraciones y formularios",
+      "analytics": "Analytics avanzados y reportes",
+      "support": "Soporte prioritario",
+      "customization": "Personalización completa"
+    },
+    "button": {
+      "primary": "Ver planes",
+      "secondary": "Más tarde"
+    }
+  },
   "visitor": "Visitante",
   "anonymous": "Anónimo",
   "completed": "Completada",

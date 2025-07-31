@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -41,13 +41,31 @@ interface Integration {
   description?: string;
 }
 
-export default function DashboardTabs() {
+interface DashboardTabsProps {
+  initialTab?: string;
+}
+
+export default function DashboardTabs({ initialTab = "integrations" }: DashboardTabsProps) {
   const [, setLocation] = useLocation();
-  const [activeTab, setActiveTab] = useState("integrations");
+  const [activeTab, setActiveTab] = useState(initialTab);
   const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const upgradeModal = useUpgradeModal();
+
+  // Sync activeTab with initialTab when it changes
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  // Update URL when tab changes
+  const handleTabChange = (newTab: string) => {
+    setActiveTab(newTab);
+    // Update URL to preserve navigation state
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', newTab);
+    window.history.replaceState({}, '', url.toString());
+  };
   
   // Consulta para obtener las integraciones
   const { data: integrations, isLoading: isLoadingIntegrations } = useQuery<Integration[]>({
@@ -539,7 +557,7 @@ export default function DashboardTabs() {
 
   return (
     <div className="space-y-4">
-      <Tabs defaultValue="integrations" value={activeTab} onValueChange={setActiveTab}>
+      <Tabs defaultValue="integrations" value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="mb-4">
           <TabsTrigger value="automation">{t("task_automation")}</TabsTrigger>
           <TabsTrigger value="conversations">{t("conversations")}</TabsTrigger>

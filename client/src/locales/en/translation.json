@@ -401,6 +401,24 @@
   "no_settings_found": "No settings found",
   "no_settings_description": "Create your assistant settings to customize your AIPPS experience",
   "configure_settings": "Configure Settings",
+  "upgrade": {
+    "general": {
+      "title": "You have reached your plan limit",
+      "message": "Your Basic plan does not allow using this functionality or you have reached its maximum limit.",
+      "description": "To continue using this functionality, you need to upgrade to a higher plan with more included resources."
+    },
+    "benefits": {
+      "title": "Benefits of upgrading:",
+      "unlimited": "More integrations and forms",
+      "analytics": "Advanced analytics and reports",
+      "support": "Priority support",
+      "customization": "Complete customization"
+    },
+    "button": {
+      "primary": "View plans",
+      "secondary": "Later"
+    }
+  },
   
   "visitor": "Visitor",
   "anonymous": "Anonymous",

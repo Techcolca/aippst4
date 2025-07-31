@@ -113,6 +113,12 @@ July 30, 2025:
 - ✓ Parameters section now displays in user's selected language: "Configuración del Asistente IA" (ES), "AI Assistant Settings" (EN), "Paramètres de l'Assistant IA" (FR)
 - ✓ All settings labels now translate properly: Assistant Name, Appearance, Welcome Chat, Status, Colors, etc.
 - ✓ Settings buttons and messages fully localized across all supported languages
+- ✓ NAVIGATION STATE PERSISTENCE: Fixed page refresh navigation issue during language changes
+- ✓ Modified LanguageSelector to preserve current URL and tab state when changing languages
+- ✓ Updated DashboardTabs to accept initialTab prop and maintain tab state across refreshes
+- ✓ Added URL parameter synchronization for dashboard tabs to prevent losing navigation state
+- ✓ Language changes now maintain user's current location instead of defaulting to integrations tab
+- ✓ Added missing translation keys for upgrade modal system (title, message, benefits, buttons)
 
 July 22, 2025:
 - ✓ CRITICAL BUG FIX: Fixed translation system for relative time formatting ("hace 3 horas" → "il y a 3 heures")

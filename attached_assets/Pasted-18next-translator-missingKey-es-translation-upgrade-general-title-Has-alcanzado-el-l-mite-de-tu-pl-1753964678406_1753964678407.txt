@@ -1,0 +1,22 @@
+18next::translator: missingKey es translation upgrade.general.title Has alcanzado el límite de tu plan
+i18n.ts:37 Missing translation: en.translation.upgrade.general.title
+upgrade-plan-modal.tsx:53 i18next::translator: missingKey es translation upgrade.general.message Tu plan Básico no permite usar esta funcionalidad o has alcanzado su límite máximo.
+i18n.ts:37 Missing translation: en.translation.upgrade.general.message
+upgrade-plan-modal.tsx:54 i18next::translator: missingKey es translation upgrade.general.description Para continuar usando esta funcionalidad, necesitas actualizar a un plan superior con más recursos incluidos.
+i18n.ts:37 Missing translation: en.translation.upgrade.general.description
+upgrade-plan-modal.tsx:89 i18next::translator: missingKey es translation upgrade.benefits.title Beneficios de actualizar:
+i18n.ts:37 Missing translation: en.translation.upgrade.benefits.title
+upgrade-plan-modal.tsx:93 i18next::translator: missingKey es translation upgrade.benefits.unlimited Más integraciones y formularios
+i18n.ts:37 Missing translation: en.translation.upgrade.benefits.unlimited
+upgrade-plan-modal.tsx:94 i18next::translator: missingKey es translation upgrade.benefits.analytics Analytics avanzados y reportes
+i18n.ts:37 Missing translation: en.translation.upgrade.benefits.analytics
+upgrade-plan-modal.tsx:95 i18next::translator: missingKey es translation upgrade.benefits.support Soporte prioritario
+i18n.ts:37 Missing translation: en.translation.upgrade.benefits.support
+upgrade-plan-modal.tsx:96 i18next::translator: missingKey es translation upgrade.benefits.customization Personalización completa
+i18n.ts:37 Missing translation: en.translation.upgrade.benefits.customization
+upgrade-plan-modal.tsx:105 i18next::translator: missingKey es translation upgrade.button.primary Ver planes
+i18n.ts:37 Missing translation: en.translation.upgrade.button.primary
+upgrade-plan-modal.tsx:113 i18next::translator: missingKey es translation upgrade.button.secondary Más tarde
+i18n.ts:37 Missing translation: en.translation.upgrade.button.secondary
+queryClient.ts:56 Ejecutando consulta para: /api/forms
+queryClient.ts:70 Respuesta: 200 OK
