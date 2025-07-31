@@ -62,6 +62,45 @@ const resources = {
         spots_left_of_total: "Il ne reste que {{remaining}} places sur {{total}} dans cette promotion spéciale.",
         take_advantage_unique_prices: "Profitez de ces prix uniques avant qu'ils ne reviennent aux prix réguliers.",
         pricing_note: "Tous les plans incluent un support complet et des mises à jour gratuites."
+      },
+      getStartedPage: {
+        title: "Commencer",
+        subtitle: "Intégrez AIPPS dans votre site web en quelques minutes",
+        tabs: {
+          widget: "Widget",
+          fullscreen: "Plein écran",
+          form: "Formulaire"
+        },
+        widget: {
+          step2: {
+            dashboard_steps: {
+              "0": "Accédez à la section \"Intégrations\" du panneau",
+              "1": "Sélectionnez l'intégration que vous souhaitez configurer",
+              "2": "Personnalisez les couleurs, position et messages",
+              "3": "Les changements seront appliqués automatiquement"
+            }
+          }
+        },
+        form: {
+          step3: {
+            title: "Étape 3: Entraînez votre assistant (optionnel)",
+            description: "Pour que votre assistant fournisse des réponses utiles et pertinentes, vous pouvez l'entraîner avec:",
+            dashboard_steps: [
+              "Documents PDF avec des informations sur vos produits ou services",
+              "Fichiers DOCX avec des questions fréquemment posées et leurs réponses", 
+              "Fichiers Excel avec des données structurées",
+              "Instructions spécifiques sur le ton et le style des réponses"
+            ]
+          }
+        },
+        buttons: {
+          go_to_forms: "Aller aux formulaires",
+          login_to_manage_forms: "Se connecter pour gérer les formulaires"
+        },
+        cta: {
+          forms_title: "Prêt à créer vos formulaires ?",
+          forms_description: "Commencez à capturer des leads avec nos formulaires personnalisés dès aujourd'hui."
+        }
       }
     }
   },
@@ -121,6 +160,45 @@ const resources = {
         spots_left_of_total: "Solo quedan {{remaining}} lugares de {{total}} en esta promoción especial.",
         take_advantage_unique_prices: "Aprovecha estos precios únicos antes de que vuelvan a los precios regulares.",
         pricing_note: "Todos los planes incluyen soporte completo y actualizaciones gratuitas."
+      },
+      getStartedPage: {
+        title: "Comienza Ahora",
+        subtitle: "Integra AIPPS en tu sitio web en minutos",
+        tabs: {
+          widget: "Widget",
+          fullscreen: "Pantalla",
+          form: "Formulario"
+        },
+        widget: {
+          step2: {
+            dashboard_steps: {
+              "0": "Accede a la sección \"Integraciones\" del panel",
+              "1": "Selecciona la integración que deseas configurar",
+              "2": "Personaliza colores, posición y mensajes",
+              "3": "Los cambios se aplicarán automáticamente"
+            }
+          }
+        },
+        form: {
+          step3: {
+            title: "Paso 3: Entrena tu asistente (opcional)",
+            description: "Para que tu asistente proporcione respuestas útiles y relevantes, puedes entrenarlo con:",
+            dashboard_steps: [
+              "Documentos PDF con información sobre tus productos o servicios",
+              "Archivos DOCX con preguntas frecuentes y sus respuestas",
+              "Archivos Excel con datos estructurados",
+              "Instrucciones específicas sobre el tono y estilo de las respuestas"
+            ]
+          }
+        },
+        buttons: {
+          go_to_forms: "Ir a formularios",
+          login_to_manage_forms: "Iniciar sesión para gestionar formularios"
+        },
+        cta: {
+          forms_title: "¿Listo para crear tus formularios?",
+          forms_description: "Comienza a capturar leads con nuestros formularios personalizados hoy mismo."
+        }
       }
     }
   },
@@ -180,6 +258,45 @@ const resources = {
         spots_left_of_total: "Only {{remaining}} spots left out of {{total}} in this special promotion.",
         take_advantage_unique_prices: "Take advantage of these unique prices before they return to regular prices.",
         pricing_note: "All plans include full support and free updates."
+      },
+      getStartedPage: {
+        title: "Get Started",
+        subtitle: "Integrate AIPPS into your website in minutes",
+        tabs: {
+          widget: "Widget",
+          fullscreen: "Fullscreen",
+          form: "Form"
+        },
+        widget: {
+          step2: {
+            dashboard_steps: {
+              "0": "Access the \"Integrations\" section of the panel",
+              "1": "Select the integration you want to configure",
+              "2": "Customize colors, position and messages",
+              "3": "Changes will be applied automatically"
+            }
+          }
+        },
+        form: {
+          step3: {
+            title: "Step 3: Train your assistant (optional)",
+            description: "For your assistant to provide useful and relevant responses, you can train it with:",
+            dashboard_steps: [
+              "PDF documents with information about your products or services",
+              "DOCX files with frequently asked questions and their answers",
+              "Excel files with structured data",
+              "Specific instructions about response tone and style"
+            ]
+          }
+        },
+        buttons: {
+          go_to_forms: "Go to forms",
+          login_to_manage_forms: "Log in to manage forms"
+        },
+        cta: {
+          forms_title: "Ready to create your forms?",
+          forms_description: "Start capturing leads with our custom forms today."
+        }
       }
     }
   }
@@ -189,15 +306,18 @@ const resources = {
 console.log('🔍 I18N DEBUG - Manual resources loaded:', {
   fr: {
     pricing: Object.keys(resources.fr.translation.pricing),
-    language: Object.keys(resources.fr.translation.language)
+    language: Object.keys(resources.fr.translation.language),
+    getStartedPage: Object.keys(resources.fr.translation.getStartedPage)
   },
   es: {
     pricing: Object.keys(resources.es.translation.pricing),
-    language: Object.keys(resources.es.translation.language)
+    language: Object.keys(resources.es.translation.language),
+    getStartedPage: Object.keys(resources.es.translation.getStartedPage)
   },
   en: {
     pricing: Object.keys(resources.en.translation.pricing),
-    language: Object.keys(resources.en.translation.language)
+    language: Object.keys(resources.en.translation.language),
+    getStartedPage: Object.keys(resources.en.translation.getStartedPage)
   }
 });
 
