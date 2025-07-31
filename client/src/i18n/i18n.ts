@@ -72,7 +72,65 @@ const resources = {
           form: "Formulaire"
         },
         widget: {
+          step1: {
+            title: "Étape 1: Ajoutez ce code à votre site web",
+            description: "Copiez et collez ce code dans le HTML de votre site web, juste avant la balise de fermeture </body>:",
+            copied: "✓ Code copié dans le presse-papiers",
+            wordpress_note: "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
+          },
           step2: {
+            title: "Étape 2: Personnalisez votre widget (optionnel)",
+            description: "Vous pouvez personnaliser le comportement et l'apparence du widget en ajoutant des paramètres supplémentaires:",
+            customization_title: "Options de personnalisation:",
+            position: "Position du widget sur la page",
+            theme_color: "Couleur principale du widget",
+            assistant_name: "Nom de l'assistant",
+            welcome_message: "Message de bienvenue personnalisé",
+            example_title: "Exemple de configuration personnalisée:",
+            configure_dashboard: "Configurez ces options depuis le panneau d'administration:",
+            dashboard_steps: {
+              "0": "Accédez à la section \"Intégrations\" du panneau",
+              "1": "Sélectionnez l'intégration que vous souhaitez configurer",
+              "2": "Personnalisez les couleurs, position et messages",
+              "3": "Les changements seront appliqués automatiquement"
+            }
+          },
+          step3: {
+            title: "Étape 3: Entraînez votre assistant (optionnel)",
+            description: "Pour que votre assistant fournisse des réponses utiles et pertinentes, vous pouvez l'entraîner avec:",
+            training_options: [
+              "Documents PDF avec des informations sur vos produits ou services",
+              "Fichiers DOCX avec des questions fréquemment posées et leurs réponses",
+              "Fichiers Excel avec des données structurées",
+              "Instructions spécifiques sur le ton et le style des réponses"
+            ],
+            step4_title: "Étape 4: Configurez les Formulaires (Optionnel)",
+            step4_description: "Alimentez votre widget avec des formulaires personnalisés pour capturer des leads et des informations spécifiques:",
+            form_options: [
+              "Formulaires de contact et capture de leads",
+              "Enquêtes de satisfaction et feedback",
+              "Formulaires d'inscription à des événements",
+              "Intégration automatique avec votre CRM"
+            ]
+          }
+        },
+        fullscreen: {
+          step1: {
+            title: "Étape 1: Ajoutez ce code à votre site web",
+            description: "Copiez et collez ce code dans le HTML de votre site web, juste avant la balise de fermeture </body>:",
+            copied: "✓ Code copié dans le presse-papiers",
+            wordpress_note: "Si vous utilisez WordPress: Vous pouvez l'ajouter dans le thème dans footer.php ou installer un plugin qui permet d'insérer du code HTML."
+          },
+          step2: {
+            title: "Étape 2: Personnalisez votre expérience (optionnel)",
+            description: "Le mode plein écran crée une expérience immersive similaire à ChatGPT. Vous pouvez le personnaliser avec:",
+            customization_title: "Options de personnalisation:",
+            position: "Position du bouton d'activation",
+            theme_color: "Couleurs et thème du chat",
+            assistant_name: "Nom de l'assistant",
+            welcome_message: "Message de bienvenue personnalisé",
+            example_title: "Exemple de configuration personnalisée:",
+            configure_dashboard: "Configurez ces options depuis le panneau d'administration:",
             dashboard_steps: {
               "0": "Accédez à la section \"Intégrations\" du panneau",
               "1": "Sélectionnez l'intégration que vous souhaitez configurer",
@@ -82,14 +140,29 @@ const resources = {
           }
         },
         form: {
+          step1: {
+            title: "Étape 1: Ajoutez ce code à votre site web",
+            description: "Copiez et collez ce code dans le HTML de votre site web où vous voulez que le formulaire apparaisse:",
+            copied: "✓ Code copié dans le presse-papiers"
+          },
+          step2: {
+            title: "Étape 2: Personnalisez votre formulaire (optionnel)",
+            description: "Vous pouvez personnaliser le comportement et l'apparence du formulaire en ajoutant des paramètres supplémentaires:",
+            customization_title: "Options de personnalisation:",
+            display_type: "Type d'affichage (modal, intégré, etc.)",
+            position: "Position du bouton ou formulaire",
+            theme_color: "Couleur principale du formulaire",
+            button_text: "Texte du bouton",
+            example_title: "Exemple de configuration personnalisée:"
+          },
           step3: {
-            title: "Étape 3: Entraînez votre assistant (optionnel)",
-            description: "Pour que votre assistant fournisse des réponses utiles et pertinentes, vous pouvez l'entraîner avec:",
+            title: "Étape 3: Gérez depuis le Tableau de Bord",
+            description: "Une fois le formulaire intégré, vous pouvez le gérer complètement depuis votre panneau d'administration:",
             dashboard_steps: [
-              "Documents PDF avec des informations sur vos produits ou services",
-              "Fichiers DOCX avec des questions fréquemment posées et leurs réponses", 
-              "Fichiers Excel avec des données structurées",
-              "Instructions spécifiques sur le ton et le style des réponses"
+              "Accédez à la section \"Formulaires\" du panneau",
+              "Sélectionnez le formulaire que vous souhaitez configurer",
+              "Personnalisez les champs, validations et réponses automatiques",
+              "Consultez les réponses et statistiques en temps réel"
             ]
           }
         },
@@ -170,7 +243,65 @@ const resources = {
           form: "Formulario"
         },
         widget: {
+          step1: {
+            title: "Paso 1: Agrega este código a tu sitio web",
+            description: "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
+            copied: "✓ Código copiado al portapapeles",
+            wordpress_note: "Si usas WordPress: Puedes agregarlo en el tema en footer.php o instalar un plugin que permita insertar código HTML."
+          },
           step2: {
+            title: "Paso 2: Personaliza tu widget (opcional)",
+            description: "Puedes personalizar el comportamiento y apariencia del widget agregando parámetros adicionales:",
+            customization_title: "Opciones de personalización:",
+            position: "Posición del widget en la página",
+            theme_color: "Color principal del widget",
+            assistant_name: "Nombre del asistente",
+            welcome_message: "Mensaje de bienvenida personalizado",
+            example_title: "Ejemplo de configuración personalizada:",
+            configure_dashboard: "Configura estas opciones desde el panel de administración:",
+            dashboard_steps: {
+              "0": "Accede a la sección \"Integraciones\" del panel",
+              "1": "Selecciona la integración que deseas configurar",
+              "2": "Personaliza colores, posición y mensajes",
+              "3": "Los cambios se aplicarán automáticamente"
+            }
+          },
+          step3: {
+            title: "Paso 3: Entrena tu asistente (opcional)",
+            description: "Para que tu asistente proporcione respuestas útiles y relevantes, puedes entrenarlo con:",
+            training_options: [
+              "Documentos PDF con información sobre tus productos o servicios",
+              "Archivos DOCX con preguntas frecuentes y sus respuestas",
+              "Archivos Excel con datos estructurados",
+              "Instrucciones específicas sobre el tono y estilo de las respuestas"
+            ],
+            step4_title: "Paso 4: Configura Formularios (Opcional)",
+            step4_description: "Potencia tu widget con formularios personalizados para capturar leads y información específica:",
+            form_options: [
+              "Formularios de contacto y captura de leads",
+              "Encuestas de satisfacción y feedback",
+              "Formularios de registro para eventos",
+              "Integración automática con tu CRM"
+            ]
+          }
+        },
+        fullscreen: {
+          step1: {
+            title: "Paso 1: Agrega este código a tu sitio web",
+            description: "Copia y pega este código en el HTML de tu sitio web, justo antes de la etiqueta de cierre </body>:",
+            copied: "✓ Código copiado al portapapeles",
+            wordpress_note: "Si usas WordPress: Puedes agregarlo en el tema en footer.php o instalar un plugin que permita insertar código HTML."
+          },
+          step2: {
+            title: "Paso 2: Personaliza tu experiencia (opcional)",
+            description: "El modo pantalla completa crea una experiencia inmersiva similar a ChatGPT. Puedes personalizarlo con:",
+            customization_title: "Opciones de personalización:",
+            position: "Posición del botón de activación",
+            theme_color: "Colores y tema del chat",
+            assistant_name: "Nombre del asistente",
+            welcome_message: "Mensaje de bienvenida personalizado",
+            example_title: "Ejemplo de configuración personalizada:",
+            configure_dashboard: "Configura estas opciones desde el panel de administración:",
             dashboard_steps: {
               "0": "Accede a la sección \"Integraciones\" del panel",
               "1": "Selecciona la integración que deseas configurar",
@@ -180,14 +311,29 @@ const resources = {
           }
         },
         form: {
+          step1: {
+            title: "Paso 1: Agrega este código a tu sitio web",
+            description: "Copia y pega este código en el HTML de tu sitio web donde quieras que aparezca el formulario:",
+            copied: "✓ Código copiado al portapapeles"
+          },
+          step2: {
+            title: "Paso 2: Personaliza tu formulario (opcional)",
+            description: "Puedes personalizar el comportamiento y apariencia del formulario agregando parámetros adicionales:",
+            customization_title: "Opciones de personalización:",
+            display_type: "Tipo de visualización (modal, embebido, etc.)",
+            position: "Posición del botón o formulario",
+            theme_color: "Color principal del formulario",
+            button_text: "Texto del botón",
+            example_title: "Ejemplo de configuración personalizada:"
+          },
           step3: {
-            title: "Paso 3: Entrena tu asistente (opcional)",
-            description: "Para que tu asistente proporcione respuestas útiles y relevantes, puedes entrenarlo con:",
+            title: "Paso 3: Gestiona desde el Dashboard",
+            description: "Una vez integrado el formulario, puedes gestionarlo completamente desde tu panel de administración:",
             dashboard_steps: [
-              "Documentos PDF con información sobre tus productos o servicios",
-              "Archivos DOCX con preguntas frecuentes y sus respuestas",
-              "Archivos Excel con datos estructurados",
-              "Instrucciones específicas sobre el tono y estilo de las respuestas"
+              "Accede a la sección \"Formularios\" del panel",
+              "Selecciona el formulario que deseas configurar",
+              "Personaliza campos, validaciones y respuestas automáticas",
+              "Revisa las respuestas y estadísticas en tiempo real"
             ]
           }
         },
@@ -268,7 +414,65 @@ const resources = {
           form: "Form"
         },
         widget: {
+          step1: {
+            title: "Step 1: Add this code to your website",
+            description: "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
+            copied: "✓ Code copied to clipboard",
+            wordpress_note: "If you use WordPress: You can add it in the theme in footer.php or install a plugin that allows inserting HTML code."
+          },
           step2: {
+            title: "Step 2: Customize your widget (optional)",
+            description: "You can customize the widget's behavior and appearance by adding additional parameters:",
+            customization_title: "Customization options:",
+            position: "Widget position on the page",
+            theme_color: "Widget primary color",
+            assistant_name: "Assistant name",
+            welcome_message: "Custom welcome message",
+            example_title: "Custom configuration example:",
+            configure_dashboard: "Configure these options from the admin panel:",
+            dashboard_steps: {
+              "0": "Access the \"Integrations\" section of the panel",
+              "1": "Select the integration you want to configure",
+              "2": "Customize colors, position and messages",
+              "3": "Changes will be applied automatically"
+            }
+          },
+          step3: {
+            title: "Step 3: Train your assistant (optional)",
+            description: "For your assistant to provide useful and relevant responses, you can train it with:",
+            training_options: [
+              "PDF documents with information about your products or services",
+              "DOCX files with frequently asked questions and their answers",
+              "Excel files with structured data",
+              "Specific instructions about response tone and style"
+            ],
+            step4_title: "Step 4: Configure Forms (Optional)",
+            step4_description: "Power your widget with custom forms to capture leads and specific information:",
+            form_options: [
+              "Contact forms and lead capture",
+              "Satisfaction surveys and feedback",
+              "Event registration forms",
+              "Automatic CRM integration"
+            ]
+          }
+        },
+        fullscreen: {
+          step1: {
+            title: "Step 1: Add this code to your website",
+            description: "Copy and paste this code into your website's HTML, just before the closing </body> tag:",
+            copied: "✓ Code copied to clipboard",
+            wordpress_note: "If you use WordPress: You can add it in the theme in footer.php or install a plugin that allows inserting HTML code."
+          },
+          step2: {
+            title: "Step 2: Customize your experience (optional)",
+            description: "Fullscreen mode creates an immersive experience similar to ChatGPT. You can customize it with:",
+            customization_title: "Customization options:",
+            position: "Activation button position",
+            theme_color: "Chat colors and theme",
+            assistant_name: "Assistant name",
+            welcome_message: "Custom welcome message",
+            example_title: "Custom configuration example:",
+            configure_dashboard: "Configure these options from the admin panel:",
             dashboard_steps: {
               "0": "Access the \"Integrations\" section of the panel",
               "1": "Select the integration you want to configure",
@@ -278,14 +482,29 @@ const resources = {
           }
         },
         form: {
+          step1: {
+            title: "Step 1: Add this code to your website",
+            description: "Copy and paste this code into your website's HTML where you want the form to appear:",
+            copied: "✓ Code copied to clipboard"
+          },
+          step2: {
+            title: "Step 2: Customize your form (optional)",
+            description: "You can customize the form's behavior and appearance by adding additional parameters:",
+            customization_title: "Customization options:",
+            display_type: "Display type (modal, embedded, etc.)",
+            position: "Button or form position",
+            theme_color: "Form primary color",
+            button_text: "Button text",
+            example_title: "Custom configuration example:"
+          },
           step3: {
-            title: "Step 3: Train your assistant (optional)",
-            description: "For your assistant to provide useful and relevant responses, you can train it with:",
+            title: "Step 3: Manage from Dashboard",
+            description: "Once the form is integrated, you can manage it completely from your admin panel:",
             dashboard_steps: [
-              "PDF documents with information about your products or services",
-              "DOCX files with frequently asked questions and their answers",
-              "Excel files with structured data",
-              "Specific instructions about response tone and style"
+              "Access the \"Forms\" section of the panel",
+              "Select the form you want to configure",
+              "Customize fields, validations and automatic responses",
+              "Review responses and statistics in real time"
             ]
           }
         },
