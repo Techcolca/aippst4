@@ -106,7 +106,28 @@ const resources = {
         limited_launch_offer: "Offre de Lancement Limitée",
         spots_left_of_total: "Il ne reste que {{remaining}} places sur {{total}} dans cette promotion spéciale.",
         take_advantage_unique_prices: "Profitez de ces prix uniques avant qu'ils ne reviennent aux prix réguliers.",
-        pricing_note: "Tous les plans incluent un support complet et des mises à jour gratuites."
+        pricing_note: "Tous les plans incluent un support complet et des mises à jour gratuites.",
+        login_required: "Connexion requise",
+        login_description: "Vous devez vous connecter pour vous abonner à un plan",
+        success: "Succès !",
+        error: "Erreur",
+        free_plan_activated: "Plan gratuit activé avec succès",
+        process_error: "Erreur lors du traitement de la demande",
+        faq: {
+          title: "Questions Fréquentes",
+          q1: "Puis-je changer de plan à tout moment ?",
+          a1: "Oui, vous pouvez mettre à niveau ou réduire votre plan à tout moment depuis votre tableau de bord."
+        },
+        support: {
+          title: "Support",
+          q1: "Quel type de support est inclus ?",
+          a1: "Tous les plans incluent un support par email. Les plans Pro et Enterprise incluent un support prioritaire."
+        },
+        refund: {
+          title: "Politique de Remboursement",
+          q1: "Offrez-vous une garantie de remboursement ?",
+          a1: "Nous offrons une garantie de remboursement de 30 jours pour tous les plans payants."
+        }
       },
       getStartedPage: {
         title: "Commencer",
@@ -337,7 +358,28 @@ const resources = {
         limited_launch_offer: "Oferta de Lanzamiento Limitada",
         spots_left_of_total: "Solo quedan {{remaining}} lugares de {{total}} en esta promoción especial.",
         take_advantage_unique_prices: "Aprovecha estos precios únicos antes de que vuelvan a los precios regulares.",
-        pricing_note: "Todos los planes incluyen soporte completo y actualizaciones gratuitas."
+        pricing_note: "Todos los planes incluyen soporte completo y actualizaciones gratuitas.",
+        login_required: "Inicio de sesión requerido",
+        login_description: "Necesitas iniciar sesión para suscribirte a un plan",
+        success: "¡Éxito!",
+        error: "Error",
+        free_plan_activated: "Plan gratuito activado correctamente",
+        process_error: "Error al procesar la solicitud",
+        faq: {
+          title: "Preguntas Frecuentes",
+          q1: "¿Puedo cambiar de plan en cualquier momento?",
+          a1: "Sí, puedes actualizar o reducir tu plan en cualquier momento desde tu panel de control."
+        },
+        support: {
+          title: "Soporte",
+          q1: "¿Qué tipo de soporte está incluido?",
+          a1: "Todos los planes incluyen soporte por email. Los planes Pro y Enterprise incluyen soporte prioritario."
+        },
+        refund: {
+          title: "Política de Reembolso",
+          q1: "¿Ofrecen garantía de devolución de dinero?",
+          a1: "Ofrecemos una garantía de devolución de dinero de 30 días para todos los planes de pago."
+        }
       },
       getStartedPage: {
         title: "Comienza Ahora",
@@ -568,7 +610,28 @@ const resources = {
         limited_launch_offer: "Limited Launch Offer",
         spots_left_of_total: "Only {{remaining}} spots left out of {{total}} in this special promotion.",
         take_advantage_unique_prices: "Take advantage of these unique prices before they return to regular prices.",
-        pricing_note: "All plans include full support and free updates."
+        pricing_note: "All plans include full support and free updates.",
+        login_required: "Login required",
+        login_description: "You need to log in to subscribe to a plan",
+        success: "Success!",
+        error: "Error",
+        free_plan_activated: "Free plan activated successfully",
+        process_error: "Error processing request",
+        faq: {
+          title: "Frequently Asked Questions",
+          q1: "Can I change plans at any time?",
+          a1: "Yes, you can upgrade or downgrade your plan at any time from your dashboard."
+        },
+        support: {
+          title: "Support",
+          q1: "What type of support is included?",
+          a1: "All plans include email support. Pro and Enterprise plans include priority support."
+        },
+        refund: {
+          title: "Refund Policy",
+          q1: "Do you offer a money-back guarantee?",
+          a1: "We offer a 30-day money-back guarantee for all paid plans."
+        }
       },
       getStartedPage: {
         title: "Get Started",
