@@ -749,21 +749,30 @@ ${t.newConversation}
 
   // Función para generar paleta de colores pasteles basada en el color principal
   function generatePastelPalette(baseColor) {
-    const hex = baseColor.replace('#', '');
+    let hex = baseColor;
+    if (!hex || typeof hex !== 'string') {
+      hex = '#6366f1'; // Color por defecto si no hay color
+    }
+    
+    hex = hex.replace('#', '');
+    if (hex.length !== 6) {
+      hex = '6366f1'; // Fallback si el formato es incorrecto
+    }
+    
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
     
-    // Crear tonos pasteles mezclando con blanco
-    const pastelLight = `rgba(${Math.round(r + (255 - r) * 0.8)}, ${Math.round(g + (255 - g) * 0.8)}, ${Math.round(b + (255 - b) * 0.8)}, 0.3)`;
-    const pastelMedium = `rgba(${Math.round(r + (255 - r) * 0.6)}, ${Math.round(g + (255 - g) * 0.6)}, ${Math.round(b + (255 - b) * 0.6)}, 0.5)`;
-    const pastelDark = `rgba(${Math.round(r + (255 - r) * 0.4)}, ${Math.round(g + (255 - g) * 0.4)}, ${Math.round(b + (255 - b) * 0.4)}, 0.7)`;
+    // Crear tonos pasteles más visibles con mayor opacidad
+    const pastelLight = `rgba(${Math.round(r + (255 - r) * 0.85)}, ${Math.round(g + (255 - g) * 0.85)}, ${Math.round(b + (255 - b) * 0.85)}, 0.6)`;
+    const pastelMedium = `rgba(${Math.round(r + (255 - r) * 0.7)}, ${Math.round(g + (255 - g) * 0.7)}, ${Math.round(b + (255 - b) * 0.7)}, 0.7)`;
+    const pastelDark = `rgba(${Math.round(r + (255 - r) * 0.5)}, ${Math.round(g + (255 - g) * 0.5)}, ${Math.round(b + (255 - b) * 0.5)}, 0.8)`;
     
     return {
       light: pastelLight,
       medium: pastelMedium,
       dark: pastelDark,
-      accent: baseColor
+      accent: '#' + hex
     };
   }
 
@@ -790,6 +799,11 @@ ${t.newConversation}
     // Formatear subtítulos (líneas que empiezan con ##)
     safeText = safeText.replace(/^## (.+)$/gm, 
       `<h2 style="font-size: 18px; font-weight: 600; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h2>`
+    );
+    
+    // Formatear subtítulos de tercer nivel (líneas que empiezan con ###)
+    safeText = safeText.replace(/^### (.+)$/gm, 
+      `<h3 style="font-size: 16px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.light}; padding: 10px 14px; border-left: 4px solid ${palette.accent}; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">$1</h3>`
     );
     
     // Formatear texto en negrita (**texto**)
