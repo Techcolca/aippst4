@@ -4,7 +4,20 @@ import Footer from "@/components/footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Terms() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // Función para formatear la fecha según el idioma actual
+  const formatDate = (date: Date) => {
+    const locale = i18n.language === 'es' ? 'es-ES' : 
+                   i18n.language === 'fr' ? 'fr-FR' : 'en-US';
+    
+    return new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'long'
+    }).format(date);
+  };
+
+  const lastUpdated = formatDate(new Date(2025, 0)); // January 2025
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -130,7 +143,7 @@ export default function Terms() {
               </Card>
 
               <div className="mt-8 text-sm text-gray-600 dark:text-gray-400">
-                <p>{t('terms.last_updated')}: January 2025</p>
+                <p>{t('terms.last_updated')}: {lastUpdated}</p>
               </div>
             </div>
           </div>

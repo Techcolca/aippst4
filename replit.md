@@ -2,254 +2,46 @@
 
 ## Overview
 
-AIPI is an advanced conversational AI platform designed to integrate intelligent chat capabilities into websites. It provides dynamic interaction tools, communication solutions, and comprehensive form integration features. The platform offers both bubble-style chat widgets and fullscreen chat interfaces similar to ChatGPT, along with embedded form solutions.
+AIPI is an advanced conversational AI platform for websites, offering intelligent chat widgets and integrated form solutions. It aims to provide dynamic interaction tools and communication solutions, enhancing user engagement and data collection on client websites. Key capabilities include bubble-style and fullscreen chat interfaces, and embeddable form solutions.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
 ### Frontend Architecture
 - **Framework**: React with TypeScript
 - **UI Library**: Tailwind CSS with Shadcn UI components
-- **State Management**: React Query for data fetching and caching
-- **Build Tool**: Vite for fast development and optimized builds
-- **Widget Scripts**: Multiple JavaScript embeddable widgets for external integration
+- **State Management**: React Query
+- **Build Tool**: Vite
+- **Widget Scripts**: Multiple embeddable JavaScript widgets for external integration.
+- **UI/UX Decisions**: Dynamic typography, adaptive color schemes based on widget themes, professional styling with rounded corners, shadows, and border accents. Support for visual formatting in chatbot responses including titles, lists, and emphasis.
 
 ### Backend Architecture
-- **Runtime**: Node.js with Express.js server
-- **Language**: TypeScript for type safety
+- **Runtime**: Node.js with Express.js
+- **Language**: TypeScript
 - **Authentication**: JWT-based authentication with cookie support
-- **File Processing**: Document processing for PDF, DOCX formats
-- **API Design**: RESTful API with comprehensive route structure
+- **File Processing**: Document processing for PDF, DOCX formats.
+- **API Design**: RESTful API.
 
 ### Data Storage Solutions
-- **Primary Database**: PostgreSQL with Drizzle ORM
-- **Connection**: Neon serverless PostgreSQL for scalability
-- **Schema Management**: Drizzle Kit for migrations and schema management
-- **Storage Strategy**: Relational design with proper indexing for performance
+- **Primary Database**: PostgreSQL with Drizzle ORM (via Neon serverless).
+- **Schema Management**: Drizzle Kit for migrations.
 
-## Key Components
-
-### Chat Widget System
-- **Multiple Widget Types**: Bubble widgets, fullscreen chat interfaces, and modern form integrations
-- **External Integration**: Embeddable JavaScript files for third-party websites
-- **Real-time Communication**: WebSocket-style interactions for live chat
-- **Intelligent Conflict Detection**: Automatic detection to prevent widget conflicts with forms
-
-### Document Processing Engine
-- **Supported Formats**: PDF, DOCX, and plain text files
-- **Content Extraction**: Mammoth.js for Word documents, pdf-parse for PDFs
-- **Knowledge Base Integration**: Processed documents feed into AI knowledge base
-
-### AI Integration Layer
-- **Provider**: OpenAI GPT-4o-mini model
-- **Features**: Chat completion, sentiment analysis, content summarization
-- **Context Awareness**: Site-specific knowledge base building from scraped content
-
-### Form Management System
-- **Dynamic Forms**: Template-based form generation with various field types
-- **External Embedding**: JavaScript-based form embedding for external sites
-- **Data Collection**: Comprehensive form response storage and analytics
-
-### Payment Integration
-- **Provider**: Stripe payment processing
-- **Subscription Management**: Tiered pricing plans with usage limits
-- **Webhook Handling**: Automated subscription lifecycle management
-
-## Data Flow
-
-1. **User Interaction**: Visitors interact through embedded widgets or forms
-2. **Authentication**: JWT tokens manage user sessions and API access
-3. **Content Processing**: Website content is scraped and processed for context
-4. **AI Processing**: OpenAI processes queries with site-specific knowledge base
-5. **Response Delivery**: Formatted responses delivered through the widget interface
-6. **Data Storage**: Conversations, analytics, and user data stored in PostgreSQL
+### Key Components
+- **Chat Widget System**: Bubble, fullscreen, and modern form integrations with embeddable JavaScript and real-time communication. Includes intelligent conflict detection.
+- **Document Processing Engine**: Supports PDF, DOCX, and plain text content extraction for knowledge base integration.
+- **AI Integration Layer**: Utilizes OpenAI GPT-4o-mini for chat completion, sentiment analysis, and summarization, building context-aware knowledge bases from scraped content.
+- **Form Management System**: Dynamic, template-based form generation with external embedding and comprehensive data collection.
+- **Payment Integration**: Stripe for payment processing, subscription management, and webhook handling for tiered pricing plans.
+- **Internationalization**: Comprehensive multilingual support for UI elements, messages, and content across English, Spanish, and French, including dynamic language detection and persistence.
 
 ## External Dependencies
 
-### Core Services
-- **OpenAI API**: AI model access for chat completions
-- **Stripe**: Payment processing and subscription management
-- **PostgreSQL**: Primary database (via Neon serverless)
-
-### Integration Services
-- **Google Calendar API**: Appointment scheduling integration
-- **Outlook Calendar API**: Microsoft calendar integration
-- **SendGrid/AWS SES**: Email notification services
-
-### Development Tools
-- **Drizzle ORM**: Database schema and query management
-- **Shadcn UI**: Component library for consistent design
-- **Tailwind CSS**: Utility-first CSS framework
-
-## Deployment Strategy
-
-### Railway Deployment
-- **Platform**: Railway.app for production hosting
-- **Build Process**: Automated build with npm run build
-- **Database**: Auto-provisioned PostgreSQL instance
-- **Environment Variables**: Managed through Railway's interface
-- **Process Management**: Railway Procfile for startup commands
-
-### Development Environment
-- **Local Development**: Replit-based development with hot reloading
-- **Database Migrations**: Automated through Drizzle Kit
-- **Static Assets**: Served through Express with proper CORS headers
-
-### Configuration Management
-- **Environment Variables**: Comprehensive .env setup for all services
-- **Secrets Management**: Separate handling for API keys and sensitive data
-- **CORS Configuration**: Proper cross-origin setup for widget embedding
-
-## Changelog
-
-## Recent Changes
-
-July 31, 2025:
-- ✓ ENHANCED MESSAGE FORMATTING SYSTEM: Implemented comprehensive visual formatting for chatbot responses
-- ✓ Added automatic pastel color palette generation based on widget theme colors for cohesive design
-- ✓ Created formatBotResponse() function with support for markdown-style formatting (titles, subtitles, lists, emphasis)
-- ✓ Implemented intelligent typography hierarchy with different font sizes and weights for improved readability
-- ✓ Added support for structured content: numbered lists, bullet points, highlighted text, and links
-- ✓ Enhanced OpenAI system prompts to generate properly formatted responses with markdown syntax
-- ✓ Applied enhanced formatting to all widget types: bubble (simple-embed.js), fullscreen (chatgpt-embed.js), and internal (aipi-web-widget.js)
-- ✓ Responses now display with professional styling including background colors, borders, shadows, and spacing
-- ✓ Typography adapts dynamically to light/dark themes with appropriate contrast ratios
-- ✓ Fixed widget configuration references for consistent color application across all widget types
-- ✓ CRITICAL FIX: Markdown symbols (###, ##, #) are now properly processed and REMOVED from final display
-- ✓ Implemented visible pastel backgrounds ONLY for bubble and fullscreen widgets (not internal widget)
-- ✓ Increased pastel color opacity (0.7-0.9) for better visibility with robust color validation
-- ✓ Enhanced contrast system ensures readability on all theme colors
-- ✓ Professional styling with rounded corners, shadows, and border accents for markdown elements
-- ✓ ULTIMATE FIX: Added complete formatting system to main embed.js file that all widgets use
-- ✓ Replaced basic formatAssistantMessage with full pastel color formatting system
-- ✓ Added generatePastelPalette and isColorDark functions to embed.js for consistent formatting
-- ✓ Debug logging system implemented to track formatting process and color generation
-- ✓ All widget types now use same formatting engine with visible pastel backgrounds
-- ✓ CONTRAST FIX: Adjusted text colors to always be dark (#1f2937, #374151) for optimal readability on pastel backgrounds
-- ✓ Reduced pastel background opacity (0.4-0.6) and increased lightness (90-80%) for perfect text contrast
-- ✓ Enhanced pastel color algorithm to create lighter backgrounds that work well with dark text
-- ✓ COMPLETE INTERNATIONALIZATION FIX: Resolved all hardcoded Spanish text in Fullscreen and Form tabs
-- ✓ Replaced 50+ hardcoded Spanish strings with i18next translation functions throughout get-started.tsx
-- ✓ Added comprehensive translation keys for ignored sections, fullscreen features, form attributes, and support sections
-- ✓ Implemented array safety checks for translation lists to prevent JavaScript runtime errors
-- ✓ Added missing translation keys to Spanish, French, and English language files
-- ✓ Fixed "Formularios Personalizables" section that was not translating properly across all tabs
-- ✓ All UI text now properly changes when user switches between Spanish, French, and English
-- ✓ Enhanced form step descriptions with proper attribute translations for technical documentation
-- ✓ Added support and CTA section translations for consistent user experience across languages
-
-July 30, 2025:
-- ✓ CRITICAL BUG FIX: Fixed duplicate "Profile" menu entries in header dropdown
-- ✓ Removed non-functional DropdownMenuLabel that created duplicate Profile entry
-- ✓ Maintained only functional Profile link that properly navigates to dashboard
-- ✓ MULTILINGUAL PARAMETERS SECTION: Implemented complete translation system for settings/parameters display
-- ✓ Added 25+ new translation keys for settings interface (Spanish, French, English)
-- ✓ Replaced all hardcoded text in dashboard settings tab with i18next translation functions
-- ✓ Parameters section now displays in user's selected language: "Configuración del Asistente IA" (ES), "AI Assistant Settings" (EN), "Paramètres de l'Assistant IA" (FR)
-- ✓ All settings labels now translate properly: Assistant Name, Appearance, Welcome Chat, Status, Colors, etc.
-- ✓ Settings buttons and messages fully localized across all supported languages
-- ✓ NAVIGATION STATE PERSISTENCE: Fixed page refresh navigation issue during language changes
-- ✓ Modified LanguageSelector to preserve current URL and tab state when changing languages
-- ✓ Updated DashboardTabs to accept initialTab prop and maintain tab state across refreshes
-- ✓ Added URL parameter synchronization for dashboard tabs to prevent losing navigation state
-- ✓ Language changes now maintain user's current location instead of defaulting to integrations tab
-- ✓ Added missing translation keys for upgrade modal system (title, message, benefits, buttons)
-- ✓ WIDGET COLOR CONTRAST ENHANCEMENT: Fixed critical readability issues in all widget types
-- ✓ Implemented intelligent color detection function to determine if theme colors are dark or light
-- ✓ Added dynamic contrast adjustment for text, backgrounds, and input fields based on theme
-- ✓ Updated simple-embed.js (bubble widget) with adaptive color scheme for improved readability
-- ✓ Updated chatgpt-embed.js (fullscreen widget) with comprehensive color contrast system
-- ✓ Updated aipi-web-widget.js (internal widget) with dynamic color adaptation
-- ✓ Dark theme widgets now use light text on dark backgrounds for optimal contrast
-- ✓ Light theme widgets maintain existing high-contrast color combinations
-- ✓ Fixed customer-reported issue where dark themed widgets had illegible text content
-
-July 22, 2025:
-- ✓ CRITICAL BUG FIX: Fixed translation system for relative time formatting ("hace 3 horas" → "il y a 3 heures")
-- ✓ Resolved currentLang: 'unknown' issue in formatRelativeTime function by importing i18n instance directly
-- ✓ Enhanced LanguageSelector with proper cache bypass for complete page reload
-- ✓ Implemented comprehensive debug system to diagnose translation issues
-- ✓ Verified translation system works correctly: FR/ES/EN switching now updates all time displays
-- ✓ Cleaned up debug logs for production readiness
-
-July 21, 2025:
-- ✓ Removed "Abajo al Centro" (bottom-center) position option from integration creation form
-- ✓ Updated form validation to prevent new integrations from using bottom-center position
-- ✓ Maintained backward compatibility for existing integrations with bottom-center position
-- ✓ Fixed TypeScript errors in edit integration form by handling legacy position values
-- ✓ Kept CSS styling for bottom-center position for existing embedded widgets
-- ✓ Fixed login success/failure message localization issue
-- ✓ Added complete translation keys for login page in English, French, and Spanish
-- ✓ Implemented useTranslation hook in login component for proper i18n support
-- ✓ Login messages now appear in user's selected language instead of hardcoded English
-- ✓ Fixed critical Spanish translation structure bug where login object was incorrectly defined as string
-- ✓ Corrected JSON structure to properly support all login translation keys in Spanish
-- ✓ Added missing key handler for better debugging of translation issues
-- ✓ Completed analytics page internationalization with comprehensive translation support
-- ✓ Replaced all hardcoded Spanish text in analytics.tsx with i18next translation functions
-- ✓ Added dynamic browser language detection to all chat widget embed files
-- ✓ Chat widgets now automatically show placeholders in correct language (ES/EN/FR)
-- ✓ Updated PDF export functionality to use translated text for all languages
-- ✓ Added 40+ translation keys for analytics interface, PDF export, and advanced metrics
-- ✓ Analytics page now fully supports Spanish, English, and French language switching
-- ✓ CRITICAL FIX: Resolved widget language persistence bug - integration language changes now persist and update widgets
-- ✓ Added language field to widget API endpoint response (server/routes.ts)
-- ✓ Enhanced embed.js widget to use integration-specific language settings
-- ✓ Implemented automatic widget language detection and periodic refresh system
-- ✓ Updated memory storage to include language field for all existing integrations
-- ✓ Widget elements (placeholder, buttons, messages) now dynamically update when language changes
-- ✓ Created comprehensive translation system for widget interface elements (ES/EN/FR)
-- ✓ Added live configuration refresh system that detects language changes every 3 seconds
-- ✓ MAJOR BUG FIX: Resolved chatbot generic response issue by fixing site content loading in conversation routes
-- ✓ Fixed critical bug in server/routes.ts where siteContentItems was empty array instead of loaded site content
-- ✓ Added proper site content loading in conversation-specific endpoints for knowledge base construction
-- ✓ Inserted specific TechColca website content into database for testing (services, AI solutions, security focus)
-- ✓ Enhanced debug logging in OpenAI integration to track context and system message construction
-- ✓ Chatbot now has access to website-specific content for contextual responses instead of generic replies
-- ✓ FRONTEND INTERNATIONALIZATION COMPLETION: Fixed remaining translation issues for complete multilingual support
-- ✓ Added missing translation keys for "conversations_for", "online" status, and relative time formats (ES/EN/FR)
-- ✓ Created formatRelativeTime() utility function for consistent "hace X minutos/horas/días" time display
-- ✓ Updated integration-conversations.tsx to use dynamic relative time formatting instead of raw timestamps
-- ✓ Enhanced embed.js widgets with language-specific "Online" status display (En línea/Online/En ligne)
-- ✓ Widget headers now show "Online" status in correct integration language (Spanish/English/French)
-- ✓ Both bubble and fullscreen chat widgets support dynamic "Online" status translation
-- ✓ Time stamps in conversation lists now display as "hace 2 horas" instead of raw dates for better UX
-- ✓ CRITICAL FIX: Enhanced LanguageSelector to force page reload after language change for complete UI update
-- ✓ Fixed language persistence issue where React components weren't re-rendering with new translations
-- ✓ Added query dependencies to force re-fetch data when language changes in conversation pages
-- ✓ Language switching now guarantees complete translation update across all UI elements
-
-June 25, 2025:
-- ✓ Fixed promotional message rotation system on homepage
-- ✓ Implemented missing generateAIPromotionalMessages function in backend
-- ✓ Created proper database integration for AI-generated promotional messages
-- ✓ Fixed React Query implementation for promotional messages API
-- ✓ Ensured 7 promotional messages rotate every 7 seconds as designed
-- ✓ Messages now properly display below "Bienvenidos a AiPPS" title with full rotation
-- ✓ Added complete multilingual support for promotional messages (Spanish, French, English)
-- ✓ Updated database schema to support language-specific promotional messages
-- ✓ Modified API to filter messages by language parameter automatically
-- ✓ Created 3 test users with different subscription plans:
-  - usuario_basico (Plan Básico) - Test123!
-  - usuario_startup (Plan Startup) - Test123!
-  - usuario_profesional (Plan Profesional) - Test123!
-
-June 24, 2025:
-- ✓ Implemented complete marketing campaign system with promotional pricing
-- ✓ Created database-driven promotional campaigns with discount management
-- ✓ Updated pricing page to show strikethrough prices and promotional discounts
-- ✓ Implemented AI-generated rotating promotional messages that auto-refresh weekly
-- ✓ Messages include real-time campaign data, discounts, features, and remaining spots
-- ✓ Applied specific discounts per marketing plan:
-  - Básico: 10% anual
-  - Startup: 35% mensual (5 meses), 40% anual
-  - Profesional: 40% mensual (5 meses), 45% anual
-  - Empresarial: 30% mensual (3 meses), "Desde $299", botón "Habla con Nosotros"
-- ✓ Added urgency messaging with subscriber counters (500 limit)
-- ✓ Plan-based feature restriction system with soft restrictions and upgrade popups
-
-Changelog:
-- June 23, 2025. Initial setup
-
-## User Preferences
-
-Preferred communication style: Simple, everyday language.
+- **OpenAI API**: AI model access for chat completions.
+- **Stripe**: Payment processing and subscription management.
+- **PostgreSQL**: Primary database.
+- **Google Calendar API**: Appointment scheduling.
+- **Outlook Calendar API**: Microsoft calendar integration.
+- **SendGrid/AWS SES**: Email notification services.
