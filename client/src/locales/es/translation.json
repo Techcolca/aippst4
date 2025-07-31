@@ -1132,17 +1132,15 @@
     },
     "cta": {
       "forms_title": "Formularios Personalizables",
-      "forms_description": "Crea formularios personalizados para capturar información de tus visitantes, generar leads y aumentar las conversiones."
-    },
-    "support": {
-      "title": "¿Necesitas ayuda con la integración?",
-      "description": "Nuestro equipo de soporte está disponible para ayudarte con cualquier duda sobre la integración de AIPI en tu sitio web."
-    },
-    "cta": {
+      "forms_description": "Crea formularios personalizados para capturar información de tus visitantes, generar leads y aumentar las conversiones.",
       "title": "¿Listo para potenciar tu sitio web?",
       "description": "Únete a miles de sitios web que ya están usando AIPPS para mejorar la experiencia de sus usuarios.",
       "create_account": "Crear Cuenta Gratuita",
       "learn_more": "Conocer Más"
+    },
+    "support": {
+      "title": "¿Necesitas ayuda con la integración?",
+      "description": "Nuestro equipo de soporte está disponible para ayudarte con cualquier duda sobre la integración de AIPI en tu sitio web."
     },
     "fullscreen_features": {
       "title": "✨ Funcionalidades de Usuario Autenticado",

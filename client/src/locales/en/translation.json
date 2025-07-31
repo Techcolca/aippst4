@@ -1231,7 +1231,11 @@
     },
     "cta": {
       "forms_title": "Customizable Forms",
-      "forms_description": "Create custom forms to capture visitor information, generate leads and increase conversions."
+      "forms_description": "Create custom forms to capture visitor information, generate leads and increase conversions.",
+      "title": "Ready to power up your website?",
+      "description": "Join thousands of websites already using AIPPS to improve their user experience.",
+      "create_account": "Create Free Account",
+      "learn_more": "Learn More"
     },
     "support": {
       "title": "Need help with integration?",

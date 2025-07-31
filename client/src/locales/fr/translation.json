@@ -1110,7 +1110,11 @@
     },
     "cta": {
       "forms_title": "Formulaires Personnalisables",
-      "forms_description": "Créez des formulaires personnalisés pour capturer les informations de vos visiteurs, générer des leads et augmenter les conversions."
+      "forms_description": "Créez des formulaires personnalisés pour capturer les informations de vos visiteurs, générer des leads et augmenter les conversions.",
+      "title": "Prêt à dynamiser votre site web?",
+      "description": "Rejoignez des milliers de sites web qui utilisent déjà AIPPS pour améliorer l'expérience de leurs utilisateurs.",
+      "create_account": "Créer un Compte Gratuit",
+      "learn_more": "En Savoir Plus"
     },
     "support": {
       "title": "Besoin d'aide avec l'intégration?",
