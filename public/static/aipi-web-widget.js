@@ -435,6 +435,100 @@
     return luminance < 0.5;
   }
 
+  // Función para generar paleta de colores pasteles basada en el color principal
+  function generatePastelPalette(baseColor) {
+    const hex = baseColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Crear tonos pasteles mezclando con blanco
+    const pastelLight = `rgba(${Math.round(r + (255 - r) * 0.75)}, ${Math.round(g + (255 - g) * 0.75)}, ${Math.round(b + (255 - b) * 0.75)}, 0.4)`;
+    const pastelMedium = `rgba(${Math.round(r + (255 - r) * 0.55)}, ${Math.round(g + (255 - g) * 0.55)}, ${Math.round(b + (255 - b) * 0.55)}, 0.6)`;
+    const pastelDark = `rgba(${Math.round(r + (255 - r) * 0.35)}, ${Math.round(g + (255 - g) * 0.35)}, ${Math.round(b + (255 - b) * 0.35)}, 0.8)`;
+    
+    return {
+      light: pastelLight,
+      medium: pastelMedium,
+      dark: pastelDark,
+      accent: baseColor
+    };
+  }
+
+  // Función para formatear respuestas del chatbot con estilo enriquecido
+  function formatBotResponse(text) {
+    if (!text) return '';
+    
+    const palette = generatePastelPalette(config.color);
+    const isDarkTheme = isColorDark(config.color);
+    
+    // Colores de texto basados en el tema
+    const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
+    const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
+    const accentColor = config.color;
+    
+    // Escape HTML para prevenir XSS
+    let safeText = escapeHTML(text);
+    
+    // Formatear títulos principales (líneas que empiezan con #)
+    safeText = safeText.replace(/^# (.+)$/gm, 
+      `<h1 style="font-size: 19px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border-bottom: 2px solid ${palette.medium}; padding-bottom: 6px;">$1</h1>`
+    );
+    
+    // Formatear subtítulos (líneas que empiezan con ##)
+    safeText = safeText.replace(/^## (.+)$/gm, 
+      `<h2 style="font-size: 17px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h2>`
+    );
+    
+    // Formatear texto en negrita (**texto**)
+    safeText = safeText.replace(/\*\*(.+?)\*\*/g, 
+      `<strong style="font-weight: 600; color: ${titleColor}; background: ${palette.light}; padding: 2px 5px; border-radius: 3px;">$1</strong>`
+    );
+    
+    // Formatear texto destacado (*texto*)
+    safeText = safeText.replace(/\*(.+?)\*/g, 
+      `<em style="font-style: italic; color: ${accentColor}; font-weight: 500; background: ${palette.light}; padding: 1px 3px; border-radius: 2px;">$1</em>`
+    );
+    
+    // Formatear listas numeradas (1. texto)
+    safeText = safeText.replace(/^\d+\.\s(.+)$/gm, 
+      `<div style="margin: 8px 0; padding: 10px 12px; background: ${palette.light}; border-left: 3px solid ${palette.accent}; border-radius: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);"><span style="font-weight: 500; color: ${titleColor}; font-size: 14px;">$1</span></div>`
+    );
+    
+    // Formatear listas con viñetas (- texto)
+    safeText = safeText.replace(/^-\s(.+)$/gm, 
+      `<div style="margin: 6px 0; padding: 8px 10px; background: ${palette.light}; border-radius: 4px; border-left: 2px solid ${palette.medium}; box-shadow: 0 1px 1px rgba(0,0,0,0.04);"><span style="color: ${bodyColor}; font-size: 14px;">• $1</span></div>`
+    );
+    
+    // Formatear enlaces
+    safeText = safeText.replace(/(https?:\/\/[^\s]+)/g, 
+      `<a href="$1" target="_blank" style="color: ${accentColor}; text-decoration: underline; font-weight: 500; background: ${palette.light}; padding: 1px 4px; border-radius: 3px; transition: all 0.2s;">$1</a>`
+    );
+    
+    // Formatear párrafos (líneas que no son títulos ni listas)
+    const lines = safeText.split('\n');
+    const formattedLines = lines.map(line => {
+      line = line.trim();
+      if (!line) return '<br style="margin: 6px 0;">';
+      
+      // Si no es título, lista o ya tiene formato HTML, envolver en párrafo
+      if (!line.match(/^<(h1|h2|div|a)/)) {
+        return `<p style="margin: 8px 0; line-height: 1.6; color: ${bodyColor}; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${line}</p>`;
+      }
+      
+      return line;
+    });
+    
+    return formattedLines.join('');
+  }
+
+  // Función auxiliar para escapar HTML
+  function escapeHTML(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   function addMessage(content, role) {
     const messageElement = document.createElement('div');
     messageElement.className = `aipi-message aipi-message-${role}`;
@@ -463,8 +557,12 @@
       messageElement.style.borderBottomLeftRadius = '4px';
     }
     
-    // Formatear el contenido para que los enlaces sean clicables
-    messageElement.innerHTML = formatMessage(content);
+    // Formatear el contenido según el rol del mensaje
+    if (role === 'assistant') {
+      messageElement.innerHTML = formatBotResponse(content);
+    } else {
+      messageElement.innerHTML = formatMessage(content);
+    }
     
     messageContainer.appendChild(messageElement);
     scrollToBottom();

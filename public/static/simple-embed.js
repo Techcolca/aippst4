@@ -426,7 +426,13 @@
     
     const messageEl = document.createElement('div');
     messageEl.className = `message ${role}`;
-    messageEl.textContent = content;
+    
+    // Formatear el contenido según el rol del mensaje
+    if (role === 'assistant') {
+      messageEl.innerHTML = formatBotResponse(content);
+    } else {
+      messageEl.textContent = content;
+    }
     
     messagesContainer.appendChild(messageEl);
     
@@ -473,6 +479,100 @@
     
     // Si la luminancia es menor a 0.5, es un color oscuro
     return luminance < 0.5;
+  }
+
+  // Función para generar paleta de colores pasteles basada en el color principal
+  function generatePastelPalette(baseColor) {
+    const hex = baseColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Crear tonos pasteles mezclando con blanco
+    const pastelLight = `rgb(${Math.round(r + (255 - r) * 0.7)}, ${Math.round(g + (255 - g) * 0.7)}, ${Math.round(b + (255 - b) * 0.7)})`;
+    const pastelMedium = `rgb(${Math.round(r + (255 - r) * 0.5)}, ${Math.round(g + (255 - g) * 0.5)}, ${Math.round(b + (255 - b) * 0.5)})`;
+    const pastelDark = `rgb(${Math.round(r + (255 - r) * 0.3)}, ${Math.round(g + (255 - g) * 0.3)}, ${Math.round(b + (255 - b) * 0.3)})`;
+    
+    return {
+      light: pastelLight,
+      medium: pastelMedium,
+      dark: pastelDark,
+      accent: baseColor
+    };
+  }
+
+  // Función para formatear respuestas del chatbot con estilo enriquecido
+  function formatBotResponse(text) {
+    if (!text) return '';
+    
+    const palette = generatePastelPalette(config.mainColor);
+    const isDarkTheme = isColorDark(config.mainColor);
+    
+    // Colores de texto basados en el tema
+    const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
+    const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
+    const accentColor = config.mainColor;
+    
+    // Escape HTML para prevenir XSS
+    let safeText = escapeHTML(text);
+    
+    // Formatear títulos principales (líneas que empiezan con #)
+    safeText = safeText.replace(/^# (.+)$/gm, 
+      `<h1 style="font-size: 18px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h1>`
+    );
+    
+    // Formatear subtítulos (líneas que empiezan con ##)
+    safeText = safeText.replace(/^## (.+)$/gm, 
+      `<h2 style="font-size: 16px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h2>`
+    );
+    
+    // Formatear texto en negrita (**texto**)
+    safeText = safeText.replace(/\*\*(.+?)\*\*/g, 
+      `<strong style="font-weight: 600; color: ${titleColor};">$1</strong>`
+    );
+    
+    // Formatear texto destacado (*texto*)
+    safeText = safeText.replace(/\*(.+?)\*/g, 
+      `<em style="font-style: italic; color: ${accentColor}; font-weight: 500;">$1</em>`
+    );
+    
+    // Formatear listas numeradas (1. texto)
+    safeText = safeText.replace(/^\d+\.\s(.+)$/gm, 
+      `<div style="margin: 8px 0; padding: 8px 12px; background: ${palette.light}; border-left: 3px solid ${palette.accent}; border-radius: 4px;"><span style="font-weight: 500; color: ${titleColor};">$1</span></div>`
+    );
+    
+    // Formatear listas con viñetas (- texto)
+    safeText = safeText.replace(/^-\s(.+)$/gm, 
+      `<div style="margin: 6px 0; padding: 6px 12px; background: ${palette.light}; border-radius: 4px; border-left: 2px solid ${palette.medium};"><span style="color: ${bodyColor};">• $1</span></div>`
+    );
+    
+    // Formatear enlaces
+    safeText = safeText.replace(/(https?:\/\/[^\s]+)/g, 
+      `<a href="$1" target="_blank" style="color: ${accentColor}; text-decoration: underline; font-weight: 500;">$1</a>`
+    );
+    
+    // Formatear párrafos (líneas que no son títulos ni listas)
+    const lines = safeText.split('\n');
+    const formattedLines = lines.map(line => {
+      line = line.trim();
+      if (!line) return '<br>';
+      
+      // Si no es título, lista o ya tiene formato HTML, envolver en párrafo
+      if (!line.match(/^<(h1|h2|div|a)/)) {
+        return `<p style="margin: 8px 0; line-height: 1.6; color: ${bodyColor}; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${line}</p>`;
+      }
+      
+      return line;
+    });
+    
+    return formattedLines.join('');
+  }
+
+  // Función auxiliar para escapar HTML
+  function escapeHTML(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   // Obtener estilos CSS como string
