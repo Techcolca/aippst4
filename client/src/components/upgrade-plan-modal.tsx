@@ -27,36 +27,79 @@ export default function UpgradePlanModal({
     onClose();
   };
 
+  // Determinar el plan actual y los beneficios del próximo plan
+  const getPlanInfo = () => {
+    const currentPlanType = planName?.toLowerCase().includes('profesional') ? 'professional' :
+                           planName?.toLowerCase().includes('startup') ? 'startup' :
+                           planName?.toLowerCase().includes('empresarial') ? 'enterprise' : 'basic';
+    
+    // Beneficios específicos según el plan actual
+    const getNextPlanBenefits = () => {
+      switch (currentPlanType) {
+        case 'basic':
+          return [
+            t('upgrade.benefits.startup.conversations', '2,000 conversations/month'),
+            t('upgrade.benefits.startup.forms', '5 customizable forms'),
+            t('upgrade.benefits.startup.widgets', 'Bubble + fullscreen widgets'),
+            t('upgrade.benefits.startup.sites', 'Up to 3 websites'),
+            t('upgrade.benefits.startup.analytics', 'Advanced analytics')
+          ];
+        case 'startup':
+          return [
+            t('upgrade.benefits.professional.conversations', '10,000 conversations/month'),
+            t('upgrade.benefits.professional.forms', 'Unlimited forms'),
+            t('upgrade.benefits.professional.sites', 'Unlimited websites'),
+            t('upgrade.benefits.professional.automation', 'Basic automations'),
+            t('upgrade.benefits.professional.crm', 'CRM integration')
+          ];
+        case 'professional':
+          return [
+            t('upgrade.benefits.enterprise.conversations', 'Unlimited conversations'),
+            t('upgrade.benefits.enterprise.all', 'Everything included'),
+            t('upgrade.benefits.enterprise.ai', 'AI automations'),
+            t('upgrade.benefits.enterprise.support', '24/7 dedicated support'),
+            t('upgrade.benefits.enterprise.manager', 'Account manager')
+          ];
+        default:
+          return [
+            t('upgrade.benefits.general.integrations', 'More integrations and forms'),
+            t('upgrade.benefits.general.analytics', 'Advanced analytics and reports'),
+            t('upgrade.benefits.general.support', 'Priority support'),
+            t('upgrade.benefits.general.customization', 'Complete customization')
+          ];
+      }
+    };
+
+    return { currentPlanType, benefits: getNextPlanBenefits() };
+  };
+
   const getLimitMessage = () => {
     switch (limitType) {
       case 'integrations':
         return {
-          title: t('upgrade.integrations.title', 'No puedes crear más integraciones'),
-          message: t('upgrade.integrations.message', `Tu plan ${planName} permite un máximo de ${currentLimit} ${currentLimit === 1 ? 'integración' : 'integraciones'} y ya has alcanzado este límite.`),
-          description: t('upgrade.integrations.description', 'Para crear más chatbots inteligentes para tus sitios web, necesitas actualizar a un plan superior con más integraciones incluidas.')
+          message: t('upgrade.integrations.message', { planName }),
+          description: t('upgrade.integrations.description')
         };
       case 'forms':
         return {
-          title: t('upgrade.forms.title', 'No puedes crear más formularios'),
-          message: t('upgrade.forms.message', `Tu plan ${planName} permite un máximo de ${currentLimit} ${currentLimit === 1 ? 'formulario' : 'formularios'} y ya has alcanzado este límite.`),
-          description: t('upgrade.forms.description', 'Para crear más formularios inteligentes y capturar más leads, necesitas actualizar a un plan superior que incluya más formularios.')
+          message: t('upgrade.forms.message', { planName }),
+          description: t('upgrade.forms.description')
         };
       case 'conversations':
         return {
-          title: t('upgrade.conversations.title', 'Has alcanzado tu límite de conversaciones'),
-          message: t('upgrade.conversations.message', `Tu plan ${planName} permite ${currentLimit} conversaciones por mes y ya has utilizado todas.`),
-          description: t('upgrade.conversations.description', 'Para continuar teniendo conversaciones con tus clientes este mes, necesitas actualizar a un plan con más conversaciones incluidas.')
+          message: t('upgrade.conversations.message', { planName }),
+          description: t('upgrade.conversations.description')
         };
       default:
         return {
-          title: t('upgrade.general.title', 'Has alcanzado el límite de tu plan'),
-          message: t('upgrade.general.message', `Tu plan ${planName} no permite usar esta funcionalidad o has alcanzado su límite máximo.`),
-          description: t('upgrade.general.description', 'Para continuar usando esta funcionalidad, necesitas actualizar a un plan superior con más recursos incluidos.')
+          message: t('upgrade.general.message', { planName }),
+          description: t('upgrade.general.description')
         };
     }
   };
 
-  const { title, message, description } = getLimitMessage();
+  const { message, description } = getLimitMessage();
+  const { benefits } = getPlanInfo();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -67,7 +110,7 @@ export default function UpgradePlanModal({
               <Crown className="w-6 h-6 text-white" />
             </div>
             <DialogTitle className="text-xl font-semibold">
-              {title}
+              {t('upgrade.modal.title', 'You have reached your plan limit')}
             </DialogTitle>
           </div>
         </DialogHeader>
@@ -90,10 +133,9 @@ export default function UpgradePlanModal({
               </span>
             </div>
             <ul className="text-xs text-blue-600 dark:text-blue-400 space-y-1">
-              <li>• {t('upgrade.benefits.unlimited', 'Más integraciones y formularios')}</li>
-              <li>• {t('upgrade.benefits.analytics', 'Analytics avanzados y reportes')}</li>
-              <li>• {t('upgrade.benefits.support', 'Soporte prioritario')}</li>
-              <li>• {t('upgrade.benefits.customization', 'Personalización completa')}</li>
+              {benefits.map((benefit, index) => (
+                <li key={index}>• {benefit}</li>
+              ))}
             </ul>
           </div>
 
