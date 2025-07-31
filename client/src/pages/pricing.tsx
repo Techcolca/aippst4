@@ -193,7 +193,7 @@ export default function PricingPage() {
                         )}
                         <span className="text-3xl font-bold text-green-600 dark:text-green-400">
                           {plan.price === 0 ? t('pricing.free') : 
-                           plan.id.includes('enterprise') ? `Desde ${formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}` :
+                           plan.id.includes('enterprise') ? `${t('pricing.from')} ${formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}` :
                            formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (
@@ -201,7 +201,10 @@ export default function PricingPage() {
                         )}
                         {plan.campaignInfo && (
                           <div className="mt-2 text-sm text-orange-600 dark:text-orange-400 font-medium">
-                            ⚡ Solo quedan {plan.campaignInfo.remainingSpots} lugares de {plan.campaignInfo.maxSubscribers}
+                            ⚡ {t('pricing.spots_remaining', 'Only {{remaining}} spots left out of {{total}}', { 
+                              remaining: plan.campaignInfo.remainingSpots, 
+                              total: plan.campaignInfo.maxSubscribers 
+                            })}
                           </div>
                         )}
                       </div>
@@ -233,9 +236,9 @@ export default function PricingPage() {
                         ) : (
                           <>
                             {plan.id.includes('enterprise') ? (
-                              'Habla con Nosotros'
+                              t('pricing.contact_us')
                             ) : plan.discount > 0 ? (
-                              plan.isAnnual ? 'Aprovechar Oferta Anual' : 'Aprovechar Oferta'
+                              plan.isAnnual ? t('pricing.take_annual_offer') : t('pricing.take_offer')
                             ) : (
                               plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')
                             )}
@@ -246,8 +249,13 @@ export default function PricingPage() {
                       {plan.campaignInfo && plan.campaignInfo.promotionalMonths < 12 && !plan.isAnnual && (
                         <p className="text-xs text-gray-500 mt-2 text-center">
                           {plan.id.includes('enterprise') ? 
-                            `Descuento del ${plan.discount}% por ${plan.campaignInfo.promotionalMonths} meses` :
-                            `Precio promocional por ${plan.campaignInfo.promotionalMonths} meses`
+                            t('pricing.discount_duration', '{{discount}}% discount for {{months}} months', {
+                              discount: plan.discount,
+                              months: plan.campaignInfo.promotionalMonths
+                            }) :
+                            t('pricing.promotional_price_duration', 'Promotional price for {{months}} months', {
+                              months: plan.campaignInfo.promotionalMonths
+                            })
                           }
                         </p>
                       )}
@@ -265,14 +273,16 @@ export default function PricingPage() {
               {plans.some(plan => plan.campaignInfo) && (
                 <div className="mt-6 p-4 bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 rounded-lg border border-orange-200 dark:border-orange-800">
                   <h3 className="text-lg font-semibold text-orange-800 dark:text-orange-200 mb-2">
-                    🚀 Oferta de Lanzamiento Limitada
+                    🚀 {t('pricing.limited_launch_offer')}
                   </h3>
                   <p className="text-orange-700 dark:text-orange-300">
-                    Solo quedan <strong>{plans.find(p => p.campaignInfo)?.campaignInfo.remainingSpots}</strong> lugares 
-                    de <strong>{plans.find(p => p.campaignInfo)?.campaignInfo.maxSubscribers}</strong> en esta promoción especial.
+                    {t('pricing.spots_left_of_total', 'Only {{remaining}} spots left out of {{total}} in this special promotion.', {
+                      remaining: plans.find(p => p.campaignInfo)?.campaignInfo.remainingSpots,
+                      total: plans.find(p => p.campaignInfo)?.campaignInfo.maxSubscribers
+                    })}
                   </p>
                   <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
-                    ⏰ Aprovecha estos precios únicos antes de que vuelvan a los precios regulares.
+                    ⏰ {t('pricing.take_advantage_unique_prices')}
                   </p>
                 </div>
               )}
