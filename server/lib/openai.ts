@@ -126,6 +126,16 @@ INSTRUCTIONS IMPORTANTES:
 7. Votre comportement doit être: ${behavior}
 8. Répondez toujours en français.
 
+FORMAT DE RÉPONSE REQUIS:
+- Utilisez # pour les titres principaux
+- Utilisez ## pour les sous-titres
+- Utilisez **texte** pour mettre en évidence les informations importantes
+- Utilisez *texte* pour l'emphase
+- Utilisez - pour les listes à puces
+- Utilisez 1. 2. 3. pour les listes numérotées
+- Structurez vos réponses de manière claire et organisée
+- Incluez des titres descriptifs lorsque approprié
+
 CONTEXTE DÉTAILLÉ DU SITE WEB: 
 ${context}`
           : `Vous êtes ${assistantName}, un chatbot intégré spécifiquement pour ce site web.
@@ -150,6 +160,16 @@ IMPORTANT INSTRUCTIONS:
 7. Your behavior should be: ${behavior}
 8. Always respond in English.
 
+REQUIRED RESPONSE FORMAT:
+- Use # for main titles
+- Use ## for subtitles  
+- Use **text** to highlight important information
+- Use *text* for emphasis
+- Use - for bullet lists
+- Use 1. 2. 3. for numbered lists
+- Structure your responses clearly and organized
+- Include descriptive titles when appropriate
+
 DETAILED WEBSITE CONTEXT: 
 ${context}`
           : `You are ${assistantName}, a chatbot specifically integrated for this website.
@@ -173,6 +193,16 @@ INSTRUCCIONES IMPORTANTES:
 6. Nunca inventes información que no esté explícitamente mencionada en el contexto.
 7. Tu comportamiento debe ser: ${behavior}
 8. Responde siempre en español.
+
+FORMATO DE RESPUESTAS REQUERIDO:
+- Usa # para títulos principales
+- Usa ## para subtítulos
+- Usa **texto** para resaltar información importante
+- Usa *texto* para énfasis
+- Usa - para listas con viñetas
+- Usa 1. 2. 3. para listas numeradas
+- Estructura tus respuestas de manera clara y organizada
+- Incluye títulos descriptivos cuando sea apropiado
 
 CONTEXTO DETALLADO DEL SITIO WEB: 
 ${context}`
@@ -203,6 +233,16 @@ INSTRUCTIONS IMPORTANTES:
 7. N'inventez jamais de caractéristiques, prix ou services qui ne sont pas explicitement mentionnés dans le contexte.
 8. Répondez toujours en français.
 
+FORMAT DE RÉPONSE REQUIS:
+- Utilisez # pour les titres principaux
+- Utilisez ## pour les sous-titres
+- Utilisez **texte** pour mettre en évidence les informations importantes
+- Utilisez *texte* pour l'emphase
+- Utilisez - pour les listes à puces
+- Utilisez 1. 2. 3. pour les listes numérotées
+- Structurez vos réponses de manière claire et organisée
+- Incluez des titres descriptifs lorsque approprié
+
 CONTEXTE DÉTAILLÉ DU SITE: 
 ${context}`
           : "Vous êtes AIPPS, un assistant IA intégré au site web d'AIPPS. Vous fournissez des informations concises et précises sur la plateforme AIPPS, ses services, caractéristiques et avantages. Soyez amical, professionnel et serviable. Répondez toujours en français.";
@@ -220,6 +260,16 @@ IMPORTANT INSTRUCTIONS:
 7. Never invent features, prices, or services that are not explicitly mentioned in the context.
 8. Always respond in English.
 
+REQUIRED RESPONSE FORMAT:
+- Use # for main titles
+- Use ## for subtitles
+- Use **text** to highlight important information
+- Use *text* for emphasis
+- Use - for bullet lists
+- Use 1. 2. 3. for numbered lists
+- Structure your responses clearly and organized
+- Include descriptive titles when appropriate
+
 DETAILED SITE CONTEXT: 
 ${context}`
           : "You are AIPPS, an AI assistant integrated into the AIPPS website. You provide concise and accurate information about the AIPPS platform, its services, features, and benefits. Be friendly, professional, and helpful. Always respond in English.";
@@ -236,6 +286,16 @@ INSTRUCCIONES IMPORTANTES:
 6. Tus respuestas deben ser profesionales, informativas y orientadas a destacar el valor de AIPPS.
 7. Nunca inventes características, precios o servicios que no estén explícitamente mencionados en el contexto.
 8. Responde siempre en español.
+
+FORMATO DE RESPUESTAS REQUERIDO:
+- Usa # para títulos principales
+- Usa ## para subtítulos
+- Usa **texto** para resaltar información importante
+- Usa *texto* para énfasis
+- Usa - para listas con viñetas
+- Usa 1. 2. 3. para listas numeradas
+- Estructura tus respuestas de manera clara y organizada
+- Incluye títulos descriptivos cuando sea apropiado
 
 CONTEXTO DETALLADO DEL SITIO: 
 ${context}`

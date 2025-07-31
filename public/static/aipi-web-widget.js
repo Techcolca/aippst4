@@ -459,13 +459,13 @@
   function formatBotResponse(text) {
     if (!text) return '';
     
-    const palette = generatePastelPalette(config.color);
-    const isDarkTheme = isColorDark(config.color);
+    const palette = generatePastelPalette(widgetConfig.themeColor || '#6366f1');
+    const isDarkTheme = isColorDark(widgetConfig.themeColor || '#6366f1');
     
     // Colores de texto basados en el tema
     const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
     const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
-    const accentColor = config.color;
+    const accentColor = widgetConfig.themeColor || '#6366f1';
     
     // Escape HTML para prevenir XSS
     let safeText = escapeHTML(text);

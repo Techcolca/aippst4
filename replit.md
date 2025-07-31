@@ -103,6 +103,18 @@ AIPI is an advanced conversational AI platform designed to integrate intelligent
 
 ## Recent Changes
 
+July 31, 2025:
+- ✓ ENHANCED MESSAGE FORMATTING SYSTEM: Implemented comprehensive visual formatting for chatbot responses
+- ✓ Added automatic pastel color palette generation based on widget theme colors for cohesive design
+- ✓ Created formatBotResponse() function with support for markdown-style formatting (titles, subtitles, lists, emphasis)
+- ✓ Implemented intelligent typography hierarchy with different font sizes and weights for improved readability
+- ✓ Added support for structured content: numbered lists, bullet points, highlighted text, and links
+- ✓ Enhanced OpenAI system prompts to generate properly formatted responses with markdown syntax
+- ✓ Applied enhanced formatting to all widget types: bubble (simple-embed.js), fullscreen (chatgpt-embed.js), and internal (aipi-web-widget.js)
+- ✓ Responses now display with professional styling including background colors, borders, shadows, and spacing
+- ✓ Typography adapts dynamically to light/dark themes with appropriate contrast ratios
+- ✓ Fixed widget configuration references for consistent color application across all widget types
+
 July 30, 2025:
 - ✓ CRITICAL BUG FIX: Fixed duplicate "Profile" menu entries in header dropdown
 - ✓ Removed non-functional DropdownMenuLabel that created duplicate Profile entry
