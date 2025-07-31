@@ -1891,188 +1891,241 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // No necesitamos inicializar los productos de Stripe aquí
   // Los productos se crean según sea necesario cuando alguien intenta suscribirse
   
-  // Helper function to translate plan features based on language
-  function getTranslatedFeatures(planId: string, language: string = 'es') {
-    const featureTranslations: { [key: string]: { [lang: string]: string[] } } = {
+  // Helper function to get translated plan information (name, description, features)
+  function getTranslatedPlanInfo(planId: string, language: string = 'es') {
+    const planTranslations: { [key: string]: { [lang: string]: { name: string, description: string, features: string[] } } } = {
       'basic': {
-        'es': [
-          '500 conversaciones/mes',
-          '1 formulario personalizable (2 plantillas disponibles)',
-          'Widget de chat tipo burbuja únicamente',
-          'Integración en 1 sitio web',
-          'Procesamiento básico de documentos (PDF, DOCX)',
-          'Captura básica de leads',
-          'Análisis básicos de conversaciones',
-          'Soporte por email',
-          'Personalización limitada de branding'
-        ],
-        'en': [
-          '500 conversations/month',
-          '1 customizable form (2 templates available)',
-          'Bubble chat widget only',
-          'Integration on 1 website',
-          'Basic document processing (PDF, DOCX)',
-          'Basic lead capture',
-          'Basic conversation analytics',
-          'Email support',
-          'Limited branding customization'
-        ],
-        'fr': [
-          '500 conversations/mois',
-          '1 formulaire personnalisable (2 modèles disponibles)',
-          'Widget de chat bulle uniquement',
-          'Intégration sur 1 site web',
-          'Traitement de base des documents (PDF, DOCX)',
-          'Capture de leads de base',
-          'Analyses de base des conversations',
-          'Support par email',
-          'Personnalisation limitée du branding'
-        ]
+        'es': {
+          name: 'Básico',
+          description: 'Plan básico para sitios web pequeños',
+          features: [
+            '500 conversaciones/mes',
+            '1 formulario personalizable (2 plantillas disponibles)',
+            'Widget de chat tipo burbuja únicamente',
+            'Integración en 1 sitio web',
+            'Procesamiento básico de documentos (PDF, DOCX)',
+            'Captura básica de leads',
+            'Análisis básicos de conversaciones',
+            'Soporte por email',
+            'Personalización limitada de branding'
+          ]
+        },
+        'en': {
+          name: 'Basic',
+          description: 'Basic plan for small websites',
+          features: [
+            '500 conversations/month',
+            '1 customizable form (2 templates available)',
+            'Bubble chat widget only',
+            'Integration on 1 website',
+            'Basic document processing (PDF, DOCX)',
+            'Basic lead capture',
+            'Basic conversation analytics',
+            'Email support',
+            'Limited branding customization'
+          ]
+        },
+        'fr': {
+          name: 'Basique',
+          description: 'Plan de base pour petits sites web',
+          features: [
+            '500 conversations/mois',
+            '1 formulaire personnalisable (2 modèles disponibles)',
+            'Widget de chat bulle uniquement',
+            'Intégration sur 1 site web',
+            'Traitement de base des documents (PDF, DOCX)',
+            'Capture de leads de base',
+            'Analyses de base des conversations',
+            'Support par email',
+            'Personnalisation limitée du branding'
+          ]
+        }
       },
       'startup': {
-        'es': [
-          '2.000 conversaciones/mes',
-          '5 formularios personalizables (todas las plantillas)',
-          'Widget chat + modo pantalla completa tipo ChatGPT',
-          'Integración en hasta 3 sitios web',
-          'Procesamiento avanzado de documentos',
-          'Base de conocimiento personalizada',
-          'Captura y seguimiento de leads',
-          'Análisis avanzados con métricas',
-          'Personalización completa de branding',
-          'Soporte prioritario por email y chat',
-          'Exportación básica de datos'
-        ],
-        'en': [
-          '2,000 conversations/month',
-          '5 customizable forms (all templates)',
-          'Chat widget + fullscreen ChatGPT mode',
-          'Integration on up to 3 websites',
-          'Advanced document processing',
-          'Custom knowledge base',
-          'Lead capture and tracking',
-          'Advanced analytics with metrics',
-          'Complete branding customization',
-          'Priority email and chat support',
-          'Basic data export'
-        ],
-        'fr': [
-          '2 000 conversations/mois',
-          '5 formulaires personnalisables (tous les modèles)',
-          'Widget chat + mode plein écran ChatGPT',
-          'Intégration sur jusqu\'à 3 sites web',
-          'Traitement avancé des documents',
-          'Base de connaissances personnalisée',
-          'Capture et suivi des leads',
-          'Analyses avancées avec métriques',
-          'Personnalisation complète du branding',
-          'Support prioritaire par email et chat',
-          'Exportation de base des données'
-        ]
+        'es': {
+          name: 'Startup',
+          description: 'Perfecto para negocios en crecimiento',
+          features: [
+            '2.000 conversaciones/mes',
+            '5 formularios personalizables (todas las plantillas)',
+            'Widget chat + modo pantalla completa tipo ChatGPT',
+            'Integración en hasta 3 sitios web',
+            'Procesamiento avanzado de documentos',
+            'Base de conocimiento personalizada',
+            'Captura y seguimiento de leads',
+            'Análisis avanzados con métricas',
+            'Personalización completa de branding',
+            'Soporte prioritario por email y chat',
+            'Exportación básica de datos'
+          ]
+        },
+        'en': {
+          name: 'Startup',
+          description: 'Perfect for growing businesses',
+          features: [
+            '2,000 conversations/month',
+            '5 customizable forms (all templates)',
+            'Chat widget + fullscreen ChatGPT mode',
+            'Integration on up to 3 websites',
+            'Advanced document processing',
+            'Custom knowledge base',
+            'Lead capture and tracking',
+            'Advanced analytics with metrics',
+            'Complete branding customization',
+            'Priority email and chat support',
+            'Basic data export'
+          ]
+        },
+        'fr': {
+          name: 'Startup',
+          description: 'Parfait pour les entreprises en croissance',
+          features: [
+            '2 000 conversations/mois',
+            '5 formulaires personnalisables (tous les modèles)',
+            'Widget chat + mode plein écran ChatGPT',
+            'Intégration sur jusqu\'à 3 sites web',
+            'Traitement avancé des documents',
+            'Base de connaissances personnalisée',
+            'Capture et suivi des leads',
+            'Analyses avancées avec métriques',
+            'Personnalisation complète du branding',
+            'Support prioritaire par email et chat',
+            'Exportation de base des données'
+          ]
+        }
       },
       'professional': {
-        'es': [
-          '10.000 conversaciones/mes',
-          'Formularios ilimitados',
-          'Todas las funciones del plan Profesional',
-          'Integración en sitios web ilimitados',
-          'Automatizaciones básicas (respuestas automáticas)',
-          'Integración con CRM (Salesforce, HubSpot)',
-          'API del desarrollador acceso',
-          'Análisis avanzados con reportes personalizados',
-          'Exportación de datos en múltiples formatos',
-          'Respaldos automáticos',
-          'Gestión de equipos (hasta 5 usuarios)',
-          'Soporte por email, chat y teléfono',
-          'Onboarding personalizado'
-        ],
-        'en': [
-          '10,000 conversations/month',
-          'Unlimited forms',
-          'All Professional plan features',
-          'Unlimited website integrations',
-          'Basic automations (automatic responses)',
-          'CRM integration (Salesforce, HubSpot)',
-          'Developer API access',
-          'Advanced analytics with custom reports',
-          'Multi-format data export',
-          'Automatic backups',
-          'Team management (up to 5 users)',
-          'Email, chat and phone support',
-          'Custom onboarding'
-        ],
-        'fr': [
-          '10 000 conversations/mois',
-          'Formulaires illimités',
-          'Toutes les fonctionnalités du plan Professionnel',
-          'Intégrations de sites web illimitées',
-          'Automatisations de base (réponses automatiques)',
-          'Intégration CRM (Salesforce, HubSpot)',
-          'Accès API développeur',
-          'Analyses avancées avec rapports personnalisés',
-          'Exportation de données multi-formats',
-          'Sauvegardes automatiques',
-          'Gestion d\'équipe (jusqu\'à 5 utilisateurs)',
-          'Support par email, chat et téléphone',
-          'Intégration personnalisée'
-        ]
+        'es': {
+          name: 'Profesional',
+          description: 'Para empresas profesionales',
+          features: [
+            '10.000 conversaciones/mes',
+            'Formularios ilimitados',
+            'Todas las funciones del plan Profesional',
+            'Integración en sitios web ilimitados',
+            'Automatizaciones básicas (respuestas automáticas)',
+            'Integración con CRM (Salesforce, HubSpot)',
+            'API del desarrollador acceso',
+            'Análisis avanzados con reportes personalizados',
+            'Exportación de datos en múltiples formatos',
+            'Respaldos automáticos',
+            'Gestión de equipos (hasta 5 usuarios)',
+            'Soporte por email, chat y teléfono',
+            'Onboarding personalizado'
+          ]
+        },
+        'en': {
+          name: 'Professional',
+          description: 'For professional companies',
+          features: [
+            '10,000 conversations/month',
+            'Unlimited forms',
+            'All Professional plan features',
+            'Unlimited website integrations',
+            'Basic automations (automatic responses)',
+            'CRM integration (Salesforce, HubSpot)',
+            'Developer API access',
+            'Advanced analytics with custom reports',
+            'Multi-format data export',
+            'Automatic backups',
+            'Team management (up to 5 users)',
+            'Email, chat and phone support',
+            'Custom onboarding'
+          ]
+        },
+        'fr': {
+          name: 'Professionnel',
+          description: 'Pour les entreprises professionnelles',
+          features: [
+            '10 000 conversations/mois',
+            'Formulaires illimités',
+            'Toutes les fonctionnalités du plan Professionnel',
+            'Intégrations de sites web illimitées',
+            'Automatisations de base (réponses automatiques)',
+            'Intégration CRM (Salesforce, HubSpot)',
+            'Accès API développeur',
+            'Analyses avancées avec rapports personnalisés',
+            'Exportation de données multi-formats',
+            'Sauvegardes automatiques',
+            'Gestion d\'équipe (jusqu\'à 5 utilisateurs)',
+            'Support par email, chat et téléphone',
+            'Intégration personnalisée'
+          ]
+        }
       },
       'enterprise': {
-        'es': [
-          'Conversaciones ilimitadas',
-          'Formularios ilimitados',
-          'Todas las funciones disponibles',
-          'Integración en sitios web ilimitados',
-          'Automatizaciones completas con IA',
-          'IA local vs IA normal',
-          'Integración con todos los CRM',
-          'API completa con capacidades avanzadas',
-          'Análisis empresariales avanzados',
-          'Exportación de datos ilimitada',
-          'Respaldos automáticos diarios',
-          'Gestión de equipos ilimitada',
-          'Soporte 24/7 dedicado',
-          'Gerente de cuenta dedicado',
-          'SLA garantizado'
-        ],
-        'en': [
-          'Unlimited conversations',
-          'Unlimited forms',
-          'All available features',
-          'Unlimited website integrations',
-          'Complete AI automations',
-          'Local AI vs normal AI',
-          'Integration with all CRMs',
-          'Complete API with advanced capabilities',
-          'Advanced enterprise analytics',
-          'Unlimited data export',
-          'Daily automatic backups',
-          'Unlimited team management',
-          '24/7 dedicated support',
-          'Dedicated account manager',
-          'Guaranteed SLA'
-        ],
-        'fr': [
-          'Conversations illimitées',
-          'Formulaires illimités',
-          'Toutes les fonctionnalités disponibles',
-          'Intégrations de sites web illimitées',
-          'Automatisations IA complètes',
-          'IA locale vs IA normale',
-          'Intégration avec tous les CRM',
-          'API complète avec capacités avancées',
-          'Analyses d\'entreprise avancées',
-          'Exportation de données illimitée',
-          'Sauvegardes automatiques quotidiennes',
-          'Gestion d\'équipe illimitée',
-          'Support dédié 24/7',
-          'Gestionnaire de compte dédié',
-          'SLA garanti'
-        ]
+        'es': {
+          name: 'Empresarial',
+          description: 'Plan completo con IA automatizada',
+          features: [
+            'Conversaciones ilimitadas',
+            'Formularios ilimitados',
+            'Todas las funciones disponibles',
+            'Integración en sitios web ilimitados',
+            'Automatizaciones completas con IA',
+            'IA local vs IA normal',
+            'Integración con todos los CRM',
+            'API completa con capacidades avanzadas',
+            'Análisis empresariales avanzados',
+            'Exportación de datos ilimitada',
+            'Respaldos automáticos diarios',
+            'Gestión de equipos ilimitada',
+            'Soporte 24/7 dedicado',
+            'Gerente de cuenta dedicado',
+            'SLA garantizado'
+          ]
+        },
+        'en': {
+          name: 'Enterprise',
+          description: 'Complete plan with automated AI',
+          features: [
+            'Unlimited conversations',
+            'Unlimited forms',
+            'All available features',
+            'Unlimited website integrations',
+            'Complete AI automations',
+            'Local AI vs normal AI',
+            'Integration with all CRMs',
+            'Complete API with advanced capabilities',
+            'Advanced enterprise analytics',
+            'Unlimited data export',
+            'Daily automatic backups',
+            'Unlimited team management',
+            '24/7 dedicated support',
+            'Dedicated account manager',
+            'Guaranteed SLA'
+          ]
+        },
+        'fr': {
+          name: 'Entreprise',
+          description: 'Plan complet avec IA automatisée',
+          features: [
+            'Conversations illimitées',
+            'Formulaires illimités',
+            'Toutes les fonctionnalités disponibles',
+            'Intégrations de sites web illimitées',
+            'Automatisations IA complètes',
+            'IA locale vs IA normale',
+            'Intégration avec tous les CRM',
+            'API complète avec capacités avancées',
+            'Analyses d\'entreprise avancées',
+            'Exportation de données illimitée',
+            'Sauvegardes automatiques quotidiennes',
+            'Gestion d\'équipe illimitée',
+            'Support dédié 24/7',
+            'Gestionnaire de compte dédié',
+            'SLA garanti'
+          ]
+        }
       }
     };
 
-    return featureTranslations[planId]?.[language] || featureTranslations[planId]?.['es'] || [];
+    const defaultPlan = { name: planId, description: '', features: [] };
+    return planTranslations[planId]?.[language] || planTranslations[planId]?.['es'] || defaultPlan;
+  }
+
+  function getTranslatedFeatures(planId: string, language: string = 'es') {
+    return getTranslatedPlanInfo(planId, language).features;
   }
 
   // Obtener los planes disponibles con promociones activas
@@ -2109,12 +2162,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         products = pricingPlans.flatMap(plan => {
           const discount = discounts.find(d => d.plan_id === plan.planId.toLowerCase());
           const planVariants = [];
+          const translatedInfo = getTranslatedPlanInfo(plan.planId.toLowerCase(), language);
           
           // Plan mensual
           const monthlyPlan = {
             id: plan.planId.toLowerCase(),
-            name: plan.name,
-            description: plan.description,
+            name: translatedInfo.name,
+            description: translatedInfo.description,
             price: plan.price,
             currency: plan.currency || "usd",
             interval: plan.interval,
@@ -2142,8 +2196,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const annualPrice = plan.price * 12;
           const annualPlan = {
             id: plan.planId.toLowerCase() + '_annual',
-            name: plan.name,
-            description: plan.description,
+            name: translatedInfo.name,
+            description: translatedInfo.description,
             price: annualDiscount > 0 
               ? Math.round(annualPrice * (1 - annualDiscount / 100))
               : Math.round(annualPrice * 0.85), // 15% descuento estándar anual
@@ -2172,11 +2226,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       } else {
         // Sin campaña activa, transformar planes normalmente
-        products = pricingPlans.flatMap(plan => [
+        products = pricingPlans.flatMap(plan => {
+          const translatedInfo = getTranslatedPlanInfo(plan.planId.toLowerCase(), language);
+          return [
           {
             id: plan.planId.toLowerCase(),
-            name: plan.name,
-            description: plan.description,
+            name: translatedInfo.name,
+            description: translatedInfo.description,
             price: plan.price,
             currency: plan.currency || "usd",
             interval: plan.interval,
@@ -2188,8 +2244,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           {
             id: plan.planId.toLowerCase() + '_annual',
-            name: plan.name,
-            description: plan.description,
+            name: translatedInfo.name,
+            description: translatedInfo.description,
             price: Math.round(plan.price * 12 * 0.85), // 15% descuento anual estándar
             currency: plan.currency || "usd",
             interval: 'year',
@@ -2200,7 +2256,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             isAnnual: true,
             discount: 15
           }
-        ]);
+        ];
+        });
       }
       
       // Si no hay planes en la base de datos, utilizamos los planes predefinidos
