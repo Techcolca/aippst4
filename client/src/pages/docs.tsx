@@ -414,7 +414,7 @@ export default function Documentation() {
                     >
                       <div className="flex items-center">
                         <FileText className="w-5 h-5 mr-2" />
-                        <span>Formularios</span>
+                        <span>{t("documentation.forms")}</span>
                       </div>
                     </a>
                     <a 
