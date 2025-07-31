@@ -1891,9 +1891,195 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // No necesitamos inicializar los productos de Stripe aquí
   // Los productos se crean según sea necesario cuando alguien intenta suscribirse
   
+  // Helper function to translate plan features based on language
+  function getTranslatedFeatures(planId: string, language: string = 'es') {
+    const featureTranslations: { [key: string]: { [lang: string]: string[] } } = {
+      'basic': {
+        'es': [
+          '500 conversaciones/mes',
+          '1 formulario personalizable (2 plantillas disponibles)',
+          'Widget de chat tipo burbuja únicamente',
+          'Integración en 1 sitio web',
+          'Procesamiento básico de documentos (PDF, DOCX)',
+          'Captura básica de leads',
+          'Análisis básicos de conversaciones',
+          'Soporte por email',
+          'Personalización limitada de branding'
+        ],
+        'en': [
+          '500 conversations/month',
+          '1 customizable form (2 templates available)',
+          'Bubble chat widget only',
+          'Integration on 1 website',
+          'Basic document processing (PDF, DOCX)',
+          'Basic lead capture',
+          'Basic conversation analytics',
+          'Email support',
+          'Limited branding customization'
+        ],
+        'fr': [
+          '500 conversations/mois',
+          '1 formulaire personnalisable (2 modèles disponibles)',
+          'Widget de chat bulle uniquement',
+          'Intégration sur 1 site web',
+          'Traitement de base des documents (PDF, DOCX)',
+          'Capture de leads de base',
+          'Analyses de base des conversations',
+          'Support par email',
+          'Personnalisation limitée du branding'
+        ]
+      },
+      'startup': {
+        'es': [
+          '2.000 conversaciones/mes',
+          '5 formularios personalizables (todas las plantillas)',
+          'Widget chat + modo pantalla completa tipo ChatGPT',
+          'Integración en hasta 3 sitios web',
+          'Procesamiento avanzado de documentos',
+          'Base de conocimiento personalizada',
+          'Captura y seguimiento de leads',
+          'Análisis avanzados con métricas',
+          'Personalización completa de branding',
+          'Soporte prioritario por email y chat',
+          'Exportación básica de datos'
+        ],
+        'en': [
+          '2,000 conversations/month',
+          '5 customizable forms (all templates)',
+          'Chat widget + fullscreen ChatGPT mode',
+          'Integration on up to 3 websites',
+          'Advanced document processing',
+          'Custom knowledge base',
+          'Lead capture and tracking',
+          'Advanced analytics with metrics',
+          'Complete branding customization',
+          'Priority email and chat support',
+          'Basic data export'
+        ],
+        'fr': [
+          '2 000 conversations/mois',
+          '5 formulaires personnalisables (tous les modèles)',
+          'Widget chat + mode plein écran ChatGPT',
+          'Intégration sur jusqu\'à 3 sites web',
+          'Traitement avancé des documents',
+          'Base de connaissances personnalisée',
+          'Capture et suivi des leads',
+          'Analyses avancées avec métriques',
+          'Personnalisation complète du branding',
+          'Support prioritaire par email et chat',
+          'Exportation de base des données'
+        ]
+      },
+      'professional': {
+        'es': [
+          '10.000 conversaciones/mes',
+          'Formularios ilimitados',
+          'Todas las funciones del plan Profesional',
+          'Integración en sitios web ilimitados',
+          'Automatizaciones básicas (respuestas automáticas)',
+          'Integración con CRM (Salesforce, HubSpot)',
+          'API del desarrollador acceso',
+          'Análisis avanzados con reportes personalizados',
+          'Exportación de datos en múltiples formatos',
+          'Respaldos automáticos',
+          'Gestión de equipos (hasta 5 usuarios)',
+          'Soporte por email, chat y teléfono',
+          'Onboarding personalizado'
+        ],
+        'en': [
+          '10,000 conversations/month',
+          'Unlimited forms',
+          'All Professional plan features',
+          'Unlimited website integrations',
+          'Basic automations (automatic responses)',
+          'CRM integration (Salesforce, HubSpot)',
+          'Developer API access',
+          'Advanced analytics with custom reports',
+          'Multi-format data export',
+          'Automatic backups',
+          'Team management (up to 5 users)',
+          'Email, chat and phone support',
+          'Custom onboarding'
+        ],
+        'fr': [
+          '10 000 conversations/mois',
+          'Formulaires illimités',
+          'Toutes les fonctionnalités du plan Professionnel',
+          'Intégrations de sites web illimitées',
+          'Automatisations de base (réponses automatiques)',
+          'Intégration CRM (Salesforce, HubSpot)',
+          'Accès API développeur',
+          'Analyses avancées avec rapports personnalisés',
+          'Exportation de données multi-formats',
+          'Sauvegardes automatiques',
+          'Gestion d\'équipe (jusqu\'à 5 utilisateurs)',
+          'Support par email, chat et téléphone',
+          'Intégration personnalisée'
+        ]
+      },
+      'enterprise': {
+        'es': [
+          'Conversaciones ilimitadas',
+          'Formularios ilimitados',
+          'Todas las funciones disponibles',
+          'Integración en sitios web ilimitados',
+          'Automatizaciones completas con IA',
+          'IA local vs IA normal',
+          'Integración con todos los CRM',
+          'API completa con capacidades avanzadas',
+          'Análisis empresariales avanzados',
+          'Exportación de datos ilimitada',
+          'Respaldos automáticos diarios',
+          'Gestión de equipos ilimitada',
+          'Soporte 24/7 dedicado',
+          'Gerente de cuenta dedicado',
+          'SLA garantizado'
+        ],
+        'en': [
+          'Unlimited conversations',
+          'Unlimited forms',
+          'All available features',
+          'Unlimited website integrations',
+          'Complete AI automations',
+          'Local AI vs normal AI',
+          'Integration with all CRMs',
+          'Complete API with advanced capabilities',
+          'Advanced enterprise analytics',
+          'Unlimited data export',
+          'Daily automatic backups',
+          'Unlimited team management',
+          '24/7 dedicated support',
+          'Dedicated account manager',
+          'Guaranteed SLA'
+        ],
+        'fr': [
+          'Conversations illimitées',
+          'Formulaires illimités',
+          'Toutes les fonctionnalités disponibles',
+          'Intégrations de sites web illimitées',
+          'Automatisations IA complètes',
+          'IA locale vs IA normale',
+          'Intégration avec tous les CRM',
+          'API complète avec capacités avancées',
+          'Analyses d\'entreprise avancées',
+          'Exportation de données illimitée',
+          'Sauvegardes automatiques quotidiennes',
+          'Gestion d\'équipe illimitée',
+          'Support dédié 24/7',
+          'Gestionnaire de compte dédié',
+          'SLA garanti'
+        ]
+      }
+    };
+
+    return featureTranslations[planId]?.[language] || featureTranslations[planId]?.['es'] || [];
+  }
+
   // Obtener los planes disponibles con promociones activas
   app.get("/api/pricing/plans", async (req, res) => {
     try {
+      const language = req.query.lang as string || 'es';
+      
       // Obtener campaña activa
       const campaignResult = await pool.query(`
         SELECT * FROM marketing_campaigns 
@@ -1932,7 +2118,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             price: plan.price,
             currency: plan.currency || "usd",
             interval: plan.interval,
-            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            features: getTranslatedFeatures(plan.planId.toLowerCase(), language),
             tier: plan.tier,
             interactionsLimit: plan.interactionsLimit,
             isAnnual: false,
@@ -1963,7 +2149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               : Math.round(annualPrice * 0.85), // 15% descuento estándar anual
             currency: plan.currency || "usd",
             interval: 'year',
-            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            features: getTranslatedFeatures(plan.planId.toLowerCase(), language),
             tier: plan.tier,
             interactionsLimit: plan.interactionsLimit,
             originalPrice: annualPrice,
@@ -1994,7 +2180,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             price: plan.price,
             currency: plan.currency || "usd",
             interval: plan.interval,
-            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            features: getTranslatedFeatures(plan.planId.toLowerCase(), language),
             tier: plan.tier,
             interactionsLimit: plan.interactionsLimit,
             isAnnual: false,
@@ -2007,7 +2193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             price: Math.round(plan.price * 12 * 0.85), // 15% descuento anual estándar
             currency: plan.currency || "usd",
             interval: 'year',
-            features: Array.isArray(plan.features) ? plan.features : getFeaturesByTier(plan.tier),
+            features: getTranslatedFeatures(plan.planId.toLowerCase(), language),
             tier: plan.tier,
             interactionsLimit: plan.interactionsLimit,
             originalPrice: plan.price * 12,

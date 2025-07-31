@@ -48,13 +48,18 @@ const formatCurrency = (amount: number, currency: string) => {
 export default function PricingPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [checkoutInProgress, setCheckoutInProgress] = useState<string | null>(null);
   const [billingType, setBillingType] = useState<'monthly' | 'annual'>('monthly');
 
-  // Obtener los planes de precios de la API
+  // Obtener los planes de precios de la API con el idioma actual
   const { data: allPlans = [], isLoading } = useQuery<PricingPlan[]>({
-    queryKey: ['/api/pricing/plans'],
+    queryKey: ['/api/pricing/plans', i18n.language],
+    queryFn: async () => {
+      const response = await fetch(`/api/pricing/plans?lang=${i18n.language}`);
+      if (!response.ok) throw new Error('Failed to fetch pricing plans');
+      return response.json();
+    },
     retry: false
   });
   
