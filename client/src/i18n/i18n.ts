@@ -187,9 +187,18 @@ const resources = {
 
 // Debug de los recursos cargados
 console.log('🔍 I18N DEBUG - Manual resources loaded:', {
-  fr: Object.keys(resources.fr.translation.pricing),
-  es: Object.keys(resources.es.translation.pricing),
-  en: Object.keys(resources.en.translation.pricing)
+  fr: {
+    pricing: Object.keys(resources.fr.translation.pricing),
+    language: Object.keys(resources.fr.translation.language)
+  },
+  es: {
+    pricing: Object.keys(resources.es.translation.pricing),
+    language: Object.keys(resources.es.translation.language)
+  },
+  en: {
+    pricing: Object.keys(resources.en.translation.pricing),
+    language: Object.keys(resources.en.translation.language)
+  }
 });
 
 i18n
