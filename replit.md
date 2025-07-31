@@ -114,6 +114,11 @@ July 31, 2025:
 - ✓ Responses now display with professional styling including background colors, borders, shadows, and spacing
 - ✓ Typography adapts dynamically to light/dark themes with appropriate contrast ratios
 - ✓ Fixed widget configuration references for consistent color application across all widget types
+- ✓ CRITICAL FIX: Markdown symbols (###, ##, #) are now properly processed and REMOVED from final display
+- ✓ Implemented visible pastel backgrounds ONLY for bubble and fullscreen widgets (not internal widget)
+- ✓ Increased pastel color opacity (0.7-0.9) for better visibility with robust color validation
+- ✓ Enhanced contrast system ensures readability on all theme colors
+- ✓ Professional styling with rounded corners, shadows, and border accents for markdown elements
 
 July 30, 2025:
 - ✓ CRITICAL BUG FIX: Fixed duplicate "Profile" menu entries in header dropdown

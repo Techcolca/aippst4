@@ -525,17 +525,17 @@
     // Escape HTML para prevenir XSS
     let safeText = escapeHTML(text);
     
-    // Formatear títulos principales (líneas que empiezan con #)
+    // Formatear títulos principales (líneas que empiezan con #) - ELIMINAR # del texto final
     safeText = safeText.replace(/^# (.+)$/gm, 
-      `<h1 style="font-size: 18px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h1>`
+      `<h1 style="font-size: 18px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.medium}; padding: 12px 16px; border-radius: 8px; border-left: 4px solid ${palette.accent}; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">$1</h1>`
     );
     
-    // Formatear subtítulos (líneas que empiezan con ##)
+    // Formatear subtítulos (líneas que empiezan con ##) - ELIMINAR ## del texto final
     safeText = safeText.replace(/^## (.+)$/gm, 
-      `<h2 style="font-size: 16px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h2>`
+      `<h2 style="font-size: 16px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.light}; padding: 10px 14px; border-radius: 6px; border-left: 3px solid ${palette.accent}; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">$1</h2>`
     );
     
-    // Formatear subtítulos de tercer nivel (líneas que empiezan con ###)
+    // Formatear subtítulos de tercer nivel (líneas que empiezan con ###) - ELIMINAR ### del texto final
     safeText = safeText.replace(/^### (.+)$/gm, 
       `<h3 style="font-size: 14px; font-weight: 600; color: ${titleColor}; margin: 12px 0 8px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.light}; padding: 8px 12px; border-left: 3px solid ${palette.accent}; border-radius: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);">$1</h3>`
     );

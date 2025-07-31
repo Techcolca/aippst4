@@ -479,9 +479,9 @@
     // Escape HTML para prevenir XSS
     let safeText = escapeHTML(text);
     
-    // Formatear títulos principales (líneas que empiezan con #)
+    // Formatear títulos principales (líneas que empiezan con #) - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/^# (.+)$/gm, 
-      `<h1 style="font-size: 19px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border-bottom: 2px solid ${palette.medium}; padding-bottom: 6px;">$1</h1>`
+      `<h1 style="font-size: 19px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border-bottom: 2px solid ${accentColor}; padding-bottom: 6px;">$1</h1>`
     );
     
     // Formatear subtítulos (líneas que empiezan con ##)
@@ -489,34 +489,34 @@
       `<h2 style="font-size: 17px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">$1</h2>`
     );
     
-    // Formatear subtítulos de tercer nivel (líneas que empiezan con ###)
+    // Formatear subtítulos de tercer nivel (líneas que empiezan con ###) - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/^### (.+)$/gm, 
-      `<h3 style="font-size: 15px; font-weight: 600; color: ${titleColor}; margin: 12px 0 8px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.light}; padding: 8px 12px; border-left: 3px solid ${palette.accent}; border-radius: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);">$1</h3>`
+      `<h3 style="font-size: 15px; font-weight: 600; color: ${titleColor}; margin: 12px 0 8px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; border-left: 3px solid ${accentColor}; padding: 8px 12px; border-radius: 5px;">$1</h3>`
     );
     
-    // Formatear texto en negrita (**texto**)
+    // Formatear texto en negrita (**texto**) - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/\*\*(.+?)\*\*/g, 
-      `<strong style="font-weight: 600; color: ${titleColor}; background: ${palette.light}; padding: 2px 5px; border-radius: 3px;">$1</strong>`
+      `<strong style="font-weight: 600; color: ${titleColor};">$1</strong>`
     );
     
-    // Formatear texto destacado (*texto*)
+    // Formatear texto destacado (*texto*) - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/\*(.+?)\*/g, 
-      `<em style="font-style: italic; color: ${accentColor}; font-weight: 500; background: ${palette.light}; padding: 1px 3px; border-radius: 2px;">$1</em>`
+      `<em style="font-style: italic; color: ${accentColor}; font-weight: 500;">$1</em>`
     );
     
-    // Formatear listas numeradas (1. texto)
+    // Formatear listas numeradas (1. texto) - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/^\d+\.\s(.+)$/gm, 
-      `<div style="margin: 8px 0; padding: 10px 12px; background: ${palette.light}; border-left: 3px solid ${palette.accent}; border-radius: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);"><span style="font-weight: 500; color: ${titleColor}; font-size: 14px;">$1</span></div>`
+      `<div style="margin: 8px 0; padding: 10px 12px; border-left: 3px solid ${accentColor}; border-radius: 5px;"><span style="font-weight: 500; color: ${titleColor}; font-size: 14px;">$1</span></div>`
     );
     
-    // Formatear listas con viñetas (- texto)
+    // Formatear listas con viñetas (- texto) - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/^-\s(.+)$/gm, 
-      `<div style="margin: 6px 0; padding: 8px 10px; background: ${palette.light}; border-radius: 4px; border-left: 2px solid ${palette.medium}; box-shadow: 0 1px 1px rgba(0,0,0,0.04);"><span style="color: ${bodyColor}; font-size: 14px;">• $1</span></div>`
+      `<div style="margin: 6px 0; padding: 8px 10px; border-left: 2px solid ${accentColor}; border-radius: 4px;"><span style="color: ${bodyColor}; font-size: 14px;">• $1</span></div>`
     );
     
-    // Formatear enlaces
+    // Formatear enlaces - SIN fondos pasteles para widget interno
     safeText = safeText.replace(/(https?:\/\/[^\s]+)/g, 
-      `<a href="$1" target="_blank" style="color: ${accentColor}; text-decoration: underline; font-weight: 500; background: ${palette.light}; padding: 1px 4px; border-radius: 3px; transition: all 0.2s;">$1</a>`
+      `<a href="$1" target="_blank" style="color: ${accentColor}; text-decoration: underline; font-weight: 500; transition: all 0.2s;">$1</a>`
     );
     
     // Formatear párrafos (líneas que no son títulos ni listas)
