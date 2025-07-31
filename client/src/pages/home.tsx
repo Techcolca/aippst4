@@ -68,10 +68,10 @@ export default function Home() {
       
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="py-16 md:py-24">
+        <section className="py-12 sm:py-16 md:py-20 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row items-center">
-              <div className="lg:w-1/2 mb-10 lg:mb-0">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              <div className="flex-1 lg:w-1/2 text-center lg:text-left">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
                   {t("welcome")}
                 </h1>
@@ -86,8 +86,8 @@ export default function Home() {
                   </Button>
                 </div>
               </div>
-              <div className="lg:w-1/2 lg:pl-12">
-                <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-xl p-4 md:p-6 max-w-md mx-auto">
+              <div className="flex-1 lg:w-1/2">
+                <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-xl p-4 md:p-6 max-w-md mx-auto lg:mx-0 lg:ml-auto">
                   <ChatInterface 
                     demoMode={true} 
                     welcomePageSettings={welcomeChatSettings}
@@ -110,7 +110,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               <Card>
                 <CardContent className="pt-6">
                   <div className="rounded-full bg-primary-100 dark:bg-primary-900 p-3 w-12 h-12 flex items-center justify-center mb-4">

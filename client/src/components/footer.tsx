@@ -5,8 +5,8 @@ export default function Footer() {
   const { t } = useTranslation();
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8 mt-auto">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">AIPPS</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -83,12 +83,12 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
+        <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-6 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-gray-600 dark:text-gray-300 text-sm text-center sm:text-left">
             &copy; {new Date().getFullYear()} AIPPS. {t('footer.all_rights_reserved')}
           </p>
           
-          <div className="flex space-x-4 mt-4 md:mt-0">
+          <div className="flex space-x-4 mt-4 sm:mt-0">
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400">
               <span className="sr-only">Twitter</span>
               <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">

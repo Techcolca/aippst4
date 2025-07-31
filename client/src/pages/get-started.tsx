@@ -119,7 +119,7 @@ export default function GetStarted() {
       <Header />
       
       <main className="flex-grow">
-        <section className="py-12">
+        <section className="py-8 sm:py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
               {t("getStartedPage.title")}
@@ -130,33 +130,33 @@ export default function GetStarted() {
           </div>
         </section>
         
-        <section className="py-12">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-8 sm:py-12">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <Tabs defaultValue="bubble" className="w-full">
-              <TabsList className="flex w-full justify-between mb-8">
-                <TabsTrigger value="bubble" className="flex-1 text-lg py-3 px-2">{t("getStartedPage.tabs.widget")}</TabsTrigger>
-                <TabsTrigger value="fullscreen" className="flex-1 text-lg py-3 px-2">{t("getStartedPage.tabs.fullscreen")}</TabsTrigger>
-                <TabsTrigger value="form" className="flex-1 text-lg py-3 px-2">{t("getStartedPage.tabs.form")}</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 mb-8 max-w-md mx-auto sm:max-w-lg">
+                <TabsTrigger value="bubble" className="text-sm sm:text-base px-2 py-2 sm:py-3">{t("getStartedPage.tabs.widget")}</TabsTrigger>
+                <TabsTrigger value="fullscreen" className="text-sm sm:text-base px-2 py-2 sm:py-3">{t("getStartedPage.tabs.fullscreen")}</TabsTrigger>
+                <TabsTrigger value="form" className="text-sm sm:text-base px-2 py-2 sm:py-3">{t("getStartedPage.tabs.form")}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="bubble" className="space-y-8">
                 <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                  <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold">{t("getStartedPage.widget.step1.title")}</h2>
+                  <div className="bg-gray-100 dark:bg-gray-800 py-3 sm:py-4 px-4 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold">{t("getStartedPage.widget.step1.title")}</h2>
                   </div>
-                  <div className="p-6 bg-white dark:bg-gray-900">
+                  <div className="p-4 sm:p-6 bg-white dark:bg-gray-900">
                     <p className="mb-4 text-gray-700 dark:text-gray-300">
                       {t("getStartedPage.widget.step1.description")}
                     </p>
                     <div className="relative">
-                      <pre className="bg-gray-900 text-white p-6 rounded-md overflow-x-auto text-sm">
+                      <pre className="bg-gray-900 text-white p-3 sm:p-6 rounded-md overflow-x-auto text-xs sm:text-sm">
                         {bubbleWidgetCode}
                       </pre>
                       <button 
                         onClick={() => copyToClipboard(bubbleWidgetCode, 'bubble')}
-                        className="absolute top-3 right-3 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-md"
+                        className="absolute top-2 sm:top-3 right-2 sm:right-3 bg-gray-700 hover:bg-gray-600 text-white p-1.5 sm:p-2 rounded-md"
                       >
-                        {copiedBubble ? <Check size={18} /> : <Copy size={18} />}
+                        {copiedBubble ? <Check size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Copy size={16} className="sm:w-[18px] sm:h-[18px]" />}
                       </button>
                     </div>
                     <div className="mt-4">

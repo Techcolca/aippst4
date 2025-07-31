@@ -138,7 +138,7 @@ export default function PricingPage() {
       <Header />
       <main className="flex-grow">
         <section className="py-12 md:py-24">
-          <div className="container px-4 md:px-6">
+          <div className="container max-w-7xl mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="space-y-2">
                 <Badge className="px-3 py-1 text-sm" variant="outline">{t('pricing.plans')}</Badge>
@@ -181,9 +181,9 @@ export default function PricingPage() {
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:gap-8">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 justify-items-center max-w-7xl mx-auto">
                 {plans.map((plan) => (
-                  <Card key={plan.id} className={`flex flex-col justify-between h-full ${plan.id === recommendedPlanId ? 'border-primary shadow-lg shadow-primary/20 dark:shadow-primary/10 relative' : ''}`}>
+                  <Card key={plan.id} className={`flex flex-col justify-between h-full w-full max-w-sm ${plan.id === recommendedPlanId ? 'border-primary shadow-lg shadow-primary/20 dark:shadow-primary/10 relative' : ''}`}>
                     {plan.id === recommendedPlanId && (
                       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-white py-1 px-4 rounded-full text-sm font-medium">
                         {t('pricing.recommended')}
