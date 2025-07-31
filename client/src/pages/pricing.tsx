@@ -28,6 +28,13 @@ type PricingPlan = {
   interactionsLimit: number;
   isAnnual?: boolean;
   discount?: number;
+  originalPrice?: number;
+  promotionalPrice?: number;
+  campaignInfo?: {
+    remainingSpots: number;
+    maxSubscribers: number;
+    promotionalMonths: number;
+  };
 };
 
 const formatCurrency = (amount: number, currency: string) => {
