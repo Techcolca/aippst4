@@ -10,6 +10,17 @@
     "french": "French"
   },
   "refresh": "Refresh",
+  "edit": "Edit",
+  "conversations": "Conversations",
+  "analytics": "Analytics",
+  "delete": "Delete",
+  "active": "Active",
+  "inactive": "Inactive",
+  "testing": "Testing",
+  "visitors_helped": "Visitors helped",
+  "installed": "Installed",
+  "confirm_delete_title": "Are you sure?",
+  "confirm_delete_description": "This action will permanently delete the integration \"{{name}}\" and cannot be undone. The widget will stop working on your website.",
   "login": "Log in",
   "signup": "Sign up",
   "chat": {

@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 // Definición de tipos
 interface Integration {
@@ -30,6 +31,7 @@ interface IntegrationCardProps {
 export function IntegrationCard({ integration }: IntegrationCardProps) {
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   
   // Formatear fecha de instalación
@@ -45,11 +47,11 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
     
     switch (status) {
       case "active":
-        return <span className={`${baseClasses} bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`}>Active</span>;
+        return <span className={`${baseClasses} bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`}>{t("active", "Active")}</span>;
       case "inactive":
-        return <span className={`${baseClasses} bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200`}>Inactive</span>;
+        return <span className={`${baseClasses} bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200`}>{t("inactive", "Inactive")}</span>;
       case "in_testing":
-        return <span className={`${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200`}>Testing</span>;
+        return <span className={`${baseClasses} bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200`}>{t("testing", "Testing")}</span>;
       default:
         return <span className={`${baseClasses} bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200`}>{status}</span>;
     }
@@ -101,11 +103,11 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
             <Eye className="h-4 w-4 mr-1" />
-            <span>Visitors helped: {integration.visitorCount}</span>
+            <span>{t("visitors_helped", "Visitors helped")}: {integration.visitorCount}</span>
           </div>
           <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
             <Calendar className="h-4 w-4 mr-1" />
-            <span>Installed: {formatDate(integration.createdAt)}</span>
+            <span>{t("installed", "Installed")}: {formatDate(integration.createdAt)}</span>
           </div>
         </div>
         
@@ -117,7 +119,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             onClick={() => navigate(`/integrations/${integration.id}/edit`)}
           >
             <Edit className="h-4 w-4 mr-1" />
-            Edit
+            {t("edit", "Edit")}
           </Button>
           
           <Button
@@ -126,7 +128,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             className="flex-1"
             onClick={() => navigate(`/integrations/${integration.id}/conversations`)}
           >
-            Conversations
+            {t("conversations", "Conversations")}
           </Button>
           
           <Button
@@ -135,7 +137,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             className="flex-1"
             onClick={() => navigate(`/integrations/${integration.id}/analytics`)}
           >
-            Analytics
+            {t("analytics", "Analytics")}
           </Button>
           
           <Button
@@ -145,7 +147,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
             onClick={handleDeleteClick}
           >
             <Trash className="h-4 w-4 mr-1" />
-            Delete
+            {t("delete", "Delete")}
           </Button>
         </div>
       </Card>
@@ -154,15 +156,14 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
       <Dialog open={isConfirmingDelete} onOpenChange={setIsConfirmingDelete}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>¿Estás seguro?</DialogTitle>
+            <DialogTitle>{t("confirm_delete_title", "Are you sure?")}</DialogTitle>
             <DialogDescription>
-              Esta acción eliminará permanentemente la integración "{integration.name}" y no se puede deshacer.
-              El widget dejará de funcionar en tu sitio web.
+              {t("confirm_delete_description", `This action will permanently delete the integration "{{name}}" and cannot be undone. The widget will stop working on your website.`, { name: integration.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex space-x-2 justify-end">
             <Button variant="outline" onClick={() => setIsConfirmingDelete(false)}>
-              Cancelar
+              {t("common.cancel", "Cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -173,7 +174,7 @@ export function IntegrationCard({ integration }: IntegrationCardProps) {
               {deleteIntegrationMutation.isPending && (
                 <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" aria-hidden="true" />
               )}
-              Eliminar
+              {t("delete", "Delete")}
             </Button>
           </DialogFooter>
         </DialogContent>

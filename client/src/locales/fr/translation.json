@@ -10,6 +10,17 @@
     "french": "Français"
   },
   "refresh": "Actualiser",
+  "edit": "Modifier",
+  "conversations": "Conversations",
+  "analytics": "Analyses",
+  "delete": "Supprimer",
+  "active": "Actif",
+  "inactive": "Inactif",
+  "testing": "Test",
+  "visitors_helped": "Visiteurs aidés",
+  "installed": "Installé",
+  "confirm_delete_title": "Êtes-vous sûr?",
+  "confirm_delete_description": "Cette action supprimera définitivement l'intégration \"{{name}}\" et ne peut pas être annulée. Le widget cessera de fonctionner sur votre site web.",
   "login": "Se connecter",
   "signup": "S'inscrire",
   "chat": {
