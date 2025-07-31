@@ -208,7 +208,7 @@ export default function PricingPage() {
                         )}
                         {plan.campaignInfo && (
                           <div className="mt-2 text-sm text-orange-600 dark:text-orange-400 font-medium">
-                            ⚡ {t('pricing.spots_remaining', 'Only {{remaining}} spots left out of {{total}}', { 
+                            ⚡ {t('pricing.spots_remaining', { 
                               remaining: plan.campaignInfo.remainingSpots, 
                               total: plan.campaignInfo.maxSubscribers 
                             })}
@@ -256,11 +256,11 @@ export default function PricingPage() {
                       {plan.campaignInfo && plan.campaignInfo.promotionalMonths < 12 && !plan.isAnnual && (
                         <p className="text-xs text-gray-500 mt-2 text-center">
                           {plan.id.includes('enterprise') ? 
-                            t('pricing.discount_duration', '{{discount}}% discount for {{months}} months', {
+                            t('pricing.discount_duration', {
                               discount: plan.discount,
                               months: plan.campaignInfo.promotionalMonths
                             }) :
-                            t('pricing.promotional_price_duration', 'Promotional price for {{months}} months', {
+                            t('pricing.promotional_price_duration', {
                               months: plan.campaignInfo.promotionalMonths
                             })
                           }
@@ -283,7 +283,7 @@ export default function PricingPage() {
                     🚀 {t('pricing.limited_launch_offer')}
                   </h3>
                   <p className="text-orange-700 dark:text-orange-300">
-                    {t('pricing.spots_left_of_total', 'Only {{remaining}} spots left out of {{total}} in this special promotion.', {
+                    {t('pricing.spots_left_of_total', {
                       remaining: plans.find(p => p.campaignInfo)?.campaignInfo.remainingSpots,
                       total: plans.find(p => p.campaignInfo)?.campaignInfo.maxSubscribers
                     })}
