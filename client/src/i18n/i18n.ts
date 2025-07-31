@@ -36,6 +36,51 @@ const resources = {
       installed: "Installé",
       confirm_delete_title: "Êtes-vous sûr?",
       confirm_delete_description: "Cette action supprimera définitivement l'intégration \"{{name}}\" et ne peut pas être annulée. Le widget cessera de fonctionner sur votre site web.",
+      welcome: "Bienvenue chez AIPI",
+      getStarted: "Commencer",
+      learnMore: "En savoir plus",
+      features: {
+        title: "Caractéristiques Principales",
+        subtitle: "Découvrez les fonctionnalités qui font d'AIPI le meilleur choix pour votre site web",
+        conversationalAI: {
+          title: "IA Conversationnelle",
+          description: "Interactions intelligentes et naturelles avec vos visiteurs"
+        },
+        taskAutomation: {
+          title: "Automatisation des Tâches",
+          description: "Automatisez les réponses et processus pour améliorer l'efficacité"
+        },
+        easyIntegration: {
+          title: "Intégration Facile",
+          description: "Implémentez en minutes avec une simple ligne de code"
+        },
+        analytics: {
+          title: "Analyses Avancées",
+          description: "Obtenez des insights précieux sur les interactions de vos utilisateurs"
+        }
+      },
+      cta: {
+        title: "Prêt à transformer votre site web ?",
+        subtitle: "Rejoignez des milliers d'entreprises qui utilisent déjà AIPI pour améliorer l'expérience de leurs utilisateurs",
+        getStartedFree: "Commencer Gratuitement",
+        scheduleDemo: "Planifier une Démo"
+      },
+      footer: {
+        company_description: "AIPI - Plateforme avancée d'IA conversationnelle pour sites web.",
+        product: "Produit",
+        features: "Fonctionnalités",
+        pricing: "Tarifs",
+        documentation: "Documentation",
+        get_started: "Commencer",
+        company: "Entreprise",
+        about_us: "À propos",
+        contact: "Contact",
+        privacy_policy: "Politique de confidentialité",
+        terms_of_service: "Conditions d'utilisation",
+        support: "Support",
+        help_center: "Centre d'aide",
+        all_rights_reserved: "Tous droits réservés."
+      },
       pricing: {
         plans: "Plans",
         title: "Choisissez Votre Plan Parfait",
@@ -222,6 +267,51 @@ const resources = {
       installed: "Instalado",
       confirm_delete_title: "¿Estás seguro?",
       confirm_delete_description: "Esta acción eliminará permanentemente la integración \"{{name}}\" y no se puede deshacer. El widget dejará de funcionar en tu sitio web.",
+      welcome: "Bienvenido a AIPI",
+      getStarted: "Comenzar",
+      learnMore: "Saber más",
+      features: {
+        title: "Características Principales",
+        subtitle: "Descubre las características que hacen de AIPI la mejor opción para tu sitio web",
+        conversationalAI: {
+          title: "IA Conversacional",
+          description: "Interacciones inteligentes y naturales con tus visitantes"
+        },
+        taskAutomation: {
+          title: "Automatización de Tareas",
+          description: "Automatiza respuestas y procesos para mejorar la eficiencia"
+        },
+        easyIntegration: {
+          title: "Integración Fácil",
+          description: "Implementa en minutos con una simple línea de código"
+        },
+        analytics: {
+          title: "Análisis Avanzado",
+          description: "Obtén insights valiosos sobre las interacciones de tus usuarios"
+        }
+      },
+      cta: {
+        title: "¿Listo para transformar tu sitio web?",
+        subtitle: "Únete a miles de empresas que ya están usando AIPI para mejorar la experiencia de sus usuarios",
+        getStartedFree: "Comenzar Gratis",
+        scheduleDemo: "Agendar Demo"
+      },
+      footer: {
+        company_description: "AIPI - Plataforma avanzada de IA conversacional para sitios web.",
+        product: "Producto",
+        features: "Características",
+        pricing: "Precios",
+        documentation: "Documentación",
+        get_started: "Comenzar",
+        company: "Empresa",
+        about_us: "Sobre nosotros",
+        contact: "Contacto",
+        privacy_policy: "Política de privacidad",
+        terms_of_service: "Términos de servicio",
+        support: "Soporte",
+        help_center: "Centro de ayuda",
+        all_rights_reserved: "Todos los derechos reservados."
+      },
       pricing: {
         plans: "Planes",
         title: "Elige tu Plan Perfecto",
@@ -408,6 +498,51 @@ const resources = {
       installed: "Installed",
       confirm_delete_title: "Are you sure?",
       confirm_delete_description: "This action will permanently delete the integration \"{{name}}\" and cannot be undone. The widget will stop working on your website.",
+      welcome: "Welcome to AIPI",
+      getStarted: "Get Started",
+      learnMore: "Learn More",
+      features: {
+        title: "Main Features",
+        subtitle: "Discover the features that make AIPI the best choice for your website",
+        conversationalAI: {
+          title: "Conversational AI",
+          description: "Smart and natural interactions with your visitors"
+        },
+        taskAutomation: {
+          title: "Task Automation",
+          description: "Automate responses and processes to improve efficiency"
+        },
+        easyIntegration: {
+          title: "Easy Integration",
+          description: "Implement in minutes with a simple line of code"
+        },
+        analytics: {
+          title: "Advanced Analytics",
+          description: "Get valuable insights about your users' interactions"
+        }
+      },
+      cta: {
+        title: "Ready to transform your website?",
+        subtitle: "Join thousands of companies already using AIPI to improve their users' experience",
+        getStartedFree: "Get Started Free",
+        scheduleDemo: "Schedule Demo"
+      },
+      footer: {
+        company_description: "AIPI - Advanced conversational AI platform for websites.",
+        product: "Product",
+        features: "Features",
+        pricing: "Pricing",
+        documentation: "Documentation",
+        get_started: "Get Started",
+        company: "Company",
+        about_us: "About us",
+        contact: "Contact",
+        privacy_policy: "Privacy policy",
+        terms_of_service: "Terms of service",
+        support: "Support",
+        help_center: "Help center",
+        all_rights_reserved: "All rights reserved."
+      },
       pricing: {
         plans: "Plans",
         title: "Choose Your Perfect Plan",
