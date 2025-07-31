@@ -11,15 +11,17 @@ import Footer from "@/components/footer";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 export default function FormsGuide() {
   const [location, setLocation] = useLocation();
   const { user } = useAuth();
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [messages, setMessages] = useState<{content: string, role: 'user' | 'assistant'}[]>([
     {
       role: 'assistant',
-      content: 'Hola, soy tu asistente de AIPI. Estoy aquí para responder cualquier pregunta sobre la personalización de formularios y la integración con tu sitio web. ¿En qué puedo ayudarte?'
+      content: t('forms.assistant_welcome', 'Hello, I am your AIPI assistant. I am here to answer any questions about form customization and integration with your website. How can I help you?')
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -100,10 +102,10 @@ export default function FormsGuide() {
         <section className="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-gray-900 dark:to-gray-800 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">
-              Formularios Personalizables
+              {t('forms.title', 'Customizable Forms')}
             </h1>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              Crea, personaliza e integra formularios en tu sitio web para capturar información de tus visitantes.
+              {t('forms.subtitle', 'Create, customize and integrate forms on your website to capture visitor information.')}
             </p>
           </div>
         </section>
@@ -112,26 +114,26 @@ export default function FormsGuide() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-2xl font-bold">Formularios Personalizables</h2>
+                <h2 className="text-2xl font-bold">{t('forms.customizable_forms', 'Customizable Forms')}</h2>
               </div>
               <div className="p-6 bg-white dark:bg-gray-900">
                 <p className="mb-4 text-gray-700 dark:text-gray-300">
-                  AIPI te permite crear y gestionar formularios personalizados para capturar información de tus visitantes de manera eficiente. Utiliza esta funcionalidad para generar leads, encuestas o registros de usuarios.
+                  {t('forms.description', 'AIPI allows you to create and manage custom forms to efficiently capture visitor information. Use this functionality for lead generation, surveys or user registrations.')}
                 </p>
-                <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Tipos de formularios disponibles</h3>
+                <h3 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">{t('forms.available_types', 'Available Form Types')}</h3>
                 <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                  <li><strong>Formularios de contacto:</strong> Para capturar información básica de visitantes interesados</li>
-                  <li><strong>Formularios de lista de espera:</strong> Ideales para proyectos próximos a lanzarse</li>
-                  <li><strong>Encuestas:</strong> Para recabar opiniones y feedback de tus usuarios</li>
-                  <li><strong>Formularios de registro:</strong> Para crear cuentas de usuario o suscripciones</li>
+                  <li><strong>{t('forms.contact_form', 'Contact forms')}:</strong> {t('forms.contact_form_desc', 'To capture basic information from interested visitors')}</li>
+                  <li><strong>{t('forms.waitlist_form', 'Waitlist forms')}:</strong> {t('forms.waitlist_form_desc', 'Ideal for upcoming projects')}</li>
+                  <li><strong>{t('forms.survey_form', 'Surveys')}:</strong> {t('forms.survey_form_desc', 'To collect opinions and feedback from your users')}</li>
+                  <li><strong>{t('forms.registration_forms', 'Registration forms')}:</strong> {t('forms.registration_forms_desc', 'To create user accounts or subscriptions')}</li>
                 </ul>
                 {user ? (
                   <Button size="lg" onClick={() => setLocation("/dashboard/forms")}>
-                    Ir a Gestión de Formularios
+                    {t('forms.go_to_management', 'Go to Form Management')}
                   </Button>
                 ) : (
                   <Button size="lg" onClick={() => setLocation("/login")}>
-                    Iniciar Sesión
+                    {t('forms.login', 'Login')}
                   </Button>
                 )}
               </div>
@@ -139,11 +141,11 @@ export default function FormsGuide() {
             
             <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-2xl font-bold">Crear tu Primer Formulario</h2>
+                <h2 className="text-2xl font-bold">{t('forms.create_first_form', 'Create Your First Form')}</h2>
               </div>
               <div className="p-6 bg-white dark:bg-gray-900">
                 <p className="mb-4 text-gray-700 dark:text-gray-300">
-                  Sigue estos sencillos pasos para crear y publicar tu primer formulario:
+                  {t('forms.follow_steps', 'Follow these simple steps to create and publish your first form:')}
                 </p>
                 <ol className="list-decimal list-inside space-y-4 text-gray-700 dark:text-gray-300 mb-6">
                   <li className="pl-2">
