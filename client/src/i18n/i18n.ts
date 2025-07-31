@@ -22,12 +22,12 @@ const resources = {
 
 // Debug logging to check loaded resources
 console.log('🔍 I18N DEBUG - Loaded resources:', {
-  fr: Object.keys(translationFR.pricing || {}),
-  es: Object.keys(translationES.pricing || {}), 
-  en: Object.keys(translationEN.pricing || {}),
-  frSpots: translationFR.pricing?.spots_remaining,
-  esSpots: translationES.pricing?.spots_remaining,
-  enSpots: translationEN.pricing?.spots_remaining
+  fr: translationFR.pricing,
+  es: translationES.pricing, 
+  en: translationEN.pricing,
+  frType: typeof translationFR.pricing,
+  esType: typeof translationES.pricing,
+  enType: typeof translationEN.pricing
 });
 
 i18n
