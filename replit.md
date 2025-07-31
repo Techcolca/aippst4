@@ -119,6 +119,11 @@ July 31, 2025:
 - ✓ Increased pastel color opacity (0.7-0.9) for better visibility with robust color validation
 - ✓ Enhanced contrast system ensures readability on all theme colors
 - ✓ Professional styling with rounded corners, shadows, and border accents for markdown elements
+- ✓ ULTIMATE FIX: Added complete formatting system to main embed.js file that all widgets use
+- ✓ Replaced basic formatAssistantMessage with full pastel color formatting system
+- ✓ Added generatePastelPalette and isColorDark functions to embed.js for consistent formatting
+- ✓ Debug logging system implemented to track formatting process and color generation
+- ✓ All widget types now use same formatting engine with visible pastel backgrounds
 
 July 30, 2025:
 - ✓ CRITICAL BUG FIX: Fixed duplicate "Profile" menu entries in header dropdown

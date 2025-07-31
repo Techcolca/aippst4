@@ -2625,57 +2625,132 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  // Función para detectar si un color es oscuro
+  function isColorDark(color) {
+    // Convertir color hex a RGB
+    let hex = color.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calcular luminancia
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Si la luminancia es menor a 0.5, es un color oscuro
+    return luminance < 0.5;
+  }
+
+  // Función para generar paleta de colores pasteles basada en el color principal
+  function generatePastelPalette(baseColor) {
+    let hex = baseColor;
+    if (!hex || typeof hex !== 'string') {
+      hex = '#6366f1'; // Color por defecto si no hay color
+    }
+    
+    hex = hex.replace('#', '');
+    if (hex.length !== 6) {
+      hex = '6366f1'; // Fallback si el formato es incorrecto
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Crear tonos pasteles más visibles
+    const pastelLight = `rgba(${Math.round(r + (255 - r) * 0.8)}, ${Math.round(g + (255 - g) * 0.8)}, ${Math.round(b + (255 - b) * 0.8)}, 0.7)`;
+    const pastelMedium = `rgba(${Math.round(r + (255 - r) * 0.6)}, ${Math.round(g + (255 - g) * 0.6)}, ${Math.round(b + (255 - b) * 0.6)}, 0.8)`;
+    const pastelDark = `rgba(${Math.round(r + (255 - r) * 0.4)}, ${Math.round(g + (255 - g) * 0.4)}, ${Math.round(b + (255 - b) * 0.4)}, 0.9)`;
+    
+    return {
+      light: pastelLight,
+      medium: pastelMedium,
+      dark: pastelDark,
+      accent: '#' + hex
+    };
+  }
+
   // Format assistant messages for better readability
   function formatAssistantMessage(content) {
-    // Escapar HTML para seguridad
-    const escapeHtml = (text) => {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    };
-
-    let formatted = escapeHtml(content);
-
-    // Convertir saltos de línea dobles en párrafos
-    formatted = formatted.split('\n\n').map(paragraph => {
-      if (paragraph.trim()) {
-        return `<p style="margin: 0 0 12px 0; line-height: 1.5;">${paragraph.trim()}</p>`;
+    if (!content) return '';
+    
+    console.log('AIPI Debug: formatAssistantMessage called with text:', content.substring(0, 200));
+    
+    const palette = generatePastelPalette(config.themeColor || config.mainColor || '#6366f1');
+    const isDarkTheme = isColorDark(config.themeColor || config.mainColor || '#6366f1');
+    
+    console.log('AIPI Debug: Generated palette:', palette);
+    console.log('AIPI Debug: Main color:', config.themeColor || config.mainColor);
+    console.log('AIPI Debug: Is dark theme:', isDarkTheme);
+    
+    // Colores de texto basados en el tema
+    const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
+    const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
+    const accentColor = config.themeColor || config.mainColor || '#6366f1';
+    
+    // Trabajar directamente con el texto
+    let safeText = content;
+    
+    // Formatear títulos principales (líneas que empiezan con #) - ELIMINAR # del texto final
+    safeText = safeText.replace(/^# (.+)$/gm, 
+      `<h1 style="font-size: 18px; font-weight: 700; color: ${titleColor}; margin: 16px 0 12px 0; line-height: 1.3; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.medium}; padding: 12px 16px; border-radius: 8px; border-left: 4px solid ${palette.accent}; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">$1</h1>`
+    );
+    
+    // Formatear subtítulos (líneas que empiezan con ##) - ELIMINAR ## del texto final
+    safeText = safeText.replace(/^## (.+)$/gm, 
+      `<h2 style="font-size: 16px; font-weight: 600; color: ${titleColor}; margin: 14px 0 10px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.light}; padding: 10px 14px; border-radius: 6px; border-left: 3px solid ${palette.accent}; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">$1</h2>`
+    );
+    
+    // Formatear subtítulos de tercer nivel (líneas que empiezan con ###) - ELIMINAR ### del texto final
+    safeText = safeText.replace(/^### (.+)$/gm, 
+      `<h3 style="font-size: 15px; font-weight: 600; color: ${titleColor}; margin: 12px 0 8px 0; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: ${palette.light}; padding: 8px 12px; border-left: 3px solid ${palette.accent}; border-radius: 5px; box-shadow: 0 1px 2px rgba(0,0,0,0.08);">$1</h3>`
+    );
+    
+    // Formatear texto en negrita (**texto**)
+    safeText = safeText.replace(/\*\*(.+?)\*\*/g, 
+      `<strong style="font-weight: 600; color: ${titleColor}; background: ${palette.light}; padding: 2px 5px; border-radius: 3px;">$1</strong>`
+    );
+    
+    // Formatear texto destacado (*texto*)
+    safeText = safeText.replace(/\*(.+?)\*/g, 
+      `<em style="font-style: italic; color: ${accentColor}; font-weight: 500; background: ${palette.light}; padding: 1px 3px; border-radius: 2px;">$1</em>`
+    );
+    
+    // Formatear listas numeradas (1. texto)
+    safeText = safeText.replace(/^(\d+)\.\s(.+)$/gm, 
+      `<div style="margin: 8px 0; padding: 8px 12px; background: ${palette.light}; border-left: 3px solid ${palette.accent}; border-radius: 4px;"><span style="font-weight: 500; color: ${titleColor};">$1. $2</span></div>`
+    );
+    
+    // Formatear listas con viñetas (- texto)
+    safeText = safeText.replace(/^-\s(.+)$/gm, 
+      `<div style="margin: 6px 0; padding: 6px 12px; background: ${palette.light}; border-radius: 4px; border-left: 2px solid ${palette.medium};"><span style="color: ${bodyColor};">• $1</span></div>`
+    );
+    
+    // Formatear enlaces
+    safeText = safeText.replace(/(https?:\/\/[^\s]+)/g, 
+      `<a href="$1" target="_blank" style="color: ${accentColor}; text-decoration: underline; font-weight: 500;">$1</a>`
+    );
+    
+    // Formatear párrafos (líneas que no son títulos ni listas)
+    const lines = safeText.split('\n');
+    const formattedLines = lines.map(line => {
+      line = line.trim();
+      if (!line) return '<br>';
+      
+      // Si no es título, lista o ya tiene formato HTML, envolver en párrafo
+      if (!line.match(/^<(h1|h2|h3|div|a)/)) {
+        return `<p style="margin: 8px 0; line-height: 1.6; color: ${bodyColor}; font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${line}</p>`;
       }
-      return '';
-    }).join('');
-
-    // Convertir saltos de línea simples en <br>
-    formatted = formatted.replace(/\n/g, '<br>');
-
-    // Formatear versículos bíblicos (formato: "texto" — Libro capítulo:versículo)
-    formatted = formatted.replace(/"([^"]+)"\s*—\s*([^.]+\d+:\d+)/g, 
-      '<div style="background: #f0f9ff; padding: 8px 12px; margin: 8px 0; border-left: 3px solid #0ea5e9; border-radius: 4px;"><em>"$1"</em><br><strong style="color: #0284c7;">— $2</strong></div>');
-
-    // Formatear listas con viñetas (líneas que empiezan con -, •, o *)
-    formatted = formatted.replace(/(?:^|\n)[-•*]\s*([^\n]+)/g, 
-      '<li style="margin: 4px 0; line-height: 1.4;">$1</li>');
+      
+      return line;
+    });
     
-    // Envolver listas en <ul>
-    if (formatted.includes('<li')) {
-      formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<li[^>]*>.*?<\/li>)*)/gs, 
-        '<ul style="margin: 8px 0; padding-left: 20px;">$1</ul>');
-    }
-
-    // Formatear números de lista (1., 2., etc.)
-    formatted = formatted.replace(/(?:^|\n)(\d+)\.\s*([^\n]+)/g, 
-      '<li style="margin: 4px 0; line-height: 1.4;">$2</li>');
-    
-    // Envolver listas numeradas en <ol>
-    if (formatted.includes('<li') && /\d+\.\s/.test(content)) {
-      formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<li[^>]*>.*?<\/li>)*)/gs, 
-        '<ol style="margin: 8px 0; padding-left: 20px;">$1</ol>');
-    }
-
-    // Formatear texto en negritas (**texto**)
-    formatted = formatted.replace(/\*\*([^*]+)\*\*/g, 
-      '<strong style="color: #1f2937;">$1</strong>');
-
-    return formatted;
+    const finalResult = formattedLines.join('');
+    console.log('AIPI Debug: Final formatted result:', finalResult.substring(0, 300));
+    return finalResult;
   }
 
   // Scroll to bottom of messages container
