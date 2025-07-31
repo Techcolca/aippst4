@@ -149,33 +149,33 @@ export default function FormsGuide() {
                 </p>
                 <ol className="list-decimal list-inside space-y-4 text-gray-700 dark:text-gray-300 mb-6">
                   <li className="pl-2">
-                    <strong className="text-primary-600 dark:text-primary-400">Accede al Panel de Formularios</strong>
-                    <p className="mt-2 ml-6">Ve a la sección "Forms" en tu dashboard para comenzar a crear un nuevo formulario.</p>
+                    <strong className="text-primary-600 dark:text-primary-400">{t('forms.step1_title', 'Access Forms Panel')}</strong>
+                    <p className="mt-2 ml-6">{t('forms.step1_desc', 'Go to the "Forms" section in your dashboard to start creating a new form.')}</p>
                   </li>
                   <li className="pl-2">
-                    <strong className="text-primary-600 dark:text-primary-400">Elige una Plantilla</strong>
-                    <p className="mt-2 ml-6">Selecciona entre nuestras plantillas prediseñadas o comienza desde cero. Cada plantilla está optimizada para diferentes casos de uso.</p>
+                    <strong className="text-primary-600 dark:text-primary-400">{t('forms.step2_title', 'Choose a Template')}</strong>
+                    <p className="mt-2 ml-6">{t('forms.step2_desc', 'Select from our pre-designed templates or start from scratch. Each template is optimized for different use cases.')}</p>
                   </li>
                   <li className="pl-2">
-                    <strong className="text-primary-600 dark:text-primary-400">Personaliza los Campos</strong>
-                    <p className="mt-2 ml-6">Añade, elimina o modifica campos según tus necesidades. Puedes crear campos de texto, selección, fecha, archivos y más.</p>
+                    <strong className="text-primary-600 dark:text-primary-400">{t('forms.step3_title', 'Customize Fields')}</strong>
+                    <p className="mt-2 ml-6">{t('forms.step3_desc', 'Add, remove or modify fields according to your needs. You can create text, selection, date, file fields and more.')}</p>
                   </li>
                   <li className="pl-2">
-                    <strong className="text-primary-600 dark:text-primary-400">Configura la Apariencia</strong>
-                    <p className="mt-2 ml-6">Ajusta los colores, fuentes y estilos para que coincidan con tu marca. Personaliza el texto de los botones y mensajes.</p>
+                    <strong className="text-primary-600 dark:text-primary-400">{t('forms.step4_title', 'Configure Appearance')}</strong>
+                    <p className="mt-2 ml-6">{t('forms.step4_desc', 'Adjust colors, fonts and styles to match your brand. Customize button and message text.')}</p>
                   </li>
                   <li className="pl-2">
-                    <strong className="text-primary-600 dark:text-primary-400">Publica y Comparte</strong>
-                    <p className="mt-2 ml-6">Una vez listo, haz clic en "Publicar" y obtén el código de integración para insertarlo en tu sitio web.</p>
+                    <strong className="text-primary-600 dark:text-primary-400">{t('forms.step5_title', 'Publish and Share')}</strong>
+                    <p className="mt-2 ml-6">{t('forms.step5_desc', 'Once ready, click "Publish" and get the integration code to insert it into your website.')}</p>
                   </li>
                 </ol>
                 {user ? (
                   <Button size="lg" onClick={() => setLocation("/dashboard/forms/new")}>
-                    Crear Nuevo Formulario
+                    {t('forms.create_new_form', 'Create New Form')}
                   </Button>
                 ) : (
                   <Button size="lg" onClick={() => setLocation("/register")}>
-                    Crear Cuenta
+                    {t('forms.create_account', 'Create Account')}
                   </Button>
                 )}
               </div>
@@ -183,41 +183,41 @@ export default function FormsGuide() {
             
             <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
               <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-2xl font-bold">Gestión de Respuestas</h2>
+                <h2 className="text-2xl font-bold">{t('forms.response_management', 'Response Management')}</h2>
               </div>
               <div className="p-6 bg-white dark:bg-gray-900">
                 <p className="mb-4 text-gray-700 dark:text-gray-300">
-                  Todas las respuestas de tus formularios son capturadas y almacenadas de forma segura en tu cuenta de AIPI. Puedes:
+                  {t('forms.response_intro', 'All responses from your forms are captured and stored securely in your AIPI account. You can:')}
                 </p>
                 <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
-                  <li>Ver todas las respuestas en tiempo real desde tu panel de control</li>
-                  <li>Exportar los datos a CSV para análisis o integración con otras herramientas</li>
-                  <li>Configurar notificaciones por email cuando recibas nuevas respuestas</li>
-                  <li>Integrar con otros sistemas a través de webhooks</li>
-                  <li>Analizar tendencias y patrones en las respuestas recibidas</li>
+                  <li>{t('forms.view_responses', 'View all responses in real time from your control panel')}</li>
+                  <li>{t('forms.export_csv', 'Export data to CSV for analysis or integration with other tools')}</li>
+                  <li>{t('forms.email_notifications', 'Configure email notifications when you receive new responses')}</li>
+                  <li>{t('forms.webhook_integration', 'Integrate with other systems through webhooks')}</li>
+                  <li>{t('forms.analyze_patterns', 'Analyze trends and patterns in received responses')}</li>
                 </ul>
                 <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md border border-gray-200 dark:border-gray-700 mb-4">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    <strong>Consejo:</strong> Utiliza las respuestas de tus formularios para entrenar tu asistente AI, permitiéndole responder preguntas frecuentes basadas en la información recopilada.
+                    <strong>{t('forms.tip', 'Tip')}:</strong> {t('forms.tip_description', 'Use your form responses to train your AI assistant, allowing it to answer frequently asked questions based on collected information.')}
                   </p>
                 </div>
                 {user ? (
                   <Button size="lg" onClick={() => setLocation("/dashboard/forms")}>
-                    Ver Mis Formularios
+                    {t('forms.view_my_forms', 'View My Forms')}
                   </Button>
                 ) : (
                   <Button size="lg" onClick={() => setLocation("/pricing")}>
-                    Ver Planes
+                    {t('forms.view_plans', 'View Plans')}
                   </Button>
                 )}
               </div>
             </div>
             
             <div className="bg-primary-50 dark:bg-gray-800 rounded-lg p-6 border border-primary-100 dark:border-gray-700">
-              <h3 className="text-xl font-bold mb-4 text-primary-900 dark:text-primary-400">Integración en tu Sitio Web</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary-900 dark:text-primary-400">{t('forms.website_integration', 'Website Integration')}</h3>
               <div className="space-y-4">
                 <p className="text-gray-700 dark:text-gray-300">
-                  Una vez creado tu formulario, podrás obtener el código de integración para insertarlo en tu sitio web. Este código generará un formulario con todos los campos y estilos que hayas configurado.
+                  {t('forms.integration_description', 'Once your form is created, you can get the integration code to insert it into your website. This code will generate a form with all the fields and styles you have configured.')}
                 </p>
                 
                 <div className="relative">
@@ -233,13 +233,13 @@ export default function FormsGuide() {
                 </div>
                 
                 <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mt-4">
-                  <h4 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white">Vista previa de un formulario</h4>
+                  <h4 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white">{t('forms.form_preview', 'Form Preview')}</h4>
                   <div className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
                     <div className="text-center p-6 max-w-md">
-                      <h5 className="font-medium text-xl mb-4 text-gray-900 dark:text-white">Formulario de Contacto</h5>
+                      <h5 className="font-medium text-xl mb-4 text-gray-900 dark:text-white">{t('forms.contact_form_example', 'Contact Form')}</h5>
                       <div className="space-y-4 text-left">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre completo</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('forms.full_name', 'Full Name')}</label>
                           <input type="text" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md" disabled />
                         </div>
                         <div>
@@ -247,17 +247,17 @@ export default function FormsGuide() {
                           <input type="email" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md" disabled />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mensaje</label>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('forms.message', 'Message')}</label>
                           <textarea className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md" rows={3} disabled></textarea>
                         </div>
-                        <button className="w-full bg-primary-600 text-white py-2 px-4 rounded-md font-medium" disabled>Enviar mensaje</button>
+                        <button className="w-full bg-primary-600 text-white py-2 px-4 rounded-md font-medium" disabled>{t('forms.send_message', 'Send Message')}</button>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-                  Nota: Crear tu primer formulario es gratuito. Para formularios adicionales y funcionalidades avanzadas, consulta nuestros planes de precios.
+                  {t('forms.pricing_note', 'Note: Creating your first form is free. For additional forms and advanced features, check our pricing plans.')}
                 </p>
               </div>
             </div>
@@ -267,19 +267,19 @@ export default function FormsGuide() {
             <div className="flex justify-center mt-8">
               <Button asChild variant="outline" className="mr-4">
                 <Link href="/get-started">
-                  Volver a Guía de Inicio
+                  {t('forms.back_to_guide', 'Back to Getting Started')}
                 </Link>
               </Button>
               {user ? (
                 <Button asChild>
                   <Link href="/dashboard/forms">
-                    Ir a Mis Formularios
+                    {t('forms.go_to_my_forms', 'Go to My Forms')}
                   </Link>
                 </Button>
               ) : (
                 <Button asChild>
                   <Link href="/register">
-                    Crear Cuenta
+                    {t('forms.create_account_link', 'Create Account')}
                   </Link>
                 </Button>
               )}
