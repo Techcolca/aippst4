@@ -167,8 +167,23 @@ const resources = {
           }
         },
         buttons: {
+          go_to_integrations: "Aller aux intégrations",
+          login_to_manage: "Se connecter pour gérer",
+          manage_content: "Gérer le contenu",
+          create_account: "Créer un compte",
+          create_forms: "Créer des formulaires",
+          create_account_forms: "Créer un compte pour les formulaires",
+          configure_auth: "Configurer l'authentification",
+          login: "Se connecter",
+          configure_sections: "Configurer les sections",
+          configure_assistant: "Configurer l'assistant",
+          configure_advanced_forms: "Configurer les formulaires avancés",
+          create_account_advanced: "Créer un compte avancé",
           go_to_forms: "Aller aux formulaires",
-          login_to_manage_forms: "Se connecter pour gérer les formulaires"
+          login_to_manage_forms: "Se connecter pour gérer les formulaires",
+          forms_guide: "Guide des formulaires",
+          view_docs: "Voir la documentation",
+          contact_support: "Contacter le support"
         },
         cta: {
           forms_title: "Prêt à créer vos formulaires ?",
@@ -338,8 +353,23 @@ const resources = {
           }
         },
         buttons: {
+          go_to_integrations: "Ir a integraciones",
+          login_to_manage: "Iniciar sesión para gestionar",
+          manage_content: "Gestionar contenido",
+          create_account: "Crear cuenta",
+          create_forms: "Crear formularios",
+          create_account_forms: "Crear cuenta para formularios",
+          configure_auth: "Configurar autenticación",
+          login: "Iniciar sesión",
+          configure_sections: "Configurar secciones",
+          configure_assistant: "Configurar asistente",
+          configure_advanced_forms: "Configurar formularios avanzados",
+          create_account_advanced: "Crear cuenta avanzada",
           go_to_forms: "Ir a formularios",
-          login_to_manage_forms: "Iniciar sesión para gestionar formularios"
+          login_to_manage_forms: "Iniciar sesión para gestionar formularios",
+          forms_guide: "Guía de formularios",
+          view_docs: "Ver documentación",
+          contact_support: "Contactar soporte"
         },
         cta: {
           forms_title: "¿Listo para crear tus formularios?",
@@ -509,8 +539,23 @@ const resources = {
           }
         },
         buttons: {
+          go_to_integrations: "Go to integrations",
+          login_to_manage: "Log in to manage",
+          manage_content: "Manage content",
+          create_account: "Create account",
+          create_forms: "Create forms",
+          create_account_forms: "Create account for forms",
+          configure_auth: "Configure authentication",
+          login: "Log in",
+          configure_sections: "Configure sections",
+          configure_assistant: "Configure assistant",
+          configure_advanced_forms: "Configure advanced forms",
+          create_account_advanced: "Create advanced account",
           go_to_forms: "Go to forms",
-          login_to_manage_forms: "Log in to manage forms"
+          login_to_manage_forms: "Log in to manage forms",
+          forms_guide: "Forms guide",
+          view_docs: "View documentation",
+          contact_support: "Contact support"
         },
         cta: {
           forms_title: "Ready to create your forms?",
