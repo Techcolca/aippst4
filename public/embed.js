@@ -2660,10 +2660,10 @@ Contenido: [Error al extraer contenido detallado]
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
     
-    // Crear tonos pasteles más visibles
-    const pastelLight = `rgba(${Math.round(r + (255 - r) * 0.8)}, ${Math.round(g + (255 - g) * 0.8)}, ${Math.round(b + (255 - b) * 0.8)}, 0.7)`;
-    const pastelMedium = `rgba(${Math.round(r + (255 - r) * 0.6)}, ${Math.round(g + (255 - g) * 0.6)}, ${Math.round(b + (255 - b) * 0.6)}, 0.8)`;
-    const pastelDark = `rgba(${Math.round(r + (255 - r) * 0.4)}, ${Math.round(g + (255 - g) * 0.4)}, ${Math.round(b + (255 - b) * 0.4)}, 0.9)`;
+    // Crear tonos pasteles más claros para mejor contraste con texto oscuro
+    const pastelLight = `rgba(${Math.round(r + (255 - r) * 0.9)}, ${Math.round(g + (255 - g) * 0.9)}, ${Math.round(b + (255 - b) * 0.9)}, 0.4)`;
+    const pastelMedium = `rgba(${Math.round(r + (255 - r) * 0.85)}, ${Math.round(g + (255 - g) * 0.85)}, ${Math.round(b + (255 - b) * 0.85)}, 0.5)`;
+    const pastelDark = `rgba(${Math.round(r + (255 - r) * 0.8)}, ${Math.round(g + (255 - g) * 0.8)}, ${Math.round(b + (255 - b) * 0.8)}, 0.6)`;
     
     return {
       light: pastelLight,
@@ -2686,9 +2686,9 @@ Contenido: [Error al extraer contenido detallado]
     console.log('AIPI Debug: Main color:', config.themeColor || config.mainColor);
     console.log('AIPI Debug: Is dark theme:', isDarkTheme);
     
-    // Colores de texto basados en el tema
-    const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
-    const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
+    // Colores de texto basados en el tema - CORREGIDO para mejor contraste en fondos pasteles
+    const titleColor = '#1f2937'; // Siempre oscuro para mejor contraste en fondos pasteles
+    const bodyColor = '#374151'; // Siempre oscuro para mejor legibilidad
     const accentColor = config.themeColor || config.mainColor || '#6366f1';
     
     // Trabajar directamente con el texto

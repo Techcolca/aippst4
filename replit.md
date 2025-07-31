@@ -124,6 +124,9 @@ July 31, 2025:
 - ✓ Added generatePastelPalette and isColorDark functions to embed.js for consistent formatting
 - ✓ Debug logging system implemented to track formatting process and color generation
 - ✓ All widget types now use same formatting engine with visible pastel backgrounds
+- ✓ CONTRAST FIX: Adjusted text colors to always be dark (#1f2937, #374151) for optimal readability on pastel backgrounds
+- ✓ Reduced pastel background opacity (0.4-0.6) and increased lightness (90-80%) for perfect text contrast
+- ✓ Enhanced pastel color algorithm to create lighter backgrounds that work well with dark text
 
 July 30, 2025:
 - ✓ CRITICAL BUG FIX: Fixed duplicate "Profile" menu entries in header dropdown
