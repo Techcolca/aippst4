@@ -456,8 +456,37 @@
     }
   }
   
+  // Función para detectar si un color es oscuro
+  function isColorDark(color) {
+    // Convertir color hex a RGB
+    let hex = color.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calcular luminancia
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Si la luminancia es menor a 0.5, es un color oscuro
+    return luminance < 0.5;
+  }
+
   // Obtener estilos CSS como string
   function getStylesCSS() {
+    const isDarkTheme = isColorDark(config.mainColor);
+    
+    // Colores dinámicos basados en el tema
+    const chatBgColor = isDarkTheme ? '#1f2937' : '#f5f7fb';
+    const assistantBgColor = isDarkTheme ? '#374151' : '#e5e7eb';
+    const assistantTextColor = isDarkTheme ? '#f9fafb' : '#1f2937';
+    const inputBorderColor = isDarkTheme ? '#4b5563' : '#e5e7eb';
+    const inputBgColor = isDarkTheme ? '#374151' : '#ffffff';
+    const inputTextColor = isDarkTheme ? '#f9fafb' : '#000000';
+    
     return `
       /* Estilos para el botón flotante */
       #aipi-chat-button-container {
@@ -554,7 +583,7 @@
         display: flex;
         flex-direction: column;
         gap: 15px;
-        background-color: #f5f7fb;
+        background-color: ${chatBgColor};
       }
       
       .message {
@@ -567,8 +596,8 @@
       
       .message.assistant {
         align-self: flex-start;
-        background-color: #e5e7eb;
-        color: #1f2937;
+        background-color: ${assistantBgColor};
+        color: ${assistantTextColor};
         border-bottom-left-radius: 4px;
       }
       
@@ -582,17 +611,20 @@
       #aipi-chat-input-area {
         padding: 15px;
         display: flex;
-        border-top: 1px solid #e5e7eb;
+        border-top: 1px solid ${inputBorderColor};
+        background-color: ${chatBgColor};
       }
       
       #aipi-chat-input {
         flex: 1;
         padding: 12px;
-        border: 1px solid #d1d5db;
+        border: 1px solid ${inputBorderColor};
         border-radius: 24px;
         outline: none;
         font-size: 14px;
         font-family: Arial, sans-serif;
+        background-color: ${inputBgColor};
+        color: ${inputTextColor};
       }
       
       #aipi-chat-send {

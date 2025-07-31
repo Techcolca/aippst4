@@ -119,6 +119,15 @@ July 30, 2025:
 - ✓ Added URL parameter synchronization for dashboard tabs to prevent losing navigation state
 - ✓ Language changes now maintain user's current location instead of defaulting to integrations tab
 - ✓ Added missing translation keys for upgrade modal system (title, message, benefits, buttons)
+- ✓ WIDGET COLOR CONTRAST ENHANCEMENT: Fixed critical readability issues in all widget types
+- ✓ Implemented intelligent color detection function to determine if theme colors are dark or light
+- ✓ Added dynamic contrast adjustment for text, backgrounds, and input fields based on theme
+- ✓ Updated simple-embed.js (bubble widget) with adaptive color scheme for improved readability
+- ✓ Updated chatgpt-embed.js (fullscreen widget) with comprehensive color contrast system
+- ✓ Updated aipi-web-widget.js (internal widget) with dynamic color adaptation
+- ✓ Dark theme widgets now use light text on dark backgrounds for optimal contrast
+- ✓ Light theme widgets maintain existing high-contrast color combinations
+- ✓ Fixed customer-reported issue where dark themed widgets had illegible text content
 
 July 22, 2025:
 - ✓ CRITICAL BUG FIX: Fixed translation system for relative time formatting ("hace 3 horas" → "il y a 3 heures")

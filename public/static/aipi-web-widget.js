@@ -416,6 +416,25 @@
     }
   }
   
+  // Función para detectar si un color es oscuro
+  function isColorDark(color) {
+    // Convertir color hex a RGB
+    let hex = color.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calcular luminancia
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Si la luminancia es menor a 0.5, es un color oscuro
+    return luminance < 0.5;
+  }
+
   function addMessage(content, role) {
     const messageElement = document.createElement('div');
     messageElement.className = `aipi-message aipi-message-${role}`;
@@ -433,8 +452,13 @@
       messageElement.style.marginLeft = 'auto';
       messageElement.style.borderBottomRightRadius = '4px';
     } else {
-      messageElement.style.backgroundColor = '#2D3748';
-      messageElement.style.color = '#E2E8F0';
+      // Colores dinámicos basados en el tema principal
+      const isDarkTheme = isColorDark(widgetConfig.themeColor || '#6366f1');
+      const assistantBgColor = isDarkTheme ? '#374151' : '#2D3748';
+      const assistantTextColor = isDarkTheme ? '#f9fafb' : '#E2E8F0';
+      
+      messageElement.style.backgroundColor = assistantBgColor;
+      messageElement.style.color = assistantTextColor;
       messageElement.style.marginRight = 'auto';
       messageElement.style.borderBottomLeftRadius = '4px';
     }
@@ -458,7 +482,12 @@
       indicator.className = 'aipi-typing-indicator';
       indicator.style.display = 'flex';
       indicator.style.padding = '10px 14px';
-      indicator.style.backgroundColor = '#2D3748';
+      
+      // Aplicar colores dinámicos también al indicador de escritura
+      const isDarkTheme = isColorDark(widgetConfig.themeColor || '#6366f1');
+      const assistantBgColor = isDarkTheme ? '#374151' : '#2D3748';
+      
+      indicator.style.backgroundColor = assistantBgColor;
       indicator.style.borderRadius = '18px';
       indicator.style.marginBottom = '12px';
       indicator.style.maxWidth = '80%';

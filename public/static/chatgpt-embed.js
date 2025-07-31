@@ -724,8 +724,40 @@ ${t.newConversation}
     return style;
   }
   
+  // Función para detectar si un color es oscuro
+  function isColorDark(color) {
+    // Convertir color hex a RGB
+    let hex = color.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calcular luminancia
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Si la luminancia es menor a 0.5, es un color oscuro
+    return luminance < 0.5;
+  }
+
   // Obtener estilos CSS como string
   function getStylesCSS() {
+    const isDarkTheme = isColorDark(config.mainColor);
+    
+    // Colores dinámicos basados en el tema
+    const panelBgColor = isDarkTheme ? '#1f2937' : '#ffffff';
+    const headerBgColor = isDarkTheme ? '#111827' : '#f9f9f9';
+    const headerTextColor = isDarkTheme ? '#f9fafb' : '#333';
+    const messagesBgColor = isDarkTheme ? '#1f2937' : '#ffffff';
+    const assistantTextColor = isDarkTheme ? '#f9fafb' : '#111827';
+    const borderColor = isDarkTheme ? '#374151' : '#e5e5e5';
+    const inputBgColor = isDarkTheme ? '#374151' : '#ffffff';
+    const inputTextColor = isDarkTheme ? '#f9fafb' : '#000000';
+    const inputBorderColor = isDarkTheme ? '#4b5563' : '#e5e5e5';
+    
     return `
       /* ChatGPT-like Styles for AIPI Chat Widget */
       #aipi-chat-button-container {
@@ -767,7 +799,7 @@ ${t.newConversation}
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: #ffffff;
+        background-color: ${panelBgColor};
         flex-direction: column;
         z-index: 9999;
         overflow: hidden;
@@ -780,8 +812,8 @@ ${t.newConversation}
         justify-content: space-between;
         align-items: center;
         padding: 14px 20px;
-        background-color: #f9f9f9;
-        border-bottom: 1px solid #e5e5e5;
+        background-color: ${headerBgColor};
+        border-bottom: 1px solid ${borderColor};
         height: 60px;
       }
       
@@ -790,7 +822,7 @@ ${t.newConversation}
         align-items: center;
         font-size: 1.1rem;
         font-weight: 600;
-        color: #333;
+        color: ${headerTextColor};
       }
       
       #aipi-chat-avatar {
@@ -939,7 +971,7 @@ ${t.newConversation}
         flex: 1;
         overflow-y: auto;
         padding: 20px 0;
-        background-color: #ffffff;
+        background-color: ${messagesBgColor};
       }
       
       /* Estilo de mensajes tipo ChatGPT */
@@ -978,7 +1010,7 @@ ${t.newConversation}
       .aipi-message-content {
         font-size: 16px;
         line-height: 1.6;
-        color: #111827;
+        color: ${assistantTextColor};
         word-wrap: break-word;
         overflow-wrap: break-word;
         max-width: 90%;
@@ -1003,14 +1035,14 @@ ${t.newConversation}
         display: flex;
         align-items: center;
         padding: 14px 60px 20px; /* Más padding abajo para dar espacio */
-        background-color: #ffffff;
-        border-top: 1px solid #e5e5e5;
+        background-color: ${messagesBgColor};
+        border-top: 1px solid ${borderColor};
       }
       
       #aipi-chat-input {
         flex: 1;
         padding: 12px 16px;
-        border: 1px solid #e5e5e5;
+        border: 1px solid ${inputBorderColor};
         border-radius: 8px;
         font-size: 16px;
         line-height: 1.5;
@@ -1020,6 +1052,8 @@ ${t.newConversation}
         outline: none;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         transition: border-color 0.2s, box-shadow 0.2s;
+        background-color: ${inputBgColor};
+        color: ${inputTextColor};
       }
       
       #aipi-chat-input:focus {
