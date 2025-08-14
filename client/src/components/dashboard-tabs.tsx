@@ -259,6 +259,25 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
     queryKey: ["/api/conversations"],
   });
 
+  // Función para formatear inteligentemente los nombres de visitantes
+  const formatVisitorName = (visitorId: string | null) => {
+    if (!visitorId) {
+      return t("anonymous");
+    }
+    
+    // Si es un ID de prueba o técnico, mostrar un nombre más amigable
+    if (visitorId.startsWith('test_') || visitorId.startsWith('user_')) {
+      return t("anonymous");
+    }
+    
+    // Si el ID es muy largo o contiene caracteres extraños, mostrar "Visitante" + número
+    if (visitorId.length > 20 || /[#_{}()[\]]/.test(visitorId)) {
+      return t("anonymous");
+    }
+    
+    return visitorId;
+  };
+
   // Renderizar contenido de la pestaña de conversaciones
   const renderConversationsTab = () => {
     return (
@@ -276,7 +295,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
               <Card key={conversation.id} className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-medium">{t("visitor", "Visitor")} #{conversation.visitorId || t("anonymous", "Anonymous")}</h3>
+                    <h3 className="font-medium">{t("visitor")} {formatVisitorName(conversation.visitorId)}</h3>
                     <p className="text-sm text-gray-500">
                       {new Date(conversation.createdAt).toLocaleString()}
                     </p>
@@ -287,16 +306,16 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                         ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' 
                         : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
                     }`}>
-                      {conversation.status === 'completed' ? t("completed", "Completed") : t("active", "Active")}
+                      {conversation.status === 'completed' ? t("completed") : t("active")}
                     </span>
                     <Link href={`/conversations/${conversation.id}`}>
-                      <Button size="sm" variant="outline">{t("view", "View")}</Button>
+                      <Button size="sm" variant="outline">{t("view")}</Button>
                     </Link>
                   </div>
                 </div>
                 {conversation.lastMessage && (
                   <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-800 rounded text-sm">
-                    <span className="font-medium">{t("last_message", "Last message")}: </span>
+                    <span className="font-medium">{t("last_message")}: </span>
                     {conversation.lastMessage.length > 100
                       ? conversation.lastMessage.substring(0, 100) + '...'
                       : conversation.lastMessage}
