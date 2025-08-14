@@ -429,7 +429,6 @@ const resources = {
       documentation: {
         title: "Documentation AIPPS",
         subtitle: "Guide complet pour implémenter et utiliser AIPPS sur votre site web",
-        overview: "Aperçu",
         features: "Fonctionnalités",
         implementation: "Implémentation",
         api_reference: "Référence API",
@@ -444,7 +443,28 @@ const resources = {
         overview_content: "AIPPS est une plateforme d'IA conversationnelle avancée qui permet aux sites web d'offrir des expériences de chat intelligentes et personnalisées.",
         generated_on: "Généré le",
         language: "Langue",
-        table_of_contents: "Table des Matières"
+        table_of_contents: "Table des Matières",
+        download_pdf: "Télécharger PDF",
+        overview: {
+          title: "Introduction à AIPPS",
+          introduction: "AIPPS est une plateforme révolutionnaire d'IA conversationnelle conçue pour transformer la façon dont les sites web interagissent avec leurs visiteurs. Nous offrons des solutions intelligentes et personnalisées qui améliorent l'expérience utilisateur et augmentent les conversions.",
+          problem_title: "Le Problème que Nous Résolvons",
+          problem_description: "De nombreux sites web ont du mal à maintenir l'engagement de leurs visiteurs et à convertir le trafic en leads de qualité. Les méthodes traditionnelles de communication web sont souvent statiques et impersonnelles, ce qui se traduit par des taux de rebond élevés et des opportunités manquées.",
+          solution_intro: "AIPPS fournit une solution complète avec les fonctionnalités clés suivantes :",
+          solution_point_1: "Widgets de chat intelligents qui comprennent le contexte et fournissent des réponses pertinentes",
+          solution_point_2: "Formulaires dynamiques qui s'adaptent au comportement de l'utilisateur",
+          solution_point_3: "Analytiques avancées pour optimiser l'expérience utilisateur",
+          solution_point_4: "Intégration transparente avec n'importe quel site web en quelques minutes",
+          card1_title: "IA Conversationnelle Avancée",
+          card1_text: "Notre assistant virtuel utilise une technologie de pointe pour comprendre les requêtes des utilisateurs et fournir des réponses précises et utiles en temps réel.",
+          card2_title: "Capture de Leads Intelligente",
+          card2_text: "Convertissez plus de visiteurs en leads avec des formulaires adaptatifs et des flux de conversation conçus pour maximiser les conversions.",
+          card3_title: "Intégration Sans Effort",
+          card3_text: "Implémentez AIPPS sur votre site web avec une simple ligne de code. Compatible avec toutes les plateformes web principales.",
+          card4_title: "Analytiques Détaillées",
+          card4_text: "Obtenez des insights précieux sur le comportement de vos visiteurs et optimisez continuellement l'expérience utilisateur.",
+          start_button: "Commencer Maintenant"
+        }
       },
       getStartedPage: {
         title: "Commencer",
@@ -1058,7 +1078,7 @@ const resources = {
       documentation: {
         title: "Documentación AIPPS",
         subtitle: "Guía completa para implementar y usar AIPPS en tu sitio web",
-        overview: "Visión General",
+
         features: "Características",
         implementation: "Implementación",
         api_reference: "Referencia API",
@@ -1073,7 +1093,28 @@ const resources = {
         overview_content: "AIPPS es una plataforma avanzada de IA conversacional que permite a los sitios web ofrecer experiencias de chat inteligentes y personalizadas.",
         generated_on: "Generado el",
         language: "Idioma",
-        table_of_contents: "Índice de Contenidos"
+        table_of_contents: "Índice de Contenidos",
+        download_pdf: "Descargar PDF",
+        overview: {
+          title: "Introducción a AIPPS",
+          introduction: "AIPPS es una plataforma revolucionaria de IA conversacional diseñada para transformar la manera en que los sitios web interactúan con sus visitantes. Ofrecemos soluciones inteligentes y personalizadas que mejoran la experiencia del usuario y aumentan las conversiones.",
+          problem_title: "El Problema que Resolvemos",
+          problem_description: "Muchos sitios web luchan por mantener a sus visitantes comprometidos y convertir el tráfico en leads de calidad. Los métodos tradicionales de comunicación web a menudo son estáticos e impersonales, lo que resulta en altas tasas de rebote y oportunidades perdidas.",
+          solution_intro: "AIPPS proporciona una solución completa con las siguientes características clave:",
+          solution_point_1: "Widgets de chat inteligentes que entienden el contexto y proporcionan respuestas relevantes",
+          solution_point_2: "Formularios dinámicos que se adaptan al comportamiento del usuario",
+          solution_point_3: "Análisis avanzados para optimizar la experiencia del usuario",
+          solution_point_4: "Integración perfecta con cualquier sitio web en minutos",
+          card1_title: "IA Conversacional Avanzada",
+          card1_text: "Nuestro asistente virtual utiliza tecnología de punta para comprender las consultas de los usuarios y proporcionar respuestas precisas y útiles en tiempo real.",
+          card2_title: "Captura de Leads Inteligente",
+          card2_text: "Convierte más visitantes en leads con formularios adaptativos y flujos de conversación diseñados para maximizar las conversiones.",
+          card3_title: "Integración Sin Esfuerzo",
+          card3_text: "Implementa AIPPS en tu sitio web con una simple línea de código. Compatible con todas las plataformas web principales.",
+          card4_title: "Análisis Detallados",
+          card4_text: "Obtén insights valiosos sobre el comportamiento de tus visitantes y optimiza continuamente la experiencia del usuario.",
+          start_button: "Comenzar Ahora"
+        }
       },
       getStartedPage: {
         title: "Comienza Ahora",
@@ -1687,7 +1728,6 @@ const resources = {
       documentation: {
         title: "AIPPS Documentation",
         subtitle: "Complete guide to implement and use AIPPS on your website",
-        overview: "Overview",
         features: "Features",
         implementation: "Implementation",
         api_reference: "API Reference",
@@ -1702,7 +1742,28 @@ const resources = {
         overview_content: "AIPPS is an advanced conversational AI platform that allows websites to offer intelligent and personalized chat experiences.",
         generated_on: "Generated on",
         language: "Language",
-        table_of_contents: "Table of Contents"
+        table_of_contents: "Table of Contents",
+        download_pdf: "Download PDF",
+        overview: {
+          title: "Introduction to AIPPS",
+          introduction: "AIPPS is a revolutionary conversational AI platform designed to transform the way websites interact with their visitors. We offer intelligent and personalized solutions that enhance user experience and increase conversions.",
+          problem_title: "The Problem We Solve",
+          problem_description: "Many websites struggle to keep their visitors engaged and convert traffic into quality leads. Traditional web communication methods are often static and impersonal, resulting in high bounce rates and missed opportunities.",
+          solution_intro: "AIPPS provides a comprehensive solution with the following key features:",
+          solution_point_1: "Smart chat widgets that understand context and provide relevant responses",
+          solution_point_2: "Dynamic forms that adapt to user behavior",
+          solution_point_3: "Advanced analytics to optimize user experience",
+          solution_point_4: "Seamless integration with any website in minutes",
+          card1_title: "Advanced Conversational AI",
+          card1_text: "Our virtual assistant uses cutting-edge technology to understand user queries and provide accurate and helpful responses in real-time.",
+          card2_title: "Smart Lead Capture",
+          card2_text: "Convert more visitors into leads with adaptive forms and conversation flows designed to maximize conversions.",
+          card3_title: "Effortless Integration",
+          card3_text: "Implement AIPPS on your website with a simple line of code. Compatible with all major web platforms.",
+          card4_title: "Detailed Analytics",
+          card4_text: "Get valuable insights into your visitors' behavior and continuously optimize the user experience.",
+          start_button: "Get Started Now"
+        }
       },
       getStartedPage: {
         title: "Get Started",
