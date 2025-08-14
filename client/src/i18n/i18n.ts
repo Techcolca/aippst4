@@ -129,6 +129,232 @@ const resources = {
           a1: "Nous offrons une garantie de remboursement de 30 jours pour tous les plans payants."
         }
       },
+      help: {
+        title: "Centre d'Aide",
+        subtitle: "Trouvez des réponses à vos questions et apprenez à utiliser AIPPS",
+        search_placeholder: "Rechercher des articles d'aide...",
+        popular: {
+          title: "Articles Populaires",
+          badge: "Populaire",
+          article1: "Comment intégrer le widget sur votre site web",
+          article2: "Personnaliser l'assistant conversationnel",
+          article3: "Configurer les formulaires de capture de leads",
+          article4: "Analyser les métriques et conversations",
+          article5: "Entraîner votre assistant avec des documents"
+        },
+        categories: {
+          title: "Catégories d'Aide",
+          getting_started: {
+            title: "Premiers Pas",
+            description: "Tout ce dont vous avez besoin pour commencer avec AIPPS",
+            article1: "Créer votre premier compte AIPPS",
+            article2: "Configuration initiale du tableau de bord",
+            article3: "Guide de démarrage rapide pour les widgets",
+            article4: "Bases de l'IA conversationnelle"
+          },
+          configuration: {
+            title: "Configuration",
+            description: "Personnalisez AIPPS selon vos besoins",
+            article1: "Personnaliser les couleurs et le thème du widget",
+            article2: "Configurer les messages de bienvenue",
+            article3: "Définir les heures de disponibilité",
+            article4: "Gestion des langues et traductions"
+          },
+          integration: {
+            title: "Intégration",
+            description: "Connectez AIPPS avec votre site web et vos outils",
+            article1: "Intégrer le widget dans WordPress",
+            article2: "Implémentation Shopify",
+            article3: "Code d'intégration personnalisé",
+            article4: "Intégration CRM et outils"
+          },
+          billing: {
+            title: "Facturation",
+            description: "Gérez votre abonnement et vos paiements",
+            article1: "Changer de plan d'abonnement",
+            article2: "Informations de facturation et paiement",
+            article3: "Politique de remboursement",
+            article4: "Questions fréquemment posées sur les prix"
+          },
+          troubleshooting: {
+            title: "Dépannage",
+            description: "Résolvez les problèmes techniques courants",
+            article1: "Le widget n'apparaît pas sur mon site",
+            article2: "Problèmes de connexion du chat",
+            article3: "L'assistant ne répond pas correctement",
+            article4: "Problèmes avec les formulaires"
+          },
+          account: {
+            title: "Compte",
+            description: "Gérez votre profil et les paramètres de compte",
+            article1: "Changer le mot de passe et les données de profil",
+            article2: "Paramètres de notification",
+            article3: "Gérer les utilisateurs et permissions",
+            article4: "Supprimer ou fermer le compte"
+          }
+        },
+        contact_support: {
+          title: "Besoin d'Aide Supplémentaire ?",
+          description: "Si vous ne trouvez pas ce que vous cherchez, notre équipe est là pour vous aider",
+          contact_button: "Contacter le Support",
+          email_button: "Envoyer un Email"
+        }
+      },
+      about: {
+        title: "À Propos d'AIPPS",
+        subtitle: "Découvrez notre mission de transformer la communication web avec l'intelligence artificielle",
+        mission: {
+          title: "Notre Mission",
+          description: "Démocratiser l'accès à l'IA conversationnelle pour tous les sites web du monde"
+        },
+        vision: {
+          title: "Notre Vision",
+          description: "Créer un avenir où chaque interaction web est intelligente et personnalisée"
+        },
+        global: {
+          title: "Portée Mondiale",
+          description: "Nous servons des entreprises de toutes tailles dans plus de 50 pays"
+        },
+        innovation: {
+          title: "Innovation",
+          description: "Pionniers de la technologie d'IA conversationnelle avec plus de 5 ans d'expérience"
+        }
+      },
+      contact: {
+        title: "Contactez-Nous",
+        subtitle: "Nous sommes là pour vous aider. Contactez notre équipe",
+        info: {
+          title: "Informations de Contact",
+          email: "support@aipps.ca",
+          phone: "+1 (555) 123-4567",
+          address: "123 Innovation Street, Tech City, TC 12345",
+          hours: "Lundi au Vendredi : 9h00 - 18h00 (EST)"
+        },
+        form: {
+          title: "Envoyez-nous un Message",
+          name_label: "Nom",
+          name_placeholder: "Votre nom",
+          email_label: "Email",
+          email_placeholder: "votre@email.com",
+          subject_label: "Sujet",
+          subject_placeholder: "Comment pouvons-nous vous aider ?",
+          message_label: "Message",
+          message_placeholder: "Décrivez votre demande...",
+          send_button: "Envoyer le Message",
+          sending_button: "Envoi en cours...",
+          success_title: "Message Envoyé",
+          success_message: "Merci de nous avoir contactés. Nous vous répondrons bientôt."
+        }
+      },
+      privacy: {
+        title: "Politique de Confidentialité",
+        subtitle: "Comment nous collectons, utilisons et protégeons vos informations",
+        data_collection: {
+          title: "Collecte de Données",
+          description: "Nous collectons des informations pour fournir et améliorer nos services :",
+          item1: "Informations de compte (nom, email, détails de contact)",
+          item2: "Données d'utilisation et d'analyse du widget",
+          item3: "Informations techniques (IP, navigateur, appareil)",
+          item4: "Contenu des conversations pour l'entraînement de l'IA"
+        },
+        data_usage: {
+          title: "Utilisation des Données",
+          description: "Nous utilisons vos données aux fins suivantes :",
+          item1: "Fournir et maintenir nos services",
+          item2: "Améliorer l'expérience utilisateur",
+          item3: "Analyse et statistiques de performance",
+          item4: "Communications de support et mises à jour"
+        },
+        data_sharing: {
+          title: "Partage de Données",
+          description: "Nous ne vendons ni ne louons vos informations personnelles. Nous ne les partageons que dans ces cas :",
+          item1: "Avec des fournisseurs de services nécessaires au fonctionnement",
+          item2: "Lorsque requis par la loi",
+          item3: "Avec votre consentement explicite"
+        },
+        security: {
+          title: "Sécurité",
+          description: "Nous mettons en place des mesures de sécurité pour protéger vos informations"
+        },
+        rights: {
+          title: "Vos Droits",
+          description: "Vous avez le droit d'accéder, corriger ou supprimer vos informations personnelles"
+        },
+        contact: {
+          title: "Contact",
+          description: "Pour les questions de confidentialité, contactez-nous à privacy@aipps.ca"
+        }
+      },
+      terms: {
+        title: "Conditions d'Utilisation",
+        subtitle: "Termes et conditions d'utilisation d'AIPPS",
+        acceptance: {
+          title: "Acceptation des Conditions",
+          description: "En utilisant AIPPS, vous acceptez ces termes et conditions"
+        },
+        services: {
+          title: "Description du Service",
+          description: "AIPPS fournit des outils d'IA conversationnelle pour sites web :",
+          item1: "Widgets de chat intelligents",
+          item2: "Formulaires de capture de leads",
+          item3: "Analyses et métriques",
+          item4: "Intégration de sites web"
+        },
+        user_obligations: {
+          title: "Obligations de l'Utilisateur",
+          description: "En tant qu'utilisateur, vous vous engagez à :",
+          item1: "Utiliser le service de manière légale et éthique",
+          item2: "Ne pas interférer avec le fonctionnement du système",
+          item3: "Maintenir la sécurité de votre compte",
+          item4: "Respecter les droits de propriété intellectuelle"
+        },
+        payment: {
+          title: "Conditions de Paiement",
+          description: "Les conditions de paiement incluent :",
+          item1: "Facturation mensuelle ou annuelle selon le plan choisi",
+          item2: "Les paiements ne sont pas remboursables sauf exceptions",
+          item3: "Les prix peuvent changer avec préavis",
+          item4: "La suspension pour non-paiement est immédiate"
+        },
+        intellectual_property: {
+          title: "Propriété Intellectuelle",
+          description: "Tous les droits de propriété intellectuelle d'AIPPS nous appartiennent :",
+          item1: "Logiciel et technologie AIPPS",
+          item2: "Marques commerciales et logos",
+          item3: "Contenu et documentation"
+        },
+        limitation: {
+          title: "Limitation de Responsabilité",
+          description: "AIPPS n'est pas responsable des dommages indirects ou de la perte de données"
+        },
+        termination: {
+          title: "Résiliation",
+          description: "Toute partie peut résilier l'accord :",
+          item1: "L'utilisateur peut annuler à tout moment",
+          item2: "AIPPS peut suspendre les comptes pour violation des conditions",
+          item3: "Les données seront supprimées selon la politique de rétention"
+        }
+      },
+      documentation: {
+        title: "Documentation AIPPS",
+        subtitle: "Guide complet pour implémenter et utiliser AIPPS sur votre site web",
+        overview: "Aperçu",
+        features: "Fonctionnalités",
+        implementation: "Implémentation",
+        api_reference: "Référence API",
+        support: "Support",
+        widget_integration: "Intégration de Widget",
+        contextual_understanding: "Compréhension Contextuelle",
+        document_training: "Entraînement avec Documents",
+        lead_capture: "Capture de Leads",
+        analytics: "Analytiques",
+        task_automation: "Automatisation des Tâches",
+        form_creation: "Création de Formulaires",
+        overview_content: "AIPPS est une plateforme d'IA conversationnelle avancée qui permet aux sites web d'offrir des expériences de chat intelligentes et personnalisées.",
+        generated_on: "Généré le",
+        language: "Langue",
+        table_of_contents: "Table des Matières"
+      },
       getStartedPage: {
         title: "Commencer",
         subtitle: "Intégrez AIPPS dans votre site web en quelques minutes",
@@ -381,6 +607,232 @@ const resources = {
           a1: "Ofrecemos una garantía de devolución de dinero de 30 días para todos los planes de pago."
         }
       },
+      help: {
+        title: "Centro de Ayuda",
+        subtitle: "Encuentra respuestas a tus preguntas y aprende a usar AIPPS",
+        search_placeholder: "Buscar artículos de ayuda...",
+        popular: {
+          title: "Artículos Populares",
+          badge: "Popular",
+          article1: "Cómo integrar el widget en tu sitio web",
+          article2: "Personalizar el asistente conversacional",
+          article3: "Configurar formularios de captura de leads",
+          article4: "Analizar métricas y conversaciones",
+          article5: "Entrenar tu asistente con documentos"
+        },
+        categories: {
+          title: "Categorías de Ayuda",
+          getting_started: {
+            title: "Primeros Pasos",
+            description: "Todo lo que necesitas para comenzar con AIPPS",
+            article1: "Crear tu primera cuenta en AIPPS",
+            article2: "Configuración inicial del panel de control",
+            article3: "Guía de inicio rápido para widgets",
+            article4: "Conceptos básicos de IA conversacional"
+          },
+          configuration: {
+            title: "Configuración",
+            description: "Personaliza AIPPS según tus necesidades",
+            article1: "Personalizar colores y tema del widget",
+            article2: "Configurar mensajes de bienvenida",
+            article3: "Establecer horarios de disponibilidad",
+            article4: "Gestión de idiomas y traducciones"
+          },
+          integration: {
+            title: "Integración",
+            description: "Conecta AIPPS con tu sitio web y herramientas",
+            article1: "Integrar widget en WordPress",
+            article2: "Implementación en Shopify",
+            article3: "Código de integración personalizado",
+            article4: "Integración con CRM y herramientas"
+          },
+          billing: {
+            title: "Facturación",
+            description: "Gestiona tu suscripción y pagos",
+            article1: "Cambiar de plan de suscripción",
+            article2: "Información de facturación y pagos",
+            article3: "Política de reembolsos",
+            article4: "Preguntas frecuentes sobre precios"
+          },
+          troubleshooting: {
+            title: "Solución de Problemas",
+            description: "Resuelve problemas técnicos comunes",
+            article1: "El widget no aparece en mi sitio",
+            article2: "Problemas de conexión del chat",
+            article3: "El asistente no responde correctamente",
+            article4: "Problemas con formularios"
+          },
+          account: {
+            title: "Cuenta",
+            description: "Gestiona tu perfil y configuración de cuenta",
+            article1: "Cambiar contraseña y datos de perfil",
+            article2: "Configuración de notificaciones",
+            article3: "Gestionar usuarios y permisos",
+            article4: "Eliminar o cerrar cuenta"
+          }
+        },
+        contact_support: {
+          title: "¿Necesitas más ayuda?",
+          description: "Si no encuentras lo que buscas, nuestro equipo está aquí para ayudarte",
+          contact_button: "Contactar Soporte",
+          email_button: "Enviar Email"
+        }
+      },
+      about: {
+        title: "Acerca de AIPPS",
+        subtitle: "Conoce nuestra misión de transformar la comunicación web con inteligencia artificial",
+        mission: {
+          title: "Nuestra Misión",
+          description: "Democratizar el acceso a la IA conversacional para todos los sitios web del mundo"
+        },
+        vision: {
+          title: "Nuestra Visión",
+          description: "Crear un futuro donde cada interacción web sea inteligente y personalizada"
+        },
+        global: {
+          title: "Alcance Global",
+          description: "Servimos a empresas de todos los tamaños en más de 50 países"
+        },
+        innovation: {
+          title: "Innovación",
+          description: "Pioneros en tecnología de IA conversacional con más de 5 años de experiencia"
+        }
+      },
+      contact: {
+        title: "Contáctanos",
+        subtitle: "Estamos aquí para ayudarte. Ponte en contacto con nuestro equipo",
+        info: {
+          title: "Información de Contacto",
+          email: "support@aipps.ca",
+          phone: "+1 (555) 123-4567",
+          address: "123 Innovation Street, Tech City, TC 12345",
+          hours: "Lunes a Viernes: 9:00 AM - 6:00 PM (EST)"
+        },
+        form: {
+          title: "Envíanos un Mensaje",
+          name_label: "Nombre",
+          name_placeholder: "Tu nombre",
+          email_label: "Email",
+          email_placeholder: "tu@email.com",
+          subject_label: "Asunto",
+          subject_placeholder: "¿En qué podemos ayudarte?",
+          message_label: "Mensaje",
+          message_placeholder: "Describe tu consulta...",
+          send_button: "Enviar Mensaje",
+          sending_button: "Enviando...",
+          success_title: "Mensaje Enviado",
+          success_message: "Gracias por contactarnos. Te responderemos pronto."
+        }
+      },
+      privacy: {
+        title: "Política de Privacidad",
+        subtitle: "Cómo recopilamos, usamos y protegemos tu información",
+        data_collection: {
+          title: "Recopilación de Datos",
+          description: "Recopilamos información para brindar y mejorar nuestros servicios:",
+          item1: "Información de cuenta (nombre, email, datos de contacto)",
+          item2: "Datos de uso y análisis del widget",
+          item3: "Información técnica (IP, navegador, dispositivo)",
+          item4: "Contenido de conversaciones para entrenamiento de IA"
+        },
+        data_usage: {
+          title: "Uso de Datos",
+          description: "Utilizamos tus datos para los siguientes propósitos:",
+          item1: "Proporcionar y mantener nuestros servicios",
+          item2: "Mejorar la experiencia del usuario",
+          item3: "Análisis y estadísticas de rendimiento",
+          item4: "Comunicaciones de soporte y actualizaciones"
+        },
+        data_sharing: {
+          title: "Compartir Datos",
+          description: "No vendemos ni alquilamos tu información personal. Solo la compartimos en estos casos:",
+          item1: "Con proveedores de servicios necesarios para el funcionamiento",
+          item2: "Cuando sea requerido por ley",
+          item3: "Con tu consentimiento explícito"
+        },
+        security: {
+          title: "Seguridad",
+          description: "Implementamos medidas de seguridad para proteger tu información"
+        },
+        rights: {
+          title: "Tus Derechos",
+          description: "Tienes derecho a acceder, corregir o eliminar tu información personal"
+        },
+        contact: {
+          title: "Contacto",
+          description: "Para preguntas sobre privacidad, contáctanos en privacy@aipps.ca"
+        }
+      },
+      terms: {
+        title: "Términos de Servicio",
+        subtitle: "Términos y condiciones de uso de AIPPS",
+        acceptance: {
+          title: "Aceptación de Términos",
+          description: "Al usar AIPPS, aceptas estos términos y condiciones"
+        },
+        services: {
+          title: "Descripción del Servicio",
+          description: "AIPPS proporciona herramientas de IA conversacional para sitios web:",
+          item1: "Widgets de chat inteligentes",
+          item2: "Formularios de captura de leads",
+          item3: "Análisis y métricas",
+          item4: "Integración con sitios web"
+        },
+        user_obligations: {
+          title: "Obligaciones del Usuario",
+          description: "Como usuario, te comprometes a:",
+          item1: "Usar el servicio de manera legal y ética",
+          item2: "No interferir con el funcionamiento del sistema",
+          item3: "Mantener la seguridad de tu cuenta",
+          item4: "Respetar los derechos de propiedad intelectual"
+        },
+        payment: {
+          title: "Términos de Pago",
+          description: "Los términos de pago incluyen:",
+          item1: "Facturación mensual o anual según el plan elegido",
+          item2: "Los pagos son no reembolsables salvo excepciones",
+          item3: "Los precios pueden cambiar con aviso previo",
+          item4: "La suspensión por falta de pago es inmediata"
+        },
+        intellectual_property: {
+          title: "Propiedad Intelectual",
+          description: "Todos los derechos de propiedad intelectual de AIPPS nos pertenecen:",
+          item1: "Software y tecnología de AIPPS",
+          item2: "Marcas comerciales y logotipos",
+          item3: "Contenido y documentación"
+        },
+        limitation: {
+          title: "Limitación de Responsabilidad",
+          description: "AIPPS no se hace responsable por daños indirectos o pérdidas de datos"
+        },
+        termination: {
+          title: "Terminación",
+          description: "Cualquier parte puede terminar el acuerdo:",
+          item1: "El usuario puede cancelar en cualquier momento",
+          item2: "AIPPS puede suspender cuentas por violación de términos",
+          item3: "Los datos se eliminarán según la política de retención"
+        }
+      },
+      documentation: {
+        title: "Documentación AIPPS",
+        subtitle: "Guía completa para implementar y usar AIPPS en tu sitio web",
+        overview: "Visión General",
+        features: "Características",
+        implementation: "Implementación",
+        api_reference: "Referencia API",
+        support: "Soporte",
+        widget_integration: "Integración de Widget",
+        contextual_understanding: "Comprensión Contextual",
+        document_training: "Entrenamiento con Documentos",
+        lead_capture: "Captura de Leads",
+        analytics: "Análisis",
+        task_automation: "Automatización de Tareas",
+        form_creation: "Creación de Formularios",
+        overview_content: "AIPPS es una plataforma avanzada de IA conversacional que permite a los sitios web ofrecer experiencias de chat inteligentes y personalizadas.",
+        generated_on: "Generado el",
+        language: "Idioma",
+        table_of_contents: "Índice de Contenidos"
+      },
       getStartedPage: {
         title: "Comienza Ahora",
         subtitle: "Integra AIPPS en tu sitio web en minutos",
@@ -632,6 +1084,232 @@ const resources = {
           q1: "Do you offer a money-back guarantee?",
           a1: "We offer a 30-day money-back guarantee for all paid plans."
         }
+      },
+      help: {
+        title: "Help Center",
+        subtitle: "Find answers to your questions and learn how to use AIPPS",
+        search_placeholder: "Search help articles...",
+        popular: {
+          title: "Popular Articles",
+          badge: "Popular",
+          article1: "How to integrate the widget on your website",
+          article2: "Customize the conversational assistant",
+          article3: "Set up lead capture forms",
+          article4: "Analyze metrics and conversations",
+          article5: "Train your assistant with documents"
+        },
+        categories: {
+          title: "Help Categories",
+          getting_started: {
+            title: "Getting Started",
+            description: "Everything you need to begin with AIPPS",
+            article1: "Create your first AIPPS account",
+            article2: "Initial dashboard setup",
+            article3: "Quick start guide for widgets",
+            article4: "Conversational AI basics"
+          },
+          configuration: {
+            title: "Configuration",
+            description: "Customize AIPPS according to your needs",
+            article1: "Customize widget colors and theme",
+            article2: "Configure welcome messages",
+            article3: "Set availability hours",
+            article4: "Language and translation management"
+          },
+          integration: {
+            title: "Integration",
+            description: "Connect AIPPS with your website and tools",
+            article1: "Integrate widget in WordPress",
+            article2: "Shopify implementation",
+            article3: "Custom integration code",
+            article4: "CRM and tools integration"
+          },
+          billing: {
+            title: "Billing",
+            description: "Manage your subscription and payments",
+            article1: "Change subscription plan",
+            article2: "Billing and payment information",
+            article3: "Refund policy",
+            article4: "Pricing frequently asked questions"
+          },
+          troubleshooting: {
+            title: "Troubleshooting",
+            description: "Resolve common technical issues",
+            article1: "Widget doesn't appear on my site",
+            article2: "Chat connection problems",
+            article3: "Assistant not responding correctly",
+            article4: "Form issues"
+          },
+          account: {
+            title: "Account",
+            description: "Manage your profile and account settings",
+            article1: "Change password and profile data",
+            article2: "Notification settings",
+            article3: "Manage users and permissions",
+            article4: "Delete or close account"
+          }
+        },
+        contact_support: {
+          title: "Need More Help?",
+          description: "If you can't find what you're looking for, our team is here to help",
+          contact_button: "Contact Support",
+          email_button: "Send Email"
+        }
+      },
+      about: {
+        title: "About AIPPS",
+        subtitle: "Learn about our mission to transform web communication with artificial intelligence",
+        mission: {
+          title: "Our Mission",
+          description: "Democratize access to conversational AI for all websites in the world"
+        },
+        vision: {
+          title: "Our Vision",
+          description: "Create a future where every web interaction is intelligent and personalized"
+        },
+        global: {
+          title: "Global Reach",
+          description: "We serve businesses of all sizes in more than 50 countries"
+        },
+        innovation: {
+          title: "Innovation",
+          description: "Pioneers in conversational AI technology with over 5 years of experience"
+        }
+      },
+      contact: {
+        title: "Contact Us",
+        subtitle: "We're here to help. Get in touch with our team",
+        info: {
+          title: "Contact Information",
+          email: "support@aipps.ca",
+          phone: "+1 (555) 123-4567",
+          address: "123 Innovation Street, Tech City, TC 12345",
+          hours: "Monday to Friday: 9:00 AM - 6:00 PM (EST)"
+        },
+        form: {
+          title: "Send Us a Message",
+          name_label: "Name",
+          name_placeholder: "Your name",
+          email_label: "Email",
+          email_placeholder: "your@email.com",
+          subject_label: "Subject",
+          subject_placeholder: "How can we help you?",
+          message_label: "Message",
+          message_placeholder: "Describe your inquiry...",
+          send_button: "Send Message",
+          sending_button: "Sending...",
+          success_title: "Message Sent",
+          success_message: "Thanks for contacting us. We'll get back to you soon."
+        }
+      },
+      privacy: {
+        title: "Privacy Policy",
+        subtitle: "How we collect, use and protect your information",
+        data_collection: {
+          title: "Data Collection",
+          description: "We collect information to provide and improve our services:",
+          item1: "Account information (name, email, contact details)",
+          item2: "Widget usage and analytics data",
+          item3: "Technical information (IP, browser, device)",
+          item4: "Conversation content for AI training"
+        },
+        data_usage: {
+          title: "Data Usage",
+          description: "We use your data for the following purposes:",
+          item1: "Provide and maintain our services",
+          item2: "Improve user experience",
+          item3: "Performance analysis and statistics",
+          item4: "Support communications and updates"
+        },
+        data_sharing: {
+          title: "Data Sharing",
+          description: "We do not sell or rent your personal information. We only share it in these cases:",
+          item1: "With service providers necessary for operation",
+          item2: "When required by law",
+          item3: "With your explicit consent"
+        },
+        security: {
+          title: "Security",
+          description: "We implement security measures to protect your information"
+        },
+        rights: {
+          title: "Your Rights",
+          description: "You have the right to access, correct or delete your personal information"
+        },
+        contact: {
+          title: "Contact",
+          description: "For privacy questions, contact us at privacy@aipps.ca"
+        }
+      },
+      terms: {
+        title: "Terms of Service",
+        subtitle: "AIPPS terms and conditions of use",
+        acceptance: {
+          title: "Acceptance of Terms",
+          description: "By using AIPPS, you accept these terms and conditions"
+        },
+        services: {
+          title: "Service Description",
+          description: "AIPPS provides conversational AI tools for websites:",
+          item1: "Intelligent chat widgets",
+          item2: "Lead capture forms",
+          item3: "Analytics and metrics",
+          item4: "Website integration"
+        },
+        user_obligations: {
+          title: "User Obligations",
+          description: "As a user, you commit to:",
+          item1: "Use the service legally and ethically",
+          item2: "Not interfere with system operation",
+          item3: "Maintain the security of your account",
+          item4: "Respect intellectual property rights"
+        },
+        payment: {
+          title: "Payment Terms",
+          description: "Payment terms include:",
+          item1: "Monthly or annual billing according to chosen plan",
+          item2: "Payments are non-refundable except for exceptions",
+          item3: "Prices may change with prior notice",
+          item4: "Suspension for non-payment is immediate"
+        },
+        intellectual_property: {
+          title: "Intellectual Property",
+          description: "All intellectual property rights of AIPPS belong to us:",
+          item1: "AIPPS software and technology",
+          item2: "Trademarks and logos",
+          item3: "Content and documentation"
+        },
+        limitation: {
+          title: "Limitation of Liability",
+          description: "AIPPS is not responsible for indirect damages or data loss"
+        },
+        termination: {
+          title: "Termination",
+          description: "Either party may terminate the agreement:",
+          item1: "User can cancel at any time",
+          item2: "AIPPS can suspend accounts for terms violation",
+          item3: "Data will be deleted according to retention policy"
+        }
+      },
+      documentation: {
+        title: "AIPPS Documentation",
+        subtitle: "Complete guide to implement and use AIPPS on your website",
+        overview: "Overview",
+        features: "Features",
+        implementation: "Implementation",
+        api_reference: "API Reference",
+        support: "Support",
+        widget_integration: "Widget Integration",
+        contextual_understanding: "Contextual Understanding",
+        document_training: "Document Training",
+        lead_capture: "Lead Capture",
+        analytics: "Analytics",
+        task_automation: "Task Automation",
+        form_creation: "Form Creation",
+        overview_content: "AIPPS is an advanced conversational AI platform that allows websites to offer intelligent and personalized chat experiences.",
+        generated_on: "Generated on",
+        language: "Language",
+        table_of_contents: "Table of Contents"
       },
       getStartedPage: {
         title: "Get Started",
