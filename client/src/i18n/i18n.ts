@@ -274,11 +274,19 @@ const resources = {
         },
         security: {
           title: "Sécurité",
-          description: "Nous mettons en place des mesures de sécurité pour protéger vos informations"
+          description: "Nous mettons en place des mesures de sécurité pour protéger vos informations",
+          item1: "Chiffrement des données en transit et au repos",
+          item2: "Authentification à deux facteurs disponible",
+          item3: "Audits de sécurité réguliers",
+          item4: "Conformité aux normes de sécurité internationales"
         },
-        rights: {
+        user_rights: {
           title: "Vos Droits",
-          description: "Vous avez le droit d'accéder, corriger ou supprimer vos informations personnelles"
+          description: "Vous avez le droit d'accéder, corriger ou supprimer vos informations personnelles",
+          item1: "Accéder à vos données personnelles stockées",
+          item2: "Demander la correction d'informations incorrectes",
+          item3: "Supprimer votre compte et les données associées",
+          item4: "Exporter vos données dans un format portable"
         },
         contact: {
           title: "Contact",
@@ -429,6 +437,22 @@ const resources = {
               "2": "Personnalisez les couleurs, position et messages",
               "3": "Les changements seront appliqués automatiquement"
             }
+          },
+          step4: {
+            title: "Étape 4: Configurer l'Authentification (Optionnel)",
+            description: "Activez les fonctionnalités avancées avec le système d'utilisateurs:",
+            feature_1: "Historique personnel des conversations",
+            feature_2: "Personnalisation des préférences",
+            feature_3: "Suivi des progrès utilisateur",
+            feature_4: "Analyses détaillées par utilisateur"
+          },
+          step5: {
+            title: "Étape 5: Configuration Avancée de l'Assistant",
+            description: "Optimisez l'expérience de l'assistant:",
+            feature_1: "Personnalité et ton des réponses",
+            feature_2: "Base de connaissances spécialisée",
+            feature_3: "Flux de conversation prédéfinis",
+            feature_4: "Intégration d'outils externes"
           }
         },
         form: {
@@ -445,7 +469,18 @@ const resources = {
             position: "Position du bouton ou formulaire",
             theme_color: "Couleur principale du formulaire",
             button_text: "Texte du bouton",
-            example_title: "Exemple de configuration personnalisée:"
+            example_title: "Exemple de configuration personnalisée:",
+            basic_attributes: "Attributs de Base:",
+            attributes: {
+              form_id: "ID unique du formulaire",
+              display_type: "Type d'affichage (modal, inline, popup)",
+              position: "Position sur la page",
+              button_text: "Texte du bouton d'activation"
+            },
+            customization_attributes: "Attributs de Personnalisation:",
+            icon: "Icône personnalisée",
+            button_size: "Taille du bouton",
+            auto_show: "Afficher automatiquement"
           },
           step3: {
             title: "Étape 3: Gérez depuis le Tableau de Bord",
@@ -457,6 +492,39 @@ const resources = {
               "Consultez les réponses et statistiques en temps réel"
             ]
           }
+        },
+        fullscreen_features: {
+          title: "Fonctionnalités du Mode Plein Écran",
+          register_login: "Inscription et connexion utilisateur",
+          personal_history: "Historique personnel des conversations",
+          auto_titles: "Titres automatiques des conversations",
+          conversation_management: "Gestion complète des conversations",
+          user_info: "Informations utilisateur intégrées",
+          jwt_security: "Sécurité JWT intégrée",
+          visual_customization: "Personnalisation visuelle avancée",
+          brand_colors: "Couleurs de marque personnalisables",
+          welcome_messages: "Messages de bienvenue configurables",
+          registration_config: "Configuration d'inscription flexible",
+          privacy_settings: "Paramètres de confidentialité granulaires"
+        },
+        ignored_sections: {
+          step3_title: "Étape 3: Configurer les Sections Ignorées (Optionnel)",
+          title: "Sections Ignorées",
+          description: "Définissez quelles parties de votre site web l'assistant doit ignorer lors de l'analyse du contenu:",
+          benefit_1: "Éviter la confusion avec des éléments non pertinents comme les menus ou la publicité",
+          benefit_2: "Améliorer la précision des réponses de l'assistant",
+          benefit_3: "Réduire le bruit dans l'entraînement automatique",
+          benefit_4: "Concentrer l'analyse sur le contenu pertinent",
+          config_example: "aipi('init', {\n  apiKey: 'VOTRE_CLE_API',\n  // Autres configurations...\n  ignoredSections: ['Menu principal', 'Pied de page', 'Barre latérale', 'Publicité'],\n});",
+          config_description: "Configurez depuis le panneau d'administration:",
+          step_1: "Accédez à \"Paramètres\" → \"Analyse de Contenu\"",
+          step_2: "Ajoutez des sélecteurs CSS ou noms de sections à ignorer",
+          step_3: "Sauvegardez les modifications pour les appliquer immédiatement",
+          step_4: "L'assistant mettra à jour sa compréhension automatiquement"
+        },
+        support: {
+          title: "Support et Ressources",
+          description: "Obtenez de l'aide et des ressources pour maximiser votre expérience AIPPS"
         },
         buttons: {
           go_to_integrations: "Aller aux intégrations",
@@ -752,11 +820,19 @@ const resources = {
         },
         security: {
           title: "Seguridad",
-          description: "Implementamos medidas de seguridad para proteger tu información"
+          description: "Implementamos medidas de seguridad para proteger tu información",
+          item1: "Cifrado de datos en tránsito y reposo",
+          item2: "Autenticación de dos factores disponible",
+          item3: "Auditorías de seguridad regulares",
+          item4: "Cumplimiento con estándares internacionales de seguridad"
         },
-        rights: {
+        user_rights: {
           title: "Tus Derechos",
-          description: "Tienes derecho a acceder, corregir o eliminar tu información personal"
+          description: "Tienes derecho a acceder, corregir o eliminar tu información personal",
+          item1: "Acceder a tus datos personales almacenados",
+          item2: "Solicitar corrección de información incorrecta",
+          item3: "Eliminar tu cuenta y datos asociados",
+          item4: "Exportar tus datos en formato portable"
         },
         contact: {
           title: "Contacto",
@@ -907,6 +983,22 @@ const resources = {
               "2": "Personaliza colores, posición y mensajes",
               "3": "Los cambios se aplicarán automáticamente"
             }
+          },
+          step4: {
+            title: "Paso 4: Configurar Autenticación (Opcional)",
+            description: "Habilita funciones avanzadas con sistema de usuarios:",
+            feature_1: "Historial personal de conversaciones",
+            feature_2: "Personalización de preferencias",
+            feature_3: "Seguimiento de progreso usuario",
+            feature_4: "Análisis detallados por usuario"
+          },
+          step5: {
+            title: "Paso 5: Configuración Avanzada del Asistente",
+            description: "Optimiza la experiencia del asistente:",
+            feature_1: "Personalidad y tono de respuestas",
+            feature_2: "Base de conocimiento especializada",
+            feature_3: "Flujos de conversación predefinidos",
+            feature_4: "Integración con herramientas externas"
           }
         },
         form: {
@@ -923,7 +1015,18 @@ const resources = {
             position: "Posición del botón o formulario",
             theme_color: "Color principal del formulario",
             button_text: "Texto del botón",
-            example_title: "Ejemplo de configuración personalizada:"
+            example_title: "Ejemplo de configuración personalizada:",
+            basic_attributes: "Atributos Básicos:",
+            attributes: {
+              form_id: "ID único del formulario",
+              display_type: "Tipo de visualización (modal, inline, popup)",
+              position: "Posición en la página",
+              button_text: "Texto del botón de activación"
+            },
+            customization_attributes: "Atributos de Personalización:",
+            icon: "Icono personalizado",
+            button_size: "Tamaño del botón",
+            auto_show: "Mostrar automáticamente"
           },
           step3: {
             title: "Paso 3: Gestiona desde el Dashboard",
@@ -935,6 +1038,39 @@ const resources = {
               "Revisa las respuestas y estadísticas en tiempo real"
             ]
           }
+        },
+        fullscreen_features: {
+          title: "Características del Modo Pantalla Completa",
+          register_login: "Registro e inicio de sesión de usuarios",
+          personal_history: "Historial personal de conversaciones",
+          auto_titles: "Títulos automáticos para conversaciones",
+          conversation_management: "Gestión completa de conversaciones",
+          user_info: "Información de usuario integrada",
+          jwt_security: "Seguridad JWT incorporada",
+          visual_customization: "Personalización visual avanzada",
+          brand_colors: "Colores de marca personalizables",
+          welcome_messages: "Mensajes de bienvenida configurables",
+          registration_config: "Configuración de registro flexible",
+          privacy_settings: "Configuración de privacidad granular"
+        },
+        ignored_sections: {
+          step3_title: "Paso 3: Configura Secciones Ignoradas (Opcional)",
+          title: "Secciones Ignoradas",
+          description: "Define qué partes de tu sitio web debe ignorar el asistente al analizar contenido:",
+          benefit_1: "Evita confusión con elementos irrelevantes como menús o publicidad",
+          benefit_2: "Mejora la precisión de las respuestas del asistente",
+          benefit_3: "Reduce el ruido en el entrenamiento automático",
+          benefit_4: "Enfoca el análisis en contenido relevante",
+          config_example: "aipi('init', {\n  apiKey: 'TU_API_KEY',\n  // Otras configuraciones...\n  ignoredSections: ['Menú principal', 'Footer', 'Sidebar', 'Publicidad'],\n});",
+          config_description: "Configura desde el panel de administración:",
+          step_1: "Accede a \"Configuración\" → \"Análisis de Contenido\"",
+          step_2: "Agrega selectores CSS o nombres de secciones a ignorar",
+          step_3: "Guarda cambios para aplicar inmediatamente",
+          step_4: "El asistente actualizará su comprensión automáticamente"
+        },
+        support: {
+          title: "Soporte y Recursos",
+          description: "Obtén ayuda y recursos para maximizar tu experiencia con AIPPS"
         },
         buttons: {
           go_to_integrations: "Ir a integraciones",
@@ -1230,11 +1366,19 @@ const resources = {
         },
         security: {
           title: "Security",
-          description: "We implement security measures to protect your information"
+          description: "We implement security measures to protect your information",
+          item1: "Data encryption in transit and at rest",
+          item2: "Two-factor authentication available",
+          item3: "Regular security audits",
+          item4: "Compliance with international security standards"
         },
-        rights: {
+        user_rights: {
           title: "Your Rights",
-          description: "You have the right to access, correct or delete your personal information"
+          description: "You have the right to access, correct or delete your personal information",
+          item1: "Access your stored personal data",
+          item2: "Request correction of incorrect information",
+          item3: "Delete your account and associated data",
+          item4: "Export your data in portable format"
         },
         contact: {
           title: "Contact",
@@ -1385,6 +1529,22 @@ const resources = {
               "2": "Customize colors, position and messages",
               "3": "Changes will be applied automatically"
             }
+          },
+          step4: {
+            title: "Step 4: Configure Authentication (Optional)",
+            description: "Enable advanced features with user system:",
+            feature_1: "Personal conversation history",
+            feature_2: "Preference customization",
+            feature_3: "User progress tracking",
+            feature_4: "Detailed user analytics"
+          },
+          step5: {
+            title: "Step 5: Advanced Assistant Configuration",
+            description: "Optimize assistant experience:",
+            feature_1: "Response personality and tone",
+            feature_2: "Specialized knowledge base",
+            feature_3: "Predefined conversation flows",
+            feature_4: "External tool integration"
           }
         },
         form: {
@@ -1401,7 +1561,18 @@ const resources = {
             position: "Button or form position",
             theme_color: "Form primary color",
             button_text: "Button text",
-            example_title: "Custom configuration example:"
+            example_title: "Custom configuration example:",
+            basic_attributes: "Basic Attributes:",
+            attributes: {
+              form_id: "Unique form ID",
+              display_type: "Display type (modal, inline, popup)",
+              position: "Position on page",
+              button_text: "Activation button text"
+            },
+            customization_attributes: "Customization Attributes:",
+            icon: "Custom icon",
+            button_size: "Button size",
+            auto_show: "Show automatically"
           },
           step3: {
             title: "Step 3: Manage from Dashboard",
@@ -1413,6 +1584,39 @@ const resources = {
               "Review responses and statistics in real time"
             ]
           }
+        },
+        fullscreen_features: {
+          title: "Fullscreen Mode Features",
+          register_login: "User registration and login",
+          personal_history: "Personal conversation history",
+          auto_titles: "Automatic conversation titles",
+          conversation_management: "Complete conversation management",
+          user_info: "Integrated user information",
+          jwt_security: "Built-in JWT security",
+          visual_customization: "Advanced visual customization",
+          brand_colors: "Customizable brand colors",
+          welcome_messages: "Configurable welcome messages",
+          registration_config: "Flexible registration configuration",
+          privacy_settings: "Granular privacy settings"
+        },
+        ignored_sections: {
+          step3_title: "Step 3: Configure Ignored Sections (Optional)",
+          title: "Ignored Sections",
+          description: "Define which parts of your website the assistant should ignore when analyzing content:",
+          benefit_1: "Avoid confusion with irrelevant elements like menus or advertising",
+          benefit_2: "Improve assistant response accuracy",
+          benefit_3: "Reduce noise in automatic training",
+          benefit_4: "Focus analysis on relevant content",
+          config_example: "aipi('init', {\n  apiKey: 'YOUR_API_KEY',\n  // Other configurations...\n  ignoredSections: ['Main menu', 'Footer', 'Sidebar', 'Advertising'],\n});",
+          config_description: "Configure from admin panel:",
+          step_1: "Access \"Settings\" → \"Content Analysis\"",
+          step_2: "Add CSS selectors or section names to ignore",
+          step_3: "Save changes to apply immediately",
+          step_4: "Assistant will update its understanding automatically"
+        },
+        support: {
+          title: "Support and Resources",
+          description: "Get help and resources to maximize your AIPPS experience"
         },
         buttons: {
           go_to_integrations: "Go to integrations",
