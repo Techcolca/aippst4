@@ -1,8 +1,5 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-
-const resources = {
+// Traducciones simplificadas sin duplicados
+export const translations = {
   fr: {
     translation: {
       // Navegación básica
@@ -24,7 +21,6 @@ const resources = {
       hours_ago: "il y a {{count}} heure",
       minutes_ago_plural: "il y a {{count}} minutes",
       minutes_ago: "il y a {{count}} minute",
-      just_now: "À l'instant",
       
       // Dashboard básico
       dashboard: "Tableau de bord",
@@ -71,7 +67,6 @@ const resources = {
       hours_ago: "hace {{count}} hora",
       minutes_ago_plural: "hace {{count}} minutos",
       minutes_ago: "hace {{count}} minuto",
-      just_now: "Ahora mismo",
       
       // Dashboard básico
       dashboard: "Panel de control",
@@ -116,9 +111,8 @@ const resources = {
       days_ago: "{{count}} day ago",
       hours_ago_plural: "{{count}} hours ago",
       hours_ago: "{{count}} hour ago",
-      minutes_ago_plural: "{{count}} minutes ago", 
+      minutes_ago_plural: "{{count}} minutes ago",
       minutes_ago: "{{count}} minute ago",
-      just_now: "Just now",
       
       // Dashboard básico
       dashboard: "Dashboard",
@@ -145,42 +139,3 @@ const resources = {
     }
   }
 };
-
-console.log('🔍 I18N DEBUG - Manual resources loaded:', {
-  fr: {
-    pricing: typeof resources.fr.translation.pricing,
-    documentation: typeof resources.fr.translation.documentation,
-    get_started: typeof resources.fr.translation.get_started
-  },
-  es: {
-    pricing: typeof resources.es.translation.pricing,
-    documentation: typeof resources.es.translation.documentation, 
-    get_started: typeof resources.es.translation.get_started
-  },
-  en: {
-    pricing: typeof resources.en.translation.pricing,
-    documentation: typeof resources.en.translation.documentation,
-    get_started: typeof resources.en.translation.get_started
-  }
-});
-
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: 'es',
-    fallbackLng: 'en',
-    debug: false,
-    
-    interpolation: {
-      escapeValue: false,
-    },
-    
-    detection: {
-      order: ['cookie', 'localStorage', 'navigator'],
-      caches: ['cookie', 'localStorage'],
-    },
-  });
-
-export default i18n;
