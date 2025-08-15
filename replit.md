@@ -21,6 +21,18 @@ Preferred communication style: Simple, everyday language.
 - **Result**: Perfect text contrast across all widget configurations
 - **Date**: August 15, 2025
 
+### Manual Text Color Control - COMPLETED
+- **Problem Solved**: Users needed manual override for automatic text color calculations
+- **Solution Implemented**: Manual text color selection with three options
+- **Technical Details**:
+  - Database schema updated with `textColor` field in integrations table
+  - Three options: 'auto' (default), 'white', 'black'
+  - Integration in both bubble and fullscreen widgets
+  - Auto-save functionality in edit-integration interface
+  - Override system that respects manual selection over automatic calculation
+- **Result**: Users can force white or black text regardless of background color
+- **Date**: August 15, 2025
+
 ## System Architecture
 
 ### Frontend Architecture
