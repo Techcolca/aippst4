@@ -62,6 +62,8 @@
         <button class="test-button" onclick="clearLogs()">Limpiar Logs</button>
         <button class="test-button" onclick="testCurrentConfig()">Probar Configuración Actual</button>
         <button class="test-button" onclick="toggleWidget()">Mostrar/Ocultar Widget</button>
+        <button class="test-button" onclick="forceOpenWidget()">🚀 Forzar Apertura Widget</button>
+        <button class="test-button" onclick="testRealInputDirectly()">🧪 Test Input Real</button>
     </div>
 
     <div class="debug-container">
@@ -488,6 +490,69 @@
             childList: true, 
             subtree: true 
         });
+        
+        function forceOpenWidget() {
+            console.log('🚀 Forzando apertura del widget...');
+            const chatPanel = document.querySelector('#aipi-chat-panel');
+            if (chatPanel) {
+                chatPanel.style.display = 'flex';
+                console.log('✅ Chat panel forzado a mostrarse');
+                
+                // Esperar y probar input
+                setTimeout(() => {
+                    testRealInputDirectly();
+                }, 500);
+            } else {
+                console.error('❌ No se encontró chat panel');
+            }
+        }
+        
+        function testRealInputDirectly() {
+            console.log('🧪 Probando input real directamente...');
+            const input = document.querySelector('#aipi-input');
+            const button = document.querySelector('#aipi-send-button');
+            
+            if (input && button) {
+                console.log('✅ Elementos encontrados, probando funcionalidad...');
+                console.log('  Input inicial disabled:', input.disabled);
+                console.log('  Button inicial disabled:', button.disabled);
+                
+                // Simular escritura
+                input.focus();
+                input.value = 'Test directo';
+                
+                // Disparar todos los eventos posibles
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                input.dispatchEvent(new Event('keyup', { bubbles: true }));
+                
+                setTimeout(() => {
+                    console.log('📊 Resultado después de eventos:');
+                    console.log('  Input value:', input.value);
+                    console.log('  Button disabled:', button.disabled);
+                    
+                    if (!button.disabled) {
+                        console.log('🎉 ¡SUCCESS! El botón se habilitó');
+                        // Simular envío
+                        button.click();
+                        console.log('📤 Click enviado');
+                    } else {
+                        console.log('❌ El botón sigue deshabilitado');
+                        
+                        // Intentar habilitar manualmente
+                        button.disabled = false;
+                        console.log('🔧 Button habilitado manualmente');
+                        button.click();
+                        console.log('📤 Click enviado después de habilitar manualmente');
+                    }
+                }, 200);
+            } else {
+                console.error('❌ No se encontraron elementos:', {
+                    input: !!input,
+                    button: !!button
+                });
+            }
+        }
     </script>
 </body>
 </html>
