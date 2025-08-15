@@ -76,7 +76,7 @@
 
     <div class="widget-container" id="widgetContainer" style="display: none;">
         <h2>Widget AIPI en Vivo</h2>
-        <div id="aipi-widget-container"></div>
+        <div id="debug-widget-container"></div>
     </div>
 
     <script>
@@ -209,7 +209,7 @@
                 background: white;
                 margin: 20px 0;
             `;
-            document.getElementById('aipi-widget-container').appendChild(widgetDiv);
+            document.getElementById('debug-widget-container').appendChild(widgetDiv);
             
             // Crear manualmente elementos de prueba
             createTestMessages();
@@ -217,9 +217,12 @@
             // Crear input de prueba funcional
             createTestInput();
             
+            // Limpiar cualquier inicialización previa
+            window.AIPPS_WIDGET_INITIALIZED = false;
+            
             // También cargar el script real
             const script = document.createElement('script');
-            script.src = '/embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+            script.src = '/embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f&v=' + Date.now();
             script.onload = function() {
                 console.log('Widget cargado exitosamente');
                 setTimeout(() => {

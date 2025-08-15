@@ -1,0 +1,69 @@
+Iniciando debug...\n[10:56:57 a. m.] LOG: Debug de contraste iniciado
+[10:56:57 a. m.] LOG: Configuración detectada: asistente fondo #E5E7EB
+[10:56:57 a. m.] LOG: === PROBANDO CONFIGURACIÓN ACTUAL ===
+[10:56:57 a. m.] LOG: Configuración Asistente:
+[10:56:57 a. m.] LOG:   Color de fondo: #E5E7EB
+[10:56:57 a. m.] LOG:   Luminancia: 0.905
+[10:56:57 a. m.] LOG:   Color de texto calculado: #1f2937
+[10:56:57 a. m.] LOG:   Umbral usado: 0.6
+[10:56:57 a. m.] LOG:   ¿Es fondo oscuro? NO
+[10:56:57 a. m.] LOG: Testing color #E5E7EB: Luminance=0.905, TextColor=#1f2937
+[10:56:57 a. m.] LOG: Testing color #1b3569: Luminance=0.201, TextColor=#ffffff
+[10:56:57 a. m.] LOG: Testing color #ffffff: Luminance=1.000, TextColor=#1f2937
+[10:56:57 a. m.] LOG: Testing color #000000: Luminance=0.000, TextColor=#ffffff
+[10:56:57 a. m.] LOG: Testing color #f3f4f6: Luminance=0.957, TextColor=#1f2937
+[10:56:57 a. m.] LOG: Testing color #374151: Luminance=0.251, TextColor=#ffffff
+[10:56:57 a. m.] LOG: Testing color #3b82f6: Luminance=0.483, TextColor=#ffffff
+[10:56:57 a. m.] LOG: Testing color #1f2937: Luminance=0.156, TextColor=#ffffff
+[10:57:00 a. m.] LOG: Cargando widget real...
+[10:57:00 a. m.] LOG: ✅ Mensaje de prueba creado:
+[10:57:00 a. m.] LOG:   Background: #E5E7EB
+[10:57:00 a. m.] LOG:   Color: #1f2937
+[10:57:00 a. m.] LOG:   Styles applied: background-color: rgb(229, 231, 235); color: rgb(31, 41, 55); padding: 10px 14px; border-radius: 18px 18px 18px 4px; margin: 10px; max-width: 80%;
+[10:57:00 a. m.] LOG: ✅ Test input creado y configurado
+[10:57:00 a. m.] LOG: AIPPS Widget: Ya inicializado, evitando duplicación
+[10:57:00 a. m.] LOG: Widget cargado exitosamente
+[10:57:00 a. m.] LOG: 🆕 NUEVO mensaje del asistente detectado:
+[10:57:00 a. m.] LOG:   Element: DIV
+[10:57:00 a. m.] LOG:   Classes: aipi-assistant-message
+[10:57:00 a. m.] LOG:   Inline styles: background-color: rgb(229, 231, 235); color: rgb(31, 41, 55); padding: 10px 14px; border-radius: 18px 18px 18px 4px; margin: 10px; max-width: 80%;
+[10:57:00 a. m.] LOG:   Computed background: rgb(229, 231, 235)
+[10:57:00 a. m.] LOG:   Computed color: rgb(31, 41, 55)
+[10:57:00 a. m.] LOG:   Text content: Mensaje de prueba - ¿Se ve este texto?...
+[10:57:00 a. m.] LOG: 🔍 Análisis de cascada CSS:
+[10:57:00 a. m.] LOG:   Reglas CSS aplicables: 
+[10:57:00 a. m.] LOG: 📊 Estilos computados:
+[10:57:00 a. m.] LOG:   background-color: rgb(229, 231, 235)
+[10:57:00 a. m.] LOG:   color: rgb(31, 41, 55)
+[10:57:02 a. m.] LOG: 🔍 Encontrados 1 mensajes reales del asistente
+[10:57:02 a. m.] LOG: Mensaje 1:
+[10:57:02 a. m.] LOG:   Element: [object HTMLDivElement]
+[10:57:02 a. m.] LOG:   Classes: aipi-assistant-message
+[10:57:02 a. m.] LOG:   Inline styles: background-color: rgb(229, 231, 235); color: rgb(31, 41, 55); padding: 10px 14px; border-radius: 18px 18px 18px 4px; margin: 10px; max-width: 80%;
+[10:57:02 a. m.] LOG:   Computed background: rgb(229, 231, 235)
+[10:57:02 a. m.] LOG:   Computed color: rgb(31, 41, 55)
+[10:57:02 a. m.] LOG:   Parent element: DIV
+[10:57:02 a. m.] LOG: 🔍 Probando funcionalidad de inputs del widget real...
+[10:57:02 a. m.] LOG: 🔍 Estado del widget:
+[10:57:02 a. m.] LOG:   Chat panel encontrado: false
+[10:57:02 a. m.] LOG:   Toggle button encontrado: false
+[10:57:02 a. m.] LOG:   Input encontrado: false
+[10:57:02 a. m.] LOG:   Send button encontrado: false
+[10:57:02 a. m.] ERROR: ❌ No se encontraron elementos del widget real
+[10:57:02 a. m.] LOG: 📋 Todos los elementos con ID que contiene "aipi":
+[10:57:02 a. m.] LOG:   1. DIV#aipi-widget-container. - visible: true
+[10:57:02 a. m.] LOG:   2. DIV#aipi-widget-debug. - visible: true
+[10:57:02 a. m.] LOG:   3. DIV#.aipi-assistant-message - visible: true
+[10:57:05 a. m.] LOG: 🧪 Test Input: value changed to: g button enabled: true
+[10:57:05 a. m.] LOG: 🧪 Test Input: value changed to: gf button enabled: true
+[10:57:05 a. m.] LOG: 🧪 Test Input: value changed to: gff button enabled: true
+[10:57:05 a. m.] LOG: 🧪 Test Input: value changed to: gffg button enabled: true
+[10:57:05 a. m.] LOG: 🧪 Test Input: value changed to: gffgf button enabled: true
+[10:57:06 a. m.] LOG: 🧪 Test Input: Button clicked with value: gffgf
+[10:57:08 a. m.] LOG: 🧪 Test Input: value changed to:  button enabled: false
+[10:57:12 a. m.] LOG: 🧪 Test Input: value changed to: H button enabled: true
+[10:57:12 a. m.] LOG: 🧪 Test Input: value changed to: Ho button enabled: true
+[10:57:12 a. m.] LOG: 🧪 Test Input: value changed to: Hol button enabled: true
+[10:57:12 a. m.] LOG: 🧪 Test Input: value changed to: Hola button enabled: true
+[10:57:15 a. m.] LOG: 🧪 Test Input: Button clicked with value: Hola
+[10:57:16 a. m.] LOG: 🧪 Test Input: value changed to:  button enabled: false
