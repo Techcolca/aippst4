@@ -302,7 +302,7 @@ export default function PricingPage() {
         <section className="py-12">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col items-start space-y-2">
+              <div className="flex flex-col items-center text-center space-y-2">
                 <h3 className="text-lg font-bold">{t('pricing.faq.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
                   {t('pricing.faq.q1')}
@@ -311,7 +311,7 @@ export default function PricingPage() {
                   {t('pricing.faq.a1')}
                 </p>
               </div>
-              <div className="flex flex-col items-start space-y-2">
+              <div className="flex flex-col items-center text-center space-y-2">
                 <h3 className="text-lg font-bold">{t('pricing.support.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
                   {t('pricing.support.q1')}
@@ -320,7 +320,7 @@ export default function PricingPage() {
                   {t('pricing.support.a1')}
                 </p>
               </div>
-              <div className="flex flex-col items-start space-y-2">
+              <div className="flex flex-col items-center text-center space-y-2">
                 <h3 className="text-lg font-bold">{t('pricing.refund.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
                   {t('pricing.refund.q1')}
