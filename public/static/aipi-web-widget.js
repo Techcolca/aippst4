@@ -594,9 +594,9 @@
       const themeColor = widgetConfig.themeColor || '#6366f1';
       const isDarkBubble = isColorDark(themeColor);
       
-      // Determinar contraste basado en luminancia más estricta
+      // Determinar contraste basado en luminancia más estricta - FORZAR BLANCO PARA DEBUG
       const assistantBgColor = themeColor;
-      const assistantTextColor = getContrastTextColor(themeColor);
+      const assistantTextColor = '#ffffff'; // FORZADO PARA DEBUGGING
       
       messageElement.style.backgroundColor = assistantBgColor;
       messageElement.style.color = assistantTextColor;
