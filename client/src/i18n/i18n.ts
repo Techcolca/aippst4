@@ -700,6 +700,15 @@ const resources = {
       "getStartedPage.form.step3.description": "Configurez ces options depuis le panneau d'administration:",
       "getStartedPage.buttons.go_to_forms": "Aller aux formulaires",
       
+      // Pricing Page
+      "pricing.plans": "Plans",
+      "pricing.title": "Tarification",
+      "pricing.subtitle": "Choisissez le plan qui convient à vos besoins",
+      "pricing.monthly_billing": "Facturation mensuelle",
+      "pricing.toggle_billing": "Basculer la facturation",
+      "pricing.annual_billing": "Facturation annuelle",
+      "pricing.save_percentage": "Économisez {{percentage}}%",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1416,6 +1425,15 @@ const resources = {
       "getStartedPage.form.step3.description": "Configura estas opciones desde el panel de administración:",
       "getStartedPage.buttons.go_to_forms": "Ir a formularios",
       
+      // Pricing Page
+      "pricing.plans": "Planes",
+      "pricing.title": "Precios",
+      "pricing.subtitle": "Elige el plan que se adapte a tus necesidades",
+      "pricing.monthly_billing": "Facturación mensual",
+      "pricing.toggle_billing": "Cambiar facturación",
+      "pricing.annual_billing": "Facturación anual",
+      "pricing.save_percentage": "Ahorra {{percentage}}%",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -2131,6 +2149,15 @@ const resources = {
       "getStartedPage.form.step3.title": "Step 3: Dashboard configuration",
       "getStartedPage.form.step3.description": "Configure these options from the admin panel:",
       "getStartedPage.buttons.go_to_forms": "Go to forms",
+      
+      // Pricing Page
+      "pricing.plans": "Plans",
+      "pricing.title": "Pricing",
+      "pricing.subtitle": "Choose the plan that fits your needs",
+      "pricing.monthly_billing": "Monthly billing",
+      "pricing.toggle_billing": "Toggle billing",
+      "pricing.annual_billing": "Annual billing",
+      "pricing.save_percentage": "Save {{percentage}}%",
       
       // Footer
       footer: {
