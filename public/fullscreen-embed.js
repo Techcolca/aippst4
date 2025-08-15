@@ -109,6 +109,14 @@
       const assistantName = config.assistantName || config.integrationName || 'tu asistente';
       config.greetingMessage = data.settings?.defaultGreeting || `Hola, soy ${assistantName}. ¿En qué puedo ayudarte?`;
       
+      // Store user info for personalized greetings (only for authenticated users)
+      if (data.userInfo) {
+        config.userName = data.userInfo.name;
+        if (config.userName) {
+          config.greetingMessage = `¡Hola ${config.userName}! Soy ${assistantName}. ¿En qué puedo ayudarte hoy?`;
+        }
+      }
+      
       if (data.settings) {
         config.showAvailability = data.settings.showAvailability !== false;
         config.userBubbleColor = data.settings.userBubbleColor || config.userBubbleColor;

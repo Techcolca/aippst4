@@ -2994,6 +2994,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Use integration-specific customization if available, fallback to global settings
       const customization = integration.customization || {};
       
+      // Check if request is authenticated to provide user info
+      const token = req.cookies?.auth_token || 
+                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                     ? req.headers.authorization.slice(7) : null);
+      
+      let userInfo = null;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+          const authenticatedUser = await storage.getUser(decoded.userId);
+          if (authenticatedUser) {
+            userInfo = {
+              name: authenticatedUser.fullName || authenticatedUser.username
+            };
+          }
+        } catch (error) {
+          console.error("Error getting user info for widget:", error);
+        }
+      }
+      
       // Return widget configuration
       res.json({
         integration: {
@@ -3021,6 +3041,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           font: customization.font || settings.font,
           conversationStyle: customization.conversationStyle || settings.conversationStyle,
         },
+        userInfo: userInfo, // Include user info for personalized greetings
       });
     } catch (error) {
       console.error("Get widget error:", error);
@@ -3362,11 +3383,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get user settings
       const userSettings = await storage.getSettings(integration.userId);
       
+      // Get authenticated user information for personalization
+      let userContext = "";
+      if (isAuthenticated && authenticatedUserId) {
+        try {
+          const authenticatedUser = await storage.getUser(authenticatedUserId);
+          if (authenticatedUser) {
+            const userName = authenticatedUser.fullName || authenticatedUser.username;
+            userContext = `\n\nNOTA IMPORTANTE: El usuario que te está escribiendo se llama ${userName}. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana.`;
+            console.log(`AIPPS Debug: User context added for ${userName}`);
+          }
+        } catch (error) {
+          console.error("Error getting authenticated user info:", error);
+        }
+      }
+      
       // Prepare bot configuration using integration-specific settings
       const botConfig = {
         assistantName: integration.name,
         defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-        conversationStyle: integration.botBehavior,
+        conversationStyle: integration.botBehavior + userContext,
         description: integration.description,
         isWidget: true // Marca este bot como widget para aplicar restricciones
       };
