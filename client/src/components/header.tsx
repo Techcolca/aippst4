@@ -37,6 +37,7 @@ export default function Header() {
     { name: t("dashboard"), href: "/dashboard", auth: true },
     { name: t("integrations"), href: "/dashboard?tab=integrations", auth: true },
     { name: t("analytics"), href: "/analytics", auth: true },
+    { name: t("pricing"), href: "/pricing", auth: true },
     { name: t("settings"), href: "/dashboard?tab=settings", auth: true },
     { name: t("documentation"), href: "/docs", auth: true },
     // Añadir enlace a panel de administración solo si el usuario es admin
