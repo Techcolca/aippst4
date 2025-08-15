@@ -118,6 +118,22 @@ const resources = {
         en: "English"
       },
       
+      // Features Page
+      "features.title": "Fonctionnalités",
+      "features.subtitle": "Découvrez nos fonctionnalités",
+      "features.conversationalAI.title": "IA Conversationnelle",
+      "features.conversationalAI.description": "Assistant IA intelligent pour conversations naturelles",
+      "features.taskAutomation.title": "Automatisation des Tâches",
+      "features.taskAutomation.description": "Automatisez vos processus répétitifs",
+      "features.easyIntegration.title": "Intégration Facile",
+      "features.easyIntegration.description": "Intégrez facilement à vos systèmes existants",
+      "features.analytics.title": "Analyses",
+      "features.analytics.description": "Analyses détaillées et rapports",
+      "cta.title": "Prêt à Commencer",
+      "cta.subtitle": "Rejoignez-nous dès aujourd'hui",
+      "cta.getStartedFree": "Commencer Gratuitement",
+      "cta.scheduleDemo": "Planifier une Démo",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -252,6 +268,22 @@ const resources = {
         en: "English"
       },
       
+      // Features Page
+      "features.title": "Características",
+      "features.subtitle": "Descubre nuestras características",
+      "features.conversationalAI.title": "IA Conversacional",
+      "features.conversationalAI.description": "Asistente de IA inteligente para conversaciones naturales",
+      "features.taskAutomation.title": "Automatización de Tareas",
+      "features.taskAutomation.description": "Automatiza tus procesos repetitivos",
+      "features.easyIntegration.title": "Integración Fácil",
+      "features.easyIntegration.description": "Integra fácilmente con tus sistemas existentes",
+      "features.analytics.title": "Análisis",
+      "features.analytics.description": "Análisis detallados y reportes",
+      "cta.title": "Listo para Empezar",
+      "cta.subtitle": "Únete hoy mismo",
+      "cta.getStartedFree": "Empezar Gratis",
+      "cta.scheduleDemo": "Programar Demo",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -385,6 +417,22 @@ const resources = {
         es: "Español",
         en: "English"
       },
+      
+      // Features Page
+      "features.title": "Features",
+      "features.subtitle": "Discover our features",
+      "features.conversationalAI.title": "Conversational AI",
+      "features.conversationalAI.description": "Intelligent AI assistant for natural conversations",
+      "features.taskAutomation.title": "Task Automation",
+      "features.taskAutomation.description": "Automate your repetitive processes",
+      "features.easyIntegration.title": "Easy Integration",
+      "features.easyIntegration.description": "Easily integrate with your existing systems",
+      "features.analytics.title": "Analytics",
+      "features.analytics.description": "Detailed analytics and reports",
+      "cta.title": "Ready to Start",
+      "cta.subtitle": "Join us today",
+      "cta.getStartedFree": "Get Started Free",
+      "cta.scheduleDemo": "Schedule Demo",
       
       // Footer
       footer: {
