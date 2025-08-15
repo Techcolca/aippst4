@@ -81,8 +81,8 @@ export default function Home() {
                     <Link href="/get-started">{t("getStarted")}</Link>
                   </Button>
                   
-                  <Button size="lg" variant="outline" className="border-gray-600 dark:border-gray-400 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                    {t("learnMore")}
+                  <Button size="lg" variant="outline" className="border-gray-600 dark:border-gray-400 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" asChild>
+                    <Link href="/documentation">{t("learnMore")}</Link>
                   </Button>
                 </div>
               </div>
@@ -175,8 +175,8 @@ export default function Home() {
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/register">{t("cta.getStartedFree")}</Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-primary-700">
-                {t("cta.scheduleDemo")}
+              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-primary-700" asChild>
+                <Link href="/contact">{t("cta.scheduleDemo")}</Link>
               </Button>
             </div>
           </div>

@@ -118,21 +118,26 @@ const resources = {
         en: "English"
       },
       
+      // Home Page
+      "welcome": "Bienvenue à AIPPS",
+      "getStarted": "Commencer",
+      "learnMore": "En savoir plus",
+      
       // Features Page
       "features.title": "Fonctionnalités",
       "features.subtitle": "Découvrez nos fonctionnalités",
       "features.conversationalAI.title": "IA Conversationnelle",
-      "features.conversationalAI.description": "Assistant IA intelligent pour conversations naturelles",
+      "features.conversationalAI.description": "Assistant IA intelligent pour des conversations naturelles",
       "features.taskAutomation.title": "Automatisation des Tâches",
       "features.taskAutomation.description": "Automatisez vos processus répétitifs",
       "features.easyIntegration.title": "Intégration Facile",
-      "features.easyIntegration.description": "Intégrez facilement à vos systèmes existants",
+      "features.easyIntegration.description": "Intégrez facilement avec vos systèmes existants",
       "features.analytics.title": "Analyses",
       "features.analytics.description": "Analyses détaillées et rapports",
-      "cta.title": "Prêt à Commencer",
-      "cta.subtitle": "Rejoignez-nous dès aujourd'hui",
-      "cta.getStartedFree": "Commencer Gratuitement",
-      "cta.scheduleDemo": "Planifier une Démo",
+      "cta.title": "Prêt à commencer?",
+      "cta.subtitle": "Rejoignez des milliers d'entreprises qui font confiance à AIPI",
+      "cta.getStartedFree": "Commencer gratuitement",
+      "cta.scheduleDemo": "Programmer une démo",
       
       // Terms of Service
       "terms.title": "Conditions d'utilisation",
@@ -740,6 +745,8 @@ const resources = {
       "learn_more": "en savoir plus",
       "features": "fonctionnalités",
       
+
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -873,6 +880,11 @@ const resources = {
         es: "Español",
         en: "English"
       },
+      
+      // Home Page
+      "welcome": "Bienvenido a AIPPS",
+      "getStarted": "Comenzar",
+      "learnMore": "Saber más",
       
       // Features Page
       "features.title": "Características",
@@ -1496,6 +1508,8 @@ const resources = {
       "learn_more": "saber más",
       "features": "características",
       
+
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -1629,6 +1643,11 @@ const resources = {
         es: "Español",
         en: "English"
       },
+      
+      // Home Page
+      "welcome": "Welcome to AIPPS",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More",
       
       // Features Page
       "features.title": "Features",
@@ -2251,6 +2270,8 @@ const resources = {
       "feature": "feature",
       "learn_more": "learn more",
       "features": "features",
+      
+
       
       // Footer
       footer: {
