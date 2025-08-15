@@ -214,6 +214,9 @@
             // Crear manualmente elementos de prueba
             createTestMessages();
             
+            // Crear input de prueba funcional
+            createTestInput();
+            
             // También cargar el script real
             const script = document.createElement('script');
             script.src = '/embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
@@ -221,12 +224,97 @@
                 console.log('Widget cargado exitosamente');
                 setTimeout(() => {
                     inspectRealElements();
+                    testInputFunctionality();
                 }, 2000);
             };
             script.onerror = function() {
                 console.error('Error al cargar el widget');
             };
             document.head.appendChild(script);
+        }
+
+        function createTestInput() {
+            const container = document.getElementById('aipi-widget-debug');
+            if (!container) return;
+
+            const testInputDiv = document.createElement('div');
+            testInputDiv.style.cssText = `
+                background: #f8f9fa;
+                padding: 20px;
+                margin: 10px;
+                border-radius: 8px;
+                border: 2px solid #28a745;
+            `;
+
+            testInputDiv.innerHTML = `
+                <h4 style="margin: 0 0 10px 0; color: #28a745;">🧪 Test de Input - Funcional</h4>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" id="debug-test-input" placeholder="Escribe aquí para probar..." 
+                           style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; font-size: 14px;">
+                    <button id="debug-test-send" disabled style="background: #007bff; color: white; border: none; 
+                            border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; 
+                            align-items: center; justify-content: center;">
+                        ➤
+                    </button>
+                </div>
+                <small style="color: #666; margin-top: 5px; display: block;">
+                    Este input debería habilitar el botón cuando escribas
+                </small>
+            `;
+
+            container.appendChild(testInputDiv);
+
+            // Configurar eventos del input de prueba
+            const testInput = document.getElementById('debug-test-input');
+            const testSend = document.getElementById('debug-test-send');
+
+            testInput.oninput = function() {
+                const hasValue = testInput.value.trim();
+                testSend.disabled = !hasValue;
+                testSend.style.background = hasValue ? '#28a745' : '#6c757d';
+                console.log('🧪 Test Input: value changed to:', testInput.value, 'button enabled:', !testSend.disabled);
+            };
+
+            testSend.onclick = function() {
+                console.log('🧪 Test Input: Button clicked with value:', testInput.value);
+                alert('Test exitoso! Valor: ' + testInput.value);
+                testInput.value = '';
+                testInput.oninput(); // Trigger para deshabilitar botón
+            };
+
+            console.log('✅ Test input creado y configurado');
+        }
+
+        function testInputFunctionality() {
+            console.log('🔍 Probando funcionalidad de inputs del widget real...');
+            
+            const realInput = document.querySelector('#aipi-input');
+            const realSendButton = document.querySelector('#aipi-send-button');
+            
+            if (realInput && realSendButton) {
+                console.log('📝 Elementos del widget encontrados:');
+                console.log('  Input:', realInput);
+                console.log('  Send button:', realSendButton);
+                console.log('  Input disabled:', realInput.disabled);
+                console.log('  Send button disabled:', realSendButton.disabled);
+                console.log('  Input placeholder:', realInput.placeholder);
+                
+                // Simular escritura para probar
+                setTimeout(() => {
+                    console.log('🤖 Simulando escritura en el input real...');
+                    realInput.value = 'Mensaje de prueba';
+                    realInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    
+                    setTimeout(() => {
+                        console.log('📊 Estado después de simular escritura:');
+                        console.log('  Input value:', realInput.value);
+                        console.log('  Send button disabled:', realSendButton.disabled);
+                    }, 100);
+                }, 500);
+            } else {
+                console.error('❌ No se encontraron elementos del widget real');
+                console.log('  Elementos disponibles:', document.querySelectorAll('[id*="aipi"]'));
+            }
         }
 
         function createTestMessages() {
