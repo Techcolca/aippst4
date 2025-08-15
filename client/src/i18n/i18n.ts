@@ -88,6 +88,11 @@ const resources = {
       no_automations: "Aucune automatisation pour le moment",
       automations_empty_message: "Créez votre première automatisation pour simplifier les tâches répétitives avec l'IA",
       
+      // Form template descriptions
+      "form_template_waitlist": "Modèle pour capturer des utilisateurs en liste d'attente",
+      "form_template_survey": "Veuillez compléter les informations demandées pour commencer",
+      "form_template_standard": "Formulaire standard pour collecter des informations",
+      
       // Estados
       active: "Actif",
       inactive: "Inactif",
@@ -975,6 +980,11 @@ const resources = {
       no_automations: "Aún no hay automatizaciones",
       automations_empty_message: "Cree su primera automatización para agilizar tareas repetitivas con IA",
       
+      // Form template descriptions
+      "form_template_waitlist": "Modèle para capturar usuarios en lista de espera",
+      "form_template_survey": "Complete la información solicitada para comenzar",
+      "form_template_standard": "Formulario estándar para recopilar información",
+      
       // Estados
       active: "Activo",
       inactive: "Inactivo",
@@ -1861,6 +1871,11 @@ const resources = {
       view_logs: "View Logs",
       no_automations: "No automations yet",
       automations_empty_message: "Create your first automation to streamline repetitive tasks with AI",
+      
+      // Form template descriptions
+      "form_template_waitlist": "Model to capture users on waiting list",
+      "form_template_survey": "Please complete the requested information to get started",
+      "form_template_standard": "Standard form to collect information",
       
       // Estados
       active: "Active",

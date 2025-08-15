@@ -371,6 +371,23 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
     },
   });
 
+  // Función para traducir descripciones de formularios
+  const translateFormDescription = (form: any): string => {
+    if (!form.description) return t("no_description", "No description");
+    
+    // Detectar el tipo de formulario basado en la descripción o tipo
+    if (form.description.includes("liste d'attente") || form.description.includes("waiting list") || form.type === "waitlist") {
+      return t("form_template_waitlist", "Model to capture users on waiting list");
+    } else if (form.description.includes("Please complete") || form.description.includes("información solicitada") || form.type === "survey") {
+      return t("form_template_survey", "Please complete the requested information to get started");
+    } else if (form.type === "standard" || form.description.includes("standard")) {
+      return t("form_template_standard", "Standard form to collect information");
+    }
+    
+    // Si no se puede clasificar, devolver descripción original
+    return form.description;
+  };
+
   // Renderizar contenido de la pestaña de formularios
   const renderFormsTab = () => {
     return (
@@ -407,7 +424,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                   <div>
                     <h3 className="text-lg font-medium">{form.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {form.description || t("no_description", "No description")}
+                      {translateFormDescription(form)}
                     </p>
                   </div>
                 </div>
