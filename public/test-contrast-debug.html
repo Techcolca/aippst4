@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Contraste AIPPS Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .test-info {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h2>🔍 Test de Debug de Contraste AIPPS</h2>
+        <p>Esta página prueba específicamente el problema del contraste del texto en los mensajes del chatbot.</p>
+        <p><strong>Problema:</strong> Los mensajes del asistente aparecen con texto oscuro sobre fondo oscuro.</p>
+        <p><strong>Configuración actual:</strong> assistantBubbleColor: "#E5E7EB" (gris claro), pero vemos color oscuro.</p>
+        <p><strong>Debug:</strong> Abrir consola para ver logs detallados de color y luminancia.</p>
+    </div>
+
+    <h1>Página de Prueba del Widget AIPPS</h1>
+    <p>El widget debería aparecer en la esquina inferior derecha.</p>
+    <p>Escribe cualquier mensaje y observa el color del texto en la respuesta del chatbot.</p>
+
+    <!-- Widget AIPPS con configuración específica para debug -->
+    <script>
+        (function() {
+            // Configuración específica para debug
+            window.AIPI_CONFIG = {
+                apiKey: "57031f04127cd041251b1e9abd678439fd199b2f30b75a1f",
+                position: "bottom-right",
+                themeColor: "#3B82F6",
+                assistantName: "AIPPS Assistant",
+                greetingMessage: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
+                showAvailability: true,
+                userBubbleColor: "#3B82F6",
+                assistantBubbleColor: "#E5E7EB", // GRIS CLARO - debería mostrar texto oscuro
+                font: "inter",
+                autoOpen: false,
+                autoOpenDelay: 5000,
+                visitorId: "",
+                conversationId: null,
+                widgetType: "fullscreen", // Usando fullscreen específicamente
+                ignoredSections: [],
+                serverUrl: window.location.origin,
+                fontURL: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            };
+        })();
+    </script>
+    <script src="/fullscreen-embed.js"></script>
+</body>
+</html>

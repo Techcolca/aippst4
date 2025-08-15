@@ -381,21 +381,17 @@
         
         .aipi-fs-assistant-message {
           background-color: ${config.assistantBubbleColor};
-          color: ${(() => {
-            const color = config.assistantBubbleColor || '#E5E7EB';
-            let hex = color.replace('#', '');
-            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-            if (hex.length !== 6) return '#1f2937 !important';
-            
-            const r = parseInt(hex.substr(0, 2), 16);
-            const g = parseInt(hex.substr(2, 2), 16);
-            const b = parseInt(hex.substr(4, 2), 16);
-            const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-            
-            return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
-          })()};
+          color: #ffffff !important;
           align-self: flex-start;
           border-bottom-left-radius: 4px;
+        }
+        
+        /* FORCE WHITE TEXT - Override any possible conflict */
+        .aipi-fs-assistant-message,
+        .aipi-fs-assistant-message *,
+        .aipi-fs-typing-indicator,
+        .aipi-fs-typing-indicator * {
+          color: #ffffff !important;
         }
         
         .aipi-fs-typing-indicator {
@@ -404,19 +400,7 @@
           gap: 4px;
           padding: 10px 14px;
           background-color: ${config.assistantBubbleColor};
-          color: ${(() => {
-            const color = config.assistantBubbleColor || '#E5E7EB';
-            let hex = color.replace('#', '');
-            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-            if (hex.length !== 6) return '#1f2937 !important';
-            
-            const r = parseInt(hex.substr(0, 2), 16);
-            const g = parseInt(hex.substr(2, 2), 16);
-            const b = parseInt(hex.substr(4, 2), 16);
-            const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-            
-            return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
-          })()};
+          color: #ffffff !important;
           border-radius: 18px;
           border-bottom-left-radius: 4px;
           align-self: flex-start;
@@ -734,10 +718,42 @@
   
   // Add message to UI
   function addMessage(content, role) {
+    console.log('AIPPS Debug: addMessage called with role:', role, 'config.assistantBubbleColor:', config.assistantBubbleColor);
+    
     const messagesContainer = document.getElementById('aipi-fs-messages-container');
     const messageElement = document.createElement('div');
     
     messageElement.className = `aipi-fs-message aipi-fs-${role}-message`;
+    
+    // FORCE WHITE TEXT for assistant messages with inline styles (override everything)
+    if (role === 'assistant') {
+      const bgColor = config.assistantBubbleColor || '#E5E7EB';
+      
+      console.log('AIPPS Debug: BGR color:', bgColor);
+      
+      // FORCE white text for all assistant messages regardless of background
+      // This solves the problem definitively
+      messageElement.style.cssText = `
+        background-color: ${bgColor} !important;
+        color: #ffffff !important;
+        padding: 10px 14px !important;
+        border-radius: 18px !important;
+        margin-bottom: 10px !important;
+        max-width: 80% !important;
+        word-wrap: break-word !important;
+        align-self: flex-start !important;
+        border-bottom-left-radius: 4px !important;
+      `;
+      
+      // Also force all child elements to white
+      setTimeout(() => {
+        const allChildren = messageElement.querySelectorAll('*');
+        allChildren.forEach(child => {
+          child.style.color = '#ffffff !important';
+        });
+      }, 100);
+    }
+    
     messageElement.innerHTML = formatMessage(content);
     
     messagesContainer.appendChild(messageElement);
