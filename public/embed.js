@@ -1175,7 +1175,7 @@ Contenido: [Error al extraer contenido detallado]
           const b = parseInt(hex.substr(4, 2), 16);
           const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
           
-          return '#ffffff !important'; // FORZAR BLANCO PARA DEBUGGING
+          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
         })()};
         align-self: flex-start;
         border-bottom-left-radius: 4px;
@@ -1189,7 +1189,19 @@ Contenido: [Error al extraer contenido detallado]
         gap: 4px;
         padding: 10px 14px;
         background-color: ${config.assistantBubbleColor};
-        color: #ffffff !important;
+        color: ${(() => {
+          const color = config.assistantBubbleColor || '#E5E7EB';
+          let hex = color.replace('#', '');
+          if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+          if (hex.length !== 6) return '#1f2937 !important';
+          
+          const r = parseInt(hex.substr(0, 2), 16);
+          const g = parseInt(hex.substr(2, 2), 16);
+          const b = parseInt(hex.substr(4, 2), 16);
+          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+          
+          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
+        })()};
         border-radius: 18px;
         border-bottom-left-radius: 4px;
         align-self: flex-start;

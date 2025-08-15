@@ -427,8 +427,11 @@
     const messageEl = document.createElement('div');
     messageEl.className = `message ${role}`;
     
-    // Formatear el contenido según el rol del mensaje
+    // Aplicar contraste automático para mensajes del asistente
     if (role === 'assistant') {
+      const bgColor = config.mainColor || '#4f46e5';
+      messageEl.style.backgroundColor = bgColor;
+      messageEl.style.color = getContrastTextColor(bgColor);
       messageEl.innerHTML = formatBotResponse(content);
     } else {
       messageEl.textContent = content;
@@ -438,6 +441,29 @@
     
     // Desplazar al fondo
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  // Función para obtener color de texto con contraste adecuado
+  function getContrastTextColor(backgroundColor) {
+    if (!backgroundColor || typeof backgroundColor !== 'string') {
+      return '#1f2937';
+    }
+    
+    let hex = backgroundColor.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    
+    if (hex.length !== 6) {
+      return '#1f2937';
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    
+    return luminance < 0.6 ? '#ffffff' : '#1f2937';
   }
   
   // Mostrar/ocultar indicador de escritura

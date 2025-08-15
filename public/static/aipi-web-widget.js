@@ -596,7 +596,7 @@
       
       // Determinar contraste basado en luminancia más estricta - FORZAR BLANCO PARA DEBUG
       const assistantBgColor = themeColor;
-      const assistantTextColor = '#ffffff'; // FORZADO PARA DEBUGGING
+      const assistantTextColor = getContrastTextColor(themeColor);
       
       messageElement.style.backgroundColor = assistantBgColor;
       messageElement.style.color = assistantTextColor;
