@@ -197,16 +197,85 @@
         function loadRealWidget() {
             console.log('Cargando widget real...');
             
-            // Cargar el script del widget
+            // Crear un contenedor para el widget
+            const widgetDiv = document.createElement('div');
+            widgetDiv.id = 'aipi-widget-debug';
+            widgetDiv.style.cssText = `
+                width: 400px;
+                height: 500px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                position: relative;
+                background: white;
+                margin: 20px 0;
+            `;
+            document.getElementById('aipi-widget-container').appendChild(widgetDiv);
+            
+            // Crear manualmente elementos de prueba
+            createTestMessages();
+            
+            // También cargar el script real
             const script = document.createElement('script');
             script.src = '/embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
             script.onload = function() {
                 console.log('Widget cargado exitosamente');
+                setTimeout(() => {
+                    inspectRealElements();
+                }, 2000);
             };
             script.onerror = function() {
                 console.error('Error al cargar el widget');
             };
             document.head.appendChild(script);
+        }
+
+        function createTestMessages() {
+            const container = document.getElementById('aipi-widget-debug');
+            if (!container) return;
+
+            // Mensaje de prueba directo
+            const testMessage = document.createElement('div');
+            testMessage.className = 'aipi-assistant-message';
+            testMessage.style.cssText = `
+                background-color: #E5E7EB;
+                color: #1f2937;
+                padding: 10px 14px;
+                border-radius: 18px;
+                margin: 10px;
+                max-width: 80%;
+                border-bottom-left-radius: 4px;
+            `;
+            testMessage.textContent = 'Mensaje de prueba - ¿Se ve este texto?';
+            container.appendChild(testMessage);
+
+            console.log('✅ Mensaje de prueba creado:');
+            console.log('  Background:', '#E5E7EB');
+            console.log('  Color:', '#1f2937');
+            console.log('  Styles applied:', testMessage.style.cssText);
+
+            // Verificar estilos computados
+            setTimeout(() => {
+                const computed = getComputedStyle(testMessage);
+                console.log('📊 Estilos computados:');
+                console.log('  background-color:', computed.backgroundColor);
+                console.log('  color:', computed.color);
+            }, 100);
+        }
+
+        function inspectRealElements() {
+            const realMessages = document.querySelectorAll('.aipi-assistant-message, .aipi-fs-assistant-message');
+            console.log(`🔍 Encontrados ${realMessages.length} mensajes reales del asistente`);
+            
+            realMessages.forEach((msg, index) => {
+                const computed = getComputedStyle(msg);
+                console.log(`Mensaje ${index + 1}:`);
+                console.log('  Element:', msg);
+                console.log('  Classes:', Array.from(msg.classList));
+                console.log('  Inline styles:', msg.style.cssText);
+                console.log('  Computed background:', computed.backgroundColor);
+                console.log('  Computed color:', computed.color);
+                console.log('  Parent element:', msg.parentElement?.tagName);
+            });
         }
 
         function clearLogs() {
@@ -219,7 +288,7 @@
         testCurrentConfig();
         testAllColors();
 
-        // Monitorear cambios en el DOM
+        // Monitorear cambios en el DOM con análisis detallado
         const observer = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'childList') {
@@ -227,12 +296,37 @@
                         if (node.nodeType === 1 && node.classList) {
                             if (node.classList.contains('aipi-assistant-message') || 
                                 node.classList.contains('aipi-fs-assistant-message')) {
-                                console.log('Mensaje del asistente detectado:', {
-                                    element: node.tagName,
-                                    classes: Array.from(node.classList),
-                                    backgroundColor: getComputedStyle(node).backgroundColor,
-                                    color: getComputedStyle(node).color
-                                });
+                                
+                                setTimeout(() => {
+                                    const computed = getComputedStyle(node);
+                                    console.log('🆕 NUEVO mensaje del asistente detectado:');
+                                    console.log('  Element:', node.tagName);
+                                    console.log('  Classes:', Array.from(node.classList));
+                                    console.log('  Inline styles:', node.style.cssText);
+                                    console.log('  Computed background:', computed.backgroundColor);
+                                    console.log('  Computed color:', computed.color);
+                                    console.log('  Text content:', node.textContent?.substring(0, 50) + '...');
+                                    
+                                    // Verificar cascada de CSS
+                                    console.log('🔍 Análisis de cascada CSS:');
+                                    const rules = [];
+                                    for (let sheet of document.styleSheets) {
+                                        try {
+                                            for (let rule of sheet.cssRules) {
+                                                if (rule.selectorText && node.matches(rule.selectorText)) {
+                                                    rules.push({
+                                                        selector: rule.selectorText,
+                                                        color: rule.style.color,
+                                                        background: rule.style.backgroundColor
+                                                    });
+                                                }
+                                            }
+                                        } catch (e) {
+                                            // Cross-origin stylesheet
+                                        }
+                                    }
+                                    console.log('  Reglas CSS aplicables:', rules);
+                                }, 50);
                             }
                         }
                     });
