@@ -35,9 +35,23 @@ const resources = {
       logout: "Déconnexion",
       login: "Connexion",
       signup: "S'inscrire",
+      forms: "Formulaires",
+      automation: "Automatisation",
+      profile: "Profil",
+      
+      // Configuración del asistente AI
+      ai_assistant_settings: "Paramètres de l'Assistant IA",
+      assistant_name: "Nom de l'Assistant",
+      default_greeting: "Salutation par Défaut",
+      conversation_style: "Style de Conversation",
+      chat_font: "Police de Chat",
+      user_message_color: "Couleur des Messages Utilisateur",
+      show_availability: "Afficher la Disponibilité",
       
       // Estados
       active: "Actif",
+      inactive: "Inactif",
+      testing: "Test",
       resolved: "Résolu",
       loading: "Chargement...",
       back: "Retour",
@@ -45,6 +59,11 @@ const resources = {
       view_analytics: "Voir les analytiques",
       new: "Nouveau",
       messages: "messages",
+      edit: "Modifier",
+      last_modified: "Dernière modification",
+      processed: "Traité",
+      item: "élément",
+      items: "éléments",
       
       // Conversaciones
       conversations_for: "Conversations pour",
@@ -863,9 +882,23 @@ const resources = {
       logout: "Cerrar sesión",
       login: "Iniciar sesión",
       signup: "Registrarse",
+      forms: "Formularios",
+      automation: "Automatización",
+      profile: "Perfil",
+      
+      // Configuración del asistente AI
+      ai_assistant_settings: "Configuración del Asistente IA",
+      assistant_name: "Nombre del Asistente",
+      default_greeting: "Saludo Predeterminado",
+      conversation_style: "Estilo de Conversación",
+      chat_font: "Fuente del Chat",
+      user_message_color: "Color de Mensajes del Usuario",
+      show_availability: "Mostrar Disponibilidad",
       
       // Estados
       active: "Activo",
+      inactive: "Inactivo",
+      testing: "Prueba",
       resolved: "Resuelto",
       loading: "Cargando...",
       back: "Atrás",
@@ -873,6 +906,11 @@ const resources = {
       view_analytics: "Ver analíticas", 
       new: "Nuevo",
       messages: "mensajes",
+      edit: "Editar",
+      last_modified: "Última modificación",
+      processed: "Procesado",
+      item: "elemento",
+      items: "elementos",
       
       // Conversaciones
       conversations_for: "Conversaciones para",
@@ -1691,9 +1729,23 @@ const resources = {
       logout: "Logout",
       login: "Login",
       signup: "Sign up",
+      forms: "Forms",
+      automation: "Automation",
+      profile: "Profile",
+      
+      // AI Assistant Settings
+      ai_assistant_settings: "AI Assistant Settings",
+      assistant_name: "Assistant Name",
+      default_greeting: "Default Greeting",
+      conversation_style: "Conversation Style",
+      chat_font: "Chat Font",
+      user_message_color: "User Message Color",
+      show_availability: "Show Availability",
       
       // Estados
       active: "Active",
+      inactive: "Inactive",
+      testing: "Testing",
       resolved: "Resolved",
       loading: "Loading...",
       back: "Back",
@@ -1701,6 +1753,11 @@ const resources = {
       view_analytics: "View analytics",
       new: "New", 
       messages: "messages",
+      edit: "Edit",
+      last_modified: "Last modified",
+      processed: "Processed",
+      item: "item",
+      items: "items",
       
       // Conversaciones
       conversations_for: "Conversations for",
