@@ -1723,7 +1723,7 @@ export default function AdminPanel() {
                           <p className="text-sm text-gray-600 truncate mb-2">{integration.url}</p>
                           <div className="grid grid-cols-2 gap-2 text-sm">
                             <div>
-                              <span className="text-gray-500">Visitantes:</span> {integration.visitor_count || 0}
+                              <span className="text-gray-500">{t('visitors_helped')}:</span> {integration.visitor_count || 0}
                             </div>
                             <div>
                               <span className="text-gray-500">Tipo de widget:</span> {integration.widget_type || 'Flotante'}

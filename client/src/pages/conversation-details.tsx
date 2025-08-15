@@ -8,11 +8,13 @@ import { ChevronLeft } from "lucide-react";
 import { useLocation } from "wouter";
 import { Progress } from "@/components/ui/progress";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { useTranslation } from "react-i18next";
 
 export default function ConversationDetails() {
   const { id } = useParams<{ id: string }>();
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   
   // Obtener detalles de la conversación
@@ -85,8 +87,8 @@ export default function ConversationDetails() {
                       <span className="font-medium">{conversation.id}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Visitante:</span>
-                      <span className="font-medium">#{conversation.visitorId || 'Anónimo'}</span>
+                      <span className="text-gray-500">{t('visitor')}:</span>
+                      <span className="font-medium">#{conversation.visitorId || t('anonymous')}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">Estado:</span>
