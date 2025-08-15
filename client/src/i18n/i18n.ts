@@ -47,7 +47,39 @@ const resources = {
       // Conversaciones
       conversations_for: "Conversations pour",
       view_all_conversations_for_integration: "Voir toutes les conversations pour cette intégration",
-      search_conversations: "Rechercher des conversations"
+      search_conversations: "Rechercher des conversations",
+      
+      // Analytics
+      analytics_description: "Analyse détaillée des performances et métriques",
+      integration_performance: "Performance d'intégration",
+      advanced_analysis: "Analyse avancée",
+      advanced_metrics: "Métriques avancées",
+      avg_messages: "Messages moyens",
+      messages_per_conversation: "Messages par conversation",
+      total_conversations: "Total des conversations",
+      resolution_rate: "Taux de résolution",
+      avg_response_time: "Temps de réponse moyen",
+      
+      // PDF Report
+      pdf_report_title: "Rapport d'Analytics AIPI",
+      pdf_generated: "Généré le",
+      pdf_summary: "Résumé des Statistiques",
+      pdf_metric: "Métrique",
+      pdf_value: "Valeur",
+      pdf_products_demanded: "Produits les Plus Demandés",
+      pdf_products_description: "Analyse des produits mentionnés dans les conversations",
+      pdf_products_description2: "Identifie les intérêts des clients et opportunités",
+      pdf_product: "Produit",
+      pdf_mentions: "Mentions",
+      pdf_no_products_data: "Aucune donnée de produits disponible",
+      pdf_topics_discussed: "Sujets les Plus Discutés",
+      pdf_topics_description: "Analyse du sentiment des conversations",
+      pdf_topics_description2: "Comprend les préoccupations et satisfaction client",
+      pdf_topic: "Sujet",
+      pdf_sentiment: "Sentiment",
+      pdf_no_topics_data: "Aucune donnée de sujets disponible",
+      pdf_conversation_trend: "Tendance des Conversations",
+      pdf_trend_description: "Évolution du volume des conversations dans le temps"
     }
   },
   es: {
@@ -94,7 +126,39 @@ const resources = {
       // Conversaciones
       conversations_for: "Conversaciones para",
       view_all_conversations_for_integration: "Ver todas las conversaciones para esta integración",
-      search_conversations: "Buscar conversaciones"
+      search_conversations: "Buscar conversaciones",
+      
+      // Analytics
+      analytics_description: "Análisis detallado de rendimiento y métricas",
+      integration_performance: "Rendimiento de integración",
+      advanced_analysis: "Análisis avanzado",
+      advanced_metrics: "Métricas avanzadas",
+      avg_messages: "Mensajes promedio",
+      messages_per_conversation: "Mensajes por conversación",
+      total_conversations: "Total de conversaciones",
+      resolution_rate: "Tasa de resolución",
+      avg_response_time: "Tiempo de respuesta promedio",
+      
+      // PDF Report
+      pdf_report_title: "Reporte de Analytics AIPI",
+      pdf_generated: "Generado el",
+      pdf_summary: "Resumen de Estadísticas",
+      pdf_metric: "Métrica",
+      pdf_value: "Valor",
+      pdf_products_demanded: "Productos Más Demandados",
+      pdf_products_description: "Análisis de productos mencionados en conversaciones",
+      pdf_products_description2: "Identifica intereses de clientes y oportunidades",
+      pdf_product: "Producto",
+      pdf_mentions: "Menciones",
+      pdf_no_products_data: "No hay datos de productos disponibles",
+      pdf_topics_discussed: "Temas Más Discutidos",
+      pdf_topics_description: "Análisis del sentimiento de las conversaciones",
+      pdf_topics_description2: "Comprende preocupaciones y satisfacción del cliente",
+      pdf_topic: "Tema",
+      pdf_sentiment: "Sentimiento",
+      pdf_no_topics_data: "No hay datos de temas disponibles",
+      pdf_conversation_trend: "Tendencia de Conversaciones",
+      pdf_trend_description: "Evolución del volumen de conversaciones en el tiempo"
     }
   },
   en: {
@@ -141,7 +205,39 @@ const resources = {
       // Conversaciones
       conversations_for: "Conversations for",
       view_all_conversations_for_integration: "View all conversations for this integration",
-      search_conversations: "Search conversations"
+      search_conversations: "Search conversations",
+      
+      // Analytics
+      analytics_description: "Detailed performance and metrics analysis",
+      integration_performance: "Integration performance",
+      advanced_analysis: "Advanced analysis",
+      advanced_metrics: "Advanced metrics",
+      avg_messages: "Average messages",
+      messages_per_conversation: "Messages per conversation",
+      total_conversations: "Total conversations",
+      resolution_rate: "Resolution rate",
+      avg_response_time: "Average response time",
+      
+      // PDF Report
+      pdf_report_title: "AIPI Analytics Report",
+      pdf_generated: "Generated on",
+      pdf_summary: "Statistics Summary",
+      pdf_metric: "Metric",
+      pdf_value: "Value",
+      pdf_products_demanded: "Most Demanded Products",
+      pdf_products_description: "Analysis of products mentioned in conversations",
+      pdf_products_description2: "Identifies customer interests and opportunities",
+      pdf_product: "Product",
+      pdf_mentions: "Mentions",
+      pdf_no_products_data: "No product data available",
+      pdf_topics_discussed: "Most Discussed Topics",
+      pdf_topics_description: "Conversation sentiment analysis",
+      pdf_topics_description2: "Understand customer concerns and satisfaction",
+      pdf_topic: "Topic",
+      pdf_sentiment: "Sentiment",
+      pdf_no_topics_data: "No topic data available",
+      pdf_conversation_trend: "Conversation Trend",
+      pdf_trend_description: "Evolution of conversation volume over time"
     }
   }
 };
