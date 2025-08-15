@@ -797,7 +797,29 @@
 
   // Función para obtener color de texto con contraste adecuado
   function getContrastTextColor(backgroundColor) {
-    return isColorDark(backgroundColor) ? '#ffffff' : '#1f2937';
+    if (!backgroundColor || typeof backgroundColor !== 'string') {
+      return '#1f2937'; // Por defecto texto oscuro
+    }
+    
+    // Convertir a hex limpio
+    let hex = backgroundColor.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    
+    if (hex.length !== 6) {
+      return '#1f2937'; // Por defecto si formato es inválido
+    }
+    
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Calcular luminancia relativa usando fórmula WCAG 2.1
+    const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    
+    // Si la luminancia es menor a 0.6, usar texto blanco (más estricto)
+    return luminance < 0.6 ? '#ffffff' : '#1f2937';
   }
 
   // Adjust color shade
