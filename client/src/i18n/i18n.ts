@@ -79,7 +79,21 @@ const resources = {
       pdf_sentiment: "Sentiment",
       pdf_no_topics_data: "Aucune donnée de sujets disponible",
       pdf_conversation_trend: "Tendance des Conversations",
-      pdf_trend_description: "Évolution du volume des conversations dans le temps"
+      pdf_trend_description: "Évolution du volume des conversations dans le temps",
+      
+      // Analytics Charts
+      products_services_most_demanded: "Produits/Services les Plus Demandés",
+      products_analysis_description: "Analyse des produits mentionnés",
+      what_does_it_mean_products_bars_explanation: "Que signifient les barres de produits ?",
+      topics_and_sentiment: "Sujets et Sentiment",
+      topics_analysis_description: "Analyse des sujets et sentiments",
+      what_does_it_mean_topics_bars_explanation: "Que signifient les barres de sujets ?",
+      conversation_trend: "Tendance des Conversations",
+      conversation_trend_description: "Tendance des conversations dans le temps",
+      what_does_it_mean_conversation_trend_explanation: "Que signifie la tendance des conversations ?",
+      keywords: "Mots-clés",
+      keywords_description: "Description des mots-clés",
+      what_does_it_mean_keywords_explanation: "Que signifient les mots-clés ?"
     }
   },
   es: {
@@ -158,7 +172,21 @@ const resources = {
       pdf_sentiment: "Sentimiento",
       pdf_no_topics_data: "No hay datos de temas disponibles",
       pdf_conversation_trend: "Tendencia de Conversaciones",
-      pdf_trend_description: "Evolución del volumen de conversaciones en el tiempo"
+      pdf_trend_description: "Evolución del volumen de conversaciones en el tiempo",
+      
+      // Analytics Charts
+      products_services_most_demanded: "Productos/Servicios Más Demandados",
+      products_analysis_description: "Análisis de productos mencionados",
+      what_does_it_mean_products_bars_explanation: "¿Qué significan las barras de productos?",
+      topics_and_sentiment: "Temas y Sentimiento",
+      topics_analysis_description: "Análisis de temas y sentimientos",
+      what_does_it_mean_topics_bars_explanation: "¿Qué significan las barras de temas?",
+      conversation_trend: "Tendencia de Conversaciones",
+      conversation_trend_description: "Tendencia de conversaciones en el tiempo",
+      what_does_it_mean_conversation_trend_explanation: "¿Qué significa la tendencia de conversaciones?",
+      keywords: "Palabras clave",
+      keywords_description: "Descripción de palabras clave",
+      what_does_it_mean_keywords_explanation: "¿Qué significan las palabras clave?"
     }
   },
   en: {
@@ -237,7 +265,21 @@ const resources = {
       pdf_sentiment: "Sentiment",
       pdf_no_topics_data: "No topic data available",
       pdf_conversation_trend: "Conversation Trend",
-      pdf_trend_description: "Evolution of conversation volume over time"
+      pdf_trend_description: "Evolution of conversation volume over time",
+      
+      // Analytics Charts
+      products_services_most_demanded: "Most Demanded Products/Services",
+      products_analysis_description: "Analysis of mentioned products",
+      what_does_it_mean_products_bars_explanation: "What do the product bars mean?",
+      topics_and_sentiment: "Topics and Sentiment",
+      topics_analysis_description: "Analysis of topics and sentiments",
+      what_does_it_mean_topics_bars_explanation: "What do the topic bars mean?",
+      conversation_trend: "Conversation Trend",
+      conversation_trend_description: "Conversation trend over time",
+      what_does_it_mean_conversation_trend_explanation: "What does the conversation trend mean?",
+      keywords: "Keywords",
+      keywords_description: "Keywords description",
+      what_does_it_mean_keywords_explanation: "What do the keywords mean?"
     }
   }
 };
