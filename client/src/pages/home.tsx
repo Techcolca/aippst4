@@ -24,7 +24,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ChatInterface from "@/components/chat-interface";
 import { RotatingWelcomeMessage } from "@/components/RotatingWelcomeMessage";
-import { Bot, Code, BarChart3, Rocket, CopyIcon } from "lucide-react";
+import { Bot, Code, BarChart3, Rocket, CopyIcon, Globe, Shield, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Home() {
@@ -75,7 +75,28 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
                   {t("welcome")}
                 </h1>
-                <RotatingWelcomeMessage className="text-lg text-gray-700 dark:text-gray-300 mb-8" />
+                <RotatingWelcomeMessage className="text-lg text-gray-700 dark:text-gray-300 mb-6" />
+                
+                {/* Enhanced Description */}
+                <div className="mb-8 space-y-4">
+                  <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {t("home.description")}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
+                    <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{t("home.stats.websites")}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">{t("home.stats.websitesLabel")}</div>
+                    </div>
+                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                      <div className="text-2xl font-bold text-green-600 dark:text-green-400">{t("home.stats.conversations")}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">{t("home.stats.conversationsLabel")}</div>
+                    </div>
+                    <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                      <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{t("home.stats.languages")}</div>
+                      <div className="text-sm text-gray-600 dark:text-gray-400">{t("home.stats.languagesLabel")}</div>
+                    </div>
+                  </div>
+                </div>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button size="lg" className="bg-indigo-500 hover:bg-indigo-600 text-white dark:bg-indigo-600 dark:hover:bg-indigo-700 border-0" asChild>
                     <Link href="/get-started">{t("getStarted")}</Link>
@@ -105,12 +126,16 @@ export default function Home() {
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 {t("features.title")}
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-8">
                 {t("features.subtitle")}
+              </p>
+              <p className="text-base text-gray-500 dark:text-gray-500 max-w-4xl mx-auto">
+                {t("features.detailedDescription")}
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {/* Main Features Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16">
               <Card>
                 <CardContent className="pt-6">
                   <div className="rounded-full bg-primary-100 dark:bg-primary-900 p-3 w-12 h-12 flex items-center justify-center mb-4">
@@ -158,6 +183,65 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
+            </div>
+            
+            {/* Additional Features Section */}
+            <div className="mt-16">
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+                {t("features.advanced.title")}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <Card className="border-l-4 border-l-blue-500">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center mb-4">
+                      <Globe className="h-6 w-6 text-blue-500 mr-3" />
+                      <h4 className="text-lg font-semibold">{t("features.advanced.multilingual.title")}</h4>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">
+                      {t("features.advanced.multilingual.description")}
+                    </p>
+                    <ul className="text-sm text-gray-500 dark:text-gray-500 space-y-1">
+                      <li>• {t("features.advanced.multilingual.feature1")}</li>
+                      <li>• {t("features.advanced.multilingual.feature2")}</li>
+                      <li>• {t("features.advanced.multilingual.feature3")}</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-l-4 border-l-green-500">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center mb-4">
+                      <Shield className="h-6 w-6 text-green-500 mr-3" />
+                      <h4 className="text-lg font-semibold">{t("features.advanced.security.title")}</h4>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">
+                      {t("features.advanced.security.description")}
+                    </p>
+                    <ul className="text-sm text-gray-500 dark:text-gray-500 space-y-1">
+                      <li>• {t("features.advanced.security.feature1")}</li>
+                      <li>• {t("features.advanced.security.feature2")}</li>
+                      <li>• {t("features.advanced.security.feature3")}</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-l-4 border-l-purple-500">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center mb-4">
+                      <Zap className="h-6 w-6 text-purple-500 mr-3" />
+                      <h4 className="text-lg font-semibold">{t("features.advanced.customization.title")}</h4>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 mb-3">
+                      {t("features.advanced.customization.description")}
+                    </p>
+                    <ul className="text-sm text-gray-500 dark:text-gray-500 space-y-1">
+                      <li>• {t("features.advanced.customization.feature1")}</li>
+                      <li>• {t("features.advanced.customization.feature2")}</li>
+                      <li>• {t("features.advanced.customization.feature3")}</li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </section>
