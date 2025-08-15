@@ -796,6 +796,20 @@ const resources = {
       // Chat Interface
       "chat.placeholder": "Tapez votre message...",
       
+      // Login Page
+      "loginPage.title": "Connexion",
+      "loginPage.subtitle": "Connectez-vous à votre compte AIPPS",
+      "loginPage.username": "Nom d'utilisateur",
+      "loginPage.username_placeholder": "Entrez votre nom d'utilisateur",
+      "loginPage.password": "Mot de passe",
+      "loginPage.password_placeholder": "Entrez votre mot de passe",
+      "loginPage.submit": "Se connecter",
+      "loginPage.submitting": "Connexion...",
+      "loginPage.success_title": "Connexion réussie",
+      "loginPage.success_message": "Vous êtes maintenant connecté",
+      "loginPage.failed_title": "Échec de la connexion",
+      "loginPage.failed_message": "Nom d'utilisateur ou mot de passe incorrect",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1608,6 +1622,20 @@ const resources = {
       // Chat Interface
       "chat.placeholder": "Escribe tu mensaje...",
       
+      // Login Page
+      "loginPage.title": "Iniciar Sesión",
+      "loginPage.subtitle": "Accede a tu cuenta de AIPPS",
+      "loginPage.username": "Nombre de usuario",
+      "loginPage.username_placeholder": "Ingresa tu nombre de usuario",
+      "loginPage.password": "Contraseña",
+      "loginPage.password_placeholder": "Ingresa tu contraseña",
+      "loginPage.submit": "Iniciar sesión",
+      "loginPage.submitting": "Iniciando sesión...",
+      "loginPage.success_title": "Inicio de sesión exitoso",
+      "loginPage.success_message": "Has iniciado sesión correctamente",
+      "loginPage.failed_title": "Error de inicio de sesión",
+      "loginPage.failed_message": "Usuario o contraseña incorrectos",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -2419,6 +2447,20 @@ const resources = {
       
       // Chat Interface
       "chat.placeholder": "Type your message...",
+      
+      // Login Page
+      "loginPage.title": "Login",
+      "loginPage.subtitle": "Sign in to your AIPPS account",
+      "loginPage.username": "Username",
+      "loginPage.username_placeholder": "Enter your username",
+      "loginPage.password": "Password",
+      "loginPage.password_placeholder": "Enter your password",
+      "loginPage.submit": "Sign in",
+      "loginPage.submitting": "Signing in...",
+      "loginPage.success_title": "Login successful",
+      "loginPage.success_message": "You are now signed in",
+      "loginPage.failed_title": "Login failed",
+      "loginPage.failed_message": "Incorrect username or password",
       
       // Footer
       footer: {
