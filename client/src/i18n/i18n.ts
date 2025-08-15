@@ -709,6 +709,28 @@ const resources = {
       "pricing.annual_billing": "Facturation annuelle",
       "pricing.save_percentage": "Économisez {{percentage}}%",
       
+      // Integration Analytics
+      "analytics_for": "Analyses pour",
+      "view_performance_metrics_for_integration": "Voir les métriques de performance pour l'intégration",
+      "view_conversations": "Voir les conversations",
+      "download_pdf": "Télécharger PDF",
+      "Total conversations": "Total des conversations",
+      "no_messages": "Aucun message",
+      "no_conversations_to_resolve": "Aucune conversation à résoudre",
+      "message_distribution": "Distribution des messages",
+      "user_vs_assistant_messages": "Messages utilisateur vs assistant",
+      "conversations_over_time": "Conversations au fil du temps",
+      "resolution_status": "Statut de résolution",
+      "resolved_vs_active_conversations": "Conversations résolues vs actives",
+      "top_products": "Produits principaux",
+      "most_mentioned_products": "Produits les plus mentionnés",
+      "top_topics": "Sujets principaux",
+      "most_discussed_topics": "Sujets les plus discutés",
+      "keyword_cloud": "Nuage de mots-clés",
+      "frequently_mentioned_keywords": "Mots-clés fréquemment mentionnés",
+      "what_does_it_mean": "Que signifie-t-il",
+      "keywords_explanation": "Explication des mots-clés",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1434,6 +1456,28 @@ const resources = {
       "pricing.annual_billing": "Facturación anual",
       "pricing.save_percentage": "Ahorra {{percentage}}%",
       
+      // Integration Analytics
+      "analytics_for": "Análisis para",
+      "view_performance_metrics_for_integration": "Ver métricas de rendimiento para la integración",
+      "view_conversations": "Ver conversaciones",
+      "download_pdf": "Descargar PDF",
+      "Total conversations": "Total de conversaciones",
+      "no_messages": "Sin mensajes",
+      "no_conversations_to_resolve": "Sin conversaciones por resolver",
+      "message_distribution": "Distribución de mensajes",
+      "user_vs_assistant_messages": "Mensajes de usuario vs asistente",
+      "conversations_over_time": "Conversaciones a lo largo del tiempo",
+      "resolution_status": "Estado de resolución",
+      "resolved_vs_active_conversations": "Conversaciones resueltas vs activas",
+      "top_products": "Productos principales",
+      "most_mentioned_products": "Productos más mencionados",
+      "top_topics": "Temas principales",
+      "most_discussed_topics": "Temas más discutidos",
+      "keyword_cloud": "Nube de palabras clave",
+      "frequently_mentioned_keywords": "Palabras clave mencionadas frecuentemente",
+      "what_does_it_mean": "¿Qué significa?",
+      "keywords_explanation": "Explicación de palabras clave",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -2158,6 +2202,28 @@ const resources = {
       "pricing.toggle_billing": "Toggle billing",
       "pricing.annual_billing": "Annual billing",
       "pricing.save_percentage": "Save {{percentage}}%",
+      
+      // Integration Analytics
+      "analytics_for": "Analytics for",
+      "view_performance_metrics_for_integration": "View performance metrics for integration",
+      "view_conversations": "View conversations",
+      "download_pdf": "Download PDF",
+      "Total conversations": "Total conversations",
+      "no_messages": "No messages",
+      "no_conversations_to_resolve": "No conversations to resolve",
+      "message_distribution": "Message distribution",
+      "user_vs_assistant_messages": "User vs assistant messages",
+      "conversations_over_time": "Conversations over time",
+      "resolution_status": "Resolution status",
+      "resolved_vs_active_conversations": "Resolved vs active conversations",
+      "top_products": "Top products",
+      "most_mentioned_products": "Most mentioned products",
+      "top_topics": "Top topics",
+      "most_discussed_topics": "Most discussed topics",
+      "keyword_cloud": "Keyword cloud",
+      "frequently_mentioned_keywords": "Frequently mentioned keywords",
+      "what_does_it_mean": "What does it mean",
+      "keywords_explanation": "Keywords explanation",
       
       // Footer
       footer: {
