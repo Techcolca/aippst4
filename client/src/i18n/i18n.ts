@@ -587,6 +587,14 @@ const resources = {
       // Documentation
       "documentation.overview.start_button": "Commencer maintenant",
       
+      // Get Started Page
+      "getStartedPage.form.step3.dashboard_steps": [
+        "Accédez à la section \"Intégrations\" du panneau",
+        "Sélectionnez l'intégration que vous souhaitez configurer",
+        "Personnalisez les couleurs, position et messages",
+        "Les changements seront appliqués automatiquement"
+      ],
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1190,6 +1198,14 @@ const resources = {
       // Documentation
       "documentation.overview.start_button": "Comenzar ahora",
       
+      // Get Started Page
+      "getStartedPage.form.step3.dashboard_steps": [
+        "Accede a la sección \"Integraciones\" del panel",
+        "Selecciona la integración que quieres configurar",
+        "Personaliza los colores, posición y mensajes",
+        "Los cambios se aplicarán automáticamente"
+      ],
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -1792,6 +1808,14 @@ const resources = {
       
       // Documentation
       "documentation.overview.start_button": "Get started now",
+      
+      // Get Started Page
+      "getStartedPage.form.step3.dashboard_steps": [
+        "Access the \"Integrations\" section of the panel",
+        "Select the integration you want to configure",
+        "Customize colors, position and messages",
+        "Changes will be applied automatically"
+      ],
       
       // Footer
       footer: {
