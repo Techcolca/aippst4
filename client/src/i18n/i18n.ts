@@ -731,6 +731,15 @@ const resources = {
       "what_does_it_mean": "Que signifie-t-il",
       "keywords_explanation": "Explication des mots-clés",
       
+      // Pricing Button Actions
+      "Feature": "Fonctionnalité",
+      "LearnMore": "En savoir plus",
+      "Features": "Fonctionnalités",
+      "Learn More": "En savoir plus",
+      "feature": "fonctionnalité",
+      "learn_more": "en savoir plus",
+      "features": "fonctionnalités",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1478,6 +1487,15 @@ const resources = {
       "what_does_it_mean": "¿Qué significa?",
       "keywords_explanation": "Explicación de palabras clave",
       
+      // Pricing Button Actions
+      "Feature": "Característica",
+      "LearnMore": "Saber más",
+      "Features": "Características",
+      "Learn More": "Saber más",
+      "feature": "característica",
+      "learn_more": "saber más",
+      "features": "características",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -2224,6 +2242,15 @@ const resources = {
       "frequently_mentioned_keywords": "Frequently mentioned keywords",
       "what_does_it_mean": "What does it mean",
       "keywords_explanation": "Keywords explanation",
+      
+      // Pricing Button Actions
+      "Feature": "Feature",
+      "LearnMore": "Learn More",
+      "Features": "Features",
+      "Learn More": "Learn More",
+      "feature": "feature",
+      "learn_more": "learn more",
+      "features": "features",
       
       // Footer
       footer: {

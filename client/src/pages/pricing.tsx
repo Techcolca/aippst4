@@ -193,7 +193,7 @@ export default function PricingPage() {
                       <CardTitle className="text-xl">{t(`pricing.plan_${plan.id}.name`, plan.name)}</CardTitle>
                       <CardDescription>{t(`pricing.plan_${plan.id}.description`, plan.description)}</CardDescription>
                       <div className="mt-4">
-                        {plan.discount > 0 && plan.originalPrice && (
+                        {(plan.discount ?? 0) > 0 && plan.originalPrice && (
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-lg text-gray-500 dark:text-gray-400 line-through">
                               {formatCurrency(plan.originalPrice, plan.currency)}
@@ -235,7 +235,7 @@ export default function PricingPage() {
                     </CardContent>
                     <CardFooter>
                       <Button 
-                        className={`w-full ${plan.discount > 0 ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white' : ''}`}
+                        className={`w-full ${(plan.discount ?? 0) > 0 ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white' : ''}`}
                         variant={plan.id === recommendedPlanId ? "default" : "outline"}
                         disabled={!!checkoutInProgress}
                         onClick={() => handleSubscribe(plan.id)}
@@ -249,7 +249,7 @@ export default function PricingPage() {
                           <>
                             {plan.id.includes('enterprise') ? (
                               t('pricing.contact_us')
-                            ) : plan.discount > 0 ? (
+                            ) : (plan.discount ?? 0) > 0 ? (
                               plan.isAnnual ? t('pricing.take_annual_offer') : t('pricing.take_offer')
                             ) : (
                               plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')
@@ -289,8 +289,8 @@ export default function PricingPage() {
                   </h3>
                   <p className="text-orange-700 dark:text-orange-300">
                     {t('pricing.spots_left_of_total', {
-                      remaining: plans.find(p => p.campaignInfo)?.campaignInfo.remainingSpots,
-                      total: plans.find(p => p.campaignInfo)?.campaignInfo.maxSubscribers
+                      remaining: plans.find(p => p.campaignInfo)?.campaignInfo?.remainingSpots ?? 0,
+                      total: plans.find(p => p.campaignInfo)?.campaignInfo?.maxSubscribers ?? 0
                     })}
                   </p>
                   <p className="text-sm text-orange-600 dark:text-orange-400 mt-1">
