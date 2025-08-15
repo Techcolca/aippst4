@@ -389,8 +389,17 @@
         /* FORCE WHITE TEXT - Override any possible conflict */
         .aipi-fs-assistant-message,
         .aipi-fs-assistant-message *,
+        .aipi-fs-assistant-message p,
+        .aipi-fs-assistant-message span,
+        .aipi-fs-assistant-message div,
         .aipi-fs-typing-indicator,
         .aipi-fs-typing-indicator * {
+          color: #ffffff !important;
+          text-shadow: none !important;
+        }
+        
+        /* Override any inherited text colors */
+        .aipi-fs-message.aipi-fs-assistant-message * {
           color: #ffffff !important;
         }
         
@@ -745,13 +754,29 @@
         border-bottom-left-radius: 4px !important;
       `;
       
-      // Also force all child elements to white
-      setTimeout(() => {
+      // Also force all child elements to white with multiple attempts
+      const forceWhiteText = () => {
+        messageElement.style.color = '#ffffff !important';
         const allChildren = messageElement.querySelectorAll('*');
         allChildren.forEach(child => {
-          child.style.color = '#ffffff !important';
+          child.style.setProperty('color', '#ffffff', 'important');
+          child.style.setProperty('text-shadow', 'none', 'important');
         });
-      }, 100);
+      };
+      
+      // Apply immediately and after DOM updates
+      forceWhiteText();
+      setTimeout(forceWhiteText, 50);
+      setTimeout(forceWhiteText, 200);
+      
+      // Monitor for changes and reapply
+      const observer = new MutationObserver(forceWhiteText);
+      observer.observe(messageElement, { 
+        childList: true, 
+        subtree: true, 
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
     }
     
     messageElement.innerHTML = formatMessage(content);

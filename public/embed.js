@@ -1164,21 +1164,19 @@ Contenido: [Error al extraer contenido detallado]
 
       .aipi-assistant-message {
         background-color: ${config.assistantBubbleColor};
-        color: ${(() => {
-          const color = config.assistantBubbleColor || '#E5E7EB';
-          let hex = color.replace('#', '');
-          if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-          if (hex.length !== 6) return '#1f2937 !important';
-          
-          const r = parseInt(hex.substr(0, 2), 16);
-          const g = parseInt(hex.substr(2, 2), 16);
-          const b = parseInt(hex.substr(4, 2), 16);
-          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-          
-          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
-        })()};
+        color: #ffffff !important;
         align-self: flex-start;
         border-bottom-left-radius: 4px;
+      }
+      
+      /* Force white text in all assistant messages and children */
+      .aipi-assistant-message,
+      .aipi-assistant-message *,
+      .aipi-assistant-message p,
+      .aipi-assistant-message span,
+      .aipi-assistant-message div {
+        color: #ffffff !important;
+        text-shadow: none !important;
       }
 
 
@@ -1189,23 +1187,18 @@ Contenido: [Error al extraer contenido detallado]
         gap: 4px;
         padding: 10px 14px;
         background-color: ${config.assistantBubbleColor};
-        color: ${(() => {
-          const color = config.assistantBubbleColor || '#E5E7EB';
-          let hex = color.replace('#', '');
-          if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
-          if (hex.length !== 6) return '#1f2937 !important';
-          
-          const r = parseInt(hex.substr(0, 2), 16);
-          const g = parseInt(hex.substr(2, 2), 16);
-          const b = parseInt(hex.substr(4, 2), 16);
-          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-          
-          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
-        })()};
+        color: #ffffff !important;
         border-radius: 18px;
         border-bottom-left-radius: 4px;
         align-self: flex-start;
         max-width: 80px;
+      }
+      
+      /* Force white text in typing indicator */
+      .aipi-typing-indicator,
+      .aipi-typing-indicator * {
+        color: #ffffff !important;
+        text-shadow: none !important;
       }
 
 
