@@ -1175,7 +1175,7 @@ Contenido: [Error al extraer contenido detallado]
           const b = parseInt(hex.substr(4, 2), 16);
           const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
           
-          return luminance < 0.5 ? '#ffffff !important' : '#1f2937 !important';
+          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
         })()};
         align-self: flex-start;
         border-bottom-left-radius: 4px;
@@ -1200,7 +1200,7 @@ Contenido: [Error al extraer contenido detallado]
           const b = parseInt(hex.substr(4, 2), 16);
           const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
           
-          return luminance < 0.5 ? '#ffffff !important' : '#1f2937 !important';
+          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
         })()};
         border-radius: 18px;
         border-bottom-left-radius: 4px;

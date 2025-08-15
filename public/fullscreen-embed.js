@@ -392,11 +392,13 @@
             const b = parseInt(hex.substr(4, 2), 16);
             const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
             
-            console.log('AIPPS Debug: Color:', color, 'Luminance:', luminance.toFixed(3));
+            console.log('AIPPS CSS Debug: Color:', color, 'Luminance:', luminance.toFixed(3));
             
-            // Use white text for dark backgrounds (luminance < 0.5)
-            // Use dark text for light backgrounds (luminance >= 0.5)
-            return luminance < 0.5 ? '#ffffff !important' : '#1f2937 !important';
+            // FIXED: Use luminance < 0.6 for better dark detection
+            const textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
+            console.log('AIPPS CSS Debug: Selected text color:', textColor);
+            
+            return textColor + ' !important';
           })()};
           align-self: flex-start;
           border-bottom-left-radius: 4px;
@@ -420,7 +422,7 @@
             const b = parseInt(hex.substr(4, 2), 16);
             const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
             
-            return luminance < 0.5 ? '#ffffff !important' : '#1f2937 !important';
+            return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
           })()};
           border-radius: 18px;
           border-bottom-left-radius: 4px;
@@ -763,8 +765,8 @@
         
         console.log('AIPPS Debug: BGR color:', bgColor, 'Luminance:', luminance.toFixed(3));
         
-        // Use white text for dark backgrounds, dark text for light backgrounds
-        textColor = luminance < 0.5 ? '#ffffff' : '#1f2937';
+        // FIXED: Use luminance < 0.6 for better dark detection
+        textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
         console.log('AIPPS Debug: Selected text color:', textColor);
       }
       
