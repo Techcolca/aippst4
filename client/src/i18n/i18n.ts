@@ -111,10 +111,12 @@ const resources = {
       task_automation: "Automatisation des tâches",
       
       // Language Selector
-      language_select: "Sélectionner la langue",
-      "language.fr": "Français",
-      "language.es": "Español", 
-      "language.en": "English",
+      language: {
+        select: "Sélectionner la langue",
+        fr: "Français",
+        es: "Español", 
+        en: "English"
+      },
       
       // Footer
       footer: {
@@ -243,10 +245,12 @@ const resources = {
       task_automation: "Automatización de tareas",
       
       // Language Selector
-      language_select: "Seleccionar idioma",
-      "language.fr": "Français",
-      "language.es": "Español",
-      "language.en": "English",
+      language: {
+        select: "Seleccionar idioma",
+        fr: "Français",
+        es: "Español",
+        en: "English"
+      },
       
       // Footer
       footer: {
@@ -375,10 +379,12 @@ const resources = {
       task_automation: "Task automation",
       
       // Language Selector
-      language_select: "Select language",
-      "language.fr": "Français",
-      "language.es": "Español",
-      "language.en": "English",
+      language: {
+        select: "Select language",
+        fr: "Français",
+        es: "Español",
+        en: "English"
+      },
       
       // Footer
       footer: {
