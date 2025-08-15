@@ -93,7 +93,17 @@ const resources = {
       what_does_it_mean_conversation_trend_explanation: "Que signifie la tendance des conversations ?",
       keywords: "Mots-clés",
       keywords_description: "Description des mots-clés",
-      what_does_it_mean_keywords_explanation: "Que signifient les mots-clés ?"
+      what_does_it_mean_keywords_explanation: "Que signifient les mots-clés ?",
+      
+      // Additional Analytics Terms
+      avg_duration: "Durée moyenne",
+      time_per_conversation: "Temps par conversation",
+      peak_hours: "Heures de pointe",
+      highest_activity: "Activité la plus élevée",
+      devices: "Appareils",
+      mobile_desktop: "Mobile/Bureau",
+      export_pdf: "Exporter PDF",
+      back_to_dashboard: "Retour au tableau de bord"
     }
   },
   es: {
@@ -186,7 +196,17 @@ const resources = {
       what_does_it_mean_conversation_trend_explanation: "¿Qué significa la tendencia de conversaciones?",
       keywords: "Palabras clave",
       keywords_description: "Descripción de palabras clave",
-      what_does_it_mean_keywords_explanation: "¿Qué significan las palabras clave?"
+      what_does_it_mean_keywords_explanation: "¿Qué significan las palabras clave?",
+      
+      // Additional Analytics Terms
+      avg_duration: "Duración promedio",
+      time_per_conversation: "Tiempo por conversación",
+      peak_hours: "Horas pico",
+      highest_activity: "Mayor actividad",
+      devices: "Dispositivos",
+      mobile_desktop: "Móvil/Escritorio",
+      export_pdf: "Exportar PDF",
+      back_to_dashboard: "Volver al panel"
     }
   },
   en: {
@@ -279,7 +299,17 @@ const resources = {
       what_does_it_mean_conversation_trend_explanation: "What does the conversation trend mean?",
       keywords: "Keywords",
       keywords_description: "Keywords description",
-      what_does_it_mean_keywords_explanation: "What do the keywords mean?"
+      what_does_it_mean_keywords_explanation: "What do the keywords mean?",
+      
+      // Additional Analytics Terms
+      avg_duration: "Average duration",
+      time_per_conversation: "Time per conversation",
+      peak_hours: "Peak hours",
+      highest_activity: "Highest activity",
+      devices: "Devices",
+      mobile_desktop: "Mobile/Desktop",
+      export_pdf: "Export PDF",
+      back_to_dashboard: "Back to dashboard"
     }
   }
 };
