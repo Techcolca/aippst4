@@ -33,6 +33,8 @@ const resources = {
       analytics: "Analytiques",
       settings: "Paramètres",
       logout: "Déconnexion",
+      login: "Connexion",
+      signup: "S'inscrire",
       
       // Estados
       active: "Actif",
@@ -859,6 +861,8 @@ const resources = {
       analytics: "Analíticas",
       settings: "Configuración",
       logout: "Cerrar sesión",
+      login: "Iniciar sesión",
+      signup: "Registrarse",
       
       // Estados
       active: "Activo",
@@ -1685,6 +1689,8 @@ const resources = {
       analytics: "Analytics",
       settings: "Settings",
       logout: "Logout",
+      login: "Login",
+      signup: "Sign up",
       
       // Estados
       active: "Active",
