@@ -550,6 +550,7 @@
       if (data.integration) {
         config.integrationName = data.integration.name;
         config.textColorMode = data.integration.textColor || 'auto';
+        console.log('AIPPS Debug: Configuración de color de texto cargada:', config.textColorMode);
       }
       
       if (data.settings) {
@@ -4806,27 +4807,16 @@ Contenido: [Error al extraer contenido detallado]
   function updateTextColorsAfterConfig() {
     console.log('🔧 AIPPS: Recalculando colores después de cargar configuración');
     console.log('  Color de fondo del asistente:', config.assistantBubbleColor);
+    console.log('  Modo de color de texto:', config.textColorMode);
     
-    // Calculate luminance for the actual server color
+    // Calculate text color using new system
     const bgColor = config.assistantBubbleColor || '#E5E7EB';
-    let hex = bgColor.replace('#', '');
-    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const textColor = getContrastTextColor(bgColor);
     
-    let textColor = '#1f2937'; // Default dark text
-    if (hex.length === 6) {
-      const r = parseInt(hex.substr(0, 2), 16);
-      const g = parseInt(hex.substr(2, 2), 16);
-      const b = parseInt(hex.substr(4, 2), 16);
-      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-      
-      console.log('🎨 AIPPS: Recálculo de luminancia después de config:');
-      console.log('  Color de fondo:', bgColor);
-      console.log('  Luminancia:', luminance.toFixed(3));
-      console.log('  Es fondo oscuro?', luminance < 0.6);
-      
-      textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
-      console.log('  Color de texto final:', textColor);
-    }
+    console.log('🎨 AIPPS: Recálculo de colores después de config:');
+    console.log('  Color de fondo:', bgColor);
+    console.log('  Modo configurado:', config.textColorMode);
+    console.log('  Color de texto final:', textColor);
     
     // Update CSS variables or create new styles
     const existingStyles = document.querySelector('#aipi-dynamic-colors');
