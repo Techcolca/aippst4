@@ -228,17 +228,17 @@ export default function Home() {
         {/* Call to Action */}
         <section className="py-16 bg-primary-600 dark:bg-primary-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
+            <h2 className="text-3xl font-bold text-black dark:text-white mb-4">
               {t("cta.title")}
             </h2>
-            <p className="text-xl text-primary-100 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-800 dark:text-primary-100 mb-8 max-w-3xl mx-auto">
               {t("cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button size="lg" variant="secondary" asChild>
                 <Link href="/register">{t("cta.getStartedFree")}</Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-primary-700" asChild>
+              <Button size="lg" variant="outline" className="bg-transparent border-gray-800 dark:border-white text-gray-800 dark:text-white hover:bg-primary-700" asChild>
                 <Link href="/contact">{t("cta.scheduleDemo")}</Link>
               </Button>
             </div>
