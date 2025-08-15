@@ -169,9 +169,6 @@ export default function PricingPage() {
                   <span className={`text-sm font-medium ${billingType === 'annual' ? 'text-primary' : 'text-gray-500'}`}>
                     {t('pricing.annual_billing')}
                   </span>
-                  <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-900 dark:text-green-300 border-green-200 dark:border-green-800">
-                    {t('pricing.save_percentage')}
-                  </Badge>
                 </div>
               </div>
             </div>

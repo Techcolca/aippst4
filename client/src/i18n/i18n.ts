@@ -769,7 +769,8 @@ const resources = {
       "learn_more": "en savoir plus",
       "features": "fonctionnalités",
       
-
+      // Chat Interface
+      "chat.placeholder": "Tapez votre message...",
       
       // Footer
       footer: {
@@ -1556,7 +1557,8 @@ const resources = {
       "learn_more": "saber más",
       "features": "características",
       
-
+      // Chat Interface
+      "chat.placeholder": "Escribe tu mensaje...",
       
       // Footer
       footer: {
@@ -2343,7 +2345,8 @@ const resources = {
       "learn_more": "learn more",
       "features": "features",
       
-
+      // Chat Interface
+      "chat.placeholder": "Type your message...",
       
       // Footer
       footer: {
