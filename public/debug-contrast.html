@@ -288,33 +288,90 @@
         function testInputFunctionality() {
             console.log('🔍 Probando funcionalidad de inputs del widget real...');
             
+            // Buscar elementos más específicamente
             const realInput = document.querySelector('#aipi-input');
             const realSendButton = document.querySelector('#aipi-send-button');
+            const chatPanel = document.querySelector('#aipi-chat-panel');
+            const toggleButton = document.querySelector('#aipi-toggle-button');
             
-            if (realInput && realSendButton) {
-                console.log('📝 Elementos del widget encontrados:');
-                console.log('  Input:', realInput);
-                console.log('  Send button:', realSendButton);
-                console.log('  Input disabled:', realInput.disabled);
-                console.log('  Send button disabled:', realSendButton.disabled);
-                console.log('  Input placeholder:', realInput.placeholder);
+            console.log('🔍 Estado del widget:');
+            console.log('  Chat panel encontrado:', !!chatPanel);
+            console.log('  Toggle button encontrado:', !!toggleButton);
+            console.log('  Input encontrado:', !!realInput);
+            console.log('  Send button encontrado:', !!realSendButton);
+            
+            if (chatPanel) {
+                console.log('  Chat panel display:', chatPanel.style.display);
+                console.log('  Chat panel visible:', chatPanel.style.display !== 'none');
+            }
+            
+            // Si no hay input, intentar abrir el widget
+            if (!realInput && toggleButton) {
+                console.log('🚀 Widget cerrado, intentando abrir...');
+                toggleButton.click();
                 
-                // Simular escritura para probar
+                // Esperar y volver a buscar
                 setTimeout(() => {
-                    console.log('🤖 Simulando escritura en el input real...');
-                    realInput.value = 'Mensaje de prueba';
-                    realInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    const newInput = document.querySelector('#aipi-input');
+                    const newSendButton = document.querySelector('#aipi-send-button');
                     
-                    setTimeout(() => {
-                        console.log('📊 Estado después de simular escritura:');
-                        console.log('  Input value:', realInput.value);
-                        console.log('  Send button disabled:', realSendButton.disabled);
-                    }, 100);
-                }, 500);
+                    console.log('📝 Después de abrir widget:');
+                    console.log('  Input encontrado:', !!newInput);
+                    console.log('  Send button encontrado:', !!newSendButton);
+                    
+                    if (newInput && newSendButton) {
+                        testRealInput(newInput, newSendButton);
+                    } else {
+                        console.error('❌ Widget abierto pero sin elementos de input');
+                        listAllElements();
+                    }
+                }, 1000);
+            } else if (realInput && realSendButton) {
+                testRealInput(realInput, realSendButton);
             } else {
                 console.error('❌ No se encontraron elementos del widget real');
-                console.log('  Elementos disponibles:', document.querySelectorAll('[id*="aipi"]'));
+                listAllElements();
             }
+        }
+        
+        function testRealInput(realInput, realSendButton) {
+            console.log('✅ Probando input real del widget:');
+            console.log('  Input:', realInput);
+            console.log('  Send button:', realSendButton);
+            console.log('  Input disabled:', realInput.disabled);
+            console.log('  Send button disabled:', realSendButton.disabled);
+            console.log('  Input placeholder:', realInput.placeholder);
+            
+            // Simular escritura para probar
+            setTimeout(() => {
+                console.log('🤖 Simulando escritura en el input real...');
+                realInput.focus();
+                realInput.value = 'Mensaje de prueba';
+                realInput.dispatchEvent(new Event('input', { bubbles: true }));
+                realInput.dispatchEvent(new Event('change', { bubbles: true }));
+                
+                setTimeout(() => {
+                    console.log('📊 Estado después de simular escritura:');
+                    console.log('  Input value:', realInput.value);
+                    console.log('  Send button disabled:', realSendButton.disabled);
+                    
+                    // Intentar click en el botón
+                    if (!realSendButton.disabled) {
+                        console.log('🎯 Botón habilitado, simulando click...');
+                        realSendButton.click();
+                    } else {
+                        console.log('⚠️ Botón sigue deshabilitado');
+                    }
+                }, 200);
+            }, 500);
+        }
+        
+        function listAllElements() {
+            console.log('📋 Todos los elementos con ID que contiene "aipi":');
+            const elements = document.querySelectorAll('[id*="aipi"], [class*="aipi"]');
+            elements.forEach((el, index) => {
+                console.log(`  ${index + 1}. ${el.tagName}#${el.id}.${el.className} - visible: ${el.style.display !== 'none'}`);
+            });
         }
 
         function createTestMessages() {
