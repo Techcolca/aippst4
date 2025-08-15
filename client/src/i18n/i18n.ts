@@ -152,9 +152,6 @@ const resources = {
       footer: {
         company_description: "AIPI - Plateforme avancée d'IA conversationnelle pour sites web.",
         product: "Produit",
-        pricing: "Tarifs",
-        documentation: "Documentation",
-        get_started: "Commencer",
         company: "Entreprise",
         about_us: "À propos",
         contact: "Contact",
@@ -625,6 +622,9 @@ const resources = {
       add_form_to_website: "Ajouter le Formulaire au Site Web",
       embed_form_description: "Copiez et collez ce code dans votre site web pour intégrer le formulaire",
       paste_embed_code_anywhere: "Collez ce code n'importe où dans votre HTML",
+      documentation: "Documentation",
+      pricing: "Tarification",
+      get_started: "Commencer",
       getStartedPage: {
         title: "Commencer",
         subtitle: "Intégrez AIPPS dans votre site web en quelques minutes",
@@ -960,9 +960,6 @@ const resources = {
       footer: {
         company_description: "AIPI - Plataforma avanzada de IA conversacional para sitios web.",
         product: "Producto",
-        pricing: "Precios",
-        documentation: "Documentación",
-        get_started: "Comenzar",
         company: "Empresa",
         about_us: "Sobre nosotros",
         contact: "Contacto",
@@ -1434,6 +1431,9 @@ const resources = {
       add_form_to_website: "Agregar Formulario al Sitio Web",
       embed_form_description: "Copia y pega este código en tu sitio web para integrar el formulario",
       paste_embed_code_anywhere: "Pega este código en cualquier lugar de tu HTML",
+      documentation: "Documentación",
+      pricing: "Precios",
+      get_started: "Comenzar",
       getStartedPage: {
         title: "Comienza Ahora",
         subtitle: "Integra AIPPS en tu sitio web en minutos",
@@ -1769,9 +1769,6 @@ const resources = {
       footer: {
         company_description: "AIPI - Advanced conversational AI platform for websites.",
         product: "Product",
-        pricing: "Pricing",
-        documentation: "Documentation",
-        get_started: "Get Started",
         company: "Company",
         about_us: "About us",
         contact: "Contact",
@@ -2242,6 +2239,9 @@ const resources = {
       add_form_to_website: "Add Form to Website",
       embed_form_description: "Copy and paste this code into your website to integrate the form",
       paste_embed_code_anywhere: "Paste this code anywhere in your HTML",
+      documentation: "Documentation",
+      pricing: "Pricing",
+      get_started: "Get Started",
       getStartedPage: {
         title: "Get Started",
         subtitle: "Integrate AIPPS into your website in minutes",
