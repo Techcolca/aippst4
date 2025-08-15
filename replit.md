@@ -8,6 +8,19 @@ AIPI is an advanced conversational AI platform for websites, offering intelligen
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (August 2025)
+
+### Dynamic Text Contrast System - COMPLETED
+- **Problem Solved**: Text readability issues with different widget background colors
+- **Solution Implemented**: Automatic luminance-based text color calculation
+- **Technical Details**: 
+  - WCAG-compliant luminance calculations (threshold: 0.6)
+  - Real-time color recalculation after server configuration loads
+  - CSS injection with !important rules for reliable application
+  - Comprehensive debug tools for testing and validation
+- **Result**: Perfect text contrast across all widget configurations
+- **Date**: August 15, 2025
+
 ## System Architecture
 
 ### Frontend Architecture
@@ -30,12 +43,13 @@ Preferred communication style: Simple, everyday language.
 - **Schema Management**: Drizzle Kit for migrations.
 
 ### Key Components
-- **Chat Widget System**: Bubble, fullscreen, and modern form integrations with embeddable JavaScript and real-time communication. Includes intelligent conflict detection.
+- **Chat Widget System**: Bubble, fullscreen, and modern form integrations with embeddable JavaScript and real-time communication. Includes intelligent conflict detection and dynamic text contrast adaptation.
 - **Document Processing Engine**: Supports PDF, DOCX, and plain text content extraction for knowledge base integration.
 - **AI Integration Layer**: Utilizes OpenAI GPT-4o-mini for chat completion, sentiment analysis, and summarization, building context-aware knowledge bases from scraped content.
 - **Form Management System**: Dynamic, template-based form generation with external embedding and comprehensive data collection.
 - **Payment Integration**: Stripe for payment processing, subscription management, and webhook handling for tiered pricing plans.
 - **Internationalization**: Complete multilingual support with 100% translation coverage for UI elements, messages, and content across English, Spanish, and French. Eliminated all raw technical data and underscore-separated text from UI. All translation keys return proper strings (not objects) with comprehensive analytics chart translations.
+- **Dynamic Text Contrast System**: Automatic text color calculation based on background luminance for optimal readability across all widget configurations. Uses WCAG-compliant luminance calculations with configurable thresholds.
 
 ## External Dependencies
 
