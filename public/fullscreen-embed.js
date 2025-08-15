@@ -102,7 +102,13 @@
       
       if (data.settings) {
         config.assistantName = data.settings.assistantName || config.assistantName;
-        config.greetingMessage = data.settings.defaultGreeting || config.greetingMessage;
+      }
+      
+      // Update greeting message with correct assistant name after server config
+      const assistantName = config.assistantName || config.integrationName || 'tu asistente';
+      config.greetingMessage = data.settings?.defaultGreeting || `Hola, soy ${assistantName}. ¿En qué puedo ayudarte?`;
+      
+      if (data.settings) {
         config.showAvailability = data.settings.showAvailability !== false;
         config.userBubbleColor = data.settings.userBubbleColor || config.userBubbleColor;
         config.assistantBubbleColor = data.settings.assistantBubbleColor || config.assistantBubbleColor;
@@ -131,6 +137,9 @@
       
       // Create widget DOM elements
       createWidget();
+      
+      // Update any existing welcome messages
+      updateExistingWelcomeMessages();
       
     } catch (error) {
       console.error('AIPI Fullscreen Widget Error:', error);
@@ -943,5 +952,30 @@
       r.toString(16).padStart(2, '0') + 
       g.toString(16).padStart(2, '0') + 
       b.toString(16).padStart(2, '0');
+  }
+
+  // Function to update existing welcome messages with correct assistant name
+  function updateExistingWelcomeMessages() {
+    console.log('AIPPS Debug: Actualizando mensajes de bienvenida existentes (Fullscreen)');
+    
+    // Find existing assistant messages that might be welcome messages
+    const assistantMessages = document.querySelectorAll('.aipi-fs-assistant-message');
+    const assistantName = config.assistantName || config.integrationName || 'tu asistente';
+    
+    assistantMessages.forEach((msg, index) => {
+      if (index === 0) { // Usually the first message is the welcome message
+        const text = msg.textContent || msg.innerText;
+        
+        // Check if this looks like a welcome message with "AIPPS"
+        if (text.includes('AIPPS') || text.includes('Soy AIPPS')) {
+          const newMessage = text.replace(/AIPPS/g, assistantName).replace(/Soy AIPPS/g, `Soy ${assistantName}`);
+          
+          if (msg.innerHTML !== newMessage) {
+            console.log('AIPPS Debug: Actualizando mensaje de bienvenida (Fullscreen):', text, '→', newMessage);
+            msg.innerHTML = newMessage;
+          }
+        }
+      }
+    });
   }
 })();

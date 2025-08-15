@@ -553,6 +553,12 @@
       
       if (data.settings) {
         config.assistantName = data.settings.assistantName || config.assistantName;
+      }
+      
+      // Regenerate translations with updated assistant name AFTER getting server config
+      t = getTranslations(config.language);
+      
+      if (data.settings) {
         config.greetingMessage = data.settings.defaultGreeting || t.fallbackWelcome;
         config.welcomeMessage = data.settings.welcomeMessage || t.defaultWelcome;
         config.showAvailability = data.settings.showAvailability;
@@ -569,6 +575,9 @@
         
         // CRITICAL FIX: Recalculate text color after loading server config
         updateTextColorsAfterConfig();
+        
+        // Update existing welcome messages with correct assistant name
+        updateExistingWelcomeMessages();
       }
 
       // Extraer el contenido de la página actual para mejorar las respuestas
@@ -4843,6 +4852,31 @@ Contenido: [Error al extraer contenido detallado]
 
   // Expose other functions to global scope
   window.aipiSendMessage = sendMessage;
+  // Function to update existing welcome messages with correct assistant name
+  function updateExistingWelcomeMessages() {
+    console.log('AIPPS Debug: Actualizando mensajes de bienvenida existentes');
+    
+    // Find existing assistant messages that might be welcome messages
+    const assistantMessages = document.querySelectorAll('.aipi-assistant-message');
+    const assistantName = config.assistantName || config.integrationName || 'tu asistente';
+    
+    assistantMessages.forEach((msg, index) => {
+      if (index === 0) { // Usually the first message is the welcome message
+        const text = msg.textContent || msg.innerText;
+        
+        // Check if this looks like a welcome message with "AIPPS"
+        if (text.includes('AIPPS') || text.includes('Soy AIPPS')) {
+          const newMessage = text.replace(/AIPPS/g, assistantName).replace(/Soy AIPPS/g, `Soy ${assistantName}`);
+          
+          if (msg.innerHTML !== newMessage) {
+            console.log('AIPPS Debug: Actualizando mensaje de bienvenida:', text, '→', newMessage);
+            msg.innerHTML = formatAssistantMessage(newMessage);
+          }
+        }
+      }
+    });
+  }
+
   window.aipiCloseWidget = closeWidget;
   window.aipiOpenWidget = openWidget;
   window.aipiMinimizeWidget = minimizeWidget;
