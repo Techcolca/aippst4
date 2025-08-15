@@ -564,6 +564,29 @@ const resources = {
       "education.testimonial_author": "Responsable admissions",
       "education.implement_button": "Implémenter pour votre institution",
       
+      // Contact Page
+      "contact.title": "Contactez-nous",
+      "contact.subtitle": "Nous sommes là pour vous aider",
+      "contact.info.title": "Informations de contact",
+      "contact.info.email": "Email",
+      "contact.info.phone": "Téléphone",
+      "contact.info.address": "Adresse",
+      "contact.info.hours": "Heures d'ouverture",
+      "contact.info.hours_details": "Lundi - Vendredi: 9h00 - 18h00 EST",
+      "contact.form.title": "Envoyez-nous un message",
+      "contact.form.name": "Nom",
+      "contact.form.name_placeholder": "Votre nom complet",
+      "contact.form.email": "Email",
+      "contact.form.email_placeholder": "votre@email.com",
+      "contact.form.subject": "Sujet",
+      "contact.form.subject_placeholder": "Comment pouvons-nous vous aider?",
+      "contact.form.message": "Message",
+      "contact.form.message_placeholder": "Décrivez votre question ou demande...",
+      "contact.form.send": "Envoyer le message",
+      
+      // Documentation
+      "documentation.overview.start_button": "Commencer maintenant",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1144,6 +1167,29 @@ const resources = {
       "education.testimonial_author": "Responsable de admisiones",
       "education.implement_button": "Implementar para tu institución",
       
+      // Contact Page
+      "contact.title": "Contáctanos",
+      "contact.subtitle": "Estamos aquí para ayudarte",
+      "contact.info.title": "Información de contacto",
+      "contact.info.email": "Email",
+      "contact.info.phone": "Teléfono",
+      "contact.info.address": "Dirección",
+      "contact.info.hours": "Horario de atención",
+      "contact.info.hours_details": "Lunes - Viernes: 9:00 - 18:00 EST",
+      "contact.form.title": "Envíanos un mensaje",
+      "contact.form.name": "Nombre",
+      "contact.form.name_placeholder": "Tu nombre completo",
+      "contact.form.email": "Email",
+      "contact.form.email_placeholder": "tu@email.com",
+      "contact.form.subject": "Asunto",
+      "contact.form.subject_placeholder": "¿Cómo podemos ayudarte?",
+      "contact.form.message": "Mensaje",
+      "contact.form.message_placeholder": "Describe tu pregunta o solicitud...",
+      "contact.form.send": "Enviar mensaje",
+      
+      // Documentation
+      "documentation.overview.start_button": "Comenzar ahora",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -1723,6 +1769,29 @@ const resources = {
       "education.testimonial_text": "AIPPS simplified our admission process",
       "education.testimonial_author": "Admissions manager",
       "education.implement_button": "Implement for your institution",
+      
+      // Contact Page
+      "contact.title": "Contact us",
+      "contact.subtitle": "We're here to help",
+      "contact.info.title": "Contact information",
+      "contact.info.email": "Email",
+      "contact.info.phone": "Phone",
+      "contact.info.address": "Address",
+      "contact.info.hours": "Business hours",
+      "contact.info.hours_details": "Monday - Friday: 9:00 AM - 6:00 PM EST",
+      "contact.form.title": "Send us a message",
+      "contact.form.name": "Name",
+      "contact.form.name_placeholder": "Your full name",
+      "contact.form.email": "Email",
+      "contact.form.email_placeholder": "your@email.com",
+      "contact.form.subject": "Subject",
+      "contact.form.subject_placeholder": "How can we help you?",
+      "contact.form.message": "Message",
+      "contact.form.message_placeholder": "Describe your question or request...",
+      "contact.form.send": "Send message",
+      
+      // Documentation
+      "documentation.overview.start_button": "Get started now",
       
       // Footer
       footer: {
