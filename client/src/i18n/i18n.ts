@@ -130,6 +130,9 @@ const resources = {
       "formEditor.radius.none": "Aucun",
       "formEditor.radius.medium": "Moyen",
       "formEditor.radius.large": "Grand",
+      "formEditor.configuration": "Configuration",
+      "formEditor.advanced_settings": "Paramètres avancés",
+      "formEditor.success_message": "Message de succès",
 
       // Common
       "common.yes": "Oui",
@@ -1064,6 +1067,9 @@ const resources = {
       "formEditor.radius.none": "Ninguno",
       "formEditor.radius.medium": "Medio",
       "formEditor.radius.large": "Grande",
+      "formEditor.configuration": "Configuración",
+      "formEditor.advanced_settings": "Configuraciones avanzadas",
+      "formEditor.success_message": "Mensaje de éxito",
 
       // Common
       "common.yes": "Sí",
@@ -1998,6 +2004,9 @@ const resources = {
       "formEditor.radius.none": "None",
       "formEditor.radius.medium": "Medium",
       "formEditor.radius.large": "Large",
+      "formEditor.configuration": "Configuration",
+      "formEditor.advanced_settings": "Advanced settings",
+      "formEditor.success_message": "Success message",
 
       // Common
       "common.yes": "Yes",
