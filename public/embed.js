@@ -2076,7 +2076,9 @@ Contenido: [Error al extraer contenido detallado]
         if (cleanInput && cleanSendButton) {
           // Handle input changes
           cleanInput.oninput = function() {
-            cleanSendButton.disabled = !cleanInput.value.trim();
+            const hasValue = cleanInput.value.trim();
+            cleanSendButton.disabled = !hasValue;
+            console.log('AIPPS Debug: Input changed, value:', cleanInput.value, 'hasValue:', hasValue, 'button disabled:', cleanSendButton.disabled);
           };
 
           // Send message on Enter key
@@ -2108,9 +2110,13 @@ Contenido: [Error al extraer contenido detallado]
           };
           
           // Enable send button based on current input value
-          cleanSendButton.disabled = !cleanInput.value.trim();
+          const initialValue = cleanInput.value.trim();
+          cleanSendButton.disabled = !initialValue;
           
           console.log('AIPPS Debug: Input and send button events configured');
+          console.log('AIPPS Debug: Initial input value:', cleanInput.value, 'button disabled:', cleanSendButton.disabled);
+          console.log('AIPPS Debug: Input element found:', cleanInput);
+          console.log('AIPPS Debug: Send button found:', cleanSendButton);
         }
       }
       
