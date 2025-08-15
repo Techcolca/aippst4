@@ -1173,7 +1173,7 @@ Contenido: [Error al extraer contenido detallado]
 
       .aipi-assistant-message {
         background-color: ${config.assistantBubbleColor};
-        color: #1f2937;
+        color: ${isColorDark(config.assistantBubbleColor) ? '#ffffff' : '#1f2937'};
         align-self: flex-start;
         border-bottom-left-radius: 4px;
       }

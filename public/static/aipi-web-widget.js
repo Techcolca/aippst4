@@ -469,12 +469,15 @@
     if (!text) return '';
     
     const palette = generatePastelPalette(widgetConfig.themeColor || '#6366f1');
-    const isDarkTheme = isColorDark(widgetConfig.themeColor || '#6366f1');
+    const themeColor = widgetConfig.themeColor || '#6366f1';
+    const isDarkBubble = isColorDark(themeColor);
     
-    // Colores de texto basados en el tema
-    const titleColor = isDarkTheme ? '#f9fafb' : '#1f2937';
-    const bodyColor = isDarkTheme ? '#e5e7eb' : '#374151';
-    const accentColor = widgetConfig.themeColor || '#6366f1';
+    // Colores de texto basados en el contraste de la burbuja
+    // Para burbujas oscuras (fondo claro): texto oscuro
+    // Para burbujas claras (fondo oscuro): texto claro
+    const titleColor = isDarkBubble ? '#1f2937' : '#f9fafb';
+    const bodyColor = isDarkBubble ? '#374151' : '#e5e7eb';
+    const accentColor = isDarkBubble ? themeColor : '#60a5fa';
     
     // Escape HTML para prevenir XSS
     let safeText = escapeHTML(text);
@@ -560,10 +563,14 @@
       messageElement.style.marginLeft = 'auto';
       messageElement.style.borderBottomRightRadius = '4px';
     } else {
-      // Colores dinámicos basados en el tema principal
-      const isDarkTheme = isColorDark(widgetConfig.themeColor || '#6366f1');
-      const assistantBgColor = isDarkTheme ? '#374151' : '#2D3748';
-      const assistantTextColor = isDarkTheme ? '#f9fafb' : '#E2E8F0';
+      // Colores dinámicos basados en el tema principal con contraste adecuado
+      const themeColor = widgetConfig.themeColor || '#6366f1';
+      const isDarkBubble = isColorDark(themeColor);
+      
+      // Para burbujas oscuras: usar fondo claro con texto oscuro para mejor contraste
+      // Para burbujas claras: usar fondo oscuro con texto claro
+      const assistantBgColor = isDarkBubble ? '#f3f4f6' : themeColor;
+      const assistantTextColor = isDarkBubble ? '#1f2937' : '#ffffff';
       
       messageElement.style.backgroundColor = assistantBgColor;
       messageElement.style.color = assistantTextColor;
@@ -596,8 +603,9 @@
       indicator.style.padding = '10px 14px';
       
       // Aplicar colores dinámicos también al indicador de escritura
-      const isDarkTheme = isColorDark(widgetConfig.themeColor || '#6366f1');
-      const assistantBgColor = isDarkTheme ? '#374151' : '#2D3748';
+      const themeColor = widgetConfig.themeColor || '#6366f1';
+      const isDarkBubble = isColorDark(themeColor);
+      const assistantBgColor = isDarkBubble ? '#f3f4f6' : themeColor;
       
       indicator.style.backgroundColor = assistantBgColor;
       indicator.style.borderRadius = '18px';
