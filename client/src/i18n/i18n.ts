@@ -430,7 +430,6 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'es',
     fallbackLng: 'en',
     debug: false,
     
@@ -439,8 +438,8 @@ i18n
     },
     
     detection: {
-      order: ['cookie', 'localStorage', 'navigator'],
-      caches: ['cookie', 'localStorage'],
+      order: ['localStorage', 'cookie', 'navigator'],
+      caches: ['localStorage', 'cookie'],
     },
   });
 
