@@ -597,6 +597,10 @@ const resources = {
       fast_responses: "Réponses Rapides",
       export_pdf: "Exporter PDF",
       back_to_dashboard: "Retour au Tableau de Bord",
+      topics_and_sentiment: "Sujets et Sentiment",
+      topics_analysis_description: "Analyse des sujets et du sentiment des conversations client.",
+      advanced_analysis: "Analyse Avancée",
+      advanced_metrics: "Métriques Avancées",
       getStartedPage: {
         title: "Commencer",
         subtitle: "Intégrez AIPPS dans votre site web en quelques minutes",
@@ -1378,6 +1382,10 @@ const resources = {
       fast_responses: "Respuestas Rápidas",
       export_pdf: "Exportar PDF",
       back_to_dashboard: "Volver al Panel",
+      topics_and_sentiment: "Temas y Sentimiento",
+      topics_analysis_description: "Análisis de temas y sentimiento de conversaciones de clientes.",
+      advanced_analysis: "Análisis Avanzado",
+      advanced_metrics: "Métricas Avanzadas",
       getStartedPage: {
         title: "Comienza Ahora",
         subtitle: "Integra AIPPS en tu sitio web en minutos",
@@ -2158,6 +2166,10 @@ const resources = {
       fast_responses: "Fast Responses",
       export_pdf: "Export PDF",
       back_to_dashboard: "Back to Dashboard",
+      topics_and_sentiment: "Topics and Sentiment",
+      topics_analysis_description: "Analysis of topics and sentiment from customer conversations.",
+      advanced_analysis: "Advanced Analysis",
+      advanced_metrics: "Advanced Metrics",
       getStartedPage: {
         title: "Get Started",
         subtitle: "Integrate AIPPS into your website in minutes",
