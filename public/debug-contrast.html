@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Contraste AIPI Widget</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .debug-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .color-test {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .log-output {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .widget-container {
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug de Contraste - Widget AIPI</h1>
+    
+    <div class="debug-container">
+        <h2>Panel de Control de Debug</h2>
+        <button class="test-button" onclick="testAllColors()">Probar Todos los Colores</button>
+        <button class="test-button" onclick="clearLogs()">Limpiar Logs</button>
+        <button class="test-button" onclick="testCurrentConfig()">Probar Configuración Actual</button>
+        <button class="test-button" onclick="toggleWidget()">Mostrar/Ocultar Widget</button>
+    </div>
+
+    <div class="debug-container">
+        <h2>Pruebas de Colores</h2>
+        <div id="colorTests"></div>
+    </div>
+
+    <div class="debug-container">
+        <h2>Logs de Debug en Tiempo Real</h2>
+        <div class="log-output" id="debugLog">Iniciando debug...\n</div>
+    </div>
+
+    <div class="widget-container" id="widgetContainer" style="display: none;">
+        <h2>Widget AIPI en Vivo</h2>
+        <div id="aipi-widget-container"></div>
+    </div>
+
+    <script>
+        // Override console.log para capturar todos los logs
+        const originalLog = console.log;
+        const debugLogElement = document.getElementById('debugLog');
+        
+        function logToDebug(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+            debugLogElement.textContent += logMessage;
+            debugLogElement.scrollTop = debugLogElement.scrollHeight;
+            originalLog(message);
+        }
+
+        console.log = function(...args) {
+            logToDebug(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            logToDebug(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            logToDebug(args.join(' '), 'warn');
+        };
+
+        // Función para calcular luminancia
+        function calculateLuminance(hex) {
+            let color = hex.replace('#', '');
+            if (color.length === 3) {
+                color = color.split('').map(c => c + c).join('');
+            }
+            if (color.length !== 6) return null;
+            
+            const r = parseInt(color.substr(0, 2), 16);
+            const g = parseInt(color.substr(2, 2), 16);
+            const b = parseInt(color.substr(4, 2), 16);
+            
+            return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        }
+
+        // Función para determinar color de texto
+        function getTextColor(bgColor, threshold = 0.6) {
+            const luminance = calculateLuminance(bgColor);
+            return luminance < threshold ? '#ffffff' : '#1f2937';
+        }
+
+        // Probar diferentes colores
+        function testAllColors() {
+            const testColors = [
+                '#E5E7EB', // Gris claro (tu configuración)
+                '#1b3569', // Azul oscuro (problema reportado)
+                '#ffffff', // Blanco
+                '#000000', // Negro
+                '#f3f4f6', // Gris muy claro
+                '#374151', // Gris oscuro
+                '#3b82f6', // Azul medio
+                '#1f2937', // Gris muy oscuro
+            ];
+
+            const container = document.getElementById('colorTests');
+            container.innerHTML = '';
+
+            testColors.forEach(color => {
+                const luminance = calculateLuminance(color);
+                const textColor = getTextColor(color);
+                
+                console.log(`Testing color ${color}: Luminance=${luminance?.toFixed(3)}, TextColor=${textColor}`);
+                
+                const testDiv = document.createElement('div');
+                testDiv.className = 'color-test';
+                testDiv.style.backgroundColor = color;
+                testDiv.style.color = textColor;
+                testDiv.innerHTML = `
+                    <strong>Color: ${color}</strong><br>
+                    Luminancia: ${luminance?.toFixed(3) || 'ERROR'}<br>
+                    Texto: ${textColor}<br>
+                    ¿Legible? ${luminance !== null ? 'SÍ' : 'NO'}
+                `;
+                
+                container.appendChild(testDiv);
+            });
+        }
+
+        // Probar configuración actual del widget
+        function testCurrentConfig() {
+            console.log('=== PROBANDO CONFIGURACIÓN ACTUAL ===');
+            
+            // Simular la configuración actual
+            const config = {
+                assistantBubbleColor: '#E5E7EB',
+                userBubbleColor: '#3b82f6'
+            };
+
+            const assistantLuminance = calculateLuminance(config.assistantBubbleColor);
+            const assistantTextColor = getTextColor(config.assistantBubbleColor);
+            
+            console.log(`Configuración Asistente:`);
+            console.log(`  Color de fondo: ${config.assistantBubbleColor}`);
+            console.log(`  Luminancia: ${assistantLuminance?.toFixed(3)}`);
+            console.log(`  Color de texto calculado: ${assistantTextColor}`);
+            console.log(`  Umbral usado: 0.6`);
+            console.log(`  ¿Es fondo oscuro? ${assistantLuminance < 0.6 ? 'SÍ' : 'NO'}`);
+        }
+
+        // Cargar widget real
+        function toggleWidget() {
+            const container = document.getElementById('widgetContainer');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                loadRealWidget();
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function loadRealWidget() {
+            console.log('Cargando widget real...');
+            
+            // Cargar el script del widget
+            const script = document.createElement('script');
+            script.src = '/embed.js?key=57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+            script.onload = function() {
+                console.log('Widget cargado exitosamente');
+            };
+            script.onerror = function() {
+                console.error('Error al cargar el widget');
+            };
+            document.head.appendChild(script);
+        }
+
+        function clearLogs() {
+            debugLogElement.textContent = 'Logs limpiados...\n';
+        }
+
+        // Inicializar
+        console.log('Debug de contraste iniciado');
+        console.log('Configuración detectada: asistente fondo #E5E7EB');
+        testCurrentConfig();
+        testAllColors();
+
+        // Monitorear cambios en el DOM
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && node.classList) {
+                            if (node.classList.contains('aipi-assistant-message') || 
+                                node.classList.contains('aipi-fs-assistant-message')) {
+                                console.log('Mensaje del asistente detectado:', {
+                                    element: node.tagName,
+                                    classes: Array.from(node.classList),
+                                    backgroundColor: getComputedStyle(node).backgroundColor,
+                                    color: getComputedStyle(node).color
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        observer.observe(document.body, { 
+            childList: true, 
+            subtree: true 
+        });
+    </script>
+</body>
+</html>

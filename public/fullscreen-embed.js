@@ -392,11 +392,16 @@
             const b = parseInt(hex.substr(4, 2), 16);
             const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
             
-            console.log('AIPPS CSS Debug: Color:', color, 'Luminance:', luminance.toFixed(3));
+            console.log('🎨 AIPPS CSS Debug - Fullscreen:');
+            console.log('  Background color:', color);
+            console.log('  Luminance:', luminance.toFixed(3));
+            console.log('  Threshold: 0.6');
+            console.log('  Is dark background?', luminance < 0.6);
             
             // FIXED: Use luminance < 0.6 for better dark detection
             const textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
-            console.log('AIPPS CSS Debug: Selected text color:', textColor);
+            console.log('  Selected text color:', textColor);
+            console.log('  Rule applied: luminance < 0.6 ? white : dark');
             
             return textColor + ' !important';
           })()};
@@ -763,11 +768,16 @@
         const b = parseInt(hex.substr(4, 2), 16);
         const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
         
-        console.log('AIPPS Debug: BGR color:', bgColor, 'Luminance:', luminance.toFixed(3));
+        console.log('🔧 AIPPS JavaScript Debug - Fullscreen:');
+        console.log('  Background color:', bgColor);
+        console.log('  Luminance:', luminance.toFixed(3));
+        console.log('  Threshold: 0.6');
+        console.log('  Is dark background?', luminance < 0.6);
         
         // FIXED: Use luminance < 0.6 for better dark detection
         textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
-        console.log('AIPPS Debug: Selected text color:', textColor);
+        console.log('  Selected text color:', textColor);
+        console.log('  Rule applied: luminance < 0.6 ? white : dark');
       }
       
       // Apply styles with calculated contrast

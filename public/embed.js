@@ -1175,7 +1175,15 @@ Contenido: [Error al extraer contenido detallado]
           const b = parseInt(hex.substr(4, 2), 16);
           const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
           
-          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
+          console.log('🎨 AIPPS CSS Debug - Assistant Message:');
+          console.log('  Background color:', color);
+          console.log('  Luminance:', luminance.toFixed(3));
+          console.log('  Is dark background?', luminance < 0.6);
+          
+          const textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
+          console.log('  Selected text color:', textColor);
+          
+          return textColor + ' !important';
         })()};
         align-self: flex-start;
         border-bottom-left-radius: 4px;
@@ -1200,7 +1208,15 @@ Contenido: [Error al extraer contenido detallado]
           const b = parseInt(hex.substr(4, 2), 16);
           const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
           
-          return luminance < 0.6 ? '#ffffff !important' : '#1f2937 !important';
+          console.log('🎨 AIPPS CSS Debug - Typing Indicator:');
+          console.log('  Background color:', color);
+          console.log('  Luminance:', luminance.toFixed(3));
+          console.log('  Is dark background?', luminance < 0.6);
+          
+          const textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
+          console.log('  Selected text color:', textColor);
+          
+          return textColor + ' !important';
         })()};
         border-radius: 18px;
         border-bottom-left-radius: 4px;
