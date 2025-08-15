@@ -2195,6 +2195,12 @@ Contenido: [Error al extraer contenido detallado]
       return;
     }
 
+    // Re-attach event listeners when opening widget to ensure they work
+    setTimeout(() => {
+      attachEventListeners();
+      console.log('AIPPS Debug: Event listeners re-attached after opening widget');
+    }, 100);
+
     // Para widgets tipo fullscreen, abrir siempre directamente
     if (config.widgetType === 'fullscreen') {
       console.log('AIPPS Widget: Abriendo widget fullscreen');

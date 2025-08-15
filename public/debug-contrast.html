@@ -308,8 +308,8 @@
                 console.log('  Chat panel visible:', chatPanel.style.display !== 'none');
             }
             
-            // Si no hay input, intentar abrir el widget
-            if (!realInput && toggleButton) {
+            // Si no hay input o el panel está cerrado, intentar abrir el widget
+            if ((!realInput && toggleButton) || (chatPanel && chatPanel.style.display === 'none' && toggleButton)) {
                 console.log('🚀 Widget cerrado, intentando abrir...');
                 toggleButton.click();
                 
@@ -317,10 +317,12 @@
                 setTimeout(() => {
                     const newInput = document.querySelector('#aipi-input');
                     const newSendButton = document.querySelector('#aipi-send-button');
+                    const newChatPanel = document.querySelector('#aipi-chat-panel');
                     
                     console.log('📝 Después de abrir widget:');
                     console.log('  Input encontrado:', !!newInput);
                     console.log('  Send button encontrado:', !!newSendButton);
+                    console.log('  Chat panel visible:', newChatPanel?.style.display !== 'none');
                     
                     if (newInput && newSendButton) {
                         testRealInput(newInput, newSendButton);
@@ -328,7 +330,7 @@
                         console.error('❌ Widget abierto pero sin elementos de input');
                         listAllElements();
                     }
-                }, 1000);
+                }, 1500);
             } else if (realInput && realSendButton) {
                 testRealInput(realInput, realSendButton);
             } else {
