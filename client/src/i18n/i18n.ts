@@ -67,6 +67,27 @@ const resources = {
       system_default: "Défaut du système",
       settings_description: "Configurez les paramètres de votre assistant AIPI",
       
+      // Forms
+      forms_description: "Créez et gérez vos formulaires",
+      refresh: "Actualiser",
+      create_form: "Créer un Formulaire",
+      no_description: "Aucune description",
+      responses: "Réponses",
+      delete: "Supprimer",
+      confirm_delete: "Confirmer la Suppression",
+      delete_form_confirmation: "Êtes-vous sûr de vouloir supprimer ce formulaire ? Cette action ne peut pas être annulée et supprimera également toutes les réponses.",
+      cancel: "Annuler",
+      deleting: "Suppression...",
+      no_forms: "Aucun formulaire pour le moment",
+      forms_empty_message: "Créez un nouveau formulaire pour collecter des informations de vos visiteurs",
+      
+      // Automation
+      task_automation_description: "Configurez des tâches automatisées et des flux de travail alimentés par l'IA",
+      create_automation: "Créer une Automatisation",
+      view_logs: "Voir les Journaux",
+      no_automations: "Aucune automatisation pour le moment",
+      automations_empty_message: "Créez votre première automatisation pour simplifier les tâches répétitives avec l'IA",
+      
       // Estados
       active: "Actif",
       inactive: "Inactif",
@@ -933,6 +954,27 @@ const resources = {
       system_default: "Predeterminado del sistema",
       settings_description: "Configure los ajustes de su asistente AIPI",
       
+      // Forms
+      forms_description: "Cree y gestione sus formularios",
+      refresh: "Actualizar",
+      create_form: "Crear Formulario",
+      no_description: "Sin descripción",
+      responses: "Respuestas",
+      delete: "Eliminar",
+      confirm_delete: "Confirmar Eliminación",
+      delete_form_confirmation: "¿Está seguro de que desea eliminar este formulario? Esta acción no se puede deshacer y también eliminará todas las respuestas.",
+      cancel: "Cancelar",
+      deleting: "Eliminando...",
+      no_forms: "Aún no hay formularios",
+      forms_empty_message: "Cree un nuevo formulario para recopilar información de sus visitantes",
+      
+      // Automation
+      task_automation_description: "Configure tareas automatizadas y flujos de trabajo impulsados por IA",
+      create_automation: "Crear Automatización",
+      view_logs: "Ver Registros",
+      no_automations: "Aún no hay automatizaciones",
+      automations_empty_message: "Cree su primera automatización para agilizar tareas repetitivas con IA",
+      
       // Estados
       active: "Activo",
       inactive: "Inactivo",
@@ -1798,6 +1840,27 @@ const resources = {
       no: "No",
       system_default: "System default",
       settings_description: "Configure your AIPI assistant settings",
+      
+      // Forms
+      forms_description: "Create and manage your forms",
+      refresh: "Refresh",
+      create_form: "Create Form",
+      no_description: "No description",
+      responses: "Responses",
+      delete: "Delete",
+      confirm_delete: "Confirm Delete",
+      delete_form_confirmation: "Are you sure you want to delete this form? This action cannot be undone and will also delete all responses.",
+      cancel: "Cancel",
+      deleting: "Deleting...",
+      no_forms: "No forms yet",
+      forms_empty_message: "Create a new form to collect information from your visitors",
+      
+      // Automation
+      task_automation_description: "Set up automated tasks and workflows powered by AI",
+      create_automation: "Create Automation",
+      view_logs: "View Logs",
+      no_automations: "No automations yet",
+      automations_empty_message: "Create your first automation to streamline repetitive tasks with AI",
       
       // Estados
       active: "Active",
