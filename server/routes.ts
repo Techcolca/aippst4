@@ -3390,7 +3390,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const authenticatedUser = await storage.getUser(authenticatedUserId);
           if (authenticatedUser) {
             const userName = authenticatedUser.fullName || authenticatedUser.username;
-            userContext = `\n\nNOTA IMPORTANTE: El usuario que te está escribiendo se llama ${userName}. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana.`;
+            
+            // Get user's conversation history to understand context
+            const allConversations = await storage.getConversations(integration.id);
+            const userConversations = allConversations.filter(conv => 
+              conv.visitorId === `user_${authenticatedUserId}`
+            );
+            
+            let conversationHistory = "";
+            if (userConversations.length > 1) {
+              // Get recent conversation titles for context
+              const recentTitles = userConversations
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .slice(0, 3)
+                .map(conv => conv.title)
+                .filter(title => title && title !== 'Nueva conversación')
+                .join(', ');
+              
+              if (recentTitles) {
+                conversationHistory = `\n\nCONTEXTO DE CONVERSACIONES ANTERIORES: ${userName} ha hablado contigo antes sobre estos temas: ${recentTitles}. Úsalo como contexto para ser más natural y evitar preguntas repetitivas.`;
+              }
+            }
+            
+            userContext = `\n\nNOTA IMPORTANTE: El usuario que te está escribiendo se llama ${userName}. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana. Sé natural y amigable, no repitas siempre las mismas preguntas sobre problemas o proyectos.${conversationHistory}`;
             console.log(`AIPPS Debug: User context added for ${userName}`);
           }
         } catch (error) {
