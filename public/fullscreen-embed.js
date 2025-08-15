@@ -95,9 +95,10 @@
         // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
       
-      // Store integration name for dynamic messages
+      // Store integration name and text color setting for dynamic messages
       if (data.integration) {
         config.integrationName = data.integration.name;
+        config.textColorMode = data.integration.textColor || 'auto';
       }
       
       if (data.settings) {
@@ -902,8 +903,17 @@
     return luminance < 0.5;
   }
 
-  // Función para obtener color de texto con contraste adecuado
+  // Función para obtener color de texto con contraste adecuado o forzado
   function getContrastTextColor(backgroundColor) {
+    // Si hay una configuración específica de color de texto, usarla
+    if (config.textColorMode === 'white') {
+      return '#ffffff';
+    }
+    if (config.textColorMode === 'black') {
+      return '#1f2937';
+    }
+    
+    // Si es 'auto' o no está definido, calcular automáticamente
     if (!backgroundColor || typeof backgroundColor !== 'string') {
       return '#1f2937'; // Por defecto texto oscuro
     }

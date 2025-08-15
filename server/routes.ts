@@ -1127,6 +1127,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         botBehavior: req.body.botBehavior,
         description: req.body.description,
         language: req.body.language,
+        textColor: req.body.textColor,
         customization: req.body.customization
       });
       
@@ -3008,6 +3009,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           description: integration.description,
           ignoredSectionsText: integration.ignoredSectionsText,
           language: integration.language || 'es',
+          textColor: integration.textColor || 'auto',
           // No enviamos datos sensibles como userId o apiKey al cliente
         },
         settings: {

@@ -36,6 +36,9 @@ const formSchema = z.object({
   language: z.enum(["es", "en", "fr"], {
     required_error: "Debes seleccionar un idioma"
   }).default("es"),
+  textColor: z.enum(["auto", "white", "black"], {
+    required_error: "Debes seleccionar un color de texto"
+  }).default("auto"),
   customization: z.object({
     assistantName: z.string().optional(),
     defaultGreeting: z.string().optional(),
@@ -115,6 +118,7 @@ export default function EditIntegration() {
       ignoredSectionsText: "",
       description: "",
       language: "es",
+      textColor: "auto",
       customization: {
         assistantName: "AIPI Assistant",
         defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
@@ -372,6 +376,7 @@ export default function EditIntegration() {
         ignoredSectionsText: integration.ignoredSectionsText || "",
         description: integration.description || "",
         language: integration.language || "es",
+        textColor: integration.textColor || "auto",
         customization: integration.customization || {
           assistantName: "AIPI Assistant",
           defaultGreeting: "¡Hola! ¿En qué puedo ayudarte hoy?",
@@ -779,6 +784,43 @@ export default function EditIntegration() {
                     </Select>
                     <FormDescription>
                       El idioma en que se mostrará el widget a los usuarios (se guarda automáticamente)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="textColor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Color del texto del asistente</FormLabel>
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        // Auto-save text color changes
+                        const currentValues = form.getValues();
+                        updateIntegrationMutation.mutate({
+                          ...currentValues,
+                          textColor: value
+                        });
+                      }}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecciona el color del texto" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="auto">🎨 Automático (basado en contraste)</SelectItem>
+                        <SelectItem value="white">⚪ Blanco</SelectItem>
+                        <SelectItem value="black">⚫ Negro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>
+                      Color del texto en los mensajes del asistente. "Automático" calcula el mejor contraste según el color de fondo.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
