@@ -75,28 +75,7 @@ export default function Home() {
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4">
                   {t("welcome")}
                 </h1>
-                <RotatingWelcomeMessage className="text-lg text-gray-700 dark:text-gray-300 mb-6" />
-                
-                {/* Enhanced Description */}
-                <div className="mb-8 space-y-4">
-                  <p className="text-xl text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {t("home.description")}
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                    <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{t("home.stats.websites")}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{t("home.stats.websitesLabel")}</div>
-                    </div>
-                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600 dark:text-green-400">{t("home.stats.conversations")}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{t("home.stats.conversationsLabel")}</div>
-                    </div>
-                    <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{t("home.stats.languages")}</div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">{t("home.stats.languagesLabel")}</div>
-                    </div>
-                  </div>
-                </div>
+                <RotatingWelcomeMessage className="text-lg text-gray-700 dark:text-gray-300 mb-8" />
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button size="lg" className="bg-indigo-500 hover:bg-indigo-600 text-white dark:bg-indigo-600 dark:hover:bg-indigo-700 border-0" asChild>
                     <Link href="/get-started">{t("getStarted")}</Link>

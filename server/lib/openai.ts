@@ -495,15 +495,16 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
     
     if (language === 'fr') {
       systemPrompt = `Vous êtes un expert en marketing numérique spécialisé dans les plateformes d'IA conversationnelle. 
-      Générez exactement 7 messages promotionnels uniques et attrayants pour AIPPS, une plateforme de chatbots avec IA.
+      Générez exactement 7 messages promotionnels uniques et très attrayants pour AIPPS, une plateforme de chatbots avec IA.
       
       Les messages doivent:
-      - Être accrocheurs et commerciaux
-      - Mettre en évidence différents avantages d'AIPPS
-      - Être variés dans l'approche (automatisation, prospects, ventes, support, etc.)
-      - Avoir entre 8-15 mots chacun
+      - Être accrocheurs, commerciaux et détaillés
+      - Mettre en évidence différents avantages spécifiques d'AIPPS
+      - Être variés dans l'approche (automatisation, prospects, ventes, support, productivité, ROI, etc.)
+      - Avoir entre 20-35 mots chacun pour être plus descriptifs et engageants
       - Inclure des emojis pertinents
-      - Créer de l'urgence ou de l'intérêt
+      - Créer de l'urgence, de l'intérêt et montrer la valeur concrète
+      - Focus sur les bénéfices business concrets et mesurables
       
       Répondez UNIQUEMENT avec un JSON valide dans ce format:
       {
@@ -519,25 +520,26 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       }`;
       
       fallbackMessages = [
-        { message_text: "🚀 Automatisez votre service client avec IA avancée!", message_type: 'ai_generated', display_order: 1 },
-        { message_text: "💬 Chatbots intelligents qui convertissent visiteurs en clients", message_type: 'ai_generated', display_order: 2 },
-        { message_text: "⚡ Réponses instantanées 24/7 pour votre entreprise", message_type: 'ai_generated', display_order: 3 },
-        { message_text: "📈 Augmentez vos ventes pendant que vous dormez", message_type: 'ai_generated', display_order: 4 },
-        { message_text: "🎯 Capturez des prospects automatiquement et intelligemment", message_type: 'ai_generated', display_order: 5 },
-        { message_text: "🔧 Intégration facile sur n'importe quel site web", message_type: 'ai_generated', display_order: 6 },
-        { message_text: "💡 IA qui comprend vos clients mieux que jamais", message_type: 'ai_generated', display_order: 7 }
+        { message_text: "🚀 Transformez votre site web en une machine de génération de leads 24/7 avec l'IA conversationnelle AIPPS qui comprend, engage et convertit vos visiteurs automatiquement", message_type: 'ai_generated', display_order: 1 },
+        { message_text: "💬 Augmentez votre taux de conversion de 300% avec des chatbots intelligents qui qualifient vos prospects et les dirigent vers vos équipes de vente au moment optimal", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "⚡ Réduisez vos coûts de support client de 70% tout en améliorant la satisfaction avec des réponses instantanées et personnalisées disponibles 24h/24 et 7j/7", message_type: 'ai_generated', display_order: 3 },
+        { message_text: "📈 Multipliez vos ventes en ligne pendant que vous dormez grâce à l'IA qui engage proactivement vos visiteurs et les guide vers l'achat automatiquement", message_type: 'ai_generated', display_order: 4 },
+        { message_text: "🎯 Capturez et qualifiez automatiquement tous vos prospects web avec une IA qui pose les bonnes questions et collecte les informations critiques pour vos équipes", message_type: 'ai_generated', display_order: 5 },
+        { message_text: "🔧 Intégrez facilement AIPPS sur n'importe quel site web en 5 minutes et commencez immédiatement à transformer vos visiteurs en clients payants avec zéro configuration technique", message_type: 'ai_generated', display_order: 6 },
+        { message_text: "💡 Découvrez les intentions cachées de vos visiteurs avec une IA qui analyse le comportement en temps réel et adapte automatiquement sa stratégie de conversion", message_type: 'ai_generated', display_order: 7 }
       ];
     } else if (language === 'en') {
       systemPrompt = `You are a digital marketing expert specialized in conversational AI platforms. 
-      Generate exactly 7 unique and engaging promotional messages for AIPPS, an AI chatbot platform.
+      Generate exactly 7 unique and highly engaging promotional messages for AIPPS, an AI chatbot platform.
       
       The messages should:
-      - Be catchy and commercial
-      - Highlight different benefits of AIPPS
-      - Be varied in approach (automation, leads, sales, support, etc.)
-      - Have between 8-15 words each
+      - Be catchy, commercial and detailed
+      - Highlight different specific benefits of AIPPS
+      - Be varied in approach (automation, leads, sales, support, productivity, ROI, etc.)
+      - Have between 20-35 words each to be more descriptive and engaging
       - Include relevant emojis
-      - Create urgency or interest
+      - Create urgency, interest and show concrete value
+      - Focus on concrete and measurable business benefits
       
       Respond ONLY with a valid JSON in this format:
       {
@@ -553,25 +555,26 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       }`;
       
       fallbackMessages = [
-        { message_text: "🚀 Automate your customer service with advanced AI!", message_type: 'ai_generated', display_order: 1 },
-        { message_text: "💬 Smart chatbots that convert visitors into customers", message_type: 'ai_generated', display_order: 2 },
-        { message_text: "⚡ Instant responses 24/7 for your business", message_type: 'ai_generated', display_order: 3 },
-        { message_text: "📈 Increase your sales while you sleep", message_type: 'ai_generated', display_order: 4 },
-        { message_text: "🎯 Capture leads automatically and intelligently", message_type: 'ai_generated', display_order: 5 },
-        { message_text: "🔧 Easy integration on any website", message_type: 'ai_generated', display_order: 6 },
-        { message_text: "💡 AI that understands your customers better than ever", message_type: 'ai_generated', display_order: 7 }
+        { message_text: "🚀 Transform your website into a 24/7 lead generation machine with AIPPS conversational AI that understands, engages, and converts your visitors automatically", message_type: 'ai_generated', display_order: 1 },
+        { message_text: "💬 Increase your conversion rate by 300% with intelligent chatbots that qualify your prospects and direct them to your sales teams at the optimal moment", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "⚡ Reduce your customer support costs by 70% while improving satisfaction with instant, personalized responses available 24/7 for your customers", message_type: 'ai_generated', display_order: 3 },
+        { message_text: "📈 Multiply your online sales while you sleep with AI that proactively engages your visitors and guides them toward purchase automatically", message_type: 'ai_generated', display_order: 4 },
+        { message_text: "🎯 Automatically capture and qualify all your web prospects with AI that asks the right questions and collects critical information for your teams", message_type: 'ai_generated', display_order: 5 },
+        { message_text: "🔧 Easily integrate AIPPS on any website in 5 minutes and immediately start transforming your visitors into paying customers with zero technical configuration", message_type: 'ai_generated', display_order: 6 },
+        { message_text: "💡 Discover the hidden intentions of your visitors with AI that analyzes behavior in real-time and automatically adapts its conversion strategy", message_type: 'ai_generated', display_order: 7 }
       ];
     } else {
       systemPrompt = `Eres un experto en marketing digital especializado en plataformas de IA conversacional. 
-      Genera exactamente 7 mensajes promocionales únicos y atractivos para AIPPS, una plataforma de chatbots con IA.
+      Genera exactamente 7 mensajes promocionales únicos y muy atractivos para AIPPS, una plataforma de chatbots con IA.
       
       Los mensajes deben:
-      - Ser llamativos y comerciales
-      - Destacar diferentes beneficios de AIPPS
-      - Ser variados en enfoque (automatización, leads, ventas, soporte, etc.)
-      - Tener entre 8-15 palabras cada uno
+      - Ser llamativos, comerciales y detallados
+      - Destacar diferentes beneficios específicos de AIPPS
+      - Ser variados en enfoque (automatización, leads, ventas, soporte, productividad, ROI, etc.)
+      - Tener entre 20-35 palabras cada uno para ser más descriptivos y atractivos
       - Incluir emojis relevantes
-      - Crear urgencia o interés
+      - Crear urgencia, interés y mostrar valor concreto
+      - Enfocarse en beneficios empresariales concretos y medibles
       
       Responde SOLO con un JSON válido en este formato:
       {
@@ -587,13 +590,13 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       }`;
       
       fallbackMessages = [
-        { message_text: "🚀 ¡Automatiza tu atención al cliente con IA avanzada!", message_type: 'ai_generated', display_order: 1 },
-        { message_text: "💬 Chatbots inteligentes que convierten visitantes en clientes", message_type: 'ai_generated', display_order: 2 },
-        { message_text: "⚡ Respuestas instantáneas 24/7 para tu negocio", message_type: 'ai_generated', display_order: 3 },
-        { message_text: "📈 Aumenta tus ventas mientras duermes", message_type: 'ai_generated', display_order: 4 },
-        { message_text: "🎯 Captura leads de forma automática e inteligente", message_type: 'ai_generated', display_order: 5 },
-        { message_text: "🔧 Integración fácil en cualquier sitio web", message_type: 'ai_generated', display_order: 6 },
-        { message_text: "💡 IA que entiende a tus clientes mejor que nunca", message_type: 'ai_generated', display_order: 7 }
+        { message_text: "🚀 Transforma tu sitio web en una máquina de generación de leads 24/7 con la IA conversacional de AIPPS que entiende, involucra y convierte a tus visitantes automáticamente", message_type: 'ai_generated', display_order: 1 },
+        { message_text: "💬 Aumenta tu tasa de conversión un 300% con chatbots inteligentes que califican a tus prospectos y los dirigen a tus equipos de ventas en el momento óptimo", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "⚡ Reduce tus costos de soporte al cliente un 70% mientras mejoras la satisfacción con respuestas instantáneas y personalizadas disponibles 24/7 para tus clientes", message_type: 'ai_generated', display_order: 3 },
+        { message_text: "📈 Multiplica tus ventas en línea mientras duermes con IA que involucra proactivamente a tus visitantes y los guía hacia la compra de forma automática", message_type: 'ai_generated', display_order: 4 },
+        { message_text: "🎯 Captura y califica automáticamente todos tus prospectos web con IA que hace las preguntas correctas y recopila información crítica para tus equipos", message_type: 'ai_generated', display_order: 5 },
+        { message_text: "🔧 Integra fácilmente AIPPS en cualquier sitio web en 5 minutos y comienza inmediatamente a transformar tus visitantes en clientes pagadores con cero configuración técnica", message_type: 'ai_generated', display_order: 6 },
+        { message_text: "💡 Descubre las intenciones ocultas de tus visitantes con IA que analiza el comportamiento en tiempo real y adapta automáticamente su estrategia de conversión", message_type: 'ai_generated', display_order: 7 }
       ];
     }
 
@@ -604,7 +607,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       ],
       response_format: { type: "json_object" },
       temperature: 0.8,
-      max_tokens: 800
+      max_tokens: 1500
     });
 
     const content = response.choices[0].message.content;

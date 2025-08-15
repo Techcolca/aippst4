@@ -30,15 +30,15 @@ export function useWelcomeMessages() {
     refetchOnWindowFocus: false
   });
 
-  // Mensaje de fallback según el idioma
+  // Mensaje de fallback según el idioma - Mensajes más largos y atractivos
   const getFallbackMessage = (language: string) => {
     switch (language) {
       case 'fr':
-        return "Bienvenue dans AIPPS - La plateforme conversationnelle alimentée par l'IA pour une communication intelligente sur votre site web";
+        return "Transformez votre site web en une machine de génération de leads 24/7 avec l'IA conversationnelle AIPPS qui comprend, engage et convertit vos visiteurs automatiquement";
       case 'en':
-        return "Welcome to AIPPS - The AI-powered conversational platform for intelligent communication on your website";
+        return "Transform your website into a 24/7 lead generation machine with AIPPS conversational AI that understands, engages, and converts your visitors automatically";
       default:
-        return "Bienvenido a AIPPS - La plataforma conversacional con IA para una comunicación inteligente en tu sitio web";
+        return "Transforma tu sitio web en una máquina de generación de leads 24/7 con la IA conversacional de AIPPS que entiende, involucra y convierte a tus visitantes automáticamente";
     }
   };
 
@@ -74,7 +74,7 @@ export function useWelcomeMessages() {
       return;
     }
 
-    // Configurar intervalo de rotación cada 7 segundos
+    // Configurar intervalo de rotación cada 10 segundos
     intervalRef.current = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = (prevIndex + 1) % sortedMessages.length;
@@ -83,7 +83,7 @@ export function useWelcomeMessages() {
         setCurrentMessage(nextMessage);
         return nextIndex;
       });
-    }, 7000);
+    }, 10000);
 
     return clearCurrentInterval;
   }, [promotionalMessages, isLoading, fallbackMessage]);
