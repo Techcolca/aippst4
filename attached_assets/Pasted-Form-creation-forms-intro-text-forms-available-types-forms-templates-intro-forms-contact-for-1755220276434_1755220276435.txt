@@ -1,0 +1,78 @@
+Form creation
+forms.intro_text
+
+forms.available_types
+forms.templates_intro
+
+forms.contact_form: forms.contact_form_desc
+forms.waitlist_form: forms.waitlist_form_desc
+forms.survey_form: forms.survey_form_desc
+forms.feedback_form: forms.feedback_form_desc
+forms.lead_capture_form: forms.lead_capture_form_desc
+forms.custom_form: forms.custom_form_desc
+forms.main_features
+forms.flexible_design: forms.flexible_design_desc
+forms.configurable_fields: forms.configurable_fields_desc
+forms.advanced_validation: forms.advanced_validation_desc
+forms.conditional_logic: forms.conditional_logic_desc
+forms.ai_integration: forms.ai_integration_desc
+forms.captcha_protection: forms.captcha_protection_desc
+forms.email_notifications: forms.email_notifications_desc
+forms.detailed_analytics: forms.detailed_analytics_desc
+forms.response_sorting: forms.response_sorting_desc
+forms.creation_process
+forms.access_dashboard: forms.access_dashboard_desc
+forms.create_new: forms.create_new_desc
+forms.basic_config: forms.basic_config_desc
+forms.design_fields: forms.design_fields_desc
+forms.customization: forms.customization_desc
+forms.advanced_config: forms.advanced_config_desc
+forms.preview: forms.preview_desc
+forms.publication: forms.publication_desc
+forms.integration_methods
+forms.simplified_process
+
+forms.direct_embed
+forms.direct_embed_desc
+
+forms.get_code: forms.get_code_desc
+forms.copy_code: forms.copy_code_desc
+forms.insert_code: forms.insert_code_desc
+forms.code_example
+
+<script src="https://tu-dominio.com/api/forms/embed/[ID_DEL_FORMULARIO]"></script> <div id="aipi-form-[ID_DEL_FORMULARIO]"></div>
+forms.customization_options: forms.modal_instructions
+
+forms.customize_style
+forms.configure_actions
+forms.implement_validations
+forms.analytics_integration
+forms.technical_considerations:
+
+forms.works_with_cms
+forms.async_loading
+forms.secure_data
+forms.spam_protection
+forms.responsive_design
+forms.improved_response_management
+forms.advanced_capabilities
+
+forms.view_responses: forms.view_responses_desc
+forms.export_data: forms.export_data_desc
+forms.filter_sort: forms.filter_sort_desc
+forms.automatic_analysis: forms.automatic_analysis_desc
+forms.follow_up: forms.follow_up_desc
+forms.realtime_notifications: forms.realtime_notifications_desc
+forms.widget_integration
+forms.widget_integration_desc
+
+forms.present_forms
+forms.autocomplete_fields
+forms.continue_conversation
+forms.provide_assistance
+forms.popular_use_cases
+forms.education_use: forms.education_use_desc
+forms.business_use: forms.business_use_desc
+forms.professional_use: forms.professional_use_desc
+forms.ecommerce_use: forms.ecommerce_use_desc
+forms.create_first_button
