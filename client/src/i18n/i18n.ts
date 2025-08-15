@@ -431,9 +431,9 @@ const resources = {
       "pricing.support.title": "Support",
       "pricing.support.q1": "Quel niveau de support recevrai-je ?",
       "pricing.support.a1": "Tous les plans incluent un support par email. Les plans supérieurs incluent un support prioritaire.",
-      "pricing.refund.title": "Remboursement",
-      "pricing.refund.q1": "Quelle est votre politique de remboursement ?",
-      "pricing.refund.a1": "Nous offrons un remboursement complet sous 30 jours sans poser de questions.",
+      "pricing.security.title": "Sécurité",
+      "pricing.security.q1": "Vos données sont-elles protégées ?",
+      "pricing.security.a1": "Nous utilisons un chiffrement de niveau entreprise et respectons les normes RGPD pour protéger vos informations.",
       
       // Documentation
       "documentation.title": "Documentation",
@@ -1368,9 +1368,9 @@ const resources = {
       "pricing.support.title": "Soporte",
       "pricing.support.q1": "¿Qué nivel de soporte recibiré?",
       "pricing.support.a1": "Todos los planes incluyen soporte por email. Los planes superiores incluyen soporte prioritario.",
-      "pricing.refund.title": "Reembolso",
-      "pricing.refund.q1": "¿Cuál es su política de reembolso?",
-      "pricing.refund.a1": "Ofrecemos un reembolso completo dentro de 30 días sin hacer preguntas.",
+      "pricing.security.title": "Seguridad",
+      "pricing.security.q1": "¿Están protegidos mis datos?",
+      "pricing.security.a1": "Utilizamos cifrado de nivel empresarial y cumplimos con las normas RGPD para proteger tu información.",
       
       // Documentation
       "documentation.title": "Documentación",
@@ -2305,9 +2305,9 @@ const resources = {
       "pricing.support.title": "Support",
       "pricing.support.q1": "What level of support will I receive?",
       "pricing.support.a1": "All plans include email support. Higher plans include priority support.",
-      "pricing.refund.title": "Refund",
-      "pricing.refund.q1": "What is your refund policy?",
-      "pricing.refund.a1": "We offer a full refund within 30 days, no questions asked.",
+      "pricing.security.title": "Security",
+      "pricing.security.q1": "Is my data protected?",
+      "pricing.security.a1": "We use enterprise-grade encryption and comply with GDPR standards to protect your information.",
       
       // Documentation
       "documentation.title": "Documentation",

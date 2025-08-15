@@ -321,12 +321,12 @@ export default function PricingPage() {
                 </p>
               </div>
               <div className="flex flex-col items-center text-center space-y-3 px-4 max-w-sm">
-                <h3 className="text-lg font-bold">{t('pricing.refund.title')}</h3>
+                <h3 className="text-lg font-bold">{t('pricing.security.title')}</h3>
                 <p className="text-gray-500 dark:text-gray-400">
-                  {t('pricing.refund.q1')}
+                  {t('pricing.security.q1')}
                 </p>
                 <p className="text-sm">
-                  {t('pricing.refund.a1')}
+                  {t('pricing.security.a1')}
                 </p>
               </div>
             </div>
