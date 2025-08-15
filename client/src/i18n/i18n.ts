@@ -572,6 +572,16 @@ const resources = {
         testimonial_author: "Dr. Sophie Dubois, Cabinet de Conseil Juridique",
         implement_button: "Implémenter pour les Professionnels"
       },
+      // Analytics translations
+      products_services_most_demanded: "Produits/Services les Plus Demandés",
+      products_analysis_description: "Analyse des produits et services mentionnés dans les conversations client.",
+      what_does_it_mean: "Que signifie cela ?",
+      products_bars_explanation: "Les barres représentent la fréquence à laquelle chaque produit ou service est mentionné dans les conversations.",
+      keywords: "Mots-clés",
+      keywords_description: "Mots-clés les plus fréquents extraits des conversations client.",
+      keywords_explanation: "Plus un mot-clé est grand, plus il apparaît fréquemment dans vos conversations.",
+      queries: "requêtes",
+      of_total: "du total",
       getStartedPage: {
         title: "Commencer",
         subtitle: "Intégrez AIPPS dans votre site web en quelques minutes",
@@ -1328,6 +1338,16 @@ const resources = {
         testimonial_author: "Dra. María Fernández, Firma de Consultoría Legal",
         implement_button: "Implementar para Profesionales"
       },
+      // Analytics translations
+      products_services_most_demanded: "Productos/Servicios Más Demandados",
+      products_analysis_description: "Análisis de productos y servicios mencionados en las conversaciones de clientes.",
+      what_does_it_mean: "¿Qué significa esto?",
+      products_bars_explanation: "Las barras representan la frecuencia con la que se menciona cada producto o servicio en las conversaciones.",
+      keywords: "Palabras Clave",
+      keywords_description: "Palabras clave más frecuentes extraídas de las conversaciones de clientes.",
+      keywords_explanation: "Mientras más grande sea una palabra clave, más frecuentemente aparece en tus conversaciones.",
+      queries: "consultas",
+      of_total: "del total",
       getStartedPage: {
         title: "Comienza Ahora",
         subtitle: "Integra AIPPS en tu sitio web en minutos",
@@ -2083,6 +2103,16 @@ const resources = {
         testimonial_author: "Dr. Jennifer Wilson, Legal Consulting Firm",
         implement_button: "Implement for Professionals"
       },
+      // Analytics translations
+      products_services_most_demanded: "Most Demanded Products/Services",
+      products_analysis_description: "Analysis of products and services mentioned in customer conversations.",
+      what_does_it_mean: "What does it mean?",
+      products_bars_explanation: "The bars represent how frequently each product or service is mentioned in conversations.",
+      keywords: "Keywords",
+      keywords_description: "Most frequent keywords extracted from customer conversations.",
+      keywords_explanation: "The larger a keyword appears, the more frequently it shows up in your conversations.",
+      queries: "queries",
+      of_total: "of total",
       getStartedPage: {
         title: "Get Started",
         subtitle: "Integrate AIPPS into your website in minutes",
