@@ -110,6 +110,12 @@ const resources = {
       manage_assistant: "Gérer l'assistant",
       task_automation: "Automatisation des tâches",
       
+      // Language Selector
+      language_select: "Sélectionner la langue",
+      "language.fr": "Français",
+      "language.es": "Español", 
+      "language.en": "English",
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -236,6 +242,12 @@ const resources = {
       manage_assistant: "Gestionar asistente",
       task_automation: "Automatización de tareas",
       
+      // Language Selector
+      language_select: "Seleccionar idioma",
+      "language.fr": "Français",
+      "language.es": "Español",
+      "language.en": "English",
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -361,6 +373,12 @@ const resources = {
       dashboard_title: "Dashboard title",
       manage_assistant: "Manage assistant",
       task_automation: "Task automation",
+      
+      // Language Selector
+      language_select: "Select language",
+      "language.fr": "Français",
+      "language.es": "Español",
+      "language.en": "English",
       
       // Footer
       footer: {
