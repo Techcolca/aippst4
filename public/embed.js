@@ -558,8 +558,12 @@
         console.log('AIPPS Debug: Configuración cargada:', {
           assistantName: config.assistantName,
           greetingMessage: config.greetingMessage,
-          conversationStyle: data.settings.conversationStyle
+          conversationStyle: data.settings.conversationStyle,
+          assistantBubbleColor: config.assistantBubbleColor
         });
+        
+        // CRITICAL FIX: Recalculate text color after loading server config
+        updateTextColorsAfterConfig();
       }
 
       // Extraer el contenido de la página actual para mejorar las respuestas
@@ -4743,12 +4747,71 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  // Function to update text colors after config is loaded
+  function updateTextColorsAfterConfig() {
+    console.log('🔧 AIPPS: Recalculando colores después de cargar configuración');
+    console.log('  Color de fondo del asistente:', config.assistantBubbleColor);
+    
+    // Calculate luminance for the actual server color
+    const bgColor = config.assistantBubbleColor || '#E5E7EB';
+    let hex = bgColor.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    
+    let textColor = '#1f2937'; // Default dark text
+    if (hex.length === 6) {
+      const r = parseInt(hex.substr(0, 2), 16);
+      const g = parseInt(hex.substr(2, 2), 16);
+      const b = parseInt(hex.substr(4, 2), 16);
+      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      
+      console.log('🎨 AIPPS: Recálculo de luminancia después de config:');
+      console.log('  Color de fondo:', bgColor);
+      console.log('  Luminancia:', luminance.toFixed(3));
+      console.log('  Es fondo oscuro?', luminance < 0.6);
+      
+      textColor = luminance < 0.6 ? '#ffffff' : '#1f2937';
+      console.log('  Color de texto final:', textColor);
+    }
+    
+    // Update CSS variables or create new styles
+    const existingStyles = document.querySelector('#aipi-dynamic-colors');
+    if (existingStyles) {
+      existingStyles.remove();
+    }
+    
+    const dynamicStyles = document.createElement('style');
+    dynamicStyles.id = 'aipi-dynamic-colors';
+    dynamicStyles.textContent = `
+      .aipi-assistant-message {
+        background-color: ${bgColor} !important;
+        color: ${textColor} !important;
+      }
+      
+      .aipi-assistant-message * {
+        color: ${textColor} !important;
+      }
+      
+      .aipi-typing-indicator {
+        background-color: ${bgColor} !important;
+        color: ${textColor} !important;
+      }
+      
+      .aipi-typing-indicator * {
+        color: ${textColor} !important;
+      }
+    `;
+    
+    document.head.appendChild(dynamicStyles);
+    console.log('✅ AIPPS: Estilos dinámicos aplicados con color:', textColor);
+  }
+
   // Expose other functions to global scope
   window.aipiSendMessage = sendMessage;
   window.aipiCloseWidget = closeWidget;
   window.aipiOpenWidget = openWidget;
   window.aipiMinimizeWidget = minimizeWidget;
   window.aipiMaximizeWidget = maximizeWidget;
+  window.aipiUpdateTextColors = updateTextColorsAfterConfig; // Para debug
 
   // Initialize the widget when the DOM is fully loaded
   if (document.readyState === 'loading') {
