@@ -103,7 +103,28 @@ const resources = {
       devices: "Appareils",
       mobile_desktop: "Mobile/Bureau",
       export_pdf: "Exporter PDF",
-      back_to_dashboard: "Retour au tableau de bord"
+      back_to_dashboard: "Retour au tableau de bord",
+      
+      // Dashboard and Navigation
+      dashboard_title: "Titre du tableau de bord",
+      manage_assistant: "Gérer l'assistant",
+      task_automation: "Automatisation des tâches",
+      
+      // Footer
+      footer_company_description: "Description de l'entreprise",
+      footer_product: "Produit",
+      footer_company: "Entreprise",
+      footer_support: "Support",
+      footer_features: "Fonctionnalités",
+      footer_pricing: "Tarification",
+      footer_documentation: "Documentation",
+      footer_get_started: "Commencer",
+      footer_about_us: "À propos de nous",
+      footer_contact: "Contact",
+      footer_privacy_policy: "Politique de confidentialité",
+      footer_terms_of_service: "Conditions d'utilisation",
+      footer_help_center: "Centre d'aide",
+      footer_all_rights_reserved: "Tous droits réservés"
     }
   },
   es: {
@@ -206,7 +227,28 @@ const resources = {
       devices: "Dispositivos",
       mobile_desktop: "Móvil/Escritorio",
       export_pdf: "Exportar PDF",
-      back_to_dashboard: "Volver al panel"
+      back_to_dashboard: "Volver al panel",
+      
+      // Dashboard and Navigation
+      dashboard_title: "Título del panel",
+      manage_assistant: "Gestionar asistente",
+      task_automation: "Automatización de tareas",
+      
+      // Footer
+      footer_company_description: "Descripción de la empresa",
+      footer_product: "Producto",
+      footer_company: "Empresa",
+      footer_support: "Soporte",
+      footer_features: "Características",
+      footer_pricing: "Precios",
+      footer_documentation: "Documentación",
+      footer_get_started: "Comenzar",
+      footer_about_us: "Acerca de nosotros",
+      footer_contact: "Contacto",
+      footer_privacy_policy: "Política de privacidad",
+      footer_terms_of_service: "Términos de servicio",
+      footer_help_center: "Centro de ayuda",
+      footer_all_rights_reserved: "Todos los derechos reservados"
     }
   },
   en: {
@@ -309,7 +351,28 @@ const resources = {
       devices: "Devices",
       mobile_desktop: "Mobile/Desktop",
       export_pdf: "Export PDF",
-      back_to_dashboard: "Back to dashboard"
+      back_to_dashboard: "Back to dashboard",
+      
+      // Dashboard and Navigation
+      dashboard_title: "Dashboard title",
+      manage_assistant: "Manage assistant",
+      task_automation: "Task automation",
+      
+      // Footer
+      footer_company_description: "Company description",
+      footer_product: "Product",
+      footer_company: "Company",
+      footer_support: "Support",
+      footer_features: "Features",
+      footer_pricing: "Pricing",
+      footer_documentation: "Documentation",
+      footer_get_started: "Get started",
+      footer_about_us: "About us",
+      footer_contact: "Contact",
+      footer_privacy_policy: "Privacy policy",
+      footer_terms_of_service: "Terms of service",
+      footer_help_center: "Help center",
+      footer_all_rights_reserved: "All rights reserved"
     }
   }
 };
