@@ -85,6 +85,7 @@
       }
       
       const data = await response.json();
+      console.log('AIPPS Debug: Server data received:', data);
       
       // Update config with server response
       if (data.integration) {
@@ -110,11 +111,11 @@
       config.greetingMessage = data.settings?.defaultGreeting || `Hola, soy ${assistantName}. ¿En qué puedo ayudarte?`;
       
       // Store user info for personalized greetings (only for authenticated users)
-      if (data.userInfo) {
+      console.log('AIPPS Debug: Checking userInfo from server:', data.userInfo);
+      if (data.userInfo && data.userInfo.name) {
         config.userName = data.userInfo.name;
-        if (config.userName) {
-          config.greetingMessage = `¡Hola ${config.userName}! Soy ${assistantName}. ¿En qué puedo ayudarte hoy?`;
-        }
+        config.greetingMessage = `¡Hola ${config.userName}! Soy ${assistantName}. ¿En qué puedo ayudarte hoy?`;
+        console.log('AIPPS Debug: Personalized greeting set:', config.greetingMessage);
       }
       
       if (data.settings) {
@@ -123,24 +124,28 @@
         config.assistantBubbleColor = data.settings.assistantBubbleColor || config.assistantBubbleColor;
         config.font = data.settings.font || config.font;
         
-        // Leer el mensaje de bienvenida personalizado de los ajustes si existe
-        if (data.settings.welcomeMessage) {
+        // Solo usar el mensaje de bienvenida personalizado si NO hay usuario autenticado
+        // Si hay usuario autenticado, usar el saludo personalizado con nombre
+        if (data.settings.welcomeMessage && !config.userName) {
           config.customWelcomeMessage = data.settings.welcomeMessage;
         }
       }
       
       // Obtener mensaje de bienvenida personalizado del parámetro del script
-      const scriptTags = document.getElementsByTagName('script');
-      for (let i = 0; i < scriptTags.length; i++) {
-        const scriptTag = scriptTags[i];
-        const src = scriptTag.src || '';
-        
-        if (src.includes('fullscreen-embed.js')) {
-          const welcomeMessage = scriptTag.getAttribute('data-welcome-message');
-          if (welcomeMessage) {
-            config.customWelcomeMessage = welcomeMessage;
+      // Solo si NO hay usuario autenticado
+      if (!config.userName) {
+        const scriptTags = document.getElementsByTagName('script');
+        for (let i = 0; i < scriptTags.length; i++) {
+          const scriptTag = scriptTags[i];
+          const src = scriptTag.src || '';
+          
+          if (src.includes('fullscreen-embed.js')) {
+            const welcomeMessage = scriptTag.getAttribute('data-welcome-message');
+            if (welcomeMessage) {
+              config.customWelcomeMessage = welcomeMessage;
+            }
+            break;
           }
-          break;
         }
       }
       
