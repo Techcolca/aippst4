@@ -111,20 +111,22 @@ const resources = {
       task_automation: "Automatisation des tâches",
       
       // Footer
-      footer_company_description: "Description de l'entreprise",
-      footer_product: "Produit",
-      footer_company: "Entreprise",
-      footer_support: "Support",
-      footer_features: "Fonctionnalités",
-      footer_pricing: "Tarification",
-      footer_documentation: "Documentation",
-      footer_get_started: "Commencer",
-      footer_about_us: "À propos de nous",
-      footer_contact: "Contact",
-      footer_privacy_policy: "Politique de confidentialité",
-      footer_terms_of_service: "Conditions d'utilisation",
-      footer_help_center: "Centre d'aide",
-      footer_all_rights_reserved: "Tous droits réservés"
+      footer: {
+        company_description: "Description de l'entreprise",
+        product: "Produit",
+        company: "Entreprise", 
+        support: "Support",
+        features: "Fonctionnalités",
+        pricing: "Tarification",
+        documentation: "Documentation",
+        get_started: "Commencer",
+        about_us: "À propos de nous",
+        contact: "Contact",
+        privacy_policy: "Politique de confidentialité",
+        terms_of_service: "Conditions d'utilisation",
+        help_center: "Centre d'aide",
+        all_rights_reserved: "Tous droits réservés"
+      }
     }
   },
   es: {
@@ -235,20 +237,22 @@ const resources = {
       task_automation: "Automatización de tareas",
       
       // Footer
-      footer_company_description: "Descripción de la empresa",
-      footer_product: "Producto",
-      footer_company: "Empresa",
-      footer_support: "Soporte",
-      footer_features: "Características",
-      footer_pricing: "Precios",
-      footer_documentation: "Documentación",
-      footer_get_started: "Comenzar",
-      footer_about_us: "Acerca de nosotros",
-      footer_contact: "Contacto",
-      footer_privacy_policy: "Política de privacidad",
-      footer_terms_of_service: "Términos de servicio",
-      footer_help_center: "Centro de ayuda",
-      footer_all_rights_reserved: "Todos los derechos reservados"
+      footer: {
+        company_description: "Descripción de la empresa",
+        product: "Producto",
+        company: "Empresa",
+        support: "Soporte", 
+        features: "Características",
+        pricing: "Precios",
+        documentation: "Documentación",
+        get_started: "Comenzar",
+        about_us: "Acerca de nosotros",
+        contact: "Contacto",
+        privacy_policy: "Política de privacidad",
+        terms_of_service: "Términos de servicio",
+        help_center: "Centro de ayuda",
+        all_rights_reserved: "Todos los derechos reservados"
+      }
     }
   },
   en: {
@@ -359,20 +363,22 @@ const resources = {
       task_automation: "Task automation",
       
       // Footer
-      footer_company_description: "Company description",
-      footer_product: "Product",
-      footer_company: "Company",
-      footer_support: "Support",
-      footer_features: "Features",
-      footer_pricing: "Pricing",
-      footer_documentation: "Documentation",
-      footer_get_started: "Get started",
-      footer_about_us: "About us",
-      footer_contact: "Contact",
-      footer_privacy_policy: "Privacy policy",
-      footer_terms_of_service: "Terms of service",
-      footer_help_center: "Help center",
-      footer_all_rights_reserved: "All rights reserved"
+      footer: {
+        company_description: "Company description",
+        product: "Product", 
+        company: "Company",
+        support: "Support",
+        features: "Features",
+        pricing: "Pricing",
+        documentation: "Documentation",
+        get_started: "Get started",
+        about_us: "About us",
+        contact: "Contact",
+        privacy_policy: "Privacy policy",
+        terms_of_service: "Terms of service",
+        help_center: "Help center",
+        all_rights_reserved: "All rights reserved"
+      }
     }
   }
 };
