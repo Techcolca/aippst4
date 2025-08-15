@@ -2074,12 +2074,16 @@ Contenido: [Error al extraer contenido detallado]
         const cleanSendButton = document.getElementById('aipi-send-button');
         
         if (cleanInput && cleanSendButton) {
-          // Handle input changes
-          cleanInput.oninput = function() {
+          // Handle input changes with multiple event types for better compatibility
+          function handleInputChange() {
             const hasValue = cleanInput.value.trim();
             cleanSendButton.disabled = !hasValue;
             console.log('AIPPS Debug: Input changed, value:', cleanInput.value, 'hasValue:', hasValue, 'button disabled:', cleanSendButton.disabled);
-          };
+          }
+          
+          cleanInput.oninput = handleInputChange;
+          cleanInput.onkeyup = handleInputChange;
+          cleanInput.onchange = handleInputChange;
 
           // Send message on Enter key
           cleanInput.onkeydown = function(e) {
@@ -2117,6 +2121,21 @@ Contenido: [Error al extraer contenido detallado]
           console.log('AIPPS Debug: Initial input value:', cleanInput.value, 'button disabled:', cleanSendButton.disabled);
           console.log('AIPPS Debug: Input element found:', cleanInput);
           console.log('AIPPS Debug: Send button found:', cleanSendButton);
+          
+          // Force a test to ensure events work
+          setTimeout(() => {
+            console.log('AIPPS Debug: Testing input events...');
+            cleanInput.value = 'test';
+            handleInputChange();
+            console.log('AIPPS Debug: After test - button disabled:', cleanSendButton.disabled);
+            
+            // Clear test value
+            setTimeout(() => {
+              cleanInput.value = '';
+              handleInputChange();
+              console.log('AIPPS Debug: After clear - button disabled:', cleanSendButton.disabled);
+            }, 100);
+          }, 500);
         }
       }
       
