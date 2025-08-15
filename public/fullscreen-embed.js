@@ -381,27 +381,27 @@
         
         .aipi-fs-assistant-message {
           background-color: ${config.assistantBubbleColor};
-          color: #ffffff !important;
+          color: ${(() => {
+            const color = config.assistantBubbleColor || '#E5E7EB';
+            let hex = color.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+            if (hex.length !== 6) return '#1f2937 !important';
+            
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+            
+            console.log('AIPPS Debug: Color:', color, 'Luminance:', luminance.toFixed(3));
+            
+            // Use white text for dark backgrounds (luminance < 0.5)
+            // Use dark text for light backgrounds (luminance >= 0.5)
+            return luminance < 0.5 ? '#ffffff !important' : '#1f2937 !important';
+          })()};
           align-self: flex-start;
           border-bottom-left-radius: 4px;
         }
-        
-        /* FORCE WHITE TEXT - Override any possible conflict */
-        .aipi-fs-assistant-message,
-        .aipi-fs-assistant-message *,
-        .aipi-fs-assistant-message p,
-        .aipi-fs-assistant-message span,
-        .aipi-fs-assistant-message div,
-        .aipi-fs-typing-indicator,
-        .aipi-fs-typing-indicator * {
-          color: #ffffff !important;
-          text-shadow: none !important;
-        }
-        
-        /* Override any inherited text colors */
-        .aipi-fs-message.aipi-fs-assistant-message * {
-          color: #ffffff !important;
-        }
+
         
         .aipi-fs-typing-indicator {
           display: flex;
@@ -409,7 +409,19 @@
           gap: 4px;
           padding: 10px 14px;
           background-color: ${config.assistantBubbleColor};
-          color: #ffffff !important;
+          color: ${(() => {
+            const color = config.assistantBubbleColor || '#E5E7EB';
+            let hex = color.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+            if (hex.length !== 6) return '#1f2937 !important';
+            
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+            
+            return luminance < 0.5 ? '#ffffff !important' : '#1f2937 !important';
+          })()};
           border-radius: 18px;
           border-bottom-left-radius: 4px;
           align-self: flex-start;
@@ -738,13 +750,28 @@
     if (role === 'assistant') {
       const bgColor = config.assistantBubbleColor || '#E5E7EB';
       
-      console.log('AIPPS Debug: BGR color:', bgColor);
+      // Calculate optimal text color based on background
+      let hex = bgColor.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
       
-      // FORCE white text for all assistant messages regardless of background
-      // This solves the problem definitively
+      let textColor = '#1f2937'; // Default dark text
+      if (hex.length === 6) {
+        const r = parseInt(hex.substr(0, 2), 16);
+        const g = parseInt(hex.substr(2, 2), 16);
+        const b = parseInt(hex.substr(4, 2), 16);
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        
+        console.log('AIPPS Debug: BGR color:', bgColor, 'Luminance:', luminance.toFixed(3));
+        
+        // Use white text for dark backgrounds, dark text for light backgrounds
+        textColor = luminance < 0.5 ? '#ffffff' : '#1f2937';
+        console.log('AIPPS Debug: Selected text color:', textColor);
+      }
+      
+      // Apply styles with calculated contrast
       messageElement.style.cssText = `
         background-color: ${bgColor} !important;
-        color: #ffffff !important;
+        color: ${textColor} !important;
         padding: 10px 14px !important;
         border-radius: 18px !important;
         margin-bottom: 10px !important;
@@ -754,29 +781,17 @@
         border-bottom-left-radius: 4px !important;
       `;
       
-      // Also force all child elements to white with multiple attempts
-      const forceWhiteText = () => {
-        messageElement.style.color = '#ffffff !important';
+      // Apply same color to all child elements
+      const applyTextColor = () => {
+        messageElement.style.setProperty('color', textColor, 'important');
         const allChildren = messageElement.querySelectorAll('*');
         allChildren.forEach(child => {
-          child.style.setProperty('color', '#ffffff', 'important');
-          child.style.setProperty('text-shadow', 'none', 'important');
+          child.style.setProperty('color', textColor, 'important');
         });
       };
       
-      // Apply immediately and after DOM updates
-      forceWhiteText();
-      setTimeout(forceWhiteText, 50);
-      setTimeout(forceWhiteText, 200);
-      
-      // Monitor for changes and reapply
-      const observer = new MutationObserver(forceWhiteText);
-      observer.observe(messageElement, { 
-        childList: true, 
-        subtree: true, 
-        attributes: true,
-        attributeFilter: ['style', 'class']
-      });
+      applyTextColor();
+      setTimeout(applyTextColor, 100);
     }
     
     messageElement.innerHTML = formatMessage(content);
