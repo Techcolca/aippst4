@@ -231,7 +231,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-black dark:text-white mb-4">
               {t("cta.title")}
             </h2>
-            <p className="text-xl text-gray-800 dark:text-primary-100 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-800 dark:text-white mb-8 max-w-3xl mx-auto">
               {t("cta.subtitle")}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
