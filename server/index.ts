@@ -112,6 +112,11 @@ app.get('/demo-integration.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/demo-integration.html'));
 });
 
+// Servir página de debug de contraste
+app.get('/debug-contrast.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/debug-contrast.html'));
+});
+
 (async () => {
   const server = await registerRoutes(app);
 
