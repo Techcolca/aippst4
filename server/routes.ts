@@ -3011,8 +3011,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // No enviamos datos sensibles como userId o apiKey al cliente
         },
         settings: {
-          assistantName: customization.assistantName || settings.assistantName,
-          defaultGreeting: customization.defaultGreeting || settings.defaultGreeting,
+          assistantName: customization.assistantName || settings.assistantName || integration.name,
+          defaultGreeting: customization.defaultGreeting || settings.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
           showAvailability: customization.showAvailability !== undefined ? customization.showAvailability : settings.showAvailability,
           userBubbleColor: customization.userBubbleColor || settings.userBubbleColor,
           assistantBubbleColor: customization.assistantBubbleColor || settings.assistantBubbleColor,

@@ -47,7 +47,7 @@
         email: "Correo electrónico",
         // Welcome messages
         defaultWelcome: "¡Hola! ¿En qué puedo ayudarte hoy?",
-        fallbackWelcome: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿Cómo puedo ayudarte hoy?",
+        fallbackWelcome: `👋 ¡Hola! Soy ${config.assistantName || config.integrationName || 'tu asistente'}, ¿Cómo puedo ayudarte hoy?`,
         // Status
         online: "En línea"
       },
@@ -73,7 +73,7 @@
         email: "Email",
         // Welcome messages
         defaultWelcome: "Hello! How can I help you today?",
-        fallbackWelcome: "👋 Hi there! I'm AIPPS, your AI assistant. How can I help you today?",
+        fallbackWelcome: `👋 Hi there! I'm ${config.assistantName || config.integrationName || 'your assistant'}. How can I help you today?`,
         // Status
         online: "Online"
       },
@@ -99,7 +99,7 @@
         email: "Email",
         // Welcome messages
         defaultWelcome: "Bonjour! Comment puis-je vous aider aujourd'hui?",
-        fallbackWelcome: "👋 Bonjour! Je suis AIPPS, votre assistant IA. Comment puis-je vous aider aujourd'hui?",
+        fallbackWelcome: `👋 Bonjour! Je suis ${config.assistantName || config.integrationName || 'votre assistant'}. Comment puis-je vous aider aujourd'hui?`,
         // Status
         online: "En ligne"
       }
@@ -546,6 +546,11 @@
         updateLanguageElements();
       }
 
+      // Store integration name for dynamic messages
+      if (data.integration) {
+        config.integrationName = data.integration.name;
+      }
+      
       if (data.settings) {
         config.assistantName = data.settings.assistantName || config.assistantName;
         config.greetingMessage = data.settings.defaultGreeting || t.fallbackWelcome;

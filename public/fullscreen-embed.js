@@ -95,6 +95,11 @@
         // Solo usamos defaultGreeting o welcomeMessage para mostrar al usuario
       }
       
+      // Store integration name for dynamic messages
+      if (data.integration) {
+        config.integrationName = data.integration.name;
+      }
+      
       if (data.settings) {
         config.assistantName = data.settings.assistantName || config.assistantName;
         config.greetingMessage = data.settings.defaultGreeting || config.greetingMessage;
