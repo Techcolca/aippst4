@@ -55,7 +55,7 @@ import path from "path";
 import multer from "multer";
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
-import { db, pool } from "./db";
+import { db, client } from "./db";
 
 // Helper function to extract document content
 async function extractDocumentContent(doc: any): Promise<string> {

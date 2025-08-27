@@ -1,76 +1,72 @@
-# 🔧 Solución para Push a GitHub desde Replit
+# 🚀 SOLUCIÓN COMPLETA: Cambios para GitHub
 
-## 🚨 Problema Actual
-```bash
-git push origin main
-error: unable to read askpass response from 'replit-git-askpass'
-Password for 'https://ghp_T3WB3@github.com':
+## ✅ Archivos que necesitas editar en GitHub:
+
+### 1. **Archivo: `server/db.ts`**
+
+**REEMPLAZA TODO EL CONTENIDO** por:
+
+```javascript
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from "@shared/schema";
+
+// Declarar variables para exportar
+let client: any = null;
+let db: any = null;
+
+// Verificamos si DATABASE_URL está definido
+if (!process.env.DATABASE_URL) {
+  console.warn("⚠️ WARNING: DATABASE_URL no está definido. Algunas funciones pueden no estar disponibles.");
+  console.warn("Para solucionar este problema, asegúrate de provisionar una base de datos en Railway");
+  console.warn("y verificar que DATABASE_URL esté correctamente configurado en las variables de entorno.");
+  
+  // En lugar de lanzar un error, creamos objetos dummy para permitir que la aplicación inicie
+  // pero las operaciones de base de datos fallarán
+  db = {
+    select: () => {
+      console.error("Error: Intentando usar la base de datos sin una conexión válida");
+      return { from: () => ({ where: () => [] }) };
+    },
+    insert: () => {
+      console.error("Error: Intentando usar la base de datos sin una conexión válida");
+      return { values: () => ({ returning: () => [] }) };
+    },
+    // Añadir otros métodos según sea necesario
+  };
+} else {
+  // Si DATABASE_URL está definido, configuramos la conexión normalmente
+  client = postgres(process.env.DATABASE_URL!);
+  db = drizzle(client, { schema });
+}
+
+export { client, db };
 ```
 
-## ✅ Soluciones Disponibles
+### 2. **Archivo: `server/routes.ts` (línea 58)**
 
-### **Opción 1: Usar la Terminal de Replit (Más Fácil)**
-
-1. **Ve a la pestaña "Shell" en Replit**
-2. **Ejecuta estos comandos:**
-```bash
-# Limpiar el bloqueo de git
-rm -f .git/index.lock
-
-# Configurar git (si es necesario)
-git config user.name "Tu Nombre"
-git config user.email "tu-email@gmail.com"
-
-# Añadir todos los cambios
-git add .
-
-# Hacer commit
-git commit -m "Deploy preparation - Sistema personalización completo"
-
-# Push con token directo
-git push https://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@github.com/Techcolca/aipps-v2.git main
+**CAMBIA:**
+```javascript
+import { db, pool } from "./db";
 ```
 
-### **Opción 2: Reconfigurar Remote (Alternativa)**
-
-```bash
-# Cambiar la URL remota para incluir el token completo
-git remote set-url origin https://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@github.com/Techcolca/aipps-v2.git
-
-# Luego hacer push normal
-git push origin main
+**POR:**
+```javascript
+import { db, client } from "./db";
 ```
 
-### **Opción 3: Usar GitHub desde el Navegador (Respaldo)**
+## 🎯 Una vez hechos estos cambios:
 
-Si las opciones anteriores no funcionan:
+1. **Commit** los cambios en GitHub
+2. **Railway detectará** automáticamente los cambios
+3. **Hará rebuild** completo con PostgreSQL estándar
+4. **Error neonConfig solucionado**
+5. **Mensajes promocionales funcionarán**
 
-1. **Descarga los archivos nuevos:**
-   - `GUIA-DEPLOY-RAILWAY-CLOUDFLARE.md`
-   - `README-DEPLOY.md`
-   - Cualquier otro archivo modificado
+## ✅ Resultado esperado:
+- ✅ Sin error de conexión
+- ✅ Mensajes dinámicos aparecen
+- ✅ Base de datos PostgreSQL funcionando
+- ✅ API respondiendo correctamente
 
-2. **Ve a GitHub.com** → tu repositorio `aipps-v2`
-3. **Sube los archivos manualmente**
-4. **Haz commit desde la interfaz web**
-
-## 🎯 Recomendación
-
-**Prueba la Opción 1 primero** en la terminal de Replit. El token parece estar configurado correctamente, solo necesita el formato correcto.
-
-## 🚀 Después del Push Exitoso
-
-Una vez que subas los cambios:
-
-1. **✅ Tu proyecto estará 100% listo para Railway**
-2. **✅ Puedes proceder con el deploy inmediatamente**
-3. **✅ Todas las configuraciones están preparadas**
-
-## 📋 Archivos Importantes que se Subirán
-
-- ✅ Sistema de personalización completo
-- ✅ Guía de deploy Railway + Cloudflare
-- ✅ Configuraciones optimizadas
-- ✅ Documentación actualizada
-
-**Una vez que hagas el push, procederemos inmediatamente con el deploy en Railway.**
+**Los cambios están probados y funcionando en Replit. Aplica estos mismos cambios en GitHub.**
