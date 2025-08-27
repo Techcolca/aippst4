@@ -1,0 +1,127 @@
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+
+    at /app/node_modules/express/lib/router/index.js:286:9
+
+    at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+
+    at next (/app/node_modules/express/lib/router/index.js:280:10)
+
+    at file:///app/dist/main.js:10276:3
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+file:///app/dist/main.js:5588
+
+      const fallbackResult = await pool.query(`
+
+                             ^
+
+ 
+
+ReferenceError: pool is not defined
+
+    at file:///app/dist/main.js:5588:30
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+
+    at Route.dispatch (/app/node_modules/express/lib/router/route.js:119:3)
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at /app/node_modules/express/lib/router/index.js:284:15
+
+    at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+
+    at next (/app/node_modules/express/lib/router/index.js:280:10)
+
+    at cookieParser (/app/node_modules/cookie-parser/index.js:71:5)
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+    at trim_prefix (/app/node_modules/express/lib/router/index.js:328:13)
+
+    at /app/node_modules/express/lib/router/index.js:286:9
+
+    at Function.process_params (/app/node_modules/express/lib/router/index.js:346:12)
+
+    at next (/app/node_modules/express/lib/router/index.js:280:10)
+
+    at file:///app/dist/main.js:10276:3
+
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+
+ 
+
+Node.js v22.11.0
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/main.js
+
+ 
+
+Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback
+
+Sirviendo archivos estáticos desde: /app/public/static
+
+(node:15) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+(node:15) NOTE: The AWS SDK for JavaScript (v2) is in maintenance mode.
+
+ SDK releases are limited to address critical bug fixes and security issues only.
+
+ 
+
+Please migrate your code to use AWS SDK for JavaScript (v3).
+
+For more information, check the blog post at https://a.co/cUPnyil
+
+Error al crear integración interna: PostgresError: relation "integrations" does not exist
+
+    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:794:26)
+
+    at handle (file:///app/node_modules/postgres/src/connection.js:480:6)
+
+    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)
+
+    at Socket.emit (node:events:518:28)
+
+    at Socket.emit (node:domain:489:12)
+
+    at addChunk (node:internal/streams/readable:561:12)
+
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+
+    at Readable.push (node:internal/streams/readable:392:5)
+
+    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {
+
+  severity_local: 'ERROR',
+
+  severity: 'ERROR',
+
+  code: '42P01',
+
+  position: '275',
+
+  file: 'parse_relation.c',
+
+  line: '1449',
+
+  routine: 'parserOpenTable'
+
+}
+
+Sirviendo archivos estáticos desde: /app/public/static
+
+7:31:58 PM [express] Server running at http://0.0.0.0:5000
