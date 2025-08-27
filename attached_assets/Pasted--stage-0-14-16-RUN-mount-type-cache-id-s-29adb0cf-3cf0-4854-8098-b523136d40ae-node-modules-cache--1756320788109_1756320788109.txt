@@ -1,0 +1,127 @@
+[stage-0 14/16] RUN --mount=type=cache,id=s/29adb0cf-3cf0-4854-8098-b523136d40ae-node_modules/cache,target=/app/node_modules/.cache rm -rf dist && npm run build
+"rm -rf dist && npm run build" did not complete successfully: exit code: 1
+
+View in context
+Truncated to 21 lines
+
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.take_advantage_unique_prices" in object literal
+1809|        "pricing.spots_remaining": "{{remaining}} lugares restantes de {{total}}",
+1810|        "pricing.spots_left_of_total": "{{remaining}} lugares restantes de {{total}}",
+1811|        "pricing.take_advantage_unique_prices": "¡Aprovecha estos precios únicos ahora!",
+   |        ^
+1812|        
+1813|        // Integration Analytics
+
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "task_automation" in object literal
+2094|        dashboard_title: "Dashboard title",
+2095|        manage_assistant: "Manage assistant",
+2096|        task_automation: "Task automation",
+   |        ^
+2097|        
+2098|        // Language Selector
+
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.pricing_note" in object literal
+2742|        "pricing.process_error": "Error processing",
+2743|        "pricing.free_plan_activated": "Free plan activated",
+2744|        "pricing.pricing_note": "All prices are in USD. Cancellation possible at any time.",
+   |        ^
+2745|        "pricing.limited_launch_offer": "Limited launch offer",
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.limited_launch_offer" in object literal
+2743|        "pricing.free_plan_activated": "Free plan activated",
+2744|        "pricing.pricing_note": "All prices are in USD. Cancellation possible at any time.",
+2745|        "pricing.limited_launch_offer": "Limited launch offer",
+   |        ^
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+2747|        "pricing.spots_left_of_total": "{{remaining}} spots left out of {{total}}",
+
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.spots_left_of_total" in object literal
+2745|        "pricing.limited_launch_offer": "Limited launch offer",
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+2747|        "pricing.spots_left_of_total": "{{remaining}} spots left out of {{total}}",
+   |        ^
+2748|        "pricing.take_advantage_unique_prices": "Take advantage of these unique prices now!",
+2749|        
+
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.take_advantage_unique_prices" in object literal
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+2747|        "pricing.spots_left_of_total": "{{remaining}} spots left out of {{total}}",
+2748|        "pricing.take_advantage_unique_prices": "Take advantage of these unique prices now!",
+   |        ^
+2749|        
+2750|        // Integration Analytics
+
+✓ 3017 modules transformed.
+
+rendering chunks...
+
+computing gzip size...
+
+../dist/public/index.html                                           1.96 kB │ gzip:   0.78 kB
+
+../dist/public/assets/index-lRZUCQty.css                          115.11 kB │ gzip:  18.11 kB
+
+../dist/public/assets/google-calendar-instructions-CSkjaE-f.js      7.99 kB │ gzip:   2.77 kB
+
+../dist/public/assets/purify.es-CQJ0hv7W.js                        21.82 kB │ gzip:   8.54 kB
+
+../dist/public/assets/index.es-wsNWCTjX.js                        150.42 kB │ gzip:  51.21 kB
+
+../dist/public/assets/index-C7QUzeBg.js                         2,241.34 kB │ gzip: 607.51 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+✓ built in 8.96s
+
+▲ [WARNING] Duplicate key "Comparte lo que más te gustó" in object literal [duplicate-object-key]
+    server/routes.ts:5246:6:
+      5246 │       'Comparte lo que más te gustó': { en: 'Share what you li...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The original key "Comparte lo que más te gustó" is here:
+    server/routes.ts:5160:6:
+      5160 │       'Comparte lo que más te gustó': { en: 'Share what you li...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+▲ [WARNING] Duplicate key "Tus sugerencias son importantes" in object literal [duplicate-object-key]
+    server/routes.ts:5247:6:
+      5247 │       'Tus sugerencias son importantes': { en: 'Your suggestions...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The original key "Tus sugerencias son importantes" is here:
+    server/routes.ts:5161:6:
+      5161 │       'Tus sugerencias son importantes': { en: 'Your suggestions...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate member "createSiteContent" in class body [duplicate-class-member]
+    server/storage.ts:941:8:
+      941 │   async createSiteContent(content: any): Promise<any> {
+          ╵         ~~~~~~~~~~~~~~~~~
+  The original member "createSiteContent" is here:
+    server/storage.ts:906:8:
+      906 │   async createSiteContent(content: InsertSiteContent): Promise<Si...
+          ╵         ~~~~~~~~~~~~~~~~~
+
+✘ [ERROR] No matching export in "server/db.ts" for import "pool"
+    server/routes.ts:58:13:
+      58 │ import { db, pool } from "./db";
+         ╵              ~~~~
+
+▲ [WARNING] Duplicate member "updateSiteContent" in class body [duplicate-class-member]
+    server/storage.ts:946:8:
+      946 │   async updateSiteContent(integrationId: number, url: string, dat...
+          ╵         ~~~~~~~~~~~~~~~~~
+  The original member "updateSiteContent" is here:
+    server/storage.ts:921:8:
+      921 │   async updateSiteContent(id: number, data: Partial<SiteContent>)...
+          ╵         ~~~~~~~~~~~~~~~~~
+▲ [WARNING] Duplicate member "getDashboardStats" in class body [duplicate-class-member]
+    server/pg-storage.ts:1040:8:
+      1040 │   async getDashboardStats(userId: number): Promise<{ totalConver...
+           ╵         ~~~~~~~~~~~~~~~~~
+  The original member "getDashboardStats" is here:
+    server/pg-storage.ts:254:8:
+      254 │   async getDashboardStats(userId: number): Promise<{
+          ╵         ~~~~~~~~~~~~~~~~~
+5 of 11 warnings and 1 error shown (disable the message limit with --log-limit=0)
