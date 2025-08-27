@@ -1,0 +1,110 @@
+▲ [WARNING] Duplicate key "Comparte lo que más te gustó" in object literal [duplicate-object-key]
+
+    server/routes.ts:5246:6:
+      5246 │       'Comparte lo que más te gustó': { en: 'Share what you li...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The original key "Comparte lo que más te gustó" is here:
+
+    server/routes.ts:5160:6:
+      5160 │       'Comparte lo que más te gustó': { en: 'Share what you li...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate key "Tus sugerencias son importantes" in object literal [duplicate-object-key]
+
+    server/routes.ts:5247:6:
+      5247 │       'Tus sugerencias son importantes': { en: 'Your suggestions...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The original key "Tus sugerencias son importantes" is here:
+
+    server/routes.ts:5161:6:
+      5161 │       'Tus sugerencias son importantes': { en: 'Your suggestions...
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "createSiteContent" in class body [duplicate-class-member]
+
+    server/storage.ts:941:8:
+      941 │   async createSiteContent(content: any): Promise<any> {
+          ╵         ~~~~~~~~~~~~~~~~~
+
+  The original member "createSiteContent" is here:
+
+    server/storage.ts:906:8:
+      906 │   async createSiteContent(content: InsertSiteContent): Promise<Si...
+          ╵         ~~~~~~~~~~~~~~~~~
+
+
+▲ [WARNING] Duplicate member "updateSiteContent" in class body [duplicate-class-member]
+
+    server/storage.ts:946:8:
+      946 │   async updateSiteContent(integrationId: number, url: string, dat...
+          ╵         ~~~~~~~~~~~~~~~~~
+
+  The original member "updateSiteContent" is here:
+
+    server/storage.ts:921:8:
+      921 │   async updateSiteContent(id: number, data: Partial<SiteContent>)...
+          ╵         ~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate member "getDashboardStats" in class body [duplicate-class-member]
+
+    server/pg-storage.ts:1040:8:
+      1040 │   async getDashboardStats(userId: number): Promise<{ totalConver...
+           ╵         ~~~~~~~~~~~~~~~~~
+
+  The original member "getDashboardStats" is here:
+
+    server/pg-storage.ts:254:8:
+      254 │   async getDashboardStats(userId: number): Promise<{
+          ╵         ~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] Duplicate member "getConversationAnalytics" in class body [duplicate-class-member]
+
+    server/pg-storage.ts:1073:8:
+      1073 │   async getConversationAnalytics(userId: number): Promise<Conver...
+           ╵         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+  The original member "getConversationAnalytics" is here:
+
+    server/pg-storage.ts:307:8:
+      307 │   async getConversationAnalytics(userId: number): Promise<Convers...
+          ╵         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+6 of 11 warnings shown (disable the message limit with --log-limit=0)
+
+
+  dist/index.js  419.9kb
+
+⚡ Done in 28ms
+
+[stage-0 14/16] RUN --mount=type=cache,id=s/29adb0cf-3cf0-4854-8098-b523136d40ae-node_modules/cache,target=/app/node_modules/.cache rm -rf dist && npm run build  ✔ 11 s
+
+[stage-0 15/16] RUN printf '\nPATH=/app/node_modules/.bin:$PATH' >> /root/.profile
+
+[stage-0 15/16] RUN printf '\nPATH=/app/node_modules/.bin:$PATH' >> /root/.profile  ✔ 129 ms
+
+[stage-0 16/16] COPY . /app
+
+[stage-0 16/16] COPY . /app  ✔ 519 ms
+
+exporting to docker image format
+
+exporting to image
+
+importing to docker
+
+[auth] sharing credentials for production-us-east4-eqdc4a.railway-registry.com
+
+[auth] sharing credentials for production-us-east4-eqdc4a.railway-registry.com  ✔ 0 ms
+
+importing to docker  ✔ 30 s
+
+=== Successfully Built! ===
+
+Run:
+
+docker run -it production-us-east4-eqdc4a.railway-registry.com/29adb0cf-3cf0-4854-8098-b523136d40ae:48b0bd9a-54de-4797-98ad-5742e2ad1297
+
+Build time: 131.86 seconds
