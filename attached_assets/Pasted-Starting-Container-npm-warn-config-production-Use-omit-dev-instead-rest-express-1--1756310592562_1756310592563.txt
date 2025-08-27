@@ -1,0 +1,119 @@
+Starting Container
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback
+
+file:///app/dist/index.js:4214
+
+neonConfig.webSocketConstructor = ws;
+
+^
+
+ 
+
+ReferenceError: neonConfig is not defined
+
+    at file:///app/dist/index.js:4214:1
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+
+    at async loadESM (node:internal/process/esm_loader:34:7)
+
+    at async handleMainPromise (node:internal/modules/run_main:106:12)
+
+ 
+
+Node.js v18.20.5
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback
+
+file:///app/dist/index.js:4214
+
+neonConfig.webSocketConstructor = ws;
+
+^
+
+ 
+
+ReferenceError: neonConfig is not defined
+
+    at file:///app/dist/index.js:4214:1
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+
+    at async loadESM (node:internal/process/esm_loader:34:7)
+
+    at async handleMainPromise (node:internal/modules/run_main:106:12)
+
+ 
+
+Node.js v18.20.5
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback
+
+file:///app/dist/index.js:4214
+
+neonConfig.webSocketConstructor = ws;
+
+^
+
+ 
+
+ReferenceError: neonConfig is not defined
+
+    at file:///app/dist/index.js:4214:1
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:195:25)
+
+    at async ModuleLoader.import (node:internal/modules/esm/loader:337:24)
+
+    at async loadESM (node:internal/process/esm_loader:34:7)
+
+    at async handleMainPromise (node:internal/modules/run_main:106:12)
+
+ 
+
+Node.js v18.20.5
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
