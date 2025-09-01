@@ -233,7 +233,9 @@ export class MemStorage implements IStorage {
       email: "demo@example.com",
       fullName: "Demo User",
       apiKey: generateApiKey(),
-      createdAt: new Date()
+      createdAt: new Date(),
+      stripeCustomerId: null,
+      stripeSubscriptionId: null
     };
     this.users.set(demoUser.id, demoUser);
 
@@ -251,7 +253,15 @@ export class MemStorage implements IStorage {
       conversationStyle: "professional",
       knowledgeBase: "default",
       enableLearning: true,
-      emailNotificationAddress: "notifications@example.com"
+      emailNotificationAddress: "notifications@example.com",
+      welcomePageChatEnabled: true,
+      welcomePageChatGreeting: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
+      welcomePageChatBubbleColor: "#111827",
+      welcomePageChatTextColor: "#FFFFFF",
+      welcomePageChatBehavior: "Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.",
+      welcomePageChatScrapingEnabled: false,
+      welcomePageChatScrapingDepth: 5,
+      welcomePageChatScrapingData: null
     };
     this.settings.set(demoSettings.id, demoSettings);
 
@@ -267,7 +277,15 @@ export class MemStorage implements IStorage {
       active: true,
       createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000), // 60 days ago
       visitorCount: 2845,
-      language: "es"
+      language: "es",
+      botBehavior: "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
+      documentsData: [],
+      widgetType: "bubble",
+      ignoredSections: [],
+      description: null,
+      ignoredSectionsText: null,
+      customization: null,
+      textColor: "auto"
     };
     this.integrations.set(demoIntegration1.id, demoIntegration1);
 
@@ -282,7 +300,15 @@ export class MemStorage implements IStorage {
       active: true,
       createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
       visitorCount: 5231,
-      language: "es"
+      language: "es",
+      botBehavior: "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
+      documentsData: [],
+      widgetType: "bubble",
+      ignoredSections: [],
+      description: null,
+      ignoredSectionsText: null,
+      customization: null,
+      textColor: "auto"
     };
     this.integrations.set(demoIntegration2.id, demoIntegration2);
 
@@ -353,6 +379,7 @@ export class MemStorage implements IStorage {
       id: this.conversationIdCounter++,
       integrationId: demoIntegration1.id,
       visitorId: "visitor123",
+      title: "Consulta sobre precios",
       resolved: true,
       duration: 222, // 3m 42s
       createdAt: new Date(),
@@ -364,6 +391,7 @@ export class MemStorage implements IStorage {
       id: this.conversationIdCounter++,
       integrationId: demoIntegration2.id,
       visitorId: "visitor456",
+      title: "Soporte técnico",
       resolved: false,
       duration: 495, // 8m 15s
       createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
@@ -375,6 +403,7 @@ export class MemStorage implements IStorage {
       id: this.conversationIdCounter++,
       integrationId: demoIntegration1.id,
       visitorId: "visitor789",
+      title: "Información de servicios",
       resolved: true,
       duration: 290, // 4m 50s
       createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
@@ -448,10 +477,10 @@ export class MemStorage implements IStorage {
     const demoForm1: Form = {
       id: this.formIdCounter++,
       userId: demoUser.id,
-      name: "Waitlist para Beta",
+      title: "Waitlist para Beta",
       slug: "waitlist-beta",
       type: "waitlist",
-      status: "active",
+      published: true,
       structure: {
         fields: [
           { name: "nombre", label: "Nombre", type: "text", required: true },
@@ -462,7 +491,10 @@ export class MemStorage implements IStorage {
         submitButton: "Registrarme para la beta",
         successMessage: "¡Gracias por tu registro! Te contactaremos pronto."
       },
-      embedCode: "<script src=\"https://example.com/form/waitlist-beta\"></script>",
+      styling: null,
+      settings: null,
+      language: "es",
+      description: "Formulario para registrarse en la lista de espera del beta",
       responseCount: 24,
       createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
       updatedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000)
@@ -472,10 +504,10 @@ export class MemStorage implements IStorage {
     const demoForm2: Form = {
       id: this.formIdCounter++,
       userId: demoUser.id,
-      name: "Solicitud de Demo",
+      title: "Solicitud de Demo",
       slug: "solicitud-demo",
       type: "lead",
-      status: "active",
+      published: true,
       structure: {
         fields: [
           { name: "nombre", label: "Nombre completo", type: "text", required: true },
@@ -488,7 +520,10 @@ export class MemStorage implements IStorage {
         submitButton: "Solicitar una demo",
         successMessage: "Hemos recibido tu solicitud. Un representante te contactará en 24-48 horas."
       },
-      embedCode: "<script src=\"https://example.com/form/solicitud-demo\"></script>",
+      styling: null,
+      settings: null,
+      language: "es",
+      description: "Formulario para solicitar una demostración del producto",
       responseCount: 18,
       createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
       updatedAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000) // 8 days ago
@@ -565,9 +600,15 @@ export class MemStorage implements IStorage {
   async createUser(user: InsertUser & { apiKey: string }): Promise<User> {
     const id = this.userIdCounter++;
     const newUser: User = {
-      ...user,
       id,
-      createdAt: new Date()
+      username: user.username,
+      password: user.password,
+      email: user.email,
+      fullName: user.fullName || null,
+      apiKey: user.apiKey,
+      createdAt: new Date(),
+      stripeCustomerId: null,
+      stripeSubscriptionId: null
     };
     this.users.set(id, newUser);
     return newUser;
@@ -593,12 +634,25 @@ export class MemStorage implements IStorage {
   async createIntegration(integration: InsertIntegration & { apiKey: string }): Promise<Integration> {
     const id = this.integrationIdCounter++;
     const newIntegration: Integration = {
-      ...integration,
       id,
+      userId: integration.userId,
+      name: integration.name,
+      url: integration.url,
+      apiKey: integration.apiKey,
+      themeColor: integration.themeColor || "#3B82F6",
+      position: integration.position || "bottom-right",
       active: true,
       createdAt: new Date(),
       visitorCount: 0,
-      language: integration.language || "es"
+      botBehavior: integration.botBehavior || "Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.",
+      documentsData: integration.documentsData || [],
+      widgetType: integration.widgetType || "bubble",
+      ignoredSections: integration.ignoredSections || [],
+      description: integration.description || null,
+      ignoredSectionsText: null,
+      customization: null,
+      language: integration.language || "es",
+      textColor: integration.textColor || "auto"
     };
     this.integrations.set(id, newIntegration);
     return newIntegration;
@@ -623,7 +677,7 @@ export class MemStorage implements IStorage {
 
   async incrementVisitorCount(id: number): Promise<void> {
     const integration = this.integrations.get(id);
-    if (integration) {
+    if (integration && integration.visitorCount !== null) {
       integration.visitorCount += 1;
       this.integrations.set(id, integration);
     }
@@ -676,8 +730,10 @@ export class MemStorage implements IStorage {
     const id = this.conversationIdCounter++;
     const now = new Date();
     const newConversation: Conversation = {
-      ...conversation,
       id,
+      integrationId: conversation.integrationId || null,
+      visitorId: conversation.visitorId || null,
+      title: null,
       resolved: false,
       duration: 0,
       createdAt: now,
@@ -712,14 +768,20 @@ export class MemStorage implements IStorage {
   async getConversationMessages(conversationId: number): Promise<Message[]> {
     return Array.from(this.messages.values())
       .filter(message => message.conversationId === conversationId)
-      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      .sort((a, b) => {
+        const aTime = a.timestamp ? a.timestamp.getTime() : 0;
+        const bTime = b.timestamp ? b.timestamp.getTime() : 0;
+        return aTime - bTime;
+      });
   }
 
   async createMessage(message: InsertMessage): Promise<Message> {
     const id = this.messageIdCounter++;
     const newMessage: Message = {
-      ...message,
       id,
+      conversationId: message.conversationId || null,
+      content: message.content,
+      role: message.role,
       timestamp: new Date()
     };
     this.messages.set(id, newMessage);
@@ -741,8 +803,12 @@ export class MemStorage implements IStorage {
     const id = this.automationIdCounter++;
     const now = new Date();
     const newAutomation: Automation = {
-      ...automation,
       id,
+      userId: automation.userId,
+      name: automation.name,
+      description: automation.description || null,
+      status: automation.status || "active",
+      config: automation.config,
       processedCount: 0,
       createdAt: now,
       lastModified: now
@@ -803,7 +869,15 @@ export class MemStorage implements IStorage {
       conversationStyle: "professional",
       knowledgeBase: "default",
       enableLearning: true,
-      emailNotificationAddress: "notifications@example.com"
+      emailNotificationAddress: "notifications@example.com",
+      welcomePageChatEnabled: true,
+      welcomePageChatGreeting: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
+      welcomePageChatBubbleColor: "#111827",
+      welcomePageChatTextColor: "#FFFFFF",
+      welcomePageChatBehavior: "Sé amable, informativo y conciso al responder preguntas sobre AIPPS y sus características.",
+      welcomePageChatScrapingEnabled: false,
+      welcomePageChatScrapingDepth: 5,
+      welcomePageChatScrapingData: null
     };
     this.settings.set(id, newSettings);
     return newSettings;
