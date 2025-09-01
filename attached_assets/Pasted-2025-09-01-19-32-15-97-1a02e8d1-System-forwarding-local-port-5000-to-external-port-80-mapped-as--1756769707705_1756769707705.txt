@@ -1,0 +1,148 @@
+2025-09-01 19:32:15.97
+1a02e8d1
+System
+forwarding local port 5000 to external port 80 (mapped as 1104)
+2025-09-01 19:32:17.08
+1a02e8d1
+User
+> rest-express@1.0.0 build
+2025-09-01 19:32:17.08
+1a02e8d1
+User
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+2025-09-01 19:32:17.90
+1a02e8d1
+User
+vite v5.4.14 building for production...
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+870| "pricing.pricing_note": "Tous les prix sont en USD. Annulation possible à tout moment.",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+| ^
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+871| "pricing.limited_launch_offer": "Offre de lancement limitée",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+872| "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.limited_launch_offer" in object literal
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+869| "pricing.free_plan_activated": "Plan gratuit activé",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+870| "pricing.pricing_note": "Tous les prix sont en USD. Annulation possible à tout moment.",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+871| "pricing.limited_launch_offer": "Offre de lancement limitée",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+| ^
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+872| "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+873| "pricing.spots_left_of_total": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.spots_left_of_total" in object literal
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+871| "pricing.limited_launch_offer": "Offre de lancement limitée",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+872| "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+873| "pricing.spots_left_of_total": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+| ^
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+874| "pricing.take_advantage_unique_prices": "Profitez de ces prix uniques maintenant!",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+875|
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.take_advantage_unique_prices" in object literal
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+872| "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+873| "pricing.spots_left_of_total": "{{remaining}} places restantes sur {{total}}",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+874| "pricing.take_advantage_unique_prices": "Profitez de ces prix uniques maintenant!",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+| ^
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+875|
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+876| // Integration Analytics
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "task_automation" in object literal
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+1157| dashboard_title: "Título del panel",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+1158| manage_assistant: "Gestionar asistente",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+1159| task_automation: "Automatización de tareas",
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+| ^
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+1160|
+2025-09-01 19:32:19.35
+1a02e8d1
+User
+1161| // Language Selector
+2025-09-01 19:32:19.36
+1a02e8d1
+User
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.pricing_note" in object literal

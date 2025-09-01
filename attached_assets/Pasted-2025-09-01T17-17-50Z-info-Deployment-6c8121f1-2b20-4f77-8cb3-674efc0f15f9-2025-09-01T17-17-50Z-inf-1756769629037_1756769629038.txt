@@ -1,0 +1,298 @@
+2025-09-01T17:17:50Z info: Deployment: 6c8121f1-2b20-4f77-8cb3-674efc0f15f9
+2025-09-01T17:17:50Z info: Build: 1a02e8d1-1925-4144-aeb9-9688f55250a0
+2025-09-01T17:17:50Z info: Connecting to builder
+2025-09-01T17:17:50Z info: Deployment: 6c8121f1-2b20-4f77-8cb3-674efc0f15f9
+2025-09-01T17:17:50Z info: Build: 1a02e8d1-1925-4144-aeb9-9688f55250a0
+2025-09-01T17:17:50Z info: Connecting to builder
+2025-09-01T17:17:52Z info: Builder connected
+2025-09-01T17:17:54Z info: Installing packages
+--> npm install
+
+
+changed 1 package, and audited 830 packages in 9s
+
+108 packages are looking for funding
+
+  run `npm fund` for details
+
+
+13 vulnerabilities (3 low, 7 moderate, 2 high, 1 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.5.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+npm notice To update run: npm install -g npm@11.5.2
+npm notice
+
+2025-09-01T17:18:03Z info: Skipping Build as no Build command set
+2025-09-01T17:18:03Z info: Pushing pid1 binary layer...
+2025-09-01T17:18:05Z info: Created pid1 binary layer
+2025-09-01T17:18:06Z info: Pushing hosting layer...
+2025-09-01T17:18:06Z info: Pushing Repl layer...
+2025-09-01T17:18:06Z info: Nix layers for this Repl are uncached.
+2025-09-01T17:18:06Z info: Pushing nix-0 layer...
+2025-09-01T17:18:06Z info: Created hosting layer
+2025-09-01T17:19:05Z info: Created Repl layer
+2025-09-01T17:19:10Z info: Created nix-0 layer
+2025-09-01T17:19:10Z info: uploading image for cached layer
+2025-09-01T17:19:10Z info: pushed cache image manifest
+2025-09-01T17:19:11Z info: pushed cache soci index manifest
+2025-09-01T17:19:11Z info: uploading cached layer
+2025-09-01T17:19:11Z info: successfully uploaded cached layer
+2025-09-01T17:19:13Z info: Pushed image manifest
+2025-09-01T17:19:14Z info: Pushed soci index manifest
+2025-09-01T17:19:14Z info: Pushed referrer manifest
+2025-09-01T17:19:18Z info: Creating Autoscale service
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+transforming...
+221|        manage_assistant: "Gérer l'assistant",
+vite v5.4.14 building for production...
+222|        task_automation: "Automatisation des tâches",
+872|        "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+220|        dashboard_title: "Titre du tableau de bord",
+869|        "pricing.free_plan_activated": "Plan gratuit activé",
+873|        "pricing.spots_left_of_total": "{{remaining}} places restantes sur {{total}}",
+starting up user application
+868|        "pricing.process_error": "Erreur lors du traitement",
+871|        "pricing.limited_launch_offer": "Offre de lancement limitée",
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+871|        "pricing.limited_launch_offer": "Offre de lancement limitée",
+224|        // Language Selector
+  npx update-browserslist-db@latest
+forwarding local port 5000 to external port 80 (mapped as 1104)
+871|        "pricing.limited_launch_offer": "Offre de lancement limitée",
+> rest-express@1.0.0 build
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.limited_launch_offer" in object literal
+870|        "pricing.pricing_note": "Tous les prix sont en USD. Annulation possible à tout moment.",
+872|        "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+870|        "pricing.pricing_note": "Tous les prix sont en USD. Annulation possible à tout moment.",
+1161|        // Language Selector
+   |        ^
+223|        
+   |        ^
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "task_automation" in object literal
+1808|        "pricing.limited_launch_offer": "Oferta de lanzamiento limitada",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.limited_launch_offer" in object literal
+   |        ^
+1158|        manage_assistant: "Gestionar asistente",
+1159|        task_automation: "Automatización de tareas",
+1810|        "pricing.spots_left_of_total": "{{remaining}} lugares restantes de {{total}}",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.limited_launch_offer" in object literal
+875|        
+2749|        
+874|        "pricing.take_advantage_unique_prices": "Profitez de ces prix uniques maintenant!",
+   |        ^
+   |        ^
+1806|        "pricing.free_plan_activated": "Plan gratuito activado",
+1805|        "pricing.process_error": "Error al procesar",
+1809|        "pricing.spots_remaining": "{{remaining}} lugares restantes de {{total}}",
+   |        ^
+   |        ^
+   |        ^
+2745|        "pricing.limited_launch_offer": "Limited launch offer",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.take_advantage_unique_prices" in object literal
+1810|        "pricing.spots_left_of_total": "{{remaining}} lugares restantes de {{total}}",
+Browserslist: browsers data (caniuse-lite) is 11 months old. Please run:
+1811|        "pricing.take_advantage_unique_prices": "¡Aprovecha estos precios únicos ahora!",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "task_automation" in object literal
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.spots_left_of_total" in object literal
+1157|        dashboard_title: "Título del panel",
+1812|        
+2097|        
+872|        "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+875|        
+873|        "pricing.spots_left_of_total": "{{remaining}} places restantes sur {{total}}",
+1809|        "pricing.spots_remaining": "{{remaining}} lugares restantes de {{total}}",
+   |        ^
+2098|        // Language Selector
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+872|        "pricing.spots_remaining": "{{remaining}} places restantes sur {{total}}",
+869|        "pricing.free_plan_activated": "Plan gratuit activé",
+1806|        "pricing.free_plan_activated": "Plan gratuito activado",
+1812|        
+1160|        
+   |        ^
+2749|        
+   |        ^
+874|        "pricing.take_advantage_unique_prices": "Profitez de ces prix uniques maintenant!",
+1809|        "pricing.spots_remaining": "{{remaining}} lugares restantes de {{total}}",
+2748|        "pricing.take_advantage_unique_prices": "Take advantage of these unique prices now!",
+2745|        "pricing.limited_launch_offer": "Limited launch offer",
+2745|        "pricing.limited_launch_offer": "Limited launch offer",
+2094|        dashboard_title: "Dashboard title",
+1809|        "pricing.spots_remaining": "{{remaining}} lugares restantes de {{total}}",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.spots_left_of_total" in object literal
+2743|        "pricing.free_plan_activated": "Free plan activated",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.spots_left_of_total" in object literal
+873|        "pricing.spots_left_of_total": "{{remaining}} places restantes sur {{total}}",
+2744|        "pricing.pricing_note": "All prices are in USD. Cancellation possible at any time.",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "task_automation" in object literal
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.pricing_note" in object literal
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.pricing_note" in object literal
+   |        ^
+2743|        "pricing.free_plan_activated": "Free plan activated",
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.pricing_note" in object literal
+2742|        "pricing.process_error": "Error processing",
+876|        // Integration Analytics
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.take_advantage_unique_prices" in object literal
+1807|        "pricing.pricing_note": "Todos los precios están en USD. Cancelación posible en cualquier momento.",
+1807|        "pricing.pricing_note": "Todos los precios están en USD. Cancelación posible en cualquier momento.",
+2095|        manage_assistant: "Manage assistant",
+1808|        "pricing.limited_launch_offer": "Oferta de lanzamiento limitada",
+2747|        "pricing.spots_left_of_total": "{{remaining}} spots left out of {{total}}",
+2744|        "pricing.pricing_note": "All prices are in USD. Cancellation possible at any time.",
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+   |        ^
+2748|        "pricing.take_advantage_unique_prices": "Take advantage of these unique prices now!",
+1811|        "pricing.take_advantage_unique_prices": "¡Aprovecha estos precios únicos ahora!",
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+1808|        "pricing.limited_launch_offer": "Oferta de lanzamiento limitada",
+   |        ^
+1813|        // Integration Analytics
+2747|        "pricing.spots_left_of_total": "{{remaining}} spots left out of {{total}}",
+2096|        task_automation: "Task automation",
+   |        ^
+[plugin:vite:esbuild] [plugin vite:esbuild] client/src/i18n/i18n.ts: Duplicate key "pricing.take_advantage_unique_prices" in object literal
+2747|        "pricing.spots_left_of_total": "{{remaining}} spots left out of {{total}}",
+1810|        "pricing.spots_left_of_total": "{{remaining}} lugares restantes de {{total}}",
+2746|        "pricing.spots_remaining": "{{remaining}} spots remaining out of {{total}}",
+2750|        // Integration Analytics
+computing gzip size...
+- Using dynamic import() to code-split the application
+✓ 2984 modules transformed.
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+rendering chunks...
+
+    server/routes.ts:5160:6:
+      5246 │       'Comparte lo que más te gustó': { en: 'Share what you li...
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+../dist/public/index.html                                           1.96 kB │ gzip:   0.78 kB
+../dist/public/assets/purify.es-CF4_YkFU.js                        21.86 kB │ gzip:   8.57 kB
+../dist/public/assets/google-calendar-instructions-CjImkfew.js      7.98 kB │ gzip:   2.76 kB
+▲ [WARNING] Duplicate key "Comparte lo que más te gustó" in object literal [duplicate-object-key]
+✓ built in 15.85s
+../dist/public/assets/index.es-D7EhDFN9.js                        149.98 kB │ gzip:  51.06 kB
+../dist/public/assets/index-DVdHPVD4.css                          114.84 kB │ gzip:  18.12 kB
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+    server/routes.ts:5246:6:
+
+../dist/public/assets/index-DSboGm1_.js                         2,219.19 kB │ gzip: 599.07 kB
+
+      906 │   async createSiteContent(content: InsertSiteContent): Promise<Si...
+
+
+      5160 │       'Comparte lo que más te gustó': { en: 'Share what you li...
+    server/storage.ts:941:8:
+
+▲ [WARNING] Duplicate key "Tus sugerencias son importantes" in object literal [duplicate-object-key]
+          ╵         ~~~~~~~~~~~~~~~~~
+      5161 │       'Tus sugerencias son importantes': { en: 'Your suggestions...
+           ╵         ~~~~~~~~~~~~~~~~~
+
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The original key "Comparte lo que más te gustó" is here:
+    server/storage.ts:946:8:
+      254 │   async getDashboardStats(userId: number): Promise<{
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+npm notice To update run: npm install -g npm@11.5.2
+  The original member "updateSiteContent" is here:
+
+    server/pg-storage.ts:254:8:
+          ╵         ~~~~~~~~~~~~~~~~~
+    server/storage.ts:921:8:
+6 of 11 warnings shown (disable the message limit with --log-limit=0)
+
+⚡ Done in 63ms
+      946 │   async updateSiteContent(integrationId: number, url: string, dat...
+          ╵         ~~~~~~~~~~~~~~~~~
+  The original key "Tus sugerencias son importantes" is here:
+▲ [WARNING] Duplicate member "createSiteContent" in class body [duplicate-class-member]
+npm notice
+          ╵         ~~~~~~~~~~~~~~~~~
+
+    server/storage.ts:906:8:
+           ╵       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      941 │   async createSiteContent(content: any): Promise<any> {
+  dist/index.js  420.0kb
+      1040 │   async getDashboardStats(userId: number): Promise<{ totalConver...
+
+    server/pg-storage.ts:1073:8:
+      307 │   async getConversationAnalytics(userId: number): Promise<Convers...
+
+    server/routes.ts:5161:6:
+          ╵         ~~~~~~~~~~~~~~~~~~~~~~~~
+    server/pg-storage.ts:1040:8:
+
+npm notice New major version of npm available! 10.8.2 -> 11.5.2
+    server/routes.ts:5247:6:
+
+          ╵         ~~~~~~~~~~~~~~~~~
+
+
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+
+
+▲ [WARNING] Duplicate member "updateSiteContent" in class body [duplicate-class-member]
+    server/pg-storage.ts:307:8:
+  The original member "getConversationAnalytics" is here:
+
+▲ [WARNING] Duplicate member "getDashboardStats" in class body [duplicate-class-member]
+           ╵         ~~~~~~~~~~~~~~~~~~~~~~~~
+
+      5247 │       'Tus sugerencias son importantes': { en: 'Your suggestions...
+npm notice
+
+  The original member "getDashboardStats" is here:
+      921 │   async updateSiteContent(id: number, data: Partial<SiteContent>)...
+  The original member "createSiteContent" is here:
+
+▲ [WARNING] Duplicate member "getConversationAnalytics" in class body [duplicate-class-member]
+      1073 │   async getConversationAnalytics(userId: number): Promise<Conver...
+> NODE_ENV=production node dist/index.js
+(Use `node --trace-warnings ...` to show where the warning was created)
+Usando URL de Replit ID: https://1a02e8d1-1925-4144-aeb9-9688f55250a0-00.picard.replit.dev/api/auth/google-calendar/callback
+For more information, check the blog post at https://a.co/cUPnyil
+Sirviendo archivos estáticos desde: /home/runner/workspace/public/static
+Please migrate your code to use AWS SDK for JavaScript (v3).
+
+ SDK releases are limited to address critical bug fixes and security issues only.
+(node:81) NOTE: The AWS SDK for JavaScript (v2) is in maintenance mode.
+> rest-express@1.0.0 start
+2025-09-01T17:20:23Z info: Waiting for service to be ready
+    at handle (file:///home/runner/workspace/node_modules/postgres/src/connection.js:474:6)
+Error al crear integración interna: PostgresError: null value in column "user_id" of relation "integrations" violates not-null constraint
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:191:23) {
+    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+    at addChunk (node:internal/streams/readable:561:12)
+    at ErrorResponse (file:///home/runner/workspace/node_modules/postgres/src/connection.js:788:26)
+    at Readable.push (node:internal/streams/readable:392:5)
+  severity: 'ERROR',
+    at TLSSocket.emit (node:domain:489:12)
+    at TLSSocket.emit (node:events:524:28)
+  severity_local: 'ERROR',
+    at TLSSocket.data (file:///home/runner/workspace/node_modules/postgres/src/connection.js:315:9)
+  code: '23502',
+  table_name: 'integrations',
+  column_name: 'user_id',
+Re-optimizing dependencies because vite config has changed
+}
+  detail: 'Failing row contains (1, null, AIPPS Web Integration, localhost, aipps_web_internal, #6366f1, bottom-right, t, 2025-09-01 17:20:20.778467, 0, Eres AIPPS, un asistente integrado en el sitio web principal de ..., [], floating, [], null, null, null, es, auto).',
+  schema_name: 'public',
+5:20:20 PM [express] Server running at http://0.0.0.0:5000
+Sirviendo archivos estáticos desde: /home/runner/workspace/public/static
+  routine: 'ExecConstraints'
+  line: '2021',
+command finished with error [sh -c npm run build && npm run start]: exit status 1
+5:20:21 PM [vite] Pre-transform error: Failed to load url /src/main.tsx?v=1GUbKp2u6gRKlg90fBadE (resolved id: /src/main.tsx?v=1GUbKp2u6gRKlg90fBadE). Does the file exist?
+  file: 'execMain.c',
+2025-09-01T17:20:25Z info: Deployment successful

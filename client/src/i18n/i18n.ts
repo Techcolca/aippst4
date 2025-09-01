@@ -37,7 +37,6 @@ const resources = {
       signup: "S'inscrire",
       forms: "Formulaires",
       automation: "Automatisation",
-      task_automation: "Automatisation des Tâches",
       profile: "Profil",
       
       // Configuración del asistente AI
@@ -421,10 +420,6 @@ const resources = {
       "about.story.paragraph3": "Aujourd'hui, nous continuons d'innover pour façonner l'avenir de l'interaction client.",
       
       // Pricing Page
-      "pricing.pricing_note": "Note de tarification",
-      "pricing.limited_launch_offer": "Offre de lancement limitée",
-      "pricing.spots_left_of_total": "places restantes sur le total",
-      "pricing.take_advantage_unique_prices": "Profitez de ces prix uniques",
       "pricing.faq.title": "Questions Fréquentes",
       "pricing.faq.q1": "Puis-je changer de plan à tout moment ?",
       "pricing.faq.a1": "Oui, vous pouvez changer de plan à tout moment depuis votre tableau de bord.",
@@ -1156,7 +1151,6 @@ const resources = {
       // Dashboard and Navigation
       dashboard_title: "Título del panel",
       manage_assistant: "Gestionar asistente",
-      task_automation: "Automatización de tareas",
       
       // Language Selector
       language: {
@@ -1358,10 +1352,6 @@ const resources = {
       "about.story.paragraph3": "Hoy, continuamos innovando para dar forma al futuro de la interacción con el cliente.",
       
       // Pricing Page
-      "pricing.pricing_note": "Nota de precios",
-      "pricing.limited_launch_offer": "Oferta de lanzamiento limitada",
-      "pricing.spots_left_of_total": "lugares restantes del total",
-      "pricing.take_advantage_unique_prices": "Aprovecha estos precios únicos",
       "pricing.faq.title": "Preguntas Frecuentes",
       "pricing.faq.q1": "¿Puedo cambiar de plan en cualquier momento?",
       "pricing.faq.a1": "Sí, puedes cambiar de plan en cualquier momento desde tu panel de control.",
@@ -2093,7 +2083,6 @@ const resources = {
       // Dashboard and Navigation
       dashboard_title: "Dashboard title",
       manage_assistant: "Manage assistant",
-      task_automation: "Task automation",
       
       // Language Selector
       language: {
@@ -2295,10 +2284,6 @@ const resources = {
       "about.story.paragraph3": "Today, we continue to innovate to shape the future of customer interaction.",
       
       // Pricing Page
-      "pricing.pricing_note": "Pricing note",
-      "pricing.limited_launch_offer": "Limited launch offer",
-      "pricing.spots_left_of_total": "spots left out of total",
-      "pricing.take_advantage_unique_prices": "Take advantage of these unique prices",
       "pricing.faq.title": "Frequently Asked Questions",
       "pricing.faq.q1": "Can I change plans anytime?",
       "pricing.faq.a1": "Yes, you can change plans anytime from your dashboard.",

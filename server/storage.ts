@@ -937,16 +937,6 @@ export class MemStorage implements IStorage {
   async deleteSiteContent(id: number): Promise<void> {
     this.siteContents.delete(id);
   }
-
-  async createSiteContent(content: any): Promise<any> {
-    // Mock implementation - in real system this would insert into site_content table
-    return { id: Date.now(), ...content };
-  }
-
-  async updateSiteContent(integrationId: number, url: string, data: any): Promise<any> {
-    // Mock implementation - in real system this would update site_content table
-    return { integrationId, url, ...data };
-  }
   
   // Subscription methods
   async getUserSubscriptions(userId: number): Promise<Subscription[]> {
