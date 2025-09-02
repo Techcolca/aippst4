@@ -43,23 +43,29 @@ async function setupDatabase() {
           password: hashedPassword,
           fullName: 'Administrador AIPI',
           apiKey: apiKey
-             // Crear usuario Pablo si no existe
-    const pabloEmail = 'techcolca@gmail.com';
-    try {
+        });
+        
+        console.log('✅ Usuario administrador creado');
+      } else {
+        console.log('👤 Usuario administrador ya existe');
+      }
+
+      // Crear usuario Pablo si no existe
+      const pabloEmail = 'techcolca@gmail.com';
       const existingPablo = await db.select().from(users).where(eq(users.email, pabloEmail)).limit(1);
 
       if (existingPablo.length === 0) {
         console.log('👤 Creando usuario Pablo...');
         
-        const hashedPassword = await bcrypt.hash('pablo123', 10);
-        const apiKey = 'aipi_pablo_' + Math.random().toString(36).substring(2, 15);
+        const hashedPasswordPablo = await bcrypt.hash('pablo123', 10);
+        const apiKeyPablo = 'aipi_pablo_' + Math.random().toString(36).substring(2, 15);
 
         const [pablo] = await db.insert(users).values({
           username: 'Pablo',
           email: pabloEmail,
-          password: hashedPassword,
+          password: hashedPasswordPablo,
           fullName: 'Pablo Techcolca',
-          apiKey: apiKey
+          apiKey: apiKeyPablo
         }).returning();
         
         console.log('✅ Usuario Pablo creado con ID:', pablo.id);
@@ -84,17 +90,9 @@ async function setupDatabase() {
       } else {
         console.log('👤 Usuario Pablo ya existe');
       }
+
     } catch (error) {
-      console.log('⚠️  Error creando usuario Pablo:', error.message);
-    } 
-        });
-        
-        console.log('✅ Usuario administrador creado');
-      } else {
-        console.log('👤 Usuario administrador ya existe');
-      }
-    } catch (error) {
-      console.log('⚠️  No se pudo crear usuario admin (tabla puede no existir aún):', error.message);
+      console.log('⚠️  No se pudo crear usuarios (tabla puede no existir aún):', error.message);
     }
 
     // Crear planes de precios por defecto si no existen
