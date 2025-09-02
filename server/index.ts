@@ -124,8 +124,8 @@ app.get('/debug-contrast.html', (req, res) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    console.error('Error en la aplicación:', err);
     res.status(status).json({ message });
-    throw err;
   });
 
   // importantly only setup vite in development and after
@@ -142,7 +142,7 @@ app.get('/debug-contrast.html', (req, res) => {
 
   // Usar el puerto proporcionado por Railway o por defecto 5000
   // this serves both the API and the client.
-  const port = process.env.PORT || 5000;
+  const port = parseInt(process.env.PORT || '5000', 10);
   server.listen(port, "0.0.0.0", () => {
     log(`Server running at http://0.0.0.0:${port}`);
   });
