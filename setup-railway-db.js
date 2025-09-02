@@ -1,6 +1,6 @@
 // Archivo para crear todas las tablas necesarias en la base de datos durante el despliegue en Railway
-import pkg from 'pg';
-const { Pool } = pkg;
+import pg from 'pg';
+const { Pool } = pg;
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import * as schema from './shared/schema.js';
