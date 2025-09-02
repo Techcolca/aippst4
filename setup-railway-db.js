@@ -43,6 +43,50 @@ async function setupDatabase() {
           password: hashedPassword,
           fullName: 'Administrador AIPI',
           apiKey: apiKey
+             // Crear usuario Pablo si no existe
+    const pabloEmail = 'techcolca@gmail.com';
+    try {
+      const existingPablo = await db.select().from(users).where(eq(users.email, pabloEmail)).limit(1);
+
+      if (existingPablo.length === 0) {
+        console.log('👤 Creando usuario Pablo...');
+        
+        const hashedPassword = await bcrypt.hash('pablo123', 10);
+        const apiKey = 'aipi_pablo_' + Math.random().toString(36).substring(2, 15);
+
+        const [pablo] = await db.insert(users).values({
+          username: 'Pablo',
+          email: pabloEmail,
+          password: hashedPassword,
+          fullName: 'Pablo Techcolca',
+          apiKey: apiKey
+        }).returning();
+        
+        console.log('✅ Usuario Pablo creado con ID:', pablo.id);
+
+        // Crear integración básica para Pablo
+        console.log('🔗 Creando integración para Pablo...');
+        await db.insert(integrations).values({
+          userId: pablo.id,
+          name: 'Sitio Principal',
+          url: 'https://mi-sitio.com',
+          apiKey: 'int_pablo_' + Math.random().toString(36).substring(2, 15),
+          themeColor: '#3b82f6',
+          position: 'bottom-right',
+          active: true,
+          widgetType: 'bubble',
+          language: 'es',
+          description: 'Integración principal de Pablo',
+          botBehavior: 'friendly'
+        });
+        console.log('✅ Integración de Pablo creada');
+        
+      } else {
+        console.log('👤 Usuario Pablo ya existe');
+      }
+    } catch (error) {
+      console.log('⚠️  Error creando usuario Pablo:', error.message);
+    } 
         });
         
         console.log('✅ Usuario administrador creado');
