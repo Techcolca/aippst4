@@ -1,9 +1,7 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
+import pkg from 'pg';
+const { Pool } = pkg;
+import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
-
-neonConfig.webSocketConstructor = ws;
 
 // Declarar variables para exportar
 let pool: Pool | null = null;
@@ -26,12 +24,22 @@ if (!process.env.DATABASE_URL) {
       console.error("Error: Intentando usar la base de datos sin una conexión válida");
       return { values: () => ({ returning: () => [] }) };
     },
-    // Añadir otros métodos según sea necesario
+    update: () => {
+      console.error("Error: Intentando usar la base de datos sin una conexión válida");
+      return { set: () => ({ where: () => [] }) };
+    },
+    delete: () => {
+      console.error("Error: Intentando usar la base de datos sin una conexión válida");
+      return { where: () => [] };
+    }
   };
 } else {
-  // Si DATABASE_URL está definido, configuramos la conexión normalmente
-  pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  db = drizzle({ client: pool, schema });
+  // Si DATABASE_URL está definido, configuramos la conexión normalmente para Railway PostgreSQL
+  pool = new Pool({ 
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  });
+  db = drizzle(pool, { schema });
 }
 
 export { pool, db };

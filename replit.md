@@ -8,7 +8,22 @@ AIPI is an advanced conversational AI platform for websites, offering intelligen
 
 Preferred communication style: Simple, everyday language.
 
-## Recent Changes (August 2025)
+## Recent Changes (September 2025)
+
+### Railway Deployment Preparation - COMPLETED
+- **Problem Solved**: Aplicación necesitaba adaptarse completamente para Railway deployment
+- **Solution Implemented**: Configuración completa de Railway con PostgreSQL estándar
+- **Technical Details**:
+  - Migración de Neon Serverless a PostgreSQL estándar con pg y drizzle-orm/node-postgres
+  - Scripts de migración modernizados con drizzle-kit sintaxis actual
+  - Archivo setup-railway-db.js completamente funcional para inicialización automática
+  - Configuración SSL para producción en Railway
+  - railway-start.sh optimizado con mejor logging y gestión de errores
+  - Build de producción verificado y funcionando correctamente
+- **Result**: Aplicación 100% lista para deploy en Railway con base de datos automática
+- **Date**: September 2, 2025
+
+## Previous Changes (August 2025)
 
 ### Dynamic Text Contrast System - COMPLETED
 - **Problem Solved**: Text readability issues with different widget background colors
