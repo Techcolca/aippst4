@@ -5,7 +5,7 @@
     "buildCommand": "npm install && npm run build"
   },
   "deploy": {
-    "startCommand": "npm run db:push && node setup-railway-db.js && NODE_ENV=production PORT=$PORT node dist/index.js"
+    "startCommand": "npm run db:push && npm run db:seed && NODE_ENV=production PORT=$PORT node dist/index.js",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 3,
     "healthcheckPath": "/api/health",
