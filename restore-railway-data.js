@@ -10,7 +10,7 @@ import pg from 'pg';
 const { Pool } = pg;
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
-import * as schema from './shared/schema.js';
+import * as schema from './dist/shared/schema.js';
 import bcrypt from 'bcrypt';
 
 const { users, integrations, conversations, messages, pricingPlans, welcomeMessages, forms } = schema;
