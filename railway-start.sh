@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Imprimir mensaje de inicio
-echo "🚀 ===== Iniciando despliegue AIPI en Railway ===== "
+echo "🚀 ===== Iniciando despliegue AIPI en Railway ====="
 
 # Verificar variables críticas
 echo "🔍 Verificando variables de entorno..."
