@@ -118,7 +118,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         'Authorization': `Bearer ${authToken}`
       };
       
-      const response = await fetch("/api/auth/me", {
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const response = await fetch(`${baseUrl}/api/auth/me`, {
         credentials: "include",
         cache: "no-store",
         headers: headers
