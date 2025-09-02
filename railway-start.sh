@@ -66,6 +66,57 @@ fi
 
 echo "✅ Configuración de base de datos completada exitosamente"
 
+# Paso 4: Migrar datos críticos de Replit (Pablo y sus integraciones)
+echo "🔄 Migrando datos críticos de Replit..."
+node -e "
+const { db } = require('./dist/server/db.js');
+const bcrypt = require('bcrypt');
+
+async function migratePabloData() {
+  try {
+    const { users, integrations } = require('./dist/shared/schema.js');
+    
+    // Crear usuario Pablo si no existe
+    const pabloData = {
+      username: 'Pablo',
+      email: 'techcolca@gmail.com',
+      password: await bcrypt.hash('pablo123', 10),
+      fullName: 'Pablo Tech',
+      apiKey: 'pablo-' + Math.random().toString(36).substr(2, 16)
+    };
+    
+    console.log('👤 Creando usuario Pablo...');
+    await db.insert(users).values(pabloData).onConflictDoNothing();
+    
+    // Obtener ID de Pablo
+    const pabloUser = await db.select().from(users).where(eq(users.email, 'techcolca@gmail.com')).limit(1);
+    
+    if (pabloUser.length > 0) {
+      console.log('🔗 Creando integración básica para Pablo...');
+      await db.insert(integrations).values({
+        userId: pabloUser[0].id,
+        name: 'Sitio Principal',
+        url: 'https://mi-sitio.com',
+        apiKey: 'int-' + Math.random().toString(36).substr(2, 16),
+        themeColor: '#3b82f6',
+        position: 'bottom-right',
+        active: true,
+        widgetType: 'bubble'
+      }).onConflictDoNothing();
+      
+      console.log('✅ Datos de Pablo migrados exitosamente');
+    }
+  } catch (error) {
+    console.warn('⚠️ Error migrando datos de Pablo:', error.message);
+  }
+}
+
+migratePabloData();
+"
+
+echo "✅ Migración de datos completada"
+
+
 # Paso 4: Iniciar la aplicación
 echo "🌐 Iniciando servidor AIPI en producción..."
 echo "📡 Puerto: $PORT"
