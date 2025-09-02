@@ -3,7 +3,7 @@
  */
 import { Appointment, Settings } from '@shared/schema';
 import { storage } from '../storage';
-import AWS from 'aws-sdk';
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 // Configuración de AWS SES
 function configureSES() {
@@ -12,13 +12,13 @@ function configureSES() {
     return null;
   }
 
-  AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  return new SESClient({
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    },
     region: process.env.AWS_REGION || 'us-east-1'
   });
-
-  return new AWS.SES({ apiVersion: '2010-12-01' });
 }
 
 /**
@@ -108,7 +108,8 @@ export async function sendAppointmentConfirmation(
     };
     
     // Enviar email al visitante
-    await ses.sendEmail(visitorEmailParams).promise();
+    const visitorCommand = new SendEmailCommand(visitorEmailParams);
+    await ses.send(visitorCommand);
     
     // Email al propietario/organizador si está configurado
     if (settings.emailNotificationAddress) {
@@ -164,7 +165,8 @@ export async function sendAppointmentConfirmation(
         }
       };
       
-      await ses.sendEmail(ownerEmailParams).promise();
+      const ownerCommand = new SendEmailCommand(ownerEmailParams);
+      await ses.send(ownerCommand);
     }
     
   } catch (error) {
@@ -256,7 +258,8 @@ export async function sendAppointmentReminder(
       }
     };
     
-    await ses.sendEmail(params).promise();
+    const command = new SendEmailCommand(params);
+    await ses.send(command);
     
   } catch (error) {
     console.error('Error sending appointment reminder email:', error);
@@ -358,7 +361,8 @@ export async function sendAppointmentUpdateNotification(
       }
     };
     
-    await ses.sendEmail(params).promise();
+    const command = new SendEmailCommand(params);
+    await ses.send(command);
     
   } catch (error) {
     console.error('Error sending appointment update notification:', error);
@@ -453,7 +457,8 @@ export async function sendAppointmentCancellationNotification(
       }
     };
     
-    await ses.sendEmail(params).promise();
+    const command = new SendEmailCommand(params);
+    await ses.send(command);
     
   } catch (error) {
     console.error('Error sending appointment cancellation notification:', error);
