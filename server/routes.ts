@@ -328,7 +328,7 @@ async function createInternalWebsiteIntegration() {
     await storage.createIntegration({
       name: "AIPPS Web Integration",
       url: "localhost",
-      userId: null, // null indica que es una integración compartida para todos los usuarios
+      userId: 1, // Usar ID del administrador por defecto
       themeColor: "#6366f1",
       position: "bottom-right",
       botBehavior: "Eres AIPPS, un asistente integrado en el sitio web principal de AIPPS. Tu objetivo es ayudar a los usuarios a entender cómo funciona la plataforma, sus características y beneficios. Debes ser informativo, profesional y claro en tus respuestas. Brinda ejemplos concretos de cómo se puede utilizar AIPPS en diferentes contextos.",
