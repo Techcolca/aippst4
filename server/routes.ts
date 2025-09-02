@@ -57,7 +57,7 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import { db, pool } from "./db";
 
-// Helper function to extract document content
+// Helper function to extract document content cambio
 async function extractDocumentContent(doc: any): Promise<string> {
   let content = `Información del archivo: ${doc.originalName || doc.filename}`;
   
