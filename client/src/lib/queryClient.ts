@@ -23,7 +23,11 @@ export async function apiRequest(
     headers['Authorization'] = `Bearer ${authToken}`;
   }
   
-  const res = await fetch(url, {
+  // Configurar URL base para producción
+const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const fullUrl = url.startsWith('http') ? url : `${baseUrl}${url}`;
+
+const res = await fetch(fullUrl, {
     method,
     headers: headers,
     body: data ? JSON.stringify(data) : undefined,
@@ -62,7 +66,11 @@ export const getQueryFn: <T>(options: {
       headers['Authorization'] = `Bearer ${authToken}`;
     }
     
-    const res = await fetch(queryKey[0] as string, {
+    // Configurar URL base para producción
+const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+const fullUrl = (queryKey[0] as string).startsWith('http') ? queryKey[0] as string : `${baseUrl}${queryKey[0]}`;
+
+const res = await fetch(fullUrl, {
       credentials: "include",
       headers: headers,
     });
