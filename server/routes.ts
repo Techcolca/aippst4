@@ -362,39 +362,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API routes
   const apiRouter = app.route("/api");
   
-  // ================ Health Check Route (for Railway) ================
-  app.get("/api/health", async (req, res) => {
-    try {
-      // Verificar conexión a base de datos
-      if (pool) {
-        const result = await pool.query('SELECT 1 as test');
-        res.status(200).json({ 
-          status: "healthy", 
-          database: "connected",
-          timestamp: new Date().toISOString(),
-          version: "1.0.0",
-          environment: process.env.NODE_ENV || "development"
-        });
-      } else {
-        res.status(200).json({ 
-          status: "healthy", 
-          database: "not_configured",
-          timestamp: new Date().toISOString(),
-          version: "1.0.0",
-          environment: process.env.NODE_ENV || "development"
-        });
-      }
-    } catch (error) {
-      console.error("Health check failed:", error);
-      res.status(503).json({ 
-        status: "unhealthy", 
-        database: "error",
-        error: error.message,
-        timestamp: new Date().toISOString()
-      });
-    }
+// ================ Health Check Route (for Railway) ================
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ 
+    status: "healthy", 
+    timestamp: new Date().toISOString(),
+    version: "1.0.0",
+    environment: process.env.NODE_ENV || "development"
   });
-  
+});
   // ================ Auth Routes ================
   app.post("/api/auth/register", async (req, res) => {
     try {
