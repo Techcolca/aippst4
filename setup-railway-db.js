@@ -3,7 +3,7 @@ import pg from 'pg';
 const { Pool } = pg;
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
-import * as schema from './shared/schema.js';
+import * as schema from './shared/schema.ts';
 import bcrypt from 'bcrypt';
 
 const { users, integrations, pricingPlans, welcomeMessages } = schema;
