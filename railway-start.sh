@@ -84,4 +84,5 @@ echo "📡 Puerto: $PORT"
 echo "🗄️ Base de datos: Conectado"
 echo "🚀 Estado: Producción"
 
-NODE_ENV=production PORT=${PORT:-5000} node dist/index.js --host 0.0.0.0
+# DESPUÉS (línea 87):
+NODE_ENV=production PORT=${PORT:-5000} node server/index.js --host 0.0.0.0
