@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import { fileURLToPath } from 'url';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 app.use(express.json());
@@ -27,8 +28,33 @@ app.use((req, res, next) => {
   next();
 });
 
+// Middleware de protección contra ataques (AÑADIR AQUÍ)
+// Rate limiting - máximo 100 requests por 15 minutos por IP
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 requests por ventana
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { 
+    error: 'Demasiadas peticiones. Intenta de nuevo en 15 minutos.' 
+  },
+  // Solo aplicar a rutas API
+  skip: (req) => !req.path.startsWith('/api')
+});
+
+// Rate limiting más estricto para autenticación
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 5, // máximo 5 intentos de login
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { 
+    error: 'Demasiados intentos de login. Intenta de nuevo en 15 minutos.' 
+  }
+});
+
 // Middleware de seguridad contra bots
-app.use((req, res, next) => {
+const securityMiddleware = (req, res, next) => {
   const url = req.url.toLowerCase();
   const userAgent = req.get('User-Agent') || '';
   
@@ -63,7 +89,7 @@ app.use((req, res, next) => {
   // Bloquear patrones maliciosos
   if (maliciousPatterns.some(pattern => url.includes(pattern))) {
     console.log(`🚨 Blocked attack attempt from ${req.ip}: ${req.url}`);
-    return res.status(404).end(); // 404 confunde a los bots
+    return res.status(404).end();
   }
   
   // Bloquear bots conocidos
@@ -73,7 +99,13 @@ app.use((req, res, next) => {
   }
   
   next();
-});
+};
+
+// Aplicar middlewares de seguridad
+app.use(limiter);
+app.use('/api/auth', authLimiter);
+app.use(securityMiddleware);
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
