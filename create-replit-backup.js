@@ -2,7 +2,7 @@
 
 /**
  * Script para crear backup de datos existentes en Replit antes de migrar a Railway
- * Este script debe ejecutarse EN REPLIT antes del deploy a Railway
+ * Este script debe ejecutarse EN REPLIT antes del deploy a Railway ok
  */
 
 import { execSync } from 'child_process';
