@@ -27,6 +27,53 @@ app.use((req, res, next) => {
   next();
 });
 
+// Middleware de seguridad contra bots
+app.use((req, res, next) => {
+  const url = req.url.toLowerCase();
+  const userAgent = req.get('User-Agent') || '';
+  
+  // Patrones de ataque comunes
+  const maliciousPatterns = [
+    '/wp-admin',
+    '/wp-login.php',
+    '/xmlrpc.php',
+    '/wp-config.php',
+    '/wp-includes',
+    '/wp-content',
+    '/.git/',
+    '/phpmyadmin',
+    '/admin.php',
+    '/administrator',
+    '/.env',
+    '/config',
+    '.php'
+  ];
+  
+  // Bots maliciosos
+  const botSignatures = [
+    'masscan',
+    'nmap',
+    'sqlmap',
+    'nikto',
+    'wordpress',
+    'wp_is_mobile',
+    'scanner'
+  ];
+  
+  // Bloquear patrones maliciosos
+  if (maliciousPatterns.some(pattern => url.includes(pattern))) {
+    console.log(`🚨 Blocked attack attempt from ${req.ip}: ${req.url}`);
+    return res.status(404).end(); // 404 confunde a los bots
+  }
+  
+  // Bloquear bots conocidos
+  if (botSignatures.some(sig => userAgent.toLowerCase().includes(sig))) {
+    console.log(`🚨 Blocked bot from ${req.ip}: ${userAgent}`);
+    return res.status(403).end();
+  }
+  
+  next();
+});
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
