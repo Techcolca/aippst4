@@ -56,7 +56,7 @@ echo "✅ Migraciones de schema completadas"
 
 # Paso 3: Configurar datos iniciales
 echo "🏗️  Configurando datos iniciales de AIPI..."
-node setup-railway-db.js
+npx tsx setup-railway-db.js
 
 if [ $? -ne 0 ]; then
   echo "❌ ERROR: Configuración de datos iniciales falló"
