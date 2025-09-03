@@ -1689,43 +1689,61 @@ app.get("/api/health", (req, res) => {
     }
   });
 
-  // ================ Marketing Routes ================
-  // Endpoint para obtener mensajes promocionales dinámicos generados por IA
-  app.get("/api/marketing/promotional-messages", async (req, res) => {
+ // ================ Marketing Routes ================
+// Endpoint para obtener mensajes promocionales dinámicos generados por IA
+app.get("/api/marketing/promotional-messages", async (req, res) => {
+  try {
+    // ✅ VERIFICAR POOL ANTES DE USAR
+    if (!pool) {
+      console.error("Database pool not available");
+      return res.status(500).json({ 
+        message: "Database connection not available",
+        fallback: []
+      });
+    }
+
+    const language = req.query.lang as string || 'es';
+    
+    // Verificar si necesitamos generar nuevos mensajes (cada 7 días)
+    const lastGenerated = await pool.query(`
+      SELECT created_at FROM promotional_messages 
+      WHERE message_type = 'ai_generated' 
+      AND language = $1
+      ORDER BY created_at DESC 
+      LIMIT 1
+    `, [language]);
+    
+    const needsRegen = !lastGenerated.rows[0] || 
+      (Date.now() - new Date(lastGenerated.rows[0].created_at).getTime()) > (7 * 24 * 60 * 60 * 1000);
+    
+    if (needsRegen) {
+      console.log(`Generando nuevos mensajes promocionales con IA para idioma: ${language}...`);
+      await generateAndStorePromotionalMessages(language);
+    }
+    
+    // Obtener mensajes generados por IA para el idioma específico
+    const result = await pool.query(`
+      SELECT pm.message_text, pm.message_type, pm.display_order, pm.language
+      FROM promotional_messages pm
+      WHERE pm.message_type = 'ai_generated'
+      AND pm.is_active = true
+      AND pm.language = $1
+      ORDER BY pm.display_order ASC
+    `, [language]);
+    
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error getting promotional messages:", error);
+    
+    // ✅ VERIFICAR POOL EN FALLBACK TAMBIÉN
+    if (!pool) {
+      return res.status(500).json({ 
+        message: "Database connection error", 
+        fallback: [] 
+      });
+    }
+    
     try {
-      const language = req.query.lang as string || 'es';
-      
-      // Verificar si necesitamos generar nuevos mensajes (cada 7 días)
-      const lastGenerated = await pool.query(`
-        SELECT created_at FROM promotional_messages 
-        WHERE message_type = 'ai_generated' 
-        AND language = $1
-        ORDER BY created_at DESC 
-        LIMIT 1
-      `, [language]);
-      
-      const needsRegen = !lastGenerated.rows[0] || 
-        (Date.now() - new Date(lastGenerated.rows[0].created_at).getTime()) > (7 * 24 * 60 * 60 * 1000);
-      
-      if (needsRegen) {
-        console.log(`Generando nuevos mensajes promocionales con IA para idioma: ${language}...`);
-        await generateAndStorePromotionalMessages(language);
-      }
-      
-      // Obtener mensajes generados por IA para el idioma específico
-      const result = await pool.query(`
-        SELECT pm.message_text, pm.message_type, pm.display_order, pm.language
-        FROM promotional_messages pm
-        WHERE pm.message_type = 'ai_generated'
-        AND pm.is_active = true
-        AND pm.language = $1
-        ORDER BY pm.display_order ASC
-      `, [language]);
-      
-      res.json(result.rows);
-    } catch (error) {
-      console.error("Error getting promotional messages:", error);
-      
       // Fallback a mensajes estáticos si falla la IA
       const fallbackResult = await pool.query(`
         SELECT pm.message_text, pm.message_type, pm.display_order
@@ -1738,8 +1756,12 @@ app.get("/api/health", (req, res) => {
       `);
       
       res.json(fallbackResult.rows);
+    } catch (fallbackError) {
+      console.error("Error in fallback query:", fallbackError);
+      res.status(500).json({ message: "Database error", fallback: [] });
     }
-  });
+  }
+});
 
   // Endpoint para obtener información de campaña activa
   app.get("/api/marketing/active-campaign", async (req, res) => {
