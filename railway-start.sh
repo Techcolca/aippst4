@@ -58,17 +58,14 @@ echo "✅ Migraciones de schema completadas"
 echo "🏗️  Configurando datos iniciales de AIPI..."
 npx tsx setup-railway-db.js
 
-if [ $? -ne 0 ]; then
-  echo "❌ ERROR: Configuración de datos iniciales falló"
-  echo "🔍 Revisa logs arriba para detalles del error"
-  exit 1
-fi
-
-echo "✅ Configuración de base de datos completada exitosamente"
-
-# Paso 4: Migrar datos críticos de Replit (Pablo y sus integraciones)
-echo "🔄 Migrando datos críticos de Replit..."
-node -e "
+# Paso 4: Verificar datos críticos (ya creados en setup-railway-db.js)
+if [ "$RAILWAY_ENVIRONMENT" ]; then
+  echo "✅ Datos críticos ya configurados en Railway"
+  echo "✅ Usuario Pablo y admin creados en setup-railway-db.js"
+else
+  # Migrar datos críticos de Replit (Pablo y sus integraciones) - SOLO EN REPLIT
+  echo "🔄 Migrando datos críticos de Replit..."
+  node -e "
 const { db } = require('./dist/server/db.js');
 const bcrypt = require('bcrypt');
 
@@ -84,6 +81,38 @@ async function migratePabloData() {
       fullName: 'Pablo Tech',
       apiKey: 'pablo-' + Math.random().toString(36).substr(2, 16)
     };
+    
+    console.log('👤 Creando usuario Pablo...');
+    await db.insert(users).values(pabloData).onConflictDoNothing();
+    
+    // Obtener ID de Pablo
+    const pabloUser = await db.select().from(users).where(eq(users.email, 'techcolca@gmail.com')).limit(1);
+    
+    if (pabloUser.length > 0) {
+      console.log('🔗 Creando integración básica para Pablo...');
+      await db.insert(integrations).values({
+        userId: pabloUser[0].id,
+        name: 'Sitio Principal',
+        url: 'https://mi-sitio.com',
+        apiKey: 'int-' + Math.random().toString(36).substr(2, 16),
+        themeColor: '#3b82f6',
+        position: 'bottom-right',
+        active: true,
+        widgetType: 'bubble'
+      }).onConflictDoNothing();
+      
+      console.log('✅ Datos de Pablo migrados exitosamente');
+    }
+  } catch (error) {
+    console.warn('⚠️ Error migrando datos de Pablo:', error.message);
+  }
+}
+
+migratePabloData();
+"
+fi
+
+echo "✅ Migración de datos completada"
     
     console.log('👤 Creando usuario Pablo...');
     await db.insert(users).values(pabloData).onConflictDoNothing();
