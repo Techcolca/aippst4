@@ -4,7 +4,7 @@ AIPI es una plataforma avanzada impulsada por IA diseñada para integrar capacid
 
 ## Características principales
 
-- **Widget de chat integrable**: Fácil de incorporar en cualquier sitio web
+- **Widget de chat integrable**: Fácil de incorporar en cualquier sitio web 2
 - **Procesamiento de documentos**: Compatible con PDF, DOCX y otros formatos
 - **Personalización completa**: Adapta el asistente a tus necesidades
 - **Análisis de conversaciones**: Visualiza tendencias, productos populares y sentimiento
