@@ -490,6 +490,39 @@ export const insertWelcomeMessageSchema = createInsertSchema(welcomeMessages).pi
   expiresAt: true,
   orderIndex: true,
 });
+// Tabla para mensajes promocionales
+export const promotionalMessages = pgTable("promotional_messages", {
+  id: serial("id").primaryKey(),
+  message_text: text("message_text").notNull(),
+  message_type: text("message_type").notNull().default("ai_generated"),
+  display_order: integer("display_order").notNull().default(0),
+  language: text("language").notNull().default("es"),
+  is_active: boolean("is_active").notNull().default(true),
+  campaign_id: integer("campaign_id"),
+  created_at: timestamp("created_at").defaultNow(),
+});
 
+export const insertPromotionalMessageSchema = createInsertSchema(promotionalMessages).pick({
+  message_text: true,
+  message_type: true,
+  display_order: true,
+  language: true,
+  is_active: true,
+  campaign_id: true,
+});
+// Tabla para campañas de marketing  
+export const marketingCampaigns = pgTable("marketing_campaigns", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  max_subscribers: integer("max_subscribers").notNull(),
+  current_subscribers: integer("current_subscribers").default(0),
+  start_date: timestamp("start_date").defaultNow(),
+  end_date: timestamp("end_date"),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+});
+export type PromotionalMessage = typeof promotionalMessages.$inferSelect;
+export type InsertPromotionalMessage = z.infer<typeof insertPromotionalMessageSchema>;
 export type WelcomeMessage = typeof welcomeMessages.$inferSelect;
 export type InsertWelcomeMessage = z.infer<typeof insertWelcomeMessageSchema>;
