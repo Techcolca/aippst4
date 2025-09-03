@@ -54,7 +54,7 @@ const authLimiter = rateLimit({
 });
 
 // Middleware de seguridad contra bots
-const securityMiddleware = (req, res, next) => {
+const securityMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const url = req.url.toLowerCase();
   const userAgent = req.get('User-Agent') || '';
   
