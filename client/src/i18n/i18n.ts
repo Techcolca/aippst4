@@ -2818,13 +2818,20 @@ console.log('🔍 I18N DEBUG - Manual resources loaded:', {
     get_started: typeof resources.en.translation.get_started
   }
 });
-
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
+    fallbackLng: {
+      'fr-CA': ['fr'],     // ← Francés canadiense usa francés
+      'fr-FR': ['fr'],     // ← Francés francés usa francés  
+      'en-US': ['en'],     // ← Inglés americano usa inglés
+      'en-CA': ['en'],     // ← Inglés canadiense usa inglés
+      'es-ES': ['es'],     // ← Español España usa español
+      'es-MX': ['es'],     // ← Español México usa español
+      'default': ['en']    // ← Por defecto inglés
+    },
     debug: false,
     
     interpolation: {
