@@ -214,12 +214,12 @@ app.get('/debug-contrast.html', (req, res) => {
   // para evitar problemas de acceso a la aplicación
  // En Railway, forzar uso de setupVite para evitar pantalla en blanco
 const isReplit = process.env.REPL_ID !== undefined;
-const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
+const isRailway = process.env.RAILWAY_ENVIRONMENT_NAME !== undefined;
 
-if (app.get("env") === "development" || isReplit || isRailway) {
-  await setupVite(app, server);
+if (app.get("env") === "development" || isReplit) {
+  await setupVite(app, server); // Solo en desarrollo
 } else {
-  serveStatic(app);
+  serveStatic(app); // En Railway usar archivos estáticos
 }
 
   // Usar el puerto proporcionado por Railway o por defecto 5000
