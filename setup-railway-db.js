@@ -83,7 +83,7 @@ async function setupDatabase() {
           widgetType: 'bubble',
           language: 'es',
           description: 'Integración principal de Pablo',
-          botBehavior: 'friendly'
+          botBehavior: 'Sé amable y profesional, responde de manera precisa a las preguntas sobre el sitio web.'
         });
         console.log('✅ Integración de Pablo creada');
         
@@ -105,38 +105,56 @@ async function setupDatabase() {
         
         const defaultPlans = [
           {
+            planId: 'free',
             name: 'Free',
-            price: 0,
-            currency: 'USD',
             description: 'Plan gratuito con funciones básicas',
-            features: JSON.stringify(['100 mensajes/mes', '1 integración', 'Soporte básico']),
-            monthlyInteractionLimit: 100,
-            maxIntegrations: 1,
-            isActive: true,
+            price: 0,
+            priceDisplay: '$0/mes',
+            currency: 'cad',
+            interval: 'month',
+            features: ['100 mensajes/mes', '1 integración', 'Soporte básico'],
+            tier: 'free',
+            interactionsLimit: 100,
+            isAnnual: false,
+            discount: null,
+            popular: false,
+            available: true,
             stripeProductId: null,
             stripePriceId: null
           },
           {
+            planId: 'pro',
             name: 'Pro',
-            price: 29,
-            currency: 'USD',
             description: 'Plan profesional para empresas',
-            features: JSON.stringify(['5,000 mensajes/mes', '10 integraciones', 'Soporte prioritario', 'Analytics avanzados']),
-            monthlyInteractionLimit: 5000,
-            maxIntegrations: 10,
-            isActive: true,
+            price: 2900,
+            priceDisplay: '$29/mes',
+            currency: 'cad',
+            interval: 'month',
+            features: ['5,000 mensajes/mes', '10 integraciones', 'Soporte prioritario', 'Analytics avanzados'],
+            tier: 'pro',
+            interactionsLimit: 5000,
+            isAnnual: false,
+            discount: null,
+            popular: true,
+            available: true,
             stripeProductId: null,
             stripePriceId: null
           },
           {
+            planId: 'enterprise',
             name: 'Enterprise',
-            price: 99,
-            currency: 'USD',
             description: 'Plan empresarial con funciones avanzadas',
-            features: JSON.stringify(['Mensajes ilimitados', 'Integraciones ilimitadas', 'Soporte 24/7', 'API completa', 'White-label']),
-            monthlyInteractionLimit: -1,
-            maxIntegrations: -1,
-            isActive: true,
+            price: 9900,
+            priceDisplay: '$99/mes',
+            currency: 'cad',
+            interval: 'month',
+            features: ['Mensajes ilimitados', 'Integraciones ilimitadas', 'Soporte 24/7', 'API completa', 'White-label'],
+            tier: 'enterprise',
+            interactionsLimit: -1,
+            isAnnual: false,
+            discount: null,
+            popular: false,
+            available: true,
             stripeProductId: null,
             stripePriceId: null
           }
@@ -161,25 +179,31 @@ async function setupDatabase() {
         
         const defaultMessages = [
           {
-            messageText: '¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?',
-            language: 'es',
-            messageType: 'welcome',
+            messageText: '🚀 ¡Transforma tu sitio web con AI conversacional inteligente!',
+            messageTextFr: '🚀 Transformez votre site web avec une IA conversationnelle intelligente!',
+            messageTextEn: '🚀 Transform your website with intelligent conversational AI!',
+            messageType: 'commercial',
             isActive: true,
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
             orderIndex: 1
           },
           {
-            messageText: 'Hello! I\'m your virtual assistant. How can I help you today?',
-            language: 'en',
-            messageType: 'welcome',
+            messageText: '💬 Crea experiencias únicas para tus visitantes con AIPI',
+            messageTextFr: '💬 Créez des expériences uniques pour vos visiteurs avec AIPI',
+            messageTextEn: '💬 Create unique experiences for your visitors with AIPI',
+            messageType: 'commercial',
             isActive: true,
-            orderIndex: 1
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+            orderIndex: 2
           },
           {
-            messageText: 'Bonjour! Je suis votre assistant virtuel. Comment puis-je vous aider aujourd\'hui?',
-            language: 'fr',
-            messageType: 'welcome',
+            messageText: '🎯 Automatiza atención al cliente 24/7 con inteligencia artificial',
+            messageTextFr: '🎯 Automatisez le service client 24/7 avec intelligence artificielle',
+            messageTextEn: '🎯 Automate 24/7 customer service with artificial intelligence',
+            messageType: 'automation',
             isActive: true,
-            orderIndex: 1
+            expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+            orderIndex: 3
           }
         ];
 
