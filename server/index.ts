@@ -133,12 +133,14 @@ app.get('/debug-contrast.html', (req, res) => {
   // doesn't interfere with the other routes
   // En Replit, siempre usamos la configuración de desarrollo
   // para evitar problemas de acceso a la aplicación
- // En Railway y Replit, siempre usar setupVite para evitar problemas
-const isProduction = process.env.NODE_ENV === 'production' && !process.env.RAILWAY_ENVIRONMENT;
-if (isProduction) {
-  serveStatic(app);
-} else {
+ // En Railway, forzar uso de setupVite para evitar pantalla en blanco
+const isReplit = process.env.REPL_ID !== undefined;
+const isRailway = process.env.RAILWAY_ENVIRONMENT !== undefined;
+
+if (app.get("env") === "development" || isReplit || isRailway) {
   await setupVite(app, server);
+} else {
+  serveStatic(app);
 }
 
   // Usar el puerto proporcionado por Railway o por defecto 5000
