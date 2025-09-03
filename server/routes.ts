@@ -57,6 +57,21 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import { db, pool } from "./db";
 
+
+export function configureRoutes(app: Express) {
+  // Health check endpoint para Railway - DEBE IR AL INICIO
+  app.get('/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      service: 'AIPI',
+      version: '1.0.0',
+      database: pool ? 'connected' : 'disconnected'
+    });
+  });
+
+
+
 // Helper function to extract document content cambio
 async function extractDocumentContent(doc: any): Promise<string> {
   let content = `Información del archivo: ${doc.originalName || doc.filename}`;
