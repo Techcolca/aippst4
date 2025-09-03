@@ -2,7 +2,7 @@
   "name": "rest-express",
   "version": "1.0.0",
   "type": "module",
-   "engines": {
+  "engines": {
     "node": "22"
   },
   "license": "MIT",
@@ -12,10 +12,10 @@
     "db:seed": "tsx setup-railway-db.js",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
-     "db:generate": "drizzle-kit generate",
-  "db:migrate": "drizzle-kit push",      // o 'drizzle-kit migrate' según tu flujo
-  "db:studio": "drizzle-kit studio"
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "3.879.0",
@@ -74,8 +74,8 @@
     "drizzle-zod": "^0.7.0",
     "embla-carousel-react": "^8.3.0",
     "express": "^4.21.2",
-  "express-rate-limit": "^7.4.1",
-  "express-session": "^1.18.1",
+    "express-rate-limit": "^7.4.1",
+    "express-session": "^1.18.1",
     "framer-motion": "^11.13.1",
     "html2canvas": "^1.4.1",
     "i18next": "^24.2.3",
