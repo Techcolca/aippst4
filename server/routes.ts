@@ -1,3 +1,4 @@
+import { authenticateJWT } from './middleware/jwt-auth';
 import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
