@@ -29,7 +29,7 @@ const REDIRECT_URL = (() => {
   }
   
   // URL por defecto como último recurso
-  return 'https://localhost:5000/api/auth/outlook-calendar/callback';
+  return 'https://aipps.ca/api/auth/outlook-calendar/callback';
 })();
 
 /**
