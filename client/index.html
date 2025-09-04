@@ -11,11 +11,15 @@
     />
     <title>AIPPS - AI-Powered Conversational Assistant</title>
     
-    <!-- Script para sincronizar sesión con widget AIPPS -->
+    <!-- 🎯 Script para sincronizar sesión con widget AIPPS -->
     <script>
       window.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 AIPPS Session Sync iniciado');
+        
         // Función para sincronizar información de usuario con AIPPS
         function syncUserWithAIPPS() {
+          console.log('🔄 Sincronizando sesión con AIPPS...');
+          
           fetch('/api/user-session', {
             method: 'GET',
             credentials: 'include',
@@ -23,8 +27,13 @@
               'Content-Type': 'application/json'
             }
           })
-          .then(response => response.json())
+          .then(response => {
+            console.log('📡 Respuesta de /api/user-session:', response.status);
+            return response.json();
+          })
           .then(data => {
+            console.log('📊 Datos recibidos:', data);
+            
             if (data.isAuthenticated && data.userInfo) {
               // Crear evento personalizado para AIPPS
               window.dispatchEvent(new CustomEvent('userSessionUpdate', {
@@ -38,7 +47,7 @@
               window.currentUser = data.userInfo;
               window.isUserAuthenticated = true;
               
-              console.log('Información de usuario sincronizada con AIPPS:', data.userInfo);
+              console.log('✅ Usuario AIPPS sincronizado:', data.userInfo);
             } else {
               window.currentUser = null;
               window.isUserAuthenticated = false;
@@ -49,17 +58,35 @@
                   isAuthenticated: false
                 }
               }));
+              
+              console.log('❌ Usuario AIPPS no autenticado');
             }
           })
           .catch(error => {
-            console.error('Error sincronizando sesión con AIPPS:', error);
+            console.error('❌ Error sincronizando sesión AIPPS:', error);
             window.currentUser = null;
             window.isUserAuthenticated = false;
           });
         }
         
+        // Función para verificar estado de autenticación
+        function checkAuthStatus() {
+          fetch('/api/auth-status', {
+            method: 'GET',
+            credentials: 'include'
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('🔍 Estado de autenticación AIPPS:', data);
+          })
+          .catch(error => {
+            console.error('❌ Error verificando auth status:', error);
+          });
+        }
+        
         // Ejecutar inmediatamente
         syncUserWithAIPPS();
+        checkAuthStatus();
         
         // Re-ejecutar cada 30 segundos para mantener sincronización
         setInterval(syncUserWithAIPPS, 30000);
@@ -67,9 +94,15 @@
         // También sincronizar cuando el usuario regrese a la pestaña
         document.addEventListener('visibilitychange', function() {
           if (!document.hidden) {
+            console.log('👀 Usuario regresó - sincronizando AIPPS...');
             syncUserWithAIPPS();
           }
         });
+        
+        // Exponer función globalmente para debug
+        window.syncAIPPS = syncUserWithAIPPS;
+        
+        console.log('✅ AIPPS Session Sync configurado correctamente');
       });
     </script>
   </head>
