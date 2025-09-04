@@ -440,7 +440,7 @@
         config.serverUrl = domainMatch[0];
       } else {
         // Hard fallback to the known Replit URL
-        config.serverUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
+        config.serverUrl = window.location.origin;;
       }
     }
 
@@ -4429,13 +4429,12 @@ Contenido: [Error al extraer contenido detallado]
     return false;
   }
 
-  // Helper function to get the correct API base URL
-  function getApiBaseUrl() {
-    // ULTIMATE FIX: Hard-code the Replit server URL
-    const replitServerUrl = 'https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev';
-    console.log('AIPPS Debug: ULTIMATE FIX - Usando URL del servidor Replit:', replitServerUrl);
-    return replitServerUrl;
-  }
+ function getApiBaseUrl() {
+  // Use production Railway URL
+  const productionUrl = 'https://aipps.ca';
+  console.log('AIPPS Debug: Usando URL de producción Railway:', productionUrl);
+  return productionUrl;
+}
 
   // Helper function to get authentication token
   function getAuthToken() {
