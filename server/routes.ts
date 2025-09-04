@@ -144,44 +144,6 @@ async function generateAndStorePromotionalMessages(language = 'es') {
 }
 
 // Configurar multer para manejar subida de archivos
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      // Crear carpeta uploads si no existe
-      const uploadsDir = path.join(__dirname, '../uploads');
-      if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-      }
-      cb(null, uploadsDir);
-    },
-    filename: (req, file, cb) => {
-      // Generar nombre único para evitar colisiones
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.originalname);
-      cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-    }
-  }),
-  // Limitar tipos de archivos aceptados
-  fileFilter: (req, file, cb) => {
-    const allowedMimes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'text/plain'
-    ];
-    
-    if (allowedMimes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Tipo de archivo no soportado. Solo se permiten PDF, DOCX, Excel y TXT.'));
-    }
-  },
-  limits: {
-    fileSize: 10 * 1024 * 1024, // Limitar a 10MB por archivo
-  }
-});
 
 // Función para obtener las características de cada plan según su nivel
 // Función para detectar el idioma del mensaje del usuario
@@ -363,6 +325,47 @@ const isAdmin = authIsAdmin;
 // Obtener el equivalente a __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      // Crear carpeta uploads si no existe
+      const uploadsDir = path.join(__dirname, '../uploads');
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      cb(null, uploadsDir);
+    },
+    filename: (req, file, cb) => {
+      // Generar nombre único para evitar colisiones
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+  }),
+  // Limitar tipos de archivos aceptados
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/plain'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Tipo de archivo no soportado. Solo se permiten PDF, DOCX, Excel y TXT.'));
+    }
+  },
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Limitar a 10MB por archivo
+  }
+});
+
+
 
 
 export async function registerRoutes(app: Express): Promise<Server> {
