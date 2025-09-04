@@ -440,15 +440,17 @@
         config.serverUrl = domainMatch[0];
       } else {
         // Hard fallback to the known Replit URL
-        config.serverUrl = window.location.origin;;
+        config.serverUrl = "https://aipps.ca";
       }
     }
 
     // FORCE dashboard API URL override
     if (window.location.href.includes('replit.dev') || window.location.hostname.includes('replit.dev')) {
-      config.serverUrl = window.location.origin;
+      config.serverUrl = "https://aipps.ca";
       dashboardConfig.isDashboard = true;
-      dashboardConfig.apiBaseUrl = window.location.origin;
+      dashboardConfig.apiBaseUrl = window.location.href.includes('replit.dev') 
+  ? "https://aipps.ca"
+  : null;
       
       // Force get auth token from dashboard context immediately
       try {
