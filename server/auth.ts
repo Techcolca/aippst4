@@ -178,12 +178,12 @@ export function setupAuth(app: Express) {
     res.json(userWithoutPassword);
   });
 
-  // 🎯 ENDPOINT ESPECIAL PARA AIPPS WIDGET (JWT + Passport.js)
+  // 🎯 ENDPOINT ESPECIAL PARA AIPPS WIDGET (JWT + Passport.js) - VERSIÓN SEGURA
   app.get("/api/user-session", async (req, res) => {
     console.log("🔍 AIPPS user-session request");
     
     try {
-      // OPCIÓN 1: Verificar sesión Passport.js primero
+      // OPCIÓN 1: Verificar sesión Passport.js primero (PRIORITARIO)
       if (req.isAuthenticated && req.isAuthenticated() && req.user) {
         console.log('✅ Autenticación via Passport.js - Usuario:', req.user.username);
         const { password, ...userWithoutPassword } = req.user;
@@ -200,7 +200,7 @@ export function setupAuth(app: Express) {
         });
       }
 
-      // OPCIÓN 2: Verificar JWT token (desde localStorage via Authorization header)
+      // OPCIÓN 2: Verificar JWT token solo si NO hay sesión Passport
       const authHeader = req.headers.authorization;
       const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
       
@@ -212,83 +212,73 @@ export function setupAuth(app: Express) {
         });
       }
 
-      // Verificar JWT token
+      // Verificar JWT token - VERSIÓN PROMISIFICADA SEGURA
       const JWT_SECRET = process.env.JWT_SECRET;
       
       if (!JWT_SECRET) {
         console.error('❌ JWT_SECRET no configurado');
-        return res.status(500).json({ 
+        return res.status(401).json({ 
           isAuthenticated: false,
           userInfo: null 
         });
       }
-      
-      jwt.verify(token, JWT_SECRET, async (err: any, decoded: any) => {
-        if (err) {
-          console.log('❌ Token JWT inválido:', err.message);
+
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        const user = await storage.getUser(decoded.userId);
+        
+        if (!user) {
+          console.log('❌ Usuario no encontrado:', decoded.userId);
           return res.status(401).json({ 
             isAuthenticated: false,
             userInfo: null 
           });
         }
 
-        try {
-          const user = await storage.getUser(decoded.userId);
-          if (!user) {
-            console.log('❌ Usuario no encontrado:', decoded.userId);
-            return res.status(401).json({ 
-              isAuthenticated: false,
-              userInfo: null 
-            });
-          }
-
-          console.log('✅ Autenticación JWT exitosa - Usuario:', user.username);
-          
-          const userInfo = {
+        console.log('✅ Autenticación JWT exitosa - Usuario:', user.username);
+        
+        return res.json({
+          isAuthenticated: true,
+          userInfo: {
             id: user.id,
             username: user.username,
             name: user.name,
             email: user.email,
             role: user.roleName,
             avatar: user.avatar
-          };
-          
-          res.json({
-            isAuthenticated: true,
-            userInfo: userInfo
-          });
-        } catch (dbError) {
-          console.error('❌ Error verificando usuario:', dbError);
-          res.status(500).json({ 
-            isAuthenticated: false,
-            userInfo: null 
-          });
-        }
-      });
+          }
+        });
+      } catch (jwtError) {
+        console.log('❌ Token JWT inválido:', jwtError);
+        return res.status(401).json({ 
+          isAuthenticated: false,
+          userInfo: null 
+        });
+      }
 
     } catch (error) {
       console.error('❌ Error en user-session:', error);
-      res.status(500).json({ 
+      return res.status(500).json({ 
         isAuthenticated: false,
         userInfo: null 
       });
     }
   });
 
-  // 🔧 ENDPOINT PARA DEBUG DE AUTENTICACIÓN (JWT + Passport.js)
+  // 🔧 ENDPOINT PARA DEBUG DE AUTENTICACIÓN - VERSIÓN SEGURA
   app.get("/api/auth-status", async (req, res) => {
     try {
       let authMethod = 'none';
       let userId = null;
       let username = null;
       
-      // Verificar Passport.js
+      // Verificar Passport.js PRIMERO
       if (req.isAuthenticated && req.isAuthenticated() && req.user) {
         authMethod = 'passport';
         userId = req.user.id;
         username = req.user.username;
       } else {
-        // Verificar JWT
+        // Verificar JWT solo si no hay Passport
         const authHeader = req.headers.authorization;
         const token = authHeader && authHeader.split(' ')[1];
         
@@ -302,7 +292,7 @@ export function setupAuth(app: Express) {
               username = user.username;
             }
           } catch (err) {
-            // Token inválido, mantener authMethod = 'none'
+            console.log('JWT verification failed:', err);
           }
         }
       }
@@ -326,7 +316,7 @@ export function setupAuth(app: Express) {
       });
     }
   });
-
+  
   // Ruta para actualizar el perfil del usuario actual
   app.put("/api/user", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);
