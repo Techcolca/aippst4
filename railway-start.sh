@@ -66,7 +66,7 @@ fi
 
 echo "✅ Configuración de base de datos completada exitosamente"
 
-# Paso 4: Verificar datos críticos - SOLO migrar si NO estamos en Railway
+# Paso 4: Verificar datos críticos - SOLO migrar si NO estamos en Railway g
 if [ "$RAILWAY_ENVIRONMENT_NAME" = "production" ] || [ "$RAILWAY_ENVIRONMENT_NAME" = "staging" ]; then
   echo "✅ En Railway - Datos críticos ya configurados en setup-railway-db.js"
   echo "✅ Usuario Pablo y admin ya creados exitosamente"
