@@ -462,7 +462,8 @@
       } catch (e) {
         console.log('AIPPS Debug: Error accediendo localStorage:', e);
       }
-      
+      // Force production URL override
+config.serverUrl = "https://aipps.ca";
       console.log('AIPPS Debug: FORZANDO URL de dashboard:', config.serverUrl);
     }
 
