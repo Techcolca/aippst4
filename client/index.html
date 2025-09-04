@@ -10,6 +10,68 @@
       rel="stylesheet"
     />
     <title>AIPPS - AI-Powered Conversational Assistant</title>
+    
+    <!-- Script para sincronizar sesión con widget AIPPS -->
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        // Función para sincronizar información de usuario con AIPPS
+        function syncUserWithAIPPS() {
+          fetch('/api/user-session', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.isAuthenticated && data.userInfo) {
+              // Crear evento personalizado para AIPPS
+              window.dispatchEvent(new CustomEvent('userSessionUpdate', {
+                detail: {
+                  userInfo: data.userInfo,
+                  isAuthenticated: true
+                }
+              }));
+              
+              // También almacenar en el objeto window para AIPPS
+              window.currentUser = data.userInfo;
+              window.isUserAuthenticated = true;
+              
+              console.log('Información de usuario sincronizada con AIPPS:', data.userInfo);
+            } else {
+              window.currentUser = null;
+              window.isUserAuthenticated = false;
+              
+              window.dispatchEvent(new CustomEvent('userSessionUpdate', {
+                detail: {
+                  userInfo: null,
+                  isAuthenticated: false
+                }
+              }));
+            }
+          })
+          .catch(error => {
+            console.error('Error sincronizando sesión con AIPPS:', error);
+            window.currentUser = null;
+            window.isUserAuthenticated = false;
+          });
+        }
+        
+        // Ejecutar inmediatamente
+        syncUserWithAIPPS();
+        
+        // Re-ejecutar cada 30 segundos para mantener sincronización
+        setInterval(syncUserWithAIPPS, 30000);
+        
+        // También sincronizar cuando el usuario regrese a la pestaña
+        document.addEventListener('visibilitychange', function() {
+          if (!document.hidden) {
+            syncUserWithAIPPS();
+          }
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
