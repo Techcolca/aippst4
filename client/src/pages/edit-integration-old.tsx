@@ -198,7 +198,7 @@ export default function EditIntegration() {
       // El widget puede ser el estándar (embed.js) o el de pantalla completa estilo ChatGPT (chatgpt-embed.js)
       const widgetType = integration.widgetType || "bubble";
       // USANDO EMBED.JS PARA AMBOS TIPOS DE WIDGET
-      setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}"></script>`)
+      setScriptExample(`<script src="https://aipps.ca/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}"></script>`)
       
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
