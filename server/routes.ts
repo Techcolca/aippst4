@@ -320,7 +320,7 @@ async function createInternalWebsiteIntegration() {
 
 // Usando el middleware isAdmin desde middleware/auth.ts
 // Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
-const isAdmin = authIsAdmin;
+
 }
 // Obtener el equivalente a __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -371,7 +371,7 @@ const upload = multer({
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure cookie parser middleware
   app.use(cookieParser());
-  
+  const isAdmin = authIsAdmin;
   // Crear integración interna para el sitio principal
   // await createInternalWebsiteIntegration(); // Comentado temporalmente para fix Railway
   
