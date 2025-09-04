@@ -6,6 +6,7 @@ import { storage } from "./storage";
 import jwt from "jsonwebtoken";
 import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
+import { setupAuth } from './auth';
 // Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText, generateAIPromotionalMessages } from "./lib/openai";
@@ -7529,6 +7530,6 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       res.status(500).json({ message: "Error al obtener mensajes de bienvenida" });
     }
   });
-
+setupAuth(app);
   return httpServer;
 }
