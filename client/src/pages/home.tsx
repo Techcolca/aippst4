@@ -56,7 +56,7 @@ export default function Home() {
   
   // Función para copiar el código de integración
   const copyIntegrationCode = () => {
-    const code = `<script src="https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev/static/aipps-web-widget.js?key=aipps_web_internal"></script>`;
+   const code = `<script src="https://aipps.ca/static/aipps-web-widget.js?key=aipps_web_internal"></script>`;
     navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
