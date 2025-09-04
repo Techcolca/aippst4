@@ -40,14 +40,14 @@ function getRedirectUrl(req?: any, customUrl?: string): string {
   // Construir URL basada en información de Replit (prioridad baja)
   const replitId = process.env.REPL_ID || '';
   if (replitId) {
-    const url = `https://${replitId}-00.picard.replit.dev/api/auth/google-calendar/callback`;
+    const url = `https://aipps.ca/api/auth/google-calendar/callback`;
     console.log(`Usando URL de Replit ID: ${url}`);
     return url;
   }
   
   // URL por defecto como último recurso
   console.log('Usando URL por defecto: https://localhost:5000/api/auth/google-calendar/callback');
-  return 'https://localhost:5000/api/auth/google-calendar/callback';
+  return 'https://aipps.ca/api/auth/google-calendar/callback';
 }
 
 // Variable para almacenar la URL actual (se actualizará en cada solicitud)
