@@ -367,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(cookieParser());
   
   // Crear integración interna para el sitio principal
-  await createInternalWebsiteIntegration();
+  // await createInternalWebsiteIntegration(); // Comentado temporalmente para fix Railway
   
   // Servir archivos estáticos desde la carpeta /static
   const staticDir = path.join(__dirname, '../public/static');
