@@ -85,4 +85,4 @@ echo "🗄️ Base de datos: Conectado"
 echo "🚀 Estado: Producción"
 
 # DESPUÉS (línea 87):
-NODE_ENV=production PORT=${PORT:-5000} node server/index.js --host 0.0.0.0
+NODE_ENV=production PORT=${PORT:-5000} npx tsx server/index.ts --host 0.0.0.0
