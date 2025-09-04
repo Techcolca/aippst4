@@ -361,7 +361,7 @@ async function createInternalWebsiteIntegration() {
 // Usando el middleware isAdmin desde middleware/auth.ts
 // Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
 const isAdmin = authIsAdmin;
-
+}
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure cookie parser middleware
   app.use(cookieParser());
