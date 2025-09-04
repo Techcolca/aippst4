@@ -8,7 +8,7 @@ import rateLimit from 'express-rate-limit';
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.set('trust proxy', 1);
 // Add CORS headers for widget integration
 app.use((req, res, next) => {
   // Allow requests from any origin
