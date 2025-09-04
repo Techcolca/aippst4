@@ -4,6 +4,7 @@ import { Express } from "express";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
+import jwt from "jsonwebtoken";
 import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
 import { ExtendedUser } from "./database-storage";
@@ -177,30 +178,96 @@ export function setupAuth(app: Express) {
     res.json(userWithoutPassword);
   });
 
-  // Endpoint para servicios externos como AIPPS
-  app.get("/api/user-session", (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ 
-        isAuthenticated: false,
-        userInfo: null 
-      });
-    }
+  // 🎯 ENDPOINT ESPECIAL PARA AIPPS WIDGET (JWT + Passport.js)
+  app.get("/api/user-session", async (req, res) => {
+    console.log("🔍 AIPPS user-session request");
     
     try {
-      const { password, ...userWithoutPassword } = req.user;
-      res.json({
-        isAuthenticated: true,
-        userInfo: {
-          id: userWithoutPassword.id,
-          username: userWithoutPassword.username,
-          name: userWithoutPassword.name,
-          email: userWithoutPassword.email,
-          role: userWithoutPassword.roleName,
-          avatar: userWithoutPassword.avatar
+      // OPCIÓN 1: Verificar sesión Passport.js primero
+      if (req.isAuthenticated && req.isAuthenticated() && req.user) {
+        console.log('✅ Autenticación via Passport.js - Usuario:', req.user.username);
+        const { password, ...userWithoutPassword } = req.user;
+        return res.json({
+          isAuthenticated: true,
+          userInfo: {
+            id: userWithoutPassword.id,
+            username: userWithoutPassword.username,
+            name: userWithoutPassword.name,
+            email: userWithoutPassword.email,
+            role: userWithoutPassword.roleName,
+            avatar: userWithoutPassword.avatar
+          }
+        });
+      }
+
+      // OPCIÓN 2: Verificar JWT token (desde localStorage via Authorization header)
+      const authHeader = req.headers.authorization;
+      const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+      
+      if (!token) {
+        console.log('❌ No token JWT y no hay sesión Passport');
+        return res.status(401).json({ 
+          isAuthenticated: false,
+          userInfo: null 
+        });
+      }
+
+      // Verificar JWT token
+      const JWT_SECRET = process.env.JWT_SECRET;
+      
+      if (!JWT_SECRET) {
+        console.error('❌ JWT_SECRET no configurado');
+        return res.status(500).json({ 
+          isAuthenticated: false,
+          userInfo: null 
+        });
+      }
+      
+      jwt.verify(token, JWT_SECRET, async (err: any, decoded: any) => {
+        if (err) {
+          console.log('❌ Token JWT inválido:', err.message);
+          return res.status(401).json({ 
+            isAuthenticated: false,
+            userInfo: null 
+          });
+        }
+
+        try {
+          const user = await storage.getUser(decoded.userId);
+          if (!user) {
+            console.log('❌ Usuario no encontrado:', decoded.userId);
+            return res.status(401).json({ 
+              isAuthenticated: false,
+              userInfo: null 
+            });
+          }
+
+          console.log('✅ Autenticación JWT exitosa - Usuario:', user.username);
+          
+          const userInfo = {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            email: user.email,
+            role: user.roleName,
+            avatar: user.avatar
+          };
+          
+          res.json({
+            isAuthenticated: true,
+            userInfo: userInfo
+          });
+        } catch (dbError) {
+          console.error('❌ Error verificando usuario:', dbError);
+          res.status(500).json({ 
+            isAuthenticated: false,
+            userInfo: null 
+          });
         }
       });
+
     } catch (error) {
-      console.error("Error obteniendo información de sesión:", error);
+      console.error('❌ Error en user-session:', error);
       res.status(500).json({ 
         isAuthenticated: false,
         userInfo: null 
@@ -208,13 +275,56 @@ export function setupAuth(app: Express) {
     }
   });
 
-  // Endpoint para verificar estado de autenticación
-  app.get("/api/auth-status", (req, res) => {
-    res.json({
-      isAuthenticated: !!req.isAuthenticated(),
-      sessionID: req.sessionID,
-      timestamp: new Date().toISOString()
-    });
+  // 🔧 ENDPOINT PARA DEBUG DE AUTENTICACIÓN (JWT + Passport.js)
+  app.get("/api/auth-status", async (req, res) => {
+    try {
+      let authMethod = 'none';
+      let userId = null;
+      let username = null;
+      
+      // Verificar Passport.js
+      if (req.isAuthenticated && req.isAuthenticated() && req.user) {
+        authMethod = 'passport';
+        userId = req.user.id;
+        username = req.user.username;
+      } else {
+        // Verificar JWT
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1];
+        
+        if (token && process.env.JWT_SECRET) {
+          try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;
+            const user = await storage.getUser(decoded.userId);
+            if (user) {
+              authMethod = 'jwt';
+              userId = user.id;
+              username = user.username;
+            }
+          } catch (err) {
+            // Token inválido, mantener authMethod = 'none'
+          }
+        }
+      }
+      
+      const status = {
+        isAuthenticated: authMethod !== 'none',
+        authMethod: authMethod,
+        sessionID: req.sessionID,
+        timestamp: new Date().toISOString(),
+        userId: userId,
+        username: username
+      };
+      
+      console.log("🔍 AIPPS Auth Status:", status);
+      res.json(status);
+    } catch (error) {
+      console.error('❌ Error en auth-status:', error);
+      res.status(500).json({ 
+        isAuthenticated: false,
+        authMethod: 'error'
+      });
+    }
   });
 
   // Ruta para actualizar el perfil del usuario actual
