@@ -390,7 +390,7 @@ export default function EditIntegration() {
 
       // Actualizar script de ejemplo - USANDO EMBED.JS PARA TODOS LOS TIPOS
       const widgetType = integration.widgetType || "bubble";
-      setScriptExample(`<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}"></script>`);
+      setScriptExample(`<script src="https://aipps.ca/embed.js?key=${integration.apiKey}" data-widget-type="${widgetType}"></script>`);
     }
   }, [integration, form]);
 
