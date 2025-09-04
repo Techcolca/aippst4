@@ -34,7 +34,7 @@
         <ol>
             <li>El widget debería aparecer en la esquina inferior derecha</li>
             <li>Debería mostrar el placeholder en francés: "Tapez votre message..."</li>
-            <li><strong><a href="http://localhost:5000" target="_blank">Abre el dashboard en otra pestaña</a></strong></li>
+            <li><strong><a href="https://aipps.ca" target="_blank">Abre el dashboard en otra pestaña</a></strong></li>
             <li>Inicia sesión (Usuario: Pablo, Contraseña: admin)</li>
             <li>Ve a Integraciones → Busca "Techcolca" → Editar</li>
             <li>Cambia el idioma (español/inglés/francés) y guarda</li>
@@ -56,7 +56,7 @@
     <p>El widget utiliza la API key: <code>ac1b29fdd5b0e1e207bb3b71cc6cd2b1d0cf356c1ffa6c74</code></p>
 
     <!-- Widget Script -->
-    <script src="http://localhost:5000/static/embed.js?key=ac1b29fdd5b0e1e207bb3b71cc6cd2b1d0cf356c1ffa6c74"></script>
+    <script src="https://aipps.ca/static/embed.js?key=..."></script>
 
     <script>
         async function changeLanguage(language) {
@@ -85,7 +85,7 @@
                     `;
                 } else if (response.status === 401) {
                     alert('No estás autenticado. Abriendo el dashboard para que inicies sesión...');
-                    window.open('http://localhost:5000', '_blank');
+                    window.open('https://aipps.ca', '_blank');
                 } else {
                     const errorData = await response.text();
                     console.error('Error response:', errorData);
@@ -94,7 +94,7 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error de conexión. Asegúrate de estar autenticado en el dashboard e intenta de nuevo.');
-                window.open('http://localhost:5000', '_blank');
+                wwindow.open('https://aipps.ca', '_blank');
             }
         }
     </script>
