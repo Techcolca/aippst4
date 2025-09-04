@@ -113,9 +113,7 @@ async function extractDocumentContent(doc: any): Promise<string> {
   return content;
 }
 
-// Obtener el equivalente a __dirname en ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 
 // Función auxiliar para generar y almacenar mensajes promocionales
 async function generateAndStorePromotionalMessages(language = 'es') {
@@ -362,6 +360,11 @@ async function createInternalWebsiteIntegration() {
 // Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
 const isAdmin = authIsAdmin;
 }
+// Obtener el equivalente a __dirname en ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure cookie parser middleware
   app.use(cookieParser());
@@ -370,7 +373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // await createInternalWebsiteIntegration(); // Comentado temporalmente para fix Railway
   
   // Servir archivos estáticos desde la carpeta /static
-  const staticDir = path.join(__dirname, '../public/static');
+  cconst staticDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/static');
   console.log('Sirviendo archivos estáticos desde:', staticDir);
   app.use('/static', express.static(staticDir));
   
