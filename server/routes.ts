@@ -1380,7 +1380,7 @@ app.get("/api/health", (req, res) => {
           siteUrl = `${protocol}://${req.headers.host}`;
         } else {
           // URL de respaldo para Replit
-          siteUrl = "https://a82260a7-e706-4639-8a5c-db88f2f26167-00-2a8uzldw0vxo4.picard.replit.dev";
+          siteUrl = "https://aipps.ca";
         }
       }
       
