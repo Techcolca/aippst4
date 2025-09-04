@@ -203,7 +203,7 @@ export default function EditIntegration() {
       // Agregar un ejemplo alternativo para el widget fullscreen
       if (widgetType === "fullscreen") {
         setScriptExampleFullscreen(`<!-- Widget pantalla completa usando embed.js -->
-<script src="${window.location.origin}/embed.js?key=${integration.apiKey}" 
+<script src="https://aipps.ca/embed.js?key=${integration.apiKey}" 
   data-widget-type="fullscreen"
   data-theme-color="${integration.themeColor || '#4f46e5'}"
   data-position="${integration.position || 'bottom-right'}"
