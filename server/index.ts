@@ -4,29 +4,15 @@ import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
+import { setupCorsForAIPPS } from "./middleware/cors-middleware";
+
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set('trust proxy', 1);
-// Add CORS headers for widget integration
-app.use((req, res, next) => {
-  // Allow requests from any origin
-  res.header("Access-Control-Allow-Origin", "*");
-  
-  // Allow specific headers
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-api-key, Authorization");
-  
-  // Allow specific methods
-  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-  
-  // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    return res.status(204).send();
-  }
-  
-  next();
-});
+// Configurar CORS para AIPPS antes que cualquier otra ruta
+app.use(setupCorsForAIPPS);
 
 // Middleware de protección contra ataques (AÑADIR AQUÍ)
 // Rate limiting - máximo 100 requests por 15 minutos por IP
