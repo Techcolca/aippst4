@@ -373,7 +373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // await createInternalWebsiteIntegration(); // Comentado temporalmente para fix Railway
   
   // Servir archivos estáticos desde la carpeta /static
-  cconst staticDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/static');
+  const staticDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/static');
   console.log('Sirviendo archivos estáticos desde:', staticDir);
   app.use('/static', express.static(staticDir));
   
