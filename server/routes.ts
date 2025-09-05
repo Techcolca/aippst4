@@ -3294,12 +3294,19 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
       console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
       
-      const completion = await generateChatCompletion(
+      // Add timeout wrapper for OpenAI call
+const completionPromise = generateChatCompletion(
         messages.map(m => ({ role: m.role, content: m.content })),
         enhancedContext,
         detectedLanguage,
         botConfig
       );
+
+const timeoutPromise = new Promise((_, reject) =>
+  setTimeout(() => reject(new Error('OpenAI timeout')), 25000)
+);
+
+const completion = await Promise.race([completionPromise, timeoutPromise]);
       
       // Validate completion response
       if (!completion || !completion.message || !completion.message.content) {
@@ -3536,12 +3543,19 @@ console.log("🔄 About to call OpenAI for widget conversation send:", {
   botConfigName: botConfig.assistantName
 });
 
-const completion = await generateChatCompletion(
-  messages.map(m => ({ role: m.role, content: m.content })),
-  enhancedContext,
-  detectedLanguage,
-  botConfig
+// Add timeout wrapper for OpenAI call
+const completionPromise = generateChatCompletion(
+        messages.map(m => ({ role: m.role, content: m.content })),
+        enhancedContext,
+        detectedLanguage,
+        botConfig
+      );
+
+const timeoutPromise = new Promise((_, reject) =>
+  setTimeout(() => reject(new Error('OpenAI timeout')), 25000)
 );
+
+const completion = await Promise.race([completionPromise, timeoutPromise]);
       
       // Validate completion response
       if (!completion || !completion.message || !completion.message.content) {
