@@ -3291,8 +3291,7 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       // Detect language and generate AI response with bot configuration
       const detectedLanguage = detectLanguage(message);
       
-      console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
-      console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
+      
       
       // Add timeout wrapper for OpenAI call
 const completionPromise = generateChatCompletion(
@@ -3536,12 +3535,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
       console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
 console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
 
-console.log("🔄 About to call OpenAI for widget conversation send:", {
-  messagesCount: messages.length,
-  contextLength: enhancedContext.length,
-  detectedLanguage,
-  botConfigName: botConfig.assistantName
-});
+
 
 // Add timeout wrapper for OpenAI call
 const completionPromise = generateChatCompletion(
