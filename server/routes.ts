@@ -3295,11 +3295,11 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       
       // Add timeout wrapper for OpenAI call
 const completionPromise = generateChatCompletion(
-        messages.map(m => ({ role: m.role, content: m.content })),
-        enhancedContext,
-        detectedLanguage,
-        botConfig
-      );
+  messages.map(m => ({ role: m.role, content: m.content })),
+  enhancedContext,
+  detectedLanguage,
+  botConfig
+);
 
 const timeoutPromise = new Promise((_, reject) =>
   setTimeout(() => reject(new Error('OpenAI timeout')), 25000)
@@ -3594,17 +3594,17 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
         conversationId: conversationIdNum,
         success: true
       });
-    } catch (error) {
-  console.error("🚨 Widget specific conversation send error:", {
-    error: error.message,
-    stack: error.stack,
-    apiKey: apiKey,
-    conversationId: conversationId,
-    isAuthenticated: isAuthenticated,
-    timestamp: new Date().toISOString()
-  });
-  res.status(500).json({ message: "Internal server error" });
-}
+       } catch (error) {
+      console.error("🚨 Widget specific conversation send error:", {
+        error: error.message,
+        stack: error.stack,
+        apiKey: apiKey,
+        conversationId: conversationId,
+        isAuthenticated: isAuthenticated,
+        timestamp: new Date().toISOString()
+      });
+      res.status(500).json({ message: "Internal server error" });
+    }
   });
 
   app.post("/api/widget/:apiKey/message", async (req, res) => {
