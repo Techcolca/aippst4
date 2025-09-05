@@ -3405,10 +3405,12 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       // Additional security check for authenticated users
       if (isAuthenticated) {
         // Verify user owns this integration OR it's the demo integration for AIPPS website
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        if (!isDemoIntegration && integration.userId !== authenticatedUserId) {
-          return res.status(403).json({ message: "Unauthorized access to this integration" });
-        }
+       const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+// Para widgets externos, permitir acceso si la integración existe y es válida
+const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+if (!isDemoIntegration && !isExternalWidget && integration.userId !== authenticatedUserId) {
+  return res.status(403).json({ message: "Unauthorized access to this integration" });
+}
         
         // Verify conversation belongs to this authenticated user
         const expectedVisitorId = `user_${authenticatedUserId}`;
