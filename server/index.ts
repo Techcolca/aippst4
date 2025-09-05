@@ -28,10 +28,23 @@ const limiter = rateLimit({
   skip: (req) => !req.path.startsWith('/api')
 });
 
-// Rate limiting más estricto para autenticación
+// Rate limiting para producción - más permisivo
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: process.env.NODE_ENV === 'production' ? 1000 : 100, // 1000 en producción, 100 en desarrollo
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { 
+    error: 'Demasiadas peticiones. Intenta de nuevo en 15 minutos.' 
+  },
+  // Solo aplicar a rutas API específicas
+  skip: (req) => !req.path.startsWith('/api') || req.path === '/api/health'
+});
+
+// Rate limiting para autenticación - más permisivo en producción
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 520, // máximo 5 intentos de login
+  max: process.env.NODE_ENV === 'production' ? 50 : 5, // 50 en producción, 5 en desarrollo
   standardHeaders: 'draft-8',
   legacyHeaders: false,
   message: { 
