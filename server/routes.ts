@@ -3593,8 +3593,8 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
         response: completion.message.content,
         conversationId: conversationIdNum,
         success: true
-      });
-       } catch (error) {
+            });
+    } catch (error) {
       console.error("🚨 Widget specific conversation send error:", {
         error: error.message,
         stack: error.stack,
