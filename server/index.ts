@@ -16,17 +16,6 @@ app.use(setupCorsForAIPPS);
 
 // Middleware de protección contra ataques (AÑADIR AQUÍ)
 // Rate limiting - máximo 100 requests por 15 minutos por IP
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // máximo 100 requests por ventana
-  standardHeaders: 'draft-8',
-  legacyHeaders: false,
-  message: { 
-    error: 'Demasiadas peticiones. Intenta de nuevo en 15 minutos.' 
-  },
-  // Solo aplicar a rutas API
-  skip: (req) => !req.path.startsWith('/api')
-});
 
 // Rate limiting para producción - más permisivo
 const limiter = rateLimit({
