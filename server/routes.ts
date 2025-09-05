@@ -3527,14 +3527,21 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
       const detectedLanguage = detectLanguage(message);
       
       console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
-      console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
-      
-      const completion = await generateChatCompletion(
-        messages.map(m => ({ role: m.role, content: m.content })),
-        enhancedContext,
-        detectedLanguage,
-        botConfig
-      );
+console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
+
+console.log("🔄 About to call OpenAI for widget conversation send:", {
+  messagesCount: messages.length,
+  contextLength: enhancedContext.length,
+  detectedLanguage,
+  botConfigName: botConfig.assistantName
+});
+
+const completion = await generateChatCompletion(
+  messages.map(m => ({ role: m.role, content: m.content })),
+  enhancedContext,
+  detectedLanguage,
+  botConfig
+);
       
       // Validate completion response
       if (!completion || !completion.message || !completion.message.content) {
@@ -3580,9 +3587,16 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
         success: true
       });
     } catch (error) {
-      console.error("Widget specific conversation send error:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
+  console.error("🚨 Widget specific conversation send error:", {
+    error: error.message,
+    stack: error.stack,
+    apiKey: apiKey,
+    conversationId: conversationId,
+    isAuthenticated: isAuthenticated,
+    timestamp: new Date().toISOString()
+  });
+  res.status(500).json({ message: "Internal server error" });
+}
   });
 
   app.post("/api/widget/:apiKey/message", async (req, res) => {
