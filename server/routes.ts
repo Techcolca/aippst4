@@ -3466,7 +3466,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
             let conversationHistory = "";
             if (userConversations.length > 1) {
               // Get recent conversation titles for context
-              const recentTitles = userConversations
+              
                 const recentTitles = userConversations
   .sort((a, b) => {
     const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
