@@ -3467,8 +3467,13 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
             if (userConversations.length > 1) {
               // Get recent conversation titles for context
               const recentTitles = userConversations
-                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                .slice(0, 3)
+                const recentTitles = userConversations
+  .sort((a, b) => {
+    const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return dateB - dateA;
+  })
+  .slice(0, 3)
                 .map(conv => conv.title)
                 .filter(title => title && title !== 'Nueva conversación')
                 .join(', ');
@@ -3508,7 +3513,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
       
       // Extract and process documents from integration's documentsData
       if (integration.documentsData && Array.isArray(integration.documentsData)) {
-        for (const doc of integration.documentsData) {
+  for (const doc of (integration.documentsData as any[])) {
           const content = await extractDocumentContent(doc);
           
           documents.push({
@@ -3582,7 +3587,7 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
             detectedLanguage
           );
           
-          await storage.updateConversation(conversationIdNum, { title });
+          await storage.updateConversation(conversationIdNum, { title: title || "Nueva conversación" });
           console.log(`AIPPS Debug: Generated title for conversation ${conversationIdNum}: "${title}"`);
         } catch (error) {
           console.error("Error generating conversation title:", error);
