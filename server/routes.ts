@@ -3603,7 +3603,7 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       console.error("🚨 Widget specific conversation send error:", {
         error: error.message,
         stack: error.stack,
-        apiKey: apiKey,
+        apiKey: req.params.apiKey,
         conversationId: conversationId,
         isAuthenticated: isAuthenticated,
         timestamp: new Date().toISOString()
