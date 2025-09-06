@@ -3506,41 +3506,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
         messagePreview: message.substring(0, 50) + '...'
       });
       
-      // Get documents and site content for knowledge base
-      let documents = [];
-      let siteContentItems = await storage.getSiteContent(integration.id);
-      console.log(`AIPPS Debug: Loaded ${siteContentItems.length} site content items for integration ${integration.name}`);
-      
-      // Extract and process documents from integration's documentsData
-      if (integration.documentsData && Array.isArray(integration.documentsData)) {
-  for (const doc of (integration.documentsData as any[])) {
-          const content = await extractDocumentContent(doc);
-          
-          documents.push({
-            original_name: doc.originalName || doc.filename,
-            filename: doc.filename,
-            content: content,
-            path: doc.path
-          });
-        }
-      }
-      
-      console.log(`AIPPS Debug: Loaded ${documents.length} documents for integration ${integration.name}`);
-      
-      // Build enhanced context with knowledge base
-      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
-      const enhancedContext = context + "\n\n" + knowledgeBase;
-      
-      console.log(`AIPPS Debug: Knowledge base length: ${knowledgeBase.length} characters`);
-      console.log(`AIPPS Debug: Enhanced context length: ${enhancedContext.length} characters`);
-      
-      // Detect language and generate AI response
-      const detectedLanguage = detectLanguage(message);
-      
-      console.log(`AIPPS Debug: Passing enhanced context to OpenAI - Length: ${enhancedContext.length}`);
-console.log(`AIPPS Debug: Enhanced context preview: ${enhancedContext.substring(0, 300)}...`);
-
-
+     
 
 // Add timeout wrapper for OpenAI call
 const completionPromise = generateChatCompletion(
