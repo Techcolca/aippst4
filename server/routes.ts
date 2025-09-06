@@ -3509,7 +3509,40 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
         messagePreview: message.substring(0, 50) + '...'
       });
       
-     
+           // Detect language from user message
+      const detectedLanguage = detectLanguage(message);
+      console.log(`Idioma detectado: ${detectedLanguage}`);
+
+      // Get documents and site content for knowledge base
+      let documents = [];
+      let siteContentItems = [];
+
+      // Extract documents from integration
+      if (integration.documentsData && Array.isArray(integration.documentsData)) {
+        for (const doc of integration.documentsData) {
+          const content = await extractDocumentContent(doc);
+          documents.push({
+            original_name: doc.originalName || doc.filename,
+            filename: doc.filename,
+            content: content,
+            path: doc.path
+          });
+        }
+      }
+
+      // Get site content
+      try {
+        siteContentItems = await storage.getSiteContent(integration.id);
+      } catch (error) {
+        console.error('Error loading site content:', error);
+        siteContentItems = [];
+      }
+
+      // Build enhanced context with knowledge base
+      const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
+      const enhancedContext = context + userContext + "\n\n" + knowledgeBase;
+
+      console.log('AIPPS Debug: Enhanced context prepared, generating AI response...');
 
 // Add timeout wrapper for OpenAI call
 const completionPromise = generateChatCompletion(
