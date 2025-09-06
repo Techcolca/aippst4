@@ -1011,14 +1011,14 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
       }
       
       // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
-      const isPablo = req.userId === 1; // ID del usuario Pablo
-      const isReservdName = req.body.name === 'Techcolca21';
+       //const isPablo = req.userId === 1; // ID del usuario Pablo
+       //const isReservdName = req.body.name === 'Techcolca21';
       
-      if (isReservdName && !isPablo) {
-        return res.status(403).json({ 
-          message: "No puedes crear una integración con este nombre. Está reservado para el chat principal del sitio web." 
-        });
-      }
+      // if (isReservdName && !isPablo) {
+        // return res.status(403).json({ 
+        //   message: "No puedes crear una integración con este nombre. Está reservado para el chat principal del sitio web." 
+       //  });
+     //  }
       
       // Obtenemos la API key del cuerpo de la solicitud
       const apiKey = req.body.apiKey || generateApiKey();
@@ -1104,12 +1104,12 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
       }
       
       // Comprobar si es la integración principal (Techcolca21 en este caso) y si el usuario no es Pablo
-      const isMainWebsiteIntegration = integration.name === 'Techcolca21';
-      const isPablo = req.userId === 1; // ID del usuario Pablo
+       //const isMainWebsiteIntegration = integration.name === 'Techcolca21';
+      // const isPablo = req.userId === 1; // ID del usuario Pablo
       
-      if (isMainWebsiteIntegration && !isPablo) {
-        return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
-      }
+       //if (isMainWebsiteIntegration && !isPablo) {
+       //  return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
+      // }
       
       // Verificar que el usuario es el propietario de la integración
       if (integration.userId !== req.userId) {
@@ -1138,12 +1138,12 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
       }
       
       // Comprobar si es la integración principal (Techcolca21 en este caso) y si el usuario no es Pablo
-      const isMainWebsiteIntegration = integration.name === 'Techcolca21';
-      const isPablo = req.userId === 1; // ID del usuario Pablo
+       //const isMainWebsiteIntegration = integration.name === 'Techcolca21';
+       //const isPablo = req.userId === 1; // ID del usuario Pablo
       
-      if (isMainWebsiteIntegration && !isPablo) {
-        return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
-      }
+     // if (isMainWebsiteIntegration && !isPablo) {
+      //   return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
+     //  }
       
       // Verificar que el usuario es el propietario de la integración
       if (integration.userId !== req.userId) {
@@ -1189,12 +1189,12 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
       }
       
       // Comprobar si es la integración principal (Techcolca21 en este caso) y si el usuario no es Pablo
-      const isMainWebsiteIntegration = integration.name === 'Techcolca21';
-      const isPablo = req.userId === 1; // ID del usuario Pablo
+      // const isMainWebsiteIntegration = integration.name === 'Techcolca21';
+       //const isPablo = req.userId === 1; // ID del usuario Pablo
       
-      if (isMainWebsiteIntegration && !isPablo) {
-        return res.status(403).json({ message: "Solo Pablo puede eliminar el chat principal del sitio web" });
-      }
+      // if (isMainWebsiteIntegration && !isPablo) {
+       //  return res.status(403).json({ message: "Solo Pablo puede eliminar el chat principal del sitio web" });
+       //}
       
       // Verificar que el usuario es el propietario de la integración
       if (integration.userId !== req.userId) {
@@ -1214,8 +1214,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
   // ================ Settings Routes ================
   app.get("/api/settings", verifyToken, async (req, res) => {
     try {
-      const settings = await storage.getSettings(req.userId);
-      res.json(settings);
+      const settings = await storage.getSettings(req.userI
     } catch (error) {
       console.error("Get settings error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -3035,13 +3034,13 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       
       // Verificar si es la integración del sitio principal y restringir acceso
       // Las IDs son diferentes en tu entorno, en la estructura original el sitio web principal usa ID 0
-      const isMainIntegration = integration.name === 'Techcolca21';
-      const isPablo = req.userId === 1; // ID del usuario Pablo
+      // const isMainIntegration = integration.name === 'Techcolca21';
+      // const isPablo = req.userId === 1; // ID del usuario Pablo
       
       // Si es la integración principal y el usuario no es Pablo, verificar la operación
-      if (isMainIntegration && req.path.includes('/edit') && !isPablo) {
-        return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
-      }
+      // if (isMainIntegration && req.path.includes('/edit') && !isPablo) {
+     //    return res.status(403).json({ message: "Solo Pablo puede configurar el chat principal del sitio web" });
+   //    }
       
       // Get user settings
       const settings = await storage.getSettings(integration.userId);
@@ -3091,14 +3090,14 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
           // No enviamos datos sensibles como userId o apiKey al cliente
         },
         settings: {
-          assistantName: customization.assistantName || settings.assistantName || integration.name,
-          defaultGreeting: customization.defaultGreeting || settings.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-          showAvailability: customization.showAvailability !== undefined ? customization.showAvailability : settings.showAvailability,
-          userBubbleColor: customization.userBubbleColor || settings.userBubbleColor,
-          assistantBubbleColor: customization.assistantBubbleColor || settings.assistantBubbleColor,
-          font: customization.font || settings.font,
-          conversationStyle: customization.conversationStyle || settings.conversationStyle,
-        },
+          assistantName: customization.assistantName || (settings as any)?.assistantName || integration.name,
+          defaultGreeting: customization.defaultGreeting || (settings as any)?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
+          showAvailability: customization.showAvailability !== undefined ? customization.showAvailability : (settings as any)?.showAvailability,
+          userBubbleColor: customization.userBubbleColor || (settings as any)?.userBubbleColor,
+          assistantBubbleColor: customization.assistantBubbleColor || (settings as any)?.assistantBubbleColor,
+          font: customization.font || (settings as any)?.font,
+          conversationStyle: customization.conversationStyle || (settings as any)?.conversationStyle,
+                },
         userInfo: userInfo, // Include user info for personalized greetings
       });
     } catch (error) {
