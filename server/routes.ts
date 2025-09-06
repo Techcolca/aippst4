@@ -1213,13 +1213,14 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
   
   // ================ Settings Routes ================
   app.get("/api/settings", verifyToken, async (req, res) => {
-    try {
-      const settings = await storage.getSettings(req.userI
-    } catch (error) {
-      console.error("Get settings error:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
+  try {
+    const settings = await storage.getSettings(req.userId);
+    res.json(settings);
+  } catch (error) {
+    console.error("Get settings error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
   
   app.patch("/api/settings", verifyToken, async (req, res) => {
     try {
