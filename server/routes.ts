@@ -10,8 +10,7 @@ import { setupAuth } from './auth';
 // Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText, generateAIPromotionalMessages } from "./lib/openai";
-import { detectLanguage } from "./lib/language-utils";
-import { extractDocumentContent } from "./lib/document-processor";
+
 import { buildKnowledgeBase } from "./lib/content-knowledge";
 import { webscraper } from "./lib/webscraper";
 import stripe, { 
