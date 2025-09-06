@@ -2748,7 +2748,7 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       // Encontrar la suscripción activa más reciente (ordenadas por fecha de creación descendente)
       const activeSubscription = subscriptions
         .filter(sub => sub.status === "active")
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+        .sort((a, b) => new Date(b.createdAt || new Date()).getTime() - new Date(a.createdAt || new Date()).getTime())
       
       if (!activeSubscription) {
         return res.json({
@@ -3359,6 +3359,9 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
   // New endpoint for sending messages to specific conversations (supports both bubble and authenticated modes)
   app.post("/api/widget/:apiKey/conversation/:conversationId/send", async (req, res) => {
     try {
+      console.log(`🚀 POST /api/widget/.../conversation/.../send iniciado`);
+    console.log(`Request body:`, req.body);
+    console.log(`Params:`, req.params);
       const { apiKey, conversationId } = req.params;
       const { message, visitorId, currentUrl, pageTitle } = req.body;
       
@@ -3822,7 +3825,7 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       // Ordenar por fecha de creación (más reciente primero)
       allConversations.sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? .getTime() : 0;
         return dateB - dateA;
       });
       
