@@ -83,9 +83,17 @@ export default function ConversationDetails() {
                   <h3 className="text-lg font-medium mb-2">Información de la Conversación</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">ID:</span>
-                      <span className="font-medium">{conversation.id}</span>
-                    </div>
+  <span className="text-gray-500">{t('visitor')}:</span>
+  <span className="font-medium">
+    {conversation.visitorName ? conversation.visitorName : `#${conversation.visitorId || t('anonymous')}`}
+  </span>
+</div>
+{conversation.visitorEmail && (
+  <div className="flex justify-between text-sm">
+    <span className="text-gray-500">Email:</span>
+    <span className="font-medium">{conversation.visitorEmail}</span>
+  </div>
+)}
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">{t('visitor')}:</span>
                       <span className="font-medium">#{conversation.visitorId || t('anonymous')}</span>
