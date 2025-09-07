@@ -94,6 +94,12 @@ export default function ConversationDetails() {
     <span className="font-medium">{conversation.visitorEmail}</span>
   </div>
 )}
+{conversation.visitorEmail && (
+  <div className="flex justify-between text-sm">
+    <span className="text-gray-500">Email:</span>
+    <span className="font-medium">{conversation.visitorEmail}</span>
+  </div>
+)}
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-500">{t('visitor')}:</span>
                       <span className="font-medium">#{conversation.visitorId || t('anonymous')}</span>
