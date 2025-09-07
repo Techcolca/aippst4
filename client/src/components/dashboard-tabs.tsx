@@ -260,23 +260,25 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
   });
 
   // Función para formatear inteligentemente los nombres de visitantes
-  const formatVisitorName = (visitorId: string | null) => {
-    if (!visitorId) {
-      return t("anonymous");
-    }
-    
-    // Si es un ID de prueba o técnico, mostrar un nombre más amigable
-    if (visitorId.startsWith('test_') || visitorId.startsWith('user_')) {
-      return t("anonymous");
-    }
-    
-    // Si el ID es muy largo o contiene caracteres extraños, mostrar "Visitante" + número
-    if (visitorId.length > 20 || /[#_{}()[\]]/.test(visitorId)) {
-      return t("anonymous");
-    }
-    
-    return visitorId;
-  };
+  const formatVisitorName = (conversation: any) => {
+  if (conversation.visitorName) {
+    return conversation.visitorName;
+  }
+  
+  if (!conversation.visitorId) {
+    return t("anonymous");
+  }
+  
+  if (conversation.visitorId.startsWith('test_') || conversation.visitorId.startsWith('user_')) {
+    return t("anonymous");
+  }
+  
+  if (conversation.visitorId.length > 20 || /[#_{}()[\]]/.test(conversation.visitorId)) {
+    return t("anonymous");
+  }
+  
+  return `#${conversation.visitorId}`;
+};
 
   // Renderizar contenido de la pestaña de conversaciones
   const renderConversationsTab = () => {
@@ -295,7 +297,10 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
               <Card key={conversation.id} className="p-4">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h3 className="font-medium">{t("visitor")} {formatVisitorName(conversation.visitorId)}</h3>
+                    <h3 className="font-medium">{t("visitor")} {formatVisitorName(conversation)}</h3>
+{conversation.visitorEmail && (
+  <p className="text-sm text-gray-500">{conversation.visitorEmail}</p>
+)}
                     <p className="text-sm text-gray-500">
                       {new Date(conversation.createdAt).toLocaleString()}
                     </p>
