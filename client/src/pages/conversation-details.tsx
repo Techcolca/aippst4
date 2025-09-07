@@ -16,12 +16,12 @@ export default function ConversationDetails() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   // Obtener detalles de la conversación
   const { data: conversation, isLoading: isLoadingConversation } = useQuery({
     queryKey: [`/api/conversations/${id}`],
   });
-  
+
   // Obtener mensajes de la conversación
   const { data: messages, isLoading: isLoadingMessages } = useQuery({
     queryKey: [`/api/conversations/${id}/messages`],
@@ -130,7 +130,7 @@ export default function ConversationDetails() {
                     )}
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-medium mb-2">Rendimiento</h3>
                   <div className="space-y-4">
@@ -143,7 +143,7 @@ export default function ConversationDetails() {
                         <Progress value={conversation.score * 10} className="h-2" />
                       </div>
                     )}
-                    
+
                     {conversation.resolution !== undefined && (
                       <div className="space-y-1">
                         <div className="flex justify-between text-sm">
@@ -152,14 +152,14 @@ export default function ConversationDetails() {
                         </div>
                       </div>
                     )}
-                    
+
                     {conversation.messageCount !== undefined && (
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Cantidad de mensajes:</span>
                         <span className="font-medium">{conversation.messageCount}</span>
                       </div>
                     )}
-                    
+
                     {conversation.source && (
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-500">Origen:</span>
@@ -170,10 +170,10 @@ export default function ConversationDetails() {
                 </div>
               </div>
             </Card>
-            
+
             <div className="mb-6">
               <h2 className="text-xl font-bold mb-4">Mensajes de la Conversación</h2>
-              
+
               {/* Búsqueda */}
               <div className="mb-4">
                 <input
@@ -184,7 +184,7 @@ export default function ConversationDetails() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              
+
               {isLoadingMessages ? (
                 <div className="w-full py-10 flex justify-center">
                   <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
