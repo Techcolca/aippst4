@@ -3175,7 +3175,7 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
   app.post("/api/widget/:apiKey/conversation", async (req, res) => {
     try {
       const { apiKey } = req.params;
-      const { visitorId } = req.body;
+      const { visitorId, visitorName, visitorEmail } = req.body;
       
       // Validate API key and get integration
       const integration = await storage.getIntegrationByApiKey(apiKey);
@@ -3187,6 +3187,8 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       const conversation = await storage.createConversation({
         integrationId: integration.id,
         visitorId,
+        visitorName: visitorName || null,
+        visitorEmail: visitorEmail || null,
       });
       
       res.status(201).json(conversation);
@@ -3200,7 +3202,7 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
   app.post("/api/widget/:apiKey/send", async (req, res) => {
     try {
       const { apiKey } = req.params;
-      const { message, visitorId, currentUrl, pageTitle } = req.body;
+      const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
       
       // Validate input
       if (!message || !visitorId) {
@@ -3222,6 +3224,8 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
         conversation = await storage.createConversation({
           integrationId: integration.id,
           visitorId,
+          visitorName: visitorName || null,
+          visitorEmail: visitorEmail || null,
           title: message.substring(0, 50) + "..."
         });
       }
@@ -3377,7 +3381,7 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
     console.log(`Request body:`, req.body);
     console.log(`Params:`, req.params);
       const { apiKey, conversationId } = req.params;
-      const { message, visitorId, currentUrl, pageTitle } = req.body;
+      const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
       
       // Check if this is an authenticated request (fullscreen widget)
       const token = req.cookies?.auth_token || 
