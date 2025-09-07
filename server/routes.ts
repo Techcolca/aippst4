@@ -1,4 +1,3 @@
-import { authenticateJWT } from './middleware/jwt-auth';
 import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
@@ -223,106 +222,6 @@ async function generateAndStorePromotionalMessages(language = 'es') {
 // Configurar multer para manejar subida de archivos
 
 // Función para obtener las características de cada plan según su nivel
-// Función para detectar el idioma del mensaje del usuario
-function detectLanguage(message: string): string {
-  console.log(`=== DETECCIÓN DE IDIOMA ===`);
-  console.log(`Mensaje original: "${message}"`);
-  
-  const text = message.toLowerCase().trim();
-  console.log(`Texto procesado: "${text}"`);
-  
-  // Palabras comunes en español
-  const spanishWords = [
-    'hola', 'gracias', 'por favor', 'adiós', 'sí', 'no', 'cómo', 'qué', 'dónde', 'cuándo',
-    'quién', 'por qué', 'ayuda', 'información', 'precio', 'servicio', 'empresa', 'contacto',
-    'productos', 'disponible', 'horario', 'ubicación', 'teléfono', 'correo', 'página',
-    'necesito', 'quiero', 'busco', 'me interesa', 'puedo', 'tienes', 'tienen', 'ofrecen',
-    'buenos días', 'buenas tardes', 'buenas noches', 'muchas gracias', 'de nada', 'está',
-    'son', 'estoy', 'tengo', 'puede', 'hacer', 'muy', 'bien', 'malo', 'bueno'
-  ];
-  
-  // Palabras comunes en francés
-  const frenchWords = [
-    'bonjour', 'merci', 'au revoir', 'oui', 'non', 'comment', 'quoi', 'où', 'quand',
-    'qui', 'pourquoi', 'aide', 'information', 'prix', 'service', 'entreprise', 'contact',
-    'produits', 'disponible', 'horaire', 'emplacement', 'téléphone', 'email', 'page',
-    'besoin', 'veux', 'cherche', 'intéresse', 'puis', 'avez', 'offrez', 'vous',
-    'journée', 'soirée', 'nuit', 'beaucoup', 'rien', 'salut', 'est', 'sont', 'suis',
-    'avoir', 'être', 'faire', 'très', 'bien', 'mal', 'bon', 'bonne'
-  ];
-  
-  // Palabras comunes en inglés
-  const englishWords = [
-    'hello', 'thank', 'please', 'goodbye', 'yes', 'no', 'how', 'what', 'where', 'when',
-    'who', 'why', 'help', 'information', 'price', 'service', 'company', 'contact',
-    'products', 'available', 'schedule', 'location', 'phone', 'email', 'page',
-    'need', 'want', 'looking', 'interested', 'can', 'have', 'offer', 'you',
-    'morning', 'afternoon', 'evening', 'night', 'much', 'welcome', 'hi', 'are',
-    'is', 'am', 'do', 'make', 'very', 'good', 'bad', 'well'
-  ];
-  
-  let spanishScore = 0;
-  let frenchScore = 0;
-  let englishScore = 0;
-  
-  let spanishMatches = [];
-  let frenchMatches = [];
-  let englishMatches = [];
-  
-  // Contar coincidencias para cada idioma
-  spanishWords.forEach(word => {
-    if (text.includes(word)) {
-      spanishScore++;
-      spanishMatches.push(word);
-    }
-  });
-  
-  frenchWords.forEach(word => {
-    if (text.includes(word)) {
-      frenchScore++;
-      frenchMatches.push(word);
-    }
-  });
-  
-  englishWords.forEach(word => {
-    if (text.includes(word)) {
-      englishScore++;
-      englishMatches.push(word);
-    }
-  });
-  
-  // Detectar patrones específicos de caracteres
-  if (text.includes('ñ') || text.includes('¿') || text.includes('¡')) {
-    spanishScore += 2;
-    console.log('Caracteres específicos del español detectados (+2 puntos)');
-  }
-  
-  if (text.includes('ç') || text.includes('à') || text.includes('è') || text.includes('é') || text.includes('ê') || text.includes('ë') || text.includes('î') || text.includes('ï') || text.includes('ô') || text.includes('ù') || text.includes('û') || text.includes('ü') || text.includes('ÿ')) {
-    frenchScore += 2;
-    console.log('Caracteres específicos del francés detectados (+2 puntos)');
-  }
-  
-  console.log(`Puntuaciones:
-  - Español: ${spanishScore} (palabras: ${spanishMatches.join(', ')})
-  - Francés: ${frenchScore} (palabras: ${frenchMatches.join(', ')})
-  - Inglés: ${englishScore} (palabras: ${englishMatches.join(', ')})`);
-  
-  // Devolver el idioma con mayor puntuación
-  let detectedLanguage = 'es'; // Default español
-  
-  if (spanishScore > frenchScore && spanishScore > englishScore) {
-    detectedLanguage = 'es';
-  } else if (frenchScore > spanishScore && frenchScore > englishScore) {
-    detectedLanguage = 'fr';
-  } else if (englishScore > spanishScore && englishScore > frenchScore) {
-    detectedLanguage = 'en';
-  }
-  
-  console.log(`Idioma detectado: ${detectedLanguage}`);
-  console.log(`=== FIN DETECCIÓN ===`);
-  
-  return detectedLanguage;
-}
 
 function getFeaturesByTier(tier: string): string[] {
   switch (tier) {
@@ -3681,8 +3580,7 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
         error: error.message,
         stack: error.stack,
         apiKey: req.params.apiKey,
-        conversationId: conversationId,
-        isAuthenticated: isAuthenticated,
+        conversationId: req.params.conversationId,
         timestamp: new Date().toISOString()
       });
       res.status(500).json({ message: "Internal server error" });
