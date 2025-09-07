@@ -72,7 +72,7 @@ export function configureRoutes(app: Express) {
     });
   });
 
-  // Función para detectar el idioma del mensaje del usuario
+  // Función para detectar el idioma del mensaje del usuario test
 function detectLanguage(message: string): string {
   console.log(`=== DETECCIÓN DE IDIOMA ===`);
   console.log(`Mensaje original: "${message}"`);
