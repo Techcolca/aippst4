@@ -65,7 +65,9 @@ export const conversations = pgTable("conversations", {
   id: serial("id").primaryKey(),
   integrationId: integer("integration_id").references(() => integrations.id),
   visitorId: text("visitor_id"),
-  title: text("title"), // Auto-generated title based on first messages
+  visitorName: text("visitor_name"), // AGREGAR ESTA LÍNEA
+  visitorEmail: text("visitor_email"), // AGREGAR ESTA LÍNEA
+  title: text("title"),
   resolved: boolean("resolved").default(false),
   duration: integer("duration").default(0),
   createdAt: timestamp("created_at").defaultNow(),
