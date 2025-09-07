@@ -66,7 +66,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
     url.searchParams.set('tab', newTab);
     window.history.replaceState({}, '', url.toString());
   };
-  
+
   // Consulta para obtener las integraciones
   const { data: integrations, isLoading: isLoadingIntegrations } = useQuery<Integration[]>({
     queryKey: ["/api/integrations"],
@@ -134,7 +134,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
       <div>
         <h2 className="text-xl font-semibold mb-4">{t("settings")}</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">{t("settings_description", "Configure your AIPI assistant settings.")}</p>
-        
+
         {isLoadingSettings ? (
           <div className="flex items-center justify-center h-60">
             <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full"></div>
@@ -163,7 +163,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h3 className="text-lg font-medium mb-2">{t("appearance")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -193,7 +193,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h3 className="text-lg font-medium mb-2">{t("welcome_chat")}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -231,7 +231,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex justify-end">
                 <Button onClick={() => setLocation("/settings/edit")}>
                   {t("edit_settings")}
@@ -264,19 +264,19 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
   if (conversation.visitorName) {
     return conversation.visitorName;
   }
-  
+
   if (!conversation.visitorId) {
     return t("anonymous");
   }
-  
+
   if (conversation.visitorId.startsWith('test_') || conversation.visitorId.startsWith('user_')) {
     return t("anonymous");
   }
-  
+
   if (conversation.visitorId.length > 20 || /[#_{}()[\]]/.test(conversation.visitorId)) {
     return t("anonymous");
   }
-  
+
   return `#${conversation.visitorId}`;
 };
 
@@ -286,7 +286,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
       <div>
         <h2 className="text-xl font-semibold mb-4">{t("conversations")}</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">{t("conversations_description", "Review and manage conversations with your visitors.")}</p>
-        
+
         {isLoadingConversations ? (
           <div className="flex items-center justify-center h-60">
             <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full"></div>
@@ -379,7 +379,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
   // Función para traducir descripciones de formularios
   const translateFormDescription = (form: any): string => {
     if (!form.description) return t("no_description", "No description");
-    
+
     // Detectar el tipo de formulario basado en la descripción o tipo
     if (form.description.includes("liste d'attente") || form.description.includes("waiting list") || form.type === "waitlist") {
       return t("form_template_waitlist", "Model to capture users on waiting list");
@@ -388,7 +388,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
     } else if (form.type === "standard" || form.description.includes("standard")) {
       return t("form_template_standard", "Standard form to collect information");
     }
-    
+
     // Si no se puede clasificar, devolver descripción original
     return form.description;
   };
@@ -399,7 +399,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
       <div>
         <h2 className="text-xl font-semibold mb-4">{t("forms")}</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">{t("forms_description", "Create and manage your forms.")}</p>
-        
+
         <div className="flex justify-between items-center mb-4">
           <Button 
             variant="outline" 
@@ -416,7 +416,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
             {t("create_form", "Create Form")}
           </FeatureRestrictedButton>
         </div>
-        
+
         {isLoadingForms ? (
           <div className="flex items-center justify-center h-60">
             <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full"></div>
@@ -439,7 +439,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                     {form.responseCount || 0} {t("responses", "responses")}
                   </div>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
@@ -450,7 +450,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                     <Edit3 className="h-4 w-4 mr-1" />
                     {t("edit", "Edit")}
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -459,7 +459,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                   >
                     {t("responses", "Responses")}
                   </Button>
-                  
+
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
@@ -525,7 +525,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
       <div>
         <h2 className="text-xl font-semibold mb-4">{t("task_automation")}</h2>
         <p className="text-gray-600 dark:text-gray-400 mb-6">{t("task_automation_description", "Set up automated tasks and workflows powered by AI.")}</p>
-        
+
         <div className="flex justify-end mb-4">
           <FeatureRestrictedButton 
             feature="basicAutomations"
@@ -534,7 +534,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
             {t("create_automation", "Create Automation")}
           </FeatureRestrictedButton>
         </div>
-        
+
         {isLoadingAutomations ? (
           <div className="flex items-center justify-center h-60">
             <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full"></div>
@@ -563,7 +563,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex-grow"></div>
                 <div className="flex justify-end mt-4 space-x-2">
                   <Link href={`/automations/${automation.id}/logs`}>
@@ -606,7 +606,7 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
           <TabsTrigger value="forms">{t("forms")}</TabsTrigger>
           <TabsTrigger value="settings">{t("settings")}</TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="automation">{renderAutomationTab()}</TabsContent>
         <TabsContent value="conversations">{renderConversationsTab()}</TabsContent>
         <TabsContent value="integrations">{renderIntegrationsTab()}</TabsContent>
