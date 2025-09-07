@@ -638,7 +638,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
   app.post("/api/widget/:apiKey/conversations/user", async (req, res) => {
     try {
       const { apiKey } = req.params;
-      const { title } = req.body;
+      const { title, visitorName, visitorEmail } = req.body;
       
       // Validate API key first
       const integration = await storage.getIntegrationByApiKey(apiKey);
@@ -670,7 +670,9 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
         const conversation = await storage.createConversation({
           integrationId: integration.id,
           visitorId: `user_${decoded.userId}`,
-          title: title || 'Nueva conversación'
+          title: title || 'Nueva conversación',
+          visitorName: visitorName || null,
+          visitorEmail: visitorEmail || null
         });
         
         console.log(`AIPPS Debug: Created fullscreen conversation:`, conversation.id);
@@ -689,7 +691,7 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
   // Create new conversation for authenticated user
   app.post("/api/conversations", authenticateJWT, async (req, res) => {
     try {
-      const { title } = req.body;
+      const { title, visitorName, visitorEmail } = req.body;
       
       // Get user's first integration (for simplicity, use the first one)
       const integrations = await storage.getIntegrations(req.userId);
@@ -701,7 +703,9 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
       const conversation = await storage.createConversation({
         integrationId: integrations[0].id,
         visitorId: `user_${req.userId}`,
-        title: title || 'Nueva conversación'
+        title: title || 'Nueva conversación',
+          visitorName: visitorName || null,
+          visitorEmail: visitorEmail || null
       });
       
       res.status(201).json(conversation);
