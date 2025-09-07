@@ -60,19 +60,8 @@ import crypto from 'crypto';
 import { db, pool } from "./db";
 
 
-export function configureRoutes(app: Express) {
-  // Health check endpoint para Railway - DEBE IR AL INICIO
-  app.get('/health', (req, res) => {
-    res.status(200).json({ 
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      service: 'AIPI',
-      version: '1.0.0',
-      database: pool ? 'connected' : 'disconnected'
-    });
-  });
 
-  // Función para detectar el idioma del mensaje del usuario test
+// Función para detectar el idioma del mensaje del usuario
 function detectLanguage(message: string): string {
   console.log(`=== DETECCIÓN DE IDIOMA ===`);
   console.log(`Mensaje original: "${message}"`);
@@ -82,32 +71,32 @@ function detectLanguage(message: string): string {
   
   // Palabras comunes en español
   const spanishWords = [
-    'hola', 'gracias', 'por favor', 'adiós', 'sí', 'no', 'cómo', 'qué', 'dónde', 'cuándo',
-    'quién', 'por qué', 'ayuda', 'información', 'precio', 'servicio', 'empresa', 'contacto',
-    'productos', 'disponible', 'horario', 'ubicación', 'teléfono', 'correo', 'página',
-    'necesito', 'quiero', 'busco', 'me interesa', 'puedo', 'tienes', 'tienen', 'ofrecen',
-    'buenos días', 'buenas tardes', 'buenas noches', 'muchas gracias', 'de nada', 'está',
-    'son', 'estoy', 'tengo', 'puede', 'hacer', 'muy', 'bien', 'malo', 'bueno'
+    "hola", "gracias", "por favor", "adiós", "sí", "no", "cómo", "qué", "dónde", "cuándo",
+    "quién", "por qué", "ayuda", "información", "precio", "servicio", "empresa", "contacto",
+    "productos", "disponible", "horario", "ubicación", "teléfono", "correo", "página",
+    "necesito", "quiero", "busco", "me interesa", "puedo", "tienes", "tienen", "ofrecen",
+    "buenos días", "buenas tardes", "buenas noches", "muchas gracias", "de nada", "está",
+    "son", "estoy", "tengo", "puede", "hacer", "muy", "bien", "malo", "bueno"
   ];
   
   // Palabras comunes en francés
   const frenchWords = [
-    'bonjour', 'merci', 'au revoir', 'oui', 'non', 'comment', 'quoi', 'où', 'quand',
-    'qui', 'pourquoi', 'aide', 'information', 'prix', 'service', 'entreprise', 'contact',
-    'produits', 'disponible', 'horaire', 'emplacement', 'téléphone', 'email', 'page',
-    'besoin', 'veux', 'cherche', 'intéresse', 'puis', 'avez', 'offrez', 'vous',
-    'journée', 'soirée', 'nuit', 'beaucoup', 'rien', 'salut', 'est', 'sont', 'suis',
-    'avoir', 'être', 'faire', 'très', 'bien', 'mal', 'bon', 'bonne'
+    "bonjour", "merci", "au revoir", "oui", "non", "comment", "quoi", "où", "quand",
+    "qui", "pourquoi", "aide", "information", "prix", "service", "entreprise", "contact",
+    "produits", "disponible", "horaire", "emplacement", "téléphone", "email", "page",
+    "besoin", "veux", "cherche", "intéresse", "puis", "avez", "offrez", "vous",
+    "journée", "soirée", "nuit", "beaucoup", "rien", "salut", "est", "sont", "suis",
+    "avoir", "être", "faire", "très", "bien", "mal", "bon", "bonne"
   ];
   
   // Palabras comunes en inglés
   const englishWords = [
-    'hello', 'thank', 'please', 'goodbye', 'yes', 'no', 'how', 'what', 'where', 'when',
-    'who', 'why', 'help', 'information', 'price', 'service', 'company', 'contact',
-    'products', 'available', 'schedule', 'location', 'phone', 'email', 'page',
-    'need', 'want', 'looking', 'interested', 'can', 'have', 'offer', 'you',
-    'morning', 'afternoon', 'evening', 'night', 'much', 'welcome', 'hi', 'are',
-    'is', 'am', 'do', 'make', 'very', 'good', 'bad', 'well'
+    "hello", "thank", "please", "goodbye", "yes", "no", "how", "what", "where", "when",
+    "who", "why", "help", "information", "price", "service", "company", "contact",
+    "products", "available", "schedule", "location", "phone", "email", "page",
+    "need", "want", "looking", "interested", "can", "have", "offer", "you",
+    "morning", "afternoon", "evening", "night", "much", "welcome", "hi", "are",
+    "is", "am", "do", "make", "very", "good", "bad", "well"
   ];
   
   let spanishScore = 0;
@@ -136,18 +125,69 @@ function detectLanguage(message: string): string {
   // Determinar idioma con mayor puntuación
   if (spanishScore > frenchScore && spanishScore > englishScore) {
     console.log(`Idioma detectado: ESPAÑOL (puntuación: ${spanishScore})`);
-    return 'es';
+    return "es";
   } else if (frenchScore > spanishScore && frenchScore > englishScore) {
     console.log(`Idioma detectado: FRANCÉS (puntuación: ${frenchScore})`);
-    return 'fr';
+    return "fr";
   } else if (englishScore > 0) {
     console.log(`Idioma detectado: INGLÉS (puntuación: ${englishScore})`);
-    return 'en';
+    return "en";
   } else {
     console.log(`Idioma por defecto: ESPAÑOL (sin coincidencias claras)`);
-    return 'es'; // Default to Spanish
+    return "es";
   }
 }
+
+// Función para extraer contenido de documentos
+async function extractDocumentContent(doc: any): Promise<string> {
+  let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+  
+  if (doc.path && fs.existsSync(doc.path)) {
+    try {
+      if (doc.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        try {
+          const mammoth = await import("mammoth");
+          const fileBuffer = fs.readFileSync(doc.path);
+          const result = await mammoth.extractRawText({ buffer: fileBuffer });
+          content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
+        } catch (mammothError) {
+          console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
+          content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+        }
+      } else if (doc.mimetype === "application/pdf") {
+        try {
+          const pdfParse = await import("pdf-parse");
+          const fileBuffer = fs.readFileSync(doc.path);
+          const pdfData = await pdfParse.default(fileBuffer);
+          content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
+        } catch (pdfError) {
+          console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
+          content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+        }
+      } else if (doc.mimetype === "text/plain") {
+        content = fs.readFileSync(doc.path, "utf8");
+      } else {
+        content = `Archivo ${doc.originalName}: Contiene información relevante sobre su organización.`;
+      }
+    } catch (error) {
+      content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
+    }
+  }
+  
+  return content;
+}
+export function configureRoutes(app: Express) {
+  // Health check endpoint para Railway - DEBE IR AL INICIO
+  app.get('/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      service: 'AIPI',
+      version: '1.0.0',
+      database: pool ? 'connected' : 'disconnected'
+    });
+  });
+
 // Función para extraer contenido de documentos
 async function extractDocumentContent(doc: any): Promise<string> {
   let content = `Información del archivo: ${doc.originalName || doc.filename}`;
