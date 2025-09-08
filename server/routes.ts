@@ -63,11 +63,8 @@ import { db, pool } from "./db";
 
 // Función para detectar el idioma del mensaje del usuario
 function detectLanguage(message: string): string {
-  console.log(`=== DETECCIÓN DE IDIOMA ===`);
-  console.log(`Mensaje original: "${message}"`);
   
   const text = message.toLowerCase().trim();
-  console.log(`Texto procesado: "${text}"`);
   
   // Palabras comunes en español
   const spanishWords = [
@@ -124,16 +121,12 @@ function detectLanguage(message: string): string {
   
   // Determinar idioma con mayor puntuación
   if (spanishScore > frenchScore && spanishScore > englishScore) {
-    console.log(`Idioma detectado: ESPAÑOL (puntuación: ${spanishScore})`);
     return "es";
   } else if (frenchScore > spanishScore && frenchScore > englishScore) {
-    console.log(`Idioma detectado: FRANCÉS (puntuación: ${frenchScore})`);
     return "fr";
   } else if (englishScore > 0) {
-    console.log(`Idioma detectado: INGLÉS (puntuación: ${englishScore})`);
     return "en";
   } else {
-    console.log(`Idioma por defecto: ESPAÑOL (sin coincidencias claras)`);
     return "es";
   }
 }
@@ -253,7 +246,6 @@ async function generateAndStorePromotionalMessages(language = 'es') {
       `, [message.message_text, message.message_type, message.display_order, language]);
     }
     
-    console.log(`Successfully generated and stored ${messages.length} promotional messages for ${language}`);
   } catch (error) {
     console.error("Error generating and storing promotional messages:", error);
   }
@@ -311,7 +303,6 @@ async function createInternalWebsiteIntegration() {
     const existingIntegration = await storage.getIntegrationByApiKey("aipps_web_internal");
     
     if (existingIntegration) {
-      console.log("La integración interna para el sitio web principal ya existe");
       return;
     }
     
@@ -328,7 +319,6 @@ async function createInternalWebsiteIntegration() {
       documentsData: []
     });
     
-    console.log("Se ha creado la integración interna para el sitio web principal");
   } catch (error) {
     console.error("Error al crear integración interna:", error);
   }
@@ -393,7 +383,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Servir archivos estáticos desde la carpeta /static
   const staticDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '../public/static');
-  console.log('Sirviendo archivos estáticos desde:', staticDir);
   app.use('/static', express.static(staticDir));
   
   // API routes
@@ -448,8 +437,6 @@ app.get("/api/health", (req, res) => {
         path: "/",
       });
       
-      console.log("Registration successful");
-      console.log("Token created:", token.substring(0, 20) + "...");
       
       // Return user without password and include token
       const { password, ...userWithoutPassword } = user;
@@ -496,8 +483,6 @@ app.get("/api/health", (req, res) => {
         path: "/",
       });
       
-      console.log("Login successful");
-      console.log("Token created successfully");
       
       // Return user without password and también incluir el token en la respuesta
       const { password: _, ...userWithoutPassword } = user;
@@ -544,6 +529,27 @@ app.get("/api/health", (req, res) => {
       res.json(userWithoutPassword);
     } catch (error) {
       console.error("Get user error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // User session endpoint - verifica y devuelve información de sesión
+  app.get("/api/user-session", verifyToken, async (req, res) => {
+    try {
+      const user = await storage.getUser(req.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Return user without password - same as /api/auth/me
+      const { password, ...userWithoutPassword } = user;
+      res.json({
+        user: userWithoutPassword,
+        authenticated: true,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Get user session error:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
@@ -594,7 +600,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
         // Sort by creation date (newest first)
         userConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         
-        console.log(`AIPPS Debug: Fullscreen widget conversations loaded:`, userConversations.length);
         
         res.json(userConversations);
       } catch (error) {
@@ -675,7 +680,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
           visitorEmail: visitorEmail || null
         });
         
-        console.log(`AIPPS Debug: Created fullscreen conversation:`, conversation.id);
         
         res.status(201).json(conversation);
       } catch (error) {
@@ -780,7 +784,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
           
           if (siteContent && siteContent.length > 0) {
             context = siteContent.map(content => `${content.title || 'Sin título'}: ${content.content}`).join('\n\n');
-            console.log(`Contexto del sitio obtenido: ${context.length} caracteres`);
           }
           
           // Prepare conversation history
@@ -1001,7 +1004,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
   
   app.post("/api/integrations", authenticateJWT, upload.array('documents'), async (req, res) => {
     try {
-      console.log("Create integration request body:", req.body);
       
       // Verificar permisos del plan para crear integraciones
       const subscription = await getUserSubscription(req.userId);
@@ -1053,7 +1055,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
         ignoredSections: req.body.ignoredSections || [],
       };
       
-      console.log("Cleaned integration data:", integrationData);
       
       // Preparar la información de los documentos subidos (si hay)
       const uploadedFiles = req.files as Express.Multer.File[];
@@ -1066,7 +1067,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
         uploadedAt: new Date()
       })) : [];
       
-      console.log("Documentos subidos:", documentsData.length);
       
       // Creamos la integración con los datos del formulario y información de documentos
       const integration = await storage.createIntegration({
@@ -1075,7 +1075,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
         documentsData: documentsData
       });
       
-      console.log("Integration created successfully:", integration);
       
       res.status(201).json(integration);
     } catch (error) {
@@ -3276,12 +3275,10 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
       let documents = [];
       let siteContentItems = [];
       
-      console.log(`AIPPS Debug: Loading site content for integration ${integration.name}`);
       
       // Load site content items
       try {
         siteContentItems = await storage.getSiteContent(integration.id);
-        console.log(`AIPPS Debug: Loaded ${siteContentItems.length} site content items for integration ${integration.name}`);
       } catch (error) {
         console.error('Error loading site content:', error);
         siteContentItems = [];
@@ -3301,14 +3298,11 @@ app.get("/api/marketing/promotional-messages", async (req, res) => {
         }
       }
       
-      console.log(`AIPPS Debug: Loaded ${documents.length} documents for integration ${integration.name}`);
       
       // Build enhanced context with knowledge base
       const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
       const enhancedContext = context + "\n\n" + knowledgeBase;
       
-      console.log(`AIPPS Debug: Knowledge base length: ${knowledgeBase.length} characters`);
-      console.log(`AIPPS Debug: Enhanced context length: ${enhancedContext.length} characters`);
       
       // Detect language and generate AI response with bot configuration
       const detectedLanguage = detectLanguage(message);
@@ -3346,7 +3340,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       const allMessages = await storage.getConversationMessages(conversation.id);
       const userMessages = allMessages.filter(m => m.role === 'user');
       
-      console.log(`AIPPS Debug: Title generation check - conversationId: ${conversation.id}, currentTitle: "${conversation.title}", userMessages: ${userMessages.length}`);
       
       if ((!conversation.title || conversation.title === null || conversation.title === "null" || conversation.title === "Nueva conversación" || conversation.title === "New conversation" || conversation.title === "Nouvelle conversation") && userMessages.length >= 1) {
         try {
@@ -3361,7 +3354,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
           );
           
           await storage.updateConversation(conversation.id, { title });
-          console.log(`AIPPS Debug: Generated title for conversation ${conversation.id}: "${title}"`);
         } catch (error) {
           console.error("Error generating conversation title:", error);
         }
@@ -3400,7 +3392,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
           const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
           isAuthenticated = true;
           authenticatedUserId = decoded.userId;
-          console.log(`AIPPS Debug: Authenticated request`);
         } catch (error) {
           console.error('JWT verification failed:', error);
           return res.status(401).json({ message: "Invalid or expired token" });
@@ -3449,7 +3440,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
           return res.status(403).json({ message: "Unauthorized access to this conversation" });
         }
         
-        console.log(`AIPPS Debug: Security check passed for authenticated user`);
       }
       
       // Create user message
@@ -3509,7 +3499,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
             }
             
             userContext = `\n\nNOTA IMPORTANTE: El usuario que te está escribiendo se llama ${userName}. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana. Sé natural y amigable, no repitas siempre las mismas preguntas sobre problemas o proyectos.${conversationHistory}`;
-            console.log(`AIPPS Debug: User context added for ${userName}`);
           }
         } catch (error) {
           console.error("Error getting authenticated user info:", error);
@@ -3533,7 +3522,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
       
            // Detect language from user message
       const detectedLanguage = detectLanguage(message);
-      console.log(`Idioma detectado: ${detectedLanguage}`);
 
       // Get documents and site content for knowledge base
       let documents = [];
@@ -3564,7 +3552,6 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== authentica
       const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
       const enhancedContext = context + userContext + "\n\n" + knowledgeBase;
 
-      console.log('AIPPS Debug: Enhanced context prepared, generating AI response...');
 
 // Add timeout wrapper for OpenAI call
 const completionPromise = generateChatCompletion(
@@ -3597,7 +3584,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       const allMessages = await storage.getConversationMessages(conversationIdNum);
       const userMessages = allMessages.filter(m => m.role === 'user');
       
-      console.log(`AIPPS Debug: Title generation check - conversationId: ${conversationIdNum}, currentTitle: "${conversation.title}", userMessages: ${userMessages.length}`);
       
       if ((!conversation.title || conversation.title === null || conversation.title === "null" || conversation.title === "Nueva conversación" || conversation.title === "New conversation" || conversation.title === "Nouvelle conversation") && userMessages.length >= 1) {
         try {
@@ -3612,7 +3598,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
           );
           
           await storage.updateConversation(conversationIdNum, { title: title || "Nueva conversación" });
-          console.log(`AIPPS Debug: Generated title for conversation ${conversationIdNum}: "${title}"`);
         } catch (error) {
           console.error("Error generating conversation title:", error);
         }
@@ -3806,7 +3791,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
           }
         }
         
-        console.log(`AIPPS Debug: Widget loaded ${widgetDocuments.length} documents for integration ${integration.name}`);
         
         // Build enhanced context with knowledge base
         const knowledgeBase = buildKnowledgeBase(integration, widgetDocuments, widgetSiteContent);
@@ -4039,7 +4023,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       // Eliminar la conversación
       await storage.deleteConversation(conversationIdNum);
       
-      console.log(`AIPPS Debug: Conversation ${conversationIdNum} deleted successfully`);
       res.json({ success: true, message: "Conversation deleted successfully" });
       
     } catch (error) {
@@ -5596,8 +5579,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       const formId = parseInt(req.params.id);
       const formData = req.body;
       
-      console.log("Actualizando formulario ID:", formId);
-      console.log("Datos recibidos:", JSON.stringify(formData, null, 2));
       console.log("Usuario autenticado");
 
       // Verificar que el formulario existe
@@ -5609,12 +5590,10 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       
       // Verificar que el usuario es propietario del formulario
       if (existingForm.userId !== req.user!.id) {
-        console.log(`Error de autorización: formulario no pertenece al usuario actual`);
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
       
       const updatedForm = await storage.updateForm(formId, formData);
-      console.log("Formulario actualizado:", JSON.stringify(updatedForm, null, 2));
       res.json(updatedForm);
     } catch (error) {
       console.error("Error updating form:", error);
@@ -5844,7 +5823,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       const slug = req.params.slug;
       const responseData = req.body;
       
-      console.log("Form submission data:", JSON.stringify(responseData, null, 2));
       
       // Verificar que el formulario existe
       const form = await storage.getFormBySlug(slug);
@@ -6379,7 +6357,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
         }
       }
       
-      console.log(`Idioma detectado para formulario ${formId}: ${detectedLanguage} (scores: fr=${frenchScore}, en=${englishScore}, es=${spanishScore})`);
       
       const t = getFormTranslations(detectedLanguage);
       
@@ -7047,7 +7024,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
           // Continuamos aunque falle el envío del correo
         }
       } else {
-        console.log("AWS credenciales no configuradas, no se envió email de confirmación");
       }
       
       res.status(201).json(newAppointment);
@@ -7249,7 +7225,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
             console.error(`Error al enviar recordatorio para cita ${appointment.id}:`, emailError);
           }
         } else {
-          console.log("AWS credenciales no configuradas, no se pueden enviar recordatorios");
           break;
         }
       }
@@ -7305,10 +7280,6 @@ const completion = await Promise.race([completionPromise, timeoutPromise]);
       const authUrl = getGoogleAuthUrl(userId, undefined, req, customRedirectUrl);
       
       // Loguear información para verificar
-      console.log("INFO REDIRECCIÓN GOOGLE CALENDAR:");
-      console.log("URL de autorización:", authUrl);
-      console.log("REDIRECT_URL completa:", authUrl.match(/redirect_uri=([^&]*)/)?.[1]);
-      console.log("URL personalizada proporcionada:", customRedirectUrl || "No");
       
       res.json({ authUrl });
     } catch (error) {
