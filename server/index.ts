@@ -4,15 +4,40 @@ import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
-import { setupCorsForAIPPS } from "./middleware/cors-middleware";
 
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.set('trust proxy', 1);
-// Configurar CORS para AIPPS antes que cualquier otra ruta
-app.use(setupCorsForAIPPS);
+
+// Configurar CORS para widgets embebidos de AIPPS
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  
+  // Para widgets embebidos: permitir CUALQUIER origen con credenciales
+  // Esto es seguro porque usamos API keys para autenticación del widget
+  if (origin) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+  } else {
+    // Para requests sin origen (misma aplicación, Postman, etc.)
+    res.header("Access-Control-Allow-Origin", "*");
+  }
+  
+  // Headers necesarios para widgets y autenticación
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-api-key, Authorization, Cookie");
+  
+  // Métodos permitidos
+  res.header("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS, PUT");
+  
+  // Manejo de preflight requests
+  if (req.method === "OPTIONS") {
+    return res.status(204).send();
+  }
+  
+  next();
+});
 
 // Middleware de protección contra ataques (AÑADIR AQUÍ)
 // Rate limiting - máximo 100 requests por 15 minutos por IP
@@ -45,7 +70,7 @@ const authLimiter = rateLimit({
 const securityMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const url = req.url.toLowerCase();
   const userAgent = req.get('User-Agent') || '';
-  
+
   // Patrones de ataque comunes
   const maliciousPatterns = [
     '/wp-admin',
@@ -62,7 +87,7 @@ const securityMiddleware = (req: Request, res: Response, next: NextFunction) => 
     '/config',
     '.php'
   ];
-  
+
   // Bots maliciosos
   const botSignatures = [
     'masscan',
@@ -73,19 +98,19 @@ const securityMiddleware = (req: Request, res: Response, next: NextFunction) => 
     'wp_is_mobile',
     'scanner'
   ];
-  
+
   // Bloquear patrones maliciosos
   if (maliciousPatterns.some(pattern => url.includes(pattern))) {
     console.log(`🚨 Blocked attack attempt from ${req.ip}: ${req.url}`);
     return res.status(404).end();
   }
-  
+
   // Bloquear bots conocidos
   if (botSignatures.some(sig => userAgent.toLowerCase().includes(sig))) {
     console.log(`🚨 Blocked bot from ${req.ip}: ${userAgent}`);
     return res.status(403).end();
   }
-  
+
   next();
 };
 
@@ -133,11 +158,19 @@ const staticPath = path.join(__dirname, '../public/static');
 console.log(`Sirviendo archivos estáticos desde: ${staticPath}`);
 
 app.use('/static', (req, res, next) => {
-  // Asegurar headers CORS específicos para archivos estáticos
-  res.header("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+  
+  // Permitir widgets embebidos desde cualquier dominio
+  if (origin) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+  } else {
+    res.header("Access-Control-Allow-Origin", "*");
+  }
+  
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  
+
   // Establecer tipo de contenido correcto para archivos JS
   if (req.path.endsWith('.js')) {
     res.type('application/javascript');
@@ -146,7 +179,7 @@ app.use('/static', (req, res, next) => {
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
   }
-  
+
   next();
 }, express.static(staticPath, {
   // Configuraciones adicionales para servir archivos estáticos
