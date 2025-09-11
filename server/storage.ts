@@ -724,6 +724,8 @@ export interface IStorage {
         id,
         integrationId: conversation.integrationId || null,
         visitorId: conversation.visitorId || null,
+        visitorName: conversation.visitorName || null,    // ← AGREGAR ESTA LÍNEA
+        visitorEmail: conversation.visitorEmail || null,  // ← AGREGAR ESTA LÍNEA
         title: null,
         resolved: false,
         duration: 0,
