@@ -261,24 +261,32 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
 
   // Función para formatear inteligentemente los nombres de visitantes
   const formatVisitorName = (conversation: any) => {
-  if (conversation.visitorName) {
-    return conversation.visitorName;
-  }
-
-  if (!conversation.visitorId) {
+    // Prioridad 1: Nombre real del visitante
+    if (conversation.visitorName && conversation.visitorName.trim() !== '') {
+      return conversation.visitorName;
+    }
+    
+    // Prioridad 2: Email como identificador (solo la parte antes del @)
+    if (conversation.visitorEmail && conversation.visitorEmail.trim() !== '') {
+      return conversation.visitorEmail.split('@')[0];
+    }
+    
+    // Prioridad 3: Si es usuario autenticado, mostrar "Usuario Registrado"
+    if (conversation.visitorId && conversation.visitorId.startsWith('user_')) {
+      return t("registered_user", "Usuario Registrado");
+    }
+    
+    // Prioridad 4: ID del visitante si es útil
+    if (conversation.visitorId && 
+        !conversation.visitorId.startsWith('test_') && 
+        conversation.visitorId.length <= 20 && 
+        !/[#_{}()[\]]/.test(conversation.visitorId)) {
+      return `#${conversation.visitorId}`;
+    }
+    
+    // Último recurso: Anónimo
     return t("anonymous");
-  }
-
-  if (conversation.visitorId.startsWith('test_') || conversation.visitorId.startsWith('user_')) {
-    return t("anonymous");
-  }
-
-  if (conversation.visitorId.length > 20 || /[#_{}()[\]]/.test(conversation.visitorId)) {
-    return t("anonymous");
-  }
-
-  return `#${conversation.visitorId}`;
-};
+  };
 
   // Renderizar contenido de la pestaña de conversaciones
   const renderConversationsTab = () => {
