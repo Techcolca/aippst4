@@ -676,8 +676,8 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
           integrationId: integration.id,
           visitorId: `user_${decoded.userId}`,
           title: title || 'Nueva conversación',
-          visitorName: visitorName || null,
-          visitorEmail: visitorEmail || null
+                  visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
+          visitorEmail: visitorEmail || authenticatedUser?.email || null
         });
         
         
@@ -703,13 +703,14 @@ if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.us
       if (integrations.length === 0) {
         return res.status(400).json({ message: "No integrations found for user" });
       }
-      
+            // Get authenticated user data for visitor info
+      const authenticatedUser = await storage.getUser(req.userId);
       const conversation = await storage.createConversation({
         integrationId: integrations[0].id,
         visitorId: `user_${req.userId}`,
         title: title || 'Nueva conversación',
-          visitorName: visitorName || null,
-          visitorEmail: visitorEmail || null
+          visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
+          visitorEmail: visitorEmail || authenticatedUser?.email || null
       });
       
       res.status(201).json(conversation);
