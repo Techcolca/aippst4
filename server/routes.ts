@@ -670,13 +670,16 @@ app.get("/api/health", (req, res) => {
   return res.status(403).json({ message: "Unauthorized access to this integration" });
   }
 
+        // Get authenticated user data for visitor info
+        const authenticatedUser = await storage.getUser(decoded.userId);
+        
         // Create conversation with authenticated user's visitorId pattern
         const conversation = await storage.createConversation({
           integrationId: integration.id,
           visitorId: `user_${decoded.userId}`,
           title: title || 'Nueva conversación',
-                  visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
-          visitorEmail: visitorEmail || authenticatedUser?.email || null
+          visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
+          visitorEmail: authenticatedUser?.email || null
         });
 
 
@@ -694,7 +697,7 @@ app.get("/api/health", (req, res) => {
   // Create new conversation for authenticated user
   app.post("/api/conversations", authenticateJWT, async (req, res) => {
     try {
-      const { title, visitorName, visitorEmail } = req.body;
+      const { title } = req.body;
 
       // Get user's first integration (for simplicity, use the first one)
       const integrations = await storage.getIntegrations(req.userId);
@@ -702,14 +705,16 @@ app.get("/api/health", (req, res) => {
       if (integrations.length === 0) {
         return res.status(400).json({ message: "No integrations found for user" });
       }
-            // Get authenticated user data for visitor info
+      
+      // Get authenticated user data for visitor info
       const authenticatedUser = await storage.getUser(req.userId);
+      
       const conversation = await storage.createConversation({
         integrationId: integrations[0].id,
         visitorId: `user_${req.userId}`,
         title: title || 'Nueva conversación',
-          visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
-          visitorEmail: visitorEmail || authenticatedUser?.email || null
+        visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
+        visitorEmail: authenticatedUser?.email || null
       });
 
       res.status(201).json(conversation);
