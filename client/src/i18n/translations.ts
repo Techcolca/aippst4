@@ -8,6 +8,7 @@ export const translations = {
       get_started: "Commencer",
       visitor: "Visiteur",
       anonymous: "Anonyme",
+      registered_user: "Utilisateur enregistré",
       visitors_helped: "Visiteurs aidés",
 
       // Tiempo
@@ -54,6 +55,7 @@ export const translations = {
       get_started: "Comenzar", 
       visitor: "Visitante",
       anonymous: "Anónimo",
+      registered_user: "Usuario Registrado",
       visitors_helped: "Visitantes atendidos",
 
       // Tiempo
@@ -100,6 +102,7 @@ export const translations = {
       get_started: "Get Started",
       visitor: "Visitor", 
       anonymous: "Anonymous",
+      registered_user: "Registered User",
       visitors_helped: "Visitors helped",
 
       // Tiempo
