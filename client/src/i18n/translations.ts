@@ -9,7 +9,7 @@ export const translations = {
       visitor: "Visiteur",
       anonymous: "Anonyme",
       visitors_helped: "Visiteurs aidés",
-      
+
       // Tiempo
       weeks_ago_plural: "il y a {{count}} semaines",
       weeks_ago: "il y a {{count}} semaine", 
@@ -21,7 +21,7 @@ export const translations = {
       hours_ago: "il y a {{count}} heure",
       minutes_ago_plural: "il y a {{count}} minutes",
       minutes_ago: "il y a {{count}} minute",
-      
+
       // Dashboard básico
       dashboard: "Tableau de bord",
       conversations: "Conversations",
@@ -29,7 +29,7 @@ export const translations = {
       analytics: "Analytiques",
       settings: "Paramètres",
       logout: "Déconnexion",
-      
+
       // Estados
       active: "Actif",
       resolved: "Résolu",
@@ -39,7 +39,7 @@ export const translations = {
       view_analytics: "Voir les analytiques",
       new: "Nouveau",
       messages: "messages",
-      
+
       // Conversaciones
       conversations_for: "Conversations pour",
       view_all_conversations_for_integration: "Voir toutes les conversations pour cette intégration",
@@ -55,7 +55,7 @@ export const translations = {
       visitor: "Visitante",
       anonymous: "Anónimo",
       visitors_helped: "Visitantes atendidos",
-      
+
       // Tiempo
       weeks_ago_plural: "hace {{count}} semanas",
       weeks_ago: "hace {{count}} semana",
@@ -67,7 +67,7 @@ export const translations = {
       hours_ago: "hace {{count}} hora",
       minutes_ago_plural: "hace {{count}} minutos",
       minutes_ago: "hace {{count}} minuto",
-      
+
       // Dashboard básico
       dashboard: "Panel de control",
       conversations: "Conversaciones", 
@@ -75,7 +75,7 @@ export const translations = {
       analytics: "Analíticas",
       settings: "Configuración",
       logout: "Cerrar sesión",
-      
+
       // Estados
       active: "Activo",
       resolved: "Resuelto",
@@ -85,7 +85,7 @@ export const translations = {
       view_analytics: "Ver analíticas", 
       new: "Nuevo",
       messages: "mensajes",
-      
+
       // Conversaciones
       conversations_for: "Conversaciones para",
       view_all_conversations_for_integration: "Ver todas las conversaciones para esta integración",
@@ -101,7 +101,7 @@ export const translations = {
       visitor: "Visitor", 
       anonymous: "Anonymous",
       visitors_helped: "Visitors helped",
-      
+
       // Tiempo
       weeks_ago_plural: "{{count}} weeks ago",
       weeks_ago: "{{count}} week ago",
@@ -113,7 +113,7 @@ export const translations = {
       hours_ago: "{{count}} hour ago",
       minutes_ago_plural: "{{count}} minutes ago",
       minutes_ago: "{{count}} minute ago",
-      
+
       // Dashboard básico
       dashboard: "Dashboard",
       conversations: "Conversations",
@@ -121,7 +121,7 @@ export const translations = {
       analytics: "Analytics",
       settings: "Settings",
       logout: "Logout",
-      
+
       // Estados
       active: "Active",
       resolved: "Resolved",
@@ -131,7 +131,7 @@ export const translations = {
       view_analytics: "View analytics",
       new: "New", 
       messages: "messages",
-      
+
       // Conversaciones
       conversations_for: "Conversations for",
       view_all_conversations_for_integration: "View all conversations for this integration",
