@@ -9,6 +9,7 @@ import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context/auth-context-stub";
 import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
+import { usePlanLimits } from "@/hooks/use-plan-limits";
 import UpgradePlanModal from "@/components/upgrade-plan-modal";
 
 // Componentes UI
@@ -67,6 +68,7 @@ export default function CreateIntegration() {
   const [extractedContent, setExtractedContent] = useState<Array<{url: string, title: string}>>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const upgradeModal = useUpgradeModal();
+  const { canCreateResource, limits } = usePlanLimits();
 
   // Inicializamos el formulario
   const form = useForm<FormValues>({
@@ -282,10 +284,38 @@ export default function CreateIntegration() {
     },
   });
 
+  // Verificar límites antes del envío
+  const handleSubmitWithLimitCheck = async (data: FormValues) => {
+    try {
+      // Verificar si puede crear más integraciones
+      const canCreate = await canCreateResource('integrations');
+      
+      if (!canCreate) {
+        // Mostrar modal de upgrade con información específica
+        const integrationLimit = limits?.limits?.integrations?.limit || 1;
+        const integrationUsed = limits?.limits?.integrations?.used || 0;
+        const planName = limits?.planName || "Plan Básico";
+        
+        upgradeModal.showUpgradeModal('integrations', integrationLimit, planName);
+        return;
+      }
+      
+      // Si puede crear, proceder normalmente
+      setIsSubmitting(true);
+      createIntegrationMutation.mutate(data);
+    } catch (error) {
+      console.error('Error verificando límites:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo verificar los límites de tu plan. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Manejador de envío del formulario
   const onSubmit = (data: FormValues) => {
-    setIsSubmitting(true);
-    createIntegrationMutation.mutate(data);
+    handleSubmitWithLimitCheck(data);
   };
 
   return (
@@ -835,13 +865,14 @@ export default function CreateIntegration() {
               </Button>
               <Button 
                 type="submit" 
-                disabled={isSubmitting}
+                disabled={isSubmitting || (limits?.limits?.integrations?.remaining === 0)}
                 className="gap-2"
+                title={limits?.limits?.integrations?.remaining === 0 ? `Has alcanzado el límite de ${limits?.limits?.integrations?.limit} integraciones en tu ${limits?.planName}` : ""}
               >
                 {isSubmitting && (
                   <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full" aria-hidden="true" />
                 )}
-                Crear integración
+                {limits?.limits?.integrations?.remaining === 0 ? "Límite alcanzado" : "Crear integración"}
               </Button>
             </div>
           </form>

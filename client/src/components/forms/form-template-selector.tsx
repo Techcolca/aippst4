@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
+import { usePlanLimits } from "@/hooks/use-plan-limits";
 import UpgradePlanModal from "@/components/upgrade-plan-modal";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,7 @@ export function FormTemplateSelector() {
   const [showPreview, setShowPreview] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language || 'es');
   const upgradeModal = useUpgradeModal();
+  const { canCreateResource, limits } = usePlanLimits();
 
   // Sistema de traducción específico para plantillas
   const templateTranslations: Record<string, Record<string, string>> = {
@@ -284,13 +286,69 @@ export function FormTemplateSelector() {
     setSelectedTemplate(templateId);
   };
 
+  // Verificar límites antes del envío para plantillas
+  const handleSubmitWithLimitCheck = async (templateId: number) => {
+    try {
+      // Verificar si puede crear más formularios
+      const canCreate = await canCreateResource('forms');
+      
+      if (!canCreate) {
+        // Mostrar modal de upgrade con información específica
+        const formLimit = limits?.limits?.forms?.limit || 1;
+        const formUsed = limits?.limits?.forms?.used || 0;
+        const planName = limits?.planName || "Plan Básico";
+        
+        upgradeModal.showUpgradeModal('forms', formLimit, planName);
+        return;
+      }
+      
+      // Si puede crear, proceder normalmente
+      createFormMutation.mutate(templateId);
+    } catch (error) {
+      console.error('Error verificando límites:', error);
+      toast({
+        title: t('common.error'),
+        description: "No se pudo verificar los límites de tu plan. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleCreateForm = () => {
     if (selectedTemplate) {
-      createFormMutation.mutate(selectedTemplate);
+      handleSubmitWithLimitCheck(selectedTemplate);
     } else {
       toast({
         title: t('formTemplateSelector.selectionRequired'),
         description: t('formTemplateSelector.pleaseSelectTemplate'),
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Verificar límites antes de crear formulario en blanco
+  const handleCreateBlankFormWithLimitCheck = async () => {
+    try {
+      // Verificar si puede crear más formularios
+      const canCreate = await canCreateResource('forms');
+      
+      if (!canCreate) {
+        // Mostrar modal de upgrade con información específica
+        const formLimit = limits?.limits?.forms?.limit || 1;
+        const formUsed = limits?.limits?.forms?.used || 0;
+        const planName = limits?.planName || "Plan Básico";
+        
+        upgradeModal.showUpgradeModal('forms', formLimit, planName);
+        return;
+      }
+      
+      // Si puede crear, proceder normalmente
+      await handleCreateBlankForm();
+    } catch (error) {
+      console.error('Error verificando límites:', error);
+      toast({
+        title: t('common.error'),
+        description: "No se pudo verificar los límites de tu plan. Inténtalo de nuevo.",
         variant: "destructive",
       });
     }
@@ -302,6 +360,9 @@ export function FormTemplateSelector() {
         templateId: null // Indica crear formulario en blanco
       });
       
+      // Corregir el parsing del JSON response
+      const created = await response.json();
+      
       queryClient.invalidateQueries({ queryKey: ['/api/forms'] });
       toast({
         title: t('formTemplateSelector.blankFormCreated'),
@@ -309,8 +370,8 @@ export function FormTemplateSelector() {
       });
       
       // Redirigir al editor de formularios con el nuevo ID
-      if (response.id) {
-        setLocation(`/dashboard/form-editor/${response.id}`);
+      if (created.id) {
+        setLocation(`/dashboard/form-editor/${created.id}`);
       } else {
         setLocation('/dashboard?tab=forms');
       }
@@ -374,7 +435,15 @@ export function FormTemplateSelector() {
               </SelectContent>
             </Select>
           </div>
-          <Button variant="outline" onClick={handleCreateBlankForm}>
+          <Button 
+            variant="outline" 
+            onClick={handleCreateBlankFormWithLimitCheck}
+            disabled={limits?.limits?.forms?.remaining === 0}
+            title={limits?.limits?.forms?.remaining === 0 ? 
+              `Has alcanzado el límite de ${limits?.limits?.forms?.limit} formularios en tu plan ${limits?.planName}` : 
+              undefined}
+            data-testid="button-create-blank-form"
+          >
             {t('formTemplateSelector.createFromScratch')}
           </Button>
         </div>
@@ -631,12 +700,17 @@ export function FormTemplateSelector() {
             <CardFooter className="bg-muted/50 p-3">
               <Button 
                 variant={selectedTemplate === template.id ? "default" : "ghost"}
-                className={`w-full text-xs justify-between ${selectedTemplate === template.id ? "bg-primary text-primary-foreground" : "text-primary hover:bg-primary/10 hover:text-primary"}`}
+                className={`w-full text-xs justify-between ${selectedTemplate === template.id ? "bg-primary text-primary-foreground" : "text-primary hover:bg-primary/10 hover:text-primary"} ${limits?.limits?.forms?.remaining === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
+                disabled={limits?.limits?.forms?.remaining === 0}
+                title={limits?.limits?.forms?.remaining === 0 ? 
+                  `Has alcanzado el límite de ${limits?.limits?.forms?.limit} formularios en tu plan ${limits?.planName}` : 
+                  undefined}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedTemplate(template.id);
-                  createFormMutation.mutate(template.id);
+                  handleSubmitWithLimitCheck(template.id);
                 }}
+                data-testid={`button-use-template-${template.id}`}
               >
                 <span>{selectedTemplate === template.id ? t('formTemplateSelector.createWithTemplate') : t('formTemplateSelector.useTemplate')}</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
