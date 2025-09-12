@@ -65,11 +65,13 @@ export default function PricingPage() {
     retry: false
   });
   
+  // Helper para detectar planes anuales usando interval como fuente de verdad
+  const isAnnualPlan = (plan: PricingPlan) => 
+    plan.interval?.toLowerCase() === 'year' || /(^|_)annual$/.test(plan.id);
+
   // Filtrar y ordenar los planes según la selección de facturación (mensual o anual)
-  const filteredPlans = allPlans.filter(plan => 
-    billingType === 'monthly' 
-      ? !plan.isAnnual
-      : plan.isAnnual || plan.id === 'free' // Mantener el plan gratuito en ambas vistas
+  const plans = allPlans.filter(plan => 
+    billingType === 'annual' ? isAnnualPlan(plan) : !isAnnualPlan(plan)
   ).sort((a, b) => {
     // Plan gratuito siempre primero
     if (a.price === 0 && b.price !== 0) return -1;
@@ -77,11 +79,6 @@ export default function PricingPage() {
     // Resto ordenado por precio ascendente
     return a.price - b.price;
   });
-
-  // Limitar planes anuales a solo 3 (free, pro, enterprise)
-  const plans = billingType === 'annual' 
-    ? filteredPlans.slice(0, 3)
-    : filteredPlans;
 
   // Función para iniciar el proceso de checkout
   const handleSubscribe = async (planId: string) => {
@@ -264,7 +261,7 @@ export default function PricingPage() {
                             {plan.id.includes('enterprise') ? (
                               t('pricing.contact_us')
                             ) : (plan.discount ?? 0) > 0 ? (
-                              plan.isAnnual ? t('pricing.take_annual_offer') : t('pricing.take_offer')
+                              isAnnualPlan(plan) ? t('pricing.take_annual_offer') : t('pricing.take_offer')
                             ) : (
                               plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')
                             )}
@@ -272,7 +269,7 @@ export default function PricingPage() {
                           </>
                         )}
                       </Button>
-                      {plan.campaignInfo && plan.campaignInfo.promotionalMonths < 12 && !plan.isAnnual && (
+                      {plan.campaignInfo && plan.campaignInfo.promotionalMonths < 12 && !isAnnualPlan(plan) && (
                         <p className="text-xs text-gray-500 mt-2 text-center">
                           {plan.id.includes('enterprise') ? 
                             t('pricing.discount_duration', {
