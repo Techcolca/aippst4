@@ -5,7 +5,7 @@ import { storage } from "./storage";
 import jwt from "jsonwebtoken";
 import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
-import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
+import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, requireResourceLimit, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
 import { setupAuth } from './auth';
 // Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
