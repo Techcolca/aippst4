@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "tsx server/index.ts",
     "build": "vite build",
-    "build:frontend": "vite build", 
+    "build:frontend": "vite build",
     "start": "npm run migrate && node server/index.js",
     "migrate": "drizzle-kit push --force",
     "db:seed": "tsx setup-railway-db.js",
@@ -135,7 +135,7 @@
     "esbuild": "^0.25.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
-    "tsx": "^4.19.1",
+    "tsx": "4.20.5",
     "typescript": "5.6.3",
     "vite": "^6.0.0"
   },
