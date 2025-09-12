@@ -168,11 +168,10 @@ const FormPreview = () => {
   const { data: form, isLoading, isError, refetch } = useQuery<FormData>({
     queryKey: [`/api/forms/${formId}`],
     enabled: !!formId,
-    staleTime: 0, // Nunca usar caché
-    gcTime: 0, // No almacenar en caché (en v5 cacheTime se llama gcTime)
+    staleTime: 1000 * 60, // 1 minuto
     refetchOnWindowFocus: true,
     refetchOnMount: true,
-    refetchInterval: 2000, // Refrescar cada 2 segundos mientras esté visible
+    // Removed refetchInterval to prevent 429 rate limiting
   });
 
   // Cargar datos iniciales

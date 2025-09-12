@@ -65,9 +65,9 @@ export default function PricingPage() {
     retry: false
   });
   
-  // Helper para detectar planes anuales usando interval como fuente de verdad
+  // Helper para detectar planes anuales específicos (solo _annual suffix)
   const isAnnualPlan = (plan: PricingPlan) => 
-    plan.interval?.toLowerCase() === 'year' || /(^|_)annual$/.test(plan.id);
+    plan.id?.endsWith('_annual') || false;
 
   // Filtrar y ordenar los planes según la selección de facturación (mensual o anual)
   const plans = allPlans.filter(plan => 

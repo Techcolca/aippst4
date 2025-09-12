@@ -352,9 +352,9 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
   // Consulta para obtener los formularios con configuración de refresco automático
   const { data: forms, isLoading: isLoadingForms, refetch: refetchForms } = useQuery({
     queryKey: ["/api/forms"],
-    staleTime: 1000, // Considera los datos obsoletos después de 1 segundo
+    staleTime: 1000 * 60 * 2, // 2 minutos
     refetchOnWindowFocus: true, // Refresca cuando la ventana recibe el foco
-    refetchInterval: 5000, // Refresca cada 5 segundos
+    // Removed refetchInterval to prevent 429 rate limiting
   });
 
   // Mutación para eliminar formularios

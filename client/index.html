@@ -84,20 +84,12 @@
           });
         }
         
-        // Ejecutar inmediatamente
+        // ONLY execute once on page load - removed all polling to prevent 429 rate limiting
         syncUserWithAIPPS();
         checkAuthStatus();
         
-        // Re-ejecutar cada 30 segundos para mantener sincronización
-        setInterval(syncUserWithAIPPS, 30000);
-        
-        // También sincronizar cuando el usuario regrese a la pestaña
-        document.addEventListener('visibilitychange', function() {
-          if (!document.hidden) {
-            console.log('👀 Usuario regresó - sincronizando AIPPS...');
-            syncUserWithAIPPS();
-          }
-        });
+        // REMOVED: setInterval polling (was causing 429 rate limiting)
+        // REMOVED: visibilitychange listener (was causing 429 rate limiting)
         
         // Exponer función globalmente para debug
         window.syncAIPPS = syncUserWithAIPPS;
