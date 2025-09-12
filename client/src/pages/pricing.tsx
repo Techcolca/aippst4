@@ -62,15 +62,23 @@ export default function PricingPage() {
       if (!response.ok) throw new Error('Failed to fetch pricing plans');
       return response.json();
     },
-    retry: false
+    retry: false,
+    staleTime: 15 * 60 * 1000, // 15 minutos - evitar refetch frecuente
+    refetchOnWindowFocus: false, // No refetch al cambiar ventana
+    refetchOnReconnect: false   // No refetch al reconectar
   });
   
   // Helper para detectar planes anuales específicos (solo _annual suffix)
   const isAnnualPlan = (plan: PricingPlan) => 
     plan.id?.endsWith('_annual') || false;
 
+  // Deduplicar planes por ID para seguridad defensiva contra API duplicada
+  const uniquePlans = allPlans.filter((plan, index, self) => 
+    self.findIndex(p => p.id === plan.id) === index
+  );
+  
   // Filtrar y ordenar los planes según la selección de facturación (mensual o anual)
-  const plans = allPlans.filter(plan => 
+  const plans = uniquePlans.filter(plan => 
     billingType === 'annual' ? isAnnualPlan(plan) : !isAnnualPlan(plan)
   ).sort((a, b) => {
     // Plan gratuito siempre primero

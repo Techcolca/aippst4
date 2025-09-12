@@ -1373,7 +1373,7 @@ app.get("/api/health", (req, res) => {
         if (token) {
           try {
             // Verificar el token
-            console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
+            // Token verification (logging removed for security)
             const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
             console.log("Token verificado correctamente");
 
@@ -2238,7 +2238,7 @@ app.get("/api/health", (req, res) => {
 
                 const discounts = discountsResult.rows;
 
-                products = pricingPlans.flatMap(plan => {
+                products = pricingPlans.map(plan => {
                   const discount = discounts.find(d => d.plan_id === plan.planId.toLowerCase());
                   const planVariants = [];
                   const translatedInfo = getTranslatedPlanInfo(plan.planId.toLowerCase(), language);

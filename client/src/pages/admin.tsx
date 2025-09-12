@@ -381,14 +381,11 @@ export default function AdminPanel() {
     
     checkAdminAuth();
     
-    // Configurar verificación periódica de la sesión (cada 2 minutos)
-    const interval = setInterval(() => {
-      console.log("Verificando estado de autenticación del administrador...");
-      checkAdminAuth();
-    }, 2 * 60 * 1000);
+    // REMOVED: Periodic admin auth check to prevent 429 rate limiting
+    // Authentication is handled by AuthContext with appropriate throttling
     
-    return () => clearInterval(interval);
-  }, [user, navigate, toast, refreshAuth]);
+    return () => {}; // No cleanup needed
+  }, []); // Empty deps - solo ejecutar UNA VEZ al montar, evita loop infinito
   
   // Query para obtener estadísticas de administrador
   const { data: adminStats, isLoading: isLoadingStats, refetch: refetchStats } = useQuery<AdminStats>({

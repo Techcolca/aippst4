@@ -594,8 +594,10 @@ config.serverUrl = "https://aipps.ca";
     }
   }
 
-  // Function to periodically check for config updates
+  // Function to periodically check for config updates (DISABLED to prevent 429 rate limiting)
   function startConfigRefresh() {
+    // DISABLED: setInterval polling caused 429 rate limiting - config updates now manual only
+    if (false) { // Disabled polling
     setInterval(async () => {
       try {
         const response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}`);

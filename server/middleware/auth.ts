@@ -27,7 +27,7 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
   
   if (token) {
     try {
-      console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
+      // Token verification (logging removed for security)
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
       req.userId = decoded.userId;
       console.log("Token verificado correctamente. ID de usuario:", req.userId);
@@ -204,7 +204,7 @@ export async function authenticateJWT(req: Request, res: Response, next: NextFun
   
   try {
     // Verificar el token
-    console.log("Token encontrado, intentando verificar:", token.substring(0, 20) + "...");
+    // Token verification (logging removed for security)
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
     console.log("Token verificado correctamente. ID de usuario:", decoded.userId);
     req.userId = decoded.userId;

@@ -164,13 +164,10 @@ const response = await fetch(`${baseUrl}/api/auth/me`, {
   useEffect(() => {
     refreshAuth();
     
-    // Configurar verificación periódica de la sesión (cada 15 minutos)
-    const interval = setInterval(() => {
-      console.log("Verificando estado de sesión...");
-      refreshAuth();
-    }, 15 * 60 * 1000); // Aumentado a 15 minutos para reducir carga en el servidor
+    // REMOVED: Periodic session check to prevent 429 rate limiting
+    // Session is managed on-demand by components as needed
     
-    return () => clearInterval(interval);
+    return () => {}; // No cleanup needed
   }, []);
   
   // Login function
