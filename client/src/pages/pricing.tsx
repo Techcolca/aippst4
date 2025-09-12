@@ -65,12 +65,23 @@ export default function PricingPage() {
     retry: false
   });
   
-  // Filtrar los planes según la selección de facturación (mensual o anual)
-  const plans = allPlans.filter(plan => 
+  // Filtrar y ordenar los planes según la selección de facturación (mensual o anual)
+  const filteredPlans = allPlans.filter(plan => 
     billingType === 'monthly' 
       ? !plan.isAnnual
       : plan.isAnnual || plan.id === 'free' // Mantener el plan gratuito en ambas vistas
-  );
+  ).sort((a, b) => {
+    // Plan gratuito siempre primero
+    if (a.price === 0 && b.price !== 0) return -1;
+    if (b.price === 0 && a.price !== 0) return 1;
+    // Resto ordenado por precio ascendente
+    return a.price - b.price;
+  });
+
+  // Limitar planes anuales a solo 3 (free, pro, enterprise)
+  const plans = billingType === 'annual' 
+    ? filteredPlans.slice(0, 3)
+    : filteredPlans;
 
   // Función para iniciar el proceso de checkout
   const handleSubscribe = async (planId: string) => {
@@ -180,7 +191,11 @@ export default function PricingPage() {
                 <Loader2 className="h-12 w-12 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-stretch max-w-none">
+              <div className={`grid gap-6 justify-items-center max-w-6xl mx-auto ${
+                plans.length <= 3 
+                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 place-content-center' 
+                  : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              }`}>
                 {plans.map((plan) => (
                   <Card key={plan.id} className={`flex flex-col justify-between h-full w-full ${plan.id === recommendedPlanId ? 'border-primary shadow-lg shadow-primary/20 dark:shadow-primary/10 relative' : ''}`}>
                     {plan.id === recommendedPlanId && (
