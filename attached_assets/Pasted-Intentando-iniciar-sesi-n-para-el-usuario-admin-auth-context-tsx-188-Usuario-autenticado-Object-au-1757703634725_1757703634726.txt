@@ -1,0 +1,45 @@
+Intentando iniciar sesión para el usuario: admin
+auth-context.tsx:188 Usuario autenticado: Object
+auth-context.tsx:193 Token guardado en localStorage: eyJhbGciOiJIUzI1NiIs...
+queryClient.ts:60 Ejecutando consulta para: /api/integrations
+queryClient.ts:60 Ejecutando consulta para: /api/settings
+queryClient.ts:60 Ejecutando consulta para: /api/conversations
+queryClient.ts:60 Ejecutando consulta para: /api/forms
+queryClient.ts:60 Ejecutando consulta para: /api/automations
+queryClient.ts:60 Ejecutando consulta para: /api/dashboard/stats
+6queryClient.ts:78 Respuesta: 200 OK
+admin.tsx:344 Verificando autenticación para panel de administración...
+auth-context.tsx:79 Última verificación hace 10s. Omitiendo...
+queryClient.ts:60 Ejecutando consulta para: /api/admin/stats
+admin.tsx:377 Acceso autorizado al panel de administración para: admin
+queryClient.ts:78 Respuesta: 200 OK
+queryClient.ts:60 Ejecutando consulta para: /api/admin/pricing-plans
+queryClient.ts:78 Respuesta: 200 OK
+queryClient.ts:60 Ejecutando consulta para: /api/admin/pricing-plans
+queryClient.ts:78 Respuesta: 200 OK
+queryClient.ts:60 Ejecutando consulta para: /api/admin/pricing-plans
+queryClient.ts:78 Respuesta: 200 OK
+admin.tsx:344 Verificando autenticación para panel de administración...
+auth-context.tsx:86 Verificando estado de autenticación...
+auth-context.tsx:128 Estado de la respuesta: 200
+auth-context.tsx:132 Usuario autenticado correctamente
+admin.tsx:377 Acceso autorizado al panel de administración para: admin
+queryClient.ts:60 Ejecutando consulta para: /api/admin/pricing-plans
+queryClient.ts:78 Respuesta: 200 OK
+queryClient.ts:60 Ejecutando consulta para: /api/admin/pricing-plans
+queryClient.ts:78 Respuesta: 200 OK
+queryClient.ts:60 Ejecutando consulta para: /api/integrations
+queryClient.ts:60 Ejecutando consulta para: /api/settings
+queryClient.ts:60 Ejecutando consulta para: /api/conversations
+queryClient.ts:60 Ejecutando consulta para: /api/forms
+queryClient.ts:60 Ejecutando consulta para: /api/automations
+dashboard.tsx:34 Dashboard: Setting initialTab to settings from URL query parameters
+queryClient.ts:60 Ejecutando consulta para: /api/dashboard/stats
+6queryClient.ts:78 Respuesta: 200 OK
+admin.tsx:344 Verificando autenticación para panel de administración...
+auth-context.tsx:86 Verificando estado de autenticación...
+auth-context.tsx:128 Estado de la respuesta: 200
+auth-context.tsx:132 Usuario autenticado correctamente
+admin.tsx:377 Acceso autorizado al panel de administración para: admin
+queryClient.ts:60 Ejecutando consulta para: /api/discount-codes
+queryClient.ts:78 Respuesta: 200 OK
