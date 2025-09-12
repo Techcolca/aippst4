@@ -2304,38 +2304,23 @@ app.get("/api/health", (req, res) => {
                   return planVariants;
                 });
               } else {
-                // Sin campaña activa, transformar planes normalmente
-                products = pricingPlans.flatMap(plan => {
+                // Sin campaña activa, transformar planes normalmente usando los planes reales de la DB
+                products = pricingPlans.map(plan => {
                   const translatedInfo = getTranslatedPlanInfo(plan.planId.toLowerCase(), language);
-                  return [
-                  {
+                  return {
                     id: plan.planId.toLowerCase(),
                     name: translatedInfo.name,
                     description: translatedInfo.description,
                     price: plan.price,
+                    priceDisplay: plan.priceDisplay || `$${plan.price}/${plan.interval === 'year' ? 'año' : 'mes'}`,
                     currency: plan.currency || "usd",
                     interval: plan.interval,
                     features: Array.isArray(plan.features) ? plan.features : [],
                     tier: plan.tier,
                     interactionsLimit: plan.interactionsLimit,
-                    isAnnual: false,
+                    isAnnual: plan.interval === 'year',
                     discount: 0
-                  },
-                  {
-                    id: plan.planId.toLowerCase() + '_annual',
-                    name: translatedInfo.name,
-                    description: translatedInfo.description,
-                    price: Math.round(plan.price * 12 * 0.85), // 15% descuento anual estándar
-                    currency: plan.currency || "usd",
-                    interval: 'year',
-                    features: Array.isArray(plan.features) ? plan.features : [],
-                    tier: plan.tier,
-                    interactionsLimit: plan.interactionsLimit,
-                    originalPrice: plan.price * 12,
-                    isAnnual: true,
-                    discount: 15
-                  }
-                ];
+                  };
                 });
               }
 
