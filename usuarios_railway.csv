@@ -1,0 +1,3 @@
+"id","username","password","email","full_name","api_key","created_at","stripe_customer_id","stripe_subscription_id"
+1,"admin","$2b$10$cxn5CWSchagpODxZoLUrTepwU2RtGPd6ixoYA21sqDSLbSRB3sM/m","admin@aipi.com","Administrador AIPI","aipi_admin_3f4krx9dtfp","2025-09-02 17:29:19.551884",NULL,NULL
+3,"Empresa","$2b$10$1VfJZg77yvgVax2MCKzoe.RWodNwa3NuYTZtKKX46n2eFZZkDOH4S","perc80@hotmail.com","Techcolca","aipi_39ab21b57203b2cdbf6308ad51595302","2025-09-02 19:35:07.2268",NULL,NULL
