@@ -1,0 +1,31 @@
+id,conversation_id,content,role,timestamp
+1,1,Hola como estas?,user,2025-09-05 17:22:50.88781
+2,1,necesito saber los servicios,user,2025-09-05 18:07:18.774921
+3,1,hi,user,2025-09-05 18:22:27.338029
+4,1,hola,user,2025-09-05 18:24:57.788397
+5,1,hi como estas? dime sobre aipps,user,2025-09-05 18:41:31.362997
+6,1,que bueno ayudame,user,2025-09-05 19:12:43.635096
+7,1,que cosa,user,2025-09-05 19:13:38.855265
+8,1,necesito informacion,user,2025-09-05 19:27:38.099943
+9,1,hola,user,2025-09-05 19:28:06.430986
+10,1,ola necesito ayuda con esta informacion,user,2025-09-06 11:46:00.792692
+11,1,hi i need the information,user,2025-09-06 12:23:33.547159
+12,1,quiero saber mas de techcolca,user,2025-09-06 12:34:54.156386
+13,1,Hola como estas?,user,2025-09-06 12:36:37.015373
+14,2,Hola como estas?,user,2025-09-06 15:21:52.020316
+15,1,hi como estas,user,2025-09-06 16:11:33.104248
+16,1,ola,user,2025-09-06 17:34:30.710666
+17,2,Hola,user,2025-09-06 17:55:00.082755
+18,2,Hola,user,2025-09-06 20:11:46.11556
+19,2,Hola como vas?,user,2025-09-07 17:47:25.828691
+20,1,hi,user,2025-09-07 17:58:14.303696
+21,3,hi,user,2025-09-07 17:58:47.433201
+22,4,Hola,user,2025-09-07 18:26:31.677789
+23,4,hola,user,2025-09-07 18:28:00.90029
+24,4,hola,user,2025-09-07 18:29:14.088669
+25,5,como sigues hoy?,user,2025-09-07 18:44:50.599317
+26,5,hola,user,2025-09-07 18:45:07.349403
+27,6,Buenos dias,user,2025-09-07 18:48:50.656578
+28,6,mira,user,2025-09-07 18:49:02.399254
+29,6,el error es este,user,2025-09-07 18:49:17.993356
+30,7,entiedno,user,2025-09-07 19:13:41.074703
