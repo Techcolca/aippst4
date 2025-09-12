@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import jwt from "jsonwebtoken";
 import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
+import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
 import { setupAuth } from './auth';
 // Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
@@ -553,6 +554,80 @@ app.get("/api/health", (req, res) => {
     }
   });
 
+  // ================ Plan Limits Routes ================
+  
+  // Get user limits summary
+  app.get("/api/limits/summary", verifyToken, async (req, res) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+      }
+
+      const summary = await getUserLimitsSummary(req.userId);
+      
+      if (!summary) {
+        return res.status(404).json({ message: 'No se encontró información de suscripción' });
+      }
+
+      res.json(summary);
+    } catch (error) {
+      console.error('Error obteniendo resumen de límites:', error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  });
+
+  // Check if user can create a resource
+  app.get("/api/limits/check-resource/:resourceType", verifyToken, async (req, res) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+      }
+
+      const resourceType = req.params.resourceType as LimitableResource;
+      
+      // Validate resource type
+      const validResources: LimitableResource[] = ['integrations', 'forms', 'conversations'];
+      if (!validResources.includes(resourceType)) {
+        return res.status(400).json({ message: `Tipo de recurso no válido: ${resourceType}` });
+      }
+
+      const result = await checkResourceLimit(req.userId, resourceType);
+      res.json(result);
+    } catch (error) {
+      console.error('Error verificando límite de recurso:', error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  });
+
+  // Check if user has access to a feature
+  app.get("/api/limits/check-feature/:feature", verifyToken, async (req, res) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ message: 'Usuario no autenticado' });
+      }
+
+      const feature = req.params.feature as LimitableFeature;
+      
+      // Validate feature
+      const validFeatures: LimitableFeature[] = [
+        'customBranding', 'advancedAnalytics', 'apiAccess', 'basicAutomations',
+        'advancedAutomations', 'webhooks', 'basicExport', 'advancedExport', 
+        'dataBackups', 'crmIntegrations', 'calendarIntegrations', 'emailIntegrations',
+        'multiUserAccess', 'teamManagement', 'whiteLabel'
+      ];
+      
+      if (!validFeatures.includes(feature)) {
+        return res.status(400).json({ message: `Funcionalidad no válida: ${feature}` });
+      }
+
+      const result = await checkFeatureAccess(req.userId, feature);
+      res.json(result);
+    } catch (error) {
+      console.error('Error verificando acceso a funcionalidad:', error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  });
+
   // ================ Authenticated Conversations Routes ================
 
   // Get user conversations specifically for fullscreen widget with apiKey verification
@@ -597,7 +672,11 @@ app.get("/api/health", (req, res) => {
         );
 
         // Sort by creation date (newest first)
-        userConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        userConversations.sort((a, b) => {
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          return dateB - dateA;
+        });
 
 
         res.json(userConversations);
@@ -622,14 +701,18 @@ app.get("/api/health", (req, res) => {
       }
 
       // Get conversations from all user integrations
-      let allConversations = [];
+      let allConversations: any[] = [];
       for (const integration of integrations) {
         const conversations = await storage.getConversations(integration.id);
         allConversations = allConversations.concat(conversations);
       }
 
       // Sort by creation date (newest first)
-      allConversations.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      allConversations.sort((a, b) => {
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
 
       res.json(allConversations);
     } catch (error) {
@@ -1006,33 +1089,8 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    app.post("/api/integrations", authenticateJWT, upload.array('documents'), async (req, res) => {
+    app.post("/api/integrations", verifyToken, requireResourceLimit('integrations'), upload.array('documents'), async (req, res) => {
       try {
-
-        // Verificar permisos del plan para crear integraciones
-        const subscription = await getUserSubscription(req.userId);
-        const userPlan = subscription?.tier || 'basic';
-
-        // Importar funciones de verificación de permisos
-        const { canCreateResource, getResourceLimit, getUpgradeMessage } = await import('../shared/feature-permissions');
-
-        // Contar integraciones actuales del usuario
-        const currentIntegrations = await storage.getIntegrations(req.userId);
-        const currentCount = currentIntegrations.length;
-
-        // Verificar si puede crear más integraciones
-        const canCreate = canCreateResource(userPlan, 'integrations', currentCount);
-        const limit = getResourceLimit(userPlan, 'integrations');
-
-        if (!canCreate) {
-          const upgradeMessage = getUpgradeMessage(userPlan, 'createIntegrations');
-          return res.status(403).json({
-            message: upgradeMessage,
-            currentCount: currentCount,
-            limit: limit === -1 ? 'Ilimitado' : limit,
-            planRequired: userPlan === 'basic' ? 'startup' : 'professional'
-          });
-        }
 
         // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
          //const isPablo = req.userId === 1; // ID del usuario Pablo
@@ -2752,7 +2810,7 @@ app.get("/api/health", (req, res) => {
         // Encontrar la suscripción activa más reciente (ordenadas por fecha de creación descendente)
         const activeSubscription = subscriptions
           .filter(sub => sub.status === "active")
-          .sort((a, b) => new Date(b.createdAt || new Date()).getTime() - new Date(a.createdAt || new Date()).getTime())
+          .sort((a, b) => new Date(b.createdAt || new Date()).getTime() - new Date(a.createdAt || new Date()).getTime())[0];
 
         if (!activeSubscription) {
           return res.json({
@@ -5405,35 +5463,10 @@ app.get("/api/health", (req, res) => {
     return structure;
   };
 
-  app.post("/api/forms", authenticateJWT, async (req, res) => {
+  app.post("/api/forms", verifyToken, requireResourceLimit('forms'), async (req, res) => {
     try {
       const userId = req.userId;
       const { templateId, language = 'es', ...formData } = req.body;
-
-      // Verificar permisos del plan para crear formularios
-      const subscription = await getUserSubscription(userId);
-      const userPlan = subscription?.tier || 'basic';
-
-      // Importar funciones de verificación de permisos
-      const { canCreateResource, getResourceLimit, getUpgradeMessage } = await import('../shared/feature-permissions');
-
-      // Contar formularios actuales del usuario
-      const currentForms = await storage.getForms(userId);
-      const currentCount = currentForms.length;
-
-      // Verificar si puede crear más formularios
-      const canCreate = canCreateResource(userPlan, 'forms', currentCount);
-      const limit = getResourceLimit(userPlan, 'forms');
-
-      if (!canCreate) {
-        const upgradeMessage = getUpgradeMessage(userPlan, 'createForms');
-        return res.status(403).json({
-          message: upgradeMessage,
-          currentCount: currentCount,
-          limit: limit === -1 ? 'Ilimitado' : limit,
-          planRequired: userPlan === 'basic' ? 'startup' : 'professional'
-        });
-      }
 
       // Si se proporciona templateId, crear formulario basado en plantilla
       if (templateId) {
