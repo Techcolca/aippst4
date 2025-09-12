@@ -15,13 +15,12 @@ import Footer from '@/components/footer';
 import { apiRequest } from '@/lib/queryClient';
 import { useTranslation } from 'react-i18next';
 
-if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
-}
-
 // Make sure to call loadStripe outside of a component's render to avoid
 // recreating the Stripe object on every render.
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+// Handle missing Stripe key gracefully - payments will be disabled but app continues to work
+const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
+  ? loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY)
+  : null;
 
 interface PricingPlan {
   id: string;
@@ -259,7 +258,20 @@ export default function Checkout() {
               <CardDescription>{t('paymentSecure')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {sessionId ? (
+              {!stripePromise ? (
+                // Show message when Stripe is not configured
+                <div className="bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
+                  <div className="flex">
+                    <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
+                    <div>
+                      <p className="text-sm text-yellow-600 dark:text-yellow-400 font-medium">Payment System Not Configured</p>
+                      <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+                        The payment system is currently being set up. Please contact support for assistance with your subscription.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : sessionId ? (
                 // Show Stripe Elements form for embedded checkout
                 <Elements stripe={stripePromise} options={{ clientSecret: sessionId }}>
                   <CheckoutForm />
