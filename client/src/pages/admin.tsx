@@ -394,7 +394,7 @@ export default function AdminPanel() {
   const { data: adminStats, isLoading: isLoadingStats, refetch: refetchStats } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"],
     enabled: !!user && user.username === 'admin',
-    refetchInterval: 30000, // Actualizar cada 30 segundos
+    // Removed refetchInterval to prevent 429 errors - manual refresh only
   });
   
   // Query para obtener lista de usuarios
