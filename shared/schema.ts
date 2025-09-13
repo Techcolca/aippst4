@@ -1,4 +1,5 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json, date, time } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, json, date, time, numeric, unique, check, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -528,3 +529,184 @@ export type PromotionalMessage = typeof promotionalMessages.$inferSelect;
 export type InsertPromotionalMessage = z.infer<typeof insertPromotionalMessageSchema>;
 export type WelcomeMessage = typeof welcomeMessages.$inferSelect;
 export type InsertWelcomeMessage = z.infer<typeof insertWelcomeMessageSchema>;
+
+// ===================================================================
+// NUEVAS TABLAS - SISTEMA DE PRESUPUESTOS FLEXIBLES
+// ===================================================================
+
+// Tabla de presupuestos de usuario
+export const userBudgets = pgTable("user_budgets", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  monthlyBudget: numeric("monthly_budget", { precision: 12, scale: 2 }).notNull(), // Presupuesto mensual con precisión decimal
+  currentSpent: numeric("current_spent", { precision: 12, scale: 2 }).default("0.00").notNull(), // Gasto actual del mes
+  currency: text("currency").default("CAD").notNull(), // Moneda del presupuesto
+  billingCycleDay: integer("billing_cycle_day").default(1).notNull(), // Día del mes para reset (1-28)
+  alertThreshold50: boolean("alert_threshold_50").default(true), // Alerta al 50%
+  alertThreshold80: boolean("alert_threshold_80").default(true), // Alerta al 80%
+  alertThreshold90: boolean("alert_threshold_90").default(true), // Alerta al 90%
+  alertThreshold100: boolean("alert_threshold_100").default(true), // Alerta al 100%
+  isSuspended: boolean("is_suspended").default(false), // Estado de suspensión
+  suspendedAt: timestamp("suspended_at"), // Fecha de suspensión
+  lastResetAt: timestamp("last_reset_at").defaultNow(), // Último reset mensual
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  // Constraint único: un presupuesto por usuario
+  uniqueUserId: unique().on(table.userId),
+  // Validaciones CHECK
+  validBillingDay: check("valid_billing_day", sql`${table.billingCycleDay} >= 1 AND ${table.billingCycleDay} <= 28`),
+  positiveMonthlyBudget: check("positive_monthly_budget", sql`${table.monthlyBudget} >= 0`),
+  positiveCurrentSpent: check("positive_current_spent", sql`${table.currentSpent} >= 0`),
+}));
+
+export const insertUserBudgetSchema = createInsertSchema(userBudgets).pick({
+  userId: true,
+  monthlyBudget: true,
+  currency: true,
+  billingCycleDay: true,
+  alertThreshold50: true,
+  alertThreshold80: true,
+  alertThreshold90: true,
+  alertThreshold100: true,
+}).extend({
+  // Validaciones adicionales para campos numéricos
+  monthlyBudget: z.union([z.string(), z.number()]).transform(val => Number(val)).pipe(z.number().min(0, "Monthly budget must be positive")),
+  billingCycleDay: z.number().int().min(1, "Billing cycle day must be between 1 and 28").max(28, "Billing cycle day must be between 1 and 28"),
+});
+
+// Tabla de costos por acción
+export const actionCosts = pgTable("action_costs", {
+  id: serial("id").primaryKey(),
+  actionType: text("action_type").notNull().unique(), // "create_integration", "create_form", "send_email", "chat_conversation"
+  baseCost: numeric("base_cost", { precision: 12, scale: 2 }).notNull(), // Costo base con precisión decimal
+  markupPercentage: integer("markup_percentage").default(30).notNull(), // Porcentaje de ganancia (default 30%)
+  finalCost: numeric("final_cost", { precision: 12, scale: 2 }).notNull(), // Costo final calculado (base + markup)
+  currency: text("currency").default("CAD").notNull(),
+  isActive: boolean("is_active").default(true),
+  updateMethod: text("update_method").default("manual").notNull(), // "manual", "ai_suggested", "automatic"
+  lastUpdatedBy: integer("last_updated_by").references(() => users.id), // Admin que hizo el último cambio
+  aiJustification: text("ai_justification"), // Justificación de sugerencia IA
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+}, (table) => ({
+  // Validaciones CHECK para costos
+  positiveBaseCost: check("positive_base_cost", sql`${table.baseCost} >= 0`),
+  positiveFinalCost: check("positive_final_cost", sql`${table.finalCost} >= 0`),
+  validMarkup: check("valid_markup", sql`${table.markupPercentage} >= 0 AND ${table.markupPercentage} <= 1000`),
+}));
+
+export const insertActionCostSchema = createInsertSchema(actionCosts).pick({
+  actionType: true,
+  baseCost: true,
+  markupPercentage: true,
+  finalCost: true,
+  currency: true,
+  isActive: true,
+  updateMethod: true,
+  lastUpdatedBy: true,
+  aiJustification: true,
+}).extend({
+  // Validaciones adicionales para campos numéricos
+  baseCost: z.union([z.string(), z.number()]).transform(val => Number(val)).pipe(z.number().min(0, "Base cost must be positive")),
+  finalCost: z.union([z.string(), z.number()]).transform(val => Number(val)).pipe(z.number().min(0, "Final cost must be positive")),
+  markupPercentage: z.number().int().min(0, "Markup percentage must be positive").max(1000, "Markup percentage cannot exceed 1000%"),
+});
+
+// Tabla de seguimiento de uso
+export const usageTracking = pgTable("usage_tracking", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  actionType: text("action_type").notNull().references(() => actionCosts.actionType),
+  costApplied: numeric("cost_applied", { precision: 12, scale: 2 }).notNull(), // Costo que se aplicó en el momento
+  currency: text("currency").default("CAD").notNull(),
+  resourceId: integer("resource_id"), // ID del recurso creado (integración, formulario, etc.)
+  resourceType: text("resource_type"), // Tipo de recurso ("integration", "form", "conversation", etc.)
+  billingMonth: text("billing_month").notNull(), // YYYY-MM para agrupación mensual
+  metadata: json("metadata"), // Datos adicionales específicos de la acción
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  // Índices para performance
+  userBillingIdx: index("usage_user_billing_idx").on(table.userId, table.billingMonth),
+  actionTypeIdx: index("usage_action_type_idx").on(table.actionType),
+  createdAtIdx: index("usage_created_at_idx").on(table.createdAt),
+  // Validaciones CHECK
+  positiveCostApplied: check("positive_cost_applied", sql`${table.costApplied} >= 0`),
+  validBillingMonth: check("valid_billing_month", sql`${table.billingMonth} ~ '^\\d{4}-\\d{2}$'`),
+}));
+
+export const insertUsageTrackingSchema = createInsertSchema(usageTracking).pick({
+  userId: true,
+  actionType: true,
+  costApplied: true,
+  currency: true,
+  resourceId: true,
+  resourceType: true,
+  billingMonth: true,
+  metadata: true,
+}).extend({
+  // Validaciones adicionales para campos numéricos y de formato
+  costApplied: z.union([z.string(), z.number()]).transform(val => Number(val)).pipe(z.number().min(0, "Cost applied must be positive")),
+  billingMonth: z.string().regex(/^\d{4}-\d{2}$/, "Billing month must be in YYYY-MM format"),
+});
+
+// Tabla de alertas enviadas
+export const sentAlerts = pgTable("sent_alerts", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  alertType: text("alert_type").notNull(), // "threshold_50", "threshold_80", "threshold_90", "budget_exceeded", "budget_suspended"
+  thresholdReached: integer("threshold_reached"), // Porcentaje alcanzado (50, 80, 90, 100)
+  currentSpent: numeric("current_spent", { precision: 12, scale: 2 }).notNull(), // Gasto al momento de la alerta
+  monthlyBudget: numeric("monthly_budget", { precision: 12, scale: 2 }).notNull(), // Presupuesto mensual al momento
+  deliveryMethod: text("delivery_method").notNull(), // "email", "in_app", "push"
+  deliveryStatus: text("delivery_status").default("pending").notNull(), // "pending", "sent", "delivered", "failed"
+  emailAddress: text("email_address"), // Email al que se envió (si aplica)
+  messageContent: text("message_content"), // Contenido del mensaje enviado
+  billingMonth: text("billing_month").notNull(), // YYYY-MM para evitar spam de alertas repetidas
+  createdAt: timestamp("created_at").defaultNow(),
+  deliveredAt: timestamp("delivered_at"), // Timestamp cuando se confirmó la entrega
+}, (table) => ({
+  // Constraint único anti-spam: evita alertas duplicadas para el mismo usuario, tipo, umbral y mes
+  uniqueAlert: unique().on(table.userId, table.alertType, table.thresholdReached, table.billingMonth),
+  // Índices para performance
+  userBillingAlertIdx: index("alerts_user_billing_idx").on(table.userId, table.billingMonth),
+  deliveryStatusIdx: index("alerts_delivery_status_idx").on(table.deliveryStatus),
+  createdAtIdx: index("alerts_created_at_idx").on(table.createdAt),
+  // Validaciones CHECK
+  validThreshold: check("valid_threshold", sql`${table.thresholdReached} IN (50, 80, 90, 100) OR ${table.thresholdReached} IS NULL`),
+  positiveCurrentSpent: check("positive_current_spent_alert", sql`${table.currentSpent} >= 0`),
+  positiveMonthlyBudget: check("positive_monthly_budget_alert", sql`${table.monthlyBudget} >= 0`),
+  validBillingMonth: check("valid_billing_month_alert", sql`${table.billingMonth} ~ '^\\d{4}-\\d{2}$'`),
+}));
+
+export const insertSentAlertSchema = createInsertSchema(sentAlerts).pick({
+  userId: true,
+  alertType: true,
+  thresholdReached: true,
+  currentSpent: true,
+  monthlyBudget: true,
+  deliveryMethod: true,
+  deliveryStatus: true,
+  emailAddress: true,
+  messageContent: true,
+  billingMonth: true,
+}).extend({
+  // Validaciones adicionales para campos numéricos y de formato
+  currentSpent: z.union([z.string(), z.number()]).transform(val => Number(val)).pipe(z.number().min(0, "Current spent must be positive")),
+  monthlyBudget: z.union([z.string(), z.number()]).transform(val => Number(val)).pipe(z.number().min(0, "Monthly budget must be positive")),
+  thresholdReached: z.number().int().refine(val => val === null || [50, 80, 90, 100].includes(val), "Threshold must be 50, 80, 90, or 100").optional(),
+  billingMonth: z.string().regex(/^\d{4}-\d{2}$/, "Billing month must be in YYYY-MM format"),
+});
+
+// Tipos TypeScript para las nuevas tablas
+export type UserBudget = typeof userBudgets.$inferSelect;
+export type InsertUserBudget = z.infer<typeof insertUserBudgetSchema>;
+
+export type ActionCost = typeof actionCosts.$inferSelect;
+export type InsertActionCost = z.infer<typeof insertActionCostSchema>;
+
+export type UsageTracking = typeof usageTracking.$inferSelect;
+export type InsertUsageTracking = z.infer<typeof insertUsageTrackingSchema>;
+
+export type SentAlert = typeof sentAlerts.$inferSelect;
+export type InsertSentAlert = z.infer<typeof insertSentAlertSchema>;

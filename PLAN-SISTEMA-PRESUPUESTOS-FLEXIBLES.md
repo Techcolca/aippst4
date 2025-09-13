@@ -61,27 +61,27 @@ Transformar el sistema actual de **límites rígidos por plan** a un **sistema d
 
 ## **FASE 2: NUEVA ARQUITECTURA DE DATOS**
 
-### **Paso 2.1: Diseño de Nuevas Tablas**
+### **Paso 2.1: Diseño de Nuevas Tablas** ✅ COMPLETADO
 
-**Tabla Presupuestos de Usuario:**
-- ID usuario, presupuesto mensual, gasto actual, fecha de reset
-- Umbrales de alerta personalizables (50%, 80%, 90%, 100%)
-- Estado de suspensión, día de corte mensual configurable
-- Timestamps de creación y actualización
+**✅ Tabla `user_budgets` (Presupuestos de Usuario):**
+- userId, monthlyBudget, currentSpent, billingCycleDay
+- Umbrales de alerta configurables (50%, 80%, 90%, 100%)
+- Estado de suspensión, timestamps de reset y creación
 
-**Tabla Costos por Acción:**
-- Tipo de acción, costo base, porcentaje markup, costo final
-- Estado activo/inactivo, moneda, método de actualización (manual/IA)
-- Usuario que hizo último cambio, timestamp de modificación
+**✅ Tabla `action_costs` (Costos por Acción):**
+- actionType (único), baseCost, markupPercentage, finalCost
+- updateMethod (manual/IA), lastUpdatedBy, aiJustification
+- Estado activo/inactivo, timestamps
 
-**Tabla Seguimiento de Uso:**
-- Usuario, tipo de acción, costo aplicado, ID de recurso creado
-- Metadata adicional, timestamp, mes de facturación
-- Referencia a integración/formulario/conversación creada
+**✅ Tabla `usage_tracking` (Seguimiento de Uso):**
+- userId, actionType, costApplied, resourceId/Type
+- billingMonth para agrupación, metadata JSON
+- Timestamps para auditoría completa
 
-**Tabla Alertas Enviadas:**
-- Usuario, tipo de alerta, umbral alcanzado, método de envío
-- Estado de entrega, timestamp, contenido del mensaje
+**✅ Tabla `sent_alerts` (Alertas Enviadas):**
+- userId, alertType, thresholdReached, deliveryMethod
+- deliveryStatus, messageContent, billingMonth
+- Sistema anti-spam integrado
 
 ### **Paso 2.2: Modificaciones a Tablas Existentes**
 - Mantener compatibilidad total con sistema de suscripciones Stripe
