@@ -618,6 +618,7 @@ export const usageTracking = pgTable("usage_tracking", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   actionType: text("action_type").notNull().references(() => actionCosts.actionType),
+  actionCostId: integer("action_cost_id").notNull().references(() => actionCosts.id), // Referencia al precio usado para auditoría
   costApplied: numeric("cost_applied", { precision: 12, scale: 2 }).notNull(), // Costo que se aplicó en el momento
   currency: text("currency").default("CAD").notNull(),
   resourceId: integer("resource_id"), // ID del recurso creado (integración, formulario, etc.)
@@ -638,6 +639,7 @@ export const usageTracking = pgTable("usage_tracking", {
 export const insertUsageTrackingSchema = createInsertSchema(usageTracking).pick({
   userId: true,
   actionType: true,
+  actionCostId: true,
   costApplied: true,
   currency: true,
   resourceId: true,
