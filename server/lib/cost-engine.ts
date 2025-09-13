@@ -124,42 +124,16 @@ export async function checkBudgetAvailability(
   actionType: ActionType
 ): Promise<BudgetCheckResult> {
   try {
-    // Verificación optimizada sin transacción ni locks innecesarios
-    const verificationQuery = await db
-      .select({
-        // Datos del presupuesto
-        userBudgetId: userBudgets.id,
-        monthlyBudget: userBudgets.monthlyBudget,
-        currentSpent: userBudgets.currentSpent,
-        currency: userBudgets.currency,
-        isSuspended: userBudgets.isSuspended,
-        alertThreshold50: userBudgets.alertThreshold50,
-        alertThreshold80: userBudgets.alertThreshold80,
-        alertThreshold90: userBudgets.alertThreshold90,
-        alertThreshold100: userBudgets.alertThreshold100,
-        
-        // Datos del costo de acción
-        actionCostId: actionCosts.id,
-        actionType: actionCosts.actionType,
-        finalCost: actionCosts.finalCost,
-        costCurrency: actionCosts.currency,
-        isActive: actionCosts.isActive,
-        
-        // Cálculos SQL para evitar JavaScript arithmetic
-        hasEnoughFunds: sql<boolean>`(${userBudgets.monthlyBudget} - ${userBudgets.currentSpent}) >= ${actionCosts.finalCost}`,
-        remainingBudget: sql<string>`(${userBudgets.monthlyBudget} - ${userBudgets.currentSpent})::numeric(12,2)::text`,
-        currentPercentage: sql<number>`(${userBudgets.currentSpent}::numeric / ${userBudgets.monthlyBudget}::numeric * 100)::numeric(5,2)`,
-        newPercentage: sql<number>`((${userBudgets.currentSpent} + ${actionCosts.finalCost})::numeric / ${userBudgets.monthlyBudget}::numeric * 100)::numeric(5,2)`
-      })
+    // Verificación en dos etapas para evitar problemas SQL complejos
+    
+    // 1. Obtener presupuesto del usuario
+    const userBudgetQuery = await db
+      .select()
       .from(userBudgets)
-      .leftJoin(actionCosts, and(
-        eq(actionCosts.actionType, actionType),
-        eq(actionCosts.isActive, true)
-      ))
       .where(eq(userBudgets.userId, userId))
       .limit(1);
 
-    if (verificationQuery.length === 0) {
+    if (userBudgetQuery.length === 0) {
       return {
         allowed: false,
         userBudget: null,
@@ -171,134 +145,87 @@ export async function checkBudgetAvailability(
       };
     }
 
-    const result = verificationQuery[0];
+    const userBudget = userBudgetQuery[0];
 
-    // Verificar si se encontró el costo de acción
-    if (!result.actionCostId || !result.isActive) {
+    // 2. Obtener costo de la acción
+    const actionCostQuery = await db
+      .select()
+      .from(actionCosts)
+      .where(and(
+        eq(actionCosts.actionType, actionType),
+        eq(actionCosts.isActive, true)
+      ))
+      .limit(1);
+
+    if (actionCostQuery.length === 0) {
       return {
         allowed: false,
-        userBudget: {
-          id: result.userBudgetId,
-          userId,
-          monthlyBudget: result.monthlyBudget,
-          currentSpent: result.currentSpent,
-          currency: result.currency,
-          isSuspended: result.isSuspended,
-          alertThreshold50: result.alertThreshold50,
-          alertThreshold80: result.alertThreshold80,
-          alertThreshold90: result.alertThreshold90,
-          alertThreshold100: result.alertThreshold100
-        } as UserBudget,
+        userBudget,
         actionCost: null,
         costToApply: "0.00",
-        remainingBudget: result.remainingBudget,
-        percentageUsed: result.currentPercentage,
+        remainingBudget: (parseFloat(userBudget.monthlyBudget) - parseFloat(userBudget.currentSpent)).toFixed(2),
+        percentageUsed: Math.round((parseFloat(userBudget.currentSpent) / parseFloat(userBudget.monthlyBudget)) * 100),
         reason: `Costo no configurado para acción: ${actionType}`
       };
     }
 
-    // Verificar si está suspendido
-    if (result.isSuspended) {
+    const actionCost = actionCostQuery[0];
+
+    // 3. Cálculos JavaScript simples
+    const monthlyBudget = parseFloat(userBudget.monthlyBudget);
+    const currentSpent = parseFloat(userBudget.currentSpent);
+    const finalCost = parseFloat(actionCost.finalCost);
+    
+    const remainingBudget = monthlyBudget - currentSpent;
+    const hasEnoughFunds = remainingBudget >= finalCost;
+    const currentPercentage = (currentSpent / monthlyBudget) * 100;
+    const newPercentage = ((currentSpent + finalCost) / monthlyBudget) * 100;
+
+    // 4. Verificar si está suspendido
+    if (userBudget.isSuspended) {
       return {
         allowed: false,
-        userBudget: {
-          id: result.userBudgetId,
-          userId,
-          monthlyBudget: result.monthlyBudget,
-          currentSpent: result.currentSpent,
-          currency: result.currency,
-          isSuspended: result.isSuspended,
-          alertThreshold50: result.alertThreshold50,
-          alertThreshold80: result.alertThreshold80,
-          alertThreshold90: result.alertThreshold90,
-          alertThreshold100: result.alertThreshold100
-        } as UserBudget,
-        actionCost: {
-          id: result.actionCostId,
-          actionType: result.actionType,
-          finalCost: result.finalCost,
-          currency: result.costCurrency,
-          isActive: result.isActive
-        } as ActionCost,
-        costToApply: result.finalCost || "0.00",
-        remainingBudget: result.remainingBudget || "0.00",
-        percentageUsed: Math.min(result.currentPercentage, 100),
+        userBudget,
+        actionCost,
+        costToApply: finalCost.toFixed(2),
+        remainingBudget: remainingBudget.toFixed(2),
+        percentageUsed: Math.round(currentPercentage),
         reason: "Presupuesto mensual agotado. Aumente su presupuesto para continuar."
       };
     }
 
-    // Verificar fondos suficientes
-    if (!result.hasEnoughFunds) {
+    // 5. Verificar fondos suficientes
+    if (!hasEnoughFunds) {
       return {
         allowed: false,
-        userBudget: {
-          id: result.userBudgetId,
-          userId,
-          monthlyBudget: result.monthlyBudget,
-          currentSpent: result.currentSpent,
-          currency: result.currency,
-          isSuspended: result.isSuspended,
-          alertThreshold50: result.alertThreshold50,
-          alertThreshold80: result.alertThreshold80,
-          alertThreshold90: result.alertThreshold90,
-          alertThreshold100: result.alertThreshold100
-        } as UserBudget,
-        actionCost: {
-          id: result.actionCostId,
-          actionType: result.actionType,
-          finalCost: result.finalCost,
-          currency: result.costCurrency,
-          isActive: result.isActive
-        } as ActionCost,
-        costToApply: result.finalCost || "0.00",
-        remainingBudget: result.remainingBudget || "0.00",
-        percentageUsed: Math.min(result.currentPercentage, 100),
-        reason: `Fondos insuficientes. Costo: $${result.finalCost || "0.00"} ${result.currency}, Disponible: $${result.remainingBudget || "0.00"} ${result.currency}`
+        userBudget,
+        actionCost,
+        costToApply: finalCost.toFixed(2),
+        remainingBudget: remainingBudget.toFixed(2),
+        percentageUsed: Math.round(currentPercentage),
+        reason: `Fondos insuficientes. Costo: $${finalCost.toFixed(2)} ${userBudget.currency}, Disponible: $${remainingBudget.toFixed(2)} ${userBudget.currency}`
       };
     }
 
-    // Determinar si se activará una alerta al realizar esta acción
+    // 6. Determinar si se activará una alerta al realizar esta acción
     let willTriggerAlert = undefined;
-    if (result.currentPercentage < 50 && result.newPercentage >= 50 && result.alertThreshold50) {
+    if (currentPercentage < 50 && newPercentage >= 50 && userBudget.alertThreshold50) {
       willTriggerAlert = { threshold: 50, type: 'threshold_50' as const };
-    } else if (result.currentPercentage < 80 && result.newPercentage >= 80 && result.alertThreshold80) {
+    } else if (currentPercentage < 80 && newPercentage >= 80 && userBudget.alertThreshold80) {
       willTriggerAlert = { threshold: 80, type: 'threshold_80' as const };
-    } else if (result.currentPercentage < 90 && result.newPercentage >= 90 && result.alertThreshold90) {
+    } else if (currentPercentage < 90 && newPercentage >= 90 && userBudget.alertThreshold90) {
       willTriggerAlert = { threshold: 90, type: 'threshold_90' as const };
-    } else if (result.newPercentage >= 100 && result.alertThreshold100) {
+    } else if (newPercentage >= 100 && userBudget.alertThreshold100) {
       willTriggerAlert = { threshold: 100, type: 'budget_exceeded' as const };
     }
 
-    // Calcular remaining budget después de la acción usando SQL precision
-    const remainingAfterActionResult = await db.execute(
-      sql`SELECT (${result.monthlyBudget} - ${result.currentSpent} - ${result.finalCost || "0.00"})::numeric(12,2)::text as remaining`
-    );
-    const remainingAfterAction = remainingAfterActionResult;
-
     return {
       allowed: true,
-      userBudget: {
-        id: result.userBudgetId,
-        userId,
-        monthlyBudget: result.monthlyBudget,
-        currentSpent: result.currentSpent,
-        currency: result.currency,
-        isSuspended: result.isSuspended,
-        alertThreshold50: result.alertThreshold50,
-        alertThreshold80: result.alertThreshold80,
-        alertThreshold90: result.alertThreshold90,
-        alertThreshold100: result.alertThreshold100
-      } as UserBudget,
-      actionCost: {
-        id: result.actionCostId,
-        actionType: result.actionType,
-        finalCost: result.finalCost,
-        currency: result.costCurrency,
-        isActive: result.isActive
-      } as ActionCost,
-      costToApply: result.finalCost || "0.00",
-      remainingBudget: (remainingAfterAction[0] as any)?.remaining || "0.00",
-      percentageUsed: Math.min(result.newPercentage, 100),
+      userBudget,
+      actionCost,
+      costToApply: finalCost.toFixed(2),
+      remainingBudget: (remainingBudget - finalCost).toFixed(2),
+      percentageUsed: Math.round(newPercentage),
       willTriggerAlert
     };
 

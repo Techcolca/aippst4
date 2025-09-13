@@ -5,7 +5,7 @@ import { storage } from "./storage";
 import jwt from "jsonwebtoken";
 import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
-import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, requireResourceLimit, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
+import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, requireResourceLimit, requireBudgetCheck, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
 import { setupAuth } from './auth';
 // Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
@@ -1089,7 +1089,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    app.post("/api/integrations", verifyToken, requireResourceLimit('integrations'), upload.array('documents'), async (req, res) => {
+    app.post("/api/integrations", verifyToken, requireBudgetCheck('integrations'), upload.array('documents'), async (req, res) => {
       try {
 
         // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
@@ -5524,7 +5524,7 @@ app.get("/api/health", (req, res) => {
     return structure;
   };
 
-  app.post("/api/forms", verifyToken, requireResourceLimit('forms'), async (req, res) => {
+  app.post("/api/forms", verifyToken, requireBudgetCheck('forms'), async (req, res) => {
     try {
       const userId = req.userId;
       const { templateId, language = 'es', ...formData } = req.body;

@@ -8,6 +8,7 @@ import {
   PLAN_NAMES 
 } from "../../shared/feature-permissions";
 import { getUserSubscription } from "./subscription";
+import { checkBudgetAvailability, ActionType, BudgetCheckResult } from "../lib/cost-engine";
 
 // Tipos de recursos que pueden tener límites
 export type LimitableResource = 'integrations' | 'forms' | 'conversations';
@@ -188,6 +189,88 @@ export function requireResourceLimit(resourceType: LimitableResource) {
 }
 
 /**
+ * Mapeo de tipos de recursos a tipos de acción para el sistema de presupuestos
+ */
+const RESOURCE_TO_ACTION_MAP: Record<LimitableResource, ActionType> = {
+  'integrations': 'create_integration',
+  'forms': 'create_form',
+  'conversations': 'chat_conversation'
+};
+
+/**
+ * Resultado de verificación de presupuesto (compatible con LimitCheckResult)
+ */
+export interface BudgetCheckCompatResult extends Omit<LimitCheckResult, 'currentCount' | 'limit'> {
+  costToApply?: string;
+  remainingBudget?: string;
+  percentageUsed?: number;
+  budgetInfo?: BudgetCheckResult;
+}
+
+/**
+ * Nuevo middleware para verificar presupuesto antes de crear recursos
+ * Reemplaza requireResourceLimit() con el sistema de presupuestos flexibles
+ */
+export function requireBudgetCheck(resourceType: LimitableResource) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).json({ 
+          message: "No autorizado. Inicia sesión para continuar.",
+          code: "UNAUTHORIZED"
+        });
+      }
+
+      const actionType = RESOURCE_TO_ACTION_MAP[resourceType];
+      if (!actionType) {
+        console.error(`Tipo de recurso no soportado para verificación de presupuesto: ${resourceType}`);
+        return res.status(500).json({
+          message: "Error interno de configuración",
+          code: "UNSUPPORTED_RESOURCE_TYPE"
+        });
+      }
+
+      const budgetCheck = await checkBudgetAvailability(req.userId, actionType);
+      
+      if (!budgetCheck.allowed) {
+        return res.status(403).json({
+          message: budgetCheck.reason || `Presupuesto insuficiente para crear ${resourceType}`,
+          code: "BUDGET_INSUFFICIENT",
+          resourceType,
+          actionType,
+          costToApply: budgetCheck.costToApply,
+          remainingBudget: budgetCheck.remainingBudget,
+          percentageUsed: budgetCheck.percentageUsed,
+          currency: budgetCheck.userBudget?.currency || 'CAD'
+        });
+      }
+
+      // Crear resultado compatible con la interfaz existente
+      const compatResult: BudgetCheckCompatResult = {
+        allowed: true,
+        planTier: "budget", // Indicar que usa sistema de presupuesto
+        planName: "Sistema de Presupuesto Flexible",
+        costToApply: budgetCheck.costToApply,
+        remainingBudget: budgetCheck.remainingBudget,
+        percentageUsed: budgetCheck.percentageUsed,
+        budgetInfo: budgetCheck
+      };
+
+      // Adjuntar información del presupuesto a la request para uso posterior
+      req.limitCheck = compatResult;
+      next();
+
+    } catch (error) {
+      console.error(`Error en middleware de presupuesto ${resourceType}:`, error);
+      return res.status(500).json({
+        message: "Error al verificar presupuesto disponible",
+        code: "BUDGET_CHECK_ERROR"
+      });
+    }
+  };
+}
+
+/**
  * Middleware para verificar acceso a funcionalidades
  */
 export function requireFeatureAccess(feature: LimitableFeature) {
@@ -275,11 +358,11 @@ export async function getUserLimitsSummary(userId: number) {
   }
 }
 
-// Extender el tipo Request para incluir la verificación de límites
+// Extender el tipo Request para incluir la verificación de límites y presupuesto
 declare global {
   namespace Express {
     interface Request {
-      limitCheck?: LimitCheckResult;
+      limitCheck?: LimitCheckResult | BudgetCheckCompatResult;
       userId: number;
     }
   }
