@@ -128,9 +128,9 @@ export const PLAN_PERMISSIONS: Record<string, PlanLimits> = {
   },
   
   professional: {
-    integrations: 10,
-    forms: -1, // -1 = ilimitado
-    conversations: 10000,
+    integrations: 5,
+    forms: 5,
+    conversations: 200,
     features: {
       createIntegrations: true,
       createForms: true,
@@ -158,7 +158,7 @@ export const PLAN_PERMISSIONS: Record<string, PlanLimits> = {
   enterprise: {
     integrations: -1, // ilimitado
     forms: -1, // ilimitado
-    conversations: -1, // ilimitado
+    conversations: 1000,
     features: {
       createIntegrations: true,
       createForms: true,
