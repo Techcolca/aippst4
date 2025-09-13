@@ -39,12 +39,16 @@ Transformar el sistema actual de **límites rígidos por plan** a un **sistema d
 - Listar todas las acciones que generarán costos en el nuevo sistema
 - Evaluar impacto en usuarios existentes y sus datos
 
-### **Paso 1.2: Definición del Modelo de Costos**
-- Establecer acciones costeables: crear integración, crear formulario, enviar email, conversación chat
-- Definir estructura de costos: costo base + markup 30% automático
-- Establecer moneda de operación (CAD según configuración actual)
-- Crear matriz de costos iniciales por tipo de acción
-- Definir rangos permitidos para prevenir errores administrativos
+### **Paso 1.2: Definición del Modelo de Costos** ✅ COMPLETADO
+- ✅ **Acciones costeables identificadas**: crear integración, crear formulario, enviar email, conversación chat
+- ✅ **Estructura de costos**: costo base + markup 30% automático
+- ✅ **Moneda de operación**: CAD (según configuración actual)
+- ✅ **Matriz de costos iniciales**:
+  - Crear Integración: $5.00 → $6.50 CAD
+  - Crear Formulario: $3.00 → $3.90 CAD  
+  - Conversación Chat: $0.05 → $0.065 CAD
+  - Envío Email: $0.08 → $0.10 CAD
+- ✅ **Rangos permitidos**: $0.01 - $100.00 CAD para prevenir errores
 
 ### **Paso 1.3: Estrategia de Migración de Usuarios**
 - Definir presupuesto inicial para usuarios existentes según su plan actual
