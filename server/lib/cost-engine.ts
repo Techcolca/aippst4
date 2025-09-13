@@ -674,5 +674,82 @@ export async function getUserMonthlyStats(userId: number, billingMonth?: string)
   }
 }
 
+/**
+ * Get all action costs (admin function)
+ */
+export async function getActionCosts() {
+  try {
+    const result = await db.select().from(actionCosts);
+    return result;
+  } catch (error) {
+    console.error("Error fetching action costs:", error);
+    throw error;
+  }
+}
+
+/**
+ * Update action cost (admin function)
+ */
+export async function updateActionCost(
+  costId: number, 
+  updates: {
+    baseCost?: string;
+    description?: string;
+    isActive?: boolean;
+  }
+) {
+  try {
+    const result = await db.update(actionCosts)
+      .set({
+        baseCost: updates.baseCost,
+        description: updates.description,
+        isActive: updates.isActive,
+        updatedAt: new Date()
+      })
+      .where(eq(actionCosts.id, costId))
+      .returning();
+
+    // Clear cache after update
+    clearCostCache();
+    
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("Error updating action cost:", error);
+    throw error;
+  }
+}
+
+/**
+ * Get user budgets summary (admin function)
+ */
+export async function getUserBudgetsSummary() {
+  try {
+    const result = await db.execute(sql`
+      SELECT 
+        ub.id,
+        ub.user_id,
+        u.username,
+        u.email,
+        ub.monthly_budget,
+        ub.current_spent,
+        ub.currency,
+        ub.billing_month,
+        ub.is_suspended,
+        ub.suspended_at,
+        ROUND((ub.current_spent::numeric / NULLIF(ub.monthly_budget::numeric, 0)) * 100, 2) as usage_percentage,
+        ub.created_at,
+        ub.updated_at
+      FROM user_budgets ub
+      JOIN users u ON ub.user_id = u.id
+      ORDER BY ub.billing_month DESC, usage_percentage DESC
+    `);
+    
+    return result.rows;
+  } catch (error) {
+    console.error("Error fetching user budgets summary:", error);
+    throw error;
+  }
+}
+
 // Exportar instancia de DB para uso externo si es necesario
 export { db as costEngineDb };

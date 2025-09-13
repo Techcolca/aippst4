@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { PlusCircle, Trash, RefreshCw } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -38,8 +38,12 @@ import {
   Percent,
   TagIcon,
   Copy,
-  Package
+  Package,
+  Calculator,
+  DollarSign,
+  Save
 } from "lucide-react";
+import type { ActionCost, InsertActionCost, UserBudget, InsertUserBudget } from "@shared/schema";
 
 // Interfaces
 interface AdminStats {
@@ -202,6 +206,8 @@ export default function AdminPanel() {
   const [pricingPlanModal, setPricingPlanModal] = useState(false);
   const [editPricingPlanModal, setEditPricingPlanModal] = useState(false);
   const [selectedPricingPlan, setSelectedPricingPlan] = useState<PricingPlan | null>(null);
+  const [editActionCostModal, setEditActionCostModal] = useState(false);
+  const [selectedActionCost, setSelectedActionCost] = useState<ActionCost | null>(null);
   
   // Form states
   const [newUser, setNewUser] = useState({
@@ -279,10 +285,32 @@ export default function AdminPanel() {
     available: true
   });
   
+  const [editActionCostData, setEditActionCostData] = useState({
+    id: 0,
+    actionType: "" as const,
+    baseCost: "",
+    markupPercentage: 30,
+    description: "",
+    currency: "CAD",
+    isActive: true
+  });
+  
   // Query para obtener códigos de descuento
   const { data: discountCodes, isLoading: isLoadingDiscountCodes, refetch: refetchDiscountCodes } = useQuery({
     queryKey: ["/api/discount-codes"],
     enabled: !!user && user.username === 'admin' && activeTab === "discount-codes",
+  });
+
+  // Query para obtener costos de acciones (admin)
+  const { data: actionCosts, isLoading: isLoadingActionCosts, refetch: refetchActionCosts } = useQuery({
+    queryKey: ["/api/admin/action-costs"],
+    enabled: !!user && user.username === 'admin' && activeTab === "cost-management",
+  });
+
+  // Query para obtener resumen de presupuestos de usuarios (admin)
+  const { data: userBudgets, isLoading: isLoadingUserBudgets, refetch: refetchUserBudgets } = useQuery({
+    queryKey: ["/api/admin/user-budgets"],
+    enabled: !!user && user.username === 'admin' && activeTab === "cost-management",
   });
   
   // Query para obtener planes de precios
@@ -555,6 +583,63 @@ export default function AdminPanel() {
       toast({
         title: "Error",
         description: "No se pudo actualizar la suscripción. Por favor, intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Abrir modal de edición de costo de acción
+  const handleOpenEditActionCost = (cost: ActionCost) => {
+    setSelectedActionCost(cost);
+    setEditActionCostData({
+      id: cost.id,
+      actionType: cost.actionType as any,
+      baseCost: cost.baseCost,
+      markupPercentage: cost.markupPercentage,
+      description: cost.description || "",
+      currency: cost.currency,
+      isActive: cost.isActive
+    });
+    setEditActionCostModal(true);
+  };
+
+  // Editar costo de acción
+  const handleEditActionCost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!editActionCostData.baseCost || !editActionCostData.actionType) {
+      toast({
+        title: "Error",
+        description: "El tipo de acción y costo base son obligatorios",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      const updateData = {
+        baseCost: editActionCostData.baseCost,
+        markupPercentage: editActionCostData.markupPercentage,
+        description: editActionCostData.description,
+        isActive: editActionCostData.isActive
+      };
+      
+      await apiRequest("PUT", `/api/admin/action-costs/${editActionCostData.id}`, updateData);
+      
+      toast({
+        title: "Costo actualizado",
+        description: "El costo de acción ha sido actualizado exitosamente"
+      });
+      
+      // Cerrar modal y refrescar datos
+      setEditActionCostModal(false);
+      refetchActionCosts();
+      
+    } catch (error) {
+      console.error("Error updating action cost:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el costo de acción. Por favor, intenta de nuevo.",
         variant: "destructive"
       });
     }
@@ -876,6 +961,7 @@ export default function AdminPanel() {
                 <TabsTrigger value="users">Usuarios</TabsTrigger>
                 <TabsTrigger value="limits">Límites</TabsTrigger>
                 <TabsTrigger value="discount-codes">Códigos de Descuento</TabsTrigger>
+                <TabsTrigger value="cost-management">Gestión de Costos</TabsTrigger>
                 <TabsTrigger value="pricing-plans">Planes de Precios</TabsTrigger>
               </TabsList>
               
@@ -1359,6 +1445,169 @@ export default function AdminPanel() {
               </TabsContent>
               
               {/* Pricing Plans Tab */}
+              {/* Cost Management Tab */}
+              <TabsContent value="cost-management">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-2xl font-bold">Gestión de Costos</h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Administrar costos por acción y configuración del sistema de presupuestos
+                      </p>
+                    </div>
+                    <Button className="flex items-center space-x-2">
+                      <Calculator className="h-4 w-4" />
+                      <span>Nuevo Costo</span>
+                    </Button>
+                  </div>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <DollarSign className="mr-2 h-5 w-5 text-green-500" />
+                        Costos por Acción
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {isLoadingActionCosts ? (
+                        <div className="text-center py-8">
+                          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                          <p className="text-gray-500">Cargando costos...</p>
+                        </div>
+                      ) : actionCosts && Array.isArray(actionCosts) && actionCosts.length > 0 ? (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Tipo de Acción</TableHead>
+                              <TableHead>Costo Base</TableHead>
+                              <TableHead>Costo Final (+30%)</TableHead>
+                              <TableHead>Estado</TableHead>
+                              <TableHead>Descripción</TableHead>
+                              <TableHead>Acciones</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {(actionCosts as ActionCost[]).map((cost: ActionCost) => {
+                              const baseCostNum = parseFloat(cost.baseCost || "0");
+                              const finalCost = (baseCostNum * (1 + (cost.markupPercentage / 100))).toFixed(2);
+                              return (
+                                <TableRow key={cost.id}>
+                                  <TableCell className="font-medium">
+                                    {cost.actionType === 'create_integration' && 'Crear Integración'}
+                                    {cost.actionType === 'create_form' && 'Crear Formulario'}
+                                    {cost.actionType === 'send_email' && 'Enviar Email'}
+                                    {cost.actionType === 'chat_conversation' && 'Conversación Chat'}
+                                  </TableCell>
+                                  <TableCell>${cost.baseCost} {cost.currency}</TableCell>
+                                  <TableCell className="font-semibold text-green-600">
+                                    ${finalCost} {cost.currency}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge variant={cost.isActive ? "default" : "secondary"}>
+                                      {cost.isActive ? "Activo" : "Inactivo"}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell className="text-sm text-gray-600">
+                                    {cost.description}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      className="flex items-center space-x-1"
+                                      onClick={() => handleOpenEditActionCost(cost)}
+                                      data-testid={`button-edit-cost-${cost.id}`}
+                                    >
+                                      <Edit className="h-3 w-3" />
+                                      <span>Editar</span>
+                                    </Button>
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      ) : (
+                        <div className="text-center py-8 text-gray-500">
+                          <Calculator className="mx-auto h-12 w-12 mb-4 text-gray-300" />
+                          <p className="text-lg mb-2">No hay costos configurados</p>
+                          <p className="text-sm">Configure los costos por acción para comenzar</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Users className="mr-2 h-5 w-5 text-blue-500" />
+                        Resumen de Presupuestos de Usuarios
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {isLoadingUserBudgets ? (
+                        <div className="text-center py-8">
+                          <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                          <p className="text-gray-500">Cargando presupuestos...</p>
+                        </div>
+                      ) : userBudgets && Array.isArray(userBudgets) && userBudgets.length > 0 ? (
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Usuario</TableHead>
+                              <TableHead>Presupuesto Mensual</TableHead>
+                              <TableHead>Gastado</TableHead>
+                              <TableHead>% Uso</TableHead>
+                              <TableHead>Estado</TableHead>
+                              <TableHead>Mes</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {(userBudgets as UserBudget[]).map((budget: UserBudget) => (
+                              <TableRow key={budget.id}>
+                                <TableCell>
+                                  <div>
+                                    <div className="font-medium">{budget.username}</div>
+                                    <div className="text-sm text-gray-500">{budget.email}</div>
+                                  </div>
+                                </TableCell>
+                                <TableCell>${budget.monthly_budget} {budget.currency}</TableCell>
+                                <TableCell>${budget.current_spent} {budget.currency}</TableCell>
+                                <TableCell>
+                                  <div className="flex items-center space-x-2">
+                                    <span className={`font-medium ${
+                                      budget.usage_percentage >= 90 ? 'text-red-600' :
+                                      budget.usage_percentage >= 80 ? 'text-yellow-600' :
+                                      'text-green-600'
+                                    }`}>
+                                      {budget.usage_percentage || 0}%
+                                    </span>
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant={budget.is_suspended ? "destructive" : "default"}>
+                                    {budget.is_suspended ? "Suspendido" : "Activo"}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="text-sm">
+                                  {budget.billing_month}
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      ) : (
+                        <div className="text-center py-8 text-gray-500">
+                          <Users className="mx-auto h-12 w-12 mb-4 text-gray-300" />
+                          <p className="text-lg mb-2">No hay presupuestos configurados</p>
+                          <p className="text-sm">Los usuarios aún no tienen presupuestos asignados</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
               <TabsContent value="pricing-plans">
                 <div className="mb-6 flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Planes de Precios</h2>
@@ -2609,6 +2858,128 @@ Soporte por email"
             
             <DialogFooter>
               <Button type="submit">Guardar Cambios</Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal para editar costo de acción */}
+      <Dialog open={editActionCostModal} onOpenChange={setEditActionCostModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Editar Costo de Acción</DialogTitle>
+            <DialogDescription>
+              Modifica el costo y configuración para este tipo de acción
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleEditActionCost} className="space-y-4 mt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-action-type">Tipo de Acción</Label>
+                <Input 
+                  id="edit-action-type"
+                  value={editActionCostData.actionType}
+                  disabled
+                  className="bg-gray-100 cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500">El tipo de acción no se puede modificar</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-base-cost">Costo Base</Label>
+                <Input 
+                  id="edit-base-cost"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={editActionCostData.baseCost}
+                  onChange={(e) => setEditActionCostData({...editActionCostData, baseCost: e.target.value})}
+                  required
+                  data-testid="input-base-cost"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-markup">Markup (%)</Label>
+                <Input 
+                  id="edit-markup"
+                  type="number"
+                  min="0"
+                  max="200"
+                  value={editActionCostData.markupPercentage}
+                  onChange={(e) => setEditActionCostData({...editActionCostData, markupPercentage: parseInt(e.target.value)})}
+                  required
+                  data-testid="input-markup"
+                />
+                <p className="text-xs text-gray-500">Porcentaje adicional aplicado al costo base</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-currency">Moneda</Label>
+                <Select 
+                  value={editActionCostData.currency}
+                  onValueChange={(value) => setEditActionCostData({...editActionCostData, currency: value})}
+                >
+                  <SelectTrigger id="edit-currency">
+                    <SelectValue placeholder="Seleccionar moneda" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CAD">CAD</SelectItem>
+                    <SelectItem value="USD">USD</SelectItem>
+                    <SelectItem value="EUR">EUR</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2 col-span-2">
+                <Label htmlFor="edit-description">Descripción</Label>
+                <Textarea 
+                  id="edit-description"
+                  value={editActionCostData.description}
+                  onChange={(e) => setEditActionCostData({...editActionCostData, description: e.target.value})}
+                  rows={3}
+                  placeholder="Descripción opcional del costo..."
+                  data-testid="input-description"
+                />
+              </div>
+              
+              <div className="space-y-2 flex items-end pb-2">
+                <div className="flex items-center space-x-2">
+                  <Switch 
+                    id="cost-active" 
+                    checked={editActionCostData.isActive}
+                    onCheckedChange={(checked) => setEditActionCostData({...editActionCostData, isActive: checked})}
+                    data-testid="switch-active"
+                  />
+                  <Label htmlFor="cost-active">Activo</Label>
+                </div>
+              </div>
+              
+              {/* Costo final calculado */}
+              <div className="space-y-2">
+                <Label>Costo Final Calculado</Label>
+                <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                  <p className="text-lg font-semibold text-green-700 dark:text-green-300">
+                    ${editActionCostData.baseCost ? 
+                      (parseFloat(editActionCostData.baseCost) * (1 + (editActionCostData.markupPercentage / 100))).toFixed(2) 
+                      : "0.00"} {editActionCostData.currency}
+                  </p>
+                  <p className="text-xs text-green-600 dark:text-green-400">
+                    Costo base + {editActionCostData.markupPercentage}% markup
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setEditActionCostModal(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" className="flex items-center space-x-2" data-testid="button-save-cost">
+                <Save className="h-4 w-4" />
+                <span>Guardar Cambios</span>
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

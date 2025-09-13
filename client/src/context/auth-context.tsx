@@ -175,7 +175,7 @@ const response = await fetch(`${baseUrl}/api/auth/me`, {
     // Actualizar el timestamp de última actualización al iniciar sesión
     setLastRefreshed(Date.now());
     try {
-      console.log("Intentando iniciar sesión para el usuario:", username);
+      console.log("Intentando iniciar sesión...");
       
       // Usar apiRequest para el login
       const response = await apiRequest("POST", "/api/auth/login", {
@@ -185,12 +185,12 @@ const response = await fetch(`${baseUrl}/api/auth/me`, {
       
       // Obtener los datos del usuario y el token
       const userData = await response.json();
-      console.log("Usuario autenticado:", userData);
+      console.log("Usuario autenticado correctamente");
       
       // Guardar el token en localStorage si viene en la respuesta
       if (userData.token) {
         localStorage.setItem('auth_token', userData.token);
-        console.log("Token guardado en localStorage:", userData.token.substring(0, 20) + "...");
+        console.log("Token guardado en localStorage correctamente");
         
         // Eliminar el token del objeto de usuario para no guardarlo en el estado
         const { token, ...userWithoutToken } = userData;

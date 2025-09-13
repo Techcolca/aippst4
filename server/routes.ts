@@ -171,6 +171,33 @@ async function extractDocumentContent(doc: any): Promise<string> {
   return content;
 }
 export function configureRoutes(app: Express) {
+  // Función auxiliar para generar y almacenar mensajes promocionales - DEBE IR AL INICIO
+  async function generateAndStorePromotionalMessages(language = 'es') {
+    try {
+      if (!pool) {
+        console.error("Database pool not available");
+        return;
+      }
+
+      // Generar mensajes con IA para el idioma específico
+      const messages = await generateAIPromotionalMessages(language);
+
+      // Limpiar mensajes anteriores del mismo idioma
+      await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
+
+      // Insertar nuevos mensajes
+      for (const message of messages) {
+        await pool.query(`
+          INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
+          VALUES ($1, $2, $3, true, NOW(), $4)
+        `, [message.message_text, message.message_type, message.display_order, language]);
+      }
+
+    } catch (error) {
+      console.error("Error generating and storing promotional messages:", error);
+    }
+  }
+
   // Health check endpoint para Railway - DEBE IR AL INICIO
   app.get('/health', (req, res) => {
     res.status(200).json({ 
@@ -224,33 +251,6 @@ async function extractDocumentContent(doc: any): Promise<string> {
 }
 
 
-
-// Función auxiliar para generar y almacenar mensajes promocionales
-async function generateAndStorePromotionalMessages(language = 'es') {
-  try {
-    if (!pool) {
-      console.error("Database pool not available");
-      return;
-    }
-
-    // Generar mensajes con IA para el idioma específico
-    const messages = await generateAIPromotionalMessages(language);
-
-    // Limpiar mensajes anteriores del mismo idioma
-    await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
-
-    // Insertar nuevos mensajes
-    for (const message of messages) {
-      await pool.query(`
-        INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
-        VALUES ($1, $2, $3, true, NOW(), $4)
-      `, [message.message_text, message.message_type, message.display_order, language]);
-    }
-
-  } catch (error) {
-    console.error("Error generating and storing promotional messages:", error);
-  }
-}
 
 // Configurar multer para manejar subida de archivos
 
@@ -524,9 +524,9 @@ app.get("/api/health", (req, res) => {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Return user without password
-      const { password, ...userWithoutPassword } = user;
-      res.json(userWithoutPassword);
+      // Return user without password and API key for security
+      const { password, apiKey, ...userWithoutSecrets } = user;
+      res.json(userWithoutSecrets);
     } catch (error) {
       console.error("Get user error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -541,10 +541,10 @@ app.get("/api/health", (req, res) => {
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Return user without password - same as /api/auth/me
-      const { password, ...userWithoutPassword } = user;
+      // Return user without password and API key for security
+      const { password, apiKey, ...userWithoutSecrets } = user;
       res.json({
-        user: userWithoutPassword,
+        user: userWithoutSecrets,
         authenticated: true,
         timestamp: new Date().toISOString()
       });
@@ -1823,7 +1823,11 @@ app.get("/api/health", (req, res) => {
 
             if (needsRegen) {
               console.log(`Generando nuevos mensajes promocionales con IA para idioma: ${language}...`);
-              await generateAndStorePromotionalMessages(language);
+              try {
+                await generateAndStorePromotionalMessages(language);
+              } catch (error) {
+                console.error("Error generating promotional messages:", error);
+              }
             }
 
             // Obtener mensajes generados por IA para el idioma específico
@@ -4166,7 +4170,7 @@ app.get("/api/health", (req, res) => {
         // Obtener todos los usuarios con sus suscripciones en una sola consulta
         const queryResult = await pool.query(
           `SELECT 
-            u.id, u.username, u.email, u.full_name, u.created_at, u.api_key, 
+            u.id, u.username, u.email, u.full_name, u.created_at, 
             u.stripe_customer_id, u.stripe_subscription_id,
             s.id as subscription_id, s.tier, s.interactions_limit, s.interactions_used, 
             s.status, s.start_date, s.end_date  
@@ -4188,7 +4192,6 @@ app.get("/api/health", (req, res) => {
               email: row.email,
               full_name: row.full_name,
               created_at: row.created_at,
-              api_key: row.api_key,
               stripe_customer_id: row.stripe_customer_id,
               stripe_subscription_id: row.stripe_subscription_id,
               subscriptions: []
@@ -4232,7 +4235,7 @@ app.get("/api/health", (req, res) => {
         // Obtener usuario
         const userResult = await pool.query(
           `SELECT id, username, email, full_name, created_at, 
-            api_key, stripe_customer_id, stripe_subscription_id 
+            stripe_customer_id, stripe_subscription_id 
           FROM users WHERE id = $1`, 
           [userId]
         );
@@ -4256,7 +4259,7 @@ app.get("/api/health", (req, res) => {
         // Obtener integraciones del usuario
         const integrationsResult = await pool.query(
           `SELECT id, name, url, theme_color, position, active, 
-            api_key, visitor_count, created_at, bot_behavior, widget_type 
+            visitor_count, created_at, bot_behavior, widget_type 
           FROM integrations 
           WHERE user_id = $1 
           ORDER BY created_at DESC`, 
@@ -4366,7 +4369,7 @@ app.get("/api/health", (req, res) => {
           `INSERT INTO users 
            (username, password, email, full_name, api_key, created_at) 
            VALUES ($1, $2, $3, $4, $5, NOW())
-           RETURNING id, username, email, full_name, api_key, created_at`,
+           RETURNING id, username, email, full_name, created_at`,
           [username, hashedPassword, email, fullName, apiKey]
         );
 
@@ -5161,6 +5164,64 @@ app.get("/api/health", (req, res) => {
     } catch (error) {
       console.error("Error synchronizing plans with Stripe:", error);
       res.status(500).json({ message: "Error al sincronizar planes con Stripe" });
+    }
+  });
+
+  // ================ Cost Management Admin Routes ================
+  
+  // GET all action costs (admin)
+  app.get("/api/admin/action-costs", authenticateJWT, isAdmin, async (req, res) => {
+    try {
+      const { getActionCosts } = await import('./lib/cost-engine');
+      const actionCosts = await getActionCosts();
+      res.json(actionCosts);
+    } catch (error) {
+      console.error("Error fetching action costs:", error);
+      res.status(500).json({ error: "Failed to fetch action costs" });
+    }
+  });
+
+  // PUT update action cost (admin)  
+  app.put("/api/admin/action-costs/:id", authenticateJWT, isAdmin, async (req, res) => {
+    try {
+      const costId = parseInt(req.params.id);
+      if (isNaN(costId)) {
+        return res.status(400).json({ error: "Invalid cost ID" });
+      }
+
+      const { baseCost, description, isActive } = req.body;
+      
+      if (typeof baseCost !== 'string' || !baseCost) {
+        return res.status(400).json({ error: "Base cost is required and must be a string" });
+      }
+
+      const { updateActionCost } = await import('./lib/cost-engine');
+      const updatedCost = await updateActionCost(costId, {
+        baseCost,
+        description,
+        isActive: isActive ?? true
+      });
+
+      if (!updatedCost) {
+        return res.status(404).json({ error: "Action cost not found" });
+      }
+
+      res.json(updatedCost);
+    } catch (error) {
+      console.error("Error updating action cost:", error);
+      res.status(500).json({ error: "Failed to update action cost" });
+    }
+  });
+
+  // GET user budgets summary (admin)
+  app.get("/api/admin/user-budgets", authenticateJWT, isAdmin, async (req, res) => {
+    try {
+      const { getUserBudgetsSummary } = await import('./lib/cost-engine');
+      const budgetsSummary = await getUserBudgetsSummary();
+      res.json(budgetsSummary);
+    } catch (error) {
+      console.error("Error fetching user budgets:", error);
+      res.status(500).json({ error: "Failed to fetch user budgets" });
     }
   });
 
