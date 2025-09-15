@@ -33,24 +33,19 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
   
   if (token) {
     try {
-      // Token verification (logging removed for security)
+      // Token verification
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
       req.userId = decoded.userId;
-      console.log("Token verificado correctamente. ID de usuario:", req.userId);
       
-      // Cargar el objeto de usuario completo desde la base de datos
+      // Load complete user object from database
       try {
         const user = await storage.getUser(req.userId);
         if (user) {
           req.user = user;
-          console.log("Usuario autenticado encontrado:", user.username);
-        } else {
-          console.log("Usuario no encontrado en la base de datos con ID:", req.userId);
         }
       } catch (userError) {
-        console.error("Error al obtener el usuario:", userError);
-        // No bloquear la autenticación si no se puede cargar el usuario completo
-        // Solo se usa el userId para autenticación básica
+        // Don't block authentication if we can't load the complete user object
+        // Only userId is needed for basic authentication
       }
       
       return next();
@@ -64,15 +59,9 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
       });
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
-  } else {
-    console.log("No se encontró token de autenticación");
-    
-    // Para depuración, mostrar qué cookies hay disponibles
-    console.log("Cookies disponibles:", req.cookies);
-    console.log("Headers:", req.headers);
   }
   
-  // En cualquier ambiente, si no hay token válido, devolvemos un error
+  // If no valid token found, return authentication error
   return res.status(401).json({ message: 'Authentication required' });
 }
 
