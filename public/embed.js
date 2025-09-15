@@ -2424,6 +2424,12 @@ Contenido: [Error al extraer contenido detallado]
       <div class="aipi-notification-dot"></div>
     `;
 
+    // CRÍTICO: Re-aplicar posición flotante después de cambiar innerHTML
+    setTimeout(() => {
+      console.log('AIPPS Debug: Re-aplicando posición flotante después de cerrar chat');
+      setWidgetPosition();
+    }, 50);
+
     // Reiniciar rotación de textos cuando se cierra
     setTimeout(() => {
       startTextRotation();
