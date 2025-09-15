@@ -3088,7 +3088,16 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // ================ Widget Authentication Routes ================
+    // ================ Widget Routes ================
+    
+    // IMPORTANT: Specific endpoints must come BEFORE generic ones with parameters
+    // Otherwise Express will match the generic pattern first
+    
+    // Test endpoint to verify routing works
+    app.get("/api/widget/test", (req, res) => {
+      console.log("Test endpoint reached!");
+      res.json({ message: "Widget API is working!", timestamp: new Date().toISOString() });
+    });
     
     // Register user for specific widget/integration
     app.post("/api/widget/register", verifyApiKey, async (req, res) => {
@@ -3201,7 +3210,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // ================ Widget Routes ================
+    // Generic widget route (MUST come after specific routes)
     app.get("/api/widget/:apiKey", async (req, res) => {
       try {
         const { apiKey } = req.params;
