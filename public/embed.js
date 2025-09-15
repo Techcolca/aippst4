@@ -666,14 +666,13 @@ config.serverUrl = "https://aipps.ca";
             if (primaryButton) {
               primaryButton.style.backgroundColor = config.themeColor;
             }
-              
-              // Update other elements with theme color
-              const chatContainer = widgetInstance.querySelector('#aipi-chat-container');
-              if (chatContainer) {
-                const header = chatContainer.querySelector('#aipi-header');
-                if (header) {
-                  header.style.backgroundColor = config.themeColor;
-                }
+            
+            // Update other elements with theme color
+            const chatContainer = widgetInstance.querySelector('#aipi-chat-container');
+            if (chatContainer) {
+              const header = chatContainer.querySelector('#aipi-header');
+              if (header) {
+                header.style.backgroundColor = config.themeColor;
               }
             }
           }
