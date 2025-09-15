@@ -750,6 +750,9 @@ app.get("/api/health", (req, res) => {
       }
 
       // Verify user owns the integration associated with this conversation
+      if (!conversation.integrationId) {
+        return res.status(404).json({ message: "Conversation has no associated integration" });
+      }
       const integration = await storage.getIntegration(conversation.integrationId);
       if (!integration || integration.userId !== req.userId) {
         return res.status(403).json({ message: "Unauthorized" });
@@ -779,6 +782,9 @@ app.get("/api/health", (req, res) => {
         return res.status(404).json({ message: "Conversation not found" });
       }
 
+      if (!conversation.integrationId) {
+        return res.status(404).json({ message: "Conversation has no associated integration" });
+      }
       const integration = await storage.getIntegration(conversation.integrationId);
       if (!integration || integration.userId !== req.userId) {
         return res.status(403).json({ message: "Unauthorized" });
@@ -821,13 +827,13 @@ app.get("/api/health", (req, res) => {
           // Save AI response
           await storage.createMessage({
             conversationId,
-            content: aiResponse,
+            content: aiResponse.message.content || "Error generating response",
             role: "assistant",
           });
 
           res.json({ 
             userMessage: message,
-            aiResponse: { content: aiResponse, role: "assistant" }
+            aiResponse: { content: aiResponse.message.content || "Error generating response", role: "assistant" }
           });
         } catch (aiError) {
           console.error("Error generating AI response:", aiError);
@@ -1342,7 +1348,7 @@ app.get("/api/health", (req, res) => {
           success: true,
           settings: updatedSettings
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Update welcome chat settings error:", error);
         res.status(500).json({ 
           message: "Error updating welcome chat settings", 
@@ -1504,14 +1510,14 @@ app.get("/api/health", (req, res) => {
             success: true,
             scrapedData: processedData
           });
-        } catch (scrapeError) {
+        } catch (scrapeError: any) {
           console.error("Error durante el scraping:", scrapeError);
           res.status(500).json({ 
             message: "Error durante el proceso de scraping", 
             error: scrapeError.message 
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error en la autenticación para scraping:", error);
         res.status(500).json({ 
           message: "Error durante el proceso de autenticación para scraping", 
@@ -1873,7 +1879,7 @@ app.get("/api/health", (req, res) => {
                 count: newMessages.length,
                 messages: newMessages 
               });
-            } catch (error) {
+            } catch (error: any) {
               console.error("Error en prueba de generación:", error);
               res.status(500).json({ error: error.message });
             }
@@ -2342,14 +2348,14 @@ app.get("/api/health", (req, res) => {
                       id: key.toLowerCase(),
                       name: product.name,
                       description: product.description,
-                      price: product.price / 100, // Convertir centavos a dólares para mostrar
+                      price: (product.price || 0) / 100, // Convertir centavos a dólares para mostrar
                       currency: product.currency || "cad", // Dólares canadienses por defecto
                       interval: product.interval || "month", // Por defecto mensual
                       features: product.features || getFeaturesByTier(key.toLowerCase()),
                       tier: product.tier,
                       interactionsLimit: product.interactionsLimit,
                       isAnnual: product.isAnnual || false,
-                      discount: product.discount
+                      discount: product.discount || 0
                     });
                   }
                 }
@@ -2548,7 +2554,7 @@ app.get("/api/health", (req, res) => {
                   status: subscription.status,
                   plan: product.name,
                   interval: planItem.plan.interval,
-                  amount: planItem.price.unit_amount / 100, // Convertir de centavos a unidades
+                  amount: (planItem.price.unit_amount || 0) / 100, // Convertir de centavos a unidades
                   currency: planItem.price.currency,
                   currentPeriodStart: subscription.current_period_start * 1000, // Convertir a milisegundos
                   currentPeriodEnd: subscription.current_period_end * 1000, // Convertir a milisegundos
@@ -2911,7 +2917,6 @@ app.get("/api/health", (req, res) => {
             tier: 'free',
             status: 'active',
             interactionsLimit: getInteractionLimitByTier('free'),
-            interactionsUsed: 0,
             startDate: new Date(),
             // El plan gratuito no tiene fecha de finalización
           });
@@ -3102,13 +3107,13 @@ app.get("/api/health", (req, res) => {
             // No enviamos datos sensibles como userId o apiKey al cliente
           },
           settings: {
-            assistantName: customization.assistantName || (settings as any)?.assistantName || integration.name,
-            defaultGreeting: customization.defaultGreeting || (settings as any)?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-            showAvailability: customization.showAvailability !== undefined ? customization.showAvailability : (settings as any)?.showAvailability,
-            userBubbleColor: customization.userBubbleColor || (settings as any)?.userBubbleColor,
-            assistantBubbleColor: customization.assistantBubbleColor || (settings as any)?.assistantBubbleColor,
-            font: customization.font || (settings as any)?.font,
-            conversationStyle: customization.conversationStyle || (settings as any)?.conversationStyle,
+            assistantName: customization?.assistantName || settings?.assistantName || integration.name,
+            defaultGreeting: customization?.defaultGreeting || settings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
+            showAvailability: customization?.showAvailability !== undefined ? customization.showAvailability : settings?.showAvailability !== undefined ? settings.showAvailability : true,
+            userBubbleColor: customization?.userBubbleColor || settings?.userBubbleColor || "#3B82F6",
+            assistantBubbleColor: customization?.assistantBubbleColor || settings?.assistantBubbleColor || "#E5E7EB",
+            font: customization?.font || settings?.font || "inter",
+            conversationStyle: customization?.conversationStyle || settings?.conversationStyle || "professional",
                   },
           userInfo: userInfo, // Include user info for personalized greetings
         });
@@ -3324,7 +3329,9 @@ app.get("/api/health", (req, res) => {
   const completion = await Promise.race([completionPromise, timeoutPromise]);
 
         // Validate completion response
-        if (!completion || !completion.message || !completion.message.content) {
+        if (!completion || typeof completion !== 'object' || !('message' in completion) || 
+            !completion.message || typeof completion.message !== 'object' || !('content' in completion.message) ||
+            !completion.message.content) {
           console.error("AI completion returned null or empty content:", completion);
           throw new Error("Failed to generate AI response");
         }
@@ -3614,7 +3621,7 @@ app.get("/api/health", (req, res) => {
           conversationId: conversationIdNum,
           success: true
               });
-      } catch (error) {
+      } catch (error: any) {
         console.error("🚨 Widget specific conversation send error:", {
           error: error.message,
           stack: error.stack,
@@ -3913,6 +3920,9 @@ app.get("/api/health", (req, res) => {
         }
 
         // Verify that user owns the integration this conversation belongs to
+        if (!conversation.integrationId) {
+          return res.status(404).json({ message: "Conversation has no associated integration" });
+        }
         const integration = await storage.getIntegration(conversation.integrationId);
 
         if (!integration || integration.userId !== req.userId) {
@@ -5021,7 +5031,7 @@ app.get("/api/health", (req, res) => {
       }
 
       res.status(201).json(pricingPlan);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating pricing plan:", error);
       if (error.name === 'ZodError') {
         return res.status(400).json({ 
@@ -5086,7 +5096,7 @@ app.get("/api/health", (req, res) => {
       }
 
       res.json(updatedPlan);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating pricing plan:", error);
       if (error.name === 'ZodError') {
         return res.status(400).json({ 
@@ -5204,7 +5214,7 @@ app.get("/api/health", (req, res) => {
   // Forms API endpoints
   app.get("/api/forms", authenticateJWT, async (req, res) => {
     try {
-      const userId = req.user!.id;
+      const userId = req.userId;
       const forms = await storage.getForms(userId);
       res.json(forms);
     } catch (error) {
@@ -5227,7 +5237,7 @@ app.get("/api/health", (req, res) => {
       const form = result[0];
 
       // Verificar que el usuario es propietario del formulario
-      if (form.userId !== req.user!.id) {
+      if (form.userId !== req.userId) {
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
 
@@ -5644,7 +5654,7 @@ app.get("/api/health", (req, res) => {
       }
 
       // Verificar que el usuario es propietario del formulario
-      if (existingForm.userId !== req.user!.id) {
+      if (existingForm.userId !== req.userId) {
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
 
@@ -5668,7 +5678,7 @@ app.get("/api/health", (req, res) => {
       }
 
       // Verificar que el usuario es propietario del formulario
-      if (existingForm.userId !== req.user!.id) {
+      if (existingForm.userId !== req.userId) {
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
 
@@ -6901,7 +6911,6 @@ app.get("/api/health", (req, res) => {
                 const response = await storage.createFormResponse({
                 formId: parseInt(formId),
                 data: data,
-                createdAt: new Date(),
                 });
 
                 // Incrementar el contador de respuestas del formulario
@@ -6947,6 +6956,9 @@ app.get("/api/health", (req, res) => {
                 return res.status(404).json({ message: "Conversación no encontrada" });
                 }
 
+                if (!conversation.integrationId) {
+                return res.status(404).json({ message: "Conversation has no associated integration" });
+                }
                 const integration = await storage.getIntegration(conversation.integrationId);
                 if (!integration || integration.userId !== req.userId) {
                 return res.status(403).json({ message: "No tienes permiso para acceder a esta conversación" });

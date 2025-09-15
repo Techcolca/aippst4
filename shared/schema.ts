@@ -78,6 +78,9 @@ export const conversations = pgTable("conversations", {
 export const insertConversationSchema = createInsertSchema(conversations).pick({
   integrationId: true,
   visitorId: true,
+  visitorName: true,
+  visitorEmail: true,
+  title: true,
 });
 
 // Message schema
