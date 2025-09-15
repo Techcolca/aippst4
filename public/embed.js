@@ -481,19 +481,26 @@ config.serverUrl = "https://aipps.ca";
       serverUrl: config.serverUrl
     });
 
-    // Load widget configuration from server
+    // COMPORTAMIENTO ANTERIOR RESTAURADO: Crear widget inmediatamente
+    // Load fonts immediately
+    loadFont();
+
+    // Create widget DOM elements IMMEDIATELY with default config
+    createWidgetDOM();
+
+    // CRÍTICO: Aplicar posición inmediatamente después de crear el DOM
+    setTimeout(() => {
+      console.log('AIPPS Debug: Aplicando posición inmediata con config por defecto');
+      setWidgetPosition();
+    }, 50);
+
+    // Attach event listeners immediately
+    attachEventListeners();
+
+    // DESPUÉS cargar configuración del servidor y actualizar
     loadWidgetConfig().then(async () => {
-      // Load fonts
-      loadFont();
-
-      // Create widget DOM elements AFTER loading config
-      createWidgetDOM();
-
-      // Update button text with integration name
+      // Update button text with integration name from server
       updateButtonText();
-
-      // Attach event listeners
-      attachEventListeners();
 
       // Auto-open widget if configured
       if (config.autoOpen) {
@@ -505,13 +512,21 @@ config.serverUrl = "https://aipps.ca";
       // Start periodic config refresh to detect changes
       startConfigRefresh();
       
-      // Forzar actualización de idioma después de la creación del widget
+      // Forzar actualización de idioma después de cargar config del servidor
       setTimeout(() => {
-        console.log('AIPPS Debug: Ejecutando actualización de idioma post-creación de widget');
+        console.log('AIPPS Debug: Ejecutando actualización de idioma post-config servidor');
         updateLanguageElements();
       }, 250);
+      
+      // IMPORTANTE: Re-aplicar posición desde configuración del servidor
+      setTimeout(() => {
+        console.log('AIPPS Debug: Re-aplicando posición desde configuración servidor');
+        setWidgetPosition();
+      }, 100);
+      
     }).catch(error => {
       console.error('AIPI Widget Error:', error);
+      // Widget ya está creado, solo log del error sin romper funcionalidad básica
     });
   }
 
