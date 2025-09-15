@@ -11,9 +11,6 @@ declare global {
     interface Request {
       userId: number;
       user?: any; // Allow storing the user object
-      widgetUserId?: number; // For widget authentication
-      integrationId?: number; // For widget authentication
-      integration?: any; // Store integration object
     }
   }
 }
@@ -239,71 +236,6 @@ export async function authenticateJWT(req: Request, res: Response, next: NextFun
     }
     
     return res.status(401).json({ message: 'Invalid or expired token' });
-  }
-}
-
-/**
- * CRITICAL: Widget authentication middleware for segregated access
- * Validates that JWT token belongs to the integration specified by API key
- * This prevents cross-integration authentication attacks
- */
-export async function verifyWidgetAuth(req: Request, res: Response, next: NextFunction) {
-  try {
-    // 1. Verify API key exists and get integration
-    const apiKey = req.query.key as string || req.headers['x-api-key'] as string || req.params.apiKey;
-    
-    if (!apiKey) {
-      return res.status(401).json({ message: 'API key required' });
-    }
-
-    const integration = await storage.getIntegrationByApiKey(apiKey);
-    if (!integration) {
-      return res.status(401).json({ message: 'Invalid API key' });
-    }
-
-    // 2. Get and verify JWT token
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ message: 'Widget authentication required. Please login first.' });
-    }
-
-    const token = authHeader.slice(7);
-    
-    try {
-      // 3. Decode and verify JWT
-      const decoded = jwt.verify(token, JWT_SECRET) as {
-        widgetUserId: number;
-        integrationId: number;
-        username: string;
-        type: string;
-      };
-
-      // 4. CRITICAL: Verify token belongs to this integration
-      if (decoded.type !== 'widget') {
-        return res.status(401).json({ message: 'Invalid token type for widget access' });
-      }
-
-      if (decoded.integrationId !== integration.id) {
-        console.error(`SECURITY: Cross-integration access attempt! Token integration: ${decoded.integrationId}, API key integration: ${integration.id}`);
-        return res.status(401).json({ message: 'Token does not belong to this integration. Please login again.' });
-      }
-
-      // 5. Attach authenticated information to request
-      req.widgetUserId = decoded.widgetUserId;
-      req.integrationId = decoded.integrationId;
-      req.integration = integration;
-
-      console.log(`Widget auth success: User ${decoded.username} (ID: ${decoded.widgetUserId}) for integration ${integration.name} (ID: ${integration.id})`);
-      next();
-
-    } catch (tokenError) {
-      console.error('Widget token verification failed:', tokenError);
-      return res.status(401).json({ message: 'Invalid or expired token. Please login again.' });
-    }
-
-  } catch (error) {
-    console.error('Widget authentication error:', error);
-    return res.status(500).json({ message: 'Authentication system error' });
   }
 }
 
