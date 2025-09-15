@@ -467,11 +467,12 @@ config.serverUrl = "https://aipps.ca";
       console.log('AIPPS Debug: FORZANDO URL de dashboard:', config.serverUrl);
     }
 
-    // Generate visitor ID if not exists
-    if (!localStorage.getItem('aipi_visitor_id')) {
-      localStorage.setItem('aipi_visitor_id', 'visitor_' + Math.random().toString(36).substring(2, 15));
+    // Generate visitor ID specific to this chatbot integration (SECURITY FIX)
+    const visitorStorageKey = `aipi_visitor_id_${config.apiKey}`;
+    if (!localStorage.getItem(visitorStorageKey)) {
+      localStorage.setItem(visitorStorageKey, 'visitor_' + Math.random().toString(36).substring(2, 15));
     }
-    config.visitorId = localStorage.getItem('aipi_visitor_id');
+    config.visitorId = localStorage.getItem(visitorStorageKey);
 
     // Debug: Log what we found
     console.log('AIPPS Widget Debug:', {
@@ -4504,7 +4505,7 @@ Contenido: [Error al extraer contenido detallado]
     console.log('AIPPS Debug: Contenido de localStorage:', {
       auth_token: localStorage.getItem('auth_token'),
       aipi_auth_token: localStorage.getItem('aipi_auth_token'),
-      aipi_visitor_id: localStorage.getItem('aipi_visitor_id')
+      aipi_visitor_id: localStorage.getItem(`aipi_visitor_id_${config.apiKey}`)
     });
     console.log('AIPPS Debug: Contenido de cookies:', document.cookie);
     console.log('AIPPS Debug: No se encontró token en ninguna fuente');

@@ -62,10 +62,11 @@
       config.apiKey = apiKey;
       // config.serverUrl ya se establece en línea 47, no necesitamos reasignarlo aquí
       
-      // Generate visitor ID if not existing
-      config.visitorId = localStorage.getItem('aipi_visitor_id') || 
+      // Generate visitor ID specific to this chatbot integration (SECURITY FIX)
+      const visitorStorageKey = `aipi_visitor_id_${config.apiKey}`;
+      config.visitorId = localStorage.getItem(visitorStorageKey) || 
         'visitor_' + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('aipi_visitor_id', config.visitorId);
+      localStorage.setItem(visitorStorageKey, config.visitorId);
       
       // Load widget configuration
       loadWidgetConfig();

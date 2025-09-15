@@ -170,92 +170,34 @@ async function extractDocumentContent(doc: any): Promise<string> {
 
   return content;
 }
-export function configureRoutes(app: Express) {
-  // Función auxiliar para generar y almacenar mensajes promocionales - DEBE IR AL INICIO
-  async function generateAndStorePromotionalMessages(language = 'es') {
-    try {
-      if (!pool) {
-        console.error("Database pool not available");
-        return;
-      }
-
-      // Generar mensajes con IA para el idioma específico
-      const messages = await generateAIPromotionalMessages(language);
-
-      // Limpiar mensajes anteriores del mismo idioma
-      await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
-
-      // Insertar nuevos mensajes
-      for (const message of messages) {
-        await pool.query(`
-          INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
-          VALUES ($1, $2, $3, true, NOW(), $4)
-        `, [message.message_text, message.message_type, message.display_order, language]);
-      }
-
-    } catch (error) {
-      console.error("Error generating and storing promotional messages:", error);
+// Función auxiliar para generar y almacenar mensajes promocionales - DEBE IR AL INICIO
+async function generateAndStorePromotionalMessages(language = 'es') {
+  try {
+    if (!pool) {
+      console.error("Database pool not available");
+      return;
     }
-  }
 
-  // Health check endpoint para Railway - DEBE IR AL INICIO
-  app.get('/health', (req, res) => {
-    res.status(200).json({ 
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      service: 'AIPI',
-      version: '1.0.0',
-      database: pool ? 'connected' : 'disconnected'
-    });
-  });
+    // Generar mensajes con IA para el idioma específico
+    const messages = await generateAIPromotionalMessages(language);
 
-// Función para extraer contenido de documentos
-async function extractDocumentContent(doc: any): Promise<string> {
-  let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+    // Limpiar mensajes anteriores del mismo idioma
+    await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
 
-  if (doc.path && fs.existsSync(doc.path)) {
-    try {
-      if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        // Word document detected - extract actual content using Mammoth
-        try {
-          const mammoth = await import('mammoth');
-          const fileBuffer = fs.readFileSync(doc.path);
-          const result = await mammoth.extractRawText({ buffer: fileBuffer });
-          content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
-        } catch (mammothError) {
-          console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
-          content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
-        }
-      } else if (doc.mimetype === 'application/pdf') {
-        // PDF document detected - extract actual content using pdf-parse
-        try {
-          const pdfParse = await import('pdf-parse');
-          const fileBuffer = fs.readFileSync(doc.path);
-          const pdfData = await pdfParse.default(fileBuffer);
-          content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
-        } catch (pdfError) {
-          console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
-          content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
-        }
-      } else if (doc.mimetype === 'text/plain') {
-        content = fs.readFileSync(doc.path, 'utf8');
-      } else {
-        content = `Archivo ${doc.originalName}: Contiene información relevante sobre su organización.`;
-      }
-    } catch (error) {
-      content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
+    // Insertar nuevos mensajes
+    for (const message of messages) {
+      await pool.query(`
+        INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
+        VALUES ($1, $2, $3, true, NOW(), $4)
+      `, [message.message_text, message.message_type, message.display_order, language]);
     }
-  }
 
-  return content;
+  } catch (error) {
+    console.error("Error generating and storing promotional messages:", error);
+  }
 }
 
-
-
-// Configurar multer para manejar subida de archivos
-
 // Función para obtener las características de cada plan según su nivel
-
 function getFeaturesByTier(tier: string): string[] {
   switch (tier) {
     case 'basic':
@@ -323,11 +265,6 @@ async function createInternalWebsiteIntegration() {
   } catch (error) {
     console.error("Error al crear integración interna:", error);
   }
-}
-
-// Usando el middleware isAdmin desde middleware/auth.ts
-// Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
-
 }
 // Obtener el equivalente a __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -759,10 +696,7 @@ app.get("/api/health", (req, res) => {
         // Create conversation with authenticated user's visitorId pattern
         const conversation = await storage.createConversation({
           integrationId: integration.id,
-          visitorId: `user_${decoded.userId}`,
-          title: title || 'Nueva conversación',
-          visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
-          visitorEmail: authenticatedUser?.email || null
+          visitorId: `user_${decoded.userId}`
         });
 
 
@@ -794,10 +728,7 @@ app.get("/api/health", (req, res) => {
       
       const conversation = await storage.createConversation({
         integrationId: integrations[0].id,
-        visitorId: `user_${req.userId}`,
-        title: title || 'Nueva conversación',
-        visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
-        visitorEmail: authenticatedUser?.email || null
+        visitorId: `user_${req.userId}`
       });
 
       res.status(201).json(conversation);
@@ -884,8 +815,7 @@ app.get("/api/health", (req, res) => {
           const aiResponse = await generateChatCompletion(
             conversationHistory,
             context,
-            integration.botBehavior || "Eres un asistente virtual útil y amigable.",
-            'es' // Default to Spanish
+            integration.botBehavior || "Eres un asistente virtual útil y amigable."
           );
 
           // Save AI response
@@ -1068,8 +998,11 @@ app.get("/api/health", (req, res) => {
       }).parse(req.body);
 
       const automation = await storage.createAutomation({
-        ...validatedData,
         userId: req.userId,
+        name: validatedData.name,
+        description: validatedData.description,
+        status: validatedData.status,
+        config: validatedData.config || {}
       });
 
       res.status(201).json(automation);
@@ -1824,7 +1757,19 @@ app.get("/api/health", (req, res) => {
             if (needsRegen) {
               console.log(`Generando nuevos mensajes promocionales con IA para idioma: ${language}...`);
               try {
-                await generateAndStorePromotionalMessages(language);
+                // Generate messages directly using the available function
+                const messages = await generateAIPromotionalMessages(language);
+                
+                // Clear previous messages for this language
+                await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
+                
+                // Insert new messages
+                for (const message of messages) {
+                  await pool.query(`
+                    INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
+                    VALUES ($1, $2, $3, true, NOW(), $4)
+                  `, [message.message_text, message.message_type, message.display_order, language]);
+                }
               } catch (error) {
                 console.error("Error generating promotional messages:", error);
               }
@@ -3208,10 +3153,16 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Get conversation and verify it belongs to this integration
+        // SECURITY FIX: Get conversation and verify it belongs to this integration
         const conversation = await storage.getConversation(parseInt(conversationId));
-        if (!conversation || conversation.integrationId !== integration.id) {
+        if (!conversation) {
           return res.status(404).json({ message: "Conversation not found" });
+        }
+        
+        // CRITICAL: Verify conversation belongs to this integration (prevent cross-chatbot access)
+        if (conversation.integrationId !== integration.id) {
+          console.warn(`🚨 SECURITY: Attempted cross-integration access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
+          return res.status(403).json({ message: "Access denied" });
         }
 
         // Get messages for this conversation
