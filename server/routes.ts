@@ -3378,6 +3378,23 @@ app.get("/api/health", (req, res) => {
         const { apiKey, conversationId } = req.params;
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
 
+        // Validate API key and get integration
+        const integration = await storage.getIntegrationByApiKey(apiKey);
+        if (!integration) {
+          return res.status(404).json({ message: "Integration not found" });
+        }
+
+        // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
+        const conversation = await storage.getConversation(parseInt(conversationId));
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+        
+        if (conversation.integrationId !== integration.id) {
+          console.warn(`🚨 SECURITY: Attempted cross-integration conversation access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
         // Check if this is an authenticated request (fullscreen widget)
         const token = req.cookies?.auth_token || 
                       (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
@@ -3411,17 +3428,7 @@ app.get("/api/health", (req, res) => {
           return res.status(400).json({ message: "Invalid conversation ID" });
         }
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
-        }
-
-        // Verify conversation exists and belongs to this integration
-        const conversation = await storage.getConversation(conversationIdNum);
-        if (!conversation || conversation.integrationId !== integration.id) {
-          return res.status(404).json({ message: "Conversation not found" });
-        }
+        // (integration and conversation already validated above in SECURITY FIX section)
 
         // Additional security check for authenticated users
         if (isAuthenticated) {
@@ -3635,9 +3642,25 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
+        // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
+        const conversationIdNum = parseInt(conversationId);
+        if (isNaN(conversationIdNum)) {
+          return res.status(400).json({ message: "Invalid conversation ID" });
+        }
+        
+        const conversation = await storage.getConversation(conversationIdNum);
+        if (!conversation) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+        
+        if (conversation.integrationId !== integration.id) {
+          console.warn(`🚨 SECURITY: Attempted cross-integration message access. Conversation ${conversationIdNum} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
         // Create message
         const message = await storage.createMessage({
-          conversationId,
+          conversationId: conversationIdNum,
           content,
           role,
         });
@@ -3987,15 +4010,17 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Verificar que la conversación existe y pertenece a esta integración
+        // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
         const conversation = await storage.getConversation(conversationIdNum);
         if (!conversation) {
           return res.status(404).json({ message: "Conversation not found" });
         }
-
+        
         if (conversation.integrationId !== integration.id) {
-          return res.status(403).json({ message: "Unauthorized" });
+          console.warn(`🚨 SECURITY: Attempted cross-integration conversation deletion. Conversation ${conversationIdNum} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
+          return res.status(404).json({ message: "Conversation not found" });
         }
+
 
         // Para modo fullscreen, verificar autenticación de usuario
         if (req.headers.authorization) {
