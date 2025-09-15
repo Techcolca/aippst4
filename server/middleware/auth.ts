@@ -1,16 +1,22 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { storage } from '../storage';
+import { User } from '@shared/schema';
 
 // JWT secret key
 export const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
+
+// Import types for request extensions
+import { BudgetCheckCompatResult, LimitCheckResult } from './plan-limits';
 
 // Extend Express Request interface to include user and userId
 declare global {
   namespace Express {
     interface Request {
       userId: number;
-      user?: any; // Allow storing the user object
+      user?: User; // Use proper User type from schema
+      limitCheck?: LimitCheckResult | BudgetCheckCompatResult;
+      subscription?: any;
     }
   }
 }
