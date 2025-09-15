@@ -3433,15 +3433,11 @@ app.get("/api/health", (req, res) => {
           }
         }
 
-          res.status(201).json({
-            response: completion.message.content,
-            conversationId: conversation.id,
-            success: true
-          });
-        } catch (jwtError) {
-          console.error('JWT verification failed:', jwtError);
-          return res.status(401).json({ message: "Invalid or expired token. Please login again." });
-        }
+        res.status(201).json({
+          response: completion.message.content,
+          conversationId: conversation.id,
+          success: true
+        });
       } catch (error) {
         console.error("Widget send message error:", error);
         res.status(500).json({ message: "Internal server error" });

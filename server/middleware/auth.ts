@@ -122,15 +122,15 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
     }
     
     console.log("isAdmin: Verificando usuario con ID:", req.userId);
-    console.log("isAdmin: Usuario encontrado:", req.user.username, "con ID:", req.user.id);
+    console.log("isAdmin: Usuario encontrado:", (req.user as any).username, "con ID:", (req.user as any).id);
     
     // Verificar si el usuario es admin (username === 'admin')
-    if (req.user.username !== 'admin') {
-      console.log("isAdmin: Acceso denegado para", req.user.username, "- No es administrador");
+    if ((req.user as any).username !== 'admin') {
+      console.log("isAdmin: Acceso denegado para", (req.user as any).username, "- No es administrador");
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
     
-    console.log("isAdmin: Acceso de administrador concedido para:", req.user.username);
+    console.log("isAdmin: Acceso de administrador concedido para:", (req.user as any).username);
     next();
   } catch (error) {
     console.error("isAdmin: Error en verificación de administrador:", error);
