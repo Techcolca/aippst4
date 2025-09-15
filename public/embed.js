@@ -683,6 +683,7 @@ config.serverUrl = "https://aipps.ca";
       }
     }, 5000); // Check every 5 seconds (reduced frequency)
   }
+  } // Close startConfigRefresh function
 
   // Función para extraer el contenido del sitio
   function scanCurrentPageContent() {
