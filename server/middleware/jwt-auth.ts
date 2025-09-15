@@ -2,7 +2,14 @@ import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { storage } from '../storage';
 
-// Note: Express.Request interface extended in server/middleware/auth.ts
+// Extender la interfaz Request para incluir userId
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: number;
+    }
+  }
+}
 
 export const authenticateJWT = async (req: Request, res: Response, next: NextFunction) => {
   try {

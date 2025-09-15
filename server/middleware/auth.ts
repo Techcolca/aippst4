@@ -1,22 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { storage } from '../storage';
-import { User } from '@shared/schema';
 
 // JWT secret key
 export const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
-
-// Import types for request extensions
-import { BudgetCheckCompatResult, LimitCheckResult } from './plan-limits';
 
 // Extend Express Request interface to include user and userId
 declare global {
   namespace Express {
     interface Request {
       userId: number;
-      user?: User; // Use proper User type from schema
-      limitCheck?: LimitCheckResult | BudgetCheckCompatResult;
-      subscription?: any;
+      user?: any; // Allow storing the user object
     }
   }
 }
@@ -33,19 +27,24 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
   
   if (token) {
     try {
-      // Token verification
+      // Token verification (logging removed for security)
       const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
       req.userId = decoded.userId;
+      console.log("Token verificado correctamente. ID de usuario:", req.userId);
       
-      // Load complete user object from database
+      // Cargar el objeto de usuario completo desde la base de datos
       try {
         const user = await storage.getUser(req.userId);
         if (user) {
           req.user = user;
+          console.log("Usuario autenticado encontrado:", user.username);
+        } else {
+          console.log("Usuario no encontrado en la base de datos con ID:", req.userId);
         }
       } catch (userError) {
-        // Don't block authentication if we can't load the complete user object
-        // Only userId is needed for basic authentication
+        console.error("Error al obtener el usuario:", userError);
+        // No bloquear la autenticación si no se puede cargar el usuario completo
+        // Solo se usa el userId para autenticación básica
       }
       
       return next();
@@ -59,9 +58,15 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
       });
       return res.status(401).json({ message: 'Invalid or expired token' });
     }
+  } else {
+    console.log("No se encontró token de autenticación");
+    
+    // Para depuración, mostrar qué cookies hay disponibles
+    console.log("Cookies disponibles:", req.cookies);
+    console.log("Headers:", req.headers);
   }
   
-  // If no valid token found, return authentication error
+  // En cualquier ambiente, si no hay token válido, devolvemos un error
   return res.status(401).json({ message: 'Authentication required' });
 }
 
@@ -122,15 +127,15 @@ export function isAdmin(req: Request, res: Response, next: NextFunction) {
     }
     
     console.log("isAdmin: Verificando usuario con ID:", req.userId);
-    console.log("isAdmin: Usuario encontrado:", (req.user as any).username, "con ID:", (req.user as any).id);
+    console.log("isAdmin: Usuario encontrado:", req.user.username, "con ID:", req.user.id);
     
     // Verificar si el usuario es admin (username === 'admin')
-    if ((req.user as any).username !== 'admin') {
-      console.log("isAdmin: Acceso denegado para", (req.user as any).username, "- No es administrador");
+    if (req.user.username !== 'admin') {
+      console.log("isAdmin: Acceso denegado para", req.user.username, "- No es administrador");
       return res.status(403).json({ message: "Forbidden: Admin access required" });
     }
     
-    console.log("isAdmin: Acceso de administrador concedido para:", (req.user as any).username);
+    console.log("isAdmin: Acceso de administrador concedido para:", req.user.username);
     next();
   } catch (error) {
     console.error("isAdmin: Error en verificación de administrador:", error);

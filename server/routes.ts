@@ -170,34 +170,92 @@ async function extractDocumentContent(doc: any): Promise<string> {
 
   return content;
 }
-// Función auxiliar para generar y almacenar mensajes promocionales - DEBE IR AL INICIO
-async function generateAndStorePromotionalMessages(language = 'es') {
-  try {
-    if (!pool) {
-      console.error("Database pool not available");
-      return;
+export function configureRoutes(app: Express) {
+  // Función auxiliar para generar y almacenar mensajes promocionales - DEBE IR AL INICIO
+  async function generateAndStorePromotionalMessages(language = 'es') {
+    try {
+      if (!pool) {
+        console.error("Database pool not available");
+        return;
+      }
+
+      // Generar mensajes con IA para el idioma específico
+      const messages = await generateAIPromotionalMessages(language);
+
+      // Limpiar mensajes anteriores del mismo idioma
+      await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
+
+      // Insertar nuevos mensajes
+      for (const message of messages) {
+        await pool.query(`
+          INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
+          VALUES ($1, $2, $3, true, NOW(), $4)
+        `, [message.message_text, message.message_type, message.display_order, language]);
+      }
+
+    } catch (error) {
+      console.error("Error generating and storing promotional messages:", error);
     }
-
-    // Generar mensajes con IA para el idioma específico
-    const messages = await generateAIPromotionalMessages(language);
-
-    // Limpiar mensajes anteriores del mismo idioma
-    await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
-
-    // Insertar nuevos mensajes
-    for (const message of messages) {
-      await pool.query(`
-        INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
-        VALUES ($1, $2, $3, true, NOW(), $4)
-      `, [message.message_text, message.message_type, message.display_order, language]);
-    }
-
-  } catch (error) {
-    console.error("Error generating and storing promotional messages:", error);
   }
+
+  // Health check endpoint para Railway - DEBE IR AL INICIO
+  app.get('/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      service: 'AIPI',
+      version: '1.0.0',
+      database: pool ? 'connected' : 'disconnected'
+    });
+  });
+
+// Función para extraer contenido de documentos
+async function extractDocumentContent(doc: any): Promise<string> {
+  let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+
+  if (doc.path && fs.existsSync(doc.path)) {
+    try {
+      if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        // Word document detected - extract actual content using Mammoth
+        try {
+          const mammoth = await import('mammoth');
+          const fileBuffer = fs.readFileSync(doc.path);
+          const result = await mammoth.extractRawText({ buffer: fileBuffer });
+          content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
+        } catch (mammothError) {
+          console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
+          content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+        }
+      } else if (doc.mimetype === 'application/pdf') {
+        // PDF document detected - extract actual content using pdf-parse
+        try {
+          const pdfParse = await import('pdf-parse');
+          const fileBuffer = fs.readFileSync(doc.path);
+          const pdfData = await pdfParse.default(fileBuffer);
+          content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
+        } catch (pdfError) {
+          console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
+          content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+        }
+      } else if (doc.mimetype === 'text/plain') {
+        content = fs.readFileSync(doc.path, 'utf8');
+      } else {
+        content = `Archivo ${doc.originalName}: Contiene información relevante sobre su organización.`;
+      }
+    } catch (error) {
+      content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
+    }
+  }
+
+  return content;
 }
 
+
+
+// Configurar multer para manejar subida de archivos
+
 // Función para obtener las características de cada plan según su nivel
+
 function getFeaturesByTier(tier: string): string[] {
   switch (tier) {
     case 'basic':
@@ -265,6 +323,11 @@ async function createInternalWebsiteIntegration() {
   } catch (error) {
     console.error("Error al crear integración interna:", error);
   }
+}
+
+// Usando el middleware isAdmin desde middleware/auth.ts
+// Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
+
 }
 // Obtener el equivalente a __dirname en ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -693,12 +756,13 @@ app.get("/api/health", (req, res) => {
         // Get authenticated user data for visitor info
         const authenticatedUser = await storage.getUser(decoded.userId);
         
-        // Create conversation with authenticated user's visitorId pattern and visitor info
+        // Create conversation with authenticated user's visitorId pattern
         const conversation = await storage.createConversation({
           integrationId: integration.id,
           visitorId: `user_${decoded.userId}`,
-          visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
-          visitorEmail: visitorEmail || authenticatedUser?.email || null
+          title: title || 'Nueva conversación',
+          visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
+          visitorEmail: authenticatedUser?.email || null
         });
 
 
@@ -731,6 +795,7 @@ app.get("/api/health", (req, res) => {
       const conversation = await storage.createConversation({
         integrationId: integrations[0].id,
         visitorId: `user_${req.userId}`,
+        title: title || 'Nueva conversación',
         visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
         visitorEmail: authenticatedUser?.email || null
       });
@@ -754,9 +819,6 @@ app.get("/api/health", (req, res) => {
       }
 
       // Verify user owns the integration associated with this conversation
-      if (!conversation.integrationId) {
-        return res.status(404).json({ message: "Conversation has no associated integration" });
-      }
       const integration = await storage.getIntegration(conversation.integrationId);
       if (!integration || integration.userId !== req.userId) {
         return res.status(403).json({ message: "Unauthorized" });
@@ -786,9 +848,6 @@ app.get("/api/health", (req, res) => {
         return res.status(404).json({ message: "Conversation not found" });
       }
 
-      if (!conversation.integrationId) {
-        return res.status(404).json({ message: "Conversation has no associated integration" });
-      }
       const integration = await storage.getIntegration(conversation.integrationId);
       if (!integration || integration.userId !== req.userId) {
         return res.status(403).json({ message: "Unauthorized" });
@@ -825,19 +884,20 @@ app.get("/api/health", (req, res) => {
           const aiResponse = await generateChatCompletion(
             conversationHistory,
             context,
-            integration.botBehavior || "Eres un asistente virtual útil y amigable."
+            integration.botBehavior || "Eres un asistente virtual útil y amigable.",
+            'es' // Default to Spanish
           );
 
           // Save AI response
           await storage.createMessage({
             conversationId,
-            content: aiResponse.message.content || "Error generating response",
+            content: aiResponse,
             role: "assistant",
           });
 
           res.json({ 
             userMessage: message,
-            aiResponse: { content: aiResponse.message.content || "Error generating response", role: "assistant" }
+            aiResponse: { content: aiResponse, role: "assistant" }
           });
         } catch (aiError) {
           console.error("Error generating AI response:", aiError);
@@ -1008,11 +1068,8 @@ app.get("/api/health", (req, res) => {
       }).parse(req.body);
 
       const automation = await storage.createAutomation({
+        ...validatedData,
         userId: req.userId,
-        name: validatedData.name,
-        description: validatedData.description,
-        status: validatedData.status,
-        config: validatedData.config || {}
       });
 
       res.status(201).json(automation);
@@ -1352,7 +1409,7 @@ app.get("/api/health", (req, res) => {
           success: true,
           settings: updatedSettings
         });
-      } catch (error: any) {
+      } catch (error) {
         console.error("Update welcome chat settings error:", error);
         res.status(500).json({ 
           message: "Error updating welcome chat settings", 
@@ -1514,14 +1571,14 @@ app.get("/api/health", (req, res) => {
             success: true,
             scrapedData: processedData
           });
-        } catch (scrapeError: any) {
+        } catch (scrapeError) {
           console.error("Error durante el scraping:", scrapeError);
           res.status(500).json({ 
             message: "Error durante el proceso de scraping", 
             error: scrapeError.message 
           });
         }
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error en la autenticación para scraping:", error);
         res.status(500).json({ 
           message: "Error durante el proceso de autenticación para scraping", 
@@ -1767,19 +1824,7 @@ app.get("/api/health", (req, res) => {
             if (needsRegen) {
               console.log(`Generando nuevos mensajes promocionales con IA para idioma: ${language}...`);
               try {
-                // Generate messages directly using the available function
-                const messages = await generateAIPromotionalMessages(language);
-                
-                // Clear previous messages for this language
-                await pool.query(`DELETE FROM promotional_messages WHERE message_type = 'ai_generated' AND language = $1`, [language]);
-                
-                // Insert new messages
-                for (const message of messages) {
-                  await pool.query(`
-                    INSERT INTO promotional_messages (message_text, message_type, display_order, is_active, created_at, language)
-                    VALUES ($1, $2, $3, true, NOW(), $4)
-                  `, [message.message_text, message.message_type, message.display_order, language]);
-                }
+                await generateAndStorePromotionalMessages(language);
               } catch (error) {
                 console.error("Error generating promotional messages:", error);
               }
@@ -1883,7 +1928,7 @@ app.get("/api/health", (req, res) => {
                 count: newMessages.length,
                 messages: newMessages 
               });
-            } catch (error: any) {
+            } catch (error) {
               console.error("Error en prueba de generación:", error);
               res.status(500).json({ error: error.message });
             }
@@ -2352,14 +2397,14 @@ app.get("/api/health", (req, res) => {
                       id: key.toLowerCase(),
                       name: product.name,
                       description: product.description,
-                      price: (product.price || 0) / 100, // Convertir centavos a dólares para mostrar
+                      price: product.price / 100, // Convertir centavos a dólares para mostrar
                       currency: product.currency || "cad", // Dólares canadienses por defecto
                       interval: product.interval || "month", // Por defecto mensual
                       features: product.features || getFeaturesByTier(key.toLowerCase()),
                       tier: product.tier,
                       interactionsLimit: product.interactionsLimit,
                       isAnnual: product.isAnnual || false,
-                      discount: product.discount || 0
+                      discount: product.discount
                     });
                   }
                 }
@@ -2558,7 +2603,7 @@ app.get("/api/health", (req, res) => {
                   status: subscription.status,
                   plan: product.name,
                   interval: planItem.plan.interval,
-                  amount: (planItem.price.unit_amount || 0) / 100, // Convertir de centavos a unidades
+                  amount: planItem.price.unit_amount / 100, // Convertir de centavos a unidades
                   currency: planItem.price.currency,
                   currentPeriodStart: subscription.current_period_start * 1000, // Convertir a milisegundos
                   currentPeriodEnd: subscription.current_period_end * 1000, // Convertir a milisegundos
@@ -2921,6 +2966,7 @@ app.get("/api/health", (req, res) => {
             tier: 'free',
             status: 'active',
             interactionsLimit: getInteractionLimitByTier('free'),
+            interactionsUsed: 0,
             startDate: new Date(),
             // El plan gratuito no tiene fecha de finalización
           });
@@ -3111,13 +3157,13 @@ app.get("/api/health", (req, res) => {
             // No enviamos datos sensibles como userId o apiKey al cliente
           },
           settings: {
-            assistantName: customization?.assistantName || settings?.assistantName || integration.name,
-            defaultGreeting: customization?.defaultGreeting || settings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-            showAvailability: customization?.showAvailability !== undefined ? customization.showAvailability : settings?.showAvailability !== undefined ? settings.showAvailability : true,
-            userBubbleColor: customization?.userBubbleColor || settings?.userBubbleColor || "#3B82F6",
-            assistantBubbleColor: customization?.assistantBubbleColor || settings?.assistantBubbleColor || "#E5E7EB",
-            font: customization?.font || settings?.font || "inter",
-            conversationStyle: customization?.conversationStyle || settings?.conversationStyle || "professional",
+            assistantName: customization.assistantName || (settings as any)?.assistantName || integration.name,
+            defaultGreeting: customization.defaultGreeting || (settings as any)?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
+            showAvailability: customization.showAvailability !== undefined ? customization.showAvailability : (settings as any)?.showAvailability,
+            userBubbleColor: customization.userBubbleColor || (settings as any)?.userBubbleColor,
+            assistantBubbleColor: customization.assistantBubbleColor || (settings as any)?.assistantBubbleColor,
+            font: customization.font || (settings as any)?.font,
+            conversationStyle: customization.conversationStyle || (settings as any)?.conversationStyle,
                   },
           userInfo: userInfo, // Include user info for personalized greetings
         });
@@ -3138,44 +3184,7 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally
-        let authUserId = null;
-        
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
-
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            authUserId = decoded.userId;
-            
-            // Verify user owns this integration (unless it's demo integration)
-            if (!isDemoIntegration && integration.userId !== authUserId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
-            }
-          } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
-            return res.status(401).json({ message: "Invalid or expired token" });
-          }
-
-          // Only allow access to conversations for the authenticated user
-          const authVisitorId = `user_${authUserId}`;
-          if (visitorId !== authVisitorId) {
-            return res.status(403).json({ message: "Access denied. You can only view your own conversations." });
-          }
-        }
-
-        // Get conversations for this visitor (external widgets can access conversations by visitorId)
+        // Get conversations for this visitor
         const conversations = await storage.getConversations(integration.id);
         const visitorConversations = conversations.filter(conv => 
           conv.visitorId === visitorId
@@ -3199,62 +3208,10 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally for internal widgets only
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
-
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            
-            // Verify user owns this integration (unless it's demo integration)
-            if (!isDemoIntegration && integration.userId !== decoded.userId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
-            }
-
-            // SECURITY FIX: Get conversation and verify it belongs to this integration
-            const conversation = await storage.getConversation(parseInt(conversationId));
-            if (!conversation) {
-              return res.status(404).json({ message: "Conversation not found" });
-            }
-            
-            // CRITICAL: Verify conversation belongs to this integration (prevent cross-chatbot access)
-            if (conversation.integrationId !== integration.id) {
-              console.warn(`🚨 SECURITY: Attempted cross-integration access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
-              return res.status(403).json({ message: "Access denied" });
-            }
-
-            // SECURITY: Verify user owns this conversation for internal widgets
-            const authVisitorId = `user_${decoded.userId}`;
-            if (conversation.visitorId !== authVisitorId) {
-              return res.status(403).json({ message: "Access denied. You can only view your own conversations." });
-            }
-          } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
-            return res.status(401).json({ message: "Invalid or expired token" });
-          }
-        } else {
-          // External widget - just verify conversation belongs to integration
-          const conversation = await storage.getConversation(parseInt(conversationId));
-          if (!conversation) {
-            return res.status(404).json({ message: "Conversation not found" });
-          }
-          
-          // CRITICAL: Verify conversation belongs to this integration (prevent cross-chatbot access)
-          if (conversation.integrationId !== integration.id) {
-            console.warn(`🚨 SECURITY: Attempted cross-integration access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
-            return res.status(403).json({ message: "Access denied" });
-          }
+        // Get conversation and verify it belongs to this integration
+        const conversation = await storage.getConversation(parseInt(conversationId));
+        if (!conversation || conversation.integrationId !== integration.id) {
+          return res.status(404).json({ message: "Conversation not found" });
         }
 
         // Get messages for this conversation
@@ -3278,45 +3235,12 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally
-        let authenticatedUser = null;
-        let authUserId = null;
-        
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
-
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            authUserId = decoded.userId;
-            authenticatedUser = await storage.getUser(authUserId);
-            
-            // Verify user owns this integration (unless it's demo integration)
-            if (!isDemoIntegration && integration.userId !== authUserId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
-            }
-          } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
-            return res.status(401).json({ message: "Invalid or expired token" });
-          }
-        }
-
-        // Create conversation with appropriate visitor data
+        // Create conversation
         const conversation = await storage.createConversation({
           integrationId: integration.id,
-          visitorId: isExternalWidget ? (visitorId || `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`) : (visitorId || `user_${authUserId}`),
-          visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
-          visitorEmail: visitorEmail || authenticatedUser?.email || null,
+          visitorId,
+          visitorName: visitorName || null,
+          visitorEmail: visitorEmail || null,
         });
 
         res.status(201).json(conversation);
@@ -3333,8 +3257,8 @@ app.get("/api/health", (req, res) => {
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
 
         // Validate input
-        if (!message) {
-          return res.status(400).json({ message: "message is required" });
+        if (!message || !visitorId) {
+          return res.status(400).json({ message: "message and visitorId are required" });
         }
 
         // Validate API key and get integration
@@ -3343,68 +3267,30 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally
-        let authenticatedUser = null;
-        let authUserId = null;
-        
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
+        // Find or create conversation for this visitor
+        const conversations = await storage.getConversations(integration.id);
+        let conversation = conversations.find(conv => conv.visitorId === visitorId);
 
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            authUserId = decoded.userId;
-            authenticatedUser = await storage.getUser(authUserId);
-            
-            // Verify user owns this integration (unless it's demo integration)
-            if (!isDemoIntegration && integration.userId !== authUserId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
-            }
-          } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
-            return res.status(401).json({ message: "Invalid or expired token" });
-          }
+        if (!conversation) {
+          // Create new conversation
+          conversation = await storage.createConversation({
+            integrationId: integration.id,
+            visitorId,
+            visitorName: visitorName || null,
+            visitorEmail: visitorEmail || null,
+            title: message.substring(0, 50) + "..."
+          });
         }
 
-        // Set appropriate visitor ID based on auth status
-        const authVisitorId = isExternalWidget ? 
-          (visitorId || `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`) : 
-          (visitorId || `user_${authUserId}`);
+        // Create user message
+        await storage.createMessage({
+          conversationId: conversation.id,
+          content: message,
+          role: "user",
+        });
 
-          // Find or create conversation for this authenticated user
-          const conversations = await storage.getConversations(integration.id);
-          let conversation = conversations.find(conv => conv.visitorId === authVisitorId);
-
-          if (!conversation) {
-            // Create new conversation with authenticated user data
-            conversation = await storage.createConversation({
-              integrationId: integration.id,
-              visitorId: authVisitorId,
-              visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
-              visitorEmail: visitorEmail || authenticatedUser?.email || null,
-              title: message.substring(0, 50) + "..."
-            });
-          }
-
-          // Create user message
-          await storage.createMessage({
-            conversationId: conversation.id,
-            content: message,
-            role: "user",
-          });
-
-          // Get all messages for context
-          const messages = await storage.getConversationMessages(conversation.id);
+        // Get all messages for context
+        const messages = await storage.getConversationMessages(conversation.id);
 
         // Get site content for context (same logic as working endpoint)
         let context = "";
@@ -3487,9 +3373,7 @@ app.get("/api/health", (req, res) => {
   const completion = await Promise.race([completionPromise, timeoutPromise]);
 
         // Validate completion response
-        if (!completion || typeof completion !== 'object' || !('message' in completion) || 
-            !completion.message || typeof completion.message !== 'object' || !('content' in completion.message) ||
-            !completion.message.content) {
+        if (!completion || !completion.message || !completion.message.content) {
           console.error("AI completion returned null or empty content:", completion);
           throw new Error("Failed to generate AI response");
         }
@@ -3543,69 +3427,68 @@ app.get("/api/health", (req, res) => {
         const { apiKey, conversationId } = req.params;
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
-        }
+        // Check if this is an authenticated request (fullscreen widget)
+        const token = req.cookies?.auth_token || 
+                      (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                       ? req.headers.authorization.slice(7) : null);
 
-        // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
-        const conversation = await storage.getConversation(parseInt(conversationId));
-        if (!conversation) {
-          return res.status(404).json({ message: "Conversation not found" });
-        }
-        
-        if (conversation.integrationId !== integration.id) {
-          console.warn(`🚨 SECURITY: Attempted cross-integration conversation access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
-          return res.status(404).json({ message: "Conversation not found" });
-        }
+        let isAuthenticated = false;
+        let authenticatedUserId = null;
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally for internal widgets only
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
-
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
+        if (token) {
           try {
             const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            
-            // Verify user owns this integration (unless it's demo integration)
-            if (!isDemoIntegration && integration.userId !== decoded.userId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
-            }
-
-            // SECURITY: Verify user owns this conversation
-            const authVisitorId = `user_${decoded.userId}`;
-            if (conversation.visitorId !== authVisitorId) {
-              return res.status(403).json({ message: "Access denied. You can only send messages to your own conversations." });
-            }
-          } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
+            isAuthenticated = true;
+            authenticatedUserId = decoded.userId;
+          } catch (error) {
+            console.error('JWT verification failed:', error);
             return res.status(401).json({ message: "Invalid or expired token" });
           }
         }
 
-          // Validate input
-          if (!message) {
-            return res.status(400).json({ message: "message is required" });
-          }
+        // Validate input based on authentication mode
+        if (!message) {
+          return res.status(400).json({ message: "message is required" });
+        }
+
+        if (!isAuthenticated && !visitorId) {
+          return res.status(400).json({ message: "visitorId is required for anonymous access" });
+        }
 
         const conversationIdNum = parseInt(conversationId);
         if (isNaN(conversationIdNum)) {
           return res.status(400).json({ message: "Invalid conversation ID" });
         }
 
-        // (integration and conversation already validated above in SECURITY FIX section)
+        // Validate API key and get integration
+        const integration = await storage.getIntegrationByApiKey(apiKey);
+        if (!integration) {
+          return res.status(404).json({ message: "Integration not found" });
+        }
 
+        // Verify conversation exists and belongs to this integration
+        const conversation = await storage.getConversation(conversationIdNum);
+        if (!conversation || conversation.integrationId !== integration.id) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        // Additional security check for authenticated users
+        if (isAuthenticated) {
+          // Verify user owns this integration OR it's the demo integration for AIPPS website
+         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+  // Para widgets externos, permitir acceso si la integración existe y es válida
+  const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+  if (!isDemoIntegration && !isExternalWidget && integration.userId !== authenticatedUserId) {
+    return res.status(403).json({ message: "Unauthorized access to this integration" });
+  }
+
+          // Verify conversation belongs to this authenticated user
+          const expectedVisitorId = `user_${authenticatedUserId}`;
+          if (conversation.visitorId !== expectedVisitorId) {
+            return res.status(403).json({ message: "Unauthorized access to this conversation" });
+          }
+
+        }
 
         // Create user message
         await storage.createMessage({
@@ -3773,7 +3656,7 @@ app.get("/api/health", (req, res) => {
           conversationId: conversationIdNum,
           success: true
               });
-      } catch (error: any) {
+      } catch (error) {
         console.error("🚨 Widget specific conversation send error:", {
           error: error.message,
           stack: error.stack,
@@ -3801,53 +3684,9 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally for internal widgets only
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
-
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            
-            // Verify user owns this integration (unless it's demo integration)
-            if (!isDemoIntegration && integration.userId !== decoded.userId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
-            }
-          } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
-            return res.status(401).json({ message: "Invalid or expired token" });
-          }
-        }
-
-        // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
-        const conversationIdNum = parseInt(conversationId);
-        if (isNaN(conversationIdNum)) {
-          return res.status(400).json({ message: "Invalid conversation ID" });
-        }
-        
-        const conversation = await storage.getConversation(conversationIdNum);
-        if (!conversation) {
-          return res.status(404).json({ message: "Conversation not found" });
-        }
-        
-        if (conversation.integrationId !== integration.id) {
-          console.warn(`🚨 SECURITY: Attempted cross-integration message access. Conversation ${conversationIdNum} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
-          return res.status(404).json({ message: "Conversation not found" });
-        }
-
         // Create message
         const message = await storage.createMessage({
-          conversationId: conversationIdNum,
+          conversationId,
           content,
           role,
         });
@@ -4100,9 +3939,6 @@ app.get("/api/health", (req, res) => {
         }
 
         // Verify that user owns the integration this conversation belongs to
-        if (!conversation.integrationId) {
-          return res.status(404).json({ message: "Conversation has no associated integration" });
-        }
         const integration = await storage.getIntegration(conversation.integrationId);
 
         if (!integration || integration.userId !== req.userId) {
@@ -4200,36 +4036,24 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
+        // Verificar que la conversación existe y pertenece a esta integración
         const conversation = await storage.getConversation(conversationIdNum);
         if (!conversation) {
           return res.status(404).json({ message: "Conversation not found" });
         }
-        
+
         if (conversation.integrationId !== integration.id) {
-          console.warn(`🚨 SECURITY: Attempted cross-integration conversation deletion. Conversation ${conversationIdNum} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
-          return res.status(404).json({ message: "Conversation not found" });
+          return res.status(403).json({ message: "Unauthorized" });
         }
 
-        // Determine if this is an external widget (non-aipps.ca origin)
-        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        
-        // Handle authentication conditionally for internal widgets only
-        if (!isExternalWidget) {
-          // Internal widget (on aipps.ca) - require authentication
-          const token = req.cookies?.auth_token || 
-                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                         ? req.headers.authorization.slice(7) : null);
-
-          if (!token) {
-            return res.status(401).json({ message: "Authentication required for internal widgets" });
-          }
-
+        // Para modo fullscreen, verificar autenticación de usuario
+        if (req.headers.authorization) {
+          const token = req.headers.authorization.replace('Bearer ', '');
           try {
             const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            
-            // Verify user owns this integration (unless it's demo integration)
+
+            // Verify user owns this integration OR it's the demo integration for AIPPS website
+            const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
             if (!isDemoIntegration && integration.userId !== decoded.userId) {
               return res.status(403).json({ message: "Unauthorized access to this integration" });
             }
@@ -4240,8 +4064,7 @@ app.get("/api/health", (req, res) => {
               return res.status(403).json({ message: "Unauthorized access to this conversation" });
             }
           } catch (jwtError) {
-            console.error('JWT verification failed:', jwtError);
-            return res.status(401).json({ message: "Invalid or expired token" });
+            return res.status(401).json({ message: "Invalid authentication token" });
           }
         }
 
@@ -5222,7 +5045,7 @@ app.get("/api/health", (req, res) => {
       }
 
       res.status(201).json(pricingPlan);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error creating pricing plan:", error);
       if (error.name === 'ZodError') {
         return res.status(400).json({ 
@@ -5287,7 +5110,7 @@ app.get("/api/health", (req, res) => {
       }
 
       res.json(updatedPlan);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error updating pricing plan:", error);
       if (error.name === 'ZodError') {
         return res.status(400).json({ 
@@ -5405,7 +5228,7 @@ app.get("/api/health", (req, res) => {
   // Forms API endpoints
   app.get("/api/forms", authenticateJWT, async (req, res) => {
     try {
-      const userId = req.userId;
+      const userId = req.user!.id;
       const forms = await storage.getForms(userId);
       res.json(forms);
     } catch (error) {
@@ -5428,7 +5251,7 @@ app.get("/api/health", (req, res) => {
       const form = result[0];
 
       // Verificar que el usuario es propietario del formulario
-      if (form.userId !== req.userId) {
+      if (form.userId !== req.user!.id) {
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
 
@@ -5845,7 +5668,7 @@ app.get("/api/health", (req, res) => {
       }
 
       // Verificar que el usuario es propietario del formulario
-      if (existingForm.userId !== req.userId) {
+      if (existingForm.userId !== req.user!.id) {
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
 
@@ -5869,7 +5692,7 @@ app.get("/api/health", (req, res) => {
       }
 
       // Verificar que el usuario es propietario del formulario
-      if (existingForm.userId !== req.userId) {
+      if (existingForm.userId !== req.user!.id) {
         return res.status(403).json({ error: "Unauthorized access to this form" });
       }
 
@@ -7102,6 +6925,7 @@ app.get("/api/health", (req, res) => {
                 const response = await storage.createFormResponse({
                 formId: parseInt(formId),
                 data: data,
+                createdAt: new Date(),
                 });
 
                 // Incrementar el contador de respuestas del formulario
@@ -7147,9 +6971,6 @@ app.get("/api/health", (req, res) => {
                 return res.status(404).json({ message: "Conversación no encontrada" });
                 }
 
-                if (!conversation.integrationId) {
-                return res.status(404).json({ message: "Conversation has no associated integration" });
-                }
                 const integration = await storage.getIntegration(conversation.integrationId);
                 if (!integration || integration.userId !== req.userId) {
                 return res.status(403).json({ message: "No tienes permiso para acceder a esta conversación" });

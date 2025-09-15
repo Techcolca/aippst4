@@ -222,4 +222,11 @@ export function getInteractionLimitByTier(tier: string): number {
   return limits[tier.toLowerCase()] || limits.free;
 }
 
-// Note: Express.Request interface extended in server/middleware/auth.ts
+// Extender el tipo Request para incluir la suscripción
+declare global {
+  namespace Express {
+    interface Request {
+      subscription?: any;
+    }
+  }
+}

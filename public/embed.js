@@ -467,12 +467,11 @@ config.serverUrl = "https://aipps.ca";
       console.log('AIPPS Debug: FORZANDO URL de dashboard:', config.serverUrl);
     }
 
-    // Generate visitor ID specific to this chatbot integration (SECURITY FIX)
-    const visitorStorageKey = `aipi_visitor_id_${config.apiKey}`;
-    if (!localStorage.getItem(visitorStorageKey)) {
-      localStorage.setItem(visitorStorageKey, 'visitor_' + Math.random().toString(36).substring(2, 15));
+    // Generate visitor ID if not exists
+    if (!localStorage.getItem('aipi_visitor_id')) {
+      localStorage.setItem('aipi_visitor_id', 'visitor_' + Math.random().toString(36).substring(2, 15));
     }
-    config.visitorId = localStorage.getItem(visitorStorageKey);
+    config.visitorId = localStorage.getItem('aipi_visitor_id');
 
     // Debug: Log what we found
     console.log('AIPPS Widget Debug:', {
@@ -481,26 +480,19 @@ config.serverUrl = "https://aipps.ca";
       serverUrl: config.serverUrl
     });
 
-    // COMPORTAMIENTO ANTERIOR RESTAURADO: Crear widget inmediatamente
-    // Load fonts immediately
-    loadFont();
-
-    // Create widget DOM elements IMMEDIATELY with default config
-    createWidgetDOM();
-
-    // CRÍTICO: Aplicar posición inmediatamente después de crear el DOM
-    setTimeout(() => {
-      console.log('AIPPS Debug: Aplicando posición inmediata con config por defecto');
-      setWidgetPosition();
-    }, 50);
-
-    // Attach event listeners immediately
-    attachEventListeners();
-
-    // DESPUÉS cargar configuración del servidor y actualizar
+    // Load widget configuration from server
     loadWidgetConfig().then(async () => {
-      // Update button text with integration name from server
+      // Load fonts
+      loadFont();
+
+      // Create widget DOM elements AFTER loading config
+      createWidgetDOM();
+
+      // Update button text with integration name
       updateButtonText();
+
+      // Attach event listeners
+      attachEventListeners();
 
       // Auto-open widget if configured
       if (config.autoOpen) {
@@ -512,21 +504,13 @@ config.serverUrl = "https://aipps.ca";
       // Start periodic config refresh to detect changes
       startConfigRefresh();
       
-      // Forzar actualización de idioma después de cargar config del servidor
+      // Forzar actualización de idioma después de la creación del widget
       setTimeout(() => {
-        console.log('AIPPS Debug: Ejecutando actualización de idioma post-config servidor');
+        console.log('AIPPS Debug: Ejecutando actualización de idioma post-creación de widget');
         updateLanguageElements();
       }, 250);
-      
-      // IMPORTANTE: Re-aplicar posición desde configuración del servidor
-      setTimeout(() => {
-        console.log('AIPPS Debug: Re-aplicando posición desde configuración servidor');
-        setWidgetPosition();
-      }, 100);
-      
     }).catch(error => {
       console.error('AIPI Widget Error:', error);
-      // Widget ya está creado, solo log del error sin romper funcionalidad básica
     });
   }
 
@@ -677,17 +661,19 @@ config.serverUrl = "https://aipps.ca";
             config.themeColor = newThemeColor;
             
             // Update theme color if changed
-            const primaryButton = getPrimaryButton();
-            if (primaryButton) {
-              primaryButton.style.backgroundColor = config.themeColor;
-            }
-            
-            // Update other elements with theme color
-            const chatContainer = widgetInstance.querySelector('#aipi-chat-container');
-            if (chatContainer) {
-              const header = chatContainer.querySelector('#aipi-header');
-              if (header) {
-                header.style.backgroundColor = config.themeColor;
+            if (widgetInstance) {
+              const toggleButton = widgetInstance.querySelector('#aipi-toggle-button');
+              if (toggleButton) {
+                toggleButton.style.backgroundColor = config.themeColor;
+              }
+              
+              // Update other elements with theme color
+              const chatContainer = widgetInstance.querySelector('#aipi-chat-container');
+              if (chatContainer) {
+                const header = chatContainer.querySelector('#aipi-header');
+                if (header) {
+                  header.style.backgroundColor = config.themeColor;
+                }
               }
             }
           }
@@ -697,7 +683,6 @@ config.serverUrl = "https://aipps.ca";
       }
     }, 5000); // Check every 5 seconds (reduced frequency)
   }
-  } // Close startConfigRefresh function
 
   // Función para extraer el contenido del sitio
   function scanCurrentPageContent() {
@@ -938,15 +923,6 @@ Contenido: [Error al extraer contenido detallado]
 
 
 
-
-  // Helper function to get the primary button regardless of widget type
-  function getPrimaryButton() {
-    if (config.widgetType === 'fullscreen') {
-      return document.getElementById('aipi-fullscreen-button') || document.getElementById('aipi-toggle-button');
-    } else {
-      return document.getElementById('aipi-toggle-button') || document.getElementById('aipi-fullscreen-button');
-    }
-  }
 
   // Create widget DOM structure
   function createWidgetDOM() {
@@ -1953,7 +1929,7 @@ Contenido: [Error al extraer contenido detallado]
   function attachEventListeners() {
     // Wait for DOM to be ready, then find elements
     setTimeout(() => {
-      const primaryButton = getPrimaryButton();
+      const toggleButton = document.getElementById('aipi-toggle-button');
       const minimizeButton = document.getElementById('aipi-minimize-button');
       const closeButton = document.getElementById('aipi-close-button');
       const chatInput = document.getElementById('aipi-input');
@@ -1961,9 +1937,7 @@ Contenido: [Error al extraer contenido detallado]
       const minimizedContainer = document.getElementById('aipi-minimized-container');
 
       console.log('AIPPS Widget: Adjuntando eventos...', {
-        primaryButton: !!primaryButton,
-        primaryButtonId: primaryButton?.id,
-        widgetType: config.widgetType,
+        toggleButton: !!toggleButton,
         minimizeButton: !!minimizeButton,
         closeButton: !!closeButton,
         chatInput: !!chatInput,
@@ -1971,7 +1945,7 @@ Contenido: [Error al extraer contenido detallado]
       });
 
       // Toggle widget open/close
-      if (primaryButton) {
+      if (toggleButton) {
         // Función para manejar el toggle
         function handleToggle(e) {
           if (e) {
@@ -1988,14 +1962,14 @@ Contenido: [Error al extraer contenido detallado]
         }
 
         // Limpiar cualquier event listener previo
-        primaryButton.onclick = null;
+        toggleButton.onclick = null;
         
         // Remover todos los event listeners existentes clonando el elemento
-        const newPrimaryButton = primaryButton.cloneNode(true);
-        primaryButton.parentNode.replaceChild(newPrimaryButton, primaryButton);
+        const newToggleButton = toggleButton.cloneNode(true);
+        toggleButton.parentNode.replaceChild(newToggleButton, toggleButton);
         
         // Referenciar el nuevo botón
-        const cleanButton = getPrimaryButton();
+        const cleanButton = document.getElementById('aipi-toggle-button');
         
         // Usar solo onclick para evitar conflictos
         cleanButton.onclick = function(e) {
@@ -2039,13 +2013,13 @@ Contenido: [Error al extraer contenido detallado]
         
         if (window.aippsRetryCount < 3) {
           window.aippsRetryCount++;
-          console.log(`AIPPS Widget: No se encontró el botón principal (${config.widgetType}) - reintento ${window.aippsRetryCount}/3`);
+          console.log(`AIPPS Widget: No se encontró el botón principal - reintento ${window.aippsRetryCount}/3`);
           setTimeout(() => {
             attachEventListeners();
           }, 500);
           return;
         } else {
-          console.error(`AIPPS Widget: Máximo de reintentos alcanzado. Widget ${config.widgetType} no completamente inicializado.`);
+          console.error('AIPPS Widget: Máximo de reintentos alcanzado. Widget no completamente inicializado.');
           return;
         }
       }
@@ -2423,12 +2397,6 @@ Contenido: [Error al extraer contenido detallado]
       <span class="aipi-button-text">${dynamicTexts[currentTextIndex]}</span>
       <div class="aipi-notification-dot"></div>
     `;
-
-    // CRÍTICO: Re-aplicar posición flotante después de cambiar innerHTML
-    setTimeout(() => {
-      console.log('AIPPS Debug: Re-aplicando posición flotante después de cerrar chat');
-      setWidgetPosition();
-    }, 50);
 
     // Reiniciar rotación de textos cuando se cierra
     setTimeout(() => {
@@ -4535,7 +4503,7 @@ Contenido: [Error al extraer contenido detallado]
     console.log('AIPPS Debug: Contenido de localStorage:', {
       auth_token: localStorage.getItem('auth_token'),
       aipi_auth_token: localStorage.getItem('aipi_auth_token'),
-      aipi_visitor_id: localStorage.getItem(`aipi_visitor_id_${config.apiKey}`)
+      aipi_visitor_id: localStorage.getItem('aipi_visitor_id')
     });
     console.log('AIPPS Debug: Contenido de cookies:', document.cookie);
     console.log('AIPPS Debug: No se encontró token en ninguna fuente');
