@@ -662,11 +662,10 @@ config.serverUrl = "https://aipps.ca";
             config.themeColor = newThemeColor;
             
             // Update theme color if changed
-            if (widgetInstance) {
-              const toggleButton = widgetInstance.querySelector('#aipi-toggle-button');
-              if (toggleButton) {
-                toggleButton.style.backgroundColor = config.themeColor;
-              }
+            const primaryButton = getPrimaryButton();
+            if (primaryButton) {
+              primaryButton.style.backgroundColor = config.themeColor;
+            }
               
               // Update other elements with theme color
               const chatContainer = widgetInstance.querySelector('#aipi-chat-container');
@@ -925,6 +924,15 @@ Contenido: [Error al extraer contenido detallado]
 
 
 
+
+  // Helper function to get the primary button regardless of widget type
+  function getPrimaryButton() {
+    if (config.widgetType === 'fullscreen') {
+      return document.getElementById('aipi-fullscreen-button') || document.getElementById('aipi-toggle-button');
+    } else {
+      return document.getElementById('aipi-toggle-button') || document.getElementById('aipi-fullscreen-button');
+    }
+  }
 
   // Create widget DOM structure
   function createWidgetDOM() {
@@ -1931,7 +1939,7 @@ Contenido: [Error al extraer contenido detallado]
   function attachEventListeners() {
     // Wait for DOM to be ready, then find elements
     setTimeout(() => {
-      const toggleButton = document.getElementById('aipi-toggle-button');
+      const primaryButton = getPrimaryButton();
       const minimizeButton = document.getElementById('aipi-minimize-button');
       const closeButton = document.getElementById('aipi-close-button');
       const chatInput = document.getElementById('aipi-input');
@@ -1939,7 +1947,9 @@ Contenido: [Error al extraer contenido detallado]
       const minimizedContainer = document.getElementById('aipi-minimized-container');
 
       console.log('AIPPS Widget: Adjuntando eventos...', {
-        toggleButton: !!toggleButton,
+        primaryButton: !!primaryButton,
+        primaryButtonId: primaryButton?.id,
+        widgetType: config.widgetType,
         minimizeButton: !!minimizeButton,
         closeButton: !!closeButton,
         chatInput: !!chatInput,
@@ -1947,7 +1957,7 @@ Contenido: [Error al extraer contenido detallado]
       });
 
       // Toggle widget open/close
-      if (toggleButton) {
+      if (primaryButton) {
         // Función para manejar el toggle
         function handleToggle(e) {
           if (e) {
@@ -1964,14 +1974,14 @@ Contenido: [Error al extraer contenido detallado]
         }
 
         // Limpiar cualquier event listener previo
-        toggleButton.onclick = null;
+        primaryButton.onclick = null;
         
         // Remover todos los event listeners existentes clonando el elemento
-        const newToggleButton = toggleButton.cloneNode(true);
-        toggleButton.parentNode.replaceChild(newToggleButton, toggleButton);
+        const newPrimaryButton = primaryButton.cloneNode(true);
+        primaryButton.parentNode.replaceChild(newPrimaryButton, primaryButton);
         
         // Referenciar el nuevo botón
-        const cleanButton = document.getElementById('aipi-toggle-button');
+        const cleanButton = getPrimaryButton();
         
         // Usar solo onclick para evitar conflictos
         cleanButton.onclick = function(e) {
@@ -2015,13 +2025,13 @@ Contenido: [Error al extraer contenido detallado]
         
         if (window.aippsRetryCount < 3) {
           window.aippsRetryCount++;
-          console.log(`AIPPS Widget: No se encontró el botón principal - reintento ${window.aippsRetryCount}/3`);
+          console.log(`AIPPS Widget: No se encontró el botón principal (${config.widgetType}) - reintento ${window.aippsRetryCount}/3`);
           setTimeout(() => {
             attachEventListeners();
           }, 500);
           return;
         } else {
-          console.error('AIPPS Widget: Máximo de reintentos alcanzado. Widget no completamente inicializado.');
+          console.error(`AIPPS Widget: Máximo de reintentos alcanzado. Widget ${config.widgetType} no completamente inicializado.`);
           return;
         }
       }
