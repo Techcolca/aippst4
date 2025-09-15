@@ -693,10 +693,12 @@ app.get("/api/health", (req, res) => {
         // Get authenticated user data for visitor info
         const authenticatedUser = await storage.getUser(decoded.userId);
         
-        // Create conversation with authenticated user's visitorId pattern
+        // Create conversation with authenticated user's visitorId pattern and visitor info
         const conversation = await storage.createConversation({
           integrationId: integration.id,
-          visitorId: `user_${decoded.userId}`
+          visitorId: `user_${decoded.userId}`,
+          visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
+          visitorEmail: visitorEmail || authenticatedUser?.email || null
         });
 
 
@@ -728,7 +730,9 @@ app.get("/api/health", (req, res) => {
       
       const conversation = await storage.createConversation({
         integrationId: integrations[0].id,
-        visitorId: `user_${req.userId}`
+        visitorId: `user_${req.userId}`,
+        visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
+        visitorEmail: authenticatedUser?.email || null
       });
 
       res.status(201).json(conversation);
