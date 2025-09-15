@@ -3,7 +3,7 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import jwt from "jsonwebtoken";
-import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin, verifyApiKey } from "./middleware/auth";
+import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin, verifyApiKey, verifyWidgetAuth } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
 import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, requireResourceLimit, requireBudgetCheck, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
 import { setupAuth, hashPassword, comparePasswords } from './auth';
@@ -631,7 +631,7 @@ app.get("/api/health", (req, res) => {
   // ================ Authenticated Conversations Routes ================
 
   // Get user conversations specifically for fullscreen widget with apiKey verification
-  app.get("/api/widget/:apiKey/conversations/user", async (req, res) => {
+  app.get("/api/widget/:apiKey/conversations/user", verifyWidgetAuth, async (req, res) => {
     try {
       const { apiKey } = req.params;
 
@@ -722,7 +722,7 @@ app.get("/api/health", (req, res) => {
   });
 
   // Create new conversation for fullscreen widget with apiKey verification
-  app.post("/api/widget/:apiKey/conversations/user", async (req, res) => {
+  app.post("/api/widget/:apiKey/conversations/user", verifyWidgetAuth, async (req, res) => {
     try {
       const { apiKey } = req.params;
       const { title, visitorName, visitorEmail } = req.body;
@@ -3320,7 +3320,7 @@ app.get("/api/health", (req, res) => {
     });
 
     // New endpoint for getting messages from a specific conversation (supports fullscreen mode)
-    app.get("/api/widget/:apiKey/conversation/:conversationId/messages", async (req, res) => {
+    app.get("/api/widget/:apiKey/conversation/:conversationId/messages", verifyWidgetAuth, async (req, res) => {
       try {
         const { apiKey, conversationId } = req.params;
 
@@ -3541,7 +3541,7 @@ app.get("/api/health", (req, res) => {
       }
     });
   // New endpoint for sending messages to specific conversations (supports both bubble and authenticated modes)
-    app.post("/api/widget/:apiKey/conversation/:conversationId/send", async (req, res) => {
+    app.post("/api/widget/:apiKey/conversation/:conversationId/send", verifyWidgetAuth, async (req, res) => {
       try {
         console.log(`🚀 POST /api/widget/.../conversation/.../send iniciado`);
       console.log(`Request body:`, req.body);
@@ -3790,7 +3790,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    app.post("/api/widget/:apiKey/message", async (req, res) => {
+    app.post("/api/widget/:apiKey/message", verifyWidgetAuth, async (req, res) => {
       try {
         const { apiKey } = req.params;
         const { conversationId, content, role, pageContext, language } = req.body;
@@ -4142,7 +4142,7 @@ app.get("/api/health", (req, res) => {
     });
 
     // Delete conversation endpoint
-    app.delete("/api/widget/:apiKey/conversation/:conversationId", async (req, res) => {
+    app.delete("/api/widget/:apiKey/conversation/:conversationId", verifyWidgetAuth, async (req, res) => {
       try {
         const { apiKey, conversationId } = req.params;
         const conversationIdNum = parseInt(conversationId);
