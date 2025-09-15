@@ -3128,7 +3128,7 @@ app.get("/api/health", (req, res) => {
     });
 
     // New endpoint for getting visitor conversations (supports fullscreen mode)
-    app.get("/api/widget/:apiKey/conversations/:visitorId", verifyToken, async (req, res) => {
+    app.get("/api/widget/:apiKey/conversations/:visitorId", async (req, res) => {
       try {
         const { apiKey, visitorId } = req.params;
 
@@ -3138,23 +3138,47 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Verify user has access to this integration OR it's the demo integration
+        // Determine if this is an external widget (non-aipps.ca origin)
         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
         const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        if (!isDemoIntegration && !isExternalWidget && integration.userId !== req.userId) {
-          return res.status(403).json({ message: "Unauthorized access to this integration" });
+        
+        // Handle authentication conditionally
+        let authUserId = null;
+        
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
+
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
+          }
+
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            authUserId = decoded.userId;
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== authUserId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
+
+          // Only allow access to conversations for the authenticated user
+          const authVisitorId = `user_${authUserId}`;
+          if (visitorId !== authVisitorId) {
+            return res.status(403).json({ message: "Access denied. You can only view your own conversations." });
+          }
         }
 
-        // Only allow access to conversations for the authenticated user
-        const authVisitorId = `user_${req.userId}`;
-        if (visitorId !== authVisitorId) {
-          return res.status(403).json({ message: "Access denied. You can only view your own conversations." });
-        }
-
-        // Get conversations for this authenticated user
+        // Get conversations for this visitor (external widgets can access conversations by visitorId)
         const conversations = await storage.getConversations(integration.id);
         const visitorConversations = conversations.filter(conv => 
-          conv.visitorId === authVisitorId
+          conv.visitorId === visitorId
         );
 
         res.json(visitorConversations);
@@ -3165,7 +3189,7 @@ app.get("/api/health", (req, res) => {
     });
 
     // New endpoint for getting messages from a specific conversation (supports fullscreen mode)
-    app.get("/api/widget/:apiKey/conversation/:conversationId/messages", verifyToken, async (req, res) => {
+    app.get("/api/widget/:apiKey/conversation/:conversationId/messages", async (req, res) => {
       try {
         const { apiKey, conversationId } = req.params;
 
@@ -3175,26 +3199,52 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // SECURITY: Require user authentication for all widget access
-        const token = req.cookies?.auth_token || 
-                      (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                       ? req.headers.authorization.slice(7) : null);
+        // Determine if this is an external widget (non-aipps.ca origin)
+        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+        
+        // Handle authentication conditionally for internal widgets only
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
 
-        if (!token) {
-          return res.status(401).json({ message: "Authentication required. Please login to use this chatbot." });
-        }
-
-        try {
-          const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-
-          // Verify user has access to this integration OR it's the demo integration
-          const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-          const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-          if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
-            return res.status(403).json({ message: "Unauthorized access to this integration" });
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
           }
 
-          // SECURITY FIX: Get conversation and verify it belongs to this integration
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== decoded.userId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+
+            // SECURITY FIX: Get conversation and verify it belongs to this integration
+            const conversation = await storage.getConversation(parseInt(conversationId));
+            if (!conversation) {
+              return res.status(404).json({ message: "Conversation not found" });
+            }
+            
+            // CRITICAL: Verify conversation belongs to this integration (prevent cross-chatbot access)
+            if (conversation.integrationId !== integration.id) {
+              console.warn(`🚨 SECURITY: Attempted cross-integration access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
+              return res.status(403).json({ message: "Access denied" });
+            }
+
+            // SECURITY: Verify user owns this conversation for internal widgets
+            const authVisitorId = `user_${decoded.userId}`;
+            if (conversation.visitorId !== authVisitorId) {
+              return res.status(403).json({ message: "Access denied. You can only view your own conversations." });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
+        } else {
+          // External widget - just verify conversation belongs to integration
           const conversation = await storage.getConversation(parseInt(conversationId));
           if (!conversation) {
             return res.status(404).json({ message: "Conversation not found" });
@@ -3205,28 +3255,19 @@ app.get("/api/health", (req, res) => {
             console.warn(`🚨 SECURITY: Attempted cross-integration access. Conversation ${conversationId} belongs to integration ${conversation.integrationId}, but request used apiKey for integration ${integration.id}`);
             return res.status(403).json({ message: "Access denied" });
           }
-
-          // SECURITY: Verify user owns this conversation
-          const authVisitorId = `user_${decoded.userId}`;
-          if (conversation.visitorId !== authVisitorId) {
-            return res.status(403).json({ message: "Access denied. You can only view your own conversations." });
-          }
-
-          // Get messages for this conversation
-          const messages = await storage.getConversationMessages(parseInt(conversationId));
-
-          res.json(messages);
-        } catch (jwtError) {
-          console.error('JWT verification failed:', jwtError);
-          return res.status(401).json({ message: "Invalid or expired token. Please login again." });
         }
+
+        // Get messages for this conversation
+        const messages = await storage.getConversationMessages(parseInt(conversationId));
+
+        res.json(messages);
       } catch (error) {
         console.error("Get conversation messages error:", error);
         res.status(500).json({ message: "Internal server error" });
       }
     });
 
-    app.post("/api/widget/:apiKey/conversation", verifyToken, async (req, res) => {
+    app.post("/api/widget/:apiKey/conversation", async (req, res) => {
       try {
         const { apiKey } = req.params;
         const { visitorId, visitorName, visitorEmail } = req.body;
@@ -3237,20 +3278,43 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Verify user has access to this integration OR it's the demo integration
+        // Determine if this is an external widget (non-aipps.ca origin)
         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
         const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        if (!isDemoIntegration && !isExternalWidget && integration.userId !== req.userId) {
-          return res.status(403).json({ message: "Unauthorized access to this integration" });
+        
+        // Handle authentication conditionally
+        let authenticatedUser = null;
+        let authUserId = null;
+        
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
+
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
+          }
+
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            authUserId = decoded.userId;
+            authenticatedUser = await storage.getUser(authUserId);
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== authUserId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
         }
 
-        // Get authenticated user data for visitor info
-        const authenticatedUser = await storage.getUser(req.userId);
-
-        // Create conversation with authenticated user's data
+        // Create conversation with appropriate visitor data
         const conversation = await storage.createConversation({
           integrationId: integration.id,
-          visitorId: visitorId || `user_${req.userId}`,
+          visitorId: isExternalWidget ? (visitorId || `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`) : (visitorId || `user_${authUserId}`),
           visitorName: visitorName || authenticatedUser?.fullName || authenticatedUser?.username || null,
           visitorEmail: visitorEmail || authenticatedUser?.email || null,
         });
@@ -3263,7 +3327,7 @@ app.get("/api/health", (req, res) => {
     });
 
     // New endpoint for bubble widget system
-    app.post("/api/widget/:apiKey/send", verifyToken, async (req, res) => {
+    app.post("/api/widget/:apiKey/send", async (req, res) => {
       try {
         const { apiKey } = req.params;
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
@@ -3279,16 +3343,43 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Integration not found" });
         }
 
-        // Verify user has access to this integration OR it's the demo integration
+        // Determine if this is an external widget (non-aipps.ca origin)
         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
         const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        if (!isDemoIntegration && !isExternalWidget && integration.userId !== req.userId) {
-          return res.status(403).json({ message: "Unauthorized access to this integration" });
+        
+        // Handle authentication conditionally
+        let authenticatedUser = null;
+        let authUserId = null;
+        
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
+
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
+          }
+
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            authUserId = decoded.userId;
+            authenticatedUser = await storage.getUser(authUserId);
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== authUserId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
         }
 
-        // Get authenticated user data for visitor info
-        const authenticatedUser = await storage.getUser(req.userId);
-        const authVisitorId = visitorId || `user_${req.userId}`;
+        // Set appropriate visitor ID based on auth status
+        const authVisitorId = isExternalWidget ? 
+          (visitorId || `anonymous_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`) : 
+          (visitorId || `user_${authUserId}`);
 
           // Find or create conversation for this authenticated user
           const conversations = await storage.getConversations(integration.id);
@@ -3444,7 +3535,7 @@ app.get("/api/health", (req, res) => {
       }
     });
   // New endpoint for sending messages to specific conversations (supports both bubble and authenticated modes)
-    app.post("/api/widget/:apiKey/conversation/:conversationId/send", verifyToken, async (req, res) => {
+    app.post("/api/widget/:apiKey/conversation/:conversationId/send", async (req, res) => {
       try {
         console.log(`🚀 POST /api/widget/.../conversation/.../send iniciado`);
       console.log(`Request body:`, req.body);
@@ -3469,17 +3560,38 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Conversation not found" });
         }
 
-        // Verify user has access to this integration OR it's the demo integration
+        // Determine if this is an external widget (non-aipps.ca origin)
         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
         const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-        if (!isDemoIntegration && !isExternalWidget && integration.userId !== req.userId) {
-          return res.status(403).json({ message: "Unauthorized access to this integration" });
-        }
+        
+        // Handle authentication conditionally for internal widgets only
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
 
-        // SECURITY: Verify user owns this conversation
-        const authVisitorId = `user_${req.userId}`;
-        if (conversation.visitorId !== authVisitorId) {
-          return res.status(403).json({ message: "Access denied. You can only send messages to your own conversations." });
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
+          }
+
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== decoded.userId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+
+            // SECURITY: Verify user owns this conversation
+            const authVisitorId = `user_${decoded.userId}`;
+            if (conversation.visitorId !== authVisitorId) {
+              return res.status(403).json({ message: "Access denied. You can only send messages to your own conversations." });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
         }
 
           // Validate input
@@ -3673,7 +3785,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    app.post("/api/widget/:apiKey/message", verifyToken, async (req, res) => {
+    app.post("/api/widget/:apiKey/message", async (req, res) => {
       try {
         const { apiKey } = req.params;
         const { conversationId, content, role, pageContext, language } = req.body;
@@ -3687,6 +3799,34 @@ app.get("/api/health", (req, res) => {
         const integration = await storage.getIntegrationByApiKey(apiKey);
         if (!integration) {
           return res.status(404).json({ message: "Integration not found" });
+        }
+
+        // Determine if this is an external widget (non-aipps.ca origin)
+        const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+        
+        // Handle authentication conditionally for internal widgets only
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
+
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
+          }
+
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== decoded.userId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
         }
 
         // SECURITY FIX: Verify conversation belongs to this integration (prevent cross-chatbot access)
@@ -4044,7 +4184,7 @@ app.get("/api/health", (req, res) => {
     });
 
     // Delete conversation endpoint
-    app.delete("/api/widget/:apiKey/conversation/:conversationId", verifyToken, async (req, res) => {
+    app.delete("/api/widget/:apiKey/conversation/:conversationId", async (req, res) => {
       try {
         const { apiKey, conversationId } = req.params;
         const conversationIdNum = parseInt(conversationId);
@@ -4071,17 +4211,38 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Conversation not found" });
         }
 
-
-        // Verify user has access to this integration OR it's the demo integration
+        // Determine if this is an external widget (non-aipps.ca origin)
         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-        if (!isDemoIntegration && integration.userId !== req.userId) {
-          return res.status(403).json({ message: "Unauthorized access to this integration" });
-        }
+        const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+        
+        // Handle authentication conditionally for internal widgets only
+        if (!isExternalWidget) {
+          // Internal widget (on aipps.ca) - require authentication
+          const token = req.cookies?.auth_token || 
+                        (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
+                         ? req.headers.authorization.slice(7) : null);
 
-        // Verify conversation belongs to this authenticated user
-        const expectedVisitorId = `user_${req.userId}`;
-        if (conversation.visitorId !== expectedVisitorId) {
-          return res.status(403).json({ message: "Unauthorized access to this conversation" });
+          if (!token) {
+            return res.status(401).json({ message: "Authentication required for internal widgets" });
+          }
+
+          try {
+            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            
+            // Verify user owns this integration (unless it's demo integration)
+            if (!isDemoIntegration && integration.userId !== decoded.userId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+
+            // Verify conversation belongs to this authenticated user
+            const expectedVisitorId = `user_${decoded.userId}`;
+            if (conversation.visitorId !== expectedVisitorId) {
+              return res.status(403).json({ message: "Unauthorized access to this conversation" });
+            }
+          } catch (jwtError) {
+            console.error('JWT verification failed:', jwtError);
+            return res.status(401).json({ message: "Invalid or expired token" });
+          }
         }
 
         // Eliminar la conversación
