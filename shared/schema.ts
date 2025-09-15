@@ -700,6 +700,29 @@ export const insertSentAlertSchema = createInsertSchema(sentAlerts).pick({
   billingMonth: z.string().regex(/^\d{4}-\d{2}$/, "Billing month must be in YYYY-MM format"),
 });
 
+// Widget Users schema - for users registered specifically in widgets (per integration)
+export const widgetUsers = pgTable("widget_users", {
+  id: serial("id").primaryKey(),
+  integrationId: integer("integration_id").notNull().references(() => integrations.id),
+  username: text("username").notNull(),
+  email: text("email").notNull(),
+  password: text("password").notNull(),
+  fullName: text("full_name"),
+  createdAt: timestamp("created_at").defaultNow(),
+}, (table) => ({
+  // Unique constraint per integration (same username/email can exist in different integrations)
+  uniqueUsernamePerIntegration: unique("unique_username_per_integration").on(table.integrationId, table.username),
+  uniqueEmailPerIntegration: unique("unique_email_per_integration").on(table.integrationId, table.email),
+}));
+
+export const insertWidgetUserSchema = createInsertSchema(widgetUsers).pick({
+  integrationId: true,
+  username: true,
+  email: true,
+  password: true,
+  fullName: true,
+});
+
 // Tipos TypeScript para las nuevas tablas
 export type UserBudget = typeof userBudgets.$inferSelect;
 export type InsertUserBudget = z.infer<typeof insertUserBudgetSchema>;
@@ -712,3 +735,6 @@ export type InsertUsageTracking = z.infer<typeof insertUsageTrackingSchema>;
 
 export type SentAlert = typeof sentAlerts.$inferSelect;
 export type InsertSentAlert = z.infer<typeof insertSentAlertSchema>;
+
+export type WidgetUser = typeof widgetUsers.$inferSelect;
+export type InsertWidgetUser = z.infer<typeof insertWidgetUserSchema>;

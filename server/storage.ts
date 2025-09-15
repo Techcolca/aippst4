@@ -6,7 +6,8 @@ import {
   TopProduct, TopTopic, Subscription, InsertSubscription,
   DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan,
   Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse,
-  Appointment, InsertAppointment, CalendarToken, InsertCalendarToken
+  Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
+  WidgetUser, InsertWidgetUser
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 import fs from "fs";
@@ -16,6 +17,13 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser & { apiKey: string }): Promise<User>;
+
+  // Widget User methods (users specific to integrations/widgets)
+  getWidgetUser(id: number): Promise<WidgetUser | undefined>;
+  getWidgetUserByUsernameAndIntegration(username: string, integrationId: number): Promise<WidgetUser | undefined>;
+  getWidgetUserByEmailAndIntegration(email: string, integrationId: number): Promise<WidgetUser | undefined>;
+  createWidgetUser(user: InsertWidgetUser): Promise<WidgetUser>;
+  getWidgetUsersByIntegration(integrationId: number): Promise<WidgetUser[]>;
 
   // Integration methods
   getIntegrations(userId: number): Promise<Integration[]>;

@@ -3,10 +3,10 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import jwt from "jsonwebtoken";
-import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin } from "./middleware/auth";
+import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin, verifyApiKey } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
 import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, requireResourceLimit, requireBudgetCheck, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
-import { setupAuth } from './auth';
+import { setupAuth, hashPassword, comparePasswords } from './auth';
 // Feature access middleware removed - implementing directly in routes
 import { generateApiKey } from "./lib/utils";
 import { generateChatCompletion, analyzeSentiment, summarizeText, generateAIPromotionalMessages } from "./lib/openai";
@@ -3085,6 +3085,119 @@ app.get("/api/health", (req, res) => {
       } catch (error) {
         console.error("Error cancelando suscripción:", error);
         res.status(500).json({ message: "Error procesando la solicitud de cancelación" });
+      }
+    });
+
+    // ================ Widget Authentication Routes ================
+    
+    // Register user for specific widget/integration
+    app.post("/api/widget/register", verifyApiKey, async (req, res) => {
+      try {
+        const apiKey = req.headers['x-api-key'] as string;
+        const { username, password, email, fullName } = req.body;
+
+        // Validate input
+        if (!username || !password || !email) {
+          return res.status(400).json({ message: "Username, password, and email are required" });
+        }
+
+        // Get integration by API key to verify it exists
+        const integration = await storage.getIntegrationByApiKey(apiKey);
+        if (!integration) {
+          return res.status(401).json({ message: "Invalid API key" });
+        }
+
+        // Check if user already exists for this integration
+        const existingUserByUsername = await storage.getWidgetUserByUsernameAndIntegration(username, integration.id);
+        if (existingUserByUsername) {
+          return res.status(400).json({ message: "Username already exists for this chatbot" });
+        }
+
+        const existingUserByEmail = await storage.getWidgetUserByEmailAndIntegration(email, integration.id);
+        if (existingUserByEmail) {
+          return res.status(400).json({ message: "Email already exists for this chatbot" });
+        }
+
+        // Hash password
+        const hashedPassword = await hashPassword(password);
+
+        // Create widget user
+        const widgetUser = await storage.createWidgetUser({
+          integrationId: integration.id,
+          username,
+          email,
+          password: hashedPassword,
+          fullName: fullName || null
+        });
+
+        // Create JWT token that includes both user and integration info
+        const token = jwt.sign({ 
+          widgetUserId: widgetUser.id,
+          integrationId: integration.id,
+          username: widgetUser.username,
+          type: 'widget'
+        }, JWT_SECRET, { expiresIn: "7d" });
+
+        // Return success without password
+        const { password: _, ...userWithoutPassword } = widgetUser;
+        res.status(201).json({
+          ...userWithoutPassword,
+          token,
+          success: true
+        });
+      } catch (error) {
+        console.error("Widget registration error:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    });
+
+    // Login user for specific widget/integration
+    app.post("/api/widget/login", verifyApiKey, async (req, res) => {
+      try {
+        const apiKey = req.headers['x-api-key'] as string;
+        const { username, password } = req.body;
+
+        // Validate input
+        if (!username || !password) {
+          return res.status(400).json({ message: "Username and password are required" });
+        }
+
+        // Get integration by API key
+        const integration = await storage.getIntegrationByApiKey(apiKey);
+        if (!integration) {
+          return res.status(401).json({ message: "Invalid API key" });
+        }
+
+        // Get widget user for this integration
+        const widgetUser = await storage.getWidgetUserByUsernameAndIntegration(username, integration.id);
+        if (!widgetUser) {
+          return res.status(401).json({ message: "Invalid username or password" });
+        }
+
+        // Check password
+        const passwordMatch = await comparePasswords(password, widgetUser.password);
+        if (!passwordMatch) {
+          return res.status(401).json({ message: "Invalid username or password" });
+        }
+
+        // Create JWT token
+        const token = jwt.sign({ 
+          widgetUserId: widgetUser.id,
+          integrationId: integration.id,
+          username: widgetUser.username,
+          type: 'widget'
+        }, JWT_SECRET, { expiresIn: "7d" });
+
+        // Return success without password
+        const { password: _, ...userWithoutPassword } = widgetUser;
+        res.status(200).json({
+          ...userWithoutPassword,
+          token,
+          success: true
+        });
+      } catch (error) {
+        console.error("Widget login error:", error);
+        res.status(500).json({ message: "Internal server error" });
       }
     });
 

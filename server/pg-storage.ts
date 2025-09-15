@@ -9,9 +9,10 @@ import {
   TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
   PricingPlan, InsertPricingPlan, Form, InsertForm, FormTemplate, InsertFormTemplate,
   FormResponse, InsertFormResponse, Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
+  WidgetUser, InsertWidgetUser,
   users, integrations, conversations, messages, automations, settings, sitesContent, 
   subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments,
-  calendarTokens
+  calendarTokens, widgetUsers
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -35,6 +36,35 @@ export class PgStorage implements IStorage {
   async createUser(user: InsertUser & { apiKey: string }): Promise<User> {
     const result = await db.insert(users).values(user).returning();
     return result[0];
+  }
+
+  // Widget User methods (users specific to integrations/widgets)
+  async getWidgetUser(id: number): Promise<WidgetUser | undefined> {
+    const result = await db.select().from(widgetUsers).where(eq(widgetUsers.id, id)).limit(1);
+    return result[0];
+  }
+
+  async getWidgetUserByUsernameAndIntegration(username: string, integrationId: number): Promise<WidgetUser | undefined> {
+    const result = await db.select().from(widgetUsers)
+      .where(and(eq(widgetUsers.username, username), eq(widgetUsers.integrationId, integrationId)))
+      .limit(1);
+    return result[0];
+  }
+
+  async getWidgetUserByEmailAndIntegration(email: string, integrationId: number): Promise<WidgetUser | undefined> {
+    const result = await db.select().from(widgetUsers)
+      .where(and(eq(widgetUsers.email, email), eq(widgetUsers.integrationId, integrationId)))
+      .limit(1);
+    return result[0];
+  }
+
+  async createWidgetUser(user: InsertWidgetUser): Promise<WidgetUser> {
+    const result = await db.insert(widgetUsers).values(user).returning();
+    return result[0];
+  }
+
+  async getWidgetUsersByIntegration(integrationId: number): Promise<WidgetUser[]> {
+    return await db.select().from(widgetUsers).where(eq(widgetUsers.integrationId, integrationId));
   }
 
   // Integration methods
