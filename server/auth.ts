@@ -7,7 +7,22 @@ import { promisify } from "util";
 import jwt from "jsonwebtoken";
 import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
-import { ExtendedUser } from "./database-storage";
+
+// Extended user interface for auth with additional properties
+export interface ExtendedUser {
+  id: number;
+  username: string;
+  password: string;
+  email: string;
+  fullName: string | null;
+  apiKey: string;
+  createdAt: Date | null;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+  name?: string; // Alias for fullName
+  roleName?: string; // Role information
+  avatar?: string; // Avatar URL
+}
 
 declare global {
   namespace Express {
@@ -102,7 +117,18 @@ export function setupAuth(app: Express) {
   passport.deserializeUser(async (id: number, done) => {
     try {
       const user = await storage.getUser(id);
-      done(null, user);
+      if (user) {
+        // Add extended properties for compatibility
+        const extendedUser: ExtendedUser = {
+          ...user,
+          name: user.fullName,
+          roleName: user.username === 'admin' ? 'admin' : 'user',
+          avatar: undefined
+        };
+        done(null, extendedUser);
+      } else {
+        done(null, false);
+      }
     } catch (error) {
       done(error);
     }
@@ -192,10 +218,10 @@ export function setupAuth(app: Express) {
           userInfo: {
             id: userWithoutPassword.id,
             username: userWithoutPassword.username,
-            name: userWithoutPassword.name,
+            name: userWithoutPassword.fullName,
             email: userWithoutPassword.email,
-            role: userWithoutPassword.roleName,
-            avatar: userWithoutPassword.avatar
+            role: userWithoutPassword.username === 'admin' ? 'admin' : 'user',
+            avatar: undefined
           }
         });
       }
@@ -242,10 +268,10 @@ export function setupAuth(app: Express) {
           userInfo: {
             id: user.id,
             username: user.username,
-            name: user.name,
+            name: user.fullName,
             email: user.email,
-            role: user.roleName,
-            avatar: user.avatar
+            role: user.username === 'admin' ? 'admin' : 'user',
+            avatar: undefined
           }
         });
       } catch (jwtError) {

@@ -5,12 +5,14 @@ import { storage } from '../storage';
 // JWT secret key
 export const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
 
+import type { ExtendedUser } from '../auth';
+
 // Extend Express Request interface to include user and userId
 declare global {
   namespace Express {
     interface Request {
       userId: number;
-      user?: any; // Allow storing the user object
+      user?: ExtendedUser; // Use proper ExtendedUser type
     }
   }
 }
@@ -237,6 +239,216 @@ export async function authenticateJWT(req: Request, res: Response, next: NextFun
     
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
+}
+
+/**
+ * ⚡ SECURITY: Strict widget token validation with database lookup
+ * Prevents cross-integration token reuse attacks
+ */
+export async function verifyWidgetToken(req: Request, res: Response, next: NextFunction) {
+  // Extract integration ID from URL params
+  const integrationId = parseInt(req.params.integrationId);
+  if (!integrationId || isNaN(integrationId)) {
+    return res.status(400).json({ message: 'Invalid integration ID' });
+  }
+
+  // Extract JWT token from Authorization header or cookies
+  let token = null;
+  if (req.headers.authorization?.startsWith('Bearer ')) {
+    token = req.headers.authorization.slice(7);
+  } else if (req.cookies?.widget_auth_token) {
+    token = req.cookies.widget_auth_token;
+  }
+
+  if (!token) {
+    return res.status(401).json({ message: 'Widget authentication required' });
+  }
+
+  try {
+    // Step 1: Verify JWT signature and extract payload
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number, integrationId: number };
+    
+    // Step 2: Generate token hash for database lookup
+    const crypto = await import('crypto');
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    
+    // Step 3: Database lookup - CRITICAL security validation
+    const widgetToken = await storage.getWidgetToken(tokenHash);
+    
+    if (!widgetToken) {
+      return res.status(401).json({ 
+        message: 'Token does not belong to this integration. Please login again.' 
+      });
+    }
+
+    // Step 4: Validate integration ownership - PREVENT cross-integration access
+    if (widgetToken.integrationId !== integrationId) {
+      return res.status(401).json({ 
+        message: 'Token does not belong to this integration. Please login again.' 
+      });
+    }
+
+    // Step 5: Check token expiration and revocation
+    const now = new Date();
+    if (widgetToken.expiresAt && widgetToken.expiresAt <= now) {
+      return res.status(401).json({ 
+        message: 'Token does not belong to this integration. Please login again.' 
+      });
+    }
+
+    if (widgetToken.isRevoked) {
+      return res.status(401).json({ 
+        message: 'Token does not belong to this integration. Please login again.' 
+      });
+    }
+
+    // Step 6: Load widget user data
+    const widgetUser = await storage.getWidgetUser(widgetToken.widgetUserId);
+    if (!widgetUser) {
+      return res.status(401).json({ 
+        message: 'Token does not belong to this integration. Please login again.' 
+      });
+    }
+
+    // Attach validated widget context (avoid privilege confusion with platform auth)
+    (req as any).widgetContext = {
+      integrationId: integrationId,
+      widgetUserId: widgetUser.id,
+      widgetUser: widgetUser,
+      widgetToken: widgetToken
+    };
+    
+    next();
+  } catch (error) {
+    console.error('Widget token verification error:', error);
+    return res.status(401).json({ 
+      message: 'Token does not belong to this integration. Please login again.' 
+    });
+  }
+}
+
+/**
+ * ⚡ SECURITY: Reusable auth helpers for widget routes
+ * Supports 3 modes: anonymous, widget token, user JWT with database validation
+ */
+
+// Extract auth token from request
+export function getAuthToken(req: Request): string | null {
+  if (req.cookies?.widget_auth_token) return req.cookies.widget_auth_token;
+  if (req.cookies?.auth_token) return req.cookies.auth_token;
+  if (req.headers.authorization?.startsWith('Bearer ')) {
+    return req.headers.authorization.slice(7);
+  }
+  return null;
+}
+
+// Validate widget token against specific integration with database lookup
+export async function validateWidgetTokenFor(integrationId: number, token: string): Promise<{
+  mode: 'widget';
+  widgetUserId: number;
+  integrationId: number;
+  widgetUser: any;
+} | null> {
+  try {
+    // Step 1: Verify JWT signature
+    const decoded = jwt.verify(token, JWT_SECRET) as { 
+      widgetUserId: number; 
+      integrationId: number; 
+      type: string; 
+    };
+
+    if (decoded.type !== 'widget') return null;
+
+    // Step 2: Database lookup for security
+    const crypto = await import('crypto');
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const widgetToken = await storage.getWidgetToken(tokenHash);
+
+    if (!widgetToken || widgetToken.isRevoked) return null;
+    if (widgetToken.integrationId !== integrationId) return null;
+    
+    // Step 3: Check expiration
+    const now = new Date();
+    if (widgetToken.expiresAt && widgetToken.expiresAt <= now) return null;
+
+    // Step 4: Load widget user
+    const widgetUser = await storage.getWidgetUser(widgetToken.widgetUserId);
+    if (!widgetUser) return null;
+
+    return {
+      mode: 'widget',
+      widgetUserId: widgetUser.id,
+      integrationId: integrationId,
+      widgetUser: widgetUser
+    };
+  } catch (error) {
+    console.error('Widget token validation error:', error);
+    return null;
+  }
+}
+
+// Validate standard user JWT
+export async function validateUserJWT(token: string): Promise<{
+  mode: 'user';
+  userId: number;
+  user: any;
+} | null> {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+    const user = await storage.getUser(decoded.userId);
+    
+    if (!user) return null;
+
+    return {
+      mode: 'user',
+      userId: user.id,
+      user: user
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+// Main auth validation for widget requests
+export async function validateAuthForWidgetRequest(req: Request, integration: any): Promise<{
+  mode: 'anonymous' | 'widget' | 'user';
+  userId?: number;
+  widgetUserId?: number;
+  user?: any;
+  widgetUser?: any;
+}> {
+  const token = getAuthToken(req);
+  
+  if (!token) {
+    return { mode: 'anonymous' };
+  }
+
+  // Try widget token first
+  const widgetAuth = await validateWidgetTokenFor(integration.id, token);
+  if (widgetAuth) {
+    return {
+      mode: 'widget',
+      widgetUserId: widgetAuth.widgetUserId,
+      widgetUser: widgetAuth.widgetUser
+    };
+  }
+
+  // Try user JWT second
+  const userAuth = await validateUserJWT(token);
+  if (userAuth) {
+    // Verify user owns the integration
+    if (integration.userId !== userAuth.userId) {
+      throw new Error('Integration ownership mismatch');
+    }
+    return {
+      mode: 'user',
+      userId: userAuth.userId,
+      user: userAuth.user
+    };
+  }
+
+  // Token present but invalid
+  throw new Error('Invalid or expired token');
 }
 
 /**

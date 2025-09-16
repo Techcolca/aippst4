@@ -1,5 +1,7 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import connectPgSimple from 'connect-pg-simple';
+import session from 'express-session';
 import { IStorage } from './storage';
 import { 
   User, InsertUser, Integration, InsertIntegration, 
@@ -9,10 +11,10 @@ import {
   TopProduct, TopTopic, Subscription, InsertSubscription, DiscountCode, InsertDiscountCode,
   PricingPlan, InsertPricingPlan, Form, InsertForm, FormTemplate, InsertFormTemplate,
   FormResponse, InsertFormResponse, Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
-  WidgetUser, InsertWidgetUser,
+  WidgetUser, InsertWidgetUser, WidgetToken, InsertWidgetToken,
   users, integrations, conversations, messages, automations, settings, sitesContent, 
   subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments,
-  calendarTokens, widgetUsers
+  calendarTokens, widgetUsers, widgetTokens
 } from "@shared/schema";
 import { eq, and, inArray } from 'drizzle-orm';
 
@@ -22,6 +24,18 @@ const client = postgres(connectionString as string);
 const db = drizzle(client);
 
 export class PgStorage implements IStorage {
+  // Session store (express-session compatible)
+  public sessionStore: any;
+
+  constructor() {
+    // Initialize PostgreSQL session store
+    const pgSession = connectPgSimple(session);
+    this.sessionStore = new pgSession({
+      pg: client,
+      tableName: 'user_sessions'
+    });
+  }
+
   // User methods
   async getUser(id: number): Promise<User | undefined> {
     const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
@@ -35,6 +49,19 @@ export class PgStorage implements IStorage {
 
   async createUser(user: InsertUser & { apiKey: string }): Promise<User> {
     const result = await db.insert(users).values(user).returning();
+    return result[0];
+  }
+
+  async updateUser(id: number, data: Partial<User>): Promise<User> {
+    const result = await db.update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (result.length === 0) {
+      throw new Error(`User with id ${id} not found`);
+    }
+    
     return result[0];
   }
 
@@ -65,6 +92,79 @@ export class PgStorage implements IStorage {
 
   async getWidgetUsersByIntegration(integrationId: number): Promise<WidgetUser[]> {
     return await db.select().from(widgetUsers).where(eq(widgetUsers.integrationId, integrationId));
+  }
+
+  // Widget Token methods (secure token validation per integration)
+  async getWidgetToken(tokenHash: string): Promise<WidgetToken | undefined> {
+    const result = await db.select().from(widgetTokens).where(eq(widgetTokens.tokenHash, tokenHash)).limit(1);
+    return result[0];
+  }
+
+  async createWidgetToken(token: InsertWidgetToken): Promise<WidgetToken> {
+    const result = await db.insert(widgetTokens).values(token).returning();
+    return result[0];
+  }
+
+  async updateWidgetToken(tokenHash: string, data: Partial<WidgetToken>): Promise<WidgetToken> {
+    const result = await db.update(widgetTokens)
+      .set(data)
+      .where(eq(widgetTokens.tokenHash, tokenHash))
+      .returning();
+    
+    if (result.length === 0) {
+      throw new Error(`Widget token with hash ${tokenHash} not found`);
+    }
+    
+    return result[0];
+  }
+
+  async revokeWidgetToken(tokenHash: string): Promise<void> {
+    await db.update(widgetTokens)
+      .set({ isRevoked: true })
+      .where(eq(widgetTokens.tokenHash, tokenHash));
+  }
+
+  async revokeWidgetTokensByUser(widgetUserId: number): Promise<void> {
+    await db.update(widgetTokens)
+      .set({ isRevoked: true })
+      .where(eq(widgetTokens.widgetUserId, widgetUserId));
+  }
+
+  async cleanupExpiredWidgetTokens(): Promise<number> {
+    const now = new Date();
+    const result = await db.delete(widgetTokens)
+      .where(eq(widgetTokens.expiresAt, now))
+      .returning();
+    return result.length;
+  }
+
+  // Document methods (placeholder implementations)
+  async getDocuments(integrationId: number): Promise<any[]> {
+    // Placeholder implementation - documents are not stored in database yet
+    return [];
+  }
+
+  async createDocument(doc: any): Promise<any> {
+    // Placeholder implementation - documents are not stored in database yet
+    return doc;
+  }
+
+  async deleteDocument(id: number): Promise<void> {
+    // Placeholder implementation - documents are not stored in database yet
+  }
+
+  async getActiveWidgetTokenByUserAndIntegration(widgetUserId: number, integrationId: number): Promise<WidgetToken | undefined> {
+    const result = await db.select()
+      .from(widgetTokens)
+      .where(
+        and(
+          eq(widgetTokens.widgetUserId, widgetUserId),
+          eq(widgetTokens.integrationId, integrationId),
+          eq(widgetTokens.isRevoked, false)
+        )
+      )
+      .limit(1);
+    return result[0];
   }
 
   // Integration methods
@@ -625,10 +725,10 @@ export class PgStorage implements IStorage {
     return Array.from(topicMentions.entries())
       .map(([topic, data]) => ({
         topic,
-        frequency: data.count,
+        count: data.count,
         sentiment: Math.round(data.sentimentSum / data.sentimentCount)
       }))
-      .sort((a, b) => b.frequency - a.frequency)
+      .sort((a, b) => b.count - a.count)
       .slice(0, 5); // Top 5 temas
   }
   
@@ -1066,39 +1166,6 @@ export class PgStorage implements IStorage {
       .where(eq(calendarTokens.id, id));
   }
 
-  // Analytics methods
-  async getDashboardStats(userId: number): Promise<{ totalConversations: number; resolutionRate: number; averageResponseTime: number; }> {
-    // Obtener las integraciones del usuario
-    const userIntegrations = await this.getIntegrations(userId);
-    const integrationIds = userIntegrations.map(integration => integration.id);
-    
-    if (integrationIds.length === 0) {
-      return {
-        totalConversations: 0,
-        resolutionRate: 0,
-        averageResponseTime: 0
-      };
-    }
-    
-    // Obtener todas las conversaciones para las integraciones del usuario
-    const allConversations = await db.select()
-      .from(conversations)
-      .where(inArray(conversations.integrationId, integrationIds));
-    
-    const totalConversations = allConversations.length;
-    const resolvedConversations = allConversations.filter(conv => conv.resolved).length;
-    const resolutionRate = totalConversations > 0 ? (resolvedConversations / totalConversations) * 100 : 0;
-    
-    // Calcular tiempo promedio de respuesta
-    const totalDuration = allConversations.reduce((sum, conv) => sum + (conv.duration || 0), 0);
-    const averageResponseTime = totalConversations > 0 ? totalDuration / totalConversations / 60 : 0;
-    
-    return {
-      totalConversations,
-      resolutionRate,
-      averageResponseTime
-    };
-  }
 
   async getConversationAnalytics(userId: number): Promise<ConversationAnalytics> {
     // Obtener las integraciones del usuario

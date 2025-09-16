@@ -17,6 +17,10 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser & { apiKey: string }): Promise<User>;
+  updateUser(id: number, data: Partial<User>): Promise<User>;
+  
+  // Session store (express-session compatible)
+  sessionStore: any;
 
   // Widget User methods (users specific to integrations/widgets)
   getWidgetUser(id: number): Promise<WidgetUser | undefined>;
@@ -198,6 +202,9 @@ export interface IStorage {
     private widgetUserIdCounter: number;
     private widgetTokenIdCounter: number;
 
+    // Session store (express-session compatible)
+    public sessionStore: any;
+
     constructor() {
       this.users = new Map();
       this.integrations = new Map();
@@ -216,6 +223,12 @@ export interface IStorage {
       this.calendarTokens = new Map();
       this.widgetUsers = new Map();
       this.widgetTokens = new Map();
+      
+      // Initialize in-memory session store
+      const MemoryStore = require('memorystore')(require('express-session'));
+      this.sessionStore = new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+      });
       this.userIdCounter = 1;
         this.integrationIdCounter = 1;
         this.conversationIdCounter = 1;
@@ -624,6 +637,22 @@ export interface IStorage {
         };
         this.users.set(id, newUser);
         return newUser;
+        }
+
+        async updateUser(id: number, data: Partial<User>): Promise<User> {
+          const existingUser = this.users.get(id);
+          if (!existingUser) {
+            throw new Error(`User with id ${id} not found`);
+          }
+          
+          const updatedUser: User = {
+            ...existingUser,
+            ...data,
+            id // Ensure id is not overwritten
+          };
+          
+          this.users.set(id, updatedUser);
+          return updatedUser;
         }
 
         // Integration methods

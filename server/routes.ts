@@ -3,7 +3,7 @@ import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import jwt from "jsonwebtoken";
-import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin, verifyApiKey } from "./middleware/auth";
+import { verifyToken, JWT_SECRET, authenticateJWT, isAdmin as authIsAdmin, verifyApiKey, verifyWidgetToken, validateAuthForWidgetRequest } from "./middleware/auth";
 import { getInteractionLimitByTier, verifySubscription, incrementInteractionCount, InteractionType, getUserSubscription } from "./middleware/subscription";
 import { checkResourceLimit, checkFeatureAccess, getUserLimitsSummary, requireResourceLimit, requireBudgetCheck, LimitableResource, LimitableFeature } from "./middleware/plan-limits";
 import { setupAuth, hashPassword, comparePasswords } from './auth';
@@ -630,78 +630,32 @@ app.get("/api/health", (req, res) => {
 
   // ================ Authenticated Conversations Routes ================
 
-  // Get user conversations specifically for fullscreen widget with apiKey verification
-  app.get("/api/widget/:apiKey/conversations/user", async (req, res) => {
+  // ⚡ SECURITY: Get user conversations with strict database-backed token validation
+  app.get("/api/widget/:integrationId/conversations/user", verifyWidgetToken, async (req, res) => {
     try {
-      const { apiKey } = req.params;
+      const { integrationId } = req.params;
+      const integrationIdNum = parseInt(integrationId, 10);
 
-      // Validate API key first
-      const integration = await storage.getIntegrationByApiKey(apiKey);
-      if (!integration) {
-        return res.status(404).json({ message: "Integration not found" });
-      }
+      // The verifyWidgetToken middleware has already validated the token and integration
+      const widgetContext = (req as any).widgetContext;
 
-      // Check if user is authenticated via token
-      const token = req.cookies?.auth_token || 
-                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                     ? req.headers.authorization.slice(7) : null);
+      // Get conversations for this specific integration
+      const conversations = await storage.getConversations(widgetContext.integrationId);
 
-      if (!token) {
-        return res.status(401).json({ message: "Authentication required for fullscreen widget" });
-      }
+      // Filter conversations that belong to this authenticated widget user
+      const userVisitorId = `user_${widgetContext.widgetUserId}`;
+      const userConversations = conversations.filter(conv => 
+        conv.visitorId === userVisitorId
+      );
 
-      try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { 
-          userId?: number, 
-          widgetUserId?: number, 
-          integrationId?: number, 
-          username?: string, 
-          type?: string 
-        };
+      // Sort by creation date (newest first)
+      userConversations.sort((a, b) => {
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
 
-        // ✅ CORRECCIÓN DEL BUG: Validación estricta de integrationId
-        // Si el token es de tipo 'widget' (token específico de integración)
-        if (decoded.type === 'widget') {
-          // Verificar que el integrationId del token coincida exactamente
-          if (decoded.integrationId !== integration.id) {
-            return res.status(403).json({ 
-              message: "Token does not belong to this integration. Please login again." 
-            });
-          }
-        } else {
-          // Para tokens de usuario regulares, verificar que el usuario sea propietario
-          // CORRECCIÓN CRÍTICA: Eliminar bypass por origen - siempre validar propietario
-          if (integration.userId !== decoded.userId) {
-            return res.status(403).json({ 
-              message: "Token does not belong to this integration. Please login again." 
-            });
-          }
-        }
-
-        // Get conversations for this specific integration and user
-        const conversations = await storage.getConversations(integration.id);
-
-        // Filter conversations that belong to this authenticated user
-        // For authenticated users, we use visitorId pattern based on token type
-        const userId = decoded.type === 'widget' ? decoded.widgetUserId : decoded.userId;
-        const userVisitorId = `user_${userId}`;
-        const userConversations = conversations.filter(conv => 
-          conv.visitorId === userVisitorId
-        );
-
-        // Sort by creation date (newest first)
-        userConversations.sort((a, b) => {
-          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-          return dateB - dateA;
-        });
-
-
-        res.json(userConversations);
-      } catch (error) {
-        console.error('JWT verification failed:', error);
-        return res.status(401).json({ message: "Invalid or expired token" });
-      }
+      res.json(userConversations);
     } catch (error) {
       console.error("Get fullscreen widget conversations error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -739,8 +693,8 @@ app.get("/api/health", (req, res) => {
     }
   });
 
-  // Create new conversation for fullscreen widget with apiKey verification
-  app.post("/api/widget/:apiKey/conversations/user", async (req, res) => {
+  // Create new conversation for fullscreen widget with apiKey verification  
+  app.post("/api/widget/:apiKey/conversations/user", authenticateJWT, async (req, res) => {
     try {
       const { apiKey } = req.params;
       const { title, visitorName, visitorEmail } = req.body;
@@ -751,62 +705,26 @@ app.get("/api/health", (req, res) => {
         return res.status(404).json({ message: "Integration not found" });
       }
 
-      // Check if user is authenticated via token
-      const token = req.cookies?.auth_token || 
-                    (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                     ? req.headers.authorization.slice(7) : null);
-
-      if (!token) {
-        return res.status(401).json({ message: "Authentication required for fullscreen widget" });
-      }
-
-      try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { 
-          userId?: number, 
-          widgetUserId?: number, 
-          integrationId?: number, 
-          username?: string, 
-          type?: string 
-        };
-
-        // ✅ CORRECCIÓN DEL BUG: Validación estricta de integrationId
-        // Si el token es de tipo 'widget' (token específico de integración)
-        if (decoded.type === 'widget') {
-          // Verificar que el integrationId del token coincida exactamente
-          if (decoded.integrationId !== integration.id) {
-            return res.status(403).json({ 
-              message: "Token does not belong to this integration. Please login again." 
-            });
-          }
-        } else {
-          // Para tokens de usuario regulares, verificar que el usuario sea propietario
-          // CORRECCIÓN CRÍTICA: Eliminar bypass por origen - siempre validar propietario
-          if (integration.userId !== decoded.userId) {
-            return res.status(403).json({ 
-              message: "Token does not belong to this integration. Please login again." 
-            });
-          }
-        }
-
-        // Get authenticated user data for visitor info
-        const userId = decoded.type === 'widget' ? decoded.widgetUserId : decoded.userId;
-        const authenticatedUser = await storage.getUser(userId!);
-        
-        // Create conversation with authenticated user's visitorId pattern
-        const conversation = await storage.createConversation({
-          integrationId: integration.id,
-          visitorId: `user_${userId}`,
-          title: title || 'Nueva conversación',
-          visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
-          visitorEmail: authenticatedUser?.email || null
+      // Check if user owns the integration (simplified security check)
+      if (integration.userId !== req.userId) {
+        return res.status(403).json({ 
+          message: "Token does not belong to this integration. Please login again." 
         });
-
-
-        res.status(201).json(conversation);
-      } catch (error) {
-        console.error('JWT verification failed:', error);
-        return res.status(401).json({ message: "Invalid or expired token" });
       }
+
+      // Get authenticated user data for visitor info
+      const authenticatedUser = await storage.getUser(req.userId);
+        
+      // Create conversation with authenticated user's visitorId pattern
+      const conversation = await storage.createConversation({
+        integrationId: integration.id,
+        visitorId: `user_${req.userId}`,
+        title: title || 'Nueva conversación',
+        visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
+        visitorEmail: authenticatedUser?.email || null
+      });
+
+      res.status(201).json(conversation);
     } catch (error) {
       console.error("Create fullscreen widget conversation error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -3183,6 +3101,21 @@ app.get("/api/health", (req, res) => {
           type: 'widget'
         }, JWT_SECRET, { expiresIn: "7d" });
 
+        // ⚡ SECURITY: Store token hash in database for validation
+        const crypto = await import('crypto');
+        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+        // Store widget token in database
+        await storage.createWidgetToken({
+          tokenHash,
+          widgetUserId: widgetUser.id,
+          integrationId: integration.id,
+          jwtPayload: token,
+          expiresAt
+        });
+
         // Return success without password
         const { password: _, ...userWithoutPassword } = widgetUser;
         res.status(201).json({
@@ -3232,6 +3165,24 @@ app.get("/api/health", (req, res) => {
           username: widgetUser.username,
           type: 'widget'
         }, JWT_SECRET, { expiresIn: "7d" });
+
+        // ⚡ SECURITY: Store token hash in database for validation
+        const crypto = await import('crypto');
+        const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+        // Revoke any existing tokens for this user/integration (single session)
+        await storage.revokeWidgetTokensByUser(widgetUser.id);
+
+        // Store widget token in database
+        await storage.createWidgetToken({
+          tokenHash,
+          widgetUserId: widgetUser.id,
+          integrationId: integration.id,
+          jwtPayload: token,
+          expiresAt
+        });
 
         // Return success without password
         const { password: _, ...userWithoutPassword } = widgetUser;
@@ -3585,30 +3536,29 @@ app.get("/api/health", (req, res) => {
         const { apiKey, conversationId } = req.params;
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
 
-        // Check if this is an authenticated request (fullscreen widget)
-        const token = req.cookies?.auth_token || 
-                      (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                       ? req.headers.authorization.slice(7) : null);
-
-        let isAuthenticated = false;
-        let authenticatedUserId = null;
-
-        if (token) {
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { 
-              userId?: number, 
-              widgetUserId?: number, 
-              integrationId?: number, 
-              username?: string, 
-              type?: string 
-            };
-            isAuthenticated = true;
-            authenticatedUserId = decoded.type === 'widget' ? decoded.widgetUserId : decoded.userId;
-          } catch (error) {
-            console.error('JWT verification failed:', error);
-            return res.status(401).json({ message: "Invalid or expired token" });
-          }
+        // Validate API key and get integration
+        const integration = await storage.getIntegrationByApiKey(apiKey);
+        if (!integration) {
+          return res.status(404).json({ message: "Integration not found" });
         }
+
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req, integration);
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
+        }
+
+        const isAuthenticated = authResult.mode !== 'anonymous';
+        const authenticatedUserId = authResult.mode === 'widget' 
+          ? authResult.widgetUserId 
+          : authResult.userId;
 
         // Validate input based on authentication mode
         if (!message) {
@@ -3624,59 +3574,18 @@ app.get("/api/health", (req, res) => {
           return res.status(400).json({ message: "Invalid conversation ID" });
         }
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
-        }
-
         // Verify conversation exists and belongs to this integration
         const conversation = await storage.getConversation(conversationIdNum);
         if (!conversation || conversation.integrationId !== integration.id) {
           return res.status(404).json({ message: "Conversation not found" });
         }
 
-        // Additional security check for authenticated users
+        // ⚡ SECURITY: Verify conversation belongs to authenticated user
         if (isAuthenticated) {
-          // ✅ CORRECCIÓN DEL BUG: Validación estricta de integrationId
-          const decoded = jwt.verify(token, JWT_SECRET) as { 
-            userId?: number, 
-            widgetUserId?: number, 
-            integrationId?: number, 
-            username?: string, 
-            type?: string 
-          };
-          
-          // DEBUGGING: Ver contenido del token
-          console.log('🔍 SEND MESSAGE TOKEN DEBUG - Contenido completo:', JSON.stringify(decoded));
-          console.log('🔍 SEND MESSAGE TOKEN DEBUG - decoded.type:', decoded.type);
-          console.log('🔍 SEND MESSAGE TOKEN DEBUG - decoded.integrationId:', decoded.integrationId);
-          console.log('🔍 SEND MESSAGE TOKEN DEBUG - integration.id (esperado):', integration.id);
-          
-          // Si el token es de tipo 'widget' (token específico de integración)
-          if (decoded.type === 'widget') {
-            // Verificar que el integrationId del token coincida exactamente
-            if (decoded.integrationId !== integration.id) {
-              return res.status(403).json({ 
-                message: "Token does not belong to this integration. Please login again." 
-              });
-            }
-          } else {
-            // Para tokens de usuario regulares, verificar que el usuario sea propietario
-            // CORRECCIÓN CRÍTICA: Eliminar bypass por origen - siempre validar propietario
-            if (integration.userId !== authenticatedUserId) {
-              return res.status(403).json({ 
-                message: "Token does not belong to this integration. Please login again." 
-              });
-            }
-          }
-
-          // Verify conversation belongs to this authenticated user
           const expectedVisitorId = `user_${authenticatedUserId}`;
           if (conversation.visitorId !== expectedVisitorId) {
             return res.status(403).json({ message: "Unauthorized access to this conversation" });
           }
-
         }
 
         // Create user message
