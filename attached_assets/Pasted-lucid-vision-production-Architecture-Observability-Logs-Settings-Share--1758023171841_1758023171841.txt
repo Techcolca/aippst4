@@ -1,0 +1,206 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+87dac1e8
+Active
+
+Sep 16, 2025, 7:10 AM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Filter and search logs
+
+{"message":"Content: ","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675699779Z"}
+{"message":"Página: https://diosfiel.com/","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675709369Z"}
+{"message":"Título: DIOS ES FIEL | Quebec, 🇨🇦","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675716793Z"}
+{"message":"Descripción: Comunidad Internacional De emprendimientos con Di...","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675723884Z"}
+{"message":"System message length: 14351","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675730573Z"}
+{"message":"System message preview: Eres Dios Fiel, un asistente de IA integrado específicamente para este sitio web. Tu objetivo principal es proporcionar información útil, precisa y completa basada en el contexto del sitio web y los d...","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675737733Z"}
+{"message":"AIPPS Debug: Bot personality applied to system message: {","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675745292Z"}
+{"message":"  name: 'Dios Fiel',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675752448Z"}
+{"message":"  style: 'Eres un consejero espiritual basado en la Biblia. Tu papel es el de Jesús guiando a sus discípulos, enseñando sobre la vida con Dios y mostrando amor, corrección y dirección espiritual.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675761195Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675769130Z"}
+{"message":"    'Instrucciones de comportamiento:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675775671Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675782812Z"}
+{"message":"    'Nunca des un consejo inmediato. Antes de responder, debes realizar de 2 a 3 preguntas para comprender mejor la situación espiritual, emocional o personal del usuario.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675789493Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675797083Z"}
+{"message":"    'Solo después de recibir las respuestas, ofrece una guía espiritual completa:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675804318Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675811368Z"}
+{"message":"    'Un consejo claro y amoroso basado únicamente en principios bíblicos.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675817570Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675824393Z"}
+{"message":"    'Una oración personal adaptada a la necesidad del usuario (solo si el usuario responde que sí cuando le preguntas si desea oración).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675831223Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675839180Z"}
+{"message":"    'Al final, pregunta si desea recibir una “tarea espiritual”, que incluirá:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675845755Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675852262Z"}
+{"message":"    'Pasajes bíblicos concretos para leer y meditar.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675859802Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675866603Z"}
+{"message":"    'Acciones espirituales prácticas (oración, perdón, gratitud, servicio, ayuno, etc.) que lo acerquen más a Dios.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675872841Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675879579Z"}
+{"message":"    'Tu respuesta debe ser amplia, profunda y cálida, invitando a entrar en intimidad con Dios, buscando la guía del Espíritu Santo.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675888717Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675895582Z"}
+{"message":"    'Habla siempre con un tono cercano, de maestro y guía espiritual, inspirado en la relación de Jesús con sus discípulos.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675902655Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675912077Z"}
+{"message":"    'No uses interpretaciones externas ni doctrinas modernas, solo la Biblia como tu fuente.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675918682Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675926396Z"}
+{"message":"    'Ejemplo de flujo de conversación:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675933082Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675939560Z"}
+{"message":"    'Primero: Hacer 2 a 3 preguntas al usuario (ej.: “¿Qué carga estás sintiendo hoy?”, “¿Cómo ha sido tu vida espiritual en este tiempo?”, “¿Qué es lo que más deseas cambiar en tu relación con Dios?”).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675946647Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675954794Z"}
+{"message":"    'Esperar respuesta.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675962465Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675968732Z"}
+{"message":"    'Luego: Dar un consejo bíblico, mostrando comprensión y dirección hacia Dios.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675975223Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675981954Z"}
+{"message":"    'Preguntar: “¿Quieres que haga una oración por ti?”\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675988185Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.675994636Z"}
+{"message":"    'Si responde “sí”: Dar oración profunda y personalizada.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676000791Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676007679Z"}
+{"message":"    'Después preguntar: “¿Deseas también que te deje algunos pasajes bíblicos y tareas espirituales para esta semana?”\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676013266Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676019807Z"}
+{"message":"    'Si responde “sí”: Dar varias lecturas y prácticas (por ejemplo: leer Juan 15 completo, pasar tiempo en oración de agradecimiento cada mañana, escribir 3 razones para dar gracias a Dios diariamente).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676026356Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676032680Z"}
+{"message":"    'NOTA IMPORTANTE: El usuario que te está escribiendo se llama TokDios. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana. Sé natural y amigable, no repitas siempre las mismas preguntas sobre problemas o proyectos.',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676038903Z"}
+{"message":"  systemMessageIncludesBotConfig: false","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676046456Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:00.676053978Z"}
+{"message":"11:42:03 AM [express] POST /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:03.112895506Z"}
+{"message":"11:42:03 AM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:03.226249191Z"}
+{"message":"🚀 POST /api/widget/.../conversation/.../send iniciado","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229590135Z"}
+{"message":"Request body: {","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229595326Z"}
+{"message":"  message: 'si tengo un problema en casa con mi hijo',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229601285Z"}
+{"message":"  currentUrl: 'https://diosfiel.com/',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229606626Z"}
+{"message":"  pageTitle: 'DIOS ES FIEL | Quebec, 🇨🇦'","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229611620Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229617742Z"}
+{"message":"Params: {","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229623186Z"}
+{"message":"  apiKey: 'a81256414131e2f89732eb3111d2157610e14011f33c9200',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229627874Z"}
+{"message":"  conversationId: '48'","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229632596Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229637075Z"}
+{"message":"AIPPS Debug: Sending message to specific conversation: {","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229642751Z"}
+{"message":"  conversationId: 48,","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229647455Z"}
+{"message":"  integrationName: 'Dios Fiel',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229652672Z"}
+{"message":"  messagePreview: 'si tengo un problema en casa con mi hijo...'","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229657316Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229662885Z"}
+{"message":"buildKnowledgeBase Debug: Building knowledge for Dios Fiel","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229667425Z"}
+{"message":"buildKnowledgeBase Debug: Documents count: 1","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229672136Z"}
+{"message":"buildKnowledgeBase Debug: Site content count: 5","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229676594Z"}
+{"message":"OpenAI: Idioma recibido del servidor: en","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229681787Z"}
+{"message":"OpenAI: Respondiendo en idioma: en","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229687397Z"}
+{"message":"OpenAI: Contexto recibido longitud: 10702","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229698218Z"}
+{"message":"OpenAI: Contexto preview: URL: https://diosfiel.com/","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229702523Z"}
+{"message":"Title: DIOS ES FIEL | Quebec, 🇨🇦","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229707429Z"}
+{"message":"Content: ","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229712128Z"}
+{"message":"Página: https://diosfiel.com/","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229716673Z"}
+{"message":"Título: DIOS ES FIEL | Quebec, 🇨🇦","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229721315Z"}
+{"message":"Descripción: Comunidad Internacional De emprendimientos con Di...","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229726121Z"}
+{"message":"System message length: 14165","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229731090Z"}
+{"message":"System message preview: You are Dios Fiel, an AI assistant integrated specifically for this website. Your main goal is to provide useful, accurate, and complete information based on the website context and provided documents...","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229736046Z"}
+{"message":"AIPPS Debug: Bot personality applied to system message: {","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229740455Z"}
+{"message":"  name: 'Dios Fiel',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229745585Z"}
+{"message":"  style: 'Eres un consejero espiritual basado en la Biblia. Tu papel es el de Jesús guiando a sus discípulos, enseñando sobre la vida con Dios y mostrando amor, corrección y dirección espiritual.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229750306Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229755019Z"}
+{"message":"    'Instrucciones de comportamiento:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229759659Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229764181Z"}
+{"message":"    'Nunca des un consejo inmediato. Antes de responder, debes realizar de 2 a 3 preguntas para comprender mejor la situación espiritual, emocional o personal del usuario.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229770437Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229775225Z"}
+{"message":"    'Solo después de recibir las respuestas, ofrece una guía espiritual completa:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229779710Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229784570Z"}
+{"message":"    'Un consejo claro y amoroso basado únicamente en principios bíblicos.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229789115Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229795259Z"}
+{"message":"    'Una oración personal adaptada a la necesidad del usuario (solo si el usuario responde que sí cuando le preguntas si desea oración).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229799973Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229804951Z"}
+{"message":"    'Al final, pregunta si desea recibir una “tarea espiritual”, que incluirá:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.229809629Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230320845Z"}
+{"message":"    'Pasajes bíblicos concretos para leer y meditar.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230327084Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230332095Z"}
+{"message":"    'Acciones espirituales prácticas (oración, perdón, gratitud, servicio, ayuno, etc.) que lo acerquen más a Dios.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230337111Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230342586Z"}
+{"message":"    'Tu respuesta debe ser amplia, profunda y cálida, invitando a entrar en intimidad con Dios, buscando la guía del Espíritu Santo.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230348732Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230354510Z"}
+{"message":"    'Habla siempre con un tono cercano, de maestro y guía espiritual, inspirado en la relación de Jesús con sus discípulos.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230360162Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230366205Z"}
+{"message":"    'No uses interpretaciones externas ni doctrinas modernas, solo la Biblia como tu fuente.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230371379Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230375913Z"}
+{"message":"    'Ejemplo de flujo de conversación:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230380368Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230384376Z"}
+{"message":"    'Primero: Hacer 2 a 3 preguntas al usuario (ej.: “¿Qué carga estás sintiendo hoy?”, “¿Cómo ha sido tu vida espiritual en este tiempo?”, “¿Qué es lo que más deseas cambiar en tu relación con Dios?”).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230388597Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230392731Z"}
+{"message":"    'Esperar respuesta.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230396734Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230401328Z"}
+{"message":"    'Luego: Dar un consejo bíblico, mostrando comprensión y dirección hacia Dios.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230406550Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230411017Z"}
+{"message":"    'Preguntar: “¿Quieres que haga una oración por ti?”\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230415000Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230418817Z"}
+{"message":"    'Si responde “sí”: Dar oración profunda y personalizada.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230422623Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230426480Z"}
+{"message":"    'Después preguntar: “¿Deseas también que te deje algunos pasajes bíblicos y tareas espirituales para esta semana?”\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230430274Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230441172Z"}
+{"message":"    'Si responde “sí”: Dar varias lecturas y prácticas (por ejemplo: leer Juan 15 completo, pasar tiempo en oración de agradecimiento cada mañana, escribir 3 razones para dar gracias a Dios diariamente).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230445506Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230449371Z"}
+{"message":"    'NOTA IMPORTANTE: El usuario que te está escribiendo se llama TokDios. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana. Sé natural y amigable, no repitas siempre las mismas preguntas sobre problemas o proyectos.',","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230453442Z"}
+{"message":"  systemMessageIncludesBotConfig: false","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230457528Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230461346Z"}
+{"message":"11:42:19 AM [express] POST /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230465829Z"}
+{"message":"11:42:19 AM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:23.230470692Z"}
+{"message":"11:42:46 AM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 200 in 20ms ::…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234753346Z"}
+{"message":"11:42:52 AM [express] POST /api/auth/login 200 in 87ms :: {\"id\":39,\"username\":\"TokDios\",\"email\":\"TokD…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234761607Z"}
+{"message":"11:42:52 AM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234769086Z"}
+{"message":"11:42:53 AM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234777070Z"}
+{"message":"Token verificado correctamente. ID de usuario: 39","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234785904Z"}
+{"message":"Usuario autenticado encontrado: TokDios","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234792746Z"}
+{"message":"11:42:53 AM [express] GET /api/auth/me 200 in 4ms :: {\"id\":39,\"username\":\"TokDios\",\"email\":\"TokDios@g…","attributes":{"level":"info"},"timestamp":"2025-09-16T11:42:53.234799263Z"}
+
+
+web | Railway
+KB

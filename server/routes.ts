@@ -3593,9 +3593,15 @@ app.get("/api/health", (req, res) => {
 
         if (token) {
           try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+            const decoded = jwt.verify(token, JWT_SECRET) as { 
+              userId?: number, 
+              widgetUserId?: number, 
+              integrationId?: number, 
+              username?: string, 
+              type?: string 
+            };
             isAuthenticated = true;
-            authenticatedUserId = decoded.userId;
+            authenticatedUserId = decoded.type === 'widget' ? decoded.widgetUserId : decoded.userId;
           } catch (error) {
             console.error('JWT verification failed:', error);
             return res.status(401).json({ message: "Invalid or expired token" });
@@ -3630,13 +3636,31 @@ app.get("/api/health", (req, res) => {
 
         // Additional security check for authenticated users
         if (isAuthenticated) {
-          // Verify user owns this integration OR it's the demo integration for AIPPS website
-         const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-  // Para widgets externos, permitir acceso si la integración existe y es válida
-  const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-  if (!isDemoIntegration && !isExternalWidget && integration.userId !== authenticatedUserId) {
-    return res.status(403).json({ message: "Unauthorized access to this integration" });
-  }
+          // ✅ CORRECCIÓN DEL BUG: Validación estricta de integrationId
+          const decoded = jwt.verify(token, JWT_SECRET) as { 
+            userId?: number, 
+            widgetUserId?: number, 
+            integrationId?: number, 
+            username?: string, 
+            type?: string 
+          };
+          
+          // Si el token es de tipo 'widget' (token específico de integración)
+          if (decoded.type === 'widget') {
+            // Verificar que el integrationId del token coincida exactamente
+            if (decoded.integrationId !== integration.id) {
+              return res.status(403).json({ 
+                message: "Token does not belong to this integration. Please login again." 
+              });
+            }
+          } else {
+            // Para tokens de usuario regulares, verificar que el usuario sea propietario
+            const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+            const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+            if (!isDemoIntegration && !isExternalWidget && integration.userId !== authenticatedUserId) {
+              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            }
+          }
 
           // Verify conversation belongs to this authenticated user
           const expectedVisitorId = `user_${authenticatedUserId}`;
