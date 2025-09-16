@@ -651,22 +651,39 @@ app.get("/api/health", (req, res) => {
       }
 
       try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+        const decoded = jwt.verify(token, JWT_SECRET) as { 
+          userId?: number, 
+          widgetUserId?: number, 
+          integrationId?: number, 
+          username?: string, 
+          type?: string 
+        };
 
-       // Verify user owns this integration OR it's the demo integration for AIPPS website
-  const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-  // Para widgets externos, permitir acceso si la integración existe y es válida
-  const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-  if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
-  return res.status(403).json({ message: "Unauthorized access to this integration" });
-  }
+        // ✅ CORRECCIÓN DEL BUG: Validación estricta de integrationId
+        // Si el token es de tipo 'widget' (token específico de integración)
+        if (decoded.type === 'widget') {
+          // Verificar que el integrationId del token coincida exactamente
+          if (decoded.integrationId !== integration.id) {
+            return res.status(403).json({ 
+              message: "Token does not belong to this integration. Please login again." 
+            });
+          }
+        } else {
+          // Para tokens de usuario regulares, verificar que el usuario sea propietario
+          const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+          const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+          if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
+            return res.status(403).json({ message: "Unauthorized access to this integration" });
+          }
+        }
 
         // Get conversations for this specific integration and user
         const conversations = await storage.getConversations(integration.id);
 
         // Filter conversations that belong to this authenticated user
-        // For authenticated users, we use visitorId pattern: `user_${userId}`
-        const userVisitorId = `user_${decoded.userId}`;
+        // For authenticated users, we use visitorId pattern based on token type
+        const userId = decoded.type === 'widget' ? decoded.widgetUserId : decoded.userId;
+        const userVisitorId = `user_${userId}`;
         const userConversations = conversations.filter(conv => 
           conv.visitorId === userVisitorId
         );
@@ -743,23 +760,40 @@ app.get("/api/health", (req, res) => {
       }
 
       try {
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+        const decoded = jwt.verify(token, JWT_SECRET) as { 
+          userId?: number, 
+          widgetUserId?: number, 
+          integrationId?: number, 
+          username?: string, 
+          type?: string 
+        };
 
-        // Verify user owns this integration OR it's the demo integration for AIPPS website
-  const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-  // Para widgets externos, permitir acceso si la integración existe y es válida
-  const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-  if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
-  return res.status(403).json({ message: "Unauthorized access to this integration" });
-  }
+        // ✅ CORRECCIÓN DEL BUG: Validación estricta de integrationId
+        // Si el token es de tipo 'widget' (token específico de integración)
+        if (decoded.type === 'widget') {
+          // Verificar que el integrationId del token coincida exactamente
+          if (decoded.integrationId !== integration.id) {
+            return res.status(403).json({ 
+              message: "Token does not belong to this integration. Please login again." 
+            });
+          }
+        } else {
+          // Para tokens de usuario regulares, verificar que el usuario sea propietario
+          const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
+          const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
+          if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
+            return res.status(403).json({ message: "Unauthorized access to this integration" });
+          }
+        }
 
         // Get authenticated user data for visitor info
-        const authenticatedUser = await storage.getUser(decoded.userId);
+        const userId = decoded.type === 'widget' ? decoded.widgetUserId : decoded.userId;
+        const authenticatedUser = await storage.getUser(userId!);
         
         // Create conversation with authenticated user's visitorId pattern
         const conversation = await storage.createConversation({
           integrationId: integration.id,
-          visitorId: `user_${decoded.userId}`,
+          visitorId: `user_${userId}`,
           title: title || 'Nueva conversación',
           visitorName: authenticatedUser?.fullName || authenticatedUser?.username || null,
           visitorEmail: authenticatedUser?.email || null
