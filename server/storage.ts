@@ -70,11 +70,6 @@ export interface IStorage {
   createDocument(doc: any): Promise<any>;
   deleteDocument(id: number): Promise<void>;
 
-  // Site content methods
-  getSiteContent(integrationId: number): Promise<any[]>;
-  createSiteContent(content: any): Promise<any>;
-  updateSiteContent(integrationId: number, url: string, data: any): Promise<any>;
-
   // Dashboard methods
   getDashboardStats(userId: number): Promise<{
     totalConversations: number;
@@ -182,6 +177,8 @@ export interface IStorage {
     private formResponses: Map<number, FormResponse>;
     private appointments: Map<number, Appointment>;
     private calendarTokens: Map<number, CalendarToken>;
+    private widgetUsers: Map<number, WidgetUser>;
+    private widgetTokens: Map<number, WidgetToken>;
 
     private userIdCounter: number;
     private integrationIdCounter: number;
@@ -198,6 +195,8 @@ export interface IStorage {
     private formResponseIdCounter: number;
     private appointmentIdCounter: number;
     private calendarTokenIdCounter: number;
+    private widgetUserIdCounter: number;
+    private widgetTokenIdCounter: number;
 
     constructor() {
       this.users = new Map();
@@ -215,6 +214,8 @@ export interface IStorage {
       this.formResponses = new Map();
       this.appointments = new Map();
       this.calendarTokens = new Map();
+      this.widgetUsers = new Map();
+      this.widgetTokens = new Map();
       this.userIdCounter = 1;
         this.integrationIdCounter = 1;
         this.conversationIdCounter = 1;
@@ -230,6 +231,8 @@ export interface IStorage {
         this.formResponseIdCounter = 1;
         this.appointmentIdCounter = 1;
         this.calendarTokenIdCounter = 1;
+        this.widgetUserIdCounter = 1;
+        this.widgetTokenIdCounter = 1;
 
         // Initialize with some demo data
         this.initializeDemoData();
@@ -1809,6 +1812,117 @@ export interface IStorage {
         }
 
         return performanceData;
+      }
+
+      // Widget User methods
+      async getWidgetUser(id: number): Promise<WidgetUser | undefined> {
+        return this.widgetUsers.get(id);
+      }
+
+      async getWidgetUserByUsernameAndIntegration(username: string, integrationId: number): Promise<WidgetUser | undefined> {
+        return Array.from(this.widgetUsers.values()).find(
+          (user) => user.username === username && user.integrationId === integrationId
+        );
+      }
+
+      async getWidgetUserByEmailAndIntegration(email: string, integrationId: number): Promise<WidgetUser | undefined> {
+        return Array.from(this.widgetUsers.values()).find(
+          (user) => user.email === email && user.integrationId === integrationId
+        );
+      }
+
+      async createWidgetUser(user: InsertWidgetUser): Promise<WidgetUser> {
+        const id = this.widgetUserIdCounter++;
+        const newUser: WidgetUser = {
+          id,
+          integrationId: user.integrationId,
+          username: user.username,
+          email: user.email,
+          password: user.password,
+          fullName: user.fullName || null,
+          createdAt: new Date()
+        };
+        this.widgetUsers.set(id, newUser);
+        return newUser;
+      }
+
+      async getWidgetUsersByIntegration(integrationId: number): Promise<WidgetUser[]> {
+        return Array.from(this.widgetUsers.values()).filter(
+          (user) => user.integrationId === integrationId
+        );
+      }
+
+      // Widget Token methods
+      async getWidgetToken(tokenHash: string): Promise<WidgetToken | undefined> {
+        return Array.from(this.widgetTokens.values()).find(
+          (token) => token.tokenHash === tokenHash
+        );
+      }
+
+      async createWidgetToken(token: InsertWidgetToken): Promise<WidgetToken> {
+        const id = this.widgetTokenIdCounter++;
+        const newToken: WidgetToken = {
+          id,
+          tokenHash: token.tokenHash,
+          widgetUserId: token.widgetUserId,
+          integrationId: token.integrationId,
+          jwtPayload: token.jwtPayload,
+          expiresAt: token.expiresAt,
+          isRevoked: false,
+          createdAt: new Date()
+        };
+        this.widgetTokens.set(id, newToken);
+        return newToken;
+      }
+
+      async updateWidgetToken(tokenHash: string, data: Partial<WidgetToken>): Promise<WidgetToken> {
+        const token = await this.getWidgetToken(tokenHash);
+        if (!token) {
+          throw new Error(`Widget token with hash ${tokenHash} not found`);
+        }
+        const updatedToken = { ...token, ...data };
+        this.widgetTokens.set(token.id, updatedToken);
+        return updatedToken;
+      }
+
+      async revokeWidgetToken(tokenHash: string): Promise<void> {
+        const token = await this.getWidgetToken(tokenHash);
+        if (token) {
+          const updatedToken = { ...token, isRevoked: true };
+          this.widgetTokens.set(token.id, updatedToken);
+        }
+      }
+
+      async revokeWidgetTokensByUser(widgetUserId: number): Promise<void> {
+        for (const [id, token] of this.widgetTokens.entries()) {
+          if (token.widgetUserId === widgetUserId) {
+            const updatedToken = { ...token, isRevoked: true };
+            this.widgetTokens.set(id, updatedToken);
+          }
+        }
+      }
+
+      async cleanupExpiredWidgetTokens(): Promise<number> {
+        const now = new Date();
+        let cleanedCount = 0;
+        
+        for (const [id, token] of this.widgetTokens.entries()) {
+          if (token.expiresAt && token.expiresAt < now) {
+            this.widgetTokens.delete(id);
+            cleanedCount++;
+          }
+        }
+        
+        return cleanedCount;
+      }
+
+      async getActiveWidgetTokenByUserAndIntegration(widgetUserId: number, integrationId: number): Promise<WidgetToken | undefined> {
+        return Array.from(this.widgetTokens.values()).find(
+          (token) => token.widgetUserId === widgetUserId && 
+                     token.integrationId === integrationId && 
+                     !token.isRevoked &&
+                     (!token.expiresAt || token.expiresAt > new Date())
+        );
       }
     }
 
