@@ -670,10 +670,11 @@ app.get("/api/health", (req, res) => {
           }
         } else {
           // Para tokens de usuario regulares, verificar que el usuario sea propietario
-          const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-          const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-          if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
-            return res.status(403).json({ message: "Unauthorized access to this integration" });
+          // CORRECCIÓN CRÍTICA: Eliminar bypass por origen - siempre validar propietario
+          if (integration.userId !== decoded.userId) {
+            return res.status(403).json({ 
+              message: "Token does not belong to this integration. Please login again." 
+            });
           }
         }
 
@@ -779,10 +780,11 @@ app.get("/api/health", (req, res) => {
           }
         } else {
           // Para tokens de usuario regulares, verificar que el usuario sea propietario
-          const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-          const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-          if (!isDemoIntegration && !isExternalWidget && integration.userId !== decoded.userId) {
-            return res.status(403).json({ message: "Unauthorized access to this integration" });
+          // CORRECCIÓN CRÍTICA: Eliminar bypass por origen - siempre validar propietario
+          if (integration.userId !== decoded.userId) {
+            return res.status(403).json({ 
+              message: "Token does not belong to this integration. Please login again." 
+            });
           }
         }
 
@@ -3661,10 +3663,11 @@ app.get("/api/health", (req, res) => {
             }
           } else {
             // Para tokens de usuario regulares, verificar que el usuario sea propietario
-            const isDemoIntegration = integration.apiKey === '57031f04127cd041251b1e9abd678439fd199b2f30b75a1f';
-            const isExternalWidget = req.headers.origin && !req.headers.origin.includes('aipps.ca');
-            if (!isDemoIntegration && !isExternalWidget && integration.userId !== authenticatedUserId) {
-              return res.status(403).json({ message: "Unauthorized access to this integration" });
+            // CORRECCIÓN CRÍTICA: Eliminar bypass por origen - siempre validar propietario
+            if (integration.userId !== authenticatedUserId) {
+              return res.status(403).json({ 
+                message: "Token does not belong to this integration. Please login again." 
+              });
             }
           }
 
