@@ -7,7 +7,7 @@ import {
   DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan,
   Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse,
   Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
-  WidgetUser, InsertWidgetUser
+  WidgetUser, InsertWidgetUser, WidgetToken, InsertWidgetToken
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 import fs from "fs";
@@ -24,6 +24,15 @@ export interface IStorage {
   getWidgetUserByEmailAndIntegration(email: string, integrationId: number): Promise<WidgetUser | undefined>;
   createWidgetUser(user: InsertWidgetUser): Promise<WidgetUser>;
   getWidgetUsersByIntegration(integrationId: number): Promise<WidgetUser[]>;
+
+  // Widget Token methods (secure token validation per integration)
+  getWidgetToken(tokenHash: string): Promise<WidgetToken | undefined>;
+  createWidgetToken(token: InsertWidgetToken): Promise<WidgetToken>;
+  updateWidgetToken(tokenHash: string, data: Partial<WidgetToken>): Promise<WidgetToken>;
+  revokeWidgetToken(tokenHash: string): Promise<void>;
+  revokeWidgetTokensByUser(widgetUserId: number): Promise<void>;
+  cleanupExpiredWidgetTokens(): Promise<number>; // Returns count of cleaned up tokens
+  getActiveWidgetTokenByUserAndIntegration(widgetUserId: number, integrationId: number): Promise<WidgetToken | undefined>;
 
   // Integration methods
   getIntegrations(userId: number): Promise<Integration[]>;
