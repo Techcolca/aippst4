@@ -1,0 +1,223 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+09aa3fa4
+Active
+
+Sep 16, 2025, 7:01 PM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Filter and search logs
+
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762873755Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762880003Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762884912Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762889771Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762894434Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762899450Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762905085Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762911161Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762916333Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762921666Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762927068Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762932295Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762937712Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762945295Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762954653Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:06:48.762961496Z"}
+{"message":"11:06:48 PM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200 500 in 8ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:06:48.762967539Z"}
+{"message":"Headers: {\"host\":\"aipps.ca\",\"user-agent\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36\",\"accept\":\"*/*\",\"accept-encoding\":\"gzip, br\",\"accept-language\":\"fr-CA,fr;q=0.9,es-ES;q=0.8,es;q=0.7\",\"authorization\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc1ODA1MDAzMiwiZXhwIjoxNzU4NjU0ODMyfQ.09mys5wM2-9uX6QQluuuZWMXwPpXEfYBBOVkHDax6T4\",\"cdn-loop\":\"cloudflare; loops=1\",\"cf-connecting-ip\":\"174.95.242.169\",\"cf-ipcountry\":\"CA\",\"cf-ray\":\"980404ac88ec369c-YYZ\",\"cf-visitor\":\"{\\\"scheme\\\":\\\"https\\\"}\",\"cookie\":\"__stripe_mid=7c998881-65e1-44c8-ac29-0d5eb3f2ed19eab1cb; i18next=fr; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc1ODA1MDAzMiwiZXhwIjoxNzU4NjU0ODMyfQ.09mys5wM2-9uX6QQluuuZWMXwPpXEfYBBOVkHDax6T4; __stripe_sid=6538989a-391a-46f7-adbb-8e1e0e61295d2a10f5\",\"priority\":\"u=1, i\",\"referer\":\"https://aipps.ca/dashboard?tab=automation\",\"sec-ch-ua\":\"\\\"Chromium\\\";v=\\\"140\\\", \\\"Not=A?Brand\\\";v=\\\"24\\\", \\\"Google Chrome\\\";v=\\\"140\\\"\",\"sec-ch-ua-mobile\":\"?0\",\"sec-ch-ua-platform\":\"\\\"Windows\\\"\",\"sec-fetch-dest\":\"empty\",\"sec-fetch-mode\":\"cors\",\"sec-fetch-site\":\"same-origin\",\"x-forwarded-for\":\"174.95.242.169, 108.162.241.215\",\"x-forwarded-host\":\"aipps.ca\",\"x-forwarded-proto\":\"https\",\"x-railway-edge\":\"railway/us-east4-eqdc4a\",\"x-railway-request-id\":\"h1oo0ofxRxmqPSHcPvyhXg\",\"x-real-ip\":\"108.162.241.215\",\"x-request-start\":\"1758064027642\"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:07:08.752873233Z"}
+{"message":"Token encontrado en header Authorization con formato Bearer","attributes":{"level":"info"},"timestamp":"2025-09-16T23:07:08.752879069Z"}
+{"message":"Token encontrado: Sí","attributes":{"level":"info"},"timestamp":"2025-09-16T23:07:08.752885514Z"}
+{"message":"Token verificado correctamente. ID de usuario: 4","attributes":{"level":"info"},"timestamp":"2025-09-16T23:07:08.752891788Z"}
+{"message":"Error getting forms: PostgresError: column \"title\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.752897535Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.752903067Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.752908407Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753086779Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753094716Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753100866Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753105319Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753110198Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753115526Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753120484Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753125144Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753130948Z"}
+{"message":"  position: '25',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753137175Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753143696Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753148662Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753154091Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:07:08.753159969Z"}
+{"message":"11:07:07 PM [express] GET /api/forms 500 in 6ms :: {\"error\":\"Internal server error\"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:07:08.753166627Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126677484Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126682917Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126688036Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126693441Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126699243Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126707013Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126712690Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126718008Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126722956Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126729040Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126734051Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126739073Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126744389Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126750183Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126756032Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126761337Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:09.126767563Z"}
+{"message":"11:16:05 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 6ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:16:09.126773276Z"}
+{"message":"Registration error: PostgresError: column \"avatar_url\" of relation \"settings\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142530564Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142537042Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142541525Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142545684Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142550045Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142553995Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142557684Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142561381Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142566174Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142570027Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142573648Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142577445Z"}
+{"message":"  position: '101',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142581300Z"}
+{"message":"  file: 'parse_target.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142585016Z"}
+{"message":"  line: '1065',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142588584Z"}
+{"message":"  routine: 'checkInsertTargets'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142593366Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:16:49.142596888Z"}
+{"message":"11:16:44 PM [express] POST /api/auth/register 400 in 82ms :: {\"message\":\"Invalid registration data\"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:16:49.142600686Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134586087Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134596598Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134603892Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134610059Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134616276Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134624061Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134658089Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134665519Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134672156Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134678971Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134686015Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134691155Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134697756Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134702324Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134706866Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134712137Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:17:09.134719222Z"}
+{"message":"11:17:04 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 5ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:17:09.134723406Z"}
+{"message":"11:17:13 PM [express] POST /api/auth/login 401 in 4ms :: {\"message\":\"Invalid username or password\"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:17:13.863104688Z"}
+{"message":"Registration error: PostgresError: column \"avatar_url\" of relation \"settings\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890008899Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890015607Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890020361Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890024110Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890027976Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890031732Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890037034Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890041329Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890045371Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890048996Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890056128Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890060654Z"}
+{"message":"  position: '101',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890064772Z"}
+{"message":"  file: 'parse_target.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890070302Z"}
+{"message":"  line: '1065',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890074152Z"}
+{"message":"  routine: 'checkInsertTargets'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890078123Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:18:03.890082210Z"}
+{"message":"11:17:57 PM [express] POST /api/auth/register 400 in 76ms :: {\"message\":\"Invalid registration data\"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890085912Z"}
+{"message":"11:18:01 PM [express] GET /api/auth/register 200 in 2ms","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890089981Z"}
+{"message":"No se encontró token de autenticación","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890093940Z"}
+{"message":"Cookies disponibles: undefined","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890097789Z"}
+{"message":"Headers: {","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890101444Z"}
+{"message":"  host: 'aipps.ca',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890105120Z"}
+{"message":"  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890110185Z"}
+{"message":"  accept: '*/*',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890114184Z"}
+{"message":"  'accept-encoding': 'gzip, br',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890117918Z"}
+{"message":"  'accept-language': 'es-ES,es;q=0.9',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890122641Z"}
+{"message":"  'cdn-loop': 'cloudflare; loops=1',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890126369Z"}
+{"message":"  'cf-connecting-ip': '174.95.242.169',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890130514Z"}
+{"message":"  'cf-ipcountry': 'CA',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890135296Z"}
+{"message":"  'cf-ray': '980414a47ffacceb-YYZ',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890139402Z"}
+{"message":"  'cf-visitor': '{\"scheme\":\"https\"}',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890143458Z"}
+{"message":"  'content-type': 'application/json',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890147375Z"}
+{"message":"  cookie: 'i18next=es-ES',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890151422Z"}
+{"message":"  priority: 'u=1, i',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890154975Z"}
+{"message":"  referer: 'https://aipps.ca/api/auth/register',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890158560Z"}
+{"message":"  'sec-ch-ua': '\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890162773Z"}
+{"message":"  'sec-ch-ua-mobile': '?0',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890166339Z"}
+{"message":"  'sec-ch-ua-platform': '\"Windows\"',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890170082Z"}
+{"message":"  'sec-fetch-dest': 'empty',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890173576Z"}
+{"message":"  'sec-fetch-mode': 'cors',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890177307Z"}
+{"message":"  'sec-fetch-site': 'same-origin',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890182356Z"}
+{"message":"  'x-forwarded-for': '174.95.242.169, 108.162.241.215',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890186138Z"}
+{"message":"  'x-forwarded-host': 'aipps.ca',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890190731Z"}
+{"message":"  'x-forwarded-proto': 'https',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890194502Z"}
+{"message":"  'x-railway-edge': 'railway/us-east4-eqdc4a',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890198072Z"}
+{"message":"  'x-railway-request-id': 'UPchIrjZTzGbzxH7Aax-fw',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890202627Z"}
+{"message":"  'x-real-ip': '108.162.241.215',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890206623Z"}
+{"message":"  'x-request-start': '1758064681689'","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890210381Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890214971Z"}
+{"message":"11:18:01 PM [express] GET /api/user-session 401 in 1ms :: {\"message\":\"Authentication required\"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890218647Z"}
+{"message":"🔍 AIPPS Auth Status: {","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890222621Z"}
+{"message":"  isAuthenticated: false,","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890226159Z"}
+{"message":"  authMethod: 'none',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890229617Z"}
+{"message":"  sessionID: 'GF6U5GoYYJfZt2w83Brbb0ymMbZvSb2S',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890233178Z"}
+{"message":"  timestamp: '2025-09-16T23:18:01.691Z',","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890236839Z"}
+{"message":"  userId: null,","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890240465Z"}
+{"message":"  username: null","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890244815Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890248332Z"}
+{"message":"11:18:01 PM [express] GET /api/auth-status 200 in 2ms :: {\"isAuthenticated\":false,\"authMethod\":\"none\"…","attributes":{"level":"info"},"timestamp":"2025-09-16T23:18:03.890251968Z"}
+
+
+web | Railway

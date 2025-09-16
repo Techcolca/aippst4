@@ -1,0 +1,238 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+09aa3fa4
+Active
+
+Sep 16, 2025, 7:01 PM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Search HTTP logs e.g. @path:/api/users @httpStatus:200
+You reached the start of the range
+Sep 16, 2025, 7:01 PM
+GET
+/api/forms
+500
+107 ms
+GET
+/api/forms
+500
+10 ms
+GET
+/dashboard
+200
+15 ms
+GET
+/assets/index-Ce-DF2L-.css
+200
+48 ms
+GET
+/assets/index-BmDjlv85.js
+200
+131 ms
+GET
+/api/user-session
+401
+2 ms
+GET
+/api/auth-status
+200
+13 ms
+POST
+/api/features/check-access
+200
+29 ms
+GET
+/api/forms
+500
+93 ms
+GET
+/api/auth/me
+200
+95 ms
+GET
+/api/settings
+500
+99 ms
+GET
+/api/automations
+200
+98 ms
+GET
+/api/conversations
+200
+104 ms
+GET
+/api/integrations
+200
+11 ms
+GET
+/api/limits/summary
+404
+7 ms
+GET
+/api/dashboard/stats
+200
+12 ms
+GET
+/favicon.ico
+200
+3 ms
+POST
+/api/features/check-access
+200
+13 ms
+GET
+/api/settings
+500
+19 ms
+GET
+/api/limits/summary
+404
+22 ms
+GET
+/api/forms
+500
+23 ms
+GET
+/api/forms
+500
+7 ms
+GET
+/embed.js
+200
+47 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+500
+13 ms
+GET
+/embed.js
+200
+36 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200
+500
+10 ms
+GET
+/api/forms
+500
+14 ms
+GET
+/embed.js
+304
+3 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+500
+7 ms
+OPTIONS
+/api/auth/register
+204
+1 ms
+POST
+/api/auth/register
+400
+91 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+500
+7 ms
+OPTIONS
+/api/auth/login
+204
+2 ms
+POST
+/api/auth/login
+401
+7 ms
+OPTIONS
+/api/auth/register
+204
+2 ms
+POST
+/api/auth/register
+400
+77 ms
+GET
+/api/auth/register
+200
+3 ms
+GET
+/assets/index-Ce-DF2L-.css
+304
+4 ms
+GET
+/assets/index-BmDjlv85.js
+304
+2 ms
+GET
+/api/user-session
+401
+2 ms
+GET
+/api/auth-status
+200
+4 ms
+GET
+/favicon.ico
+304
+11 ms
+
+
+web | Railway
