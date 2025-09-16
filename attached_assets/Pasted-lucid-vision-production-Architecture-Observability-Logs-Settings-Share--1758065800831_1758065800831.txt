@@ -1,0 +1,181 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+17389b81
+Active
+
+Sep 16, 2025, 7:30 PM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Filter and search logs
+
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:22.835899122Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:22.835904617Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:22.835910512Z"}
+{"message":"11:33:21 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 90ms ::…","attributes":{"level":"info"},"timestamp":"2025-09-16T23:33:22.835916457Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823776948Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823787316Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823794480Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823802227Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823809264Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823816477Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823821838Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823827988Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823834497Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823842495Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823849093Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823856030Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823861774Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823867394Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823873529Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823880407Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:33:42.823887373Z"}
+{"message":"11:33:38 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 8ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:33:42.823893982Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823049489Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823055923Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823061832Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823067550Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823073173Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823079043Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823083570Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823087933Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823091882Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823095594Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823099483Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823104972Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823109086Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823113283Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823117176Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823121479Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823125244Z"}
+{"message":"11:34:05 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 8ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:34:12.823129505Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823133472Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823137685Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823141376Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823144993Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823149098Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823154453Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823158637Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823162617Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823180648Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823184977Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823189220Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823193139Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823196791Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823203828Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823207769Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823212226Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:12.823215959Z"}
+{"message":"11:34:07 PM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200 500 in 5ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:34:12.823219717Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823366933Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823372563Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823378050Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823384879Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823389391Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823393581Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823414099Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823418487Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823422327Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823427873Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823432019Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823436338Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823440382Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823444104Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823448555Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823452908Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823460591Z"}
+{"message":"11:34:34 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 6ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:34:42.823464292Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823468002Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823471726Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823475532Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823480253Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823493462Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823497182Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823501137Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823505664Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823510115Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823514893Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823518656Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823523997Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823528108Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823531844Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823535441Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823539115Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:34:42.823542643Z"}
+{"message":"11:34:38 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 5ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:34:42.823546428Z"}
+{"message":"Get widget error: PostgresError: column \"avatar_url\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823506697Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823513750Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823518627Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823522841Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823527138Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823542877Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823547358Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823552573Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823557507Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823561954Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823566203Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823570497Z"}
+{"message":"  position: '84',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823574575Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823578702Z"}
+{"message":"  line: '3716',","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823582898Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823587050Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-16T23:35:02.823591969Z"}
+{"message":"11:34:52 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 500 in 5ms :: …","attributes":{"level":"info"},"timestamp":"2025-09-16T23:35:02.823596714Z"}
+
+
+web | Railway

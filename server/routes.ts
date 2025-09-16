@@ -3164,6 +3164,49 @@ app.get("/api/health", (req, res) => {
       }
     });
 
+    // 🚨 TEMPORARY DIAGNOSTIC ENDPOINTS (REMOVE AFTER FIX)
+    app.get("/api/diag/db", async (req, res) => {
+      try {
+        console.log("🔍 DIAGNOSTIC: Checking database connection and schema...");
+        const result = await pool?.query(`
+          SELECT 
+            current_database() as database,
+            current_user as db_user,
+            current_schema() as schema,
+            version() as version,
+            inet_server_addr() as server_addr,
+            inet_server_port() as server_port,
+            (SELECT setting FROM pg_settings WHERE name='search_path') as search_path
+        `);
+        
+        const columns = await pool?.query(`
+          SELECT table_name, column_name 
+          FROM information_schema.columns 
+          WHERE table_name IN ('users','settings','forms') 
+          ORDER BY table_name, column_name
+        `);
+        
+        res.json({
+          timestamp: new Date().toISOString(),
+          database_info: result?.rows[0] || {},
+          columns: columns?.rows || []
+        });
+      } catch (error) {
+        console.error("Diagnostic error:", error);
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    app.get("/api/diag/version", async (req, res) => {
+      res.json({
+        timestamp: new Date().toISOString(),
+        railway_commit: process.env.RAILWAY_GIT_COMMIT_SHA,
+        railway_branch: process.env.RAILWAY_GIT_BRANCH,
+        database_url_host: process.env.DATABASE_URL?.split('@')[1]?.split('/')[0] || 'undefined',
+        version: "DIAG_v1.0.0_POST_MIGRATION"
+      });
+    });
+
     // Generic widget route (MUST come after specific routes)
     app.get("/api/widget/:apiKey", async (req, res) => {
       try {
