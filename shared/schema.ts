@@ -723,6 +723,31 @@ export const insertWidgetUserSchema = createInsertSchema(widgetUsers).pick({
   fullName: true,
 });
 
+// Widget Tokens schema - for secure token validation per integration
+export const widgetTokens = pgTable("widget_tokens", {
+  id: serial("id").primaryKey(),
+  tokenHash: text("token_hash").notNull().unique(), // Hash del JWT para búsqueda rápida
+  widgetUserId: integer("widget_user_id").notNull().references(() => widgetUsers.id),
+  integrationId: integer("integration_id").notNull().references(() => integrations.id),
+  jwtPayload: text("jwt_payload").notNull(), // JWT completo para validación
+  expiresAt: timestamp("expires_at").notNull(), // Expiración del token
+  createdAt: timestamp("created_at").defaultNow(),
+  isRevoked: boolean("is_revoked").default(false), // Para invalidar tokens
+}, (table) => ({
+  // Un token por usuario+integración
+  uniqueUserIntegration: unique("unique_widget_user_integration").on(table.widgetUserId, table.integrationId),
+  // Índice para búsquedas rápidas por hash
+  tokenHashIndex: index("widget_tokens_hash_idx").on(table.tokenHash),
+}));
+
+export const insertWidgetTokenSchema = createInsertSchema(widgetTokens).pick({
+  tokenHash: true,
+  widgetUserId: true,
+  integrationId: true,
+  jwtPayload: true,
+  expiresAt: true,
+});
+
 // Tipos TypeScript para las nuevas tablas
 export type UserBudget = typeof userBudgets.$inferSelect;
 export type InsertUserBudget = z.infer<typeof insertUserBudgetSchema>;
@@ -738,3 +763,6 @@ export type InsertSentAlert = z.infer<typeof insertSentAlertSchema>;
 
 export type WidgetUser = typeof widgetUsers.$inferSelect;
 export type InsertWidgetUser = z.infer<typeof insertWidgetUserSchema>;
+
+export type WidgetToken = typeof widgetTokens.$inferSelect;
+export type InsertWidgetToken = z.infer<typeof insertWidgetTokenSchema>;
