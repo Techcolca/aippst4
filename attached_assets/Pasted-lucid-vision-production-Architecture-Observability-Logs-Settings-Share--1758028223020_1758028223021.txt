@@ -1,0 +1,217 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+1dd3404a
+Active
+
+Sep 16, 2025, 9:03 AM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Search HTTP logs e.g. @path:/api/users @httpStatus:200
+You reached the start of the range
+Sep 16, 2025, 9:03 AM
+GET
+/embed.js
+200
+42 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200
+200
+122 ms
+GET
+/embed.js
+200
+48 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+23 ms
+OPTIONS
+/api/auth/register
+204
+10 ms
+POST
+/api/auth/register
+201
+114 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+5 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+304
+20 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+304
+14 ms
+OPTIONS
+/api/auth/me
+204
+5 ms
+GET
+/api/auth/me
+200
+19 ms
+POST
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+201
+29 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/51/send
+204
+6 ms
+POST
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/51/send
+201
+2 s
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+4 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+200
+12 ms
+
+requestId:
+"O4g1ePYiSh2BhayyAax-fw"
+
+timestamp:
+"2025-09-16T13:08:37.881611246Z"
+
+method:
+"GET"
+
+path:
+"/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user"
+
+host:
+"aipps.ca"
+
+httpStatus:
+200
+
+upstreamProto:
+"HTTP/1.1"
+
+downstreamProto:
+"HTTP/2.0"
+
+responseDetails:
+""
+
+totalDuration:
+12
+
+upstreamAddress:
+"http://[fd12:48fa:d226:0:a000:38:e34a:15c2]:5000"
+
+clientUa:
+"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+
+upstreamRqDuration:
+12
+
+txBytes:
+262
+
+rxBytes:
+1122
+
+srcIp:
+"108.162.241.214"
+
+edgeRegion:
+"us-east4-eqdc4a"
+
+upstreamErrors:
+""
+OPTIONS
+/api/auth/login
+204
+2 ms
+POST
+/api/auth/login
+200
+80 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+204
+2 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+304
+13 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+304
+8 ms
+OPTIONS
+/api/auth/me
+204
+2 ms
+GET
+/api/auth/me
+200
+9 ms
+
+
+web | Railway
+KB

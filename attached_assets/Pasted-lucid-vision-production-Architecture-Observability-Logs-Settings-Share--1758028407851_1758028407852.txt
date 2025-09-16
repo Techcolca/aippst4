@@ -1,0 +1,218 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+1dd3404a
+Active
+
+Sep 16, 2025, 9:03 AM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Filter and search logs
+
+You reached the start of the range
+Sep 16, 2025, 9:03 AM
+{"message":"Starting Container","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.000000000Z"}
+{"message":"🚀 ===== Iniciando despliegue AIPI en Railway ======","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.988888087Z"}
+{"message":"🔍 Verificando variables de entorno...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.988899377Z"}
+{"message":"✅ Variables verificadas: NODE_ENV=production, PORT=5000","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.988908568Z"}
+{"message":"🔌 Verificando conexión a PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.988918397Z"}
+{"message":"✅ Conexión a base de datos exitosa","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.988925915Z"}
+{"message":"📊 Ejecutando migraciones de schema con drizzle-kit...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:44.988937335Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:44.988947248Z"}
+{"message":"No config path provided, using default 'drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:45.538239142Z"}
+{"message":"Reading config file '/app/drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:45.538244585Z"}
+{"message":"Using 'pg' driver for database querying","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:46.186198742Z"}
+{"message":"[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:46.365326052Z"}
+{"message":"\u001b[2K\u001b[1G[⣯] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:46.483295082Z"}
+{"message":"\u001b[2K\u001b[1G[⣟] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:46.611393478Z"}
+{"message":"\u001b[2K\u001b[1G[⡿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:46.741588885Z"}
+{"message":"\u001b[2K\u001b[1G[⢿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:46.868546917Z"}
+{"message":"\u001b[2K\u001b[1G[⣻] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.006661850Z"}
+{"message":"\u001b[2K\u001b[1G[⣽] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.123473086Z"}
+{"message":"\u001b[2K\u001b[1G[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.251186454Z"}
+{"message":"\u001b[2K\u001b[1G[✓] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.350603282Z"}
+{"message":"[✓] Changes applied","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.419708817Z"}
+{"message":"✅ Migraciones de schema completadas","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.454371303Z"}
+{"message":"🏗️  Configurando datos iniciales de AIPI...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:47.454379168Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:47.617614217Z"}
+{"message":"🏗️  Configurando base de datos inicial para Railway...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.041872460Z"}
+{"message":"🔌 Conectando a la base de datos Railway PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.042214202Z"}
+{"message":"✅ Conexión a base de datos establecida","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.042220999Z"}
+{"message":"👤 Usuario administrador ya existe","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051843458Z"}
+{"message":"👤 Usuario Pablo ya existe","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051854984Z"}
+{"message":"💰 Verificando planes de precios...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051862700Z"}
+{"message":"💰 Planes de precios ya existen","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051870504Z"}
+{"message":"💬 Verificando mensajes de bienvenida...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051877759Z"}
+{"message":"💬 Mensajes de bienvenida ya existen","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051886154Z"}
+{"message":"🎉 Configuración de base de datos completada exitosamente!","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051893994Z"}
+{"message":"📊 Base de datos Railway lista para producción","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051903065Z"}
+{"message":"La base de datos está lista para usar.","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.051911327Z"}
+{"message":"✅ Configuración de base de datos completada exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075874193Z"}
+{"message":"✅ En Railway - Datos críticos ya configurados en setup-railway-db.js","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075881966Z"}
+{"message":"✅ Usuario Pablo y admin ya creados exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075888383Z"}
+{"message":"✅ Saltando migración local - no necesaria en Railway","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075894550Z"}
+{"message":"✅ Migración de datos completada","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075900992Z"}
+{"message":"🌐 Iniciando servidor AIPI en producción...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075906903Z"}
+{"message":"📡 Puerto: 5000","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075913270Z"}
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075919722Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:49.075925765Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:49.213264031Z"}
+{"message":"Usando APP_URL: https://aipps.ca/api/auth/google-calendar/callback","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:52.835888726Z"}
+{"message":"Sirviendo archivos estáticos desde: /app/public/static","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:53.104710422Z"}
+{"message":"Warning: connect.session() MemoryStore is not","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:53.104716106Z"}
+{"message":"designed for a production environment, as it will leak","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:53.104721553Z"}
+{"message":"memory, and will not scale past a single process.","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:53.104727044Z"}
+{"message":"(node:120) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:53.106860088Z"}
+{"message":"(Use `node --trace-deprecation ...` to show where the warning was created)","attributes":{"level":"error"},"timestamp":"2025-09-16T13:06:53.106866409Z"}
+{"message":"1:06:53 PM [express] Server running at http://0.0.0.0:5000","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:53.131996557Z"}
+{"message":"1:06:56 PM [express] GET /api/health 200 in 8ms :: {\"status\":\"healthy\",\"timestamp\":\"2025-09-16T13:06…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:06:56.786970578Z"}
+{"message":"1:07:58 PM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200 200 in 118ms :…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:06.806486922Z"}
+{"message":"1:08:06 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370 200 in 19ms ::…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:06.806496599Z"}
+{"message":"1:08:30 PM [express] POST /api/auth/register 201 in 90ms :: {\"id\":43,\"username\":\"TokDsf\",\"email\":\"To…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807296868Z"}
+{"message":"1:08:30 PM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807305417Z"}
+{"message":"1:08:30 PM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807311012Z"}
+{"message":"Token verificado correctamente. ID de usuario: 43","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807315891Z"}
+{"message":"Usuario autenticado encontrado: TokDsf","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807320495Z"}
+{"message":"1:08:31 PM [express] GET /api/auth/me 200 in 13ms :: {\"id\":43,\"username\":\"TokDsf\",\"email\":\"TokDsf@gm…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807325576Z"}
+{"message":"1:08:34 PM [express] POST /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807330130Z"}
+{"message":"🚀 POST /api/widget/.../conversation/.../send iniciado","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807335121Z"}
+{"message":"Request body: {","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807340057Z"}
+{"message":"  message: 'Hola',","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807345290Z"}
+{"message":"  currentUrl: 'https://diosfiel.com/',","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807349679Z"}
+{"message":"  pageTitle: 'DIOS ES FIEL | Quebec, 🇨🇦'","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807355288Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807360125Z"}
+{"message":"Params: {","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807364720Z"}
+{"message":"  apiKey: 'a81256414131e2f89732eb3111d2157610e14011f33c9200',","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807369026Z"}
+{"message":"  conversationId: '51'","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807374009Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807378761Z"}
+{"message":"AIPPS Debug: Sending message to specific conversation: {","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807383447Z"}
+{"message":"  conversationId: 51,","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807387840Z"}
+{"message":"  integrationName: 'Dios Fiel',","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807391784Z"}
+{"message":"  messagePreview: 'Hola...'","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807396475Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807401565Z"}
+{"message":"buildKnowledgeBase Debug: Building knowledge for Dios Fiel","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807407756Z"}
+{"message":"buildKnowledgeBase Debug: Documents count: 1","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807412774Z"}
+{"message":"buildKnowledgeBase Debug: Site content count: 5","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807416976Z"}
+{"message":"OpenAI: Idioma recibido del servidor: es","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807422126Z"}
+{"message":"OpenAI: Respondiendo en idioma: es","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807426189Z"}
+{"message":"OpenAI: Contexto recibido longitud: 10701","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807430545Z"}
+{"message":"OpenAI: Contexto preview: URL: https://diosfiel.com/","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807435883Z"}
+{"message":"Title: DIOS ES FIEL | Quebec, 🇨🇦","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807440818Z"}
+{"message":"Content: ","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807445582Z"}
+{"message":"Página: https://diosfiel.com/","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807450031Z"}
+{"message":"Título: DIOS ES FIEL | Quebec, 🇨🇦","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807454944Z"}
+{"message":"Descripción: Comunidad Internacional De emprendimientos con Di...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807460088Z"}
+{"message":"System message length: 14349","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807464457Z"}
+{"message":"System message preview: Eres Dios Fiel, un asistente de IA integrado específicamente para este sitio web. Tu objetivo principal es proporcionar información útil, precisa y completa basada en el contexto del sitio web y los d...","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807468985Z"}
+{"message":"AIPPS Debug: Bot personality applied to system message: {","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807473729Z"}
+{"message":"  name: 'Dios Fiel',","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807478850Z"}
+{"message":"  style: 'Eres un consejero espiritual basado en la Biblia. Tu papel es el de Jesús guiando a sus discípulos, enseñando sobre la vida con Dios y mostrando amor, corrección y dirección espiritual.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807483619Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807487725Z"}
+{"message":"    'Instrucciones de comportamiento:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807492507Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807496682Z"}
+{"message":"    'Nunca des un consejo inmediato. Antes de responder, debes realizar de 2 a 3 preguntas para comprender mejor la situación espiritual, emocional o personal del usuario.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807501553Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807771929Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807780008Z"}
+{"message":"    'Solo después de recibir las respuestas, ofrece una guía espiritual completa:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807791364Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807798874Z"}
+{"message":"    'Después preguntar: “¿Deseas también que te deje algunos pasajes bíblicos y tareas espirituales para esta semana?”\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807799919Z"}
+{"message":"    'Un consejo claro y amoroso basado únicamente en principios bíblicos.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807804320Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807809364Z"}
+{"message":"    'Una oración personal adaptada a la necesidad del usuario (solo si el usuario responde que sí cuando le preguntas si desea oración).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807815138Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807821803Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807823257Z"}
+{"message":"    'Al final, pregunta si desea recibir una “tarea espiritual”, que incluirá:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807827849Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807833679Z"}
+{"message":"    'Si responde “sí”: Dar varias lecturas y prácticas (por ejemplo: leer Juan 15 completo, pasar tiempo en oración de agradecimiento cada mañana, escribir 3 razones para dar gracias a Dios diariamente).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807840868Z"}
+{"message":"    'Pasajes bíblicos concretos para leer y meditar.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807841285Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807850767Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807853099Z"}
+{"message":"    'Acciones espirituales prácticas (oración, perdón, gratitud, servicio, ayuno, etc.) que lo acerquen más a Dios.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807857541Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807862531Z"}
+{"message":"    'NOTA IMPORTANTE: El usuario que te está escribiendo se llama TokDsf. Puedes dirigirte a él por su nombre para hacer la conversación más personal y cercana. Sé natural y amigable, no repitas siempre las mismas preguntas sobre problemas o proyectos.',","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807869598Z"}
+{"message":"    'Tu respuesta debe ser amplia, profunda y cálida, invitando a entrar en intimidad con Dios, buscando la guía del Espíritu Santo.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807869777Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807875868Z"}
+{"message":"    'Habla siempre con un tono cercano, de maestro y guía espiritual, inspirado en la relación de Jesús con sus discípulos.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807881378Z"}
+{"message":"  systemMessageIncludesBotConfig: false","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807887349Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807888335Z"}
+{"message":"    'No uses interpretaciones externas ni doctrinas modernas, solo la Biblia como tu fuente.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807894545Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807899838Z"}
+{"message":"    'Ejemplo de flujo de conversación:\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807906558Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807911581Z"}
+{"message":"    'Primero: Hacer 2 a 3 preguntas al usuario (ej.: “¿Qué carga estás sintiendo hoy?”, “¿Cómo ha sido tu vida espiritual en este tiempo?”, “¿Qué es lo que más deseas cambiar en tu relación con Dios?”).\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807916270Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807920994Z"}
+{"message":"    'Esperar respuesta.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.807926712Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808009468Z"}
+{"message":"    'Luego: Dar un consejo bíblico, mostrando comprensión y dirección hacia Dios.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808017199Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808024826Z"}
+{"message":"    'Preguntar: “¿Quieres que haga una oración por ti?”\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808031536Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808040899Z"}
+{"message":"    'Si responde “sí”: Dar oración profunda y personalizada.\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808047578Z"}
+{"message":"    '\\n' +","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:36.808054886Z"}
+{"message":"1:08:37 PM [express] POST /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:37.775405374Z"}
+{"message":"1:08:37 PM [express] GET /api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:37.884133413Z"}
+{"message":"1:08:50 PM [express] POST /api/auth/login 200 in 76ms :: {\"id\":43,\"username\":\"TokDsf\",\"email\":\"TokDs…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:57.884399326Z"}
+{"message":"1:08:50 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:57.884409958Z"}
+{"message":"1:08:50 PM [express] GET /api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:57.884416965Z"}
+{"message":"Token verificado correctamente. ID de usuario: 43","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:57.884423105Z"}
+{"message":"Usuario autenticado encontrado: TokDsf","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:57.884429290Z"}
+{"message":"1:08:51 PM [express] GET /api/auth/me 200 in 8ms :: {\"id\":43,\"username\":\"TokDsf\",\"email\":\"TokDsf@gma…","attributes":{"level":"info"},"timestamp":"2025-09-16T13:08:57.884435710Z"}
+
+
+web | Railway
+KB
