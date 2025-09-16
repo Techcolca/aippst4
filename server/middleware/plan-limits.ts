@@ -358,12 +358,5 @@ export async function getUserLimitsSummary(userId: number) {
   }
 }
 
-// Extender el tipo Request para incluir la verificación de límites y presupuesto
-declare global {
-  namespace Express {
-    interface Request {
-      limitCheck?: LimitCheckResult | BudgetCheckCompatResult;
-      userId: number;
-    }
-  }
-}
+// Request interface extension is now in server/middleware/auth.ts
+// This includes limitCheck and userId fields

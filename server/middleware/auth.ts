@@ -11,8 +11,16 @@ import type { ExtendedUser } from '../auth';
 declare global {
   namespace Express {
     interface Request {
-      userId: number;
-      user?: ExtendedUser; // Use proper ExtendedUser type
+      userId?: number;
+      user?: ExtendedUser;
+      subscription?: any;
+      widgetContext?: {
+        integrationId: number;
+        widgetUserId: number;
+        widgetUser: any;
+        widgetToken: any;
+      };
+      limitCheck?: any;
     }
   }
 }

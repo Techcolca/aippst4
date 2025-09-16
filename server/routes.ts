@@ -132,44 +132,7 @@ function detectLanguage(message: string): string {
   }
 }
 
-// Función para extraer contenido de documentos
-async function extractDocumentContent(doc: any): Promise<string> {
-  let content = `Información del archivo: ${doc.originalName || doc.filename}`;
-
-  if (doc.path && fs.existsSync(doc.path)) {
-    try {
-      if (doc.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-        try {
-          const mammoth = await import("mammoth");
-          const fileBuffer = fs.readFileSync(doc.path);
-          const result = await mammoth.extractRawText({ buffer: fileBuffer });
-          content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
-        } catch (mammothError) {
-          console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
-          content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
-        }
-      } else if (doc.mimetype === "application/pdf") {
-        try {
-          const pdfParse = await import("pdf-parse");
-          const fileBuffer = fs.readFileSync(doc.path);
-          const pdfData = await pdfParse.default(fileBuffer);
-          content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
-        } catch (pdfError) {
-          console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
-          content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
-        }
-      } else if (doc.mimetype === "text/plain") {
-        content = fs.readFileSync(doc.path, "utf8");
-      } else {
-        content = `Archivo ${doc.originalName}: Contiene información relevante sobre su organización.`;
-      }
-    } catch (error) {
-      content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
-    }
-  }
-
-  return content;
-}
+// Función para extraer contenido de documentos - MOVED INSIDE configureRoutes
 export function configureRoutes(app: Express) {
   // Función auxiliar para generar y almacenar mensajes promocionales - DEBE IR AL INICIO
   async function generateAndStorePromotionalMessages(language = 'es') {
@@ -209,54 +172,51 @@ export function configureRoutes(app: Express) {
     });
   });
 
-// Función para extraer contenido de documentos
-async function extractDocumentContent(doc: any): Promise<string> {
-  let content = `Información del archivo: ${doc.originalName || doc.filename}`;
+  // Función para extraer contenido de documentos
+  async function extractDocumentContent(doc: any): Promise<string> {
+    let content = `Información del archivo: ${doc.originalName || doc.filename}`;
 
-  if (doc.path && fs.existsSync(doc.path)) {
-    try {
-      if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-        // Word document detected - extract actual content using Mammoth
-        try {
-          const mammoth = await import('mammoth');
-          const fileBuffer = fs.readFileSync(doc.path);
-          const result = await mammoth.extractRawText({ buffer: fileBuffer });
-          content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
-        } catch (mammothError) {
-          console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
-          content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+    if (doc.path && fs.existsSync(doc.path)) {
+      try {
+        if (doc.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+          try {
+            const mammoth = await import('mammoth');
+            const fileBuffer = fs.readFileSync(doc.path);
+            const result = await mammoth.extractRawText({ buffer: fileBuffer });
+            content = `Documento Word: ${doc.originalName}\n\nContenido:\n${result.value}`;
+          } catch (mammothError) {
+            console.error(`Error extracting DOCX content from ${doc.originalName}:`, mammothError);
+            content = `Documento Word: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+          }
+        } else if (doc.mimetype === 'application/pdf') {
+          try {
+            const pdfParse = await import('pdf-parse');
+            const fileBuffer = fs.readFileSync(doc.path);
+            const pdfData = await pdfParse.default(fileBuffer);
+            content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
+          } catch (pdfError) {
+            console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
+            content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
+          }
+        } else if (doc.mimetype === 'text/plain') {
+          content = fs.readFileSync(doc.path, 'utf8');
+        } else {
+          content = `Archivo ${doc.originalName}: Contiene información relevante sobre su organización.`;
         }
-      } else if (doc.mimetype === 'application/pdf') {
-        // PDF document detected - extract actual content using pdf-parse
-        try {
-          const pdfParse = await import('pdf-parse');
-          const fileBuffer = fs.readFileSync(doc.path);
-          const pdfData = await pdfParse.default(fileBuffer);
-          content = `Documento PDF: ${doc.originalName}\n\nContenido:\n${pdfData.text}`;
-        } catch (pdfError) {
-          console.error(`Error extracting PDF content from ${doc.originalName}:`, pdfError);
-          content = `Documento PDF: ${doc.originalName}. Error al extraer contenido automáticamente.`;
-        }
-      } else if (doc.mimetype === 'text/plain') {
-        content = fs.readFileSync(doc.path, 'utf8');
-      } else {
-        content = `Archivo ${doc.originalName}: Contiene información relevante sobre su organización.`;
+      } catch (error) {
+        content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
       }
-    } catch (error) {
-      content = `Documento ${doc.originalName}: Información no disponible para procesamiento automático.`;
     }
+
+    return content;
   }
 
-  return content;
-}
 
 
+  // Configurar multer para manejar subida de archivos
 
-// Configurar multer para manejar subida de archivos
-
-// Función para obtener las características de cada plan según su nivel
-
-function getFeaturesByTier(tier: string): string[] {
+  // Función para obtener las características de cada plan según su nivel
+  function getFeaturesByTier(tier: string): string[] {
   switch (tier) {
     case 'basic':
       return [
@@ -297,8 +257,8 @@ function getFeaturesByTier(tier: string): string[] {
   }
 }
 
-// Función para crear una integración interna específica para el sitio web principal
-async function createInternalWebsiteIntegration() {
+  // Función para crear una integración interna específica para el sitio web principal
+  async function createInternalWebsiteIntegration() {
   try {
     // Verificar si ya existe la integración interna
     const existingIntegration = await storage.getIntegrationByApiKey("aipps_web_internal");
@@ -325,15 +285,14 @@ async function createInternalWebsiteIntegration() {
   }
 }
 
-// Usando el middleware isAdmin desde middleware/auth.ts
-// Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
+  // Usando el middleware isAdmin desde middleware/auth.ts
+  // Definir el middleware isAdmin como función para poder usarlo en las rutas existentes
 
-}
-// Obtener el equivalente a __dirname en ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+  // Obtener el equivalente a __dirname en ESM
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
-const upload = multer({
+  const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
       // Crear carpeta uploads si no existe
@@ -375,9 +334,10 @@ const upload = multer({
 
 
 
-export async function registerRoutes(app: Express): Promise<Server> {
-  // Configure cookie parser middleware
-  app.use(cookieParser());
+  // Create HTTP server at the beginning of configureRoutes
+  const httpServer = createServer(app);
+  
+  // Configure routes inside the main function
   const isAdmin = authIsAdmin;
   // Crear integración interna para el sitio principal
   // await createInternalWebsiteIntegration(); // Comentado temporalmente para fix Railway
@@ -693,27 +653,34 @@ app.get("/api/health", (req, res) => {
     }
   });
 
-  // Create new conversation for fullscreen widget with apiKey verification  
-  app.post("/api/widget/:apiKey/conversations/user", authenticateJWT, async (req, res) => {
+  // ⚡ SECURITY: Create new conversation with database-backed widget validation
+  app.post("/api/widget/:apiKey/conversations/user", async (req, res) => {
     try {
-      const { apiKey } = req.params;
       const { title, visitorName, visitorEmail } = req.body;
 
-      // Validate API key first
-      const integration = await storage.getIntegrationByApiKey(apiKey);
-      if (!integration) {
-        return res.status(404).json({ message: "Integration not found" });
-      }
-
-      // Check if user owns the integration (simplified security check)
-      if (integration.userId !== req.userId) {
-        return res.status(403).json({ 
-          message: "Token does not belong to this integration. Please login again." 
+      // ⚡ SECURITY: Use database-backed auth validation
+      let authResult;
+      let integration;
+      try {
+        authResult = await validateAuthForWidgetRequest(req);
+        integration = authResult.integration;
+      } catch (error) {
+        console.error('Widget auth validation error:', error);
+        return res.status(401).json({ 
+          message: error.message === 'Integration ownership mismatch' 
+            ? "Token does not belong to this integration. Please login again."
+            : "Invalid or expired token"
         });
       }
 
+      const isAuthenticated = authResult.mode !== 'anonymous';
+      if (!isAuthenticated) {
+        return res.status(401).json({ message: "Authentication required for this operation" });
+      }
+
       // Get authenticated user data for visitor info
-      const authenticatedUser = await storage.getUser(req.userId);
+      const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+      const authenticatedUser = authResult.mode === 'widget' ? authResult.widgetUser : authResult.user;
         
       // Create conversation with authenticated user's visitorId pattern
       const conversation = await storage.createConversation({
@@ -3227,24 +3194,22 @@ app.get("/api/health", (req, res) => {
         // Use integration-specific customization if available, fallback to global settings
         const customization = integration.customization || {};
 
-        // Check if request is authenticated to provide user info
-        const token = req.cookies?.auth_token || 
-                      (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') 
-                       ? req.headers.authorization.slice(7) : null);
-
+        // ⚡ SECURITY: Check authentication using database-backed validation
         let userInfo = null;
-        if (token) {
-          try {
-            const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-            const authenticatedUser = await storage.getUser(decoded.userId);
+        try {
+          const authResult = await validateAuthForWidgetRequest(req);
+          if (authResult.mode !== 'anonymous') {
+            const authenticatedUser = authResult.mode === 'widget' ? authResult.widgetUser : authResult.user;
             if (authenticatedUser) {
               userInfo = {
                 name: authenticatedUser.fullName || authenticatedUser.username
               };
             }
-          } catch (error) {
-            console.error("Error getting user info for widget:", error);
           }
+          // Note: This route supports anonymous access, so no error is thrown for anonymous users
+        } catch (error) {
+          // Log authentication errors but allow anonymous access to continue
+          console.error("Widget auth validation error (allowing anonymous access):", error);
         }
 
         // Return widget configuration
@@ -3282,18 +3247,41 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // New endpoint for getting visitor conversations (supports fullscreen mode)
+    // ⚡ SECURITY: Get visitor conversations with database-backed token validation
     app.get("/api/widget/:apiKey/conversations/:visitorId", async (req, res) => {
       try {
-        const { apiKey, visitorId } = req.params;
+        const { visitorId } = req.params;
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
         }
 
-        // Get conversations for this visitor
+        const isAuthenticated = authResult.mode !== 'anonymous';
+        if (!isAuthenticated) {
+          return res.status(401).json({ message: "Authentication required to access conversations" });
+        }
+
+        // Verify the visitor belongs to the authenticated user
+        const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+        const expectedVisitorId = `user_${authenticatedUserId}`;
+        
+        if (visitorId !== expectedVisitorId) {
+          return res.status(403).json({ 
+            message: "Token does not belong to this integration. Please login again." 
+          });
+        }
+
+        // Get conversations for this authenticated visitor only
         const conversations = await storage.getConversations(integration.id);
         const visitorConversations = conversations.filter(conv => 
           conv.visitorId === visitorId
@@ -3306,21 +3294,44 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // New endpoint for getting messages from a specific conversation (supports fullscreen mode)
+    // ⚡ SECURITY: Get conversation messages with database-backed token validation
     app.get("/api/widget/:apiKey/conversation/:conversationId/messages", async (req, res) => {
       try {
-        const { apiKey, conversationId } = req.params;
+        const { conversationId } = req.params;
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
+        }
+
+        const isAuthenticated = authResult.mode !== 'anonymous';
+        if (!isAuthenticated) {
+          return res.status(401).json({ message: "Authentication required to access conversation messages" });
         }
 
         // Get conversation and verify it belongs to this integration
         const conversation = await storage.getConversation(parseInt(conversationId));
         if (!conversation || conversation.integrationId !== integration.id) {
           return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        // Verify conversation belongs to authenticated user
+        const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+        const expectedVisitorId = `user_${authenticatedUserId}`;
+        
+        if (conversation.visitorId !== expectedVisitorId) {
+          return res.status(403).json({ 
+            message: "Token does not belong to this integration. Please login again." 
+          });
         }
 
         // Get messages for this conversation
@@ -3333,15 +3344,35 @@ app.get("/api/health", (req, res) => {
       }
     });
 
+    // ⚡ SECURITY: Create conversation with database-backed token validation
     app.post("/api/widget/:apiKey/conversation", async (req, res) => {
       try {
-        const { apiKey } = req.params;
         const { visitorId, visitorName, visitorEmail } = req.body;
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
+        }
+
+        // For authenticated users, verify visitorId matches their identity
+        if (authResult.mode !== 'anonymous') {
+          const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+          const expectedVisitorId = `user_${authenticatedUserId}`;
+          
+          if (visitorId !== expectedVisitorId) {
+            return res.status(403).json({ 
+              message: "Token does not belong to this integration. Please login again." 
+            });
+          }
         }
 
         // Create conversation
@@ -3359,10 +3390,9 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // New endpoint for bubble widget system
-    app.post("/api/widget/:apiKey/send", async (req, res) => {
+    // ⚡ SECURITY: Bubble widget endpoint with database-backed token validation + budget control
+    app.post("/api/widget/:apiKey/send", requireBudgetCheck, async (req, res) => {
       try {
-        const { apiKey } = req.params;
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
 
         // Validate input
@@ -3370,10 +3400,30 @@ app.get("/api/health", (req, res) => {
           return res.status(400).json({ message: "message and visitorId are required" });
         }
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
+        }
+
+        // For authenticated users, verify visitorId matches their identity
+        if (authResult.mode !== 'anonymous') {
+          const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+          const expectedVisitorId = `user_${authenticatedUserId}`;
+          
+          if (visitorId !== expectedVisitorId) {
+            return res.status(403).json({ 
+              message: "Token does not belong to this integration. Please login again." 
+            });
+          }
         }
 
         // Find or create conversation for this visitor
@@ -3761,9 +3811,9 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    app.post("/api/widget/:apiKey/message", async (req, res) => {
+    // ⚡ SECURITY: Widget message endpoint with database-backed token validation + budget control  
+    app.post("/api/widget/:apiKey/message", requireBudgetCheck, async (req, res) => {
       try {
-        const { apiKey } = req.params;
         const { conversationId, content, role, pageContext, language } = req.body;
 
         // Validate input
@@ -3771,10 +3821,38 @@ app.get("/api/health", (req, res) => {
           return res.status(400).json({ message: "conversationId, content, and role are required" });
         }
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
+        }
+
+        const isAuthenticated = authResult.mode !== 'anonymous';
+        if (!isAuthenticated) {
+          return res.status(401).json({ message: "Authentication required to send messages" });
+        }
+
+        // Verify conversation belongs to authenticated user
+        const conversation = await storage.getConversation(conversationId);
+        if (!conversation || conversation.integrationId !== integration.id) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+        const expectedVisitorId = `user_${authenticatedUserId}`;
+        
+        if (conversation.visitorId !== expectedVisitorId) {
+          return res.status(403).json({ 
+            message: "Token does not belong to this integration. Please login again." 
+          });
         }
 
         // Create message
@@ -4113,9 +4191,10 @@ app.get("/api/health", (req, res) => {
     });
 
     // Delete conversation endpoint
+    // ⚡ SECURITY: Delete conversation with database-backed token validation
     app.delete("/api/widget/:apiKey/conversation/:conversationId", async (req, res) => {
       try {
-        const { apiKey, conversationId } = req.params;
+        const { conversationId } = req.params;
         const conversationIdNum = parseInt(conversationId);
 
         // Validar que conversationId es un número válido
@@ -4123,16 +4202,44 @@ app.get("/api/health", (req, res) => {
           return res.status(400).json({ message: "Invalid conversation ID" });
         }
 
-        // Obtener la integración por API key
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
+        // ⚡ SECURITY: Use database-backed auth validation
+        let authResult;
+        try {
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
+        } catch (error) {
+          console.error('Widget auth validation error:', error);
+          return res.status(401).json({ 
+            message: error.message === 'Integration ownership mismatch' 
+              ? "Token does not belong to this integration. Please login again."
+              : "Invalid or expired token"
+          });
+        }
+
+        const isAuthenticated = authResult.mode !== 'anonymous';
+        if (!isAuthenticated) {
+          return res.status(401).json({ message: "Authentication required to delete conversations" });
         }
 
         // Verificar que la conversación existe y pertenece a esta integración
         const conversation = await storage.getConversation(conversationIdNum);
         if (!conversation) {
           return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        // Verify conversation belongs to this integration
+        if (conversation.integrationId !== integration.id) {
+          return res.status(404).json({ message: "Conversation not found" });
+        }
+
+        // Verify conversation belongs to authenticated user
+        const authenticatedUserId = authResult.mode === 'widget' ? authResult.widgetUserId : authResult.userId;
+        const expectedVisitorId = `user_${authenticatedUserId}`;
+        
+        if (conversation.visitorId !== expectedVisitorId) {
+          return res.status(403).json({ 
+            message: "Token does not belong to this integration. Please login again." 
+          });
         }
 
         if (conversation.integrationId !== integration.id) {
@@ -7031,7 +7138,7 @@ app.get("/api/health", (req, res) => {
                 }
                 });
 
-                const httpServer = createServer(app);
+                // httpServer already created at the beginning of configureRoutes
 
                 // ================ Appointment Routes ================
                 // GET appointments for an integration
