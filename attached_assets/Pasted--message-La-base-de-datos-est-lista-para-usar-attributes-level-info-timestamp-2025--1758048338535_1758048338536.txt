@@ -1,0 +1,19 @@
+{"message":"La base de datos está lista para usar.","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118455058Z"}
+{"message":"✅ Configuración de base de datos completada exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118459559Z"}
+{"message":"✅ En Railway - Datos críticos ya configurados en setup-railway-db.js","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118465717Z"}
+{"message":"✅ Usuario Pablo y admin ya creados exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118469644Z"}
+{"message":"✅ Saltando migración local - no necesaria en Railway","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118473346Z"}
+{"message":"✅ Migración de datos completada","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118477307Z"}
+{"message":"🌐 Iniciando servidor AIPI en producción...","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118481056Z"}
+{"message":"📡 Puerto: 5000","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118486219Z"}
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118489989Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118494974Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T18:42:03.118500448Z"}
+{"message":"Usando APP_URL: https://aipps.ca/api/auth/google-calendar/callback","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118505858Z"}
+{"message":"Sirviendo archivos estáticos desde: /app/public/static","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118511061Z"}
+{"message":"Warning: connect.session() MemoryStore is not","attributes":{"level":"error"},"timestamp":"2025-09-16T18:42:03.118516652Z"}
+{"message":"designed for a production environment, as it will leak","attributes":{"level":"error"},"timestamp":"2025-09-16T18:42:03.118521862Z"}
+{"message":"memory, and will not scale past a single process.","attributes":{"level":"error"},"timestamp":"2025-09-16T18:42:03.118526266Z"}
+{"message":"(node:122) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T18:42:03.118532995Z"}
+{"message":"(Use `node --trace-deprecation ...` to show where the warning was created)","attributes":{"level":"error"},"timestamp":"2025-09-16T18:42:03.118537665Z"}
+{"message":"6:41:57 PM [express] Server running at http://0.0.0.0:5000","attributes":{"level":"info"},"timestamp":"2025-09-16T18:42:03.118541506Z"}

@@ -1,0 +1,94 @@
+Request URL
+https://aipps.ca/api/auth/register
+Request Method
+POST
+Status Code
+400 Bad Request
+Remote Address
+104.21.48.1:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-credentials
+true
+access-control-allow-headers
+Origin, X-Requested-With, Content-Type, Accept, x-api-key, Authorization, Cookie
+access-control-allow-methods
+GET, POST, PATCH, DELETE, OPTIONS, PUT
+access-control-allow-origin
+https://aipps.ca
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+98028278ab635e86-EWR
+content-length
+39
+content-type
+application/json; charset=utf-8
+date
+Tue, 16 Sep 2025 18:43:29 GMT
+etag
+W/"27-FZch6oEOXKK/vrG4F953aNynBb8"
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+ratelimit
+"1000-in-15min"; r=996; t=843
+ratelimit
+"50-in-15min"; r=46; t=843
+ratelimit-policy
+"1000-in-15min"; q=1000; w=900; pk=:ZDczNzY4NmI0ODM4:
+ratelimit-policy
+"50-in-15min"; q=50; w=900; pk=:ZDczNzY4NmI0ODM4:
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=%2F11wKceYPWw5RUITnm82xQ2EgCC3Sp48szPQn0eTOzvVAoc9lJUw3k9FafqR6gqY1ACjPZH7Xy5UDBM6HPfp%2FXaQRf4bGONC"}]}
+server
+cloudflare
+x-powered-by
+Express
+x-railway-edge
+railway/us-east4-eqdc4a
+x-railway-request-id
+R2YkMAFnTkWN6rkbezItjw
+:authority
+aipps.ca
+:method
+POST
+:path
+/api/auth/register
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+fr-CA,fr;q=0.9,es-ES;q=0.8,es;q=0.7
+authorization
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc1Nzk0MDI4MSwiZXhwIjoxNzU4NTQ1MDgxfQ.ZgQJycFyWcMJYrK-OrUvnoOI64DgjFASQF8g_7MctCg
+content-length
+96
+content-type
+application/json
+cookie
+__stripe_mid=7c998881-65e1-44c8-ac29-0d5eb3f2ed19eab1cb; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTc1Nzk0MDI4MSwiZXhwIjoxNzU4NTQ1MDgxfQ.ZgQJycFyWcMJYrK-OrUvnoOI64DgjFASQF8g_7MctCg; i18next=fr; __stripe_sid=6538989a-391a-46f7-adbb-8e1e0e61295d2a10f5
+origin
+https://aipps.ca
+priority
+u=1, i
+referer
+https://aipps.ca/register
+sec-ch-ua
+"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-origin
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/53
