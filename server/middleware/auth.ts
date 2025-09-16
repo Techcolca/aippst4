@@ -409,18 +409,61 @@ export async function validateUserJWT(token: string): Promise<{
   }
 }
 
-// Main auth validation for widget requests
-export async function validateAuthForWidgetRequest(req: Request, integration: any): Promise<{
+// Main auth validation for widget requests - PARAM-AGNOSTIC
+export async function validateAuthForWidgetRequest(req: Request): Promise<{
   mode: 'anonymous' | 'widget' | 'user';
   userId?: number;
   widgetUserId?: number;
   user?: any;
   widgetUser?: any;
+  integration: any;
 }> {
+  // ⚡ RESOLVE INTEGRATION from multiple sources
+  let integration = null;
+  const integrationId = req.params.integrationId ? parseInt(req.params.integrationId) : null;
+  const apiKey = req.params.apiKey;
+  const conversationId = req.params.conversationId ? parseInt(req.params.conversationId) : null;
+
+  // Try integrationId first
+  if (integrationId && !isNaN(integrationId)) {
+    integration = await storage.getIntegration(integrationId);
+  }
+  
+  // Try apiKey second
+  if (!integration && apiKey) {
+    integration = await storage.getIntegrationByApiKey(apiKey);
+  }
+  
+  // Try conversationId third
+  if (!integration && conversationId && !isNaN(conversationId)) {
+    const conversation = await storage.getConversation(conversationId);
+    if (conversation) {
+      integration = await storage.getIntegration(conversation.integrationId);
+    }
+  }
+
+  if (!integration) {
+    throw new Error('Integration not found');
+  }
+
+  // ⚡ CROSS-VALIDATE multiple identifiers if present
+  if (integrationId && !isNaN(integrationId) && integration.id !== integrationId) {
+    throw new Error('Integration ID mismatch');
+  }
+  if (apiKey && integration.apiKey !== apiKey) {
+    throw new Error('API key mismatch');
+  }
+  if (conversationId && !isNaN(conversationId)) {
+    const conversation = await storage.getConversation(conversationId);
+    if (!conversation || conversation.integrationId !== integration.id) {
+      throw new Error('Conversation does not belong to this integration');
+    }
+  }
+
   const token = getAuthToken(req);
   
   if (!token) {
-    return { mode: 'anonymous' };
+    return { mode: 'anonymous', integration };
   }
 
   // Try widget token first
@@ -429,7 +472,8 @@ export async function validateAuthForWidgetRequest(req: Request, integration: an
     return {
       mode: 'widget',
       widgetUserId: widgetAuth.widgetUserId,
-      widgetUser: widgetAuth.widgetUser
+      widgetUser: widgetAuth.widgetUser,
+      integration
     };
   }
 
@@ -443,7 +487,8 @@ export async function validateAuthForWidgetRequest(req: Request, integration: an
     return {
       mode: 'user',
       userId: userAuth.userId,
-      user: userAuth.user
+      user: userAuth.user,
+      integration
     };
   }
 
