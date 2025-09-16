@@ -3645,6 +3645,12 @@ app.get("/api/health", (req, res) => {
             type?: string 
           };
           
+          // DEBUGGING: Ver contenido del token
+          console.log('🔍 SEND MESSAGE TOKEN DEBUG - Contenido completo:', JSON.stringify(decoded));
+          console.log('🔍 SEND MESSAGE TOKEN DEBUG - decoded.type:', decoded.type);
+          console.log('🔍 SEND MESSAGE TOKEN DEBUG - decoded.integrationId:', decoded.integrationId);
+          console.log('🔍 SEND MESSAGE TOKEN DEBUG - integration.id (esperado):', integration.id);
+          
           // Si el token es de tipo 'widget' (token específico de integración)
           if (decoded.type === 'widget') {
             // Verificar que el integrationId del token coincida exactamente
