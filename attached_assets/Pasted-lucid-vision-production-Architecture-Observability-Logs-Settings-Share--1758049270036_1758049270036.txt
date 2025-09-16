@@ -1,0 +1,140 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+d9a23b61
+Removed
+
+Sep 16, 2025, 10:07 AM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Filter and search logs
+
+You reached the start of the range
+Sep 16, 2025, 10:07 AM
+{"message":"Starting Container","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:21.000000000Z"}
+{"message":"🚀 ===== Iniciando despliegue AIPI en Railway ======","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.344169291Z"}
+{"message":"🔍 Verificando variables de entorno...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.344172805Z"}
+{"message":"✅ Variables verificadas: NODE_ENV=production, PORT=5000","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.344176451Z"}
+{"message":"🔌 Verificando conexión a PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.344180172Z"}
+{"message":"✅ Conexión a base de datos exitosa","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.344184136Z"}
+{"message":"📊 Ejecutando migraciones de schema con drizzle-kit...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.344187907Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:22.344191294Z"}
+{"message":"No config path provided, using default 'drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.527019944Z"}
+{"message":"Reading config file '/app/drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:22.527026202Z"}
+{"message":"Using 'pg' driver for database querying","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.053994750Z"}
+{"message":"[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.279529322Z"}
+{"message":"\u001b[2K\u001b[1G[⣯] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.290281777Z"}
+{"message":"\u001b[2K\u001b[1G[⣟] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.469139159Z"}
+{"message":"\u001b[2K\u001b[1G[⡿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.573434711Z"}
+{"message":"\u001b[2K\u001b[1G[⢿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.710534480Z"}
+{"message":"\u001b[2K\u001b[1G[⣻] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.798484824Z"}
+{"message":"\u001b[2K\u001b[1G[✓] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.925619096Z"}
+{"message":"[✓] Changes applied","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:23.974554310Z"}
+{"message":"✅ Migraciones de schema completadas","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:24.017926507Z"}
+{"message":"🏗️  Configurando datos iniciales de AIPI...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:24.017952740Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:24.156817903Z"}
+{"message":"🏗️  Configurando base de datos inicial para Railway...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.110682099Z"}
+{"message":"🔌 Conectando a la base de datos Railway PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.110689169Z"}
+{"message":"✅ Conexión a base de datos establecida","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.113898944Z"}
+{"message":"👤 Usuario administrador ya existe","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.223817081Z"}
+{"message":"👤 Usuario Pablo ya existe","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.227463764Z"}
+{"message":"💰 Verificando planes de precios...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.227471778Z"}
+{"message":"💰 Planes de precios ya existen","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.227477586Z"}
+{"message":"💬 Verificando mensajes de bienvenida...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.227483858Z"}
+{"message":"💬 Mensajes de bienvenida ya existen","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.231277843Z"}
+{"message":"🎉 Configuración de base de datos completada exitosamente!","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.231286908Z"}
+{"message":"📊 Base de datos Railway lista para producción","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.231292981Z"}
+{"message":"La base de datos está lista para usar.","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.231298976Z"}
+{"message":"✅ Configuración de base de datos completada exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262263945Z"}
+{"message":"✅ En Railway - Datos críticos ya configurados en setup-railway-db.js","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262267751Z"}
+{"message":"✅ Usuario Pablo y admin ya creados exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262271381Z"}
+{"message":"✅ Saltando migración local - no necesaria en Railway","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262275358Z"}
+{"message":"✅ Migración de datos completada","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262280134Z"}
+{"message":"🌐 Iniciando servidor AIPI en producción...","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262283513Z"}
+{"message":"📡 Puerto: 5000","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262287189Z"}
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262290910Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:25.262294559Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:25.361069666Z"}
+{"message":"Usando APP_URL: https://aipps.ca/api/auth/google-calendar/callback","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:27.897576530Z"}
+{"message":"Sirviendo archivos estáticos desde: /app/public/static","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:28.129917146Z"}
+{"message":"Warning: connect.session() MemoryStore is not","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:28.129924642Z"}
+{"message":"designed for a production environment, as it will leak","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:28.129931192Z"}
+{"message":"memory, and will not scale past a single process.","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:28.129936469Z"}
+{"message":"(node:122) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:28.129942116Z"}
+{"message":"(Use `node --trace-deprecation ...` to show where the warning was created)","attributes":{"level":"error"},"timestamp":"2025-09-16T14:09:28.129949394Z"}
+{"message":"2:09:28 PM [express] Server running at http://0.0.0.0:5000","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:28.147831493Z"}
+{"message":"2:09:29 PM [express] GET /api/health 200 in 6ms :: {\"status\":\"healthy\",\"timestamp\":\"2025-09-16T14:09…","attributes":{"level":"info"},"timestamp":"2025-09-16T14:09:29.958077257Z"}
+You reached the end of the range
+Sep 16, 2025, 10:09 AM
+
+
+web | Railway

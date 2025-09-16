@@ -1,0 +1,489 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+d9a23b61
+Removed
+
+Sep 16, 2025, 10:07 AM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Search HTTP logs e.g. @path:/api/users @httpStatus:200
+You reached the start of the range
+Sep 16, 2025, 10:07 AM
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/53/send
+204
+2 ms
+POST
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/53/send
+201
+3 s
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+200
+6 ms
+OPTIONS
+/api/auth/login
+204
+1 ms
+POST
+/api/auth/login
+200
+69 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+204
+1 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+200
+9 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+304
+14 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+200
+6 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+204
+1 ms
+POST
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+201
+10 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversation/54/send
+204
+1 ms
+POST
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversation/54/send
+201
+1 s
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+200
+7 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/53/send
+204
+1 ms
+POST
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversation/53/send
+201
+2 s
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+1 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+304
+6 ms
+GET
+/embed.js
+200
+365 ms
+GET
+/embed.js
+200
+17 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+87 ms
+GET
+/embed.js
+304
+3 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+20 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+14 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+93 ms
+GET
+/embed.js
+304
+5 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200
+200
+15 ms
+OPTIONS
+/api/auth/register
+204
+2 ms
+POST
+/api/auth/register
+201
+80 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+1 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+200
+15 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+304
+6 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+200
+7 ms
+OPTIONS
+/api/auth/login
+204
+3 ms
+POST
+/api/auth/login
+200
+76 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+1 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+304
+7 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+304
+6 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+304
+6 ms
+OPTIONS
+/api/auth/login
+204
+2 ms
+POST
+/api/auth/login
+200
+69 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+204
+1 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+304
+7 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+304
+7 ms
+OPTIONS
+/api/auth/me
+204
+2 ms
+GET
+/api/auth/me
+200
+7 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+1 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+401
+25 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+401
+6 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+401
+4 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+2 ms
+POST
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+401
+5 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+204
+1 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+401
+76 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+401
+11 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+401
+3 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+13 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+13 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+16 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+12 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+10 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370
+200
+35 ms
+OPTIONS
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+204
+1 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+401
+78 ms
+GET
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+401
+5 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+401
+3 ms
+POST
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+401
+4 ms
+OPTIONS
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+204
+2 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+401
+6 ms
+GET
+/api/widget/a81256414131e2f89732eb3111d2157610e14011f33c9200/conversations/user
+401
+5 ms
+OPTIONS
+/api/auth/me
+204
+1 ms
+GET
+/api/auth/me
+401
+7 ms
+GET
+/
+200
+9 ms
+GET
+/
+200
+7 ms
+GET
+/assets/index-Ce-DF2L-.css
+200
+28 ms
+GET
+/assets/index-BmDjlv85.js
+200
+58 ms
+GET
+/api/welcome-chat-settings
+200
+5 ms
+GET
+/api/user-session
+404
+6 ms
+GET
+/api/auth-status
+200
+3 ms
+GET
+/api/auth/me
+404
+8 ms
+GET
+/api/marketing/promotional-messages
+200
+92 ms
+GET
+/favicon.ico
+200
+4 ms
+GET
+/docs
+200
+6 ms
+POST
+/api/auth/login
+401
+12 ms
+POST
+/api/auth/login
+401
+6 ms
+POST
+/api/auth/login
+401
+9 ms
+GET
+/robots.txt
+200
+3 ms
+GET
+/
+200
+4 ms
+POST
+/api/auth/register
+400
+133 ms
+GET
+/
+304
+2 ms
+GET
+/api/auth-status
+200
+2 ms
+GET
+/api/user-session
+200
+8 ms
+GET
+/api/welcome-chat-settings
+304
+6 ms
+GET
+/api/marketing/promotional-messages
+304
+87 ms
+GET
+/api/auth/me
+200
+80 ms
+You reached the end of the range
+Sep 16, 2025, 3:01 PM
+
+
+web | Railway
