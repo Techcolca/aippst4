@@ -409,8 +409,8 @@ export async function validateUserJWT(token: string): Promise<{
   }
 }
 
-// Main auth validation for widget requests - PARAM-AGNOSTIC
-export async function validateAuthForWidgetRequest(req: Request): Promise<{
+// Main auth validation for widget requests - PARAM-AGNOSTIC (with backward compatibility)
+export async function validateAuthForWidgetRequest(req: Request, _integration?: { id: number; userId: number } | null): Promise<{
   mode: 'anonymous' | 'widget' | 'user';
   userId?: number;
   widgetUserId?: number;
@@ -437,7 +437,7 @@ export async function validateAuthForWidgetRequest(req: Request): Promise<{
   // Try conversationId third
   if (!integration && conversationId && !isNaN(conversationId)) {
     const conversation = await storage.getConversation(conversationId);
-    if (conversation) {
+    if (conversation && conversation.integrationId) {
       integration = await storage.getIntegration(conversation.integrationId);
     }
   }

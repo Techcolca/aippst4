@@ -3536,16 +3536,11 @@ app.get("/api/health", (req, res) => {
         const { apiKey, conversationId } = req.params;
         const { message, visitorId, currentUrl, pageTitle, visitorName, visitorEmail } = req.body;
 
-        // Validate API key and get integration
-        const integration = await storage.getIntegrationByApiKey(apiKey);
-        if (!integration) {
-          return res.status(404).json({ message: "Integration not found" });
-        }
-
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
         try {
-          authResult = await validateAuthForWidgetRequest(req, integration);
+          authResult = await validateAuthForWidgetRequest(req);
+          const integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -3576,7 +3571,7 @@ app.get("/api/health", (req, res) => {
 
         // Verify conversation exists and belongs to this integration
         const conversation = await storage.getConversation(conversationIdNum);
-        if (!conversation || conversation.integrationId !== integration.id) {
+        if (!conversation || conversation.integrationId !== authResult.integration.id) {
           return res.status(404).json({ message: "Conversation not found" });
         }
 
