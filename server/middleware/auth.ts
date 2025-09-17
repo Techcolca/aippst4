@@ -488,16 +488,24 @@ export async function validateAuthForWidgetRequest(req: Request, _integration?: 
   // Try user JWT second
   const userAuth = await validateUserJWT(token);
   if (userAuth) {
-    // Verify user owns the integration
-    if (integration.userId !== userAuth.userId) {
-      throw new Error('Integration ownership mismatch');
+    // Check if user owns the integration
+    if (integration.userId === userAuth.userId) {
+      // Owner has full access
+      return {
+        mode: 'user',
+        userId: userAuth.userId,
+        user: userAuth.user,
+        integration
+      };
+    } else {
+      // Non-owner user accessing widget - allow for public widget interactions
+      return {
+        mode: 'widget_user', 
+        userId: userAuth.userId,
+        user: userAuth.user,
+        integration
+      };
     }
-    return {
-      mode: 'user',
-      userId: userAuth.userId,
-      user: userAuth.user,
-      integration
-    };
   }
 
   // Token present but invalid

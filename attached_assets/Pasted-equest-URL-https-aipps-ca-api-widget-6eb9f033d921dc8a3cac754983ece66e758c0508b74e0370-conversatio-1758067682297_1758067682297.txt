@@ -1,0 +1,88 @@
+equest URL
+https://aipps.ca/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+Request Method
+POST
+Status Code
+401 Unauthorized
+Remote Address
+104.21.32.1:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-credentials
+true
+access-control-allow-headers
+Origin, X-Requested-With, Content-Type, Accept, x-api-key, Authorization, Cookie
+access-control-allow-methods
+GET, POST, PATCH, DELETE, OPTIONS, PUT
+access-control-allow-origin
+https://techcolca.ca
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+98045bd9ad76a23a-YYZ
+content-length
+76
+content-type
+application/json; charset=utf-8
+date
+Wed, 17 Sep 2025 00:06:38 GMT
+etag
+W/"4c-j9352PbjeWf7iXnACkGj5tOKjPo"
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+ratelimit
+"1000-in-15min"; r=974; t=679
+ratelimit-policy
+"1000-in-15min"; q=1000; w=900; pk=:NTA5YWVjMjQ3NDcz:
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=yIcpL2mHpsYrgKJBAJaxEAmHCpuS4dNAPgf86H2kKBn0v1GjSzKiWtEW99kDrWuPZu3M15wKPgH909vRuYnzLoPbDOL6kg%3D%3D"}]}
+server
+cloudflare
+x-powered-by
+Express
+x-railway-edge
+railway/us-east4-eqdc4a
+x-railway-request-id
+uvI-qSrxRduj4pwLozsQ6Q
+:authority
+aipps.ca
+:method
+POST
+:path
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversations/user
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+fr-CA,fr;q=0.9,es-ES;q=0.8,es;q=0.7
+authorization
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjgsImlhdCI6MTc1ODA2NzU3OSwiZXhwIjoxNzU4NjcyMzc5fQ.X3BGe-qi9SeGTmCPAc0Ei4QVOqrnVt-2LklzkASZo1k
+content-length
+31
+content-type
+application/json
+origin
+https://techcolca.ca
+priority
+u=1, i
+referer
+https://techcolca.ca/
+sec-ch-ua
+"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+cross-site
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
