@@ -2266,7 +2266,11 @@ app.get("/api/health", (req, res) => {
                     name: plan.name,
                     description: translatedInfo.description,
                     price: plan.price,
-                    priceDisplay: plan.priceDisplay || `$${plan.price}/${plan.interval === 'year' ? 'año' : 'mes'}`,
+                    priceDisplay: plan.planId.toLowerCase() === 'enterprise' 
+                      ? plan.priceDisplay || 'Contactar'
+                      : plan.planId.toLowerCase() === 'free' 
+                        ? ''
+                        : plan.priceDisplay || `$${plan.price}/${plan.interval === 'year' ? 'año' : 'mes'}`,
                     currency: plan.currency || "usd",
                     interval: plan.interval,
                     features: translatedInfo.features,
@@ -2290,7 +2294,9 @@ app.get("/api/health", (req, res) => {
                     price: annualDiscountedPrice,
                     priceDisplay: plan.planId.toLowerCase() === 'enterprise' 
                       ? 'Contactar' 
-                      : `$${Math.round(annualDiscountedPrice / 100)}/año`,
+                      : plan.planId.toLowerCase() === 'free' 
+                        ? ''
+                        : `$${Math.round(annualDiscountedPrice / 100)}/año`,
                     currency: plan.currency || "usd",
                     interval: 'year',
                     features: translatedInfo.features,
