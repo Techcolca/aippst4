@@ -223,9 +223,8 @@ export default function PricingPage() {
                           </div>
                         )}
                         <span className="text-3xl font-bold text-green-600 dark:text-green-400">
-                          {plan.price === 0 && !plan.id.includes('enterprise') ? t('pricing.free') : 
-                           plan.id.includes('enterprise') ? t('pricing.contact_us') :
-                           plan.price === 0 ? '' : // No mostrar nada si el precio es 0 para otros casos
+                          {plan.id.includes('enterprise') ? t('pricing.contact_us') :
+                           plan.id.includes('free') ? t('pricing.free') :
                            formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (
