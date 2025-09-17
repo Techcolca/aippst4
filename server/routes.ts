@@ -87,7 +87,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         ]
       },
       'fr': {
-        name: 'Gratuit',
+        name: 'Free',
         description: 'Plan gratuit pour commencer',
         features: [
           '100 conversations/mois',
@@ -194,7 +194,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
     },
     'enterprise': {
       'es': {
-        name: 'Empresarial',
+        name: 'Enterprise',
         description: 'Plan completo con IA automatizada',
         features: [
           'Conversaciones ilimitadas',
@@ -226,7 +226,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         ]
       },
       'fr': {
-        name: 'Entreprise',
+        name: 'Enterprise',
         description: 'Plan complet avec IA automatisée',
         features: [
           'Conversations illimitées',
@@ -2193,7 +2193,7 @@ app.get("/api/health", (req, res) => {
                   // Plan mensual
                   const monthlyPlan = {
                     id: plan.planId.toLowerCase(),
-                    name: translatedInfo.name,
+                    name: plan.name,
                     description: translatedInfo.description,
                     price: plan.price,
                     currency: plan.currency || "usd",
@@ -2222,7 +2222,7 @@ app.get("/api/health", (req, res) => {
                   const annualPrice = plan.price * 12;
                   const annualPlan = {
                     id: plan.planId.toLowerCase() + '_annual',
-                    name: translatedInfo.name,
+                    name: plan.name,
                     description: translatedInfo.description,
                     price: annualDiscount > 0 
                       ? Math.round(annualPrice * (1 - annualDiscount / 100))
@@ -2256,7 +2256,7 @@ app.get("/api/health", (req, res) => {
                   const translatedInfo = getTranslatedPlanInfo(plan.planId.toLowerCase(), language);
                   return {
                     id: plan.planId.toLowerCase(),
-                    name: translatedInfo.name,
+                    name: plan.name,
                     description: translatedInfo.description,
                     price: plan.price,
                     priceDisplay: plan.priceDisplay || `$${plan.price}/${plan.interval === 'year' ? 'año' : 'mes'}`,
