@@ -212,7 +212,7 @@ export default function PricingPage() {
                       <CardTitle className="text-xl">{t(`pricing.plan_${plan.id}.name`, plan.name)}</CardTitle>
                       <CardDescription>{t(`pricing.plan_${plan.id}.description`, plan.description)}</CardDescription>
                       <div className="mt-4">
-                        {(plan.discount ?? 0) > 0 && plan.originalPrice && (
+                        {(plan.discount ?? 0) > 0 && (plan.originalPrice ?? 0) > 0 && (
                           <div className="flex items-center gap-2 mb-2">
                             <span className="text-lg text-gray-500 dark:text-gray-400 line-through">
                               {formatCurrency(plan.originalPrice, plan.currency)}
