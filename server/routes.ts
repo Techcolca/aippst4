@@ -3668,11 +3668,28 @@ app.get("/api/health", (req, res) => {
           return res.status(404).json({ message: "Conversation not found" });
         }
 
-        // ⚡ SECURITY: Verify conversation belongs to authenticated user
+        // ⚡ SECURITY: Verify conversation access based on authentication mode
         if (isAuthenticated) {
           const expectedVisitorId = `user_${authenticatedUserId}`;
-          if (conversation.visitorId !== expectedVisitorId) {
-            return res.status(403).json({ message: "Unauthorized access to this conversation" });
+          
+          // Allow conversation access for both owners and widget users
+          if (authResult.mode === 'user') {
+            // Owner mode: strict validation - conversation must belong to user
+            if (conversation.visitorId !== expectedVisitorId) {
+              return res.status(403).json({ message: "Unauthorized access to this conversation" });
+            }
+          } else if (authResult.mode === 'widget_user') {
+            // Widget user mode: allow access to conversations in public widgets
+            // SECURITY: Verify conversation belongs to this integration
+            if (conversation.integrationId !== authResult.integration.id) {
+              return res.status(403).json({ message: "Unauthorized access to this conversation" });
+            }
+            console.log(`Widget user ${authenticatedUserId} accessing conversation ${conversationId} in integration ${authResult.integration.id}`);
+          } else if (authResult.mode === 'widget') {
+            // Widget token mode: allow access (existing functionality)
+            if (conversation.visitorId !== expectedVisitorId) {
+              return res.status(403).json({ message: "Unauthorized access to this conversation" });
+            }
           }
         }
 
@@ -3688,7 +3705,7 @@ app.get("/api/health", (req, res) => {
 
         // Get site content for context
         let context = "";
-        const siteContent = await storage.getSiteContent(integration.id);
+        const siteContent = await storage.getSiteContent(authResult.integration.id);
         if (siteContent.length > 0) {
           context = siteContent.map(content => 
             `URL: ${content.url}\nTitle: ${content.title || 'N/A'}\nContent: ${content.content.substring(0, 500)}...`
@@ -3696,7 +3713,7 @@ app.get("/api/health", (req, res) => {
         }
 
         // Get user settings
-        const userSettings = await storage.getSettings(integration.userId);
+        const userSettings = await storage.getSettings(authResult.integration.userId);
 
         // Get authenticated user information for personalization
         let userContext = "";
@@ -3707,7 +3724,7 @@ app.get("/api/health", (req, res) => {
               const userName = authenticatedUser.fullName || authenticatedUser.username;
 
               // Get user's conversation history to understand context
-              const allConversations = await storage.getConversations(integration.id);
+              const allConversations = await storage.getConversations(authResult.integration.id);
               const userConversations = allConversations.filter(conv => 
                 conv.visitorId === `user_${authenticatedUserId}`
               );
@@ -3741,16 +3758,16 @@ app.get("/api/health", (req, res) => {
 
         // Prepare bot configuration using integration-specific settings
         const botConfig = {
-          assistantName: integration.name,
-          defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${integration.name}. ¿En qué puedo ayudarte?`,
-          conversationStyle: integration.botBehavior + userContext,
-          description: integration.description,
+          assistantName: authResult.integration.name,
+          defaultGreeting: userSettings?.defaultGreeting || `Hola, soy ${authResult.integration.name}. ¿En qué puedo ayudarte?`,
+          conversationStyle: authResult.integration.botBehavior + userContext,
+          description: authResult.integration.description,
           isWidget: true // Marca este bot como widget para aplicar restricciones
         };
 
         console.log('AIPPS Debug: Sending message to specific conversation:', {
           conversationId: conversationIdNum,
-          integrationName: integration.name,
+          integrationName: authResult.integration.name,
           messagePreview: message.substring(0, 50) + '...'
         });
 
@@ -3762,8 +3779,8 @@ app.get("/api/health", (req, res) => {
         let siteContentItems = [];
 
         // Extract documents from integration
-        if (integration.documentsData && Array.isArray(integration.documentsData)) {
-          for (const doc of integration.documentsData) {
+        if (authResult.integration.documentsData && Array.isArray(authResult.integration.documentsData)) {
+          for (const doc of authResult.integration.documentsData) {
             const content = await extractDocumentContent(doc);
             documents.push({
               original_name: doc.originalName || doc.filename,
@@ -3776,14 +3793,14 @@ app.get("/api/health", (req, res) => {
 
         // Get site content
         try {
-          siteContentItems = await storage.getSiteContent(integration.id);
+          siteContentItems = await storage.getSiteContent(authResult.integration.id);
         } catch (error) {
           console.error('Error loading site content:', error);
           siteContentItems = [];
         }
 
         // Build enhanced context with knowledge base
-        const knowledgeBase = buildKnowledgeBase(integration, documents, siteContentItems);
+        const knowledgeBase = buildKnowledgeBase(authResult.integration, documents, siteContentItems);
         const enhancedContext = context + userContext + "\n\n" + knowledgeBase;
 
 

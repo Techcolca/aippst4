@@ -1,0 +1,97 @@
+
+Request URL
+https://aipps.ca/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversation/39/send
+Request Method
+POST
+Status Code
+403 Forbidden
+Remote Address
+104.21.112.1:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-credentials
+true
+access-control-allow-headers
+Origin, X-Requested-With, Content-Type, Accept, x-api-key, Authorization, Cookie
+access-control-allow-methods
+GET, POST, PATCH, DELETE, OPTIONS, PUT
+access-control-allow-origin
+https://techcolca.ca
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+9808ee33a8a236b5-YYZ
+content-encoding
+zstd
+content-type
+application/json; charset=utf-8
+date
+Wed, 17 Sep 2025 13:25:35 GMT
+etag
+W/"36-oexg2PBPJvCo78PHgxmxmstCey0"
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+ratelimit
+"1000-in-15min"; r=993; t=847
+ratelimit-policy
+"1000-in-15min"; q=1000; w=900; pk=:NTA5YWVjMjQ3NDcz:
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=kW%2BiV%2BLeeoH6NOxP7XS3cLzg1i43K5Ny7ZbLWhuPTbiqDOVnSt0OdNMFzL6lqYfGYjmUAbRx3deH1V12kv2gaslvBtDtKg%3D%3D"}]}
+server
+cloudflare
+x-powered-by
+Express
+x-railway-edge
+railway/us-east4-eqdc4a
+x-railway-request-id
+ycqDSjSLQ3Oe_kJmozsQ6Q
+:authority
+aipps.ca
+:method
+POST
+:path
+/api/widget/6eb9f033d921dc8a3cac754983ece66e758c0508b74e0370/conversation/39/send
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+fr-CA,fr;q=0.9,es-ES;q=0.8,es;q=0.7
+authorization
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjksImlhdCI6MTc1ODExNTUxNywiZXhwIjoxNzU4NzIwMzE3fQ.LaIsmUHelgGEw7G5QNXh4G2ZgPwcyl_r_f4zHyaxBJU
+content-length
+93
+content-type
+application/json
+origin
+https://techcolca.ca
+priority
+u=1, i
+referer
+https://techcolca.ca/
+sec-ch-ua
+"Chromium";v="140", "Not=A?Brand";v="24", "Google Chrome";v="140"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+cross-site
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36
+Ask AI about more insights
+You can now ask Gemini about more performance insights: image delivery, legacy JavaScript, duplicate JavaScript, and modern HTTP.
+
+Emulate the 'Save-Data' header
+In 'Network conditions', you can now emulate the 'Save-Data' request header that indicates the client's preference for reduced data usage.
+
+Debug complex CSS values easier
+See also, from version 138: The Elements > Styles tab can now show you a tooltip with a breakdown of the definition chain and step-by-step evaluations of complex CSS variables, so you can find bugs quicker and gain a deeper understanding of how a value is computed.
