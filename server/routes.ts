@@ -2195,17 +2195,22 @@ app.get("/api/health", (req, res) => {
             try {
               const language = req.query.lang as string || 'es';
 
-              // Obtener campaña activa
-              const campaignResult = await pool.query(`
-                SELECT * FROM marketing_campaigns 
-                WHERE is_active = true 
-                AND start_date <= NOW() 
-                AND (end_date IS NULL OR end_date >= NOW())
-                AND current_subscribers < max_subscribers
-                LIMIT 1
-              `);
-
-              const activeCampaign = campaignResult.rows[0];
+              // Obtener campaña activa (con fallback seguro)
+              let activeCampaign = null;
+              try {
+                const campaignResult = await pool.query(`
+                  SELECT * FROM marketing_campaigns 
+                  WHERE is_active = true 
+                  AND start_date <= NOW() 
+                  AND (end_date IS NULL OR end_date >= NOW())
+                  AND current_subscribers < max_subscribers
+                  LIMIT 1
+                `);
+                activeCampaign = campaignResult.rows[0];
+              } catch (error) {
+                console.log("Marketing campaigns table not available, skipping campaigns:", error.message);
+                activeCampaign = null;
+              }
 
               // Obtener los planes de precios de la base de datos
               const pricingPlans = await storage.getAvailablePricingPlans();
@@ -2214,12 +2219,17 @@ app.get("/api/health", (req, res) => {
 
               // Si hay campaña activa, aplicar descuentos
               if (activeCampaign) {
-                const discountsResult = await pool.query(`
-                  SELECT * FROM campaign_discounts 
-                  WHERE campaign_id = $1
-                `, [activeCampaign.id]);
-
-                const discounts = discountsResult.rows;
+                let discounts = [];
+                try {
+                  const discountsResult = await pool.query(`
+                    SELECT * FROM campaign_discounts 
+                    WHERE campaign_id = $1
+                  `, [activeCampaign.id]);
+                  discounts = discountsResult.rows;
+                } catch (error) {
+                  console.log("Campaign discounts table not available, skipping discounts:", error.message);
+                  discounts = [];
+                }
 
                 products = pricingPlans.map(plan => {
                   const discount = discounts.find(d => d.plan_id === plan.planId.toLowerCase());

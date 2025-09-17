@@ -1,0 +1,182 @@
+lucid-vision
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+Share
+
+
+
+
+
+
+
+
+Activity
+
+
+web
+Deployments
+Variables
+Metrics
+Settings
+aipps.ca
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+web
+/
+079d2771
+Active
+
+Sep 17, 2025, 11:23 AM
+aipps.ca
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+Filter and search logs
+
+{"message":"📊 Ejecutando migraciones de schema con drizzle-kit...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:33.833725683Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-17T15:24:33.833731515Z"}
+{"message":"No config path provided, using default 'drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:34.331181929Z"}
+{"message":"Reading config file '/app/drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:34.336639467Z"}
+{"message":"Using 'pg' driver for database querying","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.093958876Z"}
+{"message":"[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.257627511Z"}
+{"message":"\u001b[2K\u001b[1G[⣯] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.384523253Z"}
+{"message":"\u001b[2K\u001b[1G[⣟] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.508357172Z"}
+{"message":"\u001b[2K\u001b[1G[⡿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.635360668Z"}
+{"message":"\u001b[2K\u001b[1G[⢿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.766391355Z"}
+{"message":"\u001b[2K\u001b[1G[⣻] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:35.894270816Z"}
+{"message":"\u001b[2K\u001b[1G[⣽] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.034165901Z"}
+{"message":"\u001b[2K\u001b[1G[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.155119122Z"}
+{"message":"\u001b[2K\u001b[1G[⣯] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.279245716Z"}
+{"message":"\u001b[2K\u001b[1G[✓] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.340608397Z"}
+{"message":"\u001b[?25l","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.389960133Z"}
+{"message":"Is currency column in user_budgets table created or renamed from another column?","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.389966032Z"}
+{"message":"❯ + currency                         create column","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.389972056Z"}
+{"message":"  ~ billing_cycle_start › currency   rename column","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.389977816Z"}
+{"message":"  ~ billing_cycle_end › currency     rename column","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.389983497Z"}
+{"message":"  ~ budget_alerts_enabled › currency rename column","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:36.389989448Z"}
+{"message":"  ~ alert_threshold › currency       rename column✅ Migraciones de schema completadas","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396165023Z"}
+{"message":"🏗️  Configurando datos iniciales de AIPI...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396170470Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-17T15:24:56.396175945Z"}
+{"message":"🏗️  Configurando base de datos inicial para Railway...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396182539Z"}
+{"message":"🔌 Conectando a la base de datos Railway PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396188598Z"}
+{"message":"✅ Conexión a base de datos establecida","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396193640Z"}
+{"message":"👤 Usuario administrador ya existe","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396199035Z"}
+{"message":"👤 Usuario Pablo ya existe","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396204329Z"}
+{"message":"💰 Verificando planes de precios...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396209756Z"}
+{"message":"⚠️  No se pudieron crear planes de precios (tabla puede no existir aún): column \"updated_at\" does not exist","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396214442Z"}
+{"message":"💬 Verificando mensajes de bienvenida...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396219630Z"}
+{"message":"💬 Mensajes de bienvenida ya existen","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396226761Z"}
+{"message":"🎉 Configuración de base de datos completada exitosamente!","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396233333Z"}
+{"message":"📊 Base de datos Railway lista para producción","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396238264Z"}
+{"message":"La base de datos está lista para usar.","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396244110Z"}
+{"message":"✅ Configuración de base de datos completada exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396249523Z"}
+{"message":"✅ En Railway - Datos críticos ya configurados en setup-railway-db.js","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396254976Z"}
+{"message":"✅ Usuario Pablo y admin ya creados exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396260308Z"}
+{"message":"✅ Saltando migración local - no necesaria en Railway","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396266531Z"}
+{"message":"✅ Migración de datos completada","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396283376Z"}
+{"message":"🌐 Iniciando servidor AIPI en producción...","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396290566Z"}
+{"message":"📡 Puerto: 5000","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396295887Z"}
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396357449Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396362344Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-17T15:24:56.396366771Z"}
+{"message":"Usando APP_URL: https://aipps.ca/api/auth/google-calendar/callback","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396371290Z"}
+{"message":"Sirviendo archivos estáticos desde: /app/public/static","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396375847Z"}
+{"message":"(node:115) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","attributes":{"level":"error"},"timestamp":"2025-09-17T15:24:56.396380326Z"}
+{"message":"(Use `node --trace-deprecation ...` to show where the warning was created)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:24:56.396385305Z"}
+{"message":"3:24:51 PM [express] Server running at http://0.0.0.0:5000","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396389812Z"}
+{"message":"3:24:52 PM [express] GET /api/health 200 in 5ms :: {\"status\":\"healthy\",\"timestamp\":\"2025-09-17T15:24…","attributes":{"level":"info"},"timestamp":"2025-09-17T15:24:56.396393986Z"}
+{"message":"No se encontró token de autenticación","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405811675Z"}
+{"message":"Cookies disponibles: undefined","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405817829Z"}
+{"message":"Headers: {","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405824598Z"}
+{"message":"  host: 'aipps.ca',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405831326Z"}
+{"message":"  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405837626Z"}
+{"message":"  accept: '*/*',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405846475Z"}
+{"message":"  'accept-encoding': 'gzip, br',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405852459Z"}
+{"message":"  'accept-language': 'fr-CA,fr;q=0.9',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405857988Z"}
+{"message":"  'cdn-loop': 'cloudflare; loops=1',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405864394Z"}
+{"message":"  'cf-connecting-ip': '174.95.242.169',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405870800Z"}
+{"message":"  'cf-ipcountry': 'CA',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405876601Z"}
+{"message":"  'cf-ray': '98099dd02a538ce8-EWR',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405884158Z"}
+{"message":"  'cf-visitor': '{\"scheme\":\"https\"}',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405890988Z"}
+{"message":"  'content-type': 'application/json',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405898280Z"}
+{"message":"  cookie: 'i18next=fr-CA; __stripe_mid=c010baf7-4963-432f-96d2-e7cde7a0edcc46dee2; __stripe_sid=dc5b7381-4698-491d-9119-0baf32ca0ec289b9dc',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405904058Z"}
+{"message":"  priority: 'u=1, i',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405909968Z"}
+{"message":"  referer: 'https://aipps.ca/pricing',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405916495Z"}
+{"message":"  'sec-ch-ua': '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Google Chrome\";v=\"140\"',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405922505Z"}
+{"message":"  'sec-ch-ua-mobile': '?0',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405928050Z"}
+{"message":"  'sec-ch-ua-platform': '\"Windows\"',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405934331Z"}
+{"message":"  'sec-fetch-dest': 'empty',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405940820Z"}
+{"message":"  'sec-fetch-mode': 'cors',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405946434Z"}
+{"message":"  'sec-fetch-site': 'same-origin',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405952139Z"}
+{"message":"  'x-forwarded-for': '174.95.242.169, 172.70.114.12',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405958240Z"}
+{"message":"  'x-forwarded-host': 'aipps.ca',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405963987Z"}
+{"message":"  'x-forwarded-proto': 'https',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405970131Z"}
+{"message":"  'x-railway-edge': 'railway/us-east4-eqdc4a',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405976032Z"}
+{"message":"  'x-railway-request-id': '5OoUJ2kqSu6Oa1s3ozsQ6Q',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405982059Z"}
+{"message":"  'x-real-ip': '172.70.114.12',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405987633Z"}
+{"message":"  'x-request-start': '1758122728995'","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.405993485Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406003165Z"}
+{"message":"3:25:28 PM [express] GET /api/user-session 401 in 2ms :: {\"message\":\"Authentication required\"}","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406009395Z"}
+{"message":"🔍 AIPPS Auth Status: {","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406015139Z"}
+{"message":"  isAuthenticated: false,","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406021760Z"}
+{"message":"  authMethod: 'none',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406027632Z"}
+{"message":"  sessionID: 'XY_qeNObJsX33s_h6H_1F7HVgavckTFn',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406033084Z"}
+{"message":"  timestamp: '2025-09-17T15:25:28.999Z',","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406039339Z"}
+{"message":"  userId: null,","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406045533Z"}
+{"message":"  username: null","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406051333Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406056962Z"}
+{"message":"3:25:29 PM [express] GET /api/auth-status 200 in 5ms :: {\"isAuthenticated\":false,\"authMethod\":\"none\"…","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406062463Z"}
+{"message":"Error obteniendo planes: PostgresError: column \"updated_at\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406067962Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406073573Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406080027Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406085781Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406092947Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406098639Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406104230Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406109928Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406115658Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406121247Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406127117Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406132698Z"}
+{"message":"  hint: 'Perhaps you meant to reference the column \"pricing_plans.created_at\".',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406139323Z"}
+{"message":"  position: '243',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406145264Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406150579Z"}
+{"message":"  line: '3723',","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406156361Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406161878Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-17T15:25:36.406169230Z"}
+{"message":"3:25:29 PM [express] GET /api/pricing/plans 500 in 150ms :: {\"message\":\"Error obteniendo planes de p…","attributes":{"level":"info"},"timestamp":"2025-09-17T15:25:36.406175695Z"}
+
+
+web | Railway
+20
