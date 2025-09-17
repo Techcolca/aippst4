@@ -16,7 +16,7 @@ import {
   subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments,
   calendarTokens, widgetUsers, widgetTokens
 } from "@shared/schema";
-import { eq, and, inArray } from 'drizzle-orm';
+import { eq, and, inArray, sql } from 'drizzle-orm';
 
 // Initialize PostgreSQL client
 const connectionString = process.env.DATABASE_URL;
@@ -878,7 +878,16 @@ export class PgStorage implements IStorage {
   async getAvailablePricingPlans(): Promise<PricingPlan[]> {
     return await db.select()
       .from(pricingPlans)
-      .where(eq(pricingPlans.available, true));
+      .where(eq(pricingPlans.available, true))
+      .orderBy(
+        sql`CASE 
+          WHEN ${pricingPlans.planId} = 'free' THEN 1
+          WHEN ${pricingPlans.planId} = 'startup' THEN 2  
+          WHEN ${pricingPlans.planId} = 'pro' THEN 3
+          WHEN ${pricingPlans.planId} = 'enterprise' THEN 4
+          ELSE 5 
+        END`
+      );
   }
 
   async getPricingPlan(id: number): Promise<PricingPlan | undefined> {

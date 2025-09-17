@@ -2147,8 +2147,12 @@ app.get("/api/health", (req, res) => {
           // Obtener los planes disponibles con promociones activas
           app.get("/api/pricing/plans", async (req, res) => {
             try {
-              const language = req.query.lang as string || 'es';
-
+              // Extraer idioma de forma segura con whitelist
+              const requestedLang = req.query.lang as string;
+              const language = typeof requestedLang === 'string' && ['en','es','fr'].includes(requestedLang) 
+                ? requestedLang 
+                : (req.headers['accept-language']?.slice(0,2) ?? 'es');
+              
               // Obtener campaña activa (con fallback seguro)
               let activeCampaign = null;
               try {
@@ -2198,7 +2202,7 @@ app.get("/api/health", (req, res) => {
                     price: plan.price,
                     currency: plan.currency || "usd",
                     interval: plan.interval,
-                    features: Array.isArray(plan.features) ? plan.features : [],
+                    features: translatedInfo.features,
                     tier: plan.tier,
                     interactionsLimit: plan.interactionsLimit,
                     isAnnual: false,
@@ -2229,7 +2233,7 @@ app.get("/api/health", (req, res) => {
                       : Math.round(annualPrice * 0.85), // 15% descuento estándar anual
                     currency: plan.currency || "usd",
                     interval: 'year',
-                    features: Array.isArray(plan.features) ? plan.features : [],
+                    features: translatedInfo.features,
                     tier: plan.tier,
                     interactionsLimit: plan.interactionsLimit,
                     originalPrice: annualPrice,
@@ -2251,10 +2255,13 @@ app.get("/api/health", (req, res) => {
                   return planVariants;
                 });
               } else {
-                // Sin campaña activa, transformar planes normalmente usando los planes reales de la DB
-                products = pricingPlans.map(plan => {
+                // Sin campaña activa, generar planes mensuales y anuales
+                products = pricingPlans.flatMap(plan => {
                   const translatedInfo = getTranslatedPlanInfo(plan.planId.toLowerCase(), language);
-                  return {
+                  const planVariants = [];
+
+                  // Plan mensual
+                  const monthlyPlan = {
                     id: plan.planId.toLowerCase(),
                     name: plan.name,
                     description: translatedInfo.description,
@@ -2262,12 +2269,42 @@ app.get("/api/health", (req, res) => {
                     priceDisplay: plan.priceDisplay || `$${plan.price}/${plan.interval === 'year' ? 'año' : 'mes'}`,
                     currency: plan.currency || "usd",
                     interval: plan.interval,
-                    features: Array.isArray(plan.features) ? plan.features : [],
+                    features: translatedInfo.features,
                     tier: plan.tier,
                     interactionsLimit: plan.interactionsLimit,
-                    isAnnual: plan.interval === 'year',
-                    discount: 0
+                    isAnnual: false,
+                    discount: 0,
+                    originalPrice: plan.price,
+                    promotionalPrice: plan.price
                   };
+
+                  planVariants.push(monthlyPlan);
+
+                  // Plan anual (15% descuento estándar)
+                  const annualPrice = plan.price * 12;
+                  const annualDiscountedPrice = Math.round(annualPrice * 0.85);
+                  const annualPlan = {
+                    id: plan.planId.toLowerCase() + '_annual',
+                    name: plan.name,
+                    description: translatedInfo.description,
+                    price: annualDiscountedPrice,
+                    priceDisplay: plan.planId.toLowerCase() === 'enterprise' 
+                      ? 'Contactar' 
+                      : `$${Math.round(annualDiscountedPrice / 100)}/año`,
+                    currency: plan.currency || "usd",
+                    interval: 'year',
+                    features: translatedInfo.features,
+                    tier: plan.tier,
+                    interactionsLimit: plan.interactionsLimit,
+                    isAnnual: true,
+                    discount: 15,
+                    originalPrice: annualPrice,
+                    promotionalPrice: annualDiscountedPrice
+                  };
+
+                  planVariants.push(annualPlan);
+                  
+                  return planVariants;
                 });
               }
 
