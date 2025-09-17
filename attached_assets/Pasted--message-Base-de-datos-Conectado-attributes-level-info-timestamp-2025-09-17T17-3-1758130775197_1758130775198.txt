@@ -1,0 +1,93 @@
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-17T17:36:48.419015757Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-17T17:36:48.419020968Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-17T17:36:48.419026767Z"}
+{"message":"Usando APP_URL: https://aipps.ca/api/auth/google-calendar/callback","attributes":{"level":"info"},"timestamp":"2025-09-17T17:36:48.419031449Z"}
+{"message":"Sirviendo archivos estáticos desde: /app/public/static","attributes":{"level":"info"},"timestamp":"2025-09-17T17:36:48.419036493Z"}
+{"message":"(node:121) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.","attributes":{"level":"error"},"timestamp":"2025-09-17T17:36:48.419040946Z"}
+{"message":"(Use `node --trace-deprecation ...` to show where the warning was created)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:36:48.419046639Z"}
+{"message":"5:36:43 PM [express] Server running at http://0.0.0.0:5000","attributes":{"level":"info"},"timestamp":"2025-09-17T17:36:48.419052852Z"}
+{"message":"5:36:45 PM [express] GET /api/health 200 in 5ms :: {\"status\":\"healthy\",\"timestamp\":\"2025-09-17T17:36…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:36:48.419058059Z"}
+{"message":"Error obteniendo planes: PostgresError: column \"updated_at\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465912124Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465923573Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465930236Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465936138Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465979638Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465987701Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.465994491Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466000256Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466006282Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466014931Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466022321Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466030562Z"}
+{"message":"  hint: 'Perhaps you meant to reference the column \"pricing_plans.created_at\".',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466037331Z"}
+{"message":"  position: '243',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466043390Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466049734Z"}
+{"message":"  line: '3723',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466055596Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466062967Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-17T17:38:28.466070493Z"}
+{"message":"5:38:23 PM [express] GET /api/pricing/plans 500 in 145ms :: {\"message\":\"Error obteniendo planes de p…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:38:28.466077945Z"}
+{"message":"🔍 AIPPS Auth Status: {","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469774589Z"}
+{"message":"  isAuthenticated: false,","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469782403Z"}
+{"message":"  authMethod: 'none',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469788880Z"}
+{"message":"  sessionID: 'csqDfL7rBkPklvERtMozChwsucaB5mm5',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469795045Z"}
+{"message":"  timestamp: '2025-09-17T17:39:01.353Z',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469801599Z"}
+{"message":"  userId: null,","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469807296Z"}
+{"message":"  username: null","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469813010Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469818721Z"}
+{"message":"5:39:01 PM [express] GET /api/auth-status 200 in 2ms :: {\"isAuthenticated\":false,\"authMethod\":\"none\"…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469824762Z"}
+{"message":"No se encontró token de autenticación","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469832261Z"}
+{"message":"Cookies disponibles: undefined","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469839302Z"}
+{"message":"Headers: {","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469846612Z"}
+{"message":"  host: 'aipps.ca',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469852514Z"}
+{"message":"  'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469858080Z"}
+{"message":"  accept: '*/*',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469863795Z"}
+{"message":"  'accept-encoding': 'gzip, br',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469869543Z"}
+{"message":"  'accept-language': 'fr-CA,fr;q=0.9',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469877103Z"}
+{"message":"  'cache-control': 'no-cache',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469882905Z"}
+{"message":"  'cdn-loop': 'cloudflare; loops=1',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469888645Z"}
+{"message":"  'cf-connecting-ip': '174.95.242.169',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469894381Z"}
+{"message":"  'cf-ipcountry': 'CA',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469902546Z"}
+{"message":"  'cf-ray': '980a616d6c2b41d9-EWR',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469908751Z"}
+{"message":"  'cf-visitor': '{\"scheme\":\"https\"}',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469914690Z"}
+{"message":"  'content-type': 'application/json',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469920541Z"}
+{"message":"  cookie: 'i18next=fr-CA; __stripe_mid=c010baf7-4963-432f-96d2-e7cde7a0edcc46dee2; __stripe_sid=f6d742b2-8251-469f-9afb-a504410d7d0f7f0647; auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQsImlhdCI6MTc1ODEyODcyNCwiZXhwIjoxNzU4NzMzNTI0fQ.YVacpQDNvKsR2IWYGSdxUiRkilk_ce-spQUCOhp2Ano',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469927843Z"}
+{"message":"  pragma: 'no-cache',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469933243Z"}
+{"message":"  priority: 'u=1, i',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469938931Z"}
+{"message":"  referer: 'https://aipps.ca/pricing',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469944876Z"}
+{"message":"  'sec-ch-ua': '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Google Chrome\";v=\"140\"',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469986164Z"}
+{"message":"  'sec-ch-ua-mobile': '?0',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.469994060Z"}
+{"message":"  'sec-ch-ua-platform': '\"Windows\"',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470000343Z"}
+{"message":"  'sec-fetch-dest': 'empty',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470006979Z"}
+{"message":"  'sec-fetch-mode': 'cors',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470013727Z"}
+{"message":"  'sec-fetch-site': 'same-origin',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470020153Z"}
+{"message":"  'x-forwarded-for': '174.95.242.169, 162.158.158.243',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470025759Z"}
+{"message":"  'x-forwarded-host': 'aipps.ca',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470031453Z"}
+{"message":"  'x-forwarded-proto': 'https',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470037500Z"}
+{"message":"  'x-railway-edge': 'railway/us-east4-eqdc4a',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470043492Z"}
+{"message":"  'x-railway-request-id': '3BB7EqDAQ66Faax2g4a9AQ',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470049622Z"}
+{"message":"  'x-real-ip': '162.158.158.243',","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470055299Z"}
+{"message":"  'x-request-start': '1758130741351'","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470061022Z"}
+{"message":"}","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470067621Z"}
+{"message":"5:39:01 PM [express] GET /api/user-session 401 in 1ms :: {\"message\":\"Authentication required\"}","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470073280Z"}
+{"message":"Token verificado correctamente. ID de usuario: 4","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470078487Z"}
+{"message":"Usuario autenticado encontrado: Empresa","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470084063Z"}
+{"message":"5:39:01 PM [express] GET /api/auth/me 200 in 11ms :: {\"id\":4,\"username\":\"Empresa\",\"email\":\"perc80@ho…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470091074Z"}
+{"message":"Error obteniendo planes: PostgresError: column \"updated_at\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470096459Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470102181Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470107912Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470115146Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470123768Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470129788Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470137734Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470143424Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470149044Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470154171Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470159868Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470165770Z"}
+{"message":"  hint: 'Perhaps you meant to reference the column \"pricing_plans.created_at\".',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470171737Z"}
+{"message":"  position: '243',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470819509Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470829401Z"}
+{"message":"  line: '3723',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470837671Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470847870Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-17T17:39:08.470856793Z"}
+{"message":"5:39:01 PM [express] GET /api/pricing/plans 500 in 91ms :: {\"message\":\"Error obteniendo planes de pr…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:39:08.470867380Z"}
