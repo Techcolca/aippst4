@@ -223,8 +223,8 @@ export default function PricingPage() {
                           </div>
                         )}
                         <span className="text-3xl font-bold text-green-600 dark:text-green-400">
-                          {plan.price === 0 ? t('pricing.free') : 
-                           plan.id.includes('enterprise') ? `${t('pricing.from')} ${formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}` :
+                          {plan.price === 0 && !plan.id.includes('enterprise') ? t('pricing.free') : 
+                           plan.id.includes('enterprise') ? plan.priceDisplay || t('pricing.contact_us') :
                            formatCurrency(plan.promotionalPrice || plan.price, plan.currency)}
                         </span>
                         {plan.price > 0 && (
@@ -271,7 +271,7 @@ export default function PricingPage() {
                             ) : (plan.discount ?? 0) > 0 ? (
                               isAnnualPlan(plan) ? t('pricing.take_annual_offer') : t('pricing.take_offer')
                             ) : (
-                              plan.price === 0 ? t('pricing.start_free') : t('pricing.subscribe')
+                              plan.price === 0 && !plan.id.includes('enterprise') ? t('pricing.start_free') : t('pricing.subscribe')
                             )}
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </>
