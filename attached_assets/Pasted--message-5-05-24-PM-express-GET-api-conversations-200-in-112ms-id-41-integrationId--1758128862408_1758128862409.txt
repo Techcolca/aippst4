@@ -1,0 +1,21 @@
+"message":"5:05:24 PM [express] GET /api/conversations 200 in 112ms :: [{\"id\":41,\"integrationId\":3,\"visitorId\":…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:05:27.493257591Z"}
+{"message":"5:05:24 PM [express] GET /api/dashboard/stats 200 in 106ms :: {\"totalConversations\":41,\"resolutionRa…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:05:27.493263969Z"}
+{"message":"Error obteniendo planes: PostgresError: column \"updated_at\" does not exist","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493269938Z"}
+{"message":"    at ErrorResponse (file:///app/node_modules/postgres/src/connection.js:788:26)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493275871Z"}
+{"message":"    at handle (file:///app/node_modules/postgres/src/connection.js:474:6)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493281698Z"}
+{"message":"    at Socket.data (file:///app/node_modules/postgres/src/connection.js:315:9)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493287684Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493293949Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493299559Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493305537Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493310957Z"}
+{"message":"    at TCP.onStreamRead (node:internal/stream_base_commons:189:23) {","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493316384Z"}
+{"message":"  severity_local: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493322624Z"}
+{"message":"  severity: 'ERROR',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493328232Z"}
+{"message":"  code: '42703',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493333724Z"}
+{"message":"  hint: 'Perhaps you meant to reference the column \"pricing_plans.created_at\".',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493339713Z"}
+{"message":"  position: '243',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493345513Z"}
+{"message":"  file: 'parse_relation.c',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493352306Z"}
+{"message":"  line: '3723',","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493358379Z"}
+{"message":"  routine: 'errorMissingColumn'","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493364325Z"}
+{"message":"}","attributes":{"level":"error"},"timestamp":"2025-09-17T17:05:27.493370058Z"}
+{"message":"5:05:25 PM [express] GET /api/pricing/plans 500 in 24ms :: {\"message\":\"Error obteniendo planes de pr…","attributes":{"level":"info"},"timestamp":"2025-09-17T17:05:27.493376172Z"}
