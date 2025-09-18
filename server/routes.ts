@@ -2171,7 +2171,8 @@ app.get("/api/health", (req, res) => {
               }
 
               // Obtener los planes de precios de la base de datos
-              const pricingPlans = await storage.getAvailablePricingPlans();
+             const allPlans = await storage.getAvailablePricingPlans();
+             const pricingPlans = allPlans.filter(plan => !plan.isAnnual && plan.interval !== 'year');
 
               let products = [];
 
