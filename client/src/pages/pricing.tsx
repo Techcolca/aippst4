@@ -68,7 +68,7 @@ export default function PricingPage() {
     refetchOnReconnect: false   // No refetch al reconectar
   });
   
-  // Helper para detectar planes anuales (usando isAnnual o interval)
+  // Helper para detectar planes anuales
   const isAnnualPlan = (plan: PricingPlan) => 
     plan.isAnnual === true || plan.interval === 'year' || plan.id?.endsWith('_annual') || false;
 
