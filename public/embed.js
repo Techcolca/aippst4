@@ -474,15 +474,6 @@
       localStorage.setItem('aipi_visitor_id', 'visitor_' + Math.random().toString(36).substring(2, 15));
     }
 
-    // Helper function to ensure visitorId exists
-    function ensureVisitorId() {
-      let visitorId = localStorage.getItem('aipi_visitor_id');
-      if (!visitorId) {
-        visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
-        localStorage.setItem('aipi_visitor_id', visitorId);
-      }
-      return visitorId;
-    }
     config.visitorId = localStorage.getItem('aipi_visitor_id');
 
     // Debug: Log what we found
@@ -2488,6 +2479,16 @@ Contenido: [Error al extraer contenido detallado]
 
     // Scroll to bottom of messages
     scrollToBottom();
+  }
+
+  // Helper function to ensure visitorId exists
+  function ensureVisitorId() {
+    let visitorId = localStorage.getItem('aipi_visitor_id');
+    if (!visitorId) {
+      visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('aipi_visitor_id', visitorId);
+    }
+    return visitorId;
   }
 
   // Send a message
@@ -4908,3 +4909,4 @@ Contenido: [Error al extraer contenido detallado]
 // Final fix cache reload: 1758383975
 // Payload fix cache reload: 1758387814
 // Final visitorId fix: 1758387913
+// Scope fix complete: 1758407351
