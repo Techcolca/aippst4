@@ -727,7 +727,7 @@ app.get("/api/health", (req, res) => {
   });
 
   // Check if user can create a resource
-  app.get("/api/limits/check-resource/:resourceType", verifyToken, verifySubscription, async (req, res) => {
+  app.get("/api/limits/check-resource/:resourceType", verifyToken, async (req, res) => {
     try {
       if (!req.userId) {
         return res.status(401).json({ message: 'Usuario no autenticado' });
@@ -1200,7 +1200,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    app.post("/api/integrations", verifyToken, requireResourceLimit('integrations'), upload.array('documents'), async (req, res) => {
+    app.post("/api/integrations", verifyToken, requireBudgetCheck('integrations'), upload.array('documents'), async (req, res) => {
       try {
 
         // Comprobar si el usuario está tratando de crear una integración con el nombre restringido
