@@ -439,18 +439,20 @@
       if (domainMatch && domainMatch[0]) {
         config.serverUrl = domainMatch[0];
       } else {
-        // Hard fallback to the known Replit URL
-        config.serverUrl = "https://aipps.ca";
+        // Smart fallback - auto-detect environment
+        if (window.location.hostname.includes('replit.dev')) {
+          config.serverUrl = window.location.origin; // Use current Replit instance
+        } else {
+          config.serverUrl = "https://aipps.ca"; // Production fallback
+        }
       }
     }
 
-    // FORCE dashboard API URL override
+    // SMART dashboard API URL override - auto-detect environment
     if (window.location.href.includes('replit.dev') || window.location.hostname.includes('replit.dev')) {
-      config.serverUrl = "https://aipps.ca";
+      config.serverUrl = window.location.origin; // Use current Replit instance
       dashboardConfig.isDashboard = true;
-      dashboardConfig.apiBaseUrl = window.location.href.includes('replit.dev') 
-  ? "https://aipps.ca"
-  : null;
+      dashboardConfig.apiBaseUrl = window.location.origin; // Use current Replit for dashboard API
       
       // Force get auth token from dashboard context immediately
       try {
@@ -462,8 +464,8 @@
       } catch (e) {
         console.log('AIPPS Debug: Error accediendo localStorage:', e);
       }
-      // Force production URL override
-config.serverUrl = "https://aipps.ca";
+      // Smart URL override - already set to current Replit origin above
+      // config.serverUrl already set to window.location.origin
       console.log('AIPPS Debug: FORZANDO URL de dashboard:', config.serverUrl);
     }
 
@@ -4436,10 +4438,16 @@ Contenido: [Error al extraer contenido detallado]
   }
 
  function getApiBaseUrl() {
-  // Use production Railway URL
-  const productionUrl = 'https://aipps.ca';
-  console.log('AIPPS Debug: Usando URL de producción Railway:', productionUrl);
-  return productionUrl;
+  // Smart URL detection - use current environment
+  if (window.location.hostname.includes('replit.dev')) {
+    const currentUrl = window.location.origin;
+    console.log('AIPPS Debug: Usando URL de Replit actual:', currentUrl);
+    return currentUrl;
+  } else {
+    const productionUrl = 'https://aipps.ca';
+    console.log('AIPPS Debug: Usando URL de producción Railway:', productionUrl);
+    return productionUrl;
+  }
 }
 
   // Helper function to get authentication token
