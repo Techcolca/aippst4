@@ -3304,9 +3304,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -3351,9 +3352,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -3401,9 +3403,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -3452,9 +3455,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -3638,9 +3642,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -3890,9 +3895,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
@@ -4271,9 +4277,10 @@ app.get("/api/health", (req, res) => {
 
         // ⚡ SECURITY: Use database-backed auth validation
         let authResult;
+        let integration;
         try {
           authResult = await validateAuthForWidgetRequest(req);
-          const integration = authResult.integration;
+          integration = authResult.integration;
         } catch (error) {
           console.error('Widget auth validation error:', error);
           return res.status(401).json({ 
