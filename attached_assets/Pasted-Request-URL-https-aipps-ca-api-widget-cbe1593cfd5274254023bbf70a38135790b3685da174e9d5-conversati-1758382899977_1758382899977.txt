@@ -1,0 +1,87 @@
+Request URL
+https://aipps.ca/api/widget/cbe1593cfd5274254023bbf70a38135790b3685da174e9d5/conversations/user
+Request Method
+GET
+Status Code
+400 Bad Request
+Remote Address
+172.64.80.1:443
+Referrer Policy
+strict-origin-when-cross-origin
+access-control-allow-credentials
+true
+access-control-allow-headers
+Origin, X-Requested-With, Content-Type, Accept, x-api-key, Authorization, Cookie
+access-control-allow-methods
+GET, POST, PATCH, DELETE, OPTIONS, PUT
+access-control-allow-origin
+https://diosfiel.com
+alt-svc
+h3=":443"; ma=86400
+cf-cache-status
+DYNAMIC
+cf-ray
+982269305ae4cceb-YYZ
+content-length
+36
+content-type
+application/json; charset=utf-8
+date
+Sat, 20 Sep 2025 15:38:37 GMT
+etag
+W/"24-OeUtKEvM52qGCJq1hw8BZb/YOiU"
+nel
+{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+ratelimit
+"1000-in-15min"; r=988; t=504
+ratelimit-policy
+"1000-in-15min"; q=1000; w=900; pk=:NTA5YWVjMjQ3NDcz:
+report-to
+{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=p3V2QC7ZXrnwtPam6PHB3MyovKGYe61dBYlxLKSVz0bT0QvO4TQwrTO1UIhsHpjs0BrNuM%2Fo9s71MmU5z7YosGSOUZD9jQ%3D%3D"}]}
+
+server
+cloudflare
+x-powered-by
+Express
+x-railway-edge
+railway/us-east4-eqdc4a
+x-railway-request-id
+KruRE8jhQqKrK-ZoPvyhXg
+:authority
+aipps.ca
+:method
+GET
+:path
+/api/widget/cbe1593cfd5274254023bbf70a38135790b3685da174e9d5/conversations/user
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+es-ES,es;q=0.9
+authorization
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ5LCJpYXQiOjE3NTgzODI3MTcsImV4cCI6MTc1ODk4NzUxN30.ik25h_FHcct7q7eUNIJmHGJ3XRQX_C8jEWzeWduVC8o
+content-type
+application/json
+origin
+https://diosfiel.com
+priority
+u=1, i
+referer
+https://diosfiel.com/
+sec-ch-ua
+"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"
+sec-ch-ua-mobile
+?0
+sec-ch-ua-platform
+"Windows"
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+cross-site
+user-agent
+Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36

@@ -4438,16 +4438,9 @@ Contenido: [Error al extraer contenido detallado]
   }
 
  function getApiBaseUrl() {
-  // Smart URL detection - use current environment
-  if (window.location.hostname.includes('replit.dev')) {
-    const currentUrl = window.location.origin;
-    console.log('AIPPS Debug: Usando URL de Replit actual:', currentUrl);
-    return currentUrl;
-  } else {
-    const productionUrl = 'https://aipps.ca';
-    console.log('AIPPS Debug: Usando URL de producción Railway:', productionUrl);
-    return productionUrl;
-  }
+  // Use the same serverUrl detection logic as config
+  console.log('AIPPS Debug: getApiBaseUrl usando config.serverUrl:', config.serverUrl);
+  return config.serverUrl || 'https://aipps.ca';
 }
 
   // Helper function to get authentication token
@@ -4904,3 +4897,4 @@ Contenido: [Error al extraer contenido detallado]
   }
 })();
 // Cache buster: 1758382548
+// Force cache reload: 1758383015
