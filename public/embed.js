@@ -473,6 +473,16 @@
     if (!localStorage.getItem('aipi_visitor_id')) {
       localStorage.setItem('aipi_visitor_id', 'visitor_' + Math.random().toString(36).substring(2, 15));
     }
+
+    // Helper function to ensure visitorId exists
+    function ensureVisitorId() {
+      let visitorId = localStorage.getItem('aipi_visitor_id');
+      if (!visitorId) {
+        visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('aipi_visitor_id', visitorId);
+      }
+      return visitorId;
+    }
     config.visitorId = localStorage.getItem('aipi_visitor_id');
 
     // Debug: Log what we found
@@ -2543,9 +2553,9 @@ Contenido: [Error al extraer contenido detallado]
           },
           body: JSON.stringify({
             message: message,
+            visitorId: ensureVisitorId(),
             currentUrl: window.location.href,
-            pageTitle: pageTitle || document.title,
-            pageContent: currentPageContent
+            pageTitle: pageTitle || document.title
           }),
         });
       }
@@ -4896,3 +4906,5 @@ Contenido: [Error al extraer contenido detallado]
 // Cache buster: 1758382548
 // Force cache reload: 1758383015
 // Final fix cache reload: 1758383975
+// Payload fix cache reload: 1758387814
+// Final visitorId fix: 1758387913
