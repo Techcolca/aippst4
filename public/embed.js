@@ -2534,21 +2534,18 @@ Contenido: [Error al extraer contenido detallado]
           }),
         });
       } else {
-        // Anonymous bubble mode
-        response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/message`, {
+        // Anonymous bubble mode - use correct conversation endpoint
+        const conversationId = config.conversationId || currentConversationId;
+        response = await fetch(`${config.serverUrl}/api/widget/${config.apiKey}/conversation/${conversationId}/send`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            conversationId: config.conversationId,
-            content: message,
-            role: 'user',
-            pageContext: {
-              title: pageTitle || document.title,
-              url: window.location.href,
-              content: currentPageContent
-            }
+            message: message,
+            currentUrl: window.location.href,
+            pageTitle: pageTitle || document.title,
+            pageContent: currentPageContent
           }),
         });
       }
@@ -2597,9 +2594,9 @@ Contenido: [Error al extraer contenido detallado]
           addMessage("Recibí tu mensaje, pero no pude generar una respuesta en este momento.", 'assistant');
         }
       } else {
-        // Anonymous bubble mode response
-        if (data.aiMessage) {
-          addMessage(data.aiMessage.content, 'assistant');
+        // Anonymous bubble mode response - updated format
+        if (data.response || data.message) {
+          addMessage(data.response || data.message, 'assistant');
         } else {
           // Show message based on user language
           const userLang = navigator.language.split('-')[0];
@@ -4898,3 +4895,4 @@ Contenido: [Error al extraer contenido detallado]
 })();
 // Cache buster: 1758382548
 // Force cache reload: 1758383015
+// Final fix cache reload: 1758383975
