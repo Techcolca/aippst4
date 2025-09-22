@@ -131,7 +131,7 @@ export const automationAnalysisRequests = pgTable("automation_analysis_requests"
   existingSystems: text("existing_systems"), // Current tools and systems they use
   budgetRange: text("budget_range"), // Expected investment range
   timeline: text("timeline"), // When they want to implement
-  technicalTeam: boolean("technical_team").default(false), // Do they have technical team
+  technicalTeam: text("technical_team"), // Technical team situation (yes-full-team, yes-limited-team, no-team, external-help)
   previousAutomation: text("previous_automation"), // Experience with automation tools
   priorityLevel: text("priority_level").default("medium"), // low, medium, high, urgent
   estimatedTimeSavings: integer("estimated_time_savings"), // Hours per week estimated
@@ -160,6 +160,8 @@ export const insertAutomationAnalysisRequestSchema = createInsertSchema(automati
   technicalTeam: true,
   previousAutomation: true,
   priorityLevel: true,
+}).extend({
+  technicalTeam: z.enum(["yes-full-team", "yes-limited-team", "no-team", "external-help"]),
 });
 
 // Schema for user updates (excludes internal/admin fields)

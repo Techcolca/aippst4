@@ -51,7 +51,7 @@ const formSchema = z.object({
   existingSystems: z.string().optional(),
   budgetRange: z.string().min(1, "Please select a budget range"),
   timeline: z.string().min(1, "Please select a timeline"),
-  technicalTeam: z.string().min(1, "Please select an option"),
+  technicalTeam: z.enum(["yes-full-team", "yes-limited-team", "no-team", "external-help"]),
   previousAutomation: z.string().min(1, "Please select an option"),
   priorityLevel: z.string().min(1, "Please select priority level"),
 });
