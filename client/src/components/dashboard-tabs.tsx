@@ -536,8 +536,8 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
 
         <div className="flex justify-end mb-4">
           <FeatureRestrictedButton 
-            feature="basicAutomations"
-            onAccessGranted={() => setLocation("/automations/create")}
+            feature="advancedAnalytics"
+            onAccessGranted={() => setLocation("/automation-analysis")}
           >
             {t("create_automation", "Create Automation")}
           </FeatureRestrictedButton>
@@ -591,8 +591,8 @@ export default function DashboardTabs({ initialTab = "integrations" }: Dashboard
               {t("automations_empty_message", "Create your first automation to streamline repetitive tasks with AI")}
             </p>
             <FeatureRestrictedButton 
-              feature="basicAutomations"
-              onAccessGranted={() => setLocation("/automations/create")}
+              feature="advancedAnalytics"
+              onAccessGranted={() => setLocation("/automation-analysis")}
               variant="default" 
               className="w-full sm:w-auto px-8"
             >

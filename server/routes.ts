@@ -1194,11 +1194,11 @@ app.get("/api/health", (req, res) => {
   // Enterprise feature check middleware for automation analysis
   const checkEnterpriseAccess = async (req: any, res: any, next: any) => {
     try {
-      const hasAccess = await checkFeatureAccess(req.userId, 'automation_analysis');
+      const hasAccess = await checkFeatureAccess(req.userId, 'advancedAnalytics');
       if (!hasAccess) {
         return res.status(403).json({ 
           message: "This feature requires an Enterprise plan",
-          featureRequired: "automation_analysis"
+          featureRequired: "advancedAnalytics"
         });
       }
       next();

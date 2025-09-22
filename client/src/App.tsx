@@ -35,6 +35,7 @@ import IntegrationConversations from "@/pages/integration-conversations";
 import IntegrationAnalytics from "@/pages/integration-analytics";
 import SettingsEdit from "@/pages/settings-edit";
 import DebugEnvironment from "@/pages/debug-environment";
+import AutomationAnalysis from "@/pages/automation-analysis";
 import { ThemeProvider } from "@/context/theme-context";
 import { AuthProvider } from "@/context/auth-context";
 import { ProfileProvider } from "@/context/profile-context";
@@ -76,6 +77,7 @@ function Router() {
       <Route path="/conversations/:id" component={ConversationDetails} />
       <Route path="/settings/edit" component={SettingsEdit} />
       <Route path="/debug/environment" component={DebugEnvironment} />
+      <Route path="/automation-analysis" component={AutomationAnalysis} />
       <Route path="/google-calendar-instructions">
         <Suspense fallback={<div className="container mx-auto py-10 flex items-center justify-center">
           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
