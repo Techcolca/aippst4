@@ -116,6 +116,80 @@ export const insertAutomationSchema = createInsertSchema(automations).pick({
   config: true,
 });
 
+// Automation analysis requests schema - For Enterprise plan users
+export const automationAnalysisRequests = pgTable("automation_analysis_requests", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  companyName: text("company_name").notNull(),
+  contactName: text("contact_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  industry: text("industry"),
+  companySize: text("company_size"), // small, medium, large, enterprise
+  currentProcesses: text("current_processes").notNull(), // Description of current manual processes
+  automationGoals: text("automation_goals").notNull(), // What they want to automate
+  existingSystems: text("existing_systems"), // Current tools and systems they use
+  budgetRange: text("budget_range"), // Expected investment range
+  timeline: text("timeline"), // When they want to implement
+  technicalTeam: boolean("technical_team").default(false), // Do they have technical team
+  previousAutomation: text("previous_automation"), // Experience with automation tools
+  priorityLevel: text("priority_level").default("medium"), // low, medium, high, urgent
+  estimatedTimeSavings: integer("estimated_time_savings"), // Hours per week estimated
+  estimatedCostSavings: integer("estimated_cost_savings"), // CAD per month estimated
+  recommendedApproach: text("recommended_approach"), // Our recommendation: native vs n8n/make
+  analysisStatus: text("analysis_status").default("pending"), // pending, in_review, analyzed, contacted, quoted
+  analysisNotes: text("analysis_notes"), // Internal notes from analysis
+  followUpDate: timestamp("follow_up_date"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertAutomationAnalysisRequestSchema = createInsertSchema(automationAnalysisRequests).pick({
+  userId: true,
+  companyName: true,
+  contactName: true,
+  email: true,
+  phone: true,
+  industry: true,
+  companySize: true,
+  currentProcesses: true,
+  automationGoals: true,
+  existingSystems: true,
+  budgetRange: true,
+  timeline: true,
+  technicalTeam: true,
+  previousAutomation: true,
+  priorityLevel: true,
+});
+
+// Schema for user updates (excludes internal/admin fields)
+export const updateAutomationAnalysisRequestUserSchema = createInsertSchema(automationAnalysisRequests).pick({
+  companyName: true,
+  contactName: true,
+  email: true,
+  phone: true,
+  industry: true,
+  companySize: true,
+  currentProcesses: true,
+  automationGoals: true,
+  existingSystems: true,
+  budgetRange: true,
+  timeline: true,
+  technicalTeam: true,
+  previousAutomation: true,
+  priorityLevel: true,
+}).partial();
+
+// Schema for admin/internal updates (includes analysis fields)
+export const updateAutomationAnalysisRequestAdminSchema = createInsertSchema(automationAnalysisRequests).pick({
+  estimatedTimeSavings: true,
+  estimatedCostSavings: true,
+  recommendedApproach: true,
+  analysisStatus: true,
+  analysisNotes: true,
+  followUpDate: true,
+}).partial();
+
 // Settings schema
 export const settings = pgTable("settings", {
   id: serial("id").primaryKey(),
@@ -161,6 +235,9 @@ export type InsertMessage = z.infer<typeof insertMessageSchema>;
 
 export type Automation = typeof automations.$inferSelect;
 export type InsertAutomation = z.infer<typeof insertAutomationSchema>;
+
+export type AutomationAnalysisRequest = typeof automationAnalysisRequests.$inferSelect;
+export type InsertAutomationAnalysisRequest = z.infer<typeof insertAutomationAnalysisRequestSchema>;
 
 export type Settings = typeof settings.$inferSelect;
 export type InsertSettings = z.infer<typeof insertSettingsSchema>;

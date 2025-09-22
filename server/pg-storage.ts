@@ -12,9 +12,10 @@ import {
   PricingPlan, InsertPricingPlan, Form, InsertForm, FormTemplate, InsertFormTemplate,
   FormResponse, InsertFormResponse, Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
   WidgetUser, InsertWidgetUser, WidgetToken, InsertWidgetToken,
+  AutomationAnalysisRequest, InsertAutomationAnalysisRequest,
   users, integrations, conversations, messages, automations, settings, sitesContent, 
   subscriptions, discountCodes, pricingPlans, forms, formTemplates, formResponses, appointments,
-  calendarTokens, widgetUsers, widgetTokens
+  calendarTokens, widgetUsers, widgetTokens, automationAnalysisRequests
 } from "@shared/schema";
 import { eq, and, inArray, sql } from 'drizzle-orm';
 
@@ -306,6 +307,35 @@ export class PgStorage implements IStorage {
       .set({ ...data, lastModified: now })
       .where(eq(automations.id, id))
       .returning();
+    return result[0];
+  }
+
+  // Automation Analysis Request methods
+  async getAutomationAnalysisRequests(userId: number): Promise<AutomationAnalysisRequest[]> {
+    return await db.select().from(automationAnalysisRequests).where(eq(automationAnalysisRequests.userId, userId));
+  }
+
+  async getAutomationAnalysisRequest(id: number): Promise<AutomationAnalysisRequest | undefined> {
+    const result = await db.select().from(automationAnalysisRequests).where(eq(automationAnalysisRequests.id, id)).limit(1);
+    return result[0];
+  }
+
+  async createAutomationAnalysisRequest(request: InsertAutomationAnalysisRequest): Promise<AutomationAnalysisRequest> {
+    const result = await db.insert(automationAnalysisRequests).values(request).returning();
+    return result[0];
+  }
+
+  async updateAutomationAnalysisRequest(id: number, data: Partial<AutomationAnalysisRequest>): Promise<AutomationAnalysisRequest> {
+    const now = new Date();
+    const result = await db.update(automationAnalysisRequests)
+      .set({ ...data, updatedAt: now })
+      .where(eq(automationAnalysisRequests.id, id))
+      .returning();
+    
+    if (result.length === 0) {
+      throw new Error(`Automation analysis request with id ${id} not found`);
+    }
+    
     return result[0];
   }
 

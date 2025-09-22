@@ -49,7 +49,7 @@ import {
 } from "./lib/aws-email";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema, welcomeMessages, forms } from "@shared/schema";
+import { insertUserSchema, insertIntegrationSchema, insertMessageSchema, insertSitesContentSchema, insertPricingPlanSchema, welcomeMessages, forms, automationAnalysisRequests, insertAutomationAnalysisRequestSchema, updateAutomationAnalysisRequestUserSchema, updateAutomationAnalysisRequestAdminSchema, type AutomationAnalysisRequest, type InsertAutomationAnalysisRequest } from "@shared/schema";
 import cookieParser from "cookie-parser";
 import OpenAI from 'openai';
 import { and, eq, gt } from "drizzle-orm";
@@ -1189,6 +1189,166 @@ app.get("/api/health", (req, res) => {
       res.status(400).json({ message: "Invalid automation data" });
     }
   });
+
+  // ================ Automation Analysis Request Routes ================
+  // Enterprise feature check middleware for automation analysis
+  const checkEnterpriseAccess = async (req: any, res: any, next: any) => {
+    try {
+      const hasAccess = await checkFeatureAccess(req.userId, 'automation_analysis');
+      if (!hasAccess) {
+        return res.status(403).json({ 
+          message: "This feature requires an Enterprise plan",
+          featureRequired: "automation_analysis"
+        });
+      }
+      next();
+    } catch (error) {
+      console.error("Enterprise access check error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+
+  // Get all automation analysis requests for current user
+  app.get("/api/automation-analysis-requests", authenticateJWT, checkEnterpriseAccess, async (req, res) => {
+    try {
+      const requests = await storage.getAutomationAnalysisRequests(req.userId);
+      res.json(requests);
+    } catch (error) {
+      console.error("Get automation analysis requests error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Create new automation analysis request
+  app.post("/api/automation-analysis-requests", authenticateJWT, checkEnterpriseAccess, async (req, res) => {
+    try {
+      // Parse only client-provided fields, ignore userId from body
+      const clientSchema = insertAutomationAnalysisRequestSchema.omit({ userId: true });
+      const bodyData = clientSchema.parse(req.body);
+      
+      const validatedData = {
+        ...bodyData,
+        userId: req.userId, // Always use authenticated user ID
+      };
+
+      const request = await storage.createAutomationAnalysisRequest(validatedData);
+      res.status(201).json(request);
+    } catch (error) {
+      console.error("Create automation analysis request error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid request data", 
+          errors: error.errors 
+        });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Get specific automation analysis request
+  app.get("/api/automation-analysis-requests/:id", authenticateJWT, checkEnterpriseAccess, async (req, res) => {
+    try {
+      const requestId = parseInt(req.params.id);
+      if (isNaN(requestId)) {
+        return res.status(400).json({ message: "Invalid request ID" });
+      }
+
+      const request = await storage.getAutomationAnalysisRequest(requestId);
+      
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      // Verify ownership
+      if (request.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized access" });
+      }
+
+      res.json(request);
+    } catch (error) {
+      console.error("Get automation analysis request error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // Update automation analysis request (user can only update their own basic fields)
+  app.put("/api/automation-analysis-requests/:id", authenticateJWT, checkEnterpriseAccess, async (req, res) => {
+    try {
+      const requestId = parseInt(req.params.id);
+      if (isNaN(requestId)) {
+        return res.status(400).json({ message: "Invalid request ID" });
+      }
+
+      const request = await storage.getAutomationAnalysisRequest(requestId);
+      
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      // Verify ownership
+      if (request.userId !== req.userId) {
+        return res.status(403).json({ message: "Unauthorized access" });
+      }
+
+      // Users can only update basic info, not internal analysis fields
+      const validatedData = updateAutomationAnalysisRequestUserSchema.parse(req.body);
+      const updatedRequest = await storage.updateAutomationAnalysisRequest(requestId, validatedData);
+      
+      if (!updatedRequest) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      res.json(updatedRequest);
+    } catch (error) {
+      console.error("Update automation analysis request error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid update data", 
+          errors: error.errors 
+        });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
+  // Admin-only route for internal analysis updates (separate endpoint for security)
+  app.put("/api/automation-analysis-requests/:id/internal", authenticateJWT, authIsAdmin, async (req, res) => {
+    try {
+      const requestId = parseInt(req.params.id);
+      if (isNaN(requestId)) {
+        return res.status(400).json({ message: "Invalid request ID" });
+      }
+
+      const request = await storage.getAutomationAnalysisRequest(requestId);
+      
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      // Admins can update internal analysis fields
+      const validatedData = updateAutomationAnalysisRequestAdminSchema.parse(req.body);
+      const updatedRequest = await storage.updateAutomationAnalysisRequest(requestId, validatedData);
+      
+      if (!updatedRequest) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      res.json(updatedRequest);
+    } catch (error) {
+      console.error("Update automation analysis request (admin) error:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ 
+          message: "Invalid update data", 
+          errors: error.errors 
+        });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+
    // ================ Integration Routes ================
     app.get("/api/integrations", verifyToken, async (req, res) => {
       try {

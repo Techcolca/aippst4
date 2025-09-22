@@ -7,7 +7,8 @@ import {
   DiscountCode, InsertDiscountCode, PricingPlan, InsertPricingPlan,
   Form, InsertForm, FormTemplate, InsertFormTemplate, FormResponse, InsertFormResponse,
   Appointment, InsertAppointment, CalendarToken, InsertCalendarToken,
-  WidgetUser, InsertWidgetUser, WidgetToken, InsertWidgetToken
+  WidgetUser, InsertWidgetUser, WidgetToken, InsertWidgetToken,
+  AutomationAnalysisRequest, InsertAutomationAnalysisRequest
 } from "@shared/schema";
 import { generateApiKey } from "./lib/utils";
 import fs from "fs";
@@ -63,6 +64,12 @@ export interface IStorage {
   getAutomation(id: number): Promise<Automation | undefined>;
   createAutomation(automation: InsertAutomation): Promise<Automation>;
   updateAutomation(id: number, data: Partial<Automation>): Promise<Automation>;
+
+  // Automation Analysis Request methods
+  getAutomationAnalysisRequests(userId: number): Promise<AutomationAnalysisRequest[]>;
+  getAutomationAnalysisRequest(id: number): Promise<AutomationAnalysisRequest | undefined>;
+  createAutomationAnalysisRequest(request: InsertAutomationAnalysisRequest): Promise<AutomationAnalysisRequest>;
+  updateAutomationAnalysisRequest(id: number, data: Partial<AutomationAnalysisRequest>): Promise<AutomationAnalysisRequest>;
 
   // Settings methods
   getSettings(userId: number): Promise<Settings>;
