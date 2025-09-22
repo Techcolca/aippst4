@@ -916,6 +916,204 @@ const resources = {
       "loginPage.failed_title": "Échec de la connexion",
       "loginPage.failed_message": "Nom d'utilisateur ou mot de passe incorrect",
       
+      // Automation Analysis
+      automation_analysis: {
+        // Navigation & Header
+        title: "Analyse d'Automatisation Entreprise",
+        subtitle: "Analyse professionnelle avant implémentation",
+        back_button: "Retour",
+        
+        // Tabs
+        tab_benefits: "Bénéfices & ROI",
+        tab_comparison: "Comparaison d'Outils",
+        tab_request: "Demander une Analyse",
+        
+        // Benefits & ROI Section
+        benefits_title: "Pourquoi l'Analyse est Essentielle",
+        benefits_subtitle: "Une analyse appropriée évite les échecs coûteux et maximise le ROI",
+        
+        benefits_planning_title: "Planification Stratégique",
+        benefits_planning_description: "Identifiez les processus optimaux à automatiser pour un impact maximal",
+        
+        benefits_cost_title: "Optimisation des Coûts",
+        benefits_cost_description: "Évitez les investissements inutiles et choisissez la meilleure solution",
+        
+        benefits_risk_title: "Réduction des Risques",
+        benefits_risk_description: "Minimisez les risques d'échec grâce à une analyse préalable approfondie",
+        
+        // ROI Calculator
+        roi_title: "Calculateur ROI en Temps Réel",
+        roi_subtitle: "Estimez vos économies potentielles avec l'automatisation",
+        
+        roi_hours_label: "Heures économisées par semaine",
+        roi_rate_label: "Taux horaire (CAD)",
+        roi_tool_cost_label: "Coût mensuel outil (CAD)",
+        roi_implementation_label: "Coût d'implémentation (CAD)",
+        
+        roi_annual_savings: "Économies Annuelles",
+        roi_tool_investment: "Investissement Outils",
+        roi_net_savings: "Économies Nettes",
+        roi_percentage: "ROI",
+        
+        roi_example_title: "Exemple d'Entreprise Canadienne",
+        roi_example_description: "Cabinet comptable automatisant la facturation",
+        roi_example_details: "20h/semaine économisées × 75$/h = 78,000$ d'économies annuelles",
+        
+        // Tool Comparison
+        comparison_title: "Comparaison Détaillée des Outils",
+        comparison_subtitle: "n8n vs Make vs Développement Sur Mesure",
+        
+        // n8n
+        n8n_title: "n8n (Open Source)",
+        n8n_price: "Gratuit - 20$ CAD/mois",
+        n8n_pros_title: "Avantages",
+        n8n_pro1: "Solution économique",
+        n8n_pro2: "Code source ouvert",
+        n8n_pro3: "Communauté active",
+        n8n_pro4: "Hébergement flexible",
+        n8n_cons_title: "Inconvénients",
+        n8n_con1: "Courbe d'apprentissage",
+        n8n_con2: "Interface moins intuitive",
+        n8n_con3: "Support limité",
+        n8n_ideal: "Idéal pour: Équipes techniques, budgets limités",
+        
+        // Make
+        make_title: "Make (ex-Integromat)",
+        make_price: "10$ - 300$ CAD/mois",
+        make_pros_title: "Avantages",
+        make_pro1: "Interface très intuitive",
+        make_pro2: "Nombreuses intégrations",
+        make_pro3: "Support professionnel",
+        make_pro4: "Templates préfaits",
+        make_cons_title: "Inconvénients",
+        make_con1: "Plus coûteux",
+        make_con2: "Limites d'opérations",
+        make_con3: "Dépendance au service",
+        make_ideal: "Idéal pour: PME, équipes non-techniques",
+        
+        // Custom Development
+        custom_title: "Développement Sur Mesure",
+        custom_price: "5,000$ - 50,000$ CAD",
+        custom_pros_title: "Avantages",
+        custom_pro1: "Solution parfaitement adaptée",
+        custom_pro2: "Contrôle total",
+        custom_pro3: "Évolutivité maximale",
+        custom_pro4: "Propriété intellectuelle",
+        custom_cons_title: "Inconvénients",
+        custom_con1: "Investissement initial élevé",
+        custom_con2: "Temps de développement long",
+        custom_con3: "Maintenance requise",
+        custom_ideal: "Idéal pour: Grandes entreprises, besoins complexes",
+        
+        // Analysis Request Form
+        form_title: "Demande d'Analyse Professionnelle",
+        form_subtitle: "Nos experts analyseront vos besoins et vous proposeront la meilleure stratégie",
+        form_alert: "Important: L'analyse appropriée avant l'implémentation évite 80% des échecs d'automatisation",
+        
+        // Company Information
+        company_info_title: "Informations Entreprise",
+        company_name_label: "Nom de l'entreprise",
+        company_name_placeholder: "Nom de votre entreprise",
+        contact_name_label: "Nom du contact",
+        contact_name_placeholder: "Votre nom complet",
+        email_label: "Email professionnel",
+        email_placeholder: "votre@entreprise.com",
+        phone_label: "Téléphone",
+        phone_placeholder: "+1 (xxx) xxx-xxxx",
+        
+        industry_label: "Secteur d'activité",
+        industry_placeholder: "Sélectionnez votre secteur",
+        industry_tech: "Technologie",
+        industry_finance: "Finance/Assurance",
+        industry_healthcare: "Santé",
+        industry_retail: "Commerce/Retail",
+        industry_manufacturing: "Fabrication",
+        industry_education: "Éducation",
+        industry_consulting: "Conseil",
+        industry_other: "Autre",
+        
+        company_size_label: "Taille de l'entreprise",
+        company_size_placeholder: "Nombre d'employés",
+        size_1_10: "1-10 employés",
+        size_11_50: "11-50 employés",
+        size_51_200: "51-200 employés",
+        size_201_1000: "201-1000 employés",
+        size_1000_plus: "1000+ employés",
+        
+        // Automation Requirements
+        automation_requirements_title: "Besoins d'Automatisation",
+        current_processes_label: "Processus actuels à automatiser",
+        current_processes_placeholder: "Décrivez en détail vos processus manuels répétitifs...",
+        current_processes_example: "Exemple: Traitement des commandes, facturation, gestion des stocks, communication client",
+        
+        automation_goals_label: "Objectifs d'automatisation",
+        automation_goals_placeholder: "Quels résultats souhaitez-vous obtenir...",
+        automation_goals_example: "Exemple: Réduire le temps de traitement de 70%, éliminer les erreurs humaines, améliorer la satisfaction client",
+        
+        existing_systems_label: "Systèmes existants (optionnel)",
+        existing_systems_placeholder: "CRM, ERP, outils actuels...",
+        existing_systems_example: "Exemple: Salesforce, QuickBooks, Shopify, Slack, Microsoft 365",
+        
+        // Project Details
+        project_details_title: "Détails du Projet",
+        budget_range_label: "Budget estimé",
+        budget_placeholder: "Sélectionnez votre budget",
+        budget_under_5k: "Moins de 5,000$ CAD",
+        budget_5k_15k: "5,000$ - 15,000$ CAD",
+        budget_15k_50k: "15,000$ - 50,000$ CAD",
+        budget_50k_plus: "50,000$+ CAD",
+        
+        timeline_label: "Délai souhaité",
+        timeline_placeholder: "Quand souhaitez-vous commencer?",
+        timeline_asap: "Dès que possible",
+        timeline_1_month: "Dans 1 mois",
+        timeline_3_months: "Dans 3 mois",
+        timeline_6_months: "Dans 6 mois",
+        timeline_planning: "Phase de planification",
+        
+        technical_team_label: "Équipe technique interne",
+        technical_team_placeholder: "Capacités techniques",
+        technical_team_none: "Aucune équipe technique",
+        technical_team_basic: "Compétences de base",
+        technical_team_intermediate: "Équipe intermédiaire",
+        technical_team_advanced: "Équipe technique avancée",
+        
+        previous_automation_label: "Expérience en automatisation",
+        previous_automation_placeholder: "Projets précédents",
+        previous_automation_none: "Aucune expérience",
+        previous_automation_basic: "Projets simples",
+        previous_automation_moderate: "Quelques projets réussis",
+        previous_automation_extensive: "Expérience approfondie",
+        
+        priority_level_label: "Niveau de priorité",
+        priority_placeholder: "Urgence du projet",
+        priority_low: "Faible - Exploration",
+        priority_medium: "Moyenne - Planifié",
+        priority_high: "Élevée - Urgent",
+        priority_critical: "Critique - Immédiat",
+        
+        // Submit Button
+        submit_button: "Demander l'Analyse Professionnelle",
+        submitting_button: "Envoi en cours...",
+        
+        // Success Messages
+        success_title: "Demande d'Analyse Soumise",
+        success_description: "Nos experts en automatisation examineront vos exigences et vous contacteront dans 24-48 heures.",
+        
+        // Error Messages
+        error_title: "Échec de la Soumission",
+        error_description: "Veuillez vérifier vos informations et réessayer.",
+        
+        // Industry Examples
+        examples_title: "Exemples par Secteur",
+        example_finance_title: "Finance - Automatisation des Rapports",
+        example_finance_description: "Génération automatique de rapports mensuels, réconciliation bancaire, suivi des KPI",
+        example_retail_title: "Commerce - Gestion des Commandes",
+        example_retail_description: "Traitement automatisé des commandes, mise à jour des stocks, notifications clients",
+        example_consulting_title: "Conseil - Facturation Automatisée",
+        example_consulting_description: "Suivi du temps, génération de factures, envoi automatique aux clients"
+      },
+      
       // Footer
       footer: {
         company_description: "Description de l'entreprise",
@@ -1848,6 +2046,204 @@ const resources = {
       "loginPage.failed_title": "Error de inicio de sesión",
       "loginPage.failed_message": "Usuario o contraseña incorrectos",
       
+      // Automation Analysis
+      automation_analysis: {
+        // Navigation & Header
+        title: "Análisis de Automatización Empresarial",
+        subtitle: "Análisis profesional antes de la implementación",
+        back_button: "Volver",
+        
+        // Tabs
+        tab_benefits: "Beneficios y ROI",
+        tab_comparison: "Comparación de Herramientas",
+        tab_request: "Solicitar Análisis",
+        
+        // Benefits & ROI Section
+        benefits_title: "Por Qué el Análisis es Esencial",
+        benefits_subtitle: "Un análisis adecuado evita fracasos costosos y maximiza el ROI",
+        
+        benefits_planning_title: "Planificación Estratégica",
+        benefits_planning_description: "Identifique los procesos óptimos para automatizar con máximo impacto",
+        
+        benefits_cost_title: "Optimización de Costos",
+        benefits_cost_description: "Evite inversiones innecesarias y elija la mejor solución",
+        
+        benefits_risk_title: "Reducción de Riesgos",
+        benefits_risk_description: "Minimice riesgos de fracaso mediante análisis previo exhaustivo",
+        
+        // ROI Calculator
+        roi_title: "Calculadora ROI en Tiempo Real",
+        roi_subtitle: "Estime sus ahorros potenciales con automatización",
+        
+        roi_hours_label: "Horas ahorradas por semana",
+        roi_rate_label: "Tarifa por hora (USD)",
+        roi_tool_cost_label: "Costo mensual herramienta (USD)",
+        roi_implementation_label: "Costo de implementación (USD)",
+        
+        roi_annual_savings: "Ahorros Anuales",
+        roi_tool_investment: "Inversión en Herramientas",
+        roi_net_savings: "Ahorros Netos",
+        roi_percentage: "ROI",
+        
+        roi_example_title: "Ejemplo de Empresa Mexicana",
+        roi_example_description: "Despacho contable automatizando facturación",
+        roi_example_details: "20h/semana ahorradas × $50 USD/h = $52,000 USD de ahorros anuales",
+        
+        // Tool Comparison
+        comparison_title: "Comparación Detallada de Herramientas",
+        comparison_subtitle: "n8n vs Make vs Desarrollo Personalizado",
+        
+        // n8n
+        n8n_title: "n8n (Código Abierto)",
+        n8n_price: "Gratis - $15 USD/mes",
+        n8n_pros_title: "Ventajas",
+        n8n_pro1: "Solución económica",
+        n8n_pro2: "Código fuente abierto",
+        n8n_pro3: "Comunidad activa",
+        n8n_pro4: "Hosting flexible",
+        n8n_cons_title: "Desventajas",
+        n8n_con1: "Curva de aprendizaje",
+        n8n_con2: "Interfaz menos intuitiva",
+        n8n_con3: "Soporte limitado",
+        n8n_ideal: "Ideal para: Equipos técnicos, presupuestos limitados",
+        
+        // Make
+        make_title: "Make (ex-Integromat)",
+        make_price: "$9 - $240 USD/mes",
+        make_pros_title: "Ventajas",
+        make_pro1: "Interfaz muy intuitiva",
+        make_pro2: "Muchas integraciones",
+        make_pro3: "Soporte profesional",
+        make_pro4: "Plantillas prediseñadas",
+        make_cons_title: "Desventajas",
+        make_con1: "Más costoso",
+        make_con2: "Límites de operaciones",
+        make_con3: "Dependencia del servicio",
+        make_ideal: "Ideal para: PyMEs, equipos no técnicos",
+        
+        // Custom Development
+        custom_title: "Desarrollo Personalizado",
+        custom_price: "$4,000 - $40,000 USD",
+        custom_pros_title: "Ventajas",
+        custom_pro1: "Solución perfectamente adaptada",
+        custom_pro2: "Control total",
+        custom_pro3: "Escalabilidad máxima",
+        custom_pro4: "Propiedad intelectual",
+        custom_cons_title: "Desventajas",
+        custom_con1: "Inversión inicial alta",
+        custom_con2: "Tiempo de desarrollo largo",
+        custom_con3: "Mantenimiento requerido",
+        custom_ideal: "Ideal para: Grandes empresas, necesidades complejas",
+        
+        // Analysis Request Form
+        form_title: "Solicitud de Análisis Profesional",
+        form_subtitle: "Nuestros expertos analizarán sus necesidades y propondrán la mejor estrategia",
+        form_alert: "Importante: El análisis adecuado antes de la implementación evita el 80% de fracasos en automatización",
+        
+        // Company Information
+        company_info_title: "Información de la Empresa",
+        company_name_label: "Nombre de la empresa",
+        company_name_placeholder: "Nombre de su empresa",
+        contact_name_label: "Nombre del contacto",
+        contact_name_placeholder: "Su nombre completo",
+        email_label: "Email empresarial",
+        email_placeholder: "su@empresa.com",
+        phone_label: "Teléfono",
+        phone_placeholder: "+52 (xxx) xxx-xxxx",
+        
+        industry_label: "Sector empresarial",
+        industry_placeholder: "Seleccione su sector",
+        industry_tech: "Tecnología",
+        industry_finance: "Finanzas/Seguros",
+        industry_healthcare: "Salud",
+        industry_retail: "Comercio/Retail",
+        industry_manufacturing: "Manufactura",
+        industry_education: "Educación",
+        industry_consulting: "Consultoría",
+        industry_other: "Otro",
+        
+        company_size_label: "Tamaño de la empresa",
+        company_size_placeholder: "Número de empleados",
+        size_1_10: "1-10 empleados",
+        size_11_50: "11-50 empleados",
+        size_51_200: "51-200 empleados",
+        size_201_1000: "201-1000 empleados",
+        size_1000_plus: "1000+ empleados",
+        
+        // Automation Requirements
+        automation_requirements_title: "Necesidades de Automatización",
+        current_processes_label: "Procesos actuales para automatizar",
+        current_processes_placeholder: "Describa en detalle sus procesos manuales repetitivos...",
+        current_processes_example: "Ejemplo: Procesamiento de pedidos, facturación, gestión de inventario, comunicación con clientes",
+        
+        automation_goals_label: "Objetivos de automatización",
+        automation_goals_placeholder: "¿Qué resultados desea obtener?",
+        automation_goals_example: "Ejemplo: Reducir tiempo de procesamiento 70%, eliminar errores humanos, mejorar satisfacción del cliente",
+        
+        existing_systems_label: "Sistemas existentes (opcional)",
+        existing_systems_placeholder: "CRM, ERP, herramientas actuales...",
+        existing_systems_example: "Ejemplo: Salesforce, QuickBooks, Shopify, Slack, Microsoft 365",
+        
+        // Project Details
+        project_details_title: "Detalles del Proyecto",
+        budget_range_label: "Presupuesto estimado",
+        budget_placeholder: "Seleccione su presupuesto",
+        budget_under_5k: "Menos de $4,000 USD",
+        budget_5k_15k: "$4,000 - $12,000 USD",
+        budget_15k_50k: "$12,000 - $40,000 USD",
+        budget_50k_plus: "$40,000+ USD",
+        
+        timeline_label: "Cronograma deseado",
+        timeline_placeholder: "¿Cuándo desea comenzar?",
+        timeline_asap: "Lo antes posible",
+        timeline_1_month: "En 1 mes",
+        timeline_3_months: "En 3 meses",
+        timeline_6_months: "En 6 meses",
+        timeline_planning: "Fase de planificación",
+        
+        technical_team_label: "Equipo técnico interno",
+        technical_team_placeholder: "Capacidades técnicas",
+        technical_team_none: "Sin equipo técnico",
+        technical_team_basic: "Habilidades básicas",
+        technical_team_intermediate: "Equipo intermedio",
+        technical_team_advanced: "Equipo técnico avanzado",
+        
+        previous_automation_label: "Experiencia en automatización",
+        previous_automation_placeholder: "Proyectos anteriores",
+        previous_automation_none: "Sin experiencia",
+        previous_automation_basic: "Proyectos simples",
+        previous_automation_moderate: "Algunos proyectos exitosos",
+        previous_automation_extensive: "Experiencia amplia",
+        
+        priority_level_label: "Nivel de prioridad",
+        priority_placeholder: "Urgencia del proyecto",
+        priority_low: "Baja - Exploración",
+        priority_medium: "Media - Planificado",
+        priority_high: "Alta - Urgente",
+        priority_critical: "Crítica - Inmediato",
+        
+        // Submit Button
+        submit_button: "Solicitar Análisis Profesional",
+        submitting_button: "Enviando...",
+        
+        // Success Messages
+        success_title: "Solicitud de Análisis Enviada",
+        success_description: "Nuestros expertos en automatización revisarán sus requerimientos y lo contactarán en 24-48 horas.",
+        
+        // Error Messages
+        error_title: "Fallo en el Envío",
+        error_description: "Por favor verifique su información e intente nuevamente.",
+        
+        // Industry Examples
+        examples_title: "Ejemplos por Sector",
+        example_finance_title: "Finanzas - Automatización de Reportes",
+        example_finance_description: "Generación automática de reportes mensuales, conciliación bancaria, seguimiento de KPIs",
+        example_retail_title: "Comercio - Gestión de Pedidos",
+        example_retail_description: "Procesamiento automatizado de pedidos, actualización de inventario, notificaciones a clientes",
+        example_consulting_title: "Consultoría - Facturación Automatizada",
+        example_consulting_description: "Registro de tiempo, generación de facturas, envío automático a clientes"
+      },
+      
       // Footer
       footer: {
         company_description: "Descripción de la empresa",
@@ -2779,6 +3175,204 @@ const resources = {
       "loginPage.success_message": "You are now signed in",
       "loginPage.failed_title": "Login failed",
       "loginPage.failed_message": "Incorrect username or password",
+      
+      // Automation Analysis
+      automation_analysis: {
+        // Navigation & Header
+        title: "Enterprise Automation Analysis",
+        subtitle: "Professional analysis before implementation",
+        back_button: "Back",
+        
+        // Tabs
+        tab_benefits: "Benefits & ROI",
+        tab_comparison: "Tool Comparison",
+        tab_request: "Request Analysis",
+        
+        // Benefits & ROI Section
+        benefits_title: "Why Analysis is Essential",
+        benefits_subtitle: "Proper analysis prevents costly failures and maximizes ROI",
+        
+        benefits_planning_title: "Strategic Planning",
+        benefits_planning_description: "Identify optimal processes to automate for maximum impact",
+        
+        benefits_cost_title: "Cost Optimization",
+        benefits_cost_description: "Avoid unnecessary investments and choose the best solution",
+        
+        benefits_risk_title: "Risk Reduction",
+        benefits_risk_description: "Minimize failure risks through thorough preliminary analysis",
+        
+        // ROI Calculator
+        roi_title: "Real-Time ROI Calculator",
+        roi_subtitle: "Estimate your potential savings with automation",
+        
+        roi_hours_label: "Hours saved per week",
+        roi_rate_label: "Hourly rate (USD)",
+        roi_tool_cost_label: "Monthly tool cost (USD)",
+        roi_implementation_label: "Implementation cost (USD)",
+        
+        roi_annual_savings: "Annual Savings",
+        roi_tool_investment: "Tool Investment",
+        roi_net_savings: "Net Savings",
+        roi_percentage: "ROI",
+        
+        roi_example_title: "US Enterprise Example",
+        roi_example_description: "Accounting firm automating invoicing",
+        roi_example_details: "20h/week saved × $75 USD/h = $78,000 USD annual savings",
+        
+        // Tool Comparison
+        comparison_title: "Detailed Tool Comparison",
+        comparison_subtitle: "n8n vs Make vs Custom Development",
+        
+        // n8n
+        n8n_title: "n8n (Open Source)",
+        n8n_price: "Free - $20 USD/month",
+        n8n_pros_title: "Advantages",
+        n8n_pro1: "Cost-effective solution",
+        n8n_pro2: "Open source code",
+        n8n_pro3: "Active community",
+        n8n_pro4: "Flexible hosting",
+        n8n_cons_title: "Disadvantages",
+        n8n_con1: "Learning curve",
+        n8n_con2: "Less intuitive interface",
+        n8n_con3: "Limited support",
+        n8n_ideal: "Ideal for: Technical teams, limited budgets",
+        
+        // Make
+        make_title: "Make (ex-Integromat)",
+        make_price: "$10 - $300 USD/month",
+        make_pros_title: "Advantages",
+        make_pro1: "Very intuitive interface",
+        make_pro2: "Many integrations",
+        make_pro3: "Professional support",
+        make_pro4: "Pre-built templates",
+        make_cons_title: "Disadvantages",
+        make_con1: "More expensive",
+        make_con2: "Operation limits",
+        make_con3: "Service dependency",
+        make_ideal: "Ideal for: SMBs, non-technical teams",
+        
+        // Custom Development
+        custom_title: "Custom Development",
+        custom_price: "$5,000 - $50,000 USD",
+        custom_pros_title: "Advantages",
+        custom_pro1: "Perfectly tailored solution",
+        custom_pro2: "Full control",
+        custom_pro3: "Maximum scalability",
+        custom_pro4: "Intellectual property",
+        custom_cons_title: "Disadvantages",
+        custom_con1: "High initial investment",
+        custom_con2: "Long development time",
+        custom_con3: "Maintenance required",
+        custom_ideal: "Ideal for: Large enterprises, complex needs",
+        
+        // Analysis Request Form
+        form_title: "Professional Analysis Request",
+        form_subtitle: "Our experts will analyze your needs and propose the best strategy",
+        form_alert: "Important: Proper analysis before implementation prevents 80% of automation failures",
+        
+        // Company Information
+        company_info_title: "Company Information",
+        company_name_label: "Company name",
+        company_name_placeholder: "Your company name",
+        contact_name_label: "Contact name",
+        contact_name_placeholder: "Your full name",
+        email_label: "Business email",
+        email_placeholder: "your@company.com",
+        phone_label: "Phone",
+        phone_placeholder: "+1 (xxx) xxx-xxxx",
+        
+        industry_label: "Industry sector",
+        industry_placeholder: "Select your industry",
+        industry_tech: "Technology",
+        industry_finance: "Finance/Insurance",
+        industry_healthcare: "Healthcare",
+        industry_retail: "Retail/Commerce",
+        industry_manufacturing: "Manufacturing",
+        industry_education: "Education",
+        industry_consulting: "Consulting",
+        industry_other: "Other",
+        
+        company_size_label: "Company size",
+        company_size_placeholder: "Number of employees",
+        size_1_10: "1-10 employees",
+        size_11_50: "11-50 employees",
+        size_51_200: "51-200 employees",
+        size_201_1000: "201-1000 employees",
+        size_1000_plus: "1000+ employees",
+        
+        // Automation Requirements
+        automation_requirements_title: "Automation Requirements",
+        current_processes_label: "Current processes to automate",
+        current_processes_placeholder: "Describe in detail your repetitive manual processes...",
+        current_processes_example: "Example: Order processing, invoicing, inventory management, customer communication",
+        
+        automation_goals_label: "Automation goals",
+        automation_goals_placeholder: "What results do you want to achieve?",
+        automation_goals_example: "Example: Reduce processing time by 70%, eliminate human errors, improve customer satisfaction",
+        
+        existing_systems_label: "Existing systems (optional)",
+        existing_systems_placeholder: "CRM, ERP, current tools...",
+        existing_systems_example: "Example: Salesforce, QuickBooks, Shopify, Slack, Microsoft 365",
+        
+        // Project Details
+        project_details_title: "Project Details",
+        budget_range_label: "Estimated budget",
+        budget_placeholder: "Select your budget",
+        budget_under_5k: "Under $5,000 USD",
+        budget_5k_15k: "$5,000 - $15,000 USD",
+        budget_15k_50k: "$15,000 - $50,000 USD",
+        budget_50k_plus: "$50,000+ USD",
+        
+        timeline_label: "Desired timeline",
+        timeline_placeholder: "When would you like to start?",
+        timeline_asap: "As soon as possible",
+        timeline_1_month: "In 1 month",
+        timeline_3_months: "In 3 months",
+        timeline_6_months: "In 6 months",
+        timeline_planning: "Planning phase",
+        
+        technical_team_label: "Internal technical team",
+        technical_team_placeholder: "Technical capabilities",
+        technical_team_none: "No technical team",
+        technical_team_basic: "Basic skills",
+        technical_team_intermediate: "Intermediate team",
+        technical_team_advanced: "Advanced technical team",
+        
+        previous_automation_label: "Automation experience",
+        previous_automation_placeholder: "Previous projects",
+        previous_automation_none: "No experience",
+        previous_automation_basic: "Simple projects",
+        previous_automation_moderate: "Some successful projects",
+        previous_automation_extensive: "Extensive experience",
+        
+        priority_level_label: "Priority level",
+        priority_placeholder: "Project urgency",
+        priority_low: "Low - Exploration",
+        priority_medium: "Medium - Planned",
+        priority_high: "High - Urgent",
+        priority_critical: "Critical - Immediate",
+        
+        // Submit Button
+        submit_button: "Request Professional Analysis",
+        submitting_button: "Submitting...",
+        
+        // Success Messages
+        success_title: "Analysis Request Submitted",
+        success_description: "Our automation experts will review your requirements and contact you within 24-48 hours.",
+        
+        // Error Messages
+        error_title: "Submission Failed",
+        error_description: "Please check your information and try again.",
+        
+        // Industry Examples
+        examples_title: "Examples by Industry",
+        example_finance_title: "Finance - Report Automation",
+        example_finance_description: "Automatic generation of monthly reports, bank reconciliation, KPI tracking",
+        example_retail_title: "Retail - Order Management",
+        example_retail_description: "Automated order processing, inventory updates, customer notifications",
+        example_consulting_title: "Consulting - Automated Billing",
+        example_consulting_description: "Time tracking, invoice generation, automatic client delivery"
+      },
       
       // Footer
       footer: {
