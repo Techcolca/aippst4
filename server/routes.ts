@@ -1221,11 +1221,12 @@ app.get("/api/health", (req, res) => {
 
   // Create new automation analysis request
   app.post("/api/automation-analysis-requests", authenticateJWT, checkEnterpriseAccess, async (req, res) => {
-    console.log("🔥 ENDPOINT HIT: automation-analysis-requests POST");
-    console.log("🔥 Request body received:", JSON.stringify(req.body, null, 2));
-    console.log("🔥 User ID:", req.userId);
-    
     try {
+      // Ensure user is authenticated
+      if (!req.userId) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
       // Parse only client-provided fields, ignore userId from body
       const clientSchema = insertAutomationAnalysisRequestSchema.omit({ userId: true });
       const bodyData = clientSchema.parse(req.body);
@@ -1236,11 +1237,7 @@ app.get("/api/health", (req, res) => {
       };
 
       const request = await storage.createAutomationAnalysisRequest(validatedData);
-      console.log("🔥 SUCCESS: Creado request con ID:", request.id);
-      console.log("🔥 Enviando respuesta JSON:", JSON.stringify(request, null, 2));
-      
-      const response = { success: true, data: request };
-      res.status(201).json(response);
+      res.status(201).json(request);
     } catch (error) {
       console.error("Create automation analysis request error:", error);
       if (error instanceof z.ZodError) {
