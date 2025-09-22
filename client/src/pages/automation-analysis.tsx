@@ -110,7 +110,13 @@ export default function AutomationAnalysis() {
   const createRequestMutation = useMutation({
     mutationFn: async (data: FormData) => {
       const response = await apiRequest('POST', '/api/automation-analysis-requests', data);
-      return response.json();
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || 'Error submitting form');
+      }
+      
+      return result;
     },
     onSuccess: () => {
       toast({
