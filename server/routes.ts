@@ -1354,6 +1354,17 @@ app.get("/api/health", (req, res) => {
     }
   });
 
+  // Admin-only route to get ALL automation analysis requests from all users
+  app.get("/api/admin/automation-analysis-requests", authenticateJWT, authIsAdmin, async (req, res) => {
+    try {
+      const allRequests = await storage.getAllAutomationAnalysisRequests();
+      res.json(allRequests);
+    } catch (error) {
+      console.error("Get all automation analysis requests (admin) error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
    // ================ Integration Routes ================
     app.get("/api/integrations", verifyToken, async (req, res) => {
       try {

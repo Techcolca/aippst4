@@ -315,6 +315,10 @@ export class PgStorage implements IStorage {
     return await db.select().from(automationAnalysisRequests).where(eq(automationAnalysisRequests.userId, userId));
   }
 
+  async getAllAutomationAnalysisRequests(): Promise<AutomationAnalysisRequest[]> {
+    return await db.select().from(automationAnalysisRequests).orderBy(automationAnalysisRequests.createdAt);
+  }
+
   async getAutomationAnalysisRequest(id: number): Promise<AutomationAnalysisRequest | undefined> {
     const result = await db.select().from(automationAnalysisRequests).where(eq(automationAnalysisRequests.id, id)).limit(1);
     return result[0];

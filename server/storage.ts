@@ -67,6 +67,7 @@ export interface IStorage {
 
   // Automation Analysis Request methods
   getAutomationAnalysisRequests(userId: number): Promise<AutomationAnalysisRequest[]>;
+  getAllAutomationAnalysisRequests(): Promise<AutomationAnalysisRequest[]>; // For admin access
   getAutomationAnalysisRequest(id: number): Promise<AutomationAnalysisRequest | undefined>;
   createAutomationAnalysisRequest(request: InsertAutomationAnalysisRequest): Promise<AutomationAnalysisRequest>;
   updateAutomationAnalysisRequest(id: number, data: Partial<AutomationAnalysisRequest>): Promise<AutomationAnalysisRequest>;
@@ -1959,6 +1960,32 @@ export interface IStorage {
                      !token.isRevoked &&
                      (!token.expiresAt || token.expiresAt > new Date())
         );
+      }
+
+      // Automation Analysis Request methods (stubs for Enterprise feature)
+      async getAutomationAnalysisRequests(userId: number): Promise<AutomationAnalysisRequest[]> {
+        // Stub implementation - this feature is not available in memory storage
+        return [];
+      }
+
+      async getAllAutomationAnalysisRequests(): Promise<AutomationAnalysisRequest[]> {
+        // Stub implementation - this feature is not available in memory storage  
+        return [];
+      }
+
+      async getAutomationAnalysisRequest(id: number): Promise<AutomationAnalysisRequest | undefined> {
+        // Stub implementation - this feature is not available in memory storage
+        return undefined;
+      }
+
+      async createAutomationAnalysisRequest(request: InsertAutomationAnalysisRequest): Promise<AutomationAnalysisRequest> {
+        // Stub implementation - this feature is not available in memory storage
+        throw new Error('Automation analysis requests are only available with PostgreSQL storage');
+      }
+
+      async updateAutomationAnalysisRequest(id: number, data: Partial<AutomationAnalysisRequest>): Promise<AutomationAnalysisRequest> {
+        // Stub implementation - this feature is not available in memory storage
+        throw new Error('Automation analysis requests are only available with PostgreSQL storage');
       }
     }
 
