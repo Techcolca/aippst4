@@ -1111,7 +1111,89 @@ const resources = {
         example_retail_title: "Commerce - Gestion des Commandes",
         example_retail_description: "Traitement automatisé des commandes, mise à jour des stocks, notifications clients",
         example_consulting_title: "Conseil - Facturation Automatisée",
-        example_consulting_description: "Suivi du temps, génération de factures, envoi automatique aux clients"
+        example_consulting_description: "Suivi du temps, génération de factures, envoi automatique aux clients",
+        
+        // Keys with underscores for compatibility
+        n8n_pro_1: "Solution économique",
+        n8n_pro_2: "Code source ouvert", 
+        n8n_pro_3: "Communauté active",
+        n8n_pro_4: "Hébergement flexible",
+        n8n_pro_5: "Nœuds de code personnalisés",
+        n8n_con_1: "Courbe d'apprentissage",
+        n8n_con_2: "Interface moins intuitive",
+        n8n_con_3: "Support limité",
+        
+        make_pro_1: "Interface très intuitive",
+        make_pro_2: "Nombreuses intégrations",
+        make_pro_3: "Support professionnel",
+        make_pro_4: "Templates préfaits",
+        make_pro_5: "Surveillance en temps réel",
+        make_con_1: "Plus coûteux",
+        make_con_2: "Limites d'opérations",
+        make_con_3: "Dépendance au service",
+        
+        custom_pro_1: "Solution parfaitement adaptée",
+        custom_pro_2: "Contrôle total",
+        custom_pro_3: "Évolutivité maximale",
+        custom_pro_4: "Propriété intellectuelle",
+        custom_pro_5: "Performance maximale",
+        custom_pro_6: "Intégration avec tout système",
+        custom_con_1: "Investissement initial élevé",
+        custom_con_2: "Temps de développement long", 
+        custom_con_3: "Maintenance requise",
+        
+        // Form section keys
+        form_company_section: "Informations de l'Entreprise",
+        form_company_name: "Nom de l'entreprise",
+        form_contact_name: "Nom du contact",
+        form_email: "Email professionnel",
+        form_phone: "Téléphone",
+        form_industry: "Secteur d'activité",
+        form_industry_placeholder: "Sélectionnez votre secteur",
+        form_company_size: "Taille de l'entreprise",
+        form_company_size_placeholder: "Nombre d'employés",
+        form_automation_section: "Besoins d'Automatisation",
+        form_current_processes: "Processus actuels à automatiser",
+        form_current_processes_placeholder: "Décrivez les processus manuels que vous souhaitez automatiser...",
+        form_automation_goals: "Objectifs d'automatisation",
+        form_automation_goals_placeholder: "Que souhaitez-vous accomplir avec l'automatisation ?",
+        form_existing_systems: "Systèmes existants & outils",
+        form_existing_systems_placeholder: "Listez vos logiciels et systèmes actuels (CRM, ERP, etc.)",
+        form_budget_range: "Gamme de budget",
+        form_budget_range_placeholder: "Sélectionnez la gamme de budget",
+        form_timeline: "Délai d'implémentation",
+        form_timeline_placeholder: "Sélectionnez le délai",
+        form_priority_level: "Niveau de priorité",
+        form_priority_level_placeholder: "Sélectionnez le niveau de priorité",
+        form_technical_team: "Avez-vous une équipe technique pour soutenir l'implémentation ?",
+        form_previous_automation: "Avez-vous déjà implémenté des projets d'automatisation ?",
+        form_select_option: "Sélectionnez une option",
+        form_submit_button: "Demander l'Analyse Professionnelle",
+        form_submitting: "Envoi de la demande...",
+        form_footer_text: "Nos experts en automatisation examineront vos exigences et vous contacteront dans 24-48 heures avec une analyse détaillée et des recommandations d'implémentation.",
+        
+        // Additional timeline options
+        timeline_immediate: "Immédiat (dans 1 mois)",
+        timeline_short_term: "Court terme (1-3 mois)",
+        timeline_medium_term: "Moyen terme (3-6 mois)",
+        timeline_long_term: "Long terme (6+ mois)",
+        
+        // Technical team options
+        tech_team_yes_full: "Oui, nous avons une équipe technique complète",
+        tech_team_yes_limited: "Oui, mais ressources techniques limitées",
+        tech_team_no: "Non, nous n'avons pas d'équipe technique",
+        tech_team_external: "Nous prévoyons embaucher de l'aide externe",
+        
+        // Experience options
+        experience_no: "Non, c'est notre premier projet d'automatisation",
+        experience_basic: "Oui, automatisation de base (email, planification)",
+        experience_intermediate: "Oui, automatisation intermédiaire (flux de travail, intégrations)",
+        experience_advanced: "Oui, automatisation avancée (développement personnalisé)",
+        
+        // Additional keys
+        best_for_label: "Idéal pour",
+        recommendation_title: "Notre Recommandation",
+        recommendation_text: "La meilleure approche dépend de vos besoins spécifiques, de vos capacités techniques et de vos objectifs à long terme. Notre analyse vous aidera à choisir la solution optimale pour votre situation unique."
       },
       
       // Footer
@@ -2241,7 +2323,89 @@ const resources = {
         example_retail_title: "Comercio - Gestión de Pedidos",
         example_retail_description: "Procesamiento automatizado de pedidos, actualización de inventario, notificaciones a clientes",
         example_consulting_title: "Consultoría - Facturación Automatizada",
-        example_consulting_description: "Registro de tiempo, generación de facturas, envío automático a clientes"
+        example_consulting_description: "Registro de tiempo, generación de facturas, envío automático a clientes",
+        
+        // Keys with underscores for compatibility
+        n8n_pro_1: "Solución económica",
+        n8n_pro_2: "Código abierto", 
+        n8n_pro_3: "Comunidad activa",
+        n8n_pro_4: "Hosting flexible",
+        n8n_pro_5: "Nodos de código personalizado",
+        n8n_con_1: "Curva de aprendizaje",
+        n8n_con_2: "Interfaz menos intuitiva",
+        n8n_con_3: "Soporte limitado",
+        
+        make_pro_1: "Interfaz muy intuitiva",
+        make_pro_2: "Numerosas integraciones",
+        make_pro_3: "Soporte profesional",
+        make_pro_4: "Plantillas prediseñadas",
+        make_pro_5: "Monitoreo en tiempo real",
+        make_con_1: "Más costoso",
+        make_con_2: "Límites de operaciones",
+        make_con_3: "Dependencia del servicio",
+        
+        custom_pro_1: "Solución perfectamente adaptada",
+        custom_pro_2: "Control total",
+        custom_pro_3: "Escalabilidad máxima",
+        custom_pro_4: "Propiedad intelectual",
+        custom_pro_5: "Rendimiento máximo",
+        custom_pro_6: "Integración con cualquier sistema",
+        custom_con_1: "Inversión inicial alta",
+        custom_con_2: "Tiempo de desarrollo largo", 
+        custom_con_3: "Mantenimiento requerido",
+        
+        // Form section keys
+        form_company_section: "Información de la Empresa",
+        form_company_name: "Nombre de la empresa",
+        form_contact_name: "Nombre del contacto",
+        form_email: "Email profesional",
+        form_phone: "Teléfono",
+        form_industry: "Industria",
+        form_industry_placeholder: "Seleccione su industria",
+        form_company_size: "Tamaño de la empresa",
+        form_company_size_placeholder: "Número de empleados",
+        form_automation_section: "Necesidades de Automatización",
+        form_current_processes: "Procesos actuales a automatizar",
+        form_current_processes_placeholder: "Describa los procesos manuales que desea automatizar...",
+        form_automation_goals: "Objetivos de automatización",
+        form_automation_goals_placeholder: "¿Qué desea lograr con la automatización?",
+        form_existing_systems: "Sistemas & herramientas existentes",
+        form_existing_systems_placeholder: "Liste sus sistemas y software actuales (CRM, ERP, etc.)",
+        form_budget_range: "Rango de presupuesto",
+        form_budget_range_placeholder: "Seleccione el rango de presupuesto",
+        form_timeline: "Cronograma de implementación",
+        form_timeline_placeholder: "Seleccione el cronograma",
+        form_priority_level: "Nivel de prioridad",
+        form_priority_level_placeholder: "Seleccione el nivel de prioridad",
+        form_technical_team: "¿Tiene un equipo técnico para apoyar la implementación?",
+        form_previous_automation: "¿Ha implementado proyectos de automatización anteriormente?",
+        form_select_option: "Seleccione una opción",
+        form_submit_button: "Solicitar Análisis Profesional",
+        form_submitting: "Enviando solicitud...",
+        form_footer_text: "Nuestros expertos en automatización revisarán sus requisitos y lo contactarán en 24-48 horas con un análisis detallado y recomendaciones de implementación.",
+        
+        // Additional timeline options
+        timeline_immediate: "Inmediato (dentro de 1 mes)",
+        timeline_short_term: "Corto plazo (1-3 meses)",
+        timeline_medium_term: "Mediano plazo (3-6 meses)",
+        timeline_long_term: "Largo plazo (6+ meses)",
+        
+        // Technical team options
+        tech_team_yes_full: "Sí, tenemos un equipo técnico completo",
+        tech_team_yes_limited: "Sí, pero recursos técnicos limitados",
+        tech_team_no: "No, no tenemos equipo técnico",
+        tech_team_external: "Planeamos contratar ayuda externa",
+        
+        // Experience options
+        experience_no: "No, este es nuestro primer proyecto de automatización",
+        experience_basic: "Sí, automatización básica (email, programación)",
+        experience_intermediate: "Sí, automatización intermedia (flujos de trabajo, integraciones)",
+        experience_advanced: "Sí, automatización avanzada (desarrollo personalizado)",
+        
+        // Additional keys
+        best_for_label: "Ideal para",
+        recommendation_title: "Nuestra Recomendación",
+        recommendation_text: "El mejor enfoque depende de sus necesidades específicas, capacidades técnicas y objetivos a largo plazo. Nuestro análisis le ayudará a elegir la solución óptima para su situación única."
       },
       
       // Footer
@@ -3371,7 +3535,89 @@ const resources = {
         example_retail_title: "Retail - Order Management",
         example_retail_description: "Automated order processing, inventory updates, customer notifications",
         example_consulting_title: "Consulting - Automated Billing",
-        example_consulting_description: "Time tracking, invoice generation, automatic client delivery"
+        example_consulting_description: "Time tracking, invoice generation, automatic client delivery",
+        
+        // Keys with underscores for compatibility
+        n8n_pro_1: "Cost-effective solution",
+        n8n_pro_2: "Open source", 
+        n8n_pro_3: "Active community",
+        n8n_pro_4: "Flexible hosting",
+        n8n_pro_5: "Custom code nodes",
+        n8n_con_1: "Learning curve",
+        n8n_con_2: "Less intuitive interface",
+        n8n_con_3: "Limited support",
+        
+        make_pro_1: "Very intuitive interface",
+        make_pro_2: "Numerous integrations",
+        make_pro_3: "Professional support",
+        make_pro_4: "Pre-built templates",
+        make_pro_5: "Real-time monitoring",
+        make_con_1: "More expensive",
+        make_con_2: "Operation limits",
+        make_con_3: "Service dependency",
+        
+        custom_pro_1: "Perfectly tailored solution",
+        custom_pro_2: "Total control",
+        custom_pro_3: "Maximum scalability",
+        custom_pro_4: "Intellectual property",
+        custom_pro_5: "Maximum performance",
+        custom_pro_6: "Integration with any system",
+        custom_con_1: "High initial investment",
+        custom_con_2: "Long development time", 
+        custom_con_3: "Maintenance required",
+        
+        // Form section keys
+        form_company_section: "Company Information",
+        form_company_name: "Company name",
+        form_contact_name: "Contact name",
+        form_email: "Professional email",
+        form_phone: "Phone",
+        form_industry: "Industry",
+        form_industry_placeholder: "Select your industry",
+        form_company_size: "Company size",
+        form_company_size_placeholder: "Number of employees",
+        form_automation_section: "Automation Needs",
+        form_current_processes: "Current processes to automate",
+        form_current_processes_placeholder: "Describe the manual processes you want to automate...",
+        form_automation_goals: "Automation objectives",
+        form_automation_goals_placeholder: "What do you want to achieve with automation?",
+        form_existing_systems: "Existing systems & tools",
+        form_existing_systems_placeholder: "List your current systems and software (CRM, ERP, etc.)",
+        form_budget_range: "Budget range",
+        form_budget_range_placeholder: "Select budget range",
+        form_timeline: "Implementation timeline",
+        form_timeline_placeholder: "Select timeline",
+        form_priority_level: "Priority level",
+        form_priority_level_placeholder: "Select priority level",
+        form_technical_team: "Do you have a technical team to support the implementation?",
+        form_previous_automation: "Have you implemented automation projects before?",
+        form_select_option: "Select an option",
+        form_submit_button: "Request Professional Analysis",
+        form_submitting: "Sending request...",
+        form_footer_text: "Our automation experts will review your requirements and contact you within 24-48 hours with a detailed analysis and implementation recommendations.",
+        
+        // Additional timeline options
+        timeline_immediate: "Immediate (within 1 month)",
+        timeline_short_term: "Short term (1-3 months)",
+        timeline_medium_term: "Medium term (3-6 months)",
+        timeline_long_term: "Long term (6+ months)",
+        
+        // Technical team options
+        tech_team_yes_full: "Yes, we have a complete technical team",
+        tech_team_yes_limited: "Yes, but limited technical resources",
+        tech_team_no: "No, we don't have a technical team",
+        tech_team_external: "We plan to hire external help",
+        
+        // Experience options
+        experience_no: "No, this is our first automation project",
+        experience_basic: "Yes, basic automation (email, scheduling)",
+        experience_intermediate: "Yes, intermediate automation (workflows, integrations)",
+        experience_advanced: "Yes, advanced automation (custom development)",
+        
+        // Additional keys
+        best_for_label: "Best for",
+        recommendation_title: "Our Recommendation",
+        recommendation_text: "The best approach depends on your specific needs, technical capabilities, and long-term objectives. Our analysis will help you choose the optimal solution for your unique situation."
       },
       
       // Footer
