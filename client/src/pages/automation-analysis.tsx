@@ -101,7 +101,7 @@ export default function AutomationAnalysis() {
       existingSystems: "",
       budgetRange: "",
       timeline: "",
-      technicalTeam: "",
+      technicalTeam: undefined,
       previousAutomation: "",
       priorityLevel: "",
     },
@@ -177,7 +177,7 @@ export default function AutomationAnalysis() {
             <Button 
               size="lg" 
               className="w-full"
-              onClick={() => upgradeModal.showUpgradeModal("general", "Enterprise")}
+              onClick={() => upgradeModal.showUpgradeModal("general", undefined, "Enterprise")}
               data-testid="button-upgrade-enterprise"
             >
               Upgrade to Enterprise
