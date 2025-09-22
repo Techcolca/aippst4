@@ -550,14 +550,14 @@ export default function AutomationAnalysis() {
                     <div className="grid md:grid-cols-2 gap-6">
                       {/* Company Information */}
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Company Information</h3>
+                        <h3 className="text-lg font-semibold">{t("automation_analysis.form_company_section")}</h3>
                         
                         <FormField
                           control={form.control}
                           name="companyName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Company Name</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_company_name")}</FormLabel>
                               <FormControl>
                                 <Input {...field} data-testid="input-company-name" />
                               </FormControl>
@@ -571,7 +571,7 @@ export default function AutomationAnalysis() {
                           name="contactName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Contact Name</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_contact_name")}</FormLabel>
                               <FormControl>
                                 <Input {...field} data-testid="input-contact-name" />
                               </FormControl>
@@ -585,7 +585,7 @@ export default function AutomationAnalysis() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Email</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_email")}</FormLabel>
                               <FormControl>
                                 <Input {...field} type="email" data-testid="input-email" />
                               </FormControl>
@@ -599,7 +599,7 @@ export default function AutomationAnalysis() {
                           name="phone"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Phone Number</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_phone")}</FormLabel>
                               <FormControl>
                                 <Input {...field} data-testid="input-phone" />
                               </FormControl>
@@ -613,23 +613,23 @@ export default function AutomationAnalysis() {
                           name="industry"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Industry</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_industry")}</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger data-testid="select-industry">
-                                    <SelectValue placeholder="Select your industry" />
+                                    <SelectValue placeholder={t("automation_analysis.form_industry_placeholder")} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="technology">Technology</SelectItem>
-                                  <SelectItem value="healthcare">Healthcare</SelectItem>
-                                  <SelectItem value="finance">Finance</SelectItem>
-                                  <SelectItem value="retail">Retail</SelectItem>
-                                  <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                                  <SelectItem value="education">Education</SelectItem>
-                                  <SelectItem value="real-estate">Real Estate</SelectItem>
-                                  <SelectItem value="consulting">Consulting</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
+                                  <SelectItem value="technology">{t("automation_analysis.industry_technology")}</SelectItem>
+                                  <SelectItem value="healthcare">{t("automation_analysis.industry_healthcare")}</SelectItem>
+                                  <SelectItem value="finance">{t("automation_analysis.industry_finance")}</SelectItem>
+                                  <SelectItem value="retail">{t("automation_analysis.industry_retail")}</SelectItem>
+                                  <SelectItem value="manufacturing">{t("automation_analysis.industry_manufacturing")}</SelectItem>
+                                  <SelectItem value="education">{t("automation_analysis.industry_education")}</SelectItem>
+                                  <SelectItem value="real-estate">{t("automation_analysis.industry_real_estate")}</SelectItem>
+                                  <SelectItem value="consulting">{t("automation_analysis.industry_consulting")}</SelectItem>
+                                  <SelectItem value="other">{t("automation_analysis.industry_other")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -642,19 +642,19 @@ export default function AutomationAnalysis() {
                           name="companySize"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Company Size</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_company_size")}</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger data-testid="select-company-size">
-                                    <SelectValue placeholder="Select company size" />
+                                    <SelectValue placeholder={t("automation_analysis.form_company_size_placeholder")} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="1-10">1-10 employees</SelectItem>
-                                  <SelectItem value="11-50">11-50 employees</SelectItem>
-                                  <SelectItem value="51-200">51-200 employees</SelectItem>
-                                  <SelectItem value="201-1000">201-1000 employees</SelectItem>
-                                  <SelectItem value="1000+">1000+ employees</SelectItem>
+                                  <SelectItem value="1-10">{t("automation_analysis.company_size_1_10")}</SelectItem>
+                                  <SelectItem value="11-50">{t("automation_analysis.company_size_11_50")}</SelectItem>
+                                  <SelectItem value="51-200">{t("automation_analysis.company_size_51_200")}</SelectItem>
+                                  <SelectItem value="201-1000">{t("automation_analysis.company_size_201_1000")}</SelectItem>
+                                  <SelectItem value="1000+">{t("automation_analysis.company_size_1000_plus")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -665,18 +665,18 @@ export default function AutomationAnalysis() {
 
                       {/* Automation Requirements */}
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Automation Requirements</h3>
+                        <h3 className="text-lg font-semibold">{t("automation_analysis.form_automation_section")}</h3>
 
                         <FormField
                           control={form.control}
                           name="currentProcesses"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Current Manual Processes</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_current_processes")}</FormLabel>
                               <FormControl>
                                 <Textarea 
                                   {...field} 
-                                  placeholder="Describe the manual processes you want to automate..."
+                                  placeholder={t("automation_analysis.form_current_processes_placeholder")}
                                   className="min-h-[100px]"
                                   data-testid="textarea-current-processes"
                                 />
@@ -691,11 +691,11 @@ export default function AutomationAnalysis() {
                           name="automationGoals"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Automation Goals</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_automation_goals")}</FormLabel>
                               <FormControl>
                                 <Textarea 
                                   {...field} 
-                                  placeholder="What do you hope to achieve with automation?"
+                                  placeholder={t("automation_analysis.form_automation_goals_placeholder")}
                                   className="min-h-[100px]"
                                   data-testid="textarea-automation-goals"
                                 />
@@ -710,11 +710,11 @@ export default function AutomationAnalysis() {
                           name="existingSystems"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Existing Systems & Tools</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_existing_systems")}</FormLabel>
                               <FormControl>
                                 <Textarea 
                                   {...field} 
-                                  placeholder="List your current software and systems (CRM, ERP, etc.)"
+                                  placeholder={t("automation_analysis.form_existing_systems_placeholder")}
                                   className="min-h-[80px]"
                                   data-testid="textarea-existing-systems"
                                 />
@@ -729,19 +729,19 @@ export default function AutomationAnalysis() {
                           name="budgetRange"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Budget Range</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_budget_range")}</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger data-testid="select-budget-range">
-                                    <SelectValue placeholder="Select budget range" />
+                                    <SelectValue placeholder={t("automation_analysis.form_budget_range_placeholder")} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="under-5k">Under $5,000</SelectItem>
-                                  <SelectItem value="5k-15k">$5,000 - $15,000</SelectItem>
-                                  <SelectItem value="15k-50k">$15,000 - $50,000</SelectItem>
-                                  <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
-                                  <SelectItem value="100k+">$100,000+</SelectItem>
+                                  <SelectItem value="under-5k">{t("automation_analysis.budget_under_5k")}</SelectItem>
+                                  <SelectItem value="5k-15k">{t("automation_analysis.budget_5k_15k")}</SelectItem>
+                                  <SelectItem value="15k-50k">{t("automation_analysis.budget_15k_50k")}</SelectItem>
+                                  <SelectItem value="50k-100k">{t("automation_analysis.budget_50k_100k")}</SelectItem>
+                                  <SelectItem value="100k+">{t("automation_analysis.budget_100k_plus")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -754,18 +754,18 @@ export default function AutomationAnalysis() {
                           name="timeline"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Implementation Timeline</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_timeline")}</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger data-testid="select-timeline">
-                                    <SelectValue placeholder="Select timeline" />
+                                    <SelectValue placeholder={t("automation_analysis.form_timeline_placeholder")} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="immediate">Immediate (within 1 month)</SelectItem>
-                                  <SelectItem value="short-term">Short-term (1-3 months)</SelectItem>
-                                  <SelectItem value="medium-term">Medium-term (3-6 months)</SelectItem>
-                                  <SelectItem value="long-term">Long-term (6+ months)</SelectItem>
+                                  <SelectItem value="immediate">{t("automation_analysis.timeline_immediate")}</SelectItem>
+                                  <SelectItem value="short-term">{t("automation_analysis.timeline_short_term")}</SelectItem>
+                                  <SelectItem value="medium-term">{t("automation_analysis.timeline_medium_term")}</SelectItem>
+                                  <SelectItem value="long-term">{t("automation_analysis.timeline_long_term")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -778,18 +778,18 @@ export default function AutomationAnalysis() {
                           name="priorityLevel"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Priority Level</FormLabel>
+                              <FormLabel>{t("automation_analysis.form_priority_level")}</FormLabel>
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger data-testid="select-priority-level">
-                                    <SelectValue placeholder="Select priority level" />
+                                    <SelectValue placeholder={t("automation_analysis.form_priority_level_placeholder")} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="low">Low - Nice to have</SelectItem>
-                                  <SelectItem value="medium">Medium - Important</SelectItem>
-                                  <SelectItem value="high">High - Critical</SelectItem>
-                                  <SelectItem value="urgent">Urgent - Business critical</SelectItem>
+                                  <SelectItem value="low">{t("automation_analysis.priority_low")}</SelectItem>
+                                  <SelectItem value="medium">{t("automation_analysis.priority_medium")}</SelectItem>
+                                  <SelectItem value="high">{t("automation_analysis.priority_high")}</SelectItem>
+                                  <SelectItem value="urgent">{t("automation_analysis.priority_urgent")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -806,18 +806,18 @@ export default function AutomationAnalysis() {
                         name="technicalTeam"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Do you have a technical team to support implementation?</FormLabel>
+                            <FormLabel>{t("automation_analysis.form_technical_team")}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-technical-team">
-                                  <SelectValue placeholder="Select option" />
+                                  <SelectValue placeholder={t("automation_analysis.form_select_option")} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="yes-full-team">Yes, we have a full technical team</SelectItem>
-                                <SelectItem value="yes-limited-team">Yes, but limited technical resources</SelectItem>
-                                <SelectItem value="no-team">No, we don't have a technical team</SelectItem>
-                                <SelectItem value="external-help">We plan to hire external help</SelectItem>
+                                <SelectItem value="yes-full-team">{t("automation_analysis.tech_team_yes_full")}</SelectItem>
+                                <SelectItem value="yes-limited-team">{t("automation_analysis.tech_team_yes_limited")}</SelectItem>
+                                <SelectItem value="no-team">{t("automation_analysis.tech_team_no")}</SelectItem>
+                                <SelectItem value="external-help">{t("automation_analysis.tech_team_external")}</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -830,18 +830,18 @@ export default function AutomationAnalysis() {
                         name="previousAutomation"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Have you implemented automation projects before?</FormLabel>
+                            <FormLabel>{t("automation_analysis.form_previous_automation")}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-previous-automation">
-                                  <SelectValue placeholder="Select option" />
+                                  <SelectValue placeholder={t("automation_analysis.form_select_option")} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="no-experience">No, this is our first automation project</SelectItem>
-                                <SelectItem value="basic-experience">Yes, basic automation (email, scheduling)</SelectItem>
-                                <SelectItem value="intermediate-experience">Yes, intermediate automation (workflows, integrations)</SelectItem>
-                                <SelectItem value="advanced-experience">Yes, advanced automation (custom development)</SelectItem>
+                                <SelectItem value="no-experience">{t("automation_analysis.experience_no")}</SelectItem>
+                                <SelectItem value="basic-experience">{t("automation_analysis.experience_basic")}</SelectItem>
+                                <SelectItem value="intermediate-experience">{t("automation_analysis.experience_intermediate")}</SelectItem>
+                                <SelectItem value="advanced-experience">{t("automation_analysis.experience_advanced")}</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -861,19 +861,18 @@ export default function AutomationAnalysis() {
                         {createRequestMutation.isPending ? (
                           <div className="flex items-center space-x-2">
                             <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                            <span>Submitting Request...</span>
+                            <span>{t("automation_analysis.form_submitting")}</span>
                           </div>
                         ) : (
                           <div className="flex items-center space-x-2">
-                            <span>Request Professional Analysis</span>
+                            <span>{t("automation_analysis.form_submit_button")}</span>
                             <ArrowRight className="h-4 w-4" />
                           </div>
                         )}
                       </Button>
                       
                       <p className="text-sm text-muted-foreground text-center mt-4">
-                        Our automation experts will review your requirements and contact you within 24-48 hours 
-                        with a detailed analysis and implementation recommendation.
+                        {t("automation_analysis.form_footer_text")}
                       </p>
                     </div>
                   </form>
