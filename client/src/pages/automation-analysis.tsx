@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -32,7 +34,8 @@ import {
   Lightbulb,
   Target,
   Shield,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft
 } from "lucide-react";
 
 // Form validation schema
@@ -60,6 +63,22 @@ export default function AutomationAnalysis() {
   const { toast } = useToast();
   const { hasAccess: hasFeatureAccess, isLoading: featureLoading } = useFeatureCheck('advancedAnalytics');
   const upgradeModal = useUpgradeModal();
+  const { t } = useTranslation();
+  const [location, setLocation] = useLocation();
+  
+  // Navegación inteligente - detecta desde dónde viene el usuario
+  const handleBackNavigation = () => {
+    const referrer = document.referrer;
+    const isInternalReferrer = referrer && new URL(referrer).hostname === window.location.hostname;
+    
+    if (isInternalReferrer && history.length > 1) {
+      // Si viene de una página interna, usar history.back()
+      history.back();
+    } else {
+      // Si es acceso directo o desde externa, ir al dashboard
+      setLocation('/dashboard?tab=automation');
+    }
+  };
   const [currentTab, setCurrentTab] = useState("benefits");
   const [roiCalculation, setRoiCalculation] = useState({
     hoursPerWeek: 0,
@@ -95,16 +114,16 @@ export default function AutomationAnalysis() {
     },
     onSuccess: () => {
       toast({
-        title: "Analysis Request Submitted",
-        description: "Our automation experts will review your requirements and contact you within 24-48 hours.",
+        title: t("automation_analysis.success_title"),
+        description: t("automation_analysis.success_description"),
       });
       form.reset();
       setCurrentTab("benefits");
     },
     onError: (error: any) => {
       toast({
-        title: "Submission Failed",
-        description: error.message || "Please check your information and try again.",
+        title: t("automation_analysis.error_title"),
+        description: error.message || t("automation_analysis.error_description"),
         variant: "destructive",
       });
     },
@@ -141,7 +160,7 @@ export default function AutomationAnalysis() {
             </div>
             <CardTitle className="text-2xl">Enterprise Feature Required</CardTitle>
             <CardDescription className="text-lg">
-              Automation analysis is available exclusively for Enterprise plan users
+              {t("automation_analysis.subtitle")}
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
@@ -166,29 +185,40 @@ export default function AutomationAnalysis() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-6xl mx-auto">
+        {/* Navigation */}
+        <div className="mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={handleBackNavigation}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+            data-testid="button-back-navigation"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t("automation_analysis.back_button")}
+          </Button>
+        </div>
+        
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-tight mb-4">
-            Enterprise Automation Analysis
+            {t("automation_analysis.title")}
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Get a professional analysis of your automation needs. Our experts will evaluate your processes, 
-            calculate ROI, and provide a detailed implementation roadmap.
+            {t("automation_analysis.subtitle")}
           </p>
           <Alert className="mt-6 max-w-3xl mx-auto">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <strong>Important:</strong> Proper analysis is crucial before automation implementation. 
-              Rushed automation projects often fail or deliver poor ROI. Let our experts guide you to success.
+              {t("automation_analysis.form_alert")}
             </AlertDescription>
           </Alert>
         </div>
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-8">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="benefits" data-testid="tab-benefits">Benefits & ROI</TabsTrigger>
-            <TabsTrigger value="tools" data-testid="tab-tools">Tool Comparison</TabsTrigger>
-            <TabsTrigger value="request" data-testid="tab-request">Request Analysis</TabsTrigger>
+            <TabsTrigger value="benefits" data-testid="tab-benefits">{t("automation_analysis.tab_benefits")}</TabsTrigger>
+            <TabsTrigger value="tools" data-testid="tab-tools">{t("automation_analysis.tab_comparison")}</TabsTrigger>
+            <TabsTrigger value="request" data-testid="tab-request">{t("automation_analysis.tab_request")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="benefits" className="space-y-8">
@@ -201,14 +231,14 @@ export default function AutomationAnalysis() {
                       <Clock className="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg">Time Savings</CardTitle>
-                      <CardDescription>Up to 80% reduction</CardDescription>
+                      <CardTitle className="text-lg">{t("automation_analysis.benefits_planning_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.benefits_planning_description")}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Eliminate repetitive tasks and streamline complex workflows to free up valuable time for strategic work.
+                    {t("automation_analysis.benefits_planning_description")}
                   </p>
                 </CardContent>
               </Card>
@@ -220,14 +250,14 @@ export default function AutomationAnalysis() {
                       <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg">Cost Reduction</CardTitle>
-                      <CardDescription>Average 300% ROI</CardDescription>
+                      <CardTitle className="text-lg">{t("automation_analysis.benefits_cost_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.benefits_cost_description")}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Reduce operational costs through efficient automation while improving accuracy and consistency.
+                    {t("automation_analysis.benefits_cost_description")}
                   </p>
                 </CardContent>
               </Card>
@@ -239,14 +269,14 @@ export default function AutomationAnalysis() {
                       <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-lg">Team Productivity</CardTitle>
-                      <CardDescription>Focus on high-value work</CardDescription>
+                      <CardTitle className="text-lg">{t("automation_analysis.benefits_risk_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.benefits_risk_description")}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Enable your team to focus on creative and strategic tasks while automation handles the routine work.
+                    {t("automation_analysis.benefits_risk_description")}
                   </p>
                 </CardContent>
               </Card>
@@ -257,17 +287,17 @@ export default function AutomationAnalysis() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BarChart3 className="h-5 w-5" />
-                  <span>ROI Calculator</span>
+                  <span>{t("automation_analysis.roi_title")}</span>
                 </CardTitle>
                 <CardDescription>
-                  Calculate your potential return on investment from automation
+                  {t("automation_analysis.roi_subtitle")}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="hours-per-week">Hours saved per week</Label>
+                      <Label htmlFor="hours-per-week">{t("automation_analysis.roi_hours_label")}</Label>
                       <Input
                         id="hours-per-week"
                         type="number"
@@ -281,7 +311,7 @@ export default function AutomationAnalysis() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="hourly-rate">Average hourly rate ($)</Label>
+                      <Label htmlFor="hourly-rate">{t("automation_analysis.roi_rate_label")}</Label>
                       <Input
                         id="hourly-rate"
                         type="number"
@@ -295,7 +325,7 @@ export default function AutomationAnalysis() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="tool-cost">Monthly tool cost ($)</Label>
+                      <Label htmlFor="tool-cost">{t("automation_analysis.roi_tool_cost_label")}</Label>
                       <Input
                         id="tool-cost"
                         type="number"
@@ -309,7 +339,7 @@ export default function AutomationAnalysis() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="implementation-cost">Implementation cost ($)</Label>
+                      <Label htmlFor="implementation-cost">{t("automation_analysis.roi_implementation_label")}</Label>
                       <Input
                         id="implementation-cost"
                         type="number"
@@ -326,35 +356,35 @@ export default function AutomationAnalysis() {
                   
                   <div className="space-y-4">
                     <div className="p-4 bg-muted rounded-lg">
-                      <h4 className="font-semibold mb-3">Annual Results</h4>
+                      <h4 className="font-semibold mb-3">{t("automation_analysis.roi_annual_savings")}</h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
-                          <span>Time saved:</span>
+                          <span>{t("automation_analysis.roi_hours_label")}:</span>
                           <span className="font-medium" data-testid="result-time-saved">
                             {annualTimeSavings.toFixed(0)} hours/year
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Cost savings:</span>
+                          <span>{t("automation_analysis.roi_annual_savings")}:</span>
                           <span className="font-medium text-green-600" data-testid="result-cost-savings">
                             ${annualCostSavings.toLocaleString()}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Total tool costs:</span>
+                          <span>{t("automation_analysis.roi_tool_investment")}:</span>
                           <span className="font-medium text-red-600" data-testid="result-tool-costs">
                             ${totalToolCost.toLocaleString()}
                           </span>
                         </div>
                         <Separator />
                         <div className="flex justify-between">
-                          <span className="font-semibold">Net savings:</span>
+                          <span className="font-semibold">{t("automation_analysis.roi_net_savings")}:</span>
                           <span className={`font-bold ${netAnnualSavings > 0 ? 'text-green-600' : 'text-red-600'}`} data-testid="result-net-savings">
                             ${netAnnualSavings.toLocaleString()}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="font-semibold">ROI:</span>
+                          <span className="font-semibold">{t("automation_analysis.roi_percentage")}:</span>
                           <span className={`font-bold ${roiPercentage > 0 ? 'text-green-600' : 'text-red-600'}`} data-testid="result-roi">
                             {roiPercentage.toFixed(1)}%
                           </span>
@@ -366,7 +396,7 @@ export default function AutomationAnalysis() {
                       <Alert>
                         <TrendingUp className="h-4 w-4" />
                         <AlertDescription>
-                          Excellent ROI! This automation project shows strong financial benefits.
+                          {t("automation_analysis.roi_example_details")}
                         </AlertDescription>
                       </Alert>
                     )}
