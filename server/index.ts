@@ -4,11 +4,13 @@ import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
+import cookieParser from 'cookie-parser';
 
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.set('trust proxy', 1);
 
 // Configurar CORS para widgets embebidos de AIPPS
