@@ -43,7 +43,7 @@ import {
   DollarSign,
   Save
 } from "lucide-react";
-import type { ActionCost, InsertActionCost, UserBudget, InsertUserBudget } from "@shared/schema";
+import type { ActionCost, InsertActionCost, UserBudget, InsertUserBudget, AutomationAnalysisRequest } from "@shared/schema";
 
 // Interfaces
 interface AdminStats {
@@ -182,6 +182,248 @@ const formatDate = (dateString: string) => {
     minute: '2-digit'
   });
 };
+
+// Automation Analysis Admin Component
+function AutomationAnalysisAdmin() {
+  const [selectedRequest, setSelectedRequest] = useState<AutomationAnalysisRequest | null>(null);
+  const [detailsModal, setDetailsModal] = useState(false);
+
+  // Query to get all automation analysis requests
+  const { data: requests, isLoading, error } = useQuery<AutomationAnalysisRequest[]>({
+    queryKey: ['/api/admin/automation-analysis-requests'],
+  });
+
+  const formatDate = (date: Date | string) => {
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusColors = {
+      'pending': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+      'in-progress': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300', 
+      'completed': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      'cancelled': 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+    };
+    return statusColors[status as keyof typeof statusColors] || statusColors.pending;
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    const priorityColors = {
+      'low': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      'medium': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+      'high': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    };
+    return priorityColors[priority as keyof typeof priorityColors] || priorityColors.medium;
+  };
+
+  const openDetails = (request: AutomationAnalysisRequest) => {
+    setSelectedRequest(request);
+    setDetailsModal(true);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center">
+        <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+        <p className="text-lg text-gray-600 dark:text-gray-400">Cargando solicitudes...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          No se pudieron cargar las solicitudes de análisis de automatización.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!requests || requests.length === 0) {
+    return (
+      <Card>
+        <CardContent className="py-12 text-center">
+          <div className="flex flex-col items-center">
+            <Settings className="h-12 w-12 text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+              No hay solicitudes aún
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400">
+              No se han recibido solicitudes de análisis de automatización Enterprise.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <>
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Empresa</TableHead>
+                <TableHead>Contacto</TableHead>
+                <TableHead>Industria</TableHead>
+                <TableHead>Presupuesto</TableHead>
+                <TableHead>Prioridad</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {requests.map((request) => (
+                <TableRow key={request.id}>
+                  <TableCell className="font-medium">{request.companyName}</TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{request.contactName}</div>
+                      <div className="text-sm text-gray-500">{request.email}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>{request.industry || 'N/A'}</TableCell>
+                  <TableCell>{request.budgetRange || 'N/A'}</TableCell>
+                  <TableCell>
+                    <Badge className={getPriorityBadge(request.priorityLevel || 'medium')}>
+                      {request.priorityLevel || 'medium'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={getStatusBadge(request.analysisStatus || 'pending')}>
+                      {request.analysisStatus || 'pending'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>{formatDate(request.createdAt || '')}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openDetails(request)}
+                      data-testid={`button-view-request-${request.id}`}
+                    >
+                      Ver Detalles
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* Details Modal */}
+      <Dialog open={detailsModal} onOpenChange={setDetailsModal}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedRequest && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Análisis de Automatización - {selectedRequest.companyName}</DialogTitle>
+                <DialogDescription>
+                  Solicitud recibida el {formatDate(selectedRequest.createdAt || '')}
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Company Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Información de la Empresa</h3>
+                  <div className="space-y-2">
+                    <div><strong>Empresa:</strong> {selectedRequest.companyName}</div>
+                    <div><strong>Contacto:</strong> {selectedRequest.contactName}</div>
+                    <div><strong>Email:</strong> {selectedRequest.email}</div>
+                    {selectedRequest.phone && <div><strong>Teléfono:</strong> {selectedRequest.phone}</div>}
+                    <div><strong>Industria:</strong> {selectedRequest.industry || 'N/A'}</div>
+                    <div><strong>Tamaño:</strong> {selectedRequest.companySize || 'N/A'}</div>
+                  </div>
+                </div>
+
+                {/* Project Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Información del Proyecto</h3>
+                  <div className="space-y-2">
+                    <div><strong>Presupuesto:</strong> {selectedRequest.budgetRange || 'N/A'}</div>
+                    <div><strong>Timeline:</strong> {selectedRequest.timeline || 'N/A'}</div>
+                    <div><strong>Prioridad:</strong> 
+                      <Badge className={`ml-2 ${getPriorityBadge(selectedRequest.priorityLevel || 'medium')}`}>
+                        {selectedRequest.priorityLevel || 'medium'}
+                      </Badge>
+                    </div>
+                    <div><strong>Equipo Técnico:</strong> {selectedRequest.technicalTeam || 'N/A'}</div>
+                  </div>
+                </div>
+
+                {/* Current Processes */}
+                <div className="md:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold">Procesos Actuales</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-3 rounded">
+                    {selectedRequest.currentProcesses}
+                  </p>
+                </div>
+
+                {/* Automation Goals */}
+                <div className="md:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold">Objetivos de Automatización</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-3 rounded">
+                    {selectedRequest.automationGoals}
+                  </p>
+                </div>
+
+                {/* Previous Automation Experience */}
+                {selectedRequest.previousAutomation && (
+                  <div className="md:col-span-2 space-y-4">
+                    <h3 className="text-lg font-semibold">Experiencia Previa con Automatización</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-3 rounded">
+                      {selectedRequest.previousAutomation}
+                    </p>
+                  </div>
+                )}
+
+                {/* Analysis Status */}
+                <div className="md:col-span-2 space-y-4">
+                  <h3 className="text-lg font-semibold">Estado del Análisis</h3>
+                  <div className="flex items-center space-x-4">
+                    <Badge className={getStatusBadge(selectedRequest.analysisStatus || 'pending')}>
+                      {selectedRequest.analysisStatus || 'pending'}
+                    </Badge>
+                    {selectedRequest.followUpDate && (
+                      <span className="text-sm text-gray-500">
+                        Seguimiento: {formatDate(selectedRequest.followUpDate)}
+                      </span>
+                    )}
+                  </div>
+                  {selectedRequest.analysisNotes && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 p-3 rounded">
+                      <strong>Notas:</strong> {selectedRequest.analysisNotes}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setDetailsModal(false)}>
+                  Cerrar
+                </Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
 
 export default function AdminPanel() {
   const { user, refreshAuth } = useAuth();
@@ -963,6 +1205,7 @@ export default function AdminPanel() {
                 <TabsTrigger value="discount-codes">Códigos de Descuento</TabsTrigger>
                 <TabsTrigger value="cost-management">Gestión de Costos</TabsTrigger>
                 <TabsTrigger value="pricing-plans">Planes de Precios</TabsTrigger>
+                <TabsTrigger value="automation-analysis">Análisis de Automatización</TabsTrigger>
               </TabsList>
               
               {/* Dashboard Tab */}
@@ -1747,6 +1990,23 @@ export default function AdminPanel() {
                     </CardContent>
                   </Card>
                 )}
+              </TabsContent>
+
+              {/* Automation Analysis Tab */}
+              <TabsContent value="automation-analysis">
+                <div className="mb-6 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Solicitudes de Análisis de Automatización</h2>
+                  <Button 
+                    onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/admin/automation-analysis-requests'] })}
+                    className="flex items-center gap-2"
+                    data-testid="button-refresh-automation-analysis"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Actualizar
+                  </Button>
+                </div>
+
+                <AutomationAnalysisAdmin />
               </TabsContent>
             </Tabs>
           ) : (
