@@ -409,9 +409,9 @@ export default function AutomationAnalysis() {
           <TabsContent value="tools" className="space-y-8">
             <Card>
               <CardHeader>
-                <CardTitle>Automation Platform Comparison</CardTitle>
+                <CardTitle>{t("automation_analysis.comparison_title")}</CardTitle>
                 <CardDescription>
-                  Understanding the benefits and trade-offs of different automation approaches
+                  {t("automation_analysis.comparison_subtitle")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -419,33 +419,33 @@ export default function AutomationAnalysis() {
                   {/* n8n */}
                   <Card className="border-2">
                     <CardHeader>
-                      <CardTitle className="text-lg">n8n</CardTitle>
-                      <CardDescription>Visual workflow automation</CardDescription>
+                      <CardTitle className="text-lg">{t("automation_analysis.n8n_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.n8n_price")}</CardDescription>
                       <Badge variant="secondary">No-Code/Low-Code</Badge>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div>
-                        <h5 className="font-semibold text-green-600 mb-2">✅ Pros</h5>
+                        <h5 className="font-semibold text-green-600 mb-2">✅ {t("automation_analysis.n8n_pros_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• Visual workflow designer</li>
-                          <li>• 400+ pre-built integrations</li>
-                          <li>• Self-hosted option</li>
-                          <li>• Active community</li>
-                          <li>• Custom code nodes available</li>
+                          <li>• {t("automation_analysis.n8n_pro_1")}</li>
+                          <li>• {t("automation_analysis.n8n_pro_2")}</li>
+                          <li>• {t("automation_analysis.n8n_pro_3")}</li>
+                          <li>• {t("automation_analysis.n8n_pro_4")}</li>
+                          <li>• {t("automation_analysis.n8n_pro_5")}</li>
                         </ul>
                       </div>
                       <div>
-                        <h5 className="font-semibold text-red-600 mb-2">❌ Cons</h5>
+                        <h5 className="font-semibold text-red-600 mb-2">❌ {t("automation_analysis.n8n_cons_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• Limited complex logic handling</li>
-                          <li>• Performance issues with large workflows</li>
-                          <li>• Requires technical knowledge for advanced features</li>
+                          <li>• {t("automation_analysis.n8n_con_1")}</li>
+                          <li>• {t("automation_analysis.n8n_con_2")}</li>
+                          <li>• {t("automation_analysis.n8n_con_3")}</li>
                         </ul>
                       </div>
                       <div className="pt-2">
-                        <span className="text-sm font-medium">Best for:</span>
+                        <span className="text-sm font-medium">{t("automation_analysis.best_for_label")}:</span>
                         <p className="text-sm text-muted-foreground">
-                          Medium complexity workflows with existing integrations
+                          {t("automation_analysis.n8n_ideal")}
                         </p>
                       </div>
                     </CardContent>
@@ -454,33 +454,33 @@ export default function AutomationAnalysis() {
                   {/* Make (Integromat) */}
                   <Card className="border-2">
                     <CardHeader>
-                      <CardTitle className="text-lg">Make (Integromat)</CardTitle>
-                      <CardDescription>Visual automation platform</CardDescription>
+                      <CardTitle className="text-lg">{t("automation_analysis.make_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.make_price")}</CardDescription>
                       <Badge variant="secondary">No-Code</Badge>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div>
-                        <h5 className="font-semibold text-green-600 mb-2">✅ Pros</h5>
+                        <h5 className="font-semibold text-green-600 mb-2">✅ {t("automation_analysis.make_pros_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• Intuitive visual interface</li>
-                          <li>• Real-time execution monitoring</li>
-                          <li>• Good error handling</li>
-                          <li>• Strong data transformation tools</li>
-                          <li>• Webhook support</li>
+                          <li>• {t("automation_analysis.make_pro_1")}</li>
+                          <li>• {t("automation_analysis.make_pro_2")}</li>
+                          <li>• {t("automation_analysis.make_pro_3")}</li>
+                          <li>• {t("automation_analysis.make_pro_4")}</li>
+                          <li>• {t("automation_analysis.make_pro_5")}</li>
                         </ul>
                       </div>
                       <div>
-                        <h5 className="font-semibold text-red-600 mb-2">❌ Cons</h5>
+                        <h5 className="font-semibold text-red-600 mb-2">❌ {t("automation_analysis.make_cons_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• Higher pricing for complex scenarios</li>
-                          <li>• Limited customization options</li>
-                          <li>• Vendor lock-in (cloud-only)</li>
+                          <li>• {t("automation_analysis.make_con_1")}</li>
+                          <li>• {t("automation_analysis.make_con_2")}</li>
+                          <li>• {t("automation_analysis.make_con_3")}</li>
                         </ul>
                       </div>
                       <div className="pt-2">
-                        <span className="text-sm font-medium">Best for:</span>
+                        <span className="text-sm font-medium">{t("automation_analysis.best_for_label")}:</span>
                         <p className="text-sm text-muted-foreground">
-                          Simple to medium workflows with visual design preference
+                          {t("automation_analysis.make_ideal")}
                         </p>
                       </div>
                     </CardContent>
@@ -489,34 +489,34 @@ export default function AutomationAnalysis() {
                   {/* Custom Code */}
                   <Card className="border-2 border-primary">
                     <CardHeader>
-                      <CardTitle className="text-lg">Custom Development</CardTitle>
-                      <CardDescription>Native code solution</CardDescription>
+                      <CardTitle className="text-lg">{t("automation_analysis.custom_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.custom_price")}</CardDescription>
                       <Badge>Full Control</Badge>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div>
-                        <h5 className="font-semibold text-green-600 mb-2">✅ Pros</h5>
+                        <h5 className="font-semibold text-green-600 mb-2">✅ {t("automation_analysis.custom_pros_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• Complete customization</li>
-                          <li>• Maximum performance</li>
-                          <li>• No vendor lock-in</li>
-                          <li>• Complex logic handling</li>
-                          <li>• Integration with any system</li>
-                          <li>• Cost-effective at scale</li>
+                          <li>• {t("automation_analysis.custom_pro_1")}</li>
+                          <li>• {t("automation_analysis.custom_pro_2")}</li>
+                          <li>• {t("automation_analysis.custom_pro_3")}</li>
+                          <li>• {t("automation_analysis.custom_pro_4")}</li>
+                          <li>• {t("automation_analysis.custom_pro_5")}</li>
+                          <li>• {t("automation_analysis.custom_pro_6")}</li>
                         </ul>
                       </div>
                       <div>
-                        <h5 className="font-semibold text-red-600 mb-2">❌ Cons</h5>
+                        <h5 className="font-semibold text-red-600 mb-2">❌ {t("automation_analysis.custom_cons_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• Higher initial development time</li>
-                          <li>• Requires technical expertise</li>
-                          <li>• Ongoing maintenance responsibility</li>
+                          <li>• {t("automation_analysis.custom_con_1")}</li>
+                          <li>• {t("automation_analysis.custom_con_2")}</li>
+                          <li>• {t("automation_analysis.custom_con_3")}</li>
                         </ul>
                       </div>
                       <div className="pt-2">
-                        <span className="text-sm font-medium">Best for:</span>
+                        <span className="text-sm font-medium">{t("automation_analysis.best_for_label")}:</span>
                         <p className="text-sm text-muted-foreground">
-                          Complex, high-volume, or highly customized automation needs
+                          {t("automation_analysis.custom_ideal")}
                         </p>
                       </div>
                     </CardContent>
@@ -526,8 +526,7 @@ export default function AutomationAnalysis() {
                 <Alert className="mt-6">
                   <Lightbulb className="h-4 w-4" />
                   <AlertDescription>
-                    <strong>Our Recommendation:</strong> The best approach depends on your specific needs, technical capabilities, 
-                    and long-term goals. Our analysis will help you choose the optimal solution for your unique situation.
+                    <strong>{t("automation_analysis.recommendation_title")}:</strong> {t("automation_analysis.recommendation_text")}
                   </AlertDescription>
                 </Alert>
               </CardContent>
@@ -539,11 +538,10 @@ export default function AutomationAnalysis() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Target className="h-5 w-5" />
-                  <span>Request Professional Analysis</span>
+                  <span>{t("automation_analysis.form_title")}</span>
                 </CardTitle>
                 <CardDescription>
-                  Get a personalized automation strategy from our experts. We'll analyze your processes, 
-                  calculate precise ROI, and create a detailed implementation plan.
+                  {t("automation_analysis.form_subtitle")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
