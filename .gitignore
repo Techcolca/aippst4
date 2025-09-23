@@ -44,4 +44,4 @@ Thumbs.db
 .agent_state_main.bin
 repl_state.bin
 filesystem_state.json
-*.agent
+*.agent.local/
