@@ -993,16 +993,18 @@ const resources = {
         
         // Custom Development
         custom_title: "Développement Sur Mesure",
-        custom_price: "5,000$ - 50,000$ CAD",
+        custom_price: "Dépend de chaque projet",
         custom_pros_title: "Avantages",
         custom_pro1: "Solution parfaitement adaptée",
         custom_pro2: "Contrôle total",
         custom_pro3: "Évolutivité maximale",
         custom_pro4: "Propriété intellectuelle",
+        custom_pro5: "Performance maximale",
+        custom_pro6: "Intégration avec tout système",
+        custom_pro7: "Sécurité renforcée",
+        custom_pro8: "Support dédié 24/7",
         custom_cons_title: "Inconvénients",
-        custom_con1: "Investissement initial élevé",
-        custom_con2: "Temps de développement long",
-        custom_con3: "Maintenance requise",
+        custom_con1: "Maintenance requise",
         custom_ideal: "Idéal pour: Grandes entreprises, besoins complexes",
         
         // Analysis Request Form
@@ -1138,9 +1140,9 @@ const resources = {
         custom_pro_4: "Propriété intellectuelle",
         custom_pro_5: "Performance maximale",
         custom_pro_6: "Intégration avec tout système",
-        custom_con_1: "Investissement initial élevé",
-        custom_con_2: "Temps de développement long", 
-        custom_con_3: "Maintenance requise",
+        custom_pro_7: "Sécurité renforcée",
+        custom_pro_8: "Support dédié 24/7",
+        custom_con_1: "Maintenance requise",
         
         // Form section keys
         form_company_section: "Informations de l'Entreprise",
@@ -2205,16 +2207,18 @@ const resources = {
         
         // Custom Development
         custom_title: "Desarrollo Personalizado",
-        custom_price: "$4,000 - $40,000 USD",
+        custom_price: "Depende de cada proyecto",
         custom_pros_title: "Ventajas",
         custom_pro1: "Solución perfectamente adaptada",
         custom_pro2: "Control total",
         custom_pro3: "Escalabilidad máxima",
         custom_pro4: "Propiedad intelectual",
+        custom_pro5: "Rendimiento máximo",
+        custom_pro6: "Integración con cualquier sistema",
+        custom_pro7: "Seguridad reforzada",
+        custom_pro8: "Soporte dedicado 24/7",
         custom_cons_title: "Desventajas",
-        custom_con1: "Inversión inicial alta",
-        custom_con2: "Tiempo de desarrollo largo",
-        custom_con3: "Mantenimiento requerido",
+        custom_con1: "Mantenimiento requerido",
         custom_ideal: "Ideal para: Grandes empresas, necesidades complejas",
         
         // Analysis Request Form
@@ -3417,16 +3421,18 @@ const resources = {
         
         // Custom Development
         custom_title: "Custom Development",
-        custom_price: "$5,000 - $50,000 USD",
+        custom_price: "Depends on each project",
         custom_pros_title: "Advantages",
         custom_pro1: "Perfectly tailored solution",
         custom_pro2: "Full control",
         custom_pro3: "Maximum scalability",
         custom_pro4: "Intellectual property",
+        custom_pro5: "Maximum performance",
+        custom_pro6: "Integration with any system",
+        custom_pro7: "Enhanced security",
+        custom_pro8: "Dedicated 24/7 support",
         custom_cons_title: "Disadvantages",
-        custom_con1: "High initial investment",
-        custom_con2: "Long development time",
-        custom_con3: "Maintenance required",
+        custom_con1: "Maintenance required",
         custom_ideal: "Ideal for: Large enterprises, complex needs",
         
         // Analysis Request Form
