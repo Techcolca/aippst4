@@ -38,3 +38,10 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Archivos de estado de Replit Agent
+.local/
+.agent_state_main.bin
+repl_state.bin
+filesystem_state.json
+*.agent
