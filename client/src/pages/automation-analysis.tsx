@@ -79,7 +79,7 @@ export default function AutomationAnalysis() {
       setLocation('/dashboard?tab=automation');
     }
   };
-  const [currentTab, setCurrentTab] = useState("benefits");
+  const [currentTab, setCurrentTab] = useState("request");
   const [roiCalculation, setRoiCalculation] = useState({
     hoursPerWeek: 0,
     hourlyRate: 0,
@@ -222,9 +222,9 @@ export default function AutomationAnalysis() {
 
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="space-y-8">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="benefits" data-testid="tab-benefits">{t("automation_analysis.tab_benefits")}</TabsTrigger>
-            <TabsTrigger value="tools" data-testid="tab-tools">{t("automation_analysis.tab_comparison")}</TabsTrigger>
             <TabsTrigger value="request" data-testid="tab-request">{t("automation_analysis.tab_request")}</TabsTrigger>
+            <TabsTrigger value="tools" data-testid="tab-tools">{t("automation_analysis.tab_comparison")}</TabsTrigger>
+            <TabsTrigger value="benefits" data-testid="tab-benefits">{t("automation_analysis.tab_benefits")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="benefits" className="space-y-8">
