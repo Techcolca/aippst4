@@ -82,7 +82,7 @@ export default function Home() {
                   </Button>
                   
                   <Button size="lg" variant="outline" className="border-gray-600 dark:border-gray-400 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700" asChild>
-                    <Link href="/docs">{t("learnMore")}</Link>
+                    <Link href="/automation-analysis">{t("learnMore")}</Link>
                   </Button>
                 </div>
               </div>

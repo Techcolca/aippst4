@@ -231,7 +231,7 @@ const resources = {
       // Home Page
       "welcome": "Bienvenue à AIPPS",
       "getStarted": "Commencer",
-      "learnMore": "En savoir plus",
+      "learnMore": "Pré-analyse gratuit",
       "home.description": "Transformez votre site web avec l'IA conversationnelle la plus avancée. Créez des expériences interactives qui engagent vos visiteurs et convertissent plus efficacement.",
       "home.stats.websites": "1000+",
       "home.stats.websitesLabel": "Sites web actifs",
@@ -1443,7 +1443,7 @@ const resources = {
       // Home Page
       "welcome": "Bienvenido a AIPPS",
       "getStarted": "Comenzar",
-      "learnMore": "Saber más",
+      "learnMore": "Pre-análisis gratuito",
       "home.description": "Transforma tu sitio web con la IA conversacional más avanzada. Crea experiencias interactivas que atraigan a tus visitantes y conviertan más eficazmente.",
       "home.stats.websites": "1000+",
       "home.stats.websitesLabel": "Sitios web activos",
@@ -2655,7 +2655,7 @@ const resources = {
       // Home Page
       "welcome": "Welcome to AIPPS",
       "getStarted": "Get Started",
-      "learnMore": "Learn More",
+      "learnMore": "Free Pre-analysis",
       "home.description": "Transform your website with the most advanced conversational AI. Create interactive experiences that engage your visitors and convert more effectively.",
       "home.stats.websites": "1000+",
       "home.stats.websitesLabel": "Active websites",
