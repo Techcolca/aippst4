@@ -377,6 +377,42 @@ export default function AutomationAnalysis() {
               </CardHeader>
               <CardContent>
                 <div className="grid lg:grid-cols-3 gap-6">
+                  {/* Custom Code - PRIMERA POSICIÓN */}
+                  <Card className="border-2 border-primary">
+                    <CardHeader>
+                      <CardTitle className="text-lg">{t("automation_analysis.custom_title")}</CardTitle>
+                      <CardDescription>{t("automation_analysis.custom_price")}</CardDescription>
+                      <Badge>Full Control</Badge>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div>
+                        <h5 className="font-semibold text-green-600 mb-2">✅ {t("automation_analysis.custom_pros_title")}</h5>
+                        <ul className="text-sm space-y-1 text-muted-foreground">
+                          <li>• {t("automation_analysis.custom_pro1")}</li>
+                          <li>• {t("automation_analysis.custom_pro2")}</li>
+                          <li>• {t("automation_analysis.custom_pro3")}</li>
+                          <li>• {t("automation_analysis.custom_pro4")}</li>
+                          <li>• {t("automation_analysis.custom_pro5")}</li>
+                          <li>• {t("automation_analysis.custom_pro6")}</li>
+                          <li>• {t("automation_analysis.custom_pro7")}</li>
+                          <li>• {t("automation_analysis.custom_pro8")}</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h5 className="font-semibold text-red-600 mb-2">❌ {t("automation_analysis.custom_cons_title")}</h5>
+                        <ul className="text-sm space-y-1 text-muted-foreground">
+                          <li>• {t("automation_analysis.custom_con1")}</li>
+                        </ul>
+                      </div>
+                      <div className="pt-2">
+                        <span className="text-sm font-medium">{t("automation_analysis.best_for_label")}:</span>
+                        <p className="text-sm text-muted-foreground">
+                          {t("automation_analysis.custom_ideal")}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+
                   {/* n8n */}
                   <Card className="border-2">
                     <CardHeader>
@@ -442,42 +478,6 @@ export default function AutomationAnalysis() {
                         <span className="text-sm font-medium">{t("automation_analysis.best_for_label")}:</span>
                         <p className="text-sm text-muted-foreground">
                           {t("automation_analysis.make_ideal")}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Custom Code */}
-                  <Card className="border-2 border-primary">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{t("automation_analysis.custom_title")}</CardTitle>
-                      <CardDescription>{t("automation_analysis.custom_price")}</CardDescription>
-                      <Badge>Full Control</Badge>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <h5 className="font-semibold text-green-600 mb-2">✅ {t("automation_analysis.custom_pros_title")}</h5>
-                        <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• {t("automation_analysis.custom_pro1")}</li>
-                          <li>• {t("automation_analysis.custom_pro2")}</li>
-                          <li>• {t("automation_analysis.custom_pro3")}</li>
-                          <li>• {t("automation_analysis.custom_pro4")}</li>
-                          <li>• {t("automation_analysis.custom_pro5")}</li>
-                          <li>• {t("automation_analysis.custom_pro6")}</li>
-                          <li>• {t("automation_analysis.custom_pro7")}</li>
-                          <li>• {t("automation_analysis.custom_pro8")}</li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h5 className="font-semibold text-red-600 mb-2">❌ {t("automation_analysis.custom_cons_title")}</h5>
-                        <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• {t("automation_analysis.custom_con1")}</li>
-                        </ul>
-                      </div>
-                      <div className="pt-2">
-                        <span className="text-sm font-medium">{t("automation_analysis.best_for_label")}:</span>
-                        <p className="text-sm text-muted-foreground">
-                          {t("automation_analysis.custom_ideal")}
                         </p>
                       </div>
                     </CardContent>

@@ -1005,7 +1005,7 @@ const resources = {
         custom_pro8: "Support dédié 24/7",
         custom_cons_title: "Inconvénients",
         custom_con1: "Maintenance requise",
-        custom_ideal: "Idéal pour: Grandes entreprises, besoins complexes",
+        custom_ideal: "Idéal pour: Tout type d'entreprises (PME, moyennes, grandes) et besoins: facturation, inventaire, CRM, workflows, intégrations complexes",
         
         // Analysis Request Form
         form_title: "Demande d'Analyse Professionnelle",
@@ -2219,7 +2219,7 @@ const resources = {
         custom_pro8: "Soporte dedicado 24/7",
         custom_cons_title: "Desventajas",
         custom_con1: "Mantenimiento requerido",
-        custom_ideal: "Ideal para: Grandes empresas, necesidades complejas",
+        custom_ideal: "Ideal para: Todo tipo de empresas (Pymes, medianas, grandes) y necesidades: facturación, inventario, CRM, workflows, integraciones complejas",
         
         // Analysis Request Form
         form_title: "Solicitud de Análisis Profesional",
@@ -3433,7 +3433,7 @@ const resources = {
         custom_pro8: "Dedicated 24/7 support",
         custom_cons_title: "Disadvantages",
         custom_con1: "Maintenance required",
-        custom_ideal: "Ideal for: Large enterprises, complex needs",
+        custom_ideal: "Ideal for: All types of companies (SMEs, medium, large) and needs: billing, inventory, CRM, workflows, complex integrations",
         
         // Analysis Request Form
         form_title: "Professional Analysis Request",
