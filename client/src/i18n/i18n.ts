@@ -992,7 +992,7 @@ const resources = {
         make_ideal: "Idéal pour: PME, équipes non-techniques",
         
         // Custom Development
-        custom_title: "Développement Sur Mesure",
+        custom_title: "Développement Sur Mesure avec AIPPS",
         custom_price: "Dépend de chaque projet",
         custom_pros_title: "Avantages",
         custom_pro1: "Solution parfaitement adaptée",
@@ -2206,7 +2206,7 @@ const resources = {
         make_ideal: "Ideal para: PyMEs, equipos no técnicos",
         
         // Custom Development
-        custom_title: "Desarrollo Personalizado",
+        custom_title: "Desarrollo Personalizado con AIPPS",
         custom_price: "Depende de cada proyecto",
         custom_pros_title: "Ventajas",
         custom_pro1: "Solución perfectamente adaptada",
@@ -3420,7 +3420,7 @@ const resources = {
         make_ideal: "Ideal for: SMBs, non-technical teams",
         
         // Custom Development
-        custom_title: "Custom Development",
+        custom_title: "Custom Development with AIPPS",
         custom_price: "Depends on each project",
         custom_pros_title: "Advantages",
         custom_pro1: "Perfectly tailored solution",
