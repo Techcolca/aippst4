@@ -119,7 +119,7 @@ export const insertAutomationSchema = createInsertSchema(automations).pick({
 // Automation analysis requests schema - For Enterprise plan users
 export const automationAnalysisRequests = pgTable("automation_analysis_requests", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id),
+  userId: integer("user_id").references(() => users.id), // Allow null for anonymous requests
   companyName: text("company_name").notNull(),
   contactName: text("contact_name").notNull(),
   email: text("email").notNull(),

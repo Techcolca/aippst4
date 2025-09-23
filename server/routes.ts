@@ -1219,21 +1219,17 @@ app.get("/api/health", (req, res) => {
     }
   });
 
-  // Create new automation analysis request
-  app.post("/api/automation-analysis-requests", authenticateJWT, checkEnterpriseAccess, async (req, res) => {
+  // Create new automation analysis request (public access - no authentication required)
+  app.post("/api/automation-analysis-requests", async (req, res) => {
     try {
-      // Ensure user is authenticated
-      if (!req.userId) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-      
-      // Parse only client-provided fields, ignore userId from body
+      // Parse client-provided fields, allow anonymous requests
       const clientSchema = insertAutomationAnalysisRequestSchema.omit({ userId: true });
       const bodyData = clientSchema.parse(req.body);
       
+      // Use authenticated user ID if available, otherwise null for anonymous requests
       const validatedData = {
         ...bodyData,
-        userId: req.userId, // Always use authenticated user ID
+        userId: req.userId || null, // Allow anonymous requests
       };
 
       const request = await storage.createAutomationAnalysisRequest(validatedData);

@@ -17,8 +17,6 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/hooks/use-toast";
-import { useFeatureCheck } from "@/hooks/use-feature-access";
-import { useUpgradeModal } from "@/hooks/use-upgrade-modal";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -33,7 +31,6 @@ import {
   BarChart3,
   Lightbulb,
   Target,
-  Shield,
   ArrowRight,
   ArrowLeft
 } from "lucide-react";
@@ -61,8 +58,6 @@ type FormData = z.infer<typeof formSchema>;
 export default function AutomationAnalysis() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const { hasAccess: hasFeatureAccess, isLoading: featureLoading } = useFeatureCheck('advancedAnalytics');
-  const upgradeModal = useUpgradeModal();
   const { t } = useTranslation();
   const [location, setLocation] = useLocation();
   
@@ -147,46 +142,6 @@ export default function AutomationAnalysis() {
   const netAnnualSavings = annualCostSavings - totalToolCost;
   const roiPercentage = totalToolCost > 0 ? ((netAnnualSavings / totalToolCost) * 100) : 0;
 
-  // Feature access check
-  if (featureLoading) {
-    return (
-      <div className="container mx-auto py-10 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
-      </div>
-    );
-  }
-
-  if (!hasFeatureAccess) {
-    return (
-      <div className="container mx-auto py-10">
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 p-3 bg-amber-100 dark:bg-amber-900 rounded-full w-fit">
-              <Shield className="h-8 w-8 text-amber-600 dark:text-amber-400" />
-            </div>
-            <CardTitle className="text-2xl">Enterprise Feature Required</CardTitle>
-            <CardDescription className="text-lg">
-              {t("automation_analysis.subtitle")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-muted-foreground mb-6">
-              Upgrade to Enterprise to access professional automation analysis, ROI calculations, 
-              and personalized implementation guidance from our experts.
-            </p>
-            <Button 
-              size="lg" 
-              className="w-full"
-              onClick={() => upgradeModal.showUpgradeModal("general", undefined, "Enterprise")}
-              data-testid="button-upgrade-enterprise"
-            >
-              Upgrade to Enterprise
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-8 px-4">
