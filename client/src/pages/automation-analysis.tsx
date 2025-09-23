@@ -458,20 +458,20 @@ export default function AutomationAnalysis() {
                       <div>
                         <h5 className="font-semibold text-green-600 mb-2">✅ {t("automation_analysis.custom_pros_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• {t("automation_analysis.custom_pro_1")}</li>
-                          <li>• {t("automation_analysis.custom_pro_2")}</li>
-                          <li>• {t("automation_analysis.custom_pro_3")}</li>
-                          <li>• {t("automation_analysis.custom_pro_4")}</li>
-                          <li>• {t("automation_analysis.custom_pro_5")}</li>
-                          <li>• {t("automation_analysis.custom_pro_6")}</li>
+                          <li>• {t("automation_analysis.custom_pro1")}</li>
+                          <li>• {t("automation_analysis.custom_pro2")}</li>
+                          <li>• {t("automation_analysis.custom_pro3")}</li>
+                          <li>• {t("automation_analysis.custom_pro4")}</li>
+                          <li>• {t("automation_analysis.custom_pro5")}</li>
+                          <li>• {t("automation_analysis.custom_pro6")}</li>
+                          <li>• {t("automation_analysis.custom_pro7")}</li>
+                          <li>• {t("automation_analysis.custom_pro8")}</li>
                         </ul>
                       </div>
                       <div>
                         <h5 className="font-semibold text-red-600 mb-2">❌ {t("automation_analysis.custom_cons_title")}</h5>
                         <ul className="text-sm space-y-1 text-muted-foreground">
-                          <li>• {t("automation_analysis.custom_con_1")}</li>
-                          <li>• {t("automation_analysis.custom_con_2")}</li>
-                          <li>• {t("automation_analysis.custom_con_3")}</li>
+                          <li>• {t("automation_analysis.custom_con1")}</li>
                         </ul>
                       </div>
                       <div className="pt-2">
