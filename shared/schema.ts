@@ -134,6 +134,8 @@ export const automationAnalysisRequests = pgTable("automation_analysis_requests"
   technicalTeam: text("technical_team"), // Technical team situation (yes-full-team, yes-limited-team, no-team, external-help)
   previousAutomation: text("previous_automation"), // Experience with automation tools
   priorityLevel: text("priority_level").default("medium"), // low, medium, high, urgent
+  aiPreference: text("ai_preference"), // "local", "cloud", "hybrid", "no-preference"
+  sensitiveDataHandling: text("sensitive_data_handling"), // "yes-highly-sensitive", "yes-moderate", "no", "not-sure"
   estimatedTimeSavings: integer("estimated_time_savings"), // Hours per week estimated
   estimatedCostSavings: integer("estimated_cost_savings"), // CAD per month estimated
   recommendedApproach: text("recommended_approach"), // Our recommendation: native vs n8n/make
@@ -160,8 +162,12 @@ export const insertAutomationAnalysisRequestSchema = createInsertSchema(automati
   technicalTeam: true,
   previousAutomation: true,
   priorityLevel: true,
+  aiPreference: true,
+  sensitiveDataHandling: true,
 }).extend({
   technicalTeam: z.enum(["yes-full-team", "yes-limited-team", "no-team", "external-help"]),
+  aiPreference: z.enum(["local", "cloud", "hybrid", "no-preference"]).optional(),
+  sensitiveDataHandling: z.enum(["yes-highly-sensitive", "yes-moderate", "no", "not-sure"]).optional(),
 });
 
 // Schema for user updates (excludes internal/admin fields)
@@ -180,6 +186,8 @@ export const updateAutomationAnalysisRequestUserSchema = createInsertSchema(auto
   technicalTeam: true,
   previousAutomation: true,
   priorityLevel: true,
+  aiPreference: true,
+  sensitiveDataHandling: true,
 }).partial();
 
 // Schema for admin/internal updates (includes analysis fields)

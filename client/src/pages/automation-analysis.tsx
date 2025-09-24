@@ -51,6 +51,8 @@ const formSchema = z.object({
   technicalTeam: z.enum(["yes-full-team", "yes-limited-team", "no-team", "external-help"]),
   previousAutomation: z.string().min(1, "Please select an option"),
   priorityLevel: z.string().min(1, "Please select priority level"),
+  aiPreference: z.enum(["local", "cloud", "hybrid", "no-preference"]).optional(),
+  sensitiveDataHandling: z.enum(["yes-highly-sensitive", "yes-moderate", "no", "not-sure"]).optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -99,6 +101,8 @@ export default function AutomationAnalysis() {
       technicalTeam: undefined,
       previousAutomation: "",
       priorityLevel: "",
+      aiPreference: undefined,
+      sensitiveDataHandling: undefined,
     },
   });
 
@@ -751,6 +755,62 @@ export default function AutomationAnalysis() {
                                   <SelectItem value="medium">{t("automation_analysis.priority_medium")}</SelectItem>
                                   <SelectItem value="high">{t("automation_analysis.priority_high")}</SelectItem>
                                   <SelectItem value="urgent">{t("automation_analysis.priority_urgent")}</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* AI Preference */}
+                        <FormField
+                          control={form.control}
+                          name="aiPreference"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t("automation_analysis.form_ai_preference_label")}</FormLabel>
+                              <p className="text-sm text-muted-foreground mb-2">
+                                {t("automation_analysis.form_ai_preference_question")}
+                              </p>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-ai-preference">
+                                    <SelectValue placeholder={t("automation_analysis.form_select_option")} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="local">{t("automation_analysis.form_ai_preference_local")}</SelectItem>
+                                  <SelectItem value="cloud">{t("automation_analysis.form_ai_preference_cloud")}</SelectItem>
+                                  <SelectItem value="hybrid">{t("automation_analysis.form_ai_preference_hybrid")}</SelectItem>
+                                  <SelectItem value="no-preference">{t("automation_analysis.form_ai_preference_no_preference")}</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* Sensitive Data Handling */}
+                        <FormField
+                          control={form.control}
+                          name="sensitiveDataHandling"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{t("automation_analysis.form_sensitive_data_label")}</FormLabel>
+                              <p className="text-sm text-muted-foreground mb-2">
+                                {t("automation_analysis.form_sensitive_data_question")}
+                              </p>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger data-testid="select-sensitive-data">
+                                    <SelectValue placeholder={t("automation_analysis.form_select_option")} />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="yes-highly-sensitive">{t("automation_analysis.form_sensitive_data_highly")}</SelectItem>
+                                  <SelectItem value="yes-moderate">{t("automation_analysis.form_sensitive_data_moderate")}</SelectItem>
+                                  <SelectItem value="no">{t("automation_analysis.form_sensitive_data_no")}</SelectItem>
+                                  <SelectItem value="not-sure">{t("automation_analysis.form_sensitive_data_not_sure")}</SelectItem>
                                 </SelectContent>
                               </Select>
                               <FormMessage />

@@ -1174,6 +1174,22 @@ const resources = {
         form_submitting: "Envoi de la demande...",
         form_footer_text: "Nos experts en automatisation examineront vos exigences et vous contacteront dans 24-48 heures avec une analyse détaillée et des recommandations d'implémentation.",
         
+        // AI Preference fields
+        form_ai_preference_label: "Préférence d'IA",
+        form_ai_preference_question: "Préférez-vous une IA locale (sur vos serveurs) ou cloud?",
+        form_ai_preference_local: "IA locale (plus sécurisée, plus coûteuse)",
+        form_ai_preference_cloud: "IA cloud (économique, moins de contrôle)",
+        form_ai_preference_hybrid: "Hybride (combinaison)",
+        form_ai_preference_no_preference: "Sans préférence",
+        
+        // Sensitive Data fields
+        form_sensitive_data_label: "Données sensibles",
+        form_sensitive_data_question: "Manipulez-vous des informations confidentielles?",
+        form_sensitive_data_highly: "Oui, hautement sensible",
+        form_sensitive_data_moderate: "Oui, modérément sensible",
+        form_sensitive_data_no: "Non",
+        form_sensitive_data_not_sure: "Je ne suis pas sûr",
+        
         // Additional timeline options
         timeline_immediate: "Immédiat (dans 1 mois)",
         timeline_short_term: "Court terme (1-3 mois)",
@@ -2388,6 +2404,22 @@ const resources = {
         form_submitting: "Enviando solicitud...",
         form_footer_text: "Nuestros expertos en automatización revisarán sus requisitos y lo contactarán en 24-48 horas con un análisis detallado y recomendaciones de implementación.",
         
+        // AI Preference fields
+        form_ai_preference_label: "Preferencia de IA",
+        form_ai_preference_question: "¿Prefiere IA local (en sus servidores) o en la nube?",
+        form_ai_preference_local: "IA local (más segura, más costosa)",
+        form_ai_preference_cloud: "IA en la nube (económica, menos control)",
+        form_ai_preference_hybrid: "Híbrida (combinación)",
+        form_ai_preference_no_preference: "Sin preferencia",
+        
+        // Sensitive Data fields
+        form_sensitive_data_label: "Datos sensibles",
+        form_sensitive_data_question: "¿Manejan información confidencial/sensible?",
+        form_sensitive_data_highly: "Sí, altamente sensible",
+        form_sensitive_data_moderate: "Sí, moderadamente sensible",
+        form_sensitive_data_no: "No",
+        form_sensitive_data_not_sure: "No estoy seguro",
+        
         // Additional timeline options
         timeline_immediate: "Inmediato (dentro de 1 mes)",
         timeline_short_term: "Corto plazo (1-3 meses)",
@@ -3601,6 +3633,22 @@ const resources = {
         form_submit_button: "Request Professional Analysis",
         form_submitting: "Sending request...",
         form_footer_text: "Our automation experts will review your requirements and contact you within 24-48 hours with a detailed analysis and implementation recommendations.",
+        
+        // AI Preference fields
+        form_ai_preference_label: "AI Preference",
+        form_ai_preference_question: "Do you prefer local AI (on your servers) or cloud?",
+        form_ai_preference_local: "Local AI (more secure, more expensive)",
+        form_ai_preference_cloud: "Cloud AI (economical, less control)",
+        form_ai_preference_hybrid: "Hybrid (combination)",
+        form_ai_preference_no_preference: "No preference",
+        
+        // Sensitive Data fields
+        form_sensitive_data_label: "Sensitive Data",
+        form_sensitive_data_question: "Do you handle sensitive/confidential information?",
+        form_sensitive_data_highly: "Yes, highly sensitive",
+        form_sensitive_data_moderate: "Yes, moderately sensitive",
+        form_sensitive_data_no: "No",
+        form_sensitive_data_not_sure: "Not sure",
         
         // Additional timeline options
         timeline_immediate: "Immediate (within 1 month)",
