@@ -280,9 +280,9 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <span>¿Qué servicios ofrece AIPI?</span>
               </div>
-              <div class="aipi-topic" data-query="¿Cómo puedo integrar el chatbot en mi sitio web?">
+              <div class="aipi-topic" data-query="¿Cómo puedo integrar el agente de IA en mi sitio web?">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>¿Cómo puedo integrar el chatbot?</span>
+                <span>¿Cómo puedo integrar el agente de IA?</span>
               </div>
               <div class="aipi-topic" data-query="Explica cómo funciona el análisis de contenido">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -292,7 +292,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <span>Ventajas de la IA</span>
               </div>
-              <div class="aipi-topic" data-query="¿Qué tipos de documentos puedo subir para entrenar al chatbot?">
+              <div class="aipi-topic" data-query="¿Qué tipos de documentos puedo subir para entrenar al agente de IA?">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <span>Documentos compatibles</span>
               </div>

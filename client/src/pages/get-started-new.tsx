@@ -193,11 +193,11 @@ export default function GetStarted() {
                   
                   <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                     <div className="bg-gray-100 dark:bg-gray-800 py-4 px-6 border-b border-gray-200 dark:border-gray-700">
-                      <h2 className="text-2xl font-bold">Paso 2: Personaliza la experiencia de chatbot</h2>
+                      <h2 className="text-2xl font-bold">Paso 2: Personaliza la experiencia del agente de IA</h2>
                     </div>
                     <div className="p-6 bg-white dark:bg-gray-900">
                       <p className="mb-4 text-gray-700 dark:text-gray-300">
-                        Personaliza cómo funciona el chatbot de pantalla completa desde tu panel de control:
+                        Personaliza cómo funciona el agente de IA de pantalla completa desde tu panel de control:
                       </p>
                       <ul className="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
                         <li>Configurar colores y tema visual del chat</li>

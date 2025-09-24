@@ -259,7 +259,7 @@ Plan Empresarial:
           if (welcomePageSettings?.welcomePageChatScrapingEnabled && welcomePageSettings?.welcomePageChatScrapingData) {
             try {
               console.log("Usando el modelo OpenAI con contexto mejorado de la página");
-              console.log("Usando datos de scraping del servidor para el chatbot");
+              console.log("Usando datos de scraping del servidor para el agente de IA");
               
               // Intentar parsear los datos de scraping guardados
               const parsedData = JSON.parse(welcomePageSettings.welcomePageChatScrapingData);

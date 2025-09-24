@@ -536,7 +536,7 @@
     };
   }
 
-  // Función para formatear respuestas del chatbot con estilo enriquecido
+  // Función para formatear respuestas del agente de IA con estilo enriquecido
   function formatBotResponse(text) {
     if (!text) return '';
     

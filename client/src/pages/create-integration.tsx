@@ -576,7 +576,7 @@ export default function CreateIntegration() {
             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-md mb-6">
               <h3 className="font-medium text-lg mb-4">Subir documentos adicionales</h3>
               <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                Sube documentos (PDF, DOCX, Excel) para entrenar al chatbot con información adicional que no está en tu sitio web.
+                Sube documentos (PDF, DOCX, Excel) para entrenar al agente de IA con información adicional que no está en tu sitio web.
               </div>
               
               <input 

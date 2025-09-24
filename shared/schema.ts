@@ -41,7 +41,7 @@ export const integrations = pgTable("integrations", {
   ignoredSections: json("ignored_sections").default([]), // Lista de nombres de secciones a ignorar (ej: "Our Services", "Contact", etc.)
   description: text("description"), // Descripción de la integración
   ignoredSectionsText: text("ignored_sections_text"), // Texto de secciones ignoradas para scraping
-  customization: json("customization"), // Personalización del chatbot (colores, fuentes, mensajes, etc.)
+  customization: json("customization"), // Personalización del agente de IA (colores, fuentes, mensajes, etc.)
   language: text("language").default("es"), // Idioma del widget (es, en, fr)
   textColor: text("text_color").default("auto"), // Color del texto: auto (automático), white (blanco), black (negro)
 });

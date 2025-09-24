@@ -456,7 +456,7 @@ export default function EditIntegration() {
               </div>
               
               <div>
-                <Label htmlFor="botBehavior">Comportamiento del chatbot</Label>
+                <Label htmlFor="botBehavior">Comportamiento del agente de IA</Label>
                 <Textarea
                   id="botBehavior"
                   name="botBehavior"
@@ -466,7 +466,7 @@ export default function EditIntegration() {
                   className="min-h-24"
                 />
                 <p className="text-sm text-muted-foreground mt-1">
-                  Define la personalidad y el comportamiento del chatbot. Sea formal, amigable, profesional, etc.
+                  Define la personalidad y el comportamiento del agente de IA. Sea formal, amigable, profesional, etc.
                 </p>
               </div>
               

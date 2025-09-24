@@ -1011,7 +1011,7 @@ export interface IStorage {
             integration_id: integrationId,
             url: integration.url || 'https://techcolca.com/',
             title: 'AIPPS - Plataforma de IA',
-            content: 'AIPPS es una plataforma de inteligencia artificial que permite crear chatbots inteligentes para sitios web, generar formularios interactivos personalizados, automatizar procesos de atención al cliente e integrar fácilmente con WordPress y otros CMS. Planes disponibles: Gratuito (100 conversaciones/mes), Profesional (conversaciones ilimitadas), Empresarial (soluciones personalizadas).',
+            content: 'AIPPS es una plataforma de inteligencia artificial que permite crear agentes de IA inteligentes para sitios web, generar formularios interactivos personalizados, automatizar procesos de atención al cliente e integrar fácilmente con WordPress y otros CMS. Planes disponibles: Gratuito (100 conversaciones/mes), Profesional (conversaciones ilimitadas), Empresarial (soluciones personalizadas).',
             meta_description: 'Plataforma de inteligencia artificial AIPPS'
           }
         ];

@@ -69,7 +69,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Plan gratuito para comenzar',
         features: [
           '100 conversaciones/mes',
-          '1 chatbot básico',
+          '1 agente de IA básico',
           'Respuestas automáticas simples',
           'Integración web básica',
           'Soporte por email'
@@ -80,7 +80,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Free plan to get started',
         features: [
           '100 conversations/month',
-          '1 basic chatbot',
+          '1 basic AI agent',
           'Simple automatic responses',
           'Basic web integration',
           'Email support'
@@ -91,7 +91,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Plan gratuit pour commencer',
         features: [
           '100 conversations/mois',
-          '1 chatbot de base',
+          '1 agent IA de base',
           'Réponses automatiques simples',
           'Intégration web de base',
           'Support par email'
@@ -104,7 +104,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Perfecto para pequeñas empresas',
         features: [
           '1,000 conversaciones/mes',
-          '3 chatbots',
+          '3 agentes de IA',
           'Procesamiento de documentos (10/mes)',
           'Análisis de sentimientos',
           'Integración con formularios',
@@ -118,7 +118,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Perfect for small businesses',
         features: [
           '1,000 conversations/month',
-          '3 chatbots',
+          '3 AI agents',
           'Document processing (10/month)',
           'Sentiment analysis',
           'Form integrations',
@@ -132,7 +132,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Parfait pour les petites entreprises',
         features: [
           '1 000 conversations/mois',
-          '3 chatbots',
+          '3 agents IA',
           'Traitement de documents (10/mois)',
           'Analyse de sentiment',
           'Intégrations de formulaires',
@@ -148,7 +148,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Solución avanzada para empresas en crecimiento',
         features: [
           '5,000 conversaciones/mes',
-          '10 chatbots',
+          '10 agentes de IA',
           'Procesamiento avanzado documentos (100/mes)',
           'IA contextual con memoria',
           'Integraciones CRM básicas',
@@ -164,7 +164,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Advanced solution for growing businesses',
         features: [
           '5,000 conversations/month',
-          '10 chatbots',
+          '10 AI agents',
           'Advanced document processing (100/month)',
           'Contextual AI with memory',
           'Basic CRM integrations',
@@ -180,7 +180,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Solution avancée pour entreprises en croissance',
         features: [
           '5 000 conversations/mois',
-          '10 chatbots',
+          '10 agents IA',
           'Traitement avancé de documents (100/mois)',
           'IA contextuelle avec mémoire',
           'Intégrations CRM de base',
@@ -198,7 +198,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Plan completo con IA automatizada',
         features: [
           'Conversaciones ilimitadas',
-          'Chatbots ilimitados',
+          'Agentes de IA ilimitados',
           'IA local personalizada',
           'Automatizaciones IA completas',
           'Sistema de agenda integrado',
@@ -214,7 +214,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Complete plan with automated AI',
         features: [
           'Unlimited conversations',
-          'Unlimited chatbots',
+          'Unlimited AI agents',
           'Custom local AI',
           'Complete AI automations',
           'Integrated scheduling system',
@@ -230,7 +230,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Plan complet avec IA automatisée',
         features: [
           'Conversations illimitées',
-          'Chatbots illimités',
+          'Agents IA illimités',
           'IA locale personnalisée',
           'Automatisations IA complètes',
           'Système d\'agenda intégré',
@@ -1594,7 +1594,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // Ruta para obtener configuración del chatbot de la página de bienvenida
+    // Ruta para obtener configuración del agente de IA de la página de bienvenida
     app.get("/api/welcome-chat-settings", async (req, res) => {
       try {
         // Obtener configuración desde una cuenta de administrador
@@ -1604,7 +1604,7 @@ app.get("/api/health", (req, res) => {
         // Obtener configuración
         const settings = await storage.getSettings(adminUserId);
 
-        // Devolver solo la configuración relacionada con el chatbot de bienvenida
+        // Devolver solo la configuración relacionada con el agente de IA de bienvenida
         // Nota: Ya no incluimos un mensaje de bienvenida predeterminado en español para permitir que el cliente use i18n
         res.json({
           welcomePageChatEnabled: settings?.welcomePageChatEnabled || true,
@@ -1633,7 +1633,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // Ruta para actualizar configuración del chatbot de bienvenida
+    // Ruta para actualizar configuración del agente de IA de bienvenida
     app.post("/api/welcome-chat-settings", verifyToken, isAdmin, async (req, res) => {
       try {
         const {
@@ -1701,7 +1701,7 @@ app.get("/api/health", (req, res) => {
       }
     });
 
-    // Ruta para ejecutar scraping para el chatbot de bienvenida
+    // Ruta para ejecutar scraping para el agente de IA de bienvenida
     app.post("/api/welcome-chat/scrape", async (req, res) => {
       try {
         // Obtener información de autenticación
@@ -1750,7 +1750,7 @@ app.get("/api/health", (req, res) => {
           }
         }
 
-        console.log(`Iniciando scraping para chatbot de bienvenida: ${siteUrl}`);
+        console.log(`Iniciando scraping para agente de IA de bienvenida: ${siteUrl}`);
 
         // Scraper las páginas más importantes primero
         const pagesLimit = maxPages || 5;
@@ -1802,7 +1802,7 @@ app.get("/api/health", (req, res) => {
           if (!scrapedData || !scrapedData.pages || scrapedData.pages.length === 0) {
             console.warn("No se encontró contenido durante el scraping");
 
-            // Crear un dato mínimo para que el chatbot tenga algo de contexto
+            // Crear un dato mínimo para que el agente de IA tenga algo de contexto
             scrapedData.pages = [{
               url: siteUrl,
               title: "AIPPS - Plataforma de IA Conversacional",
@@ -1817,7 +1817,7 @@ app.get("/api/health", (req, res) => {
             scrapedData.pagesProcessed = Math.max(1, scrapedData.pages.length);
           }
 
-          // Transformar los datos a un formato más útil para el chatbot
+          // Transformar los datos a un formato más útil para el agente de IA
           const processedData = {
             sitemap: scrapedData.pages.map(page => ({
               url: page.url,
@@ -3219,12 +3219,12 @@ app.get("/api/health", (req, res) => {
         // Check if user already exists for this integration
         const existingUserByUsername = await storage.getWidgetUserByUsernameAndIntegration(username, integration.id);
         if (existingUserByUsername) {
-          return res.status(400).json({ message: "Username already exists for this chatbot" });
+          return res.status(400).json({ message: "Username already exists for this agent" });
         }
 
         const existingUserByEmail = await storage.getWidgetUserByEmailAndIntegration(email, integration.id);
         if (existingUserByEmail) {
-          return res.status(400).json({ message: "Email already exists for this chatbot" });
+          return res.status(400).json({ message: "Email already exists for this agent" });
         }
 
         // Hash password

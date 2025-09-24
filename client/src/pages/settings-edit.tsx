@@ -409,7 +409,7 @@ export default function SettingsEdit() {
             <CardHeader>
               <CardTitle>Configuración del Chat de Bienvenida</CardTitle>
               <CardDescription>
-                Personaliza el chatbot que aparece en la página de bienvenida para tus visitantes
+                Personaliza el agente de IA que aparece en la página de bienvenida para tus visitantes
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -520,7 +520,7 @@ export default function SettingsEdit() {
                 
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-gray-500">
-                    El scraping permite al chatbot obtener información actualizada sobre la plataforma para responder preguntas de manera precisa.
+                    El scraping permite al agente de IA obtener información actualizada sobre la plataforma para responder preguntas de manera precisa.
                   </p>
                   <Button 
                     onClick={handleScrapeSite}
@@ -645,7 +645,7 @@ export default function SettingsEdit() {
                     <div>
                       <h4 className="font-medium">{t("how_calendar_integration_works")}</h4>
                       <p className="text-sm text-gray-500 mt-1">
-                        {t("calendar_integration_description", "Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu chatbot. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.")}
+                        {t("calendar_integration_description", "Al conectar tu calendario, AIPI podrá programar citas automáticamente cuando los visitantes interactúen con tu agente de IA. Las citas se sincronizarán con tu calendario y se enviarán notificaciones por correo electrónico.")}
                       </p>
                     </div>
                   </div>

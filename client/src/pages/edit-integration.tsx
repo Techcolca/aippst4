@@ -947,7 +947,7 @@ export default function EditIntegration() {
 
             {/* Sección de personalización del chatbot */}
             <div className="space-y-6 border-t pt-6">
-              <h3 className="text-lg font-medium">Personalización del Chatbot</h3>
+              <h3 className="text-lg font-medium">Personalización del Agente de IA</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField

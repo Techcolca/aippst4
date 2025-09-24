@@ -966,7 +966,7 @@ export default function Documentation() {
                           <p className="mb-3">
                             La función "Secciones ignoradas" permite especificar qué partes de tu sitio web no deberían ser analizadas 
                             por el asistente al escanear el contenido de la página, proporcionando un control detallado sobre la 
-                            información que el chatbot utiliza para responder preguntas.
+                            información que el agente de IA utiliza para responder preguntas.
                           </p>
                           
                           <h5 className="font-medium mt-4 mb-2">Beneficios:</h5>
@@ -1948,7 +1948,7 @@ export default function Documentation() {
                       
                       <div className="prose dark:prose-invert max-w-none">
                         <p>
-                          AIPPS ofrece un sistema completo de formularios que se integra perfectamente con tu chatbot,
+                          AIPPS ofrece un sistema completo de formularios que se integra perfectamente con tu agente de IA,
                           permitiendo capturar información específica de usuarios y leads de manera inteligente y contextual.
                         </p>
                         
