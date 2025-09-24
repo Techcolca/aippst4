@@ -104,7 +104,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Perfecto para pequeñas empresas',
         features: [
           '1,000 conversaciones/mes',
-          '3 agentes de IA',
+          '3 Agentes de IA Básicos',
           'Procesamiento de documentos (10/mes)',
           'Análisis de sentimientos',
           'Integración con formularios',
@@ -118,7 +118,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Perfect for small businesses',
         features: [
           '1,000 conversations/month',
-          '3 AI agents',
+          '3 Basic AI Agents',
           'Document processing (10/month)',
           'Sentiment analysis',
           'Form integrations',
@@ -132,7 +132,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Parfait pour les petites entreprises',
         features: [
           '1 000 conversations/mois',
-          '3 agents IA',
+          '3 Agents IA de Base',
           'Traitement de documents (10/mois)',
           'Analyse de sentiment',
           'Intégrations de formulaires',
@@ -148,7 +148,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Solución avanzada para empresas en crecimiento',
         features: [
           '5,000 conversaciones/mes',
-          '10 agentes de IA',
+          '10 Agentes de IA Básicos',
           'Procesamiento avanzado documentos (100/mes)',
           'IA contextual con memoria',
           'Integraciones CRM básicas',
@@ -164,7 +164,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Advanced solution for growing businesses',
         features: [
           '5,000 conversations/month',
-          '10 AI agents',
+          '10 Basic AI Agents',
           'Advanced document processing (100/month)',
           'Contextual AI with memory',
           'Basic CRM integrations',
@@ -180,7 +180,7 @@ function getTranslatedPlanInfo(planId: string, language: string = 'es') {
         description: 'Solution avancée pour entreprises en croissance',
         features: [
           '5 000 conversations/mois',
-          '10 agents IA',
+          '10 Agents IA de Base',
           'Traitement avancé de documents (100/mois)',
           'IA contextuelle avec mémoire',
           'Intégrations CRM de base',
