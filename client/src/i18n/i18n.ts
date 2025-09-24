@@ -3834,9 +3834,10 @@ i18n
       escapeValue: false,
     },
     
+    lng: 'en', // ← FORZAR INGLÉS COMO IDIOMA POR DEFECTO
     detection: {
-      order: ['localStorage', 'cookie', 'navigator'],
-      caches: ['localStorage', 'cookie'],
+      order: ['localStorage'], // ← Solo usar localStorage, no detección automática
+      caches: ['localStorage'],
     },
   });
 
