@@ -3834,9 +3834,9 @@ i18n
       escapeValue: false,
     },
     
-    lng: 'en', // ← FORZAR INGLÉS COMO IDIOMA POR DEFECTO
+    lng: 'en', // ← INGLÉS COMO IDIOMA POR DEFECTO INICIAL
     detection: {
-      order: ['localStorage'], // ← Solo usar localStorage, no detección automática
+      order: ['localStorage'], // ← Solo localStorage, sin detección navegador = garantiza inglés inicial
       caches: ['localStorage'],
     },
   });
