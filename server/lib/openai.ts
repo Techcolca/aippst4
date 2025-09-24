@@ -107,7 +107,7 @@ export async function generateChatCompletion(
     // Si es un widget, usar el contexto completo sin restricciones
     if (botConfig?.isWidget) {
       const assistantName = botConfig.assistantName || "Asistente";
-      const description = botConfig.description || "un chatbot de ayuda";
+      const description = botConfig.description || "un agente de IA de ayuda";
       const greeting = botConfig.defaultGreeting || "¡Hola! ¿Cómo puedo ayudarte?";
       const behavior = botConfig.conversationStyle || "servicial";
       
@@ -138,7 +138,7 @@ FORMAT DE RÉPONSE REQUIS:
 
 CONTEXTE DÉTAILLÉ DU SITE WEB: 
 ${context}`
-          : `Vous êtes ${assistantName}, un chatbot intégré spécifiquement pour ce site web.
+          : `Vous êtes ${assistantName}, un agent IA intégré spécifiquement pour ce site web.
 
 VOTRE DESCRIPTION: "${description}"
 VOTRE MESSAGE D'ACCUEIL: "${greeting}"
@@ -172,7 +172,7 @@ REQUIRED RESPONSE FORMAT:
 
 DETAILED WEBSITE CONTEXT: 
 ${context}`
-          : `You are ${assistantName}, a chatbot specifically integrated for this website.
+          : `You are ${assistantName}, an AI agent specifically integrated for this website.
 
 YOUR DESCRIPTION: "${description}"
 YOUR WELCOME MESSAGE: "${greeting}"
@@ -206,7 +206,7 @@ FORMATO DE RESPUESTAS REQUERIDO:
 
 CONTEXTO DETALLADO DEL SITIO WEB: 
 ${context}`
-          : `Eres ${assistantName}, un chatbot integrado específicamente para este sitio web.
+          : `Eres ${assistantName}, un agente de IA integrado específicamente para este sitio web.
 
 TU DESCRIPCIÓN: "${description}"
 TU MENSAJE DE BIENVENIDA: "${greeting}"
@@ -495,7 +495,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
     
     if (language === 'fr') {
       systemPrompt = `Vous êtes un expert en marketing numérique spécialisé dans les plateformes d'IA conversationnelle. 
-      Générez exactement 7 messages promotionnels uniques et très attrayants pour AIPPS, une plateforme de chatbots avec IA.
+      Générez exactement 7 messages promotionnels uniques et très attrayants pour AIPPS, une plateforme d'agents IA.
       
       Les messages doivent:
       - Être accrocheurs, commerciaux et détaillés
@@ -521,7 +521,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       
       fallbackMessages = [
         { message_text: "🚀 Transformez votre site web en une machine de génération de leads 24/7 avec l'IA conversationnelle AIPPS qui comprend, engage et convertit vos visiteurs automatiquement", message_type: 'ai_generated', display_order: 1 },
-        { message_text: "💬 Augmentez votre taux de conversion de 300% avec des chatbots intelligents qui qualifient vos prospects et les dirigent vers vos équipes de vente au moment optimal", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "💬 Augmentez votre taux de conversion de 300% avec des agents IA intelligents qui qualifient vos prospects et les dirigent vers vos équipes de vente au moment optimal", message_type: 'ai_generated', display_order: 2 },
         { message_text: "⚡ Réduisez vos coûts de support client de 70% tout en améliorant la satisfaction avec des réponses instantanées et personnalisées disponibles 24h/24 et 7j/7", message_type: 'ai_generated', display_order: 3 },
         { message_text: "📈 Multipliez vos ventes en ligne pendant que vous dormez grâce à l'IA qui engage proactivement vos visiteurs et les guide vers l'achat automatiquement", message_type: 'ai_generated', display_order: 4 },
         { message_text: "🎯 Capturez et qualifiez automatiquement tous vos prospects web avec une IA qui pose les bonnes questions et collecte les informations critiques pour vos équipes", message_type: 'ai_generated', display_order: 5 },
@@ -530,7 +530,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       ];
     } else if (language === 'en') {
       systemPrompt = `You are a digital marketing expert specialized in conversational AI platforms. 
-      Generate exactly 7 unique and highly engaging promotional messages for AIPPS, an AI chatbot platform.
+      Generate exactly 7 unique and highly engaging promotional messages for AIPPS, an AI agent platform.
       
       The messages should:
       - Be catchy, commercial and detailed
@@ -556,7 +556,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       
       fallbackMessages = [
         { message_text: "🚀 Transform your website into a 24/7 lead generation machine with AIPPS conversational AI that understands, engages, and converts your visitors automatically", message_type: 'ai_generated', display_order: 1 },
-        { message_text: "💬 Increase your conversion rate by 300% with intelligent chatbots that qualify your prospects and direct them to your sales teams at the optimal moment", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "💬 Increase your conversion rate by 300% with intelligent AI agents that qualify your prospects and direct them to your sales teams at the optimal moment", message_type: 'ai_generated', display_order: 2 },
         { message_text: "⚡ Reduce your customer support costs by 70% while improving satisfaction with instant, personalized responses available 24/7 for your customers", message_type: 'ai_generated', display_order: 3 },
         { message_text: "📈 Multiply your online sales while you sleep with AI that proactively engages your visitors and guides them toward purchase automatically", message_type: 'ai_generated', display_order: 4 },
         { message_text: "🎯 Automatically capture and qualify all your web prospects with AI that asks the right questions and collects critical information for your teams", message_type: 'ai_generated', display_order: 5 },
@@ -565,7 +565,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       ];
     } else {
       systemPrompt = `Eres un experto en marketing digital especializado en plataformas de IA conversacional. 
-      Genera exactamente 7 mensajes promocionales únicos y muy atractivos para AIPPS, una plataforma de chatbots con IA.
+      Genera exactamente 7 mensajes promocionales únicos y muy atractivos para AIPPS, una plataforma de agentes de IA.
       
       Los mensajes deben:
       - Ser llamativos, comerciales y detallados
@@ -591,7 +591,7 @@ export async function generateAIPromotionalMessages(language = 'es'): Promise<Ar
       
       fallbackMessages = [
         { message_text: "🚀 Transforma tu sitio web en una máquina de generación de leads 24/7 con la IA conversacional de AIPPS que entiende, involucra y convierte a tus visitantes automáticamente", message_type: 'ai_generated', display_order: 1 },
-        { message_text: "💬 Aumenta tu tasa de conversión un 300% con chatbots inteligentes que califican a tus prospectos y los dirigen a tus equipos de ventas en el momento óptimo", message_type: 'ai_generated', display_order: 2 },
+        { message_text: "💬 Aumenta tu tasa de conversión un 300% con agentes de IA inteligentes que califican a tus prospectos y los dirigen a tus equipos de ventas en el momento óptimo", message_type: 'ai_generated', display_order: 2 },
         { message_text: "⚡ Reduce tus costos de soporte al cliente un 70% mientras mejoras la satisfacción con respuestas instantáneas y personalizadas disponibles 24/7 para tus clientes", message_type: 'ai_generated', display_order: 3 },
         { message_text: "📈 Multiplica tus ventas en línea mientras duermes con IA que involucra proactivamente a tus visitantes y los guía hacia la compra de forma automática", message_type: 'ai_generated', display_order: 4 },
         { message_text: "🎯 Captura y califica automáticamente todos tus prospectos web con IA que hace las preguntas correctas y recopila información crítica para tus equipos", message_type: 'ai_generated', display_order: 5 },
