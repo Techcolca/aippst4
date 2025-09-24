@@ -39,6 +39,23 @@ const resources = {
       automation: "Automatisation",
       profile: "Profil",
       
+      // Agentes de IA Básicos
+      basic_ai_agents: "Agents IA de Base",
+      basic_ai_agent: "Agent IA de Base",
+      ai_agents_title: "Agents d'Intelligence Artificielle",
+      agent_capabilities: "Capacités de l'Agent",
+      advanced_ai_agents: "Agents IA Avancés",
+      chatbot_vs_agent: "Agents vs Chatbots",
+      agent_advantages: "Avantages des Agents IA",
+      business_context_understanding: "Compréhension du contexte d'entreprise",
+      conversation_memory: "Mémoire de conversation",
+      automatic_analysis: "Analyse automatique",
+      deep_personalization: "Personnalisation profonde",
+      website_context_integration: "Intégration du contexte du site web",
+      evolve_to_advanced_agent: "Évoluer vers un Agent Avancé",
+      request_automation_analysis: "Demander une Analyse d'Automatisation",
+      agent_description: "Agents IA qui comprennent spécifiquement votre entreprise",
+      
       // Configuración del asistente AI
       ai_assistant_settings: "Paramètres de l'Assistant IA",
       assistant_name: "Nom de l'Assistant",
@@ -1270,6 +1287,23 @@ const resources = {
       task_automation: "Automatización de Tareas",
       profile: "Perfil",
       
+      // Agentes de IA Básicos
+      basic_ai_agents: "Agentes de IA Básicos",
+      basic_ai_agent: "Agente de IA Básico",
+      ai_agents_title: "Agentes de Inteligencia Artificial",
+      agent_capabilities: "Capacidades del Agente",
+      advanced_ai_agents: "Agentes de IA Avanzados",
+      chatbot_vs_agent: "Agentes vs Chatbots",
+      agent_advantages: "Ventajas de los Agentes de IA",
+      business_context_understanding: "Comprensión del contexto empresarial",
+      conversation_memory: "Memoria de conversaciones",
+      automatic_analysis: "Análisis automático",
+      deep_personalization: "Personalización profunda",
+      website_context_integration: "Integración del contexto del sitio web",
+      evolve_to_advanced_agent: "Evolucionar a Agente Avanzado",
+      request_automation_analysis: "Solicitar Análisis de Automatización",
+      agent_description: "Agentes de IA que comprenden específicamente tu negocio",
+      
       // Configuración del asistente AI
       ai_assistant_settings: "Configuración del Asistente IA",
       assistant_name: "Nombre del Asistente",
@@ -2499,6 +2533,23 @@ const resources = {
       automation: "Automation",
       task_automation: "Task Automation",
       profile: "Profile",
+      
+      // Basic AI Agents
+      basic_ai_agents: "Basic AI Agents",
+      basic_ai_agent: "Basic AI Agent",
+      ai_agents_title: "Artificial Intelligence Agents",
+      agent_capabilities: "Agent Capabilities",
+      advanced_ai_agents: "Advanced AI Agents",
+      chatbot_vs_agent: "Agents vs Chatbots",
+      agent_advantages: "AI Agent Advantages",
+      business_context_understanding: "Business context understanding",
+      conversation_memory: "Conversation memory",
+      automatic_analysis: "Automatic analysis",
+      deep_personalization: "Deep personalization",
+      website_context_integration: "Website context integration",
+      evolve_to_advanced_agent: "Evolve to Advanced Agent",
+      request_automation_analysis: "Request Automation Analysis",
+      agent_description: "AI agents that specifically understand your business",
       
       // AI Assistant Settings
       ai_assistant_settings: "AI Assistant Settings",
