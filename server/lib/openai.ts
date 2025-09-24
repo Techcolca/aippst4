@@ -6,8 +6,8 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "sk-yourkeyhere";
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
-// Bot configuration interface
-interface BotConfig {
+// Agent configuration interface
+interface AgentConfig {
   assistantName?: string;
   defaultGreeting?: string;
   conversationStyle?: string | null;
@@ -55,7 +55,7 @@ export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,
   context?: string,
   language?: string,
-  botConfig?: BotConfig
+  agentConfig?: AgentConfig
 ) {
   try {
     // Determinar en qué idioma responder - USAR EL IDIOMA DETECTADO AUTOMÁTICAMENTE
@@ -67,15 +67,15 @@ export async function generateChatCompletion(
     console.log("OpenAI: Contexto recibido longitud:", context?.length || 0);
     console.log("OpenAI: Contexto preview:", context?.substring(0, 200) + "...");
     
-    // Crear configuración personalizada del bot
-    const getBotPersonality = (config?: BotConfig) => {
+    // Crear configuración personalizada del agente
+    const getAgentPersonality = (config?: AgentConfig) => {
       if (!config) return "";
       
       const name = config.assistantName || "AIPPS";
       const style = config.conversationStyle || "helpful";
       
       if (responseLanguage === "fr") {
-        return `CONFIGURATION DU BOT PERSONNALISÉ:
+        return `CONFIGURATION DE L'AGENT PERSONNALISÉ:
 - Vous êtes ${name}
 - Votre style de conversation doit être: ${style}
 - Maintenez toujours cette personnalité dans toutes vos réponses
@@ -83,7 +83,7 @@ export async function generateChatCompletion(
 
 `;
       } else if (responseLanguage === "en") {
-        return `CUSTOM BOT CONFIGURATION:
+        return `CUSTOM AGENT CONFIGURATION:
 - You are ${name}
 - Your conversation style must be: ${style}
 - Always maintain this personality in all your responses
@@ -91,7 +91,7 @@ export async function generateChatCompletion(
 
 `;
       } else {
-        return `CONFIGURACIÓN PERSONALIZADA DEL BOT:
+        return `CONFIGURACIÓN PERSONALIZADA DEL AGENTE:
 - Eres ${name}
 - Tu estilo de conversación debe ser: ${style}
 - Mantén siempre esta personalidad en todas tus respuestas
@@ -105,11 +105,11 @@ export async function generateChatCompletion(
     let systemContent = "";
     
     // Si es un widget, usar el contexto completo sin restricciones
-    if (botConfig?.isWidget) {
-      const assistantName = botConfig.assistantName || "Asistente";
-      const description = botConfig.description || "un agente de IA de ayuda";
-      const greeting = botConfig.defaultGreeting || "¡Hola! ¿Cómo puedo ayudarte?";
-      const behavior = botConfig.conversationStyle || "servicial";
+    if (agentConfig?.isWidget) {
+      const assistantName = agentConfig.assistantName || "Asistente";
+      const description = agentConfig.description || "un agente de IA de ayuda";
+      const greeting = agentConfig.defaultGreeting || "¡Hola! ¿Cómo puedo ayudarte?";
+      const behavior = agentConfig.conversationStyle || "servicial";
       
       if (responseLanguage === "fr") {
         // Pour widgets en français, utiliser le contexte complet du site web
@@ -216,7 +216,7 @@ Puedes ayudar con preguntas sobre este sitio web específico. Tu comportamiento 
       }
     } else {
       // Para la aplicación AIPPS principal (no widgets), usar personalidad + contexto
-      systemContent = getBotPersonality(botConfig);
+      systemContent = getAgentPersonality(agentConfig);
       
       // Prompt original para el dashboard principal de AIPPS
       if (responseLanguage === "fr") {
@@ -310,12 +310,12 @@ ${context}`
     console.log("System message length:", systemMessage.content.length);
     console.log("System message preview:", systemMessage.content.substring(0, 200) + "...");
     
-    // Log bot configuration details
-    if (botConfig) {
-      console.log("AIPPS Debug: Bot personality applied to system message:", {
-        name: botConfig.assistantName,
-        style: botConfig.conversationStyle,
-        systemMessageIncludesBotConfig: systemMessage.content.includes("CONFIGURACIÓN PERSONALIZADA DEL BOT")
+    // Log agent configuration details
+    if (agentConfig) {
+      console.log("AIPPS Debug: Agent personality applied to system message:", {
+        name: agentConfig.assistantName,
+        style: agentConfig.conversationStyle,
+        systemMessageIncludesBotConfig: systemMessage.content.includes("CONFIGURACIÓN PERSONALIZADA DEL AGENTE")
       });
     }
     

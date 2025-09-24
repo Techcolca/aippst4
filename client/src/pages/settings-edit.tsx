@@ -38,7 +38,7 @@ export default function SettingsEdit() {
     font: "system-ui",
     userBubbleColor: "#f3f4f6",
     assistantBubbleColor: "#e5e7eb",
-    // Nuevos campos para personalización del chatbot de bienvenida
+    // Nuevos campos para personalización del agente de IA de bienvenida
     welcomePageChatEnabled: true,
     welcomePageChatGreeting: "👋 ¡Hola! Soy AIPPS, tu asistente de IA. ¿En qué puedo ayudarte hoy?",
     welcomePageChatBubbleColor: "#111827",
