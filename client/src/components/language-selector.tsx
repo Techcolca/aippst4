@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 
 export function LanguageSelector() {
   const { t, i18n } = useTranslation();
-  const [currentLang, setCurrentLang] = useState(i18n.language || "fr");
+  const [currentLang, setCurrentLang] = useState(i18n.language || "en");
 
   const changeLanguage = (lng: string) => {
     localStorage.setItem("i18nextLng", lng);
