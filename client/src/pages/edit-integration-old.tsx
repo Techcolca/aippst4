@@ -34,7 +34,7 @@ const formSchema = z.object({
   ignoredSections: z.array(z.string()).default([]),
   ignoredSectionsText: z.string().optional(),
   description: z.string().optional(),
-  // Campos de personalización del chatbot
+  // Campos de personalización del agente de IA
   customization: z.object({
     assistantName: z.string().optional(),
     defaultGreeting: z.string().optional(),
@@ -521,7 +521,7 @@ export default function EditIntegration() {
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Añade nombres de secciones de tu sitio web que quieres que el chatbot ignore. Por ejemplo: "Nuestros Servicios", "Contacto", etc.
+                  Añade nombres de secciones de tu sitio web que quieres que el agente de IA ignore. Por ejemplo: "Nuestros Servicios", "Contacto", etc.
                 </p>
               </div>
             </div>
@@ -664,7 +664,7 @@ export default function EditIntegration() {
             <div className="p-4 bg-muted/50 rounded-lg border">
               <div className="flex flex-col space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Sube documentos (PDF, DOCX, Excel) para entrenar al chatbot con información adicional que no está en tu sitio web.
+                  Sube documentos (PDF, DOCX, Excel) para entrenar al agente de IA con información adicional que no está en tu sitio web.
                 </p>
                 
                 <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center">
