@@ -12,6 +12,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'wouter';
 
 // Inicializar Stripe con la clave pública - manejar gracefully si falta la clave
 const stripePromise = import.meta.env.VITE_STRIPE_PUBLIC_KEY 
@@ -51,6 +52,7 @@ export default function PricingPage() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
+  const [, setLocation] = useLocation();
   const [checkoutInProgress, setCheckoutInProgress] = useState<string | null>(null);
   const [billingType, setBillingType] = useState<'monthly' | 'annual'>('monthly');
 
@@ -257,7 +259,13 @@ export default function PricingPage() {
                         className={`w-full ${(plan.discount ?? 0) > 0 ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white' : ''}`}
                         variant={plan.id === recommendedPlanId ? "default" : "outline"}
                         disabled={!!checkoutInProgress}
-                        onClick={() => handleSubscribe(plan.id)}
+                        onClick={() => {
+                          if (plan.id.includes('enterprise')) {
+                            setLocation('/automation-analysis');
+                          } else {
+                            handleSubscribe(plan.id);
+                          }
+                        }}
                       >
                         {checkoutInProgress === plan.id ? (
                           <>
