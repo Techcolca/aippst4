@@ -35,7 +35,7 @@ export default function Home() {
   const { t } = useTranslation();
   const [welcomeChatSettings, setWelcomeChatSettings] = useState<any>(null);
   
-  // Cargar configuración del chatbot de la página de bienvenida
+  // Cargar configuración del agente de IA de la página de bienvenida
   useEffect(() => {
     const fetchWelcomeChatSettings = async () => {
       try {

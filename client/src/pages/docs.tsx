@@ -328,6 +328,17 @@ export default function Documentation() {
                         <span>{t("documentation.features")}</span>
                       </div>
                     </a>
+                    
+                    <a 
+                      href="#agents-vs-chatbots" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("agents-vs-chatbots"); }}
+                      className={`block px-3 py-2 rounded-md ${activeTab === "agents-vs-chatbots" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <Bot className="w-5 h-5 mr-2" />
+                        <span>{t("documentation.agents_vs_chatbots.title")}</span>
+                      </div>
+                    </a>
 
                     {/* Funcionalidades separadas como submenú */}
                     <a 
@@ -726,6 +737,76 @@ export default function Documentation() {
                         </div>
                         
                         <p>Este ejemplo ilustra cómo una Task Automation puede transformar una integración web genérica en una herramienta de captación altamente especializada, que responde de manera contextual y proactiva según las necesidades específicas de cada sección del sitio web.</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Sección de Agents vs Chatbots */}
+                {activeTab === "agents-vs-chatbots" && (
+                  <div id="agents-vs-chatbots" className="space-y-8">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
+                      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{t("documentation.agents_vs_chatbots.title")}</h2>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <p className="text-lg mb-6">
+                          {t("documentation.agents_vs_chatbots.introduction")}
+                        </p>
+                        
+                        <h3 className="text-xl font-bold mb-4">{t("documentation.agents_vs_chatbots.what_are_basic_agents")}</h3>
+                        <p className="mb-6">
+                          {t("documentation.agents_vs_chatbots.basic_agent_description")}
+                        </p>
+                        
+                        <h3 className="text-xl font-bold mb-4">{t("documentation.agents_vs_chatbots.key_differences")}</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                          <div className="border border-primary-200 dark:border-primary-800 rounded-lg p-5 bg-primary-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <Database className="h-6 w-6 text-primary-600 dark:text-primary-400 mr-2" />
+                              <h4 className="text-lg font-bold text-primary-700 dark:text-primary-400">{t("documentation.agents_vs_chatbots.context_understanding")}</h4>
+                            </div>
+                            <p>{t("documentation.agents_vs_chatbots.context_description")}</p>
+                          </div>
+                          
+                          <div className="border border-green-200 dark:border-green-800 rounded-lg p-5 bg-green-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <Users className="h-6 w-6 text-green-600 dark:text-green-400 mr-2" />
+                              <h4 className="text-lg font-bold text-green-700 dark:text-green-400">{t("documentation.agents_vs_chatbots.memory_persistence")}</h4>
+                            </div>
+                            <p>{t("documentation.agents_vs_chatbots.memory_description")}</p>
+                          </div>
+                          
+                          <div className="border border-purple-200 dark:border-purple-800 rounded-lg p-5 bg-purple-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <BarChart className="h-6 w-6 text-purple-600 dark:text-purple-400 mr-2" />
+                              <h4 className="text-lg font-bold text-purple-700 dark:text-purple-400">{t("documentation.agents_vs_chatbots.automatic_analysis")}</h4>
+                            </div>
+                            <p>{t("documentation.agents_vs_chatbots.analysis_description")}</p>
+                          </div>
+                          
+                          <div className="border border-orange-200 dark:border-orange-800 rounded-lg p-5 bg-orange-50 dark:bg-gray-800">
+                            <div className="flex items-center mb-3">
+                              <Building2 className="h-6 w-6 text-orange-600 dark:text-orange-400 mr-2" />
+                              <h4 className="text-lg font-bold text-orange-700 dark:text-orange-400">{t("documentation.agents_vs_chatbots.business_integration")}</h4>
+                            </div>
+                            <p>{t("documentation.agents_vs_chatbots.integration_description")}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 border border-blue-200 dark:border-blue-800 rounded-lg p-6 my-8">
+                          <h3 className="text-xl font-bold mb-4 text-blue-800 dark:text-blue-200">{t("documentation.agents_vs_chatbots.upgrade_path")}</h3>
+                          <p className="mb-4 text-blue-700 dark:text-blue-300">
+                            {t("documentation.agents_vs_chatbots.upgrade_description")}
+                          </p>
+                          <div className="flex justify-center">
+                            <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                              <Link href="/automation-analysis">
+                                {t("request_automation_analysis")}
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
