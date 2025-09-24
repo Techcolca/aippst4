@@ -3834,10 +3834,11 @@ i18n
       escapeValue: false,
     },
     
-    lng: 'en', // ← INGLÉS COMO IDIOMA POR DEFECTO INICIAL
+    // NO forzar lng - dejar que detection funcione
     detection: {
-      order: ['localStorage'], // ← Solo localStorage, sin detección navegador = garantiza inglés inicial
+      order: ['localStorage'], // ← Solo localStorage
       caches: ['localStorage'],
+      lookupLocalStorage: 'i18nextLng', // ← Clave específica para localStorage
     },
   });
 
