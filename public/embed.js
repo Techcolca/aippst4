@@ -688,12 +688,58 @@
   }
   } // Close startConfigRefresh function
 
-  // Función para extraer el contenido del sitio
+  // Función para extraer el contenido del sitio - optimizada para móviles
   function scanCurrentPageContent() {
     try {
       // Extraer título de la página
       pageTitle = document.title || '';
 
+      // Optimización móvil: limitar operaciones DOM en móviles
+      if (isMobileDevice) {
+        // Versión simplificada para móviles - solo información esencial
+        let metaDescription = '';
+        const metaDescriptionTag = document.querySelector('meta[name="description"]');
+        if (metaDescriptionTag) {
+          metaDescription = metaDescriptionTag.getAttribute('content') || '';
+        }
+
+        // En móviles, solo extraer los primeros 3 encabezados para evitar sobrecarga
+        const headings = [];
+        const headingElements = document.querySelectorAll('h1, h2');
+        const maxHeadings = Math.min(headingElements.length, 3); // Limitar a 3 en móviles
+        
+        for (let i = 0; i < maxHeadings; i++) {
+          const heading = headingElements[i];
+          const text = heading.textContent.trim();
+          if (text) {
+            headings.push(`${heading.tagName}: ${text}`);
+          }
+        }
+
+        // Contenido simplificado para móviles - solo texto principal
+        const mainElement = document.querySelector('main, article, .main-content, #main-content');
+        let mainContent = '';
+        if (mainElement) {
+          // En móviles, limitar la extracción de texto a los primeros 1000 caracteres
+          mainContent = mainElement.textContent.substring(0, 1000) || '';
+        }
+
+        // Construir contenido final simplificado para móviles
+        currentPageContent = `
+Página: ${window.location.href}
+Título: ${pageTitle}
+Descripción: ${metaDescription}
+ESTRUCTURA:
+${headings.join(' ')}
+CONTENIDO PRINCIPAL (móvil):
+${mainContent}`.trim();
+
+        siteContentScanned = true;
+        console.log('AIPPS Mobile: Contenido escaneado (versión optimizada)');
+        return;
+      }
+
+      // Versión completa para desktop (comportamiento original)
       // Extraer metadescription si existe
       let metaDescription = '';
       const metaDescriptionTag = document.querySelector('meta[name="description"]');
@@ -2491,16 +2537,58 @@ Contenido: [Error al extraer contenido detallado]
     return visitorId;
   }
 
+  // Cache para elementos DOM - optimización móvil
+  let domCache = {
+    chatInput: null,
+    sendButton: null,
+    lastCacheTime: 0
+  };
+  
+  // Detectar si es un dispositivo móvil
+  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Función para obtener elementos DOM con cache (optimización móvil)
+  function getCachedElement(id, fallbackFn) {
+    const now = Date.now();
+    const cacheKey = id.replace('#', '').replace('aipi-', '');
+    
+    // Cache válido por 30 segundos para móviles
+    if (domCache[cacheKey] && (now - domCache.lastCacheTime) < 30000) {
+      return domCache[cacheKey];
+    }
+    
+    const element = fallbackFn ? fallbackFn() : document.getElementById(id);
+    if (element) {
+      domCache[cacheKey] = element;
+      domCache.lastCacheTime = now;
+    }
+    return element;
+  }
+
+  // Throttling para prevenir envíos múltiples en móviles
+  let lastSendTime = 0;
+  const MOBILE_SEND_THROTTLE = 2000; // 2 segundos entre envíos en móviles
+
   // Send a message
   async function sendMessage() {
-    const chatInput = document.getElementById('aipi-input');
-    const message = chatInput.value.trim();
+    // Throttling en móviles para evitar sobrecarga
+    if (isMobileDevice) {
+      const now = Date.now();
+      if (now - lastSendTime < MOBILE_SEND_THROTTLE) {
+        console.log('AIPPS Mobile: Envío throttled - esperando...');
+        return;
+      }
+      lastSendTime = now;
+    }
+    const chatInput = getCachedElement('aipi-input');
+    const message = chatInput ? chatInput.value.trim() : '';
 
     if (!message) return;
 
     // Clear input
     chatInput.value = '';
-    document.getElementById('aipi-send-button').disabled = true;
+    const sendButton = getCachedElement('aipi-send-button');
+    if (sendButton) sendButton.disabled = true;
 
     // Start conversation if not already started
     if (!conversationStarted) {
@@ -2513,9 +2601,28 @@ Contenido: [Error al extraer contenido detallado]
     // Show typing indicator
     showTypingIndicator(true);
 
-    // Asegurarnos de que tenemos el contenido de la página si no lo hemos escaneado aún
+    // Optimización móvil: escaneo asíncrono de contenido de página
     if (!siteContentScanned) {
-      scanCurrentPageContent();
+      if (isMobileDevice) {
+        // En móviles, hacer el escaneo de forma asíncrona para no bloquear el UI
+        const scanPromise = new Promise((resolve) => {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(() => {
+              scanCurrentPageContent();
+              resolve();
+            });
+          } else {
+            setTimeout(() => {
+              scanCurrentPageContent();
+              resolve();
+            }, 0);
+          }
+        });
+        // No esperar el escaneo en móviles para mantener responsividad
+      } else {
+        // En desktop, mantener comportamiento original
+        scanCurrentPageContent();
+      }
     }
 
     try {

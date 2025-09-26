@@ -1,10 +1,81 @@
-// Sistema de conocimiento personalizado para cada chatbot
-export function buildKnowledgeBase(integration: any, documents: any[], siteContent: any[]): string {
-  let knowledgeBase = integration.botBehavior || "Eres un asistente útil para este sitio web.";
+// Sistema de conocimiento personalizado para cada chatbot con cache para móviles
+
+// Cache global para knowledge base - específico para optimización móvil
+interface KnowledgeBaseCache {
+  content: string;
+  timestamp: number;
+  documentsHash: string;
+  siteContentHash: string;
+}
+
+const knowledgeBaseCache = new Map<number, KnowledgeBaseCache>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutos - optimizado para móviles
+
+// Función para generar hash real de contenido - arreglada para móviles
+function generateContentHash(data: any[]): string {
+  if (!data || data.length === 0) return '0';
   
-  console.log(`buildKnowledgeBase Debug: Building knowledge for ${integration.name}`);
+  // Generar hash real del contenido completo, no truncado
+  const fullContent = data.map(item => 
+    typeof item === 'object' ? JSON.stringify(item) : String(item)
+  ).join('|');
+  
+  // Usar hash simple pero completo para evitar dependencias
+  let hash = 0;
+  for (let i = 0; i < fullContent.length; i++) {
+    const char = fullContent.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  
+  return Math.abs(hash).toString(36);
+}
+
+// Limpieza periódica del cache para evitar memory leaks
+setInterval(() => {
+  const now = Date.now();
+  const entries = Array.from(knowledgeBaseCache.entries());
+  for (const [key, entry] of entries) {
+    if (now - entry.timestamp > CACHE_TTL) {
+      knowledgeBaseCache.delete(key);
+    }
+  }
+}, 2 * 60 * 1000); // Limpieza cada 2 minutos
+
+// Función para invalidar cache cuando se actualiza contenido
+export function invalidateKnowledgeBaseCache(integrationId: number): void {
+  knowledgeBaseCache.delete(integrationId);
+  console.log(`Knowledge base cache invalidated for integration ${integrationId}`);
+}
+
+// Función para limpiar todo el cache (útil para debugging)
+export function clearKnowledgeBaseCache(): void {
+  knowledgeBaseCache.clear();
+  console.log('Knowledge base cache cleared completely');
+}
+
+export function buildKnowledgeBase(integration: any, documents: any[], siteContent: any[]): string {
+  // Verificar cache primero para optimización móvil
+  const integrationId = integration.id;
+  const now = Date.now();
+  const documentsHash = generateContentHash(documents);
+  const siteContentHash = generateContentHash(siteContent);
+  
+  // Buscar en cache si existe y es válido
+  const cached = knowledgeBaseCache.get(integrationId);
+  if (cached && 
+      (now - cached.timestamp) < CACHE_TTL &&
+      cached.documentsHash === documentsHash &&
+      cached.siteContentHash === siteContentHash) {
+    console.log(`buildKnowledgeBase Cache HIT for ${integration.name} - Mobile optimization`);
+    return cached.content;
+  }
+  
+  console.log(`buildKnowledgeBase Cache MISS for ${integration.name} - Rebuilding`);
   console.log(`buildKnowledgeBase Debug: Documents count: ${documents.length}`);
   console.log(`buildKnowledgeBase Debug: Site content count: ${siteContent.length}`);
+  
+  let knowledgeBase = integration.botBehavior || "Eres un asistente útil para este sitio web.";
   
   // Agregar información específica del sitio web basada en la integración
   knowledgeBase += `
@@ -62,6 +133,15 @@ INSTRUCCIONES ESPECÍFICAS PARA ESTE CHATBOT:
 - Identifícate como el asistente de ${integration.name} cuando sea apropiado
 `;
 
+  // Guardar en cache para optimización móvil
+  knowledgeBaseCache.set(integrationId, {
+    content: knowledgeBase,
+    timestamp: now,
+    documentsHash,
+    siteContentHash
+  });
+
+  console.log(`buildKnowledgeBase Cached for ${integration.name} - Mobile optimization saved`);
   return knowledgeBase;
 }
 
