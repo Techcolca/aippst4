@@ -1,0 +1,121 @@
+
+
+You reached the start of the range
+Sep 26, 2025, 2:28 PM
+{"message":"Starting Container","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.000000000Z"}
+{"message":"🚀 ===== Iniciando despliegue AIPI en Railway ======","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.582823185Z"}
+{"message":"🔍 Verificando variables de entorno...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.582827749Z"}
+{"message":"✅ Variables verificadas: NODE_ENV=production, PORT=5000","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.582832281Z"}
+{"message":"🔌 Verificando conexión a PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.582838369Z"}
+{"message":"✅ Conexión a base de datos exitosa","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.582843406Z"}
+{"message":"📊 Ejecutando migraciones de schema con drizzle-kit...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.582847390Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:01.582851813Z"}
+{"message":"No config path provided, using default 'drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.848114378Z"}
+{"message":"Reading config file '/app/drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:01.848120154Z"}
+{"message":"Using 'pg' driver for database querying","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:02.411186026Z"}
+{"message":"[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:02.541062804Z"}
+{"message":"\u001b[2K\u001b[1G[⣯] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:02.668114305Z"}
+{"message":"\u001b[2K\u001b[1G[⣟] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:02.796349711Z"}
+{"message":"\u001b[2K\u001b[1G[⡿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:02.929543615Z"}
+{"message":"\u001b[2K\u001b[1G[⢿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.047197370Z"}
+{"message":"\u001b[2K\u001b[1G[⣻] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.174986117Z"}
+{"message":"\u001b[2K\u001b[1G[⣽] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.302645669Z"}
+{"message":"\u001b[2K\u001b[1G[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.430175142Z"}
+{"message":"\u001b[2K\u001b[1G[✓] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.443008048Z"}
+{"message":"\u001b[?25l","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.476213908Z"}
+{"message":"Is currency column in user_budgets table created or renamed from another column?","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.476220795Z"}
+{"message":"❯ + currency                         create column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.476225400Z"}
+{"message":"  ~ billing_cycle_start › currency   rename column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.476231869Z"}
+{"message":"  ~ billing_cycle_end › currency     rename column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.476236161Z"}
+{"message":"  ~ budget_alerts_enabled › currency rename column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:03.476240293Z"}
+{"message":"  ~ alert_threshold › currency       rename column✅ Migraciones de schema completadas","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.477978538Z"}
+{"message":"🏗️  Configurando datos iniciales de AIPI...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.477985505Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.477989699Z"}
+{"message":"🏗️  Configurando base de datos inicial para Railway...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.477993485Z"}
+{"message":"🔌 Conectando a la base de datos Railway PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.477997121Z"}
+{"message":"✅ Conexión a base de datos establecida","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478001503Z"}
+{"message":"👤 Usuario administrador ya existe","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478005599Z"}
+{"message":"👤 Usuario Pablo ya existe","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478009239Z"}
+{"message":"💰 Verificando planes de precios...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478013146Z"}
+{"message":"💰 Planes de precios ya existen","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478017094Z"}
+{"message":"💬 Verificando mensajes de bienvenida...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478020970Z"}
+{"message":"💬 Mensajes de bienvenida ya existen","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478024713Z"}
+{"message":"🎉 Configuración de base de datos completada exitosamente!","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478031760Z"}
+{"message":"📊 Base de datos Railway lista para producción","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478035398Z"}
+{"message":"La base de datos está lista para usar.","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478038838Z"}
+{"message":"✅ Configuración de base de datos completada exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478042458Z"}
+{"message":"✅ En Railway - Datos críticos ya configurados en setup-railway-db.js","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478046079Z"}
+{"message":"✅ Usuario Pablo y admin ya creados exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478050021Z"}
+{"message":"✅ Saltando migración local - no necesaria en Railway","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478053715Z"}
+{"message":"✅ Migración de datos completada","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478057518Z"}
+{"message":"🌐 Iniciando servidor AIPI en producción...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478062085Z"}
+{"message":"📡 Puerto: 5000","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478066097Z"}
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478070658Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478076055Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478081489Z"}
+{"message":"","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478087433Z"}
+{"message":"node:internal/modules/run_main:122","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478093540Z"}
+{"message":"    triggerUncaughtException(","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478098835Z"}
+{"message":"    ^","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478104263Z"}
+{"message":"Error [TransformError]: Transform failed with 1 error:","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478109959Z"}
+{"message":"/app/server/lib/openai.ts:247:0: ERROR: Expected \"finally\" but found \"export\"","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478114898Z"}
+{"message":"    at failureErrorWithLog (/app/node_modules/esbuild/lib/main.js:1467:15)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478119747Z"}
+{"message":"    at /app/node_modules/esbuild/lib/main.js:736:50","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478125320Z"}
+{"message":"    at responseCallbacks.<computed> (/app/node_modules/esbuild/lib/main.js:603:9)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478131785Z"}
+{"message":"    at handleIncomingPacket (/app/node_modules/esbuild/lib/main.js:658:12)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478138094Z"}
+{"message":"    at Socket.readFromStdout (/app/node_modules/esbuild/lib/main.js:581:7)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478143659Z"}
+{"message":"    at Socket.emit (node:events:518:28)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478149048Z"}
+{"message":"    at addChunk (node:internal/streams/readable:561:12)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478154258Z"}
+{"message":"    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478159574Z"}
+{"message":"    at Readable.push (node:internal/streams/readable:392:5)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478164110Z"}
+{"message":"    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478169864Z"}
+{"message":"","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478173958Z"}
+{"message":"Node.js v22.11.0","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478177799Z"}
+{"message":"🚀 ===== Iniciando despliegue AIPI en Railway ======","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478181438Z"}
+{"message":"🔍 Verificando variables de entorno...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478184966Z"}
+{"message":"✅ Variables verificadas: NODE_ENV=production, PORT=5000","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478188502Z"}
+{"message":"🔌 Verificando conexión a PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478192261Z"}
+{"message":"✅ Conexión a base de datos exitosa","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478195996Z"}
+{"message":"📊 Ejecutando migraciones de schema con drizzle-kit...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478199639Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:23.478203081Z"}
+{"message":"No config path provided, using default 'drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478208184Z"}
+{"message":"Reading config file '/app/drizzle.config.ts'","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478213407Z"}
+{"message":"Using 'pg' driver for database querying","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478217007Z"}
+{"message":"[⣷] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478220619Z"}
+{"message":"\u001b[2K\u001b[1G[⣯] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478225016Z"}
+{"message":"\u001b[2K\u001b[1G[⣟] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478230651Z"}
+{"message":"\u001b[2K\u001b[1G[⡿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478235105Z"}
+{"message":"\u001b[2K\u001b[1G[⢿] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478239761Z"}
+{"message":"\u001b[2K\u001b[1G[⣻] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.478245480Z"}
+{"message":"\u001b[2K\u001b[1G[⣽] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480086461Z"}
+{"message":"\u001b[2K\u001b[1G[✓] Pulling schema from database...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480094240Z"}
+{"message":"\u001b[?25l","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480099178Z"}
+{"message":"Is currency column in user_budgets table created or renamed from another column?","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480104649Z"}
+{"message":"❯ + currency                         create column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480109073Z"}
+{"message":"  ~ billing_cycle_start › currency   rename column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480113737Z"}
+{"message":"  ~ billing_cycle_end › currency     rename column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480118000Z"}
+{"message":"  ~ budget_alerts_enabled › currency rename column","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:23.480122562Z"}
+{"message":"  ~ alert_threshold › currency       rename column✅ Migraciones de schema completadas","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:29.285866587Z"}
+{"message":"🏗️  Configurando datos iniciales de AIPI...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:29.285872958Z"}
+{"message":"npm warn config production Use `--omit=dev` instead.","attributes":{"level":"error"},"timestamp":"2025-09-26T18:34:29.392293370Z"}
+{"message":"🏗️  Configurando base de datos inicial para Railway...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.265231000Z"}
+{"message":"🔌 Conectando a la base de datos Railway PostgreSQL...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.265238407Z"}
+{"message":"✅ Conexión a base de datos establecida","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.269218044Z"}
+{"message":"👤 Usuario administrador ya existe","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.379209225Z"}
+{"message":"👤 Usuario Pablo ya existe","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.379215824Z"}
+{"message":"💰 Verificando planes de precios...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.379229462Z"}
+{"message":"💰 Planes de precios ya existen","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.383307314Z"}
+{"message":"💬 Verificando mensajes de bienvenida...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.383314462Z"}
+{"message":"💬 Mensajes de bienvenida ya existen","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.386751489Z"}
+{"message":"🎉 Configuración de base de datos completada exitosamente!","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.386756717Z"}
+{"message":"📊 Base de datos Railway lista para producción","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.386762290Z"}
+{"message":"La base de datos está lista para usar.","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.386767668Z"}
+{"message":"✅ Configuración de base de datos completada exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418023282Z"}
+{"message":"✅ En Railway - Datos críticos ya configurados en setup-railway-db.js","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418037253Z"}
+{"message":"✅ Usuario Pablo y admin ya creados exitosamente","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418041641Z"}
+{"message":"✅ Saltando migración local - no necesaria en Railway","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418045620Z"}
+{"message":"✅ Migración de datos completada","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418049780Z"}
+{"message":"🌐 Iniciando servidor AIPI en producción...","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418057508Z"}
+{"message":"📡 Puerto: 5000","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418061657Z"}
+{"message":"🗄️ Base de datos: Conectado","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418065702Z"}
+{"message":"🚀 Estado: Producción","attributes":{"level":"info"},"timestamp":"2025-09-26T18:34:30.418069385Z"}
