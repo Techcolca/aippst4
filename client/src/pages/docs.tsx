@@ -2130,7 +2130,7 @@ export default function Documentation() {
                               size="sm"
                               onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/REQUISITOS-TECNICOS-HOSTING-ES.pdf';
+                                link.href = '/static/REQUISITOS-TECNICOS-HOSTING-ES.pdf';
                                 link.download = 'REQUISITOS-TECNICOS-HOSTING-ES.pdf';
                                 link.click();
                               }}
@@ -2143,7 +2143,7 @@ export default function Documentation() {
                               size="sm"
                               onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/TECHNICAL-HOSTING-REQUIREMENTS-EN.pdf';
+                                link.href = '/static/TECHNICAL-HOSTING-REQUIREMENTS-EN.pdf';
                                 link.download = 'TECHNICAL-HOSTING-REQUIREMENTS-EN.pdf';
                                 link.click();
                               }}
@@ -2156,7 +2156,7 @@ export default function Documentation() {
                               size="sm"
                               onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.pdf';
+                                link.href = '/static/EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.pdf';
                                 link.download = 'EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.pdf';
                                 link.click();
                               }}
