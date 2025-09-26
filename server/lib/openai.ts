@@ -241,6 +241,11 @@ Contexto de AIPPS: ${truncatedContext}`
       const errorMessage = openaiError instanceof Error ? openaiError.message : String(openaiError);
       throw new Error(`Failed to generate chat completion: ${errorMessage}`);
     }
+  } catch (error: unknown) {
+    console.error("Error in generateChatCompletion:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to generate chat completion: ${errorMessage}`);
+  }
 }
 
 // Sentiment analysis
