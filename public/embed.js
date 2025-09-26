@@ -3136,90 +3136,126 @@ Contenido: [Error al extraer contenido detallado]
     return translatedText;
   }
 
-  // Authentication functions for fullscreen mode
+  // Authentication functions for fullscreen mode - optimizado para móviles
   function showAuthForm() {
-    // Generate personalized explanation based on integration
     const integrationName = config.integrationName || config.assistantName || 'Asistente IA';
-    const integrationDescription = config.description || '';
-    const botBehavior = config.botBehavior || '';
-    
-    // Create a personalized explanation based on integration description
-    let personalizedExplanation;
-    
-    // Use integration description if available, otherwise fallback to bot behavior, then default message
-    if (integrationDescription && integrationDescription.trim().length > 0) {
-      personalizedExplanation = translateUserContent(integrationDescription.trim(), config.language);
-    } else if (botBehavior && botBehavior.trim().length > 0) {
-      personalizedExplanation = translateUserContent(botBehavior.trim(), config.language);
-    } else {
-      // Default fallback message in current language
-      const defaultMessages = {
-        es: `Soy una inteligencia artificial diseñada como consejero espiritual para ayudarte a crecer en tu fe. Todas mis respuestas están basadas en la Biblia y las enseñanzas de Jesucristo. Te ofrezco guía práctica, versículos relevantes y sabiduría bíblica para cualquier situación que enfrentes en tu vida cristiana.`,
-        en: `I am an artificial intelligence designed as a spiritual counselor to help you grow in your faith. All my responses are based on the Bible and the teachings of Jesus Christ. I offer practical guidance, relevant verses, and biblical wisdom for any situation you face in your Christian life.`,
-        fr: `Je suis une intelligence artificielle conçue comme conseiller spirituel pour vous aider à grandir dans votre foi. Toutes mes réponses sont basées sur la Bible et les enseignements de Jésus-Christ. J'offre des conseils pratiques, des versets pertinents et la sagesse biblique pour toute situation que vous rencontrez dans votre vie chrétienne.`
-      };
-      personalizedExplanation = defaultMessages[config.language] || defaultMessages.es;
-    }
     
     const authContainer = document.createElement('div');
     authContainer.id = 'aipi-auth-container';
-    authContainer.innerHTML = `
-      <div class="aipi-auth-overlay">
-        <div class="aipi-auth-modal">
-          <div class="aipi-auth-header">
-            <h2>${t.welcomeTo} ${escapeHTML(integrationName)}</h2>
-            <button class="aipi-auth-close" onclick="closeAuthForm()">×</button>
-          </div>
-          <div class="aipi-auth-content">
-            <div class="aipi-auth-explanation">
-              <div class="aipi-explanation-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="${config.themeColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                </svg>
+    
+    // Versión optimizada para móviles vs desktop
+    if (isMobileDevice) {
+      // Versión móvil simplificada - sin elementos pesados
+      authContainer.innerHTML = `
+        <div class="aipi-auth-overlay aipi-mobile">
+          <div class="aipi-auth-modal aipi-mobile-modal">
+            <div class="aipi-auth-header aipi-mobile-header">
+              <h2>${escapeHTML(integrationName)}</h2>
+              <button class="aipi-auth-close" onclick="closeAuthForm()">×</button>
+            </div>
+            <div class="aipi-auth-content aipi-mobile-content">
+              <div class="aipi-auth-tabs">
+                <button class="aipi-auth-tab active" onclick="showLoginTab()">${t.signIn}</button>
+                <button class="aipi-auth-tab" onclick="showRegisterTab()">${t.register}</button>
               </div>
-              <h3>${t.whyCreateAccount}</h3>
-              <p class="aipi-explanation-text">${escapeHTML(personalizedExplanation)}</p>
-              <div class="aipi-benefits">
-                <div class="aipi-benefit-item">
-                  <span class="aipi-benefit-icon">💬</span>
-                  <span>${t.saveConversations}</span>
-                </div>
-                <div class="aipi-benefit-item">
-                  <span class="aipi-benefit-icon">📚</span>
-                  <span>${t.accessHistory}</span>
-                </div>
-                <div class="aipi-benefit-item">
-                  <span class="aipi-benefit-icon">🔒</span>
-                  <span>${t.secureData}</span>
-                </div>
-                <div class="aipi-benefit-item">
-                  <span class="aipi-benefit-icon">⚡</span>
-                  <span>${t.personalizedExperience}</span>
-                </div>
+              
+              <div id="aipi-login-form" class="aipi-auth-form">
+                <input type="text" id="login-username" placeholder="${t.username}" required>
+                <input type="password" id="login-password" placeholder="${t.password}" required>
+                <button onclick="handleLogin()" class="aipi-auth-submit" id="login-submit-btn">${t.signIn}</button>
               </div>
-            </div>
-            
-            <div class="aipi-auth-tabs">
-              <button class="aipi-auth-tab active" onclick="showLoginTab()">${t.signIn}</button>
-              <button class="aipi-auth-tab" onclick="showRegisterTab()">${t.register}</button>
-            </div>
-            
-            <div id="aipi-login-form" class="aipi-auth-form">
-              <input type="text" id="login-username" placeholder="${t.username}" required>
-              <input type="password" id="login-password" placeholder="${t.password}" required>
-              <button onclick="handleLogin()" class="aipi-auth-submit">${t.signIn}</button>
-            </div>
-            
-            <div id="aipi-register-form" class="aipi-auth-form" style="display: none;">
-              <input type="text" id="register-username" placeholder="${t.username}" required>
-              <input type="email" id="register-email" placeholder="${t.email}" required>
-              <input type="password" id="register-password" placeholder="${t.password}" required>
-              <button onclick="handleRegister()" class="aipi-auth-submit">${t.register}</button>
+              
+              <div id="aipi-register-form" class="aipi-auth-form" style="display: none;">
+                <input type="text" id="register-username" placeholder="${t.username}" required>
+                <input type="email" id="register-email" placeholder="${t.email}" required>
+                <input type="password" id="register-password" placeholder="${t.password}" required>
+                <button onclick="handleRegister()" class="aipi-auth-submit" id="register-submit-btn">${t.register}</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      // Versión desktop completa (comportamiento original)
+      const integrationDescription = config.description || '';
+      const botBehavior = config.botBehavior || '';
+      
+      // Create a personalized explanation based on integration description
+      let personalizedExplanation;
+      
+      // Use integration description if available, otherwise fallback to bot behavior, then default message
+      if (integrationDescription && integrationDescription.trim().length > 0) {
+        personalizedExplanation = translateUserContent(integrationDescription.trim(), config.language);
+      } else if (botBehavior && botBehavior.trim().length > 0) {
+        personalizedExplanation = translateUserContent(botBehavior.trim(), config.language);
+      } else {
+        // Default fallback message in current language
+        const defaultMessages = {
+          es: `Soy una inteligencia artificial diseñada como consejero espiritual para ayudarte a crecer en tu fe. Todas mis respuestas están basadas en la Biblia y las enseñanzas de Jesucristo. Te ofrezco guía práctica, versículos relevantes y sabiduría bíblica para cualquier situación que enfrentes en tu vida cristiana.`,
+          en: `I am an artificial intelligence designed as a spiritual counselor to help you grow in your faith. All my responses are based on the Bible and the teachings of Jesus Christ. I offer practical guidance, relevant verses, and biblical wisdom for any situation you face in your Christian life.`,
+          fr: `Je suis une intelligence artificielle conçue comme conseiller spirituel pour vous aider à grandir dans votre foi. Toutes mes réponses sont basées sur la Bible et les enseignements de Jésus-Christ. J'offre des conseils pratiques, des versets pertinents et la sagesse biblique pour toute situation que vous rencontrez dans votre vie chrétienne.`
+        };
+        personalizedExplanation = defaultMessages[config.language] || defaultMessages.es;
+      }
+      
+      authContainer.innerHTML = `
+        <div class="aipi-auth-overlay">
+          <div class="aipi-auth-modal">
+            <div class="aipi-auth-header">
+              <h2>${t.welcomeTo} ${escapeHTML(integrationName)}</h2>
+              <button class="aipi-auth-close" onclick="closeAuthForm()">×</button>
+            </div>
+            <div class="aipi-auth-content">
+              <div class="aipi-auth-explanation">
+                <div class="aipi-explanation-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="${config.themeColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                  </svg>
+                </div>
+                <h3>${t.whyCreateAccount}</h3>
+                <p class="aipi-explanation-text">${escapeHTML(personalizedExplanation)}</p>
+                <div class="aipi-benefits">
+                  <div class="aipi-benefit-item">
+                    <span class="aipi-benefit-icon">💬</span>
+                    <span>${t.saveConversations}</span>
+                  </div>
+                  <div class="aipi-benefit-item">
+                    <span class="aipi-benefit-icon">📚</span>
+                    <span>${t.accessHistory}</span>
+                  </div>
+                  <div class="aipi-benefit-item">
+                    <span class="aipi-benefit-icon">🔒</span>
+                    <span>${t.secureData}</span>
+                  </div>
+                  <div class="aipi-benefit-item">
+                    <span class="aipi-benefit-icon">⚡</span>
+                    <span>${t.personalizedExperience}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="aipi-auth-tabs">
+                <button class="aipi-auth-tab active" onclick="showLoginTab()">${t.signIn}</button>
+                <button class="aipi-auth-tab" onclick="showRegisterTab()">${t.register}</button>
+              </div>
+              
+              <div id="aipi-login-form" class="aipi-auth-form">
+                <input type="text" id="login-username" placeholder="${t.username}" required>
+                <input type="password" id="login-password" placeholder="${t.password}" required>
+                <button onclick="handleLogin()" class="aipi-auth-submit" id="login-submit-btn">${t.signIn}</button>
+              </div>
+              
+              <div id="aipi-register-form" class="aipi-auth-form" style="display: none;">
+                <input type="text" id="register-username" placeholder="${t.username}" required>
+                <input type="email" id="register-email" placeholder="${t.email}" required>
+                <input type="password" id="register-password" placeholder="${t.password}" required>
+                <button onclick="handleRegister()" class="aipi-auth-submit" id="register-submit-btn">${t.register}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
 
     // Add auth styles
     const authStyles = document.createElement('style');
@@ -3384,6 +3420,50 @@ Contenido: [Error al extraer contenido detallado]
         }
       }
       
+      /* Estilos específicos para móviles - versión simplificada */
+      .aipi-mobile .aipi-mobile-modal {
+        width: 95vw !important;
+        max-width: 380px !important;
+        margin: 10px !important;
+        border-radius: 8px !important;
+      }
+      
+      .aipi-mobile .aipi-mobile-header {
+        padding: 15px !important;
+        border-radius: 8px 8px 0 0 !important;
+      }
+      
+      .aipi-mobile .aipi-mobile-header h2 {
+        font-size: 16px !important;
+        font-weight: 500 !important;
+      }
+      
+      .aipi-mobile .aipi-mobile-content {
+        padding: 15px !important;
+      }
+      
+      .aipi-mobile .aipi-auth-tabs {
+        margin-bottom: 15px !important;
+      }
+      
+      .aipi-mobile .aipi-auth-tab {
+        padding: 8px 16px !important;
+        font-size: 14px !important;
+      }
+      
+      .aipi-mobile .aipi-auth-form input {
+        padding: 12px !important;
+        font-size: 16px !important;
+        margin-bottom: 10px !important;
+        -webkit-appearance: none !important;
+      }
+      
+      .aipi-mobile .aipi-auth-submit {
+        padding: 12px !important;
+        font-size: 16px !important;
+        touch-action: manipulation !important;
+      }
+
       @media (min-width: 481px) and (max-width: 768px) {
         .aipi-auth-modal {
           width: 85vw !important;
@@ -3490,23 +3570,51 @@ Contenido: [Error al extraer contenido detallado]
     }
   }
 
+  // Variables para debouncing móvil
+  let loginInProgress = false;
+  let registerInProgress = false;
+
   window.handleLogin = async function() {
+    // Debouncing para móviles - prevenir dobles clics
+    if (loginInProgress) {
+      console.log('AIPPS Mobile: Login en progreso, ignorando clic');
+      return;
+    }
+
     const username = document.getElementById('login-username').value;
     const password = document.getElementById('login-password').value;
+    const submitBtn = document.getElementById('login-submit-btn');
     
     if (!username || !password) {
       alert('Por favor, completa todos los campos');
       return;
     }
 
+    loginInProgress = true;
+    
+    // Deshabilitar botón para prevenir múltiples clics
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = t.sending || 'Enviando...';
+    }
+
     try {
+      // Timeout específico para móviles vs desktop
+      const timeoutMs = isMobileDevice ? 10000 : 30000; // 10s móvil, 30s desktop
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      
       const response = await fetch(`${config.serverUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const userData = await response.json();
@@ -3533,33 +3641,87 @@ Contenido: [Error al extraer contenido detallado]
         await loadUserConversationsFromDashboard();
         showFullscreenChat();
       } else {
-        const error = await response.json();
-        alert(error.message || 'Error al iniciar sesión');
+        // Error handling mejorado para móviles
+        let errorMessage = 'Error al iniciar sesión';
+        try {
+          const error = await response.json();
+          errorMessage = error.message || errorMessage;
+        } catch {
+          // Si no se puede parsear la respuesta, usar mensaje genérico
+          if (response.status === 401) {
+            errorMessage = 'Usuario o contraseña incorrectos';
+          } else if (response.status >= 500) {
+            errorMessage = 'Error del servidor. Inténtalo más tarde';
+          }
+        }
+        alert(errorMessage);
       }
     } catch (error) {
       console.error('Login error:', error);
-      alert('Error de conexión. Inténtalo de nuevo.');
+      
+      // Error handling específico para móviles
+      let errorMessage = 'Error de conexión. Inténtalo de nuevo.';
+      if (error.name === 'AbortError') {
+        errorMessage = isMobileDevice ? 
+          'Conexión lenta. Verifica tu internet e inténtalo de nuevo.' :
+          'Tiempo de espera agotado. Inténtalo de nuevo.';
+      } else if (error.message && error.message.includes('Failed to fetch')) {
+        errorMessage = 'Sin conexión a internet. Verifica tu conexión.';
+      }
+      
+      alert(errorMessage);
+    } finally {
+      // Restaurar botón
+      loginInProgress = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = t.signIn || 'Iniciar Sesión';
+      }
     }
   }
 
   window.handleRegister = async function() {
+    // Debouncing para móviles - prevenir dobles clics
+    if (registerInProgress) {
+      console.log('AIPPS Mobile: Registro en progreso, ignorando clic');
+      return;
+    }
+
     const username = document.getElementById('register-username').value;
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
+    const submitBtn = document.getElementById('register-submit-btn');
     
     if (!username || !email || !password) {
       alert('Por favor, completa todos los campos');
       return;
     }
 
+    registerInProgress = true;
+    
+    // Deshabilitar botón para prevenir múltiples clics
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = t.sending || 'Enviando...';
+    }
+
     try {
+      // Timeout específico para móviles vs desktop
+      const timeoutMs = isMobileDevice ? 10000 : 30000; // 10s móvil, 30s desktop
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      
       const response = await fetch(`${config.serverUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, email, password }),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const userData = await response.json();
@@ -3586,12 +3748,42 @@ Contenido: [Error al extraer contenido detallado]
         await loadUserConversationsFromDashboard();
         showFullscreenChat();
       } else {
-        const error = await response.json();
-        alert(error.message || 'Error al registrarse');
+        // Error handling mejorado para móviles
+        let errorMessage = 'Error al registrarse';
+        try {
+          const error = await response.json();
+          errorMessage = error.message || errorMessage;
+        } catch {
+          // Si no se puede parsear la respuesta, usar mensaje genérico
+          if (response.status === 409) {
+            errorMessage = 'Usuario o email ya existe';
+          } else if (response.status >= 500) {
+            errorMessage = 'Error del servidor. Inténtalo más tarde';
+          }
+        }
+        alert(errorMessage);
       }
     } catch (error) {
       console.error('Register error:', error);
-      alert('Error de conexión. Inténtalo de nuevo.');
+      
+      // Error handling específico para móviles
+      let errorMessage = 'Error de conexión. Inténtalo de nuevo.';
+      if (error.name === 'AbortError') {
+        errorMessage = isMobileDevice ? 
+          'Conexión lenta. Verifica tu internet e inténtalo de nuevo.' :
+          'Tiempo de espera agotado. Inténtalo de nuevo.';
+      } else if (error.message && error.message.includes('Failed to fetch')) {
+        errorMessage = 'Sin conexión a internet. Verifica tu conexión.';
+      }
+      
+      alert(errorMessage);
+    } finally {
+      // Restaurar botón
+      registerInProgress = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = t.register || 'Registrarse';
+      }
     }
   }
 
