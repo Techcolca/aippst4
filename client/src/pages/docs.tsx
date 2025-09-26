@@ -991,7 +991,7 @@ export default function Documentation() {
                           </ul>
 
                           <h5 className="font-medium mt-4 mb-2">Configuración en el panel de administración:</h5>
-                          <p className="mb-2">Las secciones ignoradas se pueden configurar fácilmente desde la sección "Editar Integración" en tu panel de AIPI:</p>
+                          <p className="mb-2">Las secciones ignoradas se pueden configurar fácilmente desde la sección "Editar Integración" en tu panel de AIPPS:</p>
                           <ol className="list-decimal pl-5 space-y-1">
                             <li>Navega a "Integraciones" y selecciona la integración a configurar</li>
                             <li>Encuentra la sección "Secciones a ignorar"</li>
@@ -1008,7 +1008,7 @@ export default function Documentation() {
 });`}</code></pre>
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Todos los widgets de AIPI (flotante, pantalla completa y simple) procesarán automáticamente 
+                            Todos los widgets de AIPPS (flotante, pantalla completa y simple) procesarán automáticamente 
                             esta configuración para excluir las secciones especificadas del análisis de contenido.
                           </p>
                         </div>
@@ -1054,7 +1054,7 @@ export default function Documentation() {
                               Escaneo Inteligente
                             </h4>
                             <p className="text-sm">
-                              Cuando un visitante interactúa con el widget, AIPI escanea automáticamente la página 
+                              Cuando un visitante interactúa con el widget, AIPPS escanea automáticamente la página 
                               actual y otras páginas relevantes del sitio para obtener contexto.
                             </p>
                           </div>
@@ -1087,7 +1087,7 @@ export default function Documentation() {
                         <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-5 my-4">
                           <h4 className="font-semibold text-lg mb-3">Caso de Implementación:</h4>
                           <p className="mb-3">
-                            TechGadgets, una tienda online especializada en productos electrónicos, implementó AIPI para 
+                            TechGadgets, una tienda online especializada en productos electrónicos, implementó AIPPS para 
                             mejorar la asistencia a sus clientes y aumentar las conversiones.
                           </p>
                           
@@ -1972,10 +1972,10 @@ export default function Documentation() {
                           </div>
                           <p className="text-red-700 dark:text-red-300 mt-2 mb-0">
                             {i18n.language === 'es' ? 
-                              'Los widgets de IA de AIPI requieren recursos específicos de hosting para funcionar correctamente. No todos los planes de hosting son compatibles. El 85% de los problemas de rendimiento se deben a hosting inadecuado.' :
+                              'Los widgets de IA de AIPPS requieren recursos específicos de hosting para funcionar correctamente. No todos los planes de hosting son compatibles. El 85% de los problemas de rendimiento se deben a hosting inadecuado.' :
                               i18n.language === 'fr' ?
-                              'Les widgets IA d\'AIPI nécessitent des ressources d\'hébergement spécifiques pour fonctionner correctement. Tous les plans d\'hébergement ne sont pas compatibles. 85% des problèmes de performance sont dus à un hébergement inadéquat.' :
-                              'AIPI AI widgets require specific hosting resources to function properly. Not all hosting plans are compatible. 85% of performance issues are due to inadequate hosting.'
+                              'Les widgets IA d\'AIPPS nécessitent des ressources d\'hébergement spécifiques pour fonctionner correctement. Tous les plans d\'hébergement ne sont pas compatibles. 85% des problèmes de performance sont dus à un hébergement inadéquat.' :
+                              'AIPPS AI widgets require specific hosting resources to function properly. Not all hosting plans are compatible. 85% of performance issues are due to inadequate hosting.'
                             }
                           </p>
                         </div>
