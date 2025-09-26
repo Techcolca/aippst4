@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Database, Code, Building2, School, Headset, Rocket, BookOpen, 
   MessageSquare, BarChart, Users, Bot, File, FileText, Monitor, Smartphone, 
-  ExternalLink, CheckCircle2, BarChart3, LineChart, Download
+  ExternalLink, CheckCircle2, BarChart3, LineChart, Download, Server, AlertTriangle
 } from "lucide-react";
 import jsPDF from 'jspdf';
 import Header from "@/components/header";
@@ -24,7 +24,8 @@ export default function Documentation() {
     "lead-capture", 
     "analytics", 
     "task-automation",
-    "form-creation"
+    "form-creation",
+    "hosting-requirements"
   ];
 
   // Función para generar y descargar la documentación completa en PDF
@@ -93,7 +94,8 @@ export default function Documentation() {
       `7. ${t("documentation.analytics")}`,
       `8. ${t("documentation.task_automation")}`,
       `9. ${t("documentation.form_creation")}`,
-      `10. ${t("documentation.implementation")}`,
+      `10. ${t("documentation.hosting_requirements")}`,
+      `11. ${t("documentation.implementation")}`,
       `11. ${t("documentation.api_reference")}`,
       `12. ${t("documentation.support")}`
     ];
@@ -415,6 +417,17 @@ export default function Documentation() {
                       <div className="flex items-center">
                         <FileText className="w-4 h-4 mr-2" />
                         <span>{t("documentation.form_creation")}</span>
+                      </div>
+                    </a>
+                    
+                    <a 
+                      href="#hosting-requirements" 
+                      onClick={(e) => { e.preventDefault(); setActiveTab("hosting-requirements"); }}
+                      className={`block px-3 py-2 pl-10 rounded-md ${activeTab === "hosting-requirements" ? "bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400" : "hover:bg-gray-100 dark:hover:bg-gray-800"}`}
+                    >
+                      <div className="flex items-center">
+                        <Server className="w-4 h-4 mr-2" />
+                        <span>{t("documentation.hosting_requirements")}</span>
                       </div>
                     </a>
                     
@@ -1935,6 +1948,236 @@ export default function Documentation() {
                           <Button size="lg" asChild>
                             <Link href="/get-started">{t("implementation.start_button")}</Link>
                           </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {activeTab === "hosting-requirements" && (
+                  <div id="hosting-requirements" className="space-y-8">
+                    <div className="backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-800/30 rounded-lg shadow-lg p-6">
+                      <div className="flex items-center mb-4">
+                        <Server className="h-8 w-8 text-primary-600 dark:text-primary-400 mr-3" />
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t("documentation.hosting_requirements")}</h2>
+                      </div>
+                      
+                      <div className="prose dark:prose-invert max-w-none">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 dark:bg-red-900/20 dark:border-red-800">
+                          <div className="flex items-center">
+                            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 mr-2" />
+                            <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-0">
+                              {i18n.language === 'es' ? 'Advertencia Crítica' : i18n.language === 'fr' ? 'Avertissement Critique' : 'Critical Warning'}
+                            </h3>
+                          </div>
+                          <p className="text-red-700 dark:text-red-300 mt-2 mb-0">
+                            {i18n.language === 'es' ? 
+                              'Los widgets de IA de AIPI requieren recursos específicos de hosting para funcionar correctamente. No todos los planes de hosting son compatibles. El 85% de los problemas de rendimiento se deben a hosting inadecuado.' :
+                              i18n.language === 'fr' ?
+                              'Les widgets IA d\'AIPI nécessitent des ressources d\'hébergement spécifiques pour fonctionner correctement. Tous les plans d\'hébergement ne sont pas compatibles. 85% des problèmes de performance sont dus à un hébergement inadéquat.' :
+                              'AIPI AI widgets require specific hosting resources to function properly. Not all hosting plans are compatible. 85% of performance issues are due to inadequate hosting.'
+                            }
+                          </p>
+                        </div>
+                        
+                        <h3>
+                          {i18n.language === 'es' ? 'Problemas Documentados de Incompatibilidad' : 
+                           i18n.language === 'fr' ? 'Cas d\'Incompatibilité Documentés' : 
+                           'Documented Incompatibility Cases'}
+                        </h3>
+                        
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4 dark:bg-yellow-900/20 dark:border-yellow-800">
+                          <h4 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200">
+                            HostGator - {i18n.language === 'es' ? 'Planes Compartidos (INCOMPATIBLES)' : 
+                                         i18n.language === 'fr' ? 'Plans Partagés (INCOMPATIBLES)' : 
+                                         'Shared Plans (INCOMPATIBLE)'}
+                          </h4>
+                          <ul className="text-yellow-700 dark:text-yellow-300 mt-2">
+                            <li>❌ <strong>Personal Plan</strong>: 25% CPU max, 30s timeout → 
+                              {i18n.language === 'es' ? ' CONGELAMIENTO CONFIRMADO' : 
+                               i18n.language === 'fr' ? ' GEL CONFIRMÉ' : 
+                               ' CONFIRMED FREEZING'}
+                            </li>
+                            <li>❌ <strong>Business Plan</strong>: 
+                              {i18n.language === 'es' ? 'MISMAS limitaciones que Personal → NO mejora rendimiento' : 
+                               i18n.language === 'fr' ? 'MÊMES limitations que Personal → AUCUNE amélioration de performance' : 
+                               'SAME limitations as Personal → NO performance improvement'}
+                            </li>
+                          </ul>
+                        </div>
+                        
+                        <h3>
+                          {i18n.language === 'es' ? 'Requisitos Técnicos Mínimos' : 
+                           i18n.language === 'fr' ? 'Exigences Techniques Minimales' : 
+                           'Minimum Technical Requirements'}
+                        </h3>
+                        
+                        <div className="overflow-x-auto">
+                          <table className="min-w-full border border-gray-300 dark:border-gray-700">
+                            <thead className="bg-gray-50 dark:bg-gray-800">
+                              <tr>
+                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">
+                                  {i18n.language === 'es' ? 'Especificación' : i18n.language === 'fr' ? 'Spécification' : 'Specification'}
+                                </th>
+                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">
+                                  {i18n.language === 'es' ? 'Valor Mínimo' : i18n.language === 'fr' ? 'Valeur Minimale' : 'Minimum Value'}
+                                </th>
+                                <th className="border border-gray-300 dark:border-gray-700 px-4 py-2 text-left">
+                                  {i18n.language === 'es' ? 'Observaciones' : i18n.language === 'fr' ? 'Observations' : 'Notes'}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 font-semibold">CPU</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                  {i18n.language === 'es' ? 'Sin límite del 25%' : 
+                                   i18n.language === 'fr' ? 'Sans limite de 25%' : 
+                                   'No 25% limit'}
+                                </td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                  {i18n.language === 'es' ? 'Acceso equivalente a 1 core' : 
+                                   i18n.language === 'fr' ? 'Accès équivalent à 1 core' : 
+                                   'Access equivalent to 1 core'}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 font-semibold">RAM</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                  {i18n.language === 'es' ? '1GB disponible' : 
+                                   i18n.language === 'fr' ? '1GB disponible' : 
+                                   '1GB available'}
+                                </td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                  {i18n.language === 'es' ? 'Hosting que no exceda memoria' : 
+                                   i18n.language === 'fr' ? 'Hébergement qui ne dépasse pas mémoire' : 
+                                   'Hosting that doesn\'t exceed memory'}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 font-semibold">PHP</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">8.0+</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                  {i18n.language === 'es' ? 'Timeout 120s mínimo' : 
+                                   i18n.language === 'fr' ? 'Timeout 120s minimum' : 
+                                   '120s timeout minimum'}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2 font-semibold">SSL</td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">
+                                  {i18n.language === 'es' ? 'Certificado válido' : 
+                                   i18n.language === 'fr' ? 'Certificat valide' : 
+                                   'Valid certificate'}
+                                </td>
+                                <td className="border border-gray-300 dark:border-gray-700 px-4 py-2">Let's Encrypt {i18n.language === 'es' ? 'aceptable' : i18n.language === 'fr' ? 'acceptable' : 'acceptable'}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        
+                        <h3>
+                          {i18n.language === 'es' ? 'Proveedores Recomendados' : 
+                           i18n.language === 'fr' ? 'Fournisseurs Recommandés' : 
+                           'Recommended Providers'}
+                        </h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                          <div className="border border-green-200 rounded-lg p-4 bg-green-50 dark:bg-green-900/20 dark:border-green-800">
+                            <h4 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
+                              💰 {i18n.language === 'es' ? 'Presupuesto Bajo ($3-5/mes)' : 
+                                   i18n.language === 'fr' ? 'Petit Budget (3-5€/mois)' : 
+                                   'Low Budget ($3-5/month)'}
+                            </h4>
+                            <ul className="text-green-700 dark:text-green-300 space-y-1">
+                              <li>✅ <strong>ChemiCloud Starter</strong> - ~25k {i18n.language === 'es' ? 'visitas/mes' : i18n.language === 'fr' ? 'visites/mois' : 'visits/month'}</li>
+                              <li>✅ <strong>SiteGround StartUp</strong> - ~10k {i18n.language === 'es' ? 'visitas/mes' : i18n.language === 'fr' ? 'visites/mois' : 'visits/month'}</li>
+                              <li>✅ <strong>A2 Hosting Lite</strong> - {i18n.language === 'es' ? 'Recursos compartidos' : i18n.language === 'fr' ? 'Ressources partagées' : 'Shared resources'}</li>
+                            </ul>
+                          </div>
+                          
+                          <div className="border border-blue-200 rounded-lg p-4 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800">
+                            <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                              💼 {i18n.language === 'es' ? 'Presupuesto Medio ($10-30/mes)' : 
+                                   i18n.language === 'fr' ? 'Budget Moyen (10-30€/mois)' : 
+                                   'Medium Budget ($10-30/month)'}
+                            </h4>
+                            <ul className="text-blue-700 dark:text-blue-300 space-y-1">
+                              <li>✅ <strong>Cloudways Vultr</strong> - 1 core / 1GB {i18n.language === 'es' ? 'dedicados' : i18n.language === 'fr' ? 'dédiés' : 'dedicated'}</li>
+                              <li>✅ <strong>Kinsta Starter</strong> - {i18n.language === 'es' ? 'Hasta 25k visitas/mes' : i18n.language === 'fr' ? 'Jusqu\'à 25k visites/mois' : 'Up to 25k visits/month'}</li>
+                              <li>✅ <strong>WP Engine Personal</strong> - {i18n.language === 'es' ? 'Hasta 25k visitas/mes' : i18n.language === 'fr' ? 'Jusqu\'à 25k visites/mois' : 'Up to 25k visits/month'}</li>
+                            </ul>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 dark:bg-blue-900/20 dark:border-blue-800">
+                          <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">
+                            📋 {i18n.language === 'es' ? 'Documentación Técnica Completa' : 
+                                 i18n.language === 'fr' ? 'Documentation Technique Complète' : 
+                                 'Complete Technical Documentation'}
+                          </h4>
+                          <p className="text-blue-700 dark:text-blue-300 mb-4">
+                            {i18n.language === 'es' ? 
+                              'Para obtener especificaciones detalladas, matriz de compatibilidad completa, scripts de verificación y guías de optimización, descarga nuestra documentación técnica completa:' :
+                              i18n.language === 'fr' ?
+                              'Pour obtenir les spécifications détaillées, la matrice de compatibilité complète, les scripts de vérification et les guides d\'optimisation, téléchargez notre documentation technique complète :' :
+                              'For detailed specifications, complete compatibility matrix, verification scripts, and optimization guides, download our complete technical documentation:'
+                            }
+                          </p>
+                          <div className="flex flex-wrap gap-3">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = '/REQUISITOS-TECNICOS-HOSTING-ES.md';
+                                link.download = 'REQUISITOS-TECNICOS-HOSTING-ES.md';
+                                link.click();
+                              }}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Español (ES)
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = '/TECHNICAL-HOSTING-REQUIREMENTS-EN.md';
+                                link.download = 'TECHNICAL-HOSTING-REQUIREMENTS-EN.md';
+                                link.click();
+                              }}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              English (EN)
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                const link = document.createElement('a');
+                                link.href = '/EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.md';
+                                link.download = 'EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.md';
+                                link.click();
+                              }}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Français (FR)
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 dark:bg-gray-800 dark:border-gray-700">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-0">
+                            ⚠️ <strong>
+                              {i18n.language === 'es' ? 'Importante' : i18n.language === 'fr' ? 'Important' : 'Important'}
+                            </strong>: {i18n.language === 'es' ? 
+                              'Los planes de hosting compartido no garantizan CPU/RAM específicos. Las especificaciones mostradas son límites aproximados de tráfico que pueden manejar. Los recursos se comparten dinámicamente entre usuarios.' :
+                              i18n.language === 'fr' ?
+                              'Les plans d\'hébergement partagé ne garantissent pas d\'allocations CPU/RAM spécifiques. Les spécifications montrées sont des limites approximatives de trafic qu\'ils peuvent gérer. Les ressources sont partagées dynamiquement entre utilisateurs.' :
+                              'Shared hosting plans do not guarantee specific CPU/RAM allocations. Specifications shown are approximate traffic limits they can handle. Resources are shared dynamically among users.'
+                            }
+                          </p>
                         </div>
                       </div>
                     </div>
