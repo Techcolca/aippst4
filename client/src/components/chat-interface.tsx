@@ -37,8 +37,62 @@ export default function ChatInterface({
   const [inputValue, setInputValue] = useState("");
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [currentActivity, setCurrentActivity] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 2;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { t, i18n } = useTranslation();
+
+  // Performance optimization: Cache DOM queries to avoid repeated expensive operations
+  const [cachedPageContext, setCachedPageContext] = useState<string | null>(null);
+  const [contextCacheTime, setContextCacheTime] = useState<number>(0);
+  const CONTEXT_CACHE_DURATION = 60000; // Cache for 1 minute
+
+  // Performance optimization: Extract page context asynchronously to avoid blocking main thread
+  const extractPageContextAsync = async (): Promise<string> => {
+    return new Promise((resolve) => {
+      // Use requestIdleCallback or setTimeout to avoid blocking the main thread
+      const extractContext = () => {
+        try {
+          // Extract navigation links (limit to avoid excessive processing)
+          const navLinks = Array.from(document.querySelectorAll('nav a, header a, .navigation a, .menu a'))
+            .slice(0, 10) // Limit to first 10 links for performance
+            .map((link: Element) => ({
+              text: link.textContent?.trim(),
+              href: (link as HTMLAnchorElement).href
+            }))
+            .filter(link => link.text && link.text.length > 1);
+          
+          const navigationContent = navLinks.length > 0 
+            ? navLinks.map(link => `- ${link.text} (${link.href})`).join('\\n')
+            : "No se detectaron enlaces de navegación";
+          
+          // Extract services content (limit DOM queries for performance)
+          const servicesContent = Array.from(document.querySelectorAll('.features, .services, .pricing'))
+            .slice(0, 5) // Limit to first 5 elements for performance
+            .map(el => el.textContent?.trim())
+            .filter(Boolean)
+            .join('\\n\\n') || "No se detectó información específica sobre servicios";
+          
+          // Extract page content (limit length for performance)
+          const pageContent = document.body.innerText.substring(0, 2000) + "..."; // Reduced from 3000
+          
+          const context = `Navegación: ${navigationContent}\\n\\nServicios: ${servicesContent}\\n\\nContenido: ${pageContent}`;
+          resolve(context);
+        } catch (error) {
+          console.error("Error extracting page context:", error);
+          resolve("Error al extraer contexto de la página");
+        }
+      };
+
+      // Use requestIdleCallback if available, otherwise setTimeout
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(extractContext);
+      } else {
+        setTimeout(extractContext, 0);
+      }
+    });
+  };
 
   // Función para obtener el mensaje de bienvenida según el idioma
   const getWelcomeMessage = () => {
@@ -146,6 +200,7 @@ export default function ChatInterface({
     setMessages(prev => [...prev, userMessage]);
     setInputValue("");
     setIsTyping(true);
+    setCurrentActivity("Procesando mensaje...");
     
     // Registrar el idioma actual que se usará para la respuesta
     const currentLanguage = i18n.language;
@@ -186,30 +241,20 @@ export default function ChatInterface({
           const currentLanguage = i18n.language;
           console.log("Enviando mensaje con idioma:", currentLanguage);
           
-          // Intentar detectar elementos de la página para proporcionar contexto
+          // Performance optimization: Use cached page context if available
+          let cachedContext = cachedPageContext;
+          const now = Date.now();
+          
+          if (!cachedContext || (now - contextCacheTime) > CONTEXT_CACHE_DURATION) {
+            setCurrentActivity("Analizando el contenido de la página...");
+            // Only extract page context if cache is expired or doesn't exist
+            cachedContext = await extractPageContextAsync();
+            setCachedPageContext(cachedContext);
+            setContextCacheTime(now);
+          }
+          
           const pageUrl = window.location.href;
           const pageTitle = document.title;
-          
-          // Extraer enlaces de navegación
-          const navLinks = Array.from(document.querySelectorAll('nav a, header a, .navigation a, .menu a'))
-            .map((link: Element) => ({
-              text: link.textContent?.trim(),
-              href: (link as HTMLAnchorElement).href
-            }))
-            .filter(link => link.text && link.text.length > 1); // Filtrar enlaces vacíos
-          
-          const navigationContent = navLinks.length > 0 
-            ? navLinks.map(link => `- ${link.text} (${link.href})`).join('\n')
-            : "No se detectaron enlaces de navegación";
-          
-          // Extraer posible contenido sobre servicios o características
-          const servicesContent = Array.from(document.querySelectorAll('.features, .services, .pricing, [class*="feature"], [class*="service"], [class*="price"]'))
-            .map(el => el.textContent?.trim())
-            .filter(Boolean)
-            .join('\n\n') || "No se detectó información específica sobre servicios o características";
-          
-          // Extraer contenido principal de la página
-          const pageContent = document.body.innerText.substring(0, 3000) + "...";
           
           // Usar el comportamiento personalizado si está disponible
           const customBehavior = welcomePageSettings?.welcomePageChatBehavior;
@@ -463,20 +508,13 @@ Plan Empresarial:
             }
           }
           
-          // Si no hay datos de scraping del servidor o hubo un error, usar los datos extraídos en tiempo real
+          // Si no hay datos de scraping del servidor o hubo un error, usar los datos extraídos en tiempo real optimizados
           const pageContext = scrapedData || `
 INFORMACIÓN DEL SITIO:
 URL: ${pageUrl}
 Título: ${pageTitle}
 
-NAVEGACIÓN DEL SITIO:
-${navigationContent}
-
-SERVICIOS Y CARACTERÍSTICAS DETECTADOS:
-${servicesContent}
-
-CONTENIDO DE LA PÁGINA:
-${pageContent}
+${cachedContext}
 `;
 
           // Añadir instrucciones generales al contexto
@@ -594,12 +632,50 @@ ${customBehavior || 'Sé amable, informativo y conciso al responder preguntas so
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
       console.error("Error sending message:", error);
+      
+      // Enhanced error handling with retry mechanism
+      let errorMessage = "";
+      let shouldRetry = false;
+      
+      if (error instanceof Error) {
+        if (error.message.includes('timeout') || error.message.includes('OpenAI request timed out')) {
+          errorMessage = retryCount < maxRetries 
+            ? "La respuesta está tardando más de lo esperado. Reintentando..."
+            : "Lo siento, el servidor está tardando más de lo esperado. Por favor, intenta con un mensaje más corto.";
+          shouldRetry = retryCount < maxRetries;
+        } else if (error.message.includes('500')) {
+          errorMessage = "Nuestros servicios están experimentando problemas temporales. Por favor, intenta en unos minutos.";
+        } else if (error.message.includes('401') || error.message.includes('403')) {
+          errorMessage = "Hay un problema con la autenticación. Por favor, recarga la página e intenta de nuevo.";
+        } else if (error.message.includes('network') || error.message.includes('fetch')) {
+          errorMessage = "Parece que hay un problema de conexión. Verifica tu internet e intenta de nuevo.";
+          shouldRetry = retryCount < maxRetries;
+        } else {
+          errorMessage = "Lo siento, encontré un error inesperado. Por favor, intenta de nuevo.";
+        }
+      } else {
+        errorMessage = "Lo siento, encontré un error inesperado. Por favor, intenta de nuevo.";
+      }
+      
+      if (shouldRetry) {
+        setRetryCount(prev => prev + 1);
+        setCurrentActivity("Reintentando...");
+        setTimeout(() => {
+          handleSendMessage();
+        }, 2000); // Wait 2 seconds before retry
+        return;
+      }
+      
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "Lo siento, encontré un error al procesar tu solicitud. Por favor, intenta de nuevo."
+        content: errorMessage
       }]);
+      setRetryCount(0); // Reset retry count on final failure
     } finally {
-      setIsTyping(false);
+      if (retryCount === 0 || retryCount >= maxRetries) {
+        setIsTyping(false);
+        setCurrentActivity(null);
+      }
     }
   };
   

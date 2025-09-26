@@ -50,13 +50,19 @@ export async function generateConversationTitle(
   }
 }
 
-// Main chat completion function for conversations
+// Main chat completion function for conversations with timeout and performance optimizations
 export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,
   context?: string,
   language?: string,
   agentConfig?: AgentConfig
 ) {
+  // Performance optimization: Limit context length to prevent excessive token usage
+  const maxContextLength = 8000; // Reduced from unlimited
+  const truncatedContext = context && context.length > maxContextLength 
+    ? context.substring(0, maxContextLength) + "\n\n[Content truncated for performance]"
+    : context;
+  
   try {
     // Determinar en qué idioma responder - USAR EL IDIOMA DETECTADO AUTOMÁTICAMENTE
     const responseLanguage = language || "es"; // Default a español si no se especifica idioma
@@ -112,107 +118,35 @@ export async function generateChatCompletion(
       const behavior = agentConfig.conversationStyle || "servicial";
       
       if (responseLanguage === "fr") {
-        // Pour widgets en français, utiliser le contexte complet du site web
-        systemContent = context 
-          ? `Vous êtes ${assistantName}, un assistant IA intégré spécifiquement pour ce site web. Votre objectif principal est de fournir des informations utiles, précises et complètes basées sur le contexte du site web et les documents fournis.
+        // Simplified French widget prompt for better performance
+        systemContent = truncatedContext 
+          ? `Vous êtes ${assistantName}, un assistant IA pour ce site web. Fournissez des réponses utiles basées sur le contexte disponible.
 
-INSTRUCTIONS IMPORTANTES:
-1. VOUS AVEZ UN ACCÈS COMPLET à toutes les informations du contexte du site web. Utilisez-les pour répondre aux questions spécifiques.
-2. Pour les questions de CONTACT (téléphone, email, adresse) : Cherchez dans le contexte les informations de contact, données de l'entreprise, formulaires de contact.
-3. Pour les questions sur les SERVICES : Cherchez des informations sur l'IA locale, la sécurité, les dispositifs, l'analyse de données, etc.
-4. NE DITES JAMAIS que vous n'avez pas accès à des informations spécifiques - vous avez un accès complet au contexte du site.
-5. Vos réponses doivent être professionnelles, informatives et orientées vers l'aide aux visiteurs du site.
-6. N'inventez jamais d'informations qui ne sont pas explicitement mentionnées dans le contexte.
-7. Votre comportement doit être: ${behavior}
-8. Répondez toujours en français.
+Votre comportement doit être: ${behavior}
+Répondez toujours clairement et de manière concise en français.
 
-FORMAT DE RÉPONSE REQUIS:
-- Utilisez # pour les titres principaux
-- Utilisez ## pour les sous-titres
-- Utilisez **texte** pour mettre en évidence les informations importantes
-- Utilisez *texte* pour l'emphase
-- Utilisez - pour les listes à puces
-- Utilisez 1. 2. 3. pour les listes numérotées
-- Structurez vos réponses de manière claire et organisée
-- Incluez des titres descriptifs lorsque approprié
-
-CONTEXTE DÉTAILLÉ DU SITE WEB: 
-${context}`
-          : `Vous êtes ${assistantName}, un agent IA intégré spécifiquement pour ce site web.
-
-VOTRE DESCRIPTION: "${description}"
-VOTRE MESSAGE D'ACCUEIL: "${greeting}"
-VOTRE COMPORTEMENT CONFIGURÉ: "${behavior}"
-
-Vous pouvez aider avec des questions sur ce site web spécifique. Votre comportement doit être: ${behavior}. Répondez toujours en français.`;
+Contexte du site: ${truncatedContext}`
+          : `Vous êtes ${assistantName}, un agent IA pour ce site web. Votre comportement: ${behavior}. Répondez en français.`;
       } else if (responseLanguage === "en") {
-        // For English widgets, use the full website context
-        systemContent = context 
-          ? `You are ${assistantName}, an AI assistant integrated specifically for this website. Your main goal is to provide useful, accurate, and complete information based on the website context and provided documents.
+        // Simplified English widget prompt for better performance
+        systemContent = truncatedContext 
+          ? `You are ${assistantName}, an AI assistant for this website. Provide helpful responses based on available context.
 
-IMPORTANT INSTRUCTIONS:
-1. YOU HAVE COMPLETE ACCESS to all website context information. Use it to answer specific questions.
-2. For CONTACT questions (phone, email, address): Search context for contact info, company data, contact forms.
-3. For SERVICES questions: Look for information about local AI, security, devices, data analysis, etc.
-4. NEVER say you don't have access to specific information - you have full access to the site context.
-5. Your responses should be professional, informative, and oriented towards helping site visitors.
-6. Never invent information that is not explicitly mentioned in the context.
-7. Your behavior should be: ${behavior}
-8. Always respond in English.
+Your behavior should be: ${behavior}
+Always respond clearly and concisely in English.
 
-REQUIRED RESPONSE FORMAT:
-- Use # for main titles
-- Use ## for subtitles  
-- Use **text** to highlight important information
-- Use *text* for emphasis
-- Use - for bullet lists
-- Use 1. 2. 3. for numbered lists
-- Structure your responses clearly and organized
-- Include descriptive titles when appropriate
-
-DETAILED WEBSITE CONTEXT: 
-${context}`
-          : `You are ${assistantName}, an AI agent specifically integrated for this website.
-
-YOUR DESCRIPTION: "${description}"
-YOUR WELCOME MESSAGE: "${greeting}"
-YOUR CONFIGURED BEHAVIOR: "${behavior}"
-
-You can help with questions about this specific website. Your behavior should be: ${behavior}. Always respond in English.`;
+Website context: ${truncatedContext}`
+          : `You are ${assistantName}, an AI agent for this website. Your behavior: ${behavior}. Respond in English.`;
       } else {
-        // Para widgets en español, usar el contexto completo del sitio web
-        systemContent = context 
-          ? `Eres ${assistantName}, un asistente de IA integrado específicamente para este sitio web. Tu objetivo principal es proporcionar información útil, precisa y completa basada en el contexto del sitio web y los documentos proporcionados.
+        // Simplified Spanish widget prompt for better performance
+        systemContent = truncatedContext 
+          ? `Eres ${assistantName}, un asistente de IA para este sitio web. Proporciona respuestas útiles basadas en el contexto disponible.
 
-INSTRUCCIONES IMPORTANTES:
-1. TIENES ACCESO COMPLETO a toda la información del contexto del sitio web. Úsala para responder preguntas específicas.
-2. Para preguntas sobre CONTACTO (teléfono, email, dirección): Busca en el contexto información de contacto, datos de la empresa, formularios de contacto.
-3. Para preguntas sobre SERVICIOS: Busca información sobre IA local, seguridad, dispositivos, análisis de datos, etc.
-4. NUNCA digas que no tienes acceso a información específica - tienes acceso completo al contexto del sitio.
-5. Tus respuestas deben ser profesionales, informativas y orientadas a ser útil para los visitantes del sitio.
-6. Nunca inventes información que no esté explícitamente mencionada en el contexto.
-7. Tu comportamiento debe ser: ${behavior}
-8. Responde siempre en español.
+Tu comportamiento debe ser: ${behavior}
+Responde siempre en español de forma clara y concisa.
 
-FORMATO DE RESPUESTAS REQUERIDO:
-- Usa # para títulos principales
-- Usa ## para subtítulos
-- Usa **texto** para resaltar información importante
-- Usa *texto* para énfasis
-- Usa - para listas con viñetas
-- Usa 1. 2. 3. para listas numeradas
-- Estructura tus respuestas de manera clara y organizada
-- Incluye títulos descriptivos cuando sea apropiado
-
-CONTEXTO DETALLADO DEL SITIO WEB: 
-${context}`
-          : `Eres ${assistantName}, un agente de IA integrado específicamente para este sitio web.
-
-TU DESCRIPCIÓN: "${description}"
-TU MENSAJE DE BIENVENIDA: "${greeting}"
-TU COMPORTAMIENTO CONFIGURADO: "${behavior}"
-
-Puedes ayudar con preguntas sobre este sitio web específico. Tu comportamiento debe ser: ${behavior}. Responde siempre en español.`;
+Contexto del sitio: ${truncatedContext}`
+          : `Eres ${assistantName}, un agente de IA para este sitio web. Tu comportamiento: ${behavior}. Responde en español.`;
       }
     } else {
       // Para la aplicación AIPPS principal (no widgets), usar personalidad + contexto
@@ -220,94 +154,33 @@ Puedes ayudar con preguntas sobre este sitio web específico. Tu comportamiento 
       
       // Prompt original para el dashboard principal de AIPPS
       if (responseLanguage === "fr") {
-        systemContent += context 
-          ? `Vous êtes un assistant IA intégré au site web d'AIPPS. Votre objectif principal est de fournir des informations utiles, précises et complètes basées spécifiquement sur le contexte fourni concernant les services, caractéristiques et avantages de la plateforme AIPPS.
-        
-INSTRUCTIONS IMPORTANTES:
-1. Concentrez vos réponses sur les informations que vous trouvez dans le contexte fourni ci-dessous.
-2. Si la question de l'utilisateur concerne un service, une caractéristique ou une fonctionnalité spécifique d'AIPPS, recherchez minutieusement cette information dans le contexte et répondez avec des détails précis.
-3. Soyez particulièrement attentif aux informations sur les prix, les forfaits, les services offerts, les intégrations prises en charge et les caractéristiques de la plateforme.
-4. Accordez une attention particulière aux sections "SERVICES ET CARACTÉRISTIQUES DÉTECTÉS" et "NAVIGATION DU SITE" du contexte, qui peuvent contenir des informations clés.
-5. Si l'information n'est pas disponible dans le contexte, indiquez clairement que vous n'avez pas d'information spécifique à ce sujet, mais suggérez d'autres caractéristiques ou services que vous connaissez.
-6. Vos réponses doivent être professionnelles, informatives et orientées vers la mise en valeur d'AIPPS.
-7. N'inventez jamais de caractéristiques, prix ou services qui ne sont pas explicitement mentionnés dans le contexte.
-8. Répondez toujours en français.
+        systemContent += truncatedContext 
+          ? `Vous êtes un assistant IA d'AIPPS. Fournissez des informations précises basées sur le contexte concernant les services et caractéristiques de la plateforme. Répondez de manière professionnelle en français.
 
-FORMAT DE RÉPONSE REQUIS:
-- Utilisez # pour les titres principaux
-- Utilisez ## pour les sous-titres
-- Utilisez **texte** pour mettre en évidence les informations importantes
-- Utilisez *texte* pour l'emphase
-- Utilisez - pour les listes à puces
-- Utilisez 1. 2. 3. pour les listes numérotées
-- Structurez vos réponses de manière claire et organisée
-- Incluez des titres descriptifs lorsque approprié
-
-CONTEXTE DÉTAILLÉ DU SITE: 
-${context}`
-          : "Vous êtes AIPPS, un assistant IA intégré au site web d'AIPPS. Vous fournissez des informations concises et précises sur la plateforme AIPPS, ses services, caractéristiques et avantages. Soyez amical, professionnel et serviable. Répondez toujours en français.";
+Contexte d'AIPPS: ${truncatedContext}`
+          : "Vous êtes AIPPS, un assistant IA. Fournissez des informations sur la plateforme AIPPS de manière professionnelle en français.";
       } else if (responseLanguage === "en") {
-        systemContent += context 
-          ? `You are an AI assistant integrated into the AIPPS website. Your main goal is to provide useful, accurate, and complete information specifically based on the context provided about the services, features, and benefits of the AIPPS platform.
-        
-IMPORTANT INSTRUCTIONS:
-1. Focus your answers on the information you find in the context provided below.
-2. If the user's question refers to a specific AIPPS service, feature, or functionality, thoroughly search for this information in the context and respond with precise details.
-3. Be especially attentive to information about prices, plans, services offered, supported integrations, and platform features.
-4. Pay special attention to the "DETECTED SERVICES AND FEATURES" and "SITE NAVIGATION" sections of the context, which may contain key information.
-5. If the information is not available in the context, clearly indicate that you don't have specific information about that, but suggest other features or services that you do know about.
-6. Your responses should be professional, informative, and oriented towards highlighting the value of AIPPS.
-7. Never invent features, prices, or services that are not explicitly mentioned in the context.
-8. Always respond in English.
+        systemContent += truncatedContext 
+          ? `You are an AIPPS AI assistant. Provide accurate information based on context about platform services and features. Respond professionally in English.
 
-REQUIRED RESPONSE FORMAT:
-- Use # for main titles
-- Use ## for subtitles
-- Use **text** to highlight important information
-- Use *text* for emphasis
-- Use - for bullet lists
-- Use 1. 2. 3. for numbered lists
-- Structure your responses clearly and organized
-- Include descriptive titles when appropriate
-
-DETAILED SITE CONTEXT: 
-${context}`
-          : "You are AIPPS, an AI assistant integrated into the AIPPS website. You provide concise and accurate information about the AIPPS platform, its services, features, and benefits. Be friendly, professional, and helpful. Always respond in English.";
+AIPPS Context: ${truncatedContext}`
+          : "You are AIPPS, an AI assistant. Provide information about the AIPPS platform professionally in English.";
       } else {
-        systemContent += context 
-          ? `Eres un asistente de IA integrado en el sitio web de AIPPS. Tu objetivo principal es proporcionar información útil, precisa y completa basada específicamente en el contexto proporcionado sobre los servicios, características y beneficios de la plataforma AIPPS.
-        
-INSTRUCCIONES IMPORTANTES:
-1. Enfoca tus respuestas en la información que encuentres en el contexto proporcionado a continuación.
-2. Si la pregunta del usuario se refiere a un servicio, característica o funcionalidad específica de AIPPS, busca exhaustivamente esta información en el contexto y responde con detalles precisos.
-3. Sé especialmente atento a información sobre precios, planes, servicios ofrecidos, integraciones soportadas y características de la plataforma.
-4. Presta especial atención a las secciones "SERVICIOS Y CARACTERÍSTICAS DETECTADOS" y "NAVEGACIÓN DEL SITIO" del contexto, que pueden contener información clave.
-5. Si la información no está disponible en el contexto, indica claramente que no tienes información específica sobre eso, pero sugiere otras características o servicios que sí conozcas.
-6. Tus respuestas deben ser profesionales, informativas y orientadas a destacar el valor de AIPPS.
-7. Nunca inventes características, precios o servicios que no estén explícitamente mencionados en el contexto.
-8. Responde siempre en español.
+        systemContent += truncatedContext 
+          ? `Eres un asistente de IA de AIPPS. Proporciona información precisa basada en el contexto sobre servicios y características de la plataforma. Responde de manera profesional en español.
 
-FORMATO DE RESPUESTAS REQUERIDO:
-- Usa # para títulos principales
-- Usa ## para subtítulos
-- Usa **texto** para resaltar información importante
-- Usa *texto* para énfasis
-- Usa - para listas con viñetas
-- Usa 1. 2. 3. para listas numeradas
-- Estructura tus respuestas de manera clara y organizada
-- Incluye títulos descriptivos cuando sea apropiado
-
-CONTEXTO DETALLADO DEL SITIO: 
-${context}`
-          : "Eres AIPPS, un asistente de IA integrado en el sitio web de AIPPS. Proporcionas información concisa y precisa sobre la plataforma AIPPS, sus servicios, características y beneficios. Sé amigable, profesional y servicial. Responde siempre en español.";
+Contexto de AIPPS: ${truncatedContext}`
+          : "Eres AIPPS, un asistente de IA. Proporciona información sobre la plataforma AIPPS de manera profesional en español.";
       }
     }
     
     // Crear el objeto de mensaje del sistema
     const systemMessage = { role: "system", content: systemContent };
     
-    // Log system message for debugging
+    // Performance logging (using truncated context)
     console.log("System message length:", systemMessage.content.length);
+    console.log("Context was truncated:", context && context.length > maxContextLength);
+    console.log("Truncated context length:", truncatedContext?.length || 0);
     console.log("System message preview:", systemMessage.content.substring(0, 200) + "...");
     
     // Log agent configuration details
@@ -331,25 +204,43 @@ ${context}`
       }))
     ];
 
-    // Make request to OpenAI
-    const response = await openai.chat.completions.create({
-      model: OPENAI_MODEL,
-      messages: formattedMessages as any, // Type assertion to avoid TypeScript errors
-      temperature: 0.5, // Reduced temperature for more factual responses
-      max_tokens: 800  // Increased max tokens for more complete responses
-    });
-
-    return {
-      message: {
-        role: "assistant",
-        content: response.choices[0].message.content
+    // Create AbortController for real timeout functionality
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => {
+      abortController.abort();
+    }, 15000); // 15 second timeout
+    
+    try {
+      // Make request to OpenAI with real timeout protection using AbortController
+      const response = await openai.chat.completions.create({
+        model: OPENAI_MODEL,
+        messages: formattedMessages as any,
+        temperature: 0.5,
+        max_tokens: 600, // Reduced from 800 for faster responses
+      }, {
+        signal: abortController.signal,
+      });
+      
+      clearTimeout(timeoutId);
+      
+      return {
+        message: {
+          role: "assistant",
+          content: response.choices[0].message.content
+        }
+      };
+    } catch (openaiError: unknown) {
+      clearTimeout(timeoutId);
+      
+      // Handle AbortController timeout specifically
+      if (openaiError instanceof Error && openaiError.name === 'AbortError') {
+        throw new Error('OpenAI request timed out after 15 seconds');
       }
-    };
-  } catch (error: unknown) {
-    console.error("Error generating chat completion:", error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    throw new Error(`Failed to generate chat completion: ${errorMessage}`);
-  }
+      
+      console.error("Error generating chat completion:", openaiError);
+      const errorMessage = openaiError instanceof Error ? openaiError.message : String(openaiError);
+      throw new Error(`Failed to generate chat completion: ${errorMessage}`);
+    }
 }
 
 // Sentiment analysis

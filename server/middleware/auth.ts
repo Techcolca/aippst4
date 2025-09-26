@@ -7,6 +7,202 @@ export const JWT_SECRET = process.env.JWT_SECRET || 'default_jwt_secret';
 
 import type { ExtendedUser } from '../auth';
 
+// Performance optimization: Simple in-memory cache for database queries
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+  expiresIn: number;
+}
+
+class AuthCache {
+  private userCache = new Map<number, CacheEntry<ExtendedUser>>();
+  private integrationCache = new Map<number, CacheEntry<any>>();
+  private apiKeyCache = new Map<string, CacheEntry<any>>();
+  private widgetTokenCache = new Map<string, CacheEntry<any>>();
+  
+  private readonly DEFAULT_TTL = 120000; // 2 minutes - reduced for better security
+  private readonly SHORT_TTL = 30000;    // 30 seconds for sensitive data like tokens
+  
+  private isExpired<T>(entry: CacheEntry<T>): boolean {
+    return Date.now() - entry.timestamp > entry.expiresIn;
+  }
+  
+  // User cache methods
+  setUser(userId: number, user: ExtendedUser, ttl = this.DEFAULT_TTL): void {
+    this.userCache.set(userId, {
+      data: user,
+      timestamp: Date.now(),
+      expiresIn: ttl
+    });
+  }
+  
+  getUser(userId: number): ExtendedUser | null {
+    const entry = this.userCache.get(userId);
+    if (!entry || this.isExpired(entry)) {
+      this.userCache.delete(userId);
+      return null;
+    }
+    return entry.data;
+  }
+  
+  // Integration cache methods
+  setIntegration(integrationId: number, integration: any, ttl = this.DEFAULT_TTL): void {
+    this.integrationCache.set(integrationId, {
+      data: integration,
+      timestamp: Date.now(),
+      expiresIn: ttl
+    });
+  }
+  
+  getIntegration(integrationId: number): any | null {
+    const entry = this.integrationCache.get(integrationId);
+    if (!entry || this.isExpired(entry)) {
+      this.integrationCache.delete(integrationId);
+      return null;
+    }
+    return entry.data;
+  }
+  
+  // API Key cache methods
+  setIntegrationByApiKey(apiKey: string, integration: any, ttl = this.DEFAULT_TTL): void {
+    this.apiKeyCache.set(apiKey, {
+      data: integration,
+      timestamp: Date.now(),
+      expiresIn: ttl
+    });
+  }
+  
+  getIntegrationByApiKey(apiKey: string): any | null {
+    const entry = this.apiKeyCache.get(apiKey);
+    if (!entry || this.isExpired(entry)) {
+      this.apiKeyCache.delete(apiKey);
+      return null;
+    }
+    return entry.data;
+  }
+  
+  // Widget token cache methods (shorter TTL for security)
+  setWidgetToken(tokenHash: string, widgetToken: any, ttl = this.SHORT_TTL): void {
+    this.widgetTokenCache.set(tokenHash, {
+      data: widgetToken,
+      timestamp: Date.now(),
+      expiresIn: ttl
+    });
+  }
+  
+  getWidgetToken(tokenHash: string): any | null {
+    const entry = this.widgetTokenCache.get(tokenHash);
+    if (!entry || this.isExpired(entry)) {
+      this.widgetTokenCache.delete(tokenHash);
+      return null;
+    }
+    return entry.data;
+  }
+  
+  // Clear expired entries periodically
+  cleanup(): void {
+    const now = Date.now();
+    
+    this.userCache.forEach((entry, key) => {
+      if (this.isExpired(entry)) {
+        this.userCache.delete(key);
+      }
+    });
+    
+    this.integrationCache.forEach((entry, key) => {
+      if (this.isExpired(entry)) {
+        this.integrationCache.delete(key);
+      }
+    });
+    
+    this.apiKeyCache.forEach((entry, key) => {
+      if (this.isExpired(entry)) {
+        this.apiKeyCache.delete(key);
+      }
+    });
+    
+    this.widgetTokenCache.forEach((entry, key) => {
+      if (this.isExpired(entry)) {
+        this.widgetTokenCache.delete(key);
+      }
+    });
+  }
+}
+
+// Global auth cache instance
+const authCache = new AuthCache();
+
+// Cleanup expired entries every 10 minutes
+setInterval(() => {
+  authCache.cleanup();
+}, 600000);
+
+// Helper function to get user with caching
+async function getCachedUser(userId: number): Promise<ExtendedUser | null> {
+  // Try cache first
+  const cachedUser = authCache.getUser(userId);
+  if (cachedUser) {
+    return cachedUser;
+  }
+  
+  // Cache miss - fetch from database
+  try {
+    const user = await storage.getUser(userId);
+    if (user) {
+      authCache.setUser(userId, user);
+      return user;
+    }
+  } catch (error) {
+    console.error('Error fetching user:', error);
+  }
+  
+  return null;
+}
+
+// Helper function to get integration with caching
+async function getCachedIntegration(integrationId: number): Promise<any | null> {
+  // Try cache first
+  const cachedIntegration = authCache.getIntegration(integrationId);
+  if (cachedIntegration) {
+    return cachedIntegration;
+  }
+  
+  // Cache miss - fetch from database
+  try {
+    const integration = await storage.getIntegration(integrationId);
+    if (integration) {
+      authCache.setIntegration(integrationId, integration);
+      return integration;
+    }
+  } catch (error) {
+    console.error('Error fetching integration:', error);
+  }
+  
+  return null;
+}
+
+// Helper function to get integration by API key with caching
+async function getCachedIntegrationByApiKey(apiKey: string): Promise<any | null> {
+  // Try cache first
+  const cachedIntegration = authCache.getIntegrationByApiKey(apiKey);
+  if (cachedIntegration) {
+    return cachedIntegration;
+  }
+  
+  // Cache miss - fetch from database
+  try {
+    const integration = await storage.getIntegrationByApiKey(apiKey);
+    if (integration) {
+      authCache.setIntegrationByApiKey(apiKey, integration);
+      return integration;
+    }
+  } catch (error) {
+    console.error('Error fetching integration by API key:', error);
+  }
+  
+  return null;
+}
+
 // Extend Express Request interface to include user and userId
 declare global {
   namespace Express {
@@ -42,9 +238,9 @@ export async function verifyToken(req: Request, res: Response, next: NextFunctio
       req.userId = decoded.userId;
       console.log("Token verificado correctamente. ID de usuario:", req.userId);
       
-      // Cargar el objeto de usuario completo desde la base de datos
+      // Cargar el objeto de usuario completo desde la base de datos (con cache)
       try {
-        const user = await storage.getUser(req.userId);
+        const user = await getCachedUser(req.userId);
         if (user) {
           req.user = user;
           console.log("Usuario autenticado encontrado:", user.username);
@@ -219,8 +415,8 @@ export async function authenticateJWT(req: Request, res: Response, next: NextFun
     console.log("Token verificado correctamente. ID de usuario:", decoded.userId);
     req.userId = decoded.userId;
     
-    // Obtener los datos completos del usuario
-    const user = await storage.getUser(req.userId);
+    // Obtener los datos completos del usuario (con cache)
+    const user = await getCachedUser(req.userId);
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -403,7 +599,7 @@ export async function validateUserJWT(token: string): Promise<{
 } | null> {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-    const user = await storage.getUser(decoded.userId);
+    const user = await getCachedUser(decoded.userId);
     
     if (!user) return null;
 
@@ -500,7 +696,7 @@ export async function validateAuthForWidgetRequest(req: Request, _integration?: 
     } else {
       // Non-owner user accessing widget - allow for public widget interactions
       return {
-        mode: 'widget_user', 
+        mode: 'user', 
         userId: userAuth.userId,
         user: userAuth.user,
         integration
@@ -523,8 +719,8 @@ export function authorize(roles: string[]) {
         return res.status(401).json({ message: 'Authentication required' });
       }
       
-      // Obtener el usuario actual
-      const user = await storage.getUser(req.userId);
+      // Obtener el usuario actual (con cache)
+      const user = await getCachedUser(req.userId);
       
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
