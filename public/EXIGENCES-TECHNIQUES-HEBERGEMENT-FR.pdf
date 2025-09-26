@@ -1,0 +1,18 @@
+%PDF-1.4
+1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
+2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj
+3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj
+4 0 obj<</Length 2500>>stream
+BT/F1 12 Tf 50 750 Td(EXIGENCES TECHNIQUES D'HEBERGEMENT - AIPI)Tj 0 -20 Td(Documentation Technique pour Clients)Tj 0 -30 Td(AVERTISSEMENT CRITIQUE:)Tj 0 -15 Td(Les widgets IA d'AIPI necessitent des ressources d'hebergement specifiques)Tj 0 -15 Td(pour fonctionner correctement. Tous les plans d'hebergement ne sont pas compatibles.)Tj 0 -15 Td(85% des problemes de performance sont dus a un hebergement inadequat.)Tj 0 -30 Td(CAS D'INCOMPATIBILITE DOCUMENTES:)Tj 0 -20 Td(HostGator - Plans Partages \(INCOMPATIBLES\))Tj 0 -15 Td(- Plan Personal: 25% CPU maximum, timeout 30s -> GEL CONFIRME)Tj 0 -15 Td(- Plan Business: MEMES limitations que Personal -> AUCUNE amelioration)Tj 0 -15 Td(- Plan Baby: Restrictions identiques -> PROBLEMES GARANTIS)Tj 0 -20 Td(Symptomes Identifies:)Tj 0 -15 Td(1. Gel pendant l'inscription depuis les appareils mobiles)Tj 0 -15 Td(2. Timeouts dans la messagerie >30 secondes)Tj 0 -15 Td(3. Limitation automatique du CPU quand le widget fonctionne)Tj 0 -15 Td(4. Reponses IA lentes dans les operations)Tj 0 -15 Td(5. Pannes intermittentes pendant les periodes de forte charge)Tj 0 -30 Td(EXIGENCES TECHNIQUES MINIMALES:)Tj 0 -15 Td(CPU: Sans limite de 25% \(acces equivalent a 1 core\))Tj 0 -15 Td(RAM: 1GB disponible \(hebergement qui ne depasse pas memoire\))Tj 0 -15 Td(PHP: 8.0+ \(timeout 120s minimum\))Tj 0 -15 Td(Base de Donnees: MySQL 5.7+ ou PostgreSQL 12+ \(connexions illimitees\))Tj 0 -15 Td(SSL: Certificat valide \(Let's Encrypt acceptable\))Tj 0 -15 Td(Architecture: Pas Apache LAMP \(LiteSpeed/NGINX prefere\))Tj 0 -15 Td(Stockage: SSD recommande \(HDD acceptable\))Tj 0 -15 Td(Bande Passante: 10GB/mois minimum \(pour widgets integres\))Tj 0 -30 Td(FOURNISSEURS RECOMMANDES:)Tj 0 -20 Td(Petit Budget \(3-5€/mois\):)Tj 0 -15 Td(- ChemiCloud Starter - ~25k visites/mois)Tj 0 -15 Td(- SiteGround StartUp - ~10k visites/mois)Tj 0 -15 Td(- A2 Hosting Lite - Ressources partagees)Tj 0 -20 Td(Budget Moyen \(10-30€/mois\):)Tj 0 -15 Td(- Cloudways Vultr - 1 core / 1GB dedies)Tj 0 -15 Td(- Kinsta Starter - Jusqu'a 25k visites/mois)Tj 0 -15 Td(- WP Engine Personal - Jusqu'a 25k visites/mois)Tj 0 -30 Td(VERIFICATION DE COMPATIBILITE:)Tj 0 -15 Td(Avant d'implementer AIPI:)Tj 0 -15 Td(1. Verifier que votre hebergement n'a PAS de limite de 25% CPU)Tj 0 -15 Td(2. Confirmer timeout PHP >= 120 secondes)Tj 0 -15 Td(3. Valider architecture LiteSpeed/NGINX \(pas Apache LAMP\))Tj 0 -15 Td(4. S'assurer SSL valide actif)Tj 0 -15 Td(5. Reviser les limites de memoire RAM disponible)Tj 0 -30 Td(IMPORTANT: Les plans d'hebergement partage ne garantissent pas)Tj 0 -15 Td(d'allocations CPU/RAM specifiques. Les specifications sont des limites)Tj 0 -15 Td(approximatives de trafic. Les ressources sont partagees dynamiquement.)Tj ET
+endstream endobj
+5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj
+xref 0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000053 00000 n 
+0000000100 00000 n 
+0000000200 00000 n 
+0000002750 00000 n 
+trailer<</Size 6/Root 1 0 R>>
+startxref 2800
+%%EOF

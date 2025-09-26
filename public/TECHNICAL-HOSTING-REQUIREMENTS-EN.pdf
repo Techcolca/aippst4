@@ -1,0 +1,18 @@
+%PDF-1.4
+1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
+2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj
+3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj
+4 0 obj<</Length 2500>>stream
+BT/F1 12 Tf 50 750 Td(TECHNICAL HOSTING REQUIREMENTS - AIPI)Tj 0 -20 Td(Technical Documentation for Clients)Tj 0 -30 Td(CRITICAL WARNING:)Tj 0 -15 Td(AIPI AI widgets require specific hosting resources to function properly.)Tj 0 -15 Td(Not all hosting plans are compatible.)Tj 0 -15 Td(85% of performance issues are due to inadequate hosting.)Tj 0 -30 Td(DOCUMENTED INCOMPATIBILITY CASES:)Tj 0 -20 Td(HostGator - Shared Plans \(INCOMPATIBLE\))Tj 0 -15 Td(- Personal Plan: 25% CPU max, 30s timeout -> CONFIRMED FREEZING)Tj 0 -15 Td(- Business Plan: SAME limitations as Personal -> NO performance improvement)Tj 0 -15 Td(- Baby Plan: Identical restrictions -> GUARANTEED PROBLEMS)Tj 0 -20 Td(Identified Symptoms:)Tj 0 -15 Td(1. Freezing during registration from mobile devices)Tj 0 -15 Td(2. Messaging timeouts >30 seconds)Tj 0 -15 Td(3. Automatic CPU throttling when widget operates)Tj 0 -15 Td(4. Slow responses in AI operations)Tj 0 -15 Td(5. Intermittent failures during high load periods)Tj 0 -30 Td(MINIMUM TECHNICAL REQUIREMENTS:)Tj 0 -15 Td(CPU: No 25% limit \(access equivalent to 1 core\))Tj 0 -15 Td(RAM: 1GB available \(hosting that doesn't exceed memory\))Tj 0 -15 Td(PHP: 8.0+ \(120s timeout minimum\))Tj 0 -15 Td(Database: MySQL 5.7+ or PostgreSQL 12+ \(unlimited connections\))Tj 0 -15 Td(SSL: Valid certificate \(Let's Encrypt acceptable\))Tj 0 -15 Td(Architecture: Not Apache LAMP \(LiteSpeed/NGINX preferred\))Tj 0 -15 Td(Storage: SSD recommended \(HDD acceptable\))Tj 0 -15 Td(Bandwidth: 10GB/month minimum \(for embedded widgets\))Tj 0 -30 Td(RECOMMENDED PROVIDERS:)Tj 0 -20 Td(Low Budget \($3-5/month\):)Tj 0 -15 Td(- ChemiCloud Starter - ~25k visits/month)Tj 0 -15 Td(- SiteGround StartUp - ~10k visits/month)Tj 0 -15 Td(- A2 Hosting Lite - Shared resources)Tj 0 -20 Td(Medium Budget \($10-30/month\):)Tj 0 -15 Td(- Cloudways Vultr - 1 core / 1GB dedicated)Tj 0 -15 Td(- Kinsta Starter - Up to 25k visits/month)Tj 0 -15 Td(- WP Engine Personal - Up to 25k visits/month)Tj 0 -30 Td(COMPATIBILITY VERIFICATION:)Tj 0 -15 Td(Before implementing AIPI:)Tj 0 -15 Td(1. Verify your hosting does NOT have 25% CPU limit)Tj 0 -15 Td(2. Confirm PHP timeout >= 120 seconds)Tj 0 -15 Td(3. Validate LiteSpeed/NGINX architecture \(not Apache LAMP\))Tj 0 -15 Td(4. Ensure active valid SSL)Tj 0 -15 Td(5. Review available RAM memory limits)Tj 0 -30 Td(IMPORTANT: Shared hosting plans do not guarantee specific CPU/RAM.)Tj 0 -15 Td(Specifications shown are approximate traffic limits they can handle.)Tj 0 -15 Td(Resources are shared dynamically among users.)Tj ET
+endstream endobj
+5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj
+xref 0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000053 00000 n 
+0000000100 00000 n 
+0000000200 00000 n 
+0000002750 00000 n 
+trailer<</Size 6/Root 1 0 R>>
+startxref 2800
+%%EOF

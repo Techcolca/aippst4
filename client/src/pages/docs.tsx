@@ -2130,39 +2130,39 @@ export default function Documentation() {
                               size="sm"
                               onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/REQUISITOS-TECNICOS-HOSTING-ES.md';
-                                link.download = 'REQUISITOS-TECNICOS-HOSTING-ES.md';
+                                link.href = '/REQUISITOS-TECNICOS-HOSTING-ES.pdf';
+                                link.download = 'REQUISITOS-TECNICOS-HOSTING-ES.pdf';
                                 link.click();
                               }}
                             >
                               <Download className="w-4 h-4 mr-2" />
-                              Español (ES)
+                              Español (PDF)
                             </Button>
                             <Button 
                               variant="outline" 
                               size="sm"
                               onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/TECHNICAL-HOSTING-REQUIREMENTS-EN.md';
-                                link.download = 'TECHNICAL-HOSTING-REQUIREMENTS-EN.md';
+                                link.href = '/TECHNICAL-HOSTING-REQUIREMENTS-EN.pdf';
+                                link.download = 'TECHNICAL-HOSTING-REQUIREMENTS-EN.pdf';
                                 link.click();
                               }}
                             >
                               <Download className="w-4 h-4 mr-2" />
-                              English (EN)
+                              English (PDF)
                             </Button>
                             <Button 
                               variant="outline" 
                               size="sm"
                               onClick={() => {
                                 const link = document.createElement('a');
-                                link.href = '/EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.md';
-                                link.download = 'EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.md';
+                                link.href = '/EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.pdf';
+                                link.download = 'EXIGENCES-TECHNIQUES-HEBERGEMENT-FR.pdf';
                                 link.click();
                               }}
                             >
                               <Download className="w-4 h-4 mr-2" />
-                              Français (FR)
+                              Français (PDF)
                             </Button>
                           </div>
                         </div>
