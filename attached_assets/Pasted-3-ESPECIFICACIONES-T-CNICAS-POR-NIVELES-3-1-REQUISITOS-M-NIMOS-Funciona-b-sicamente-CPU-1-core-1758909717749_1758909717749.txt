@@ -1,0 +1,85 @@
+3. ESPECIFICACIONES TÉCNICAS POR NIVELES
+3.1 REQUISITOS MÍNIMOS (Funciona básicamente)
+CPU: 1 core dedicado, sin límite del 25%
+RAM: 1GB dedicado mínimo
+PHP: Versión 8.0+, timeout 120s mínimo
+Base de datos: MySQL 5.7+ o PostgreSQL 12+
+SSL: Certificado válido obligatorio
+Arquitectura: No LAMP tradicional (Apache)
+3.2 REQUISITOS RECOMENDADOS (Rendimiento óptimo)
+CPU: 2 cores dedicados
+RAM: 2GB dedicado
+PHP: Versión 8.1+, timeout sin límite
+Storage: SSD con caching habilitado
+Arquitectura: LiteSpeed o NGINX
+CDN: Cloudflare o similar
+3.3 REQUISITOS EMPRESARIALES (Alto tráfico)
+CPU: 4+ cores dedicados
+RAM: 4GB+ dedicado
+PHP: Última versión estable
+Escalabilidad: Auto-scaling disponible
+Monitoreo: Herramientas de performance incluidas
+4. MATRIZ DE COMPATIBILIDAD POR PROVEEDOR
+4.1 Hosting NO Compatibles (Lista Negra)
+HostGator Personal/Business Plans
+GoDaddy Basic Shared
+Bluehost Basic Shared
+NameCheap Basic Shared
+4.2 Hosting Compatibles por Categoría
+PRESUPUESTO BAJO ($3-5/mes):
+
+ChemiCloud Starter
+SiteGround StartUp
+A2 Hosting Lite
+PRESUPUESTO MEDIO ($10-15/mes):
+
+Cloudways Vultr
+Kinsta Starter
+WP Engine Personal
+PRESUPUESTO EMPRESARIAL ($20+/mes):
+
+Cloudways High Frequency
+Kinsta Business
+WP Engine Professional
+5. HERRAMIENTAS DE VERIFICACIÓN TÉCNICA
+5.1 Checklist de Verificación Pre-Implementación
+ Test de CPU: ¿Hay límite del 25%?
+ Test de Timeout: ¿PHP timeout es 30s?
+ Test de Procesos: ¿Máximo 25 procesos simultáneos?
+ Test de Arquitectura: ¿Usan Apache LAMP?
+ Test de SSL: ¿Certificado SSL válido?
+5.2 Scripts de Prueba Automatizados
+Script PHP para verificar limits de timeout
+Script para medir velocidad de respuesta de API
+Test de carga básico para widgets embebidos
+5.3 Herramientas de Diagnóstico
+URL para test de compatibilidad online
+Plugin WordPress de diagnóstico (si aplica)
+Guía de interpretación de resultados
+6. GUÍAS DE OPTIMIZACIÓN POR ESCENARIO
+6.1 Cliente con Hosting Incompatible
+Opción A: Migración a hosting recomendado
+Opción B: Optimizaciones de emergencia (Cloudflare + caching)
+Opción C: Upgrade del plan actual (si disponible)
+6.2 Cliente con Hosting Marginal
+Implementación de Cloudflare CDN
+Configuración de plugins de caching
+Actualización de versión PHP
+Monitoreo de rendimiento post-implementación
+6.3 Cliente con Hosting Óptimo
+Configuración avanzada de performance
+Implementación de monitoring proactivo
+Optimizaciones específicas para alto tráfico
+7. SERVICIOS DE SOPORTE TÉCNICO
+7.1 Evaluación Gratuita Pre-Venta
+Análisis de hosting actual (15 min)
+Reporte de compatibilidad detallado
+Recomendaciones específicas
+7.2 Servicios de Migración
+Básica ($50): Migración + configuración básica
+Premium ($100): Migración + optimización completa
+Empresarial ($200): Migración + configuración avanzada + soporte 30 días
+7.3 Soporte Post-Implementación
+Monitoreo de rendimiento 7 días
+Ajustes de optimización si necesario
+Documentación de configuración específica
